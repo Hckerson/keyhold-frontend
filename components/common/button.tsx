@@ -1,7 +1,6 @@
 "use client";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
-import { antonSc, poppins } from "@/public/fonts/font";
 
 interface Button extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isLoading?: boolean;
@@ -14,7 +13,6 @@ export default function Button({
     isLoading,
     className,
     size = "custom",
-    font = "poppins",
     ...rest
 }: Button) {
     const small = size == "sm" || size == "md";
@@ -35,7 +33,6 @@ export default function Button({
             className={clsx(
                 "relative z-0 flex cursor-pointer items-center justify-center overflow-hidden shadow-inner transition-all duration-200 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
                 sizes,
-                font === "poppins" ? poppins.className : antonSc.className,
                 className,
             )}
         >

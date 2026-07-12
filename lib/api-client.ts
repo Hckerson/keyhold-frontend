@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useAuthStore } from "./auth-store";
 import type {
     AxiosInstance,
     AxiosRequestConfig,
@@ -83,7 +82,7 @@ export const query = {
 
 apiClient.interceptors.request.use((config) => {
     // Extract token from Zustand store directly
-    const token = useAuthStore.getState().token;
+    const token = `${0}`
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -96,7 +95,6 @@ apiClient.interceptors.response.use(
     (error: AxiosError) => {
         if (error.response?.status === 401) {
             // Clear auth state on unauthorized
-            useAuthStore.getState().logout();
 
             // Redirect to login if not already there
             if (
