@@ -10,5 +10,18 @@
             "Read(app/|components/|lib/|hooks/)",
             "Edit(app/|components/|lib/|hooks/)"
         ]
+    },
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Write|Edit",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "jq -r '.tool_response.filePath // .tool_input.file_path' | { read -r f; if [ -n \"$f\" ]; then npx prettier --write \"$f\" 2>/dev/null; fi; } || true"
+                    }
+                ]
+            }
+        ]
     }
 }

@@ -295,15 +295,7 @@ const SelectInput = ({
     );
 };
 
-const CalendarInput = ({
-    value,
-    handleChange,
-    name = "date",
-}: {
-    value: Date;
-    name: string;
-    handleChange: (newValue: string, field: string) => void;
-}) => {
+const CalendarInput = () => {
     return (
         // <Calendar
         //     mode="single"
