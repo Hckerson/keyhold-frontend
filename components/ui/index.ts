@@ -30,3 +30,28 @@ export type { SelectProps } from './select';
 export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from './card';
 
 export { Container } from './container';
+
+export { Image } from './image';
+export type { ImageProps } from './image';
+
+export { Modal, ModalContent, ModalHeader, ModalTitle, ModalBody, ModalFooter } from './modal';
+
+export { Spinner } from './spinner';
+export type { SpinnerProps } from './spinner';
+
+export { Tooltip } from './tooltip';
+
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
+
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './accordion';
+
+export { Pagination, PaginationList, PaginationItem, PaginationLink } from './pagination';
+
+export { Progress } from './progress';
+export type { ProgressProps } from './progress';
+
+export { Textarea } from './textarea';
+
+export { Switch } from './switch';
+
+export { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from './breadcrumb';
