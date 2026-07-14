@@ -7,6 +7,7 @@
 ## Overview
 
 Seven detailed user journey maps covering:
+
 - Search & discovery flow
 - Listing detail evaluation
 - Viewing & scheduling
@@ -25,22 +26,24 @@ Each includes decision points, emotional states, system behavior, and failure pa
 
 ### Steps
 
-| Step | User Action | Emotional State | System Behavior | Success Criteria |
-|------|-------------|-----------------|-----------------|-----------------|
-| 1 | Opens app | Curious/hopeful | Show hero + featured listings | Fast load (<1s) |
-| 2 | Enters search criteria | Focused | Auto-complete, show filters | Filters feel natural |
-| 3 | Views results | Scanning | Show 20 results, map, sorting | Results match intent |
-| 4 | Refines filters | Deliberate | Live filter updates | <500ms response |
-| 5 | Sees saved count | Encouraged | "Saved 3" badge | Clear feedback |
-| 6 | Scrolls/pages results | Browsing | Pagination or infinite scroll | Feels fast |
-| 7 | Saves listing | Satisfied | Toast: "Saved" + star badge | Permanent save |
+| Step | User Action            | Emotional State | System Behavior               | Success Criteria     |
+| ---- | ---------------------- | --------------- | ----------------------------- | -------------------- |
+| 1    | Opens app              | Curious/hopeful | Show hero + featured listings | Fast load (<1s)      |
+| 2    | Enters search criteria | Focused         | Auto-complete, show filters   | Filters feel natural |
+| 3    | Views results          | Scanning        | Show 20 results, map, sorting | Results match intent |
+| 4    | Refines filters        | Deliberate      | Live filter updates           | <500ms response      |
+| 5    | Sees saved count       | Encouraged      | "Saved 3" badge               | Clear feedback       |
+| 6    | Scrolls/pages results  | Browsing        | Pagination or infinite scroll | Feels fast           |
+| 7    | Saves listing          | Satisfied       | Toast: "Saved" + star badge   | Permanent save       |
 
 ### Failure Paths
+
 - No results → Show "Try adjusting filters" + suggestions
 - Results feel irrelevant → Show comparables to help user evaluate
 - Slow search → Show skeleton cards while loading
 
 ### Emotional Arc
+
 Hopeful → Focused → Satisfied (or frustrated if results miss mark)
 
 ---
@@ -51,23 +54,25 @@ Hopeful → Focused → Satisfied (or frustrated if results miss mark)
 
 ### Steps
 
-| Step | User Action | Emotional State | System Behavior | Success Criteria |
-|------|-------------|-----------------|-----------------|-----------------|
-| 1 | Clicks listing | Intrigued | Load gallery, description, map | Fast hero image |
-| 2 | Scrolls photos | Evaluating | Smooth carousel, full-screen option | Photos load quickly |
-| 3 | Reads details | Investigating | Description, beds/baths, price, tax | Clear, scannable layout |
-| 4 | Checks neighborhood | Curious | Map, nearby schools, transit, walkability | Interactive map works |
-| 5 | Sees comps | Confident | 3-5 similar recent sales | Data is transparent |
-| 6 | Reads agent bio | Trusting | Photo, name, reviews, response time | Feels human, credible |
-| 7 | Schedules viewing | Committed | Calendar, time slots, easy confirmation | Instant confirmation |
-| 8 | Or makes offer | Serious | Pre-filled buyer info, offer amount, conditions | Form is fast |
+| Step | User Action         | Emotional State | System Behavior                                 | Success Criteria        |
+| ---- | ------------------- | --------------- | ----------------------------------------------- | ----------------------- |
+| 1    | Clicks listing      | Intrigued       | Load gallery, description, map                  | Fast hero image         |
+| 2    | Scrolls photos      | Evaluating      | Smooth carousel, full-screen option             | Photos load quickly     |
+| 3    | Reads details       | Investigating   | Description, beds/baths, price, tax             | Clear, scannable layout |
+| 4    | Checks neighborhood | Curious         | Map, nearby schools, transit, walkability       | Interactive map works   |
+| 5    | Sees comps          | Confident       | 3-5 similar recent sales                        | Data is transparent     |
+| 6    | Reads agent bio     | Trusting        | Photo, name, reviews, response time             | Feels human, credible   |
+| 7    | Schedules viewing   | Committed       | Calendar, time slots, easy confirmation         | Instant confirmation    |
+| 8    | Or makes offer      | Serious         | Pre-filled buyer info, offer amount, conditions | Form is fast            |
 
 ### Failure Paths
+
 - Photos missing → Show placeholder + agent contact option
 - Map not loading → Show text-based neighborhood info
 - Agent not responsive → Show alternative agents or buyer option
 
 ### Emotional Arc
+
 Intrigued → Evaluating → Confident → Committed (or doubtful → exit)
 
 ---
@@ -77,6 +82,7 @@ Intrigued → Evaluating → Confident → Committed (or doubtful → exit)
 **Actor:** Buyer + Agent | **Duration:** 2 days total (scheduling + showing)
 
 ### Buyer Steps
+
 1. Selects viewing time from agent's calendar
 2. Confirms in-app
 3. Gets reminder 24 hours before
@@ -84,6 +90,7 @@ Intrigued → Evaluating → Confident → Committed (or doubtful → exit)
 5. Can message agent questions before viewing
 
 ### Agent Steps
+
 1. Lists available times
 2. Receives buyer confirmation notification
 3. Gets reminder before showing
@@ -91,11 +98,13 @@ Intrigued → Evaluating → Confident → Committed (or doubtful → exit)
 5. Collects feedback after showing
 
 ### Pain Points
+
 - Timezone confusion → Show in buyer's local timezone
 - Calendar conflicts → Show next available slot
 - Agent non-responsive → Escalation path or alternative
 
 ### Emotional Arc
+
 **Buyer:** Anticipation → Excitement (at showing) → Reflection  
 **Agent:** Prepared → Engaged → Documented
 
@@ -106,6 +115,7 @@ Intrigued → Evaluating → Confident → Committed (or doubtful → exit)
 **Actor:** Buyer + Agent + Seller Agent | **Duration:** 2-7 days
 
 ### Timeline
+
 ```
 Day 1: Buyer creates offer (amount, conditions, contingencies)
        System routes to listing agent
@@ -125,6 +135,7 @@ Day 5+: Offer accepted
 ```
 
 ### User Actions (Buyer Perspective)
+
 1. Navigate to "Make Offer"
 2. Enter offer amount, move-in date, contingencies
 3. Review terms, submit
@@ -136,12 +147,14 @@ Day 5+: Offer accepted
 9. **Notification:** "Offer accepted!" → Next steps form
 
 ### Emotional States
+
 - **Creating offer:** Nervous/hopeful (entering a number is commitment)
 - **Waiting for response:** Anxious/excited
 - **Counter arrives:** Deflated (if much higher) or relieved (if close)
 - **Accepted:** Euphoric/terrified (just made huge purchase!)
 
 ### System Behavior
+
 - Real-time notifications (not next day)
 - Clear timeline of all offers/counters
 - Message thread for questions
@@ -157,23 +170,27 @@ Day 5+: Offer accepted
 ### Scenarios
 
 **Scenario A: Quick Questions**
+
 - Buyer: "When can I see this again?"
 - Agent: Reply within 2 hours (shows online status)
 - Buyer sees typing indicator
 - Message persists in listing detail page
 
 **Scenario B: Multi-Party Negotiation**
+
 - Buyer + Buyer's Agent + Listing Agent + Seller's Agent
 - Group chat auto-created when offer made
 - All can see message history
 - Notifications only for relevant parties
 
 **Scenario C: Document Sharing**
+
 - Agent shares inspection report
 - Buyer can view in-app, download, or forward
 - Timestamps show when agent shared, when buyer viewed
 
 ### Emotional Arc
+
 Empowered (fast communication) → Trusting (responsive agent) → Relaxed (knows next step)
 
 ---
@@ -184,25 +201,27 @@ Empowered (fast communication) → Trusting (responsive agent) → Relaxed (know
 
 ### Steps
 
-| Step | User Action | System Behavior | Validation |
-|------|-------------|-----------------|-----------|
-| 1 | Clicks "Sign Up" | Show form: email + persona | - |
-| 2 | Enters email | Check if registered | Real-time feedback |
-| 3 | Checks email for code | Send OTP | OTP via email (6 digits) |
-| 4 | Enters OTP | Verify, show password form | Attempt limit: 3x |
-| 5 | Sets password | Strength meter | 8+ chars, mixed case/number |
-| 6 | Optional: Social | Google/Apple/Facebook flow | Faster for some users |
-| 7 | Phone number (optional) | SMS notifications opt-in | Pre-filled if social gave it |
-| 8 | Confirm persona | Buyer/Agent/Seller selector | Clear descriptions |
-| 9 | Done → Home | Show next steps for persona | Immediate value |
+| Step | User Action             | System Behavior             | Validation                   |
+| ---- | ----------------------- | --------------------------- | ---------------------------- |
+| 1    | Clicks "Sign Up"        | Show form: email + persona  | -                            |
+| 2    | Enters email            | Check if registered         | Real-time feedback           |
+| 3    | Checks email for code   | Send OTP                    | OTP via email (6 digits)     |
+| 4    | Enters OTP              | Verify, show password form  | Attempt limit: 3x            |
+| 5    | Sets password           | Strength meter              | 8+ chars, mixed case/number  |
+| 6    | Optional: Social        | Google/Apple/Facebook flow  | Faster for some users        |
+| 7    | Phone number (optional) | SMS notifications opt-in    | Pre-filled if social gave it |
+| 8    | Confirm persona         | Buyer/Agent/Seller selector | Clear descriptions           |
+| 9    | Done → Home             | Show next steps for persona | Immediate value              |
 
 ### Failure Paths
+
 - Email already registered → "Account exists, sign in" + forgot password link
 - OTP expired → "Resend code" option
 - Password weak → Clear requirements + try again
 - Social auth fails → Fallback to email signup
 
 ### Emotional Arc
+
 Excited → Reassured (validation feedback) → Ready (persona chosen)
 
 ---
@@ -212,6 +231,7 @@ Excited → Reassured (validation feedback) → Ready (persona chosen)
 **Actor:** Buyer | **Duration:** 5-10 minutes (one-time + updates)
 
 ### Profile Section
+
 - Profile photo (optional)
 - Saved search preferences
 - Notification settings (email, SMS, in-app)
@@ -219,27 +239,29 @@ Excited → Reassured (validation feedback) → Ready (persona chosen)
 - Privacy settings (show/hide profile to agents)
 
 ### Actions
+
 - Update password
 - Change email/phone
 - Delete account
 - Download data (GDPR)
 
 ### Emotional Arc
+
 Confident (taking control) → Personalized (preferences saved)
 
 ---
 
 ## Emotional Arc Summary
 
-| Journey | Hopeful | Focused | Confident | Committed | Satisfied |
-|---------|---------|---------|-----------|-----------|-----------|
-| Search | ✓ | ✓ | ✓ |  | ✓ |
-| Detail | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Viewing |  | ✓ | ✓ |  |  |
-| Offer |  | ✓ |  | ✓ | ✓ |
-| Messaging | ✓ | ✓ | ✓ |  |  |
-| Auth | ✓ |  |  |  | ✓ |
-| Profile |  |  | ✓ |  | ✓ |
+| Journey   | Hopeful | Focused | Confident | Committed | Satisfied |
+| --------- | ------- | ------- | --------- | --------- | --------- |
+| Search    | ✓       | ✓       | ✓         |           | ✓         |
+| Detail    | ✓       | ✓       | ✓         | ✓         | ✓         |
+| Viewing   |         | ✓       | ✓         |           |           |
+| Offer     |         | ✓       |           | ✓         | ✓         |
+| Messaging | ✓       | ✓       | ✓         |           |           |
+| Auth      | ✓       |         |           |           | ✓         |
+| Profile   |         |         | ✓         |           | ✓         |
 
 ---
 

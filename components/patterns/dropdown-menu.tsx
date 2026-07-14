@@ -1,84 +1,86 @@
-'use client'
+"use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface DropdownMenuProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
+    children: ReactNode;
 }
 
 interface DropdownMenuTriggerProps extends HTMLAttributes<HTMLButtonElement> {
-  children: ReactNode
+    children: ReactNode;
 }
 
 interface DropdownMenuContentProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
+    children: ReactNode;
 }
 
 interface DropdownMenuItemProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode
+    children: ReactNode;
 }
 
 const DropdownMenu = forwardRef<HTMLDivElement, DropdownMenuProps>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('relative inline-block group', className)}
-      {...props}
-    />
-  )
-)
+    ({ className, ...props }, ref) => (
+        <div
+            ref={ref}
+            className={cn("group relative inline-block", className)}
+            {...props}
+        />
+    ),
+);
 
-DropdownMenu.displayName = 'DropdownMenu'
+DropdownMenu.displayName = "DropdownMenu";
 
-const DropdownMenuTrigger = forwardRef<HTMLButtonElement, DropdownMenuTriggerProps>(
-  ({ className, ...props }, ref) => (
+const DropdownMenuTrigger = forwardRef<
+    HTMLButtonElement,
+    DropdownMenuTriggerProps
+>(({ className, ...props }, ref) => (
     <button
-      ref={ref}
-      className={cn(
-        'inline-flex items-center justify-center px-4 py-2 bg-background-muted border border-border rounded-sm text-text hover:border-accent transition-colors',
-        className
-      )}
-      {...props}
+        ref={ref}
+        className={cn(
+            "bg-background-muted border-border text-text hover:border-accent inline-flex items-center justify-center rounded-sm border px-4 py-2 transition-colors",
+            className,
+        )}
+        {...props}
     />
-  )
-)
+));
 
-DropdownMenuTrigger.displayName = 'DropdownMenuTrigger'
+DropdownMenuTrigger.displayName = "DropdownMenuTrigger";
 
-const DropdownMenuContent = forwardRef<HTMLDivElement, DropdownMenuContentProps>(
-  ({ className, ...props }, ref) => (
+const DropdownMenuContent = forwardRef<
+    HTMLDivElement,
+    DropdownMenuContentProps
+>(({ className, ...props }, ref) => (
     <div
-      ref={ref}
-      className={cn(
-        'absolute hidden group-hover:block right-0 mt-2 w-48 bg-background-muted border border-border rounded-sm shadow-lg z-50 py-1',
-        className
-      )}
-      {...props}
+        ref={ref}
+        className={cn(
+            "bg-background-muted border-border absolute right-0 z-50 mt-2 hidden w-48 rounded-sm border py-1 shadow-lg group-hover:block",
+            className,
+        )}
+        {...props}
     />
-  )
-)
+));
 
-DropdownMenuContent.displayName = 'DropdownMenuContent'
+DropdownMenuContent.displayName = "DropdownMenuContent";
 
 const DropdownMenuItem = forwardRef<HTMLDivElement, DropdownMenuItemProps>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn(
-        'px-4 py-2 text-sm text-text hover:bg-background cursor-pointer transition-colors',
-        className
-      )}
-      {...props}
-    />
-  )
-)
+    ({ className, ...props }, ref) => (
+        <div
+            ref={ref}
+            className={cn(
+                "text-text hover:bg-background cursor-pointer px-4 py-2 text-sm transition-colors",
+                className,
+            )}
+            {...props}
+        />
+    ),
+);
 
-DropdownMenuItem.displayName = 'DropdownMenuItem'
+DropdownMenuItem.displayName = "DropdownMenuItem";
 
 export {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-}
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+};

@@ -34,18 +34,21 @@ open http://localhost:3000
 ### Key Directories
 
 **app/** — Next.js routes and server-side logic
+
 - `layout.tsx` — Root layout with providers
 - `page.tsx` — Home page
 - `(auth)/` — Authentication routes (signup, login, reset password)
 - `api/` — API route handlers
 
 **components/** — Reusable React components
+
 - `ui/` — Primitives (Button, Card, Input, etc.)
 - `sections/` — Page sections (Hero, Features, etc.)
 - `layout/` — Layout components (Header, Footer, AppLayout)
 - `providers/` — Context providers (Query, Auth, Theme, etc.)
 
 **lib/** — Business logic and utilities
+
 - `api/` — API client functions (no hooks)
 - `types/` — TypeScript types
 - `validations/` — Zod schemas for runtime validation
@@ -55,6 +58,7 @@ open http://localhost:3000
 - `tokens.ts` — Design token exports
 
 **styles/** — Global styles
+
 - `tokens.css` — CSS variables (colors, spacing, typography, motion)
 - `globals.css` — Global styles, utility classes, component defaults
 
@@ -73,14 +77,14 @@ open http://localhost:3000
 All design values live in CSS variables (see `styles/tokens.css`):
 
 ```css
---color-primary: #1a1d2e           /* Charcoal luxury */
---color-accent: #ff7a3d            /* Burnt orange (sparingly) */
---text-h1: 4.5rem                  /* Massive headlines */
---space-12: 5rem                   /* Extreme breathing room */
---motion-normal: 350ms             /* Subtle motion */
+--color-primary: #1a1d2e /* Charcoal luxury */ --color-accent: #ff7a3d
+    /* Burnt orange (sparingly) */ --text-h1: 4.5rem /* Massive headlines */
+    --space-12: 5rem /* Extreme breathing room */ --motion-normal: 350ms
+    /* Subtle motion */;
 ```
 
 Use these in CSS/Tailwind classes:
+
 ```tsx
 <h1 className="text-h1 font-display font-light text-text">Heading</h1>
 <div className="p-6 gap-8">Content with luxury spacing</div>
@@ -89,6 +93,7 @@ Use these in CSS/Tailwind classes:
 ### Component API
 
 **Button**
+
 ```tsx
 <Button variant="primary" | "secondary" | "ghost" size="sm" | "md" | "lg">
   Click me
@@ -96,18 +101,20 @@ Use these in CSS/Tailwind classes:
 ```
 
 **Card**
+
 ```tsx
 <Card>
-  <CardHeader>
-    <CardTitle>Title</CardTitle>
-    <CardDescription>Description</CardDescription>
-  </CardHeader>
-  <CardContent>{children}</CardContent>
-  <CardFooter>{children}</CardFooter>
+    <CardHeader>
+        <CardTitle>Title</CardTitle>
+        <CardDescription>Description</CardDescription>
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+    <CardFooter>{children}</CardFooter>
 </Card>
 ```
 
 **Container**
+
 ```tsx
 <Container size="sm" | "md" | "lg" | "full">
   Content with max-width constraint
@@ -129,26 +136,33 @@ Use these in CSS/Tailwind classes:
 ### Patterns
 
 **API Functions** (no hooks)
+
 ```typescript
 // lib/api/listings.ts
 export const listingsAPI = {
-  async search(query: SearchQuery) { /* ... */ },
-  async getById(id: string) { /* ... */ },
-}
+    async search(query: SearchQuery) {
+        /* ... */
+    },
+    async getById(id: string) {
+        /* ... */
+    },
+};
 ```
 
 **API Hooks** (wraps API functions)
+
 ```typescript
 // lib/hooks/use-listings.ts
 export function useListings(query: SearchQuery) {
-  return useQuery({
-    queryKey: ['listings', query],
-    queryFn: () => listingsAPI.search(query),
-  })
+    return useQuery({
+        queryKey: ["listings", query],
+        queryFn: () => listingsAPI.search(query),
+    });
 }
 ```
 
 **Components** (consume hooks)
+
 ```tsx
 export function SearchPage() {
   const { data } = useListings(params)
@@ -157,16 +171,18 @@ export function SearchPage() {
 ```
 
 **Validation** (Zod schemas)
+
 ```typescript
 export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-})
+    email: z.string().email(),
+    password: z.string().min(8),
+});
 
-export type LoginInput = z.infer<typeof loginSchema>
+export type LoginInput = z.infer<typeof loginSchema>;
 ```
 
 **Styling** (token-first, no inline)
+
 ```tsx
 // ✓ Good: Use design tokens
 <button className="bg-accent text-text hover:bg-accent-dark">
@@ -248,6 +264,7 @@ pnpm format
 ## Next Steps (Sprint 2-3)
 
 Component library (80+ components):
+
 - Primitives: Button, Input, Select, Checkbox, Badge, Avatar, Skeleton, Modal, Toast, Tooltip
 - Patterns: Filter panel, Data table, Dropdown, Tabs, Accordion, Pagination, Date picker, File upload
 - Sections: Hero, Listing card, Results grid, Photo gallery, Agent card, Offer form
@@ -257,20 +274,24 @@ See `/design-os/LUXURY-IMPLEMENTATION-PROMPT.md` for complete roadmap.
 ## Troubleshooting
 
 **Build fails with TypeScript errors**
+
 - Run `pnpm type-check` to see all errors
 - Ensure all imports use absolute paths (`@/...`)
 - Check that types are derived from Zod schemas
 
 **Prettier doesn't format on save**
+
 - Ensure hook is configured in `.claude/settings.json`
 - Run `pnpm format` manually
 
 **Styles not applying**
+
 - Check that `styles/globals.css` is imported in root layout
 - Verify CSS variable names in tokens.css
 - Test in browser DevTools (check computed styles)
 
 **Tests failing**
+
 - Ensure `STALE_TIME` and `CACHE_TIME` constants match API expectations
 - Check that mocked API responses match Zod schemas
 

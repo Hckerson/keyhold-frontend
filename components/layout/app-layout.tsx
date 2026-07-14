@@ -1,16 +1,16 @@
-import { Header } from './header'
-import { Footer } from './footer'
+import { Header } from "./header";
+import { Footer } from "./footer";
 
 interface AppLayoutProps {
-  children: React.ReactNode
+    children: React.ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow w-full">{children}</main>
-      <Footer />
-    </div>
-  )
+    return (
+        <div className="flex min-h-screen flex-col">
+            <Header />
+            <main className="w-full grow">{children}</main>
+            <Footer />
+        </div>
+    );
 }

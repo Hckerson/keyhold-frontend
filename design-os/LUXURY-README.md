@@ -26,6 +26,7 @@ Original Design OS + Luxury Direction:
 **What:** Design token system + component styling for Horizon Grove aesthetic
 
 **Contains:**
+
 - Color palette (charcoal black, burnt orange, off-white)
 - Typography (thin, elegant, generous spacing)
 - Spacing system (extreme whitespace)
@@ -34,7 +35,8 @@ Original Design OS + Luxury Direction:
 - Dark mode as primary
 - WCAG AA contrast verified
 
-**Use:** 
+**Use:**
+
 1. Read this first (30 min)
 2. Load tokens into `/styles/tokens.css`
 3. Load tokens into `/lib/tokens.ts`
@@ -46,6 +48,7 @@ Original Design OS + Luxury Direction:
 **What:** 6 new features that make this a luxury platform
 
 **Features:**
+
 1. Private Viewing System — Appointment-only properties, approval workflow
 2. Concierge Messaging — White-glove service, 2-hour SLA, priority queue
 3. VIP Access Tiers — Standard/Premium/Platinum, tier-gated properties, verification
@@ -54,6 +57,7 @@ Original Design OS + Luxury Direction:
 6. Secure Documents — Encrypted vault, watermarking, access tracking
 
 **Use:**
+
 1. Read this (45 min)
 2. Copy feature requirements into sprint plan
 3. Integrate into Phase 8 database schema
@@ -64,6 +68,7 @@ Original Design OS + Luxury Direction:
 **What:** Master implementation guide for 16-week build (core + luxury)
 
 **Contains:**
+
 - Sprint breakdown (8 sprints, weeks 1-16)
 - Hour estimates per sprint
 - Code standards (from CLAUDE.md)
@@ -72,7 +77,8 @@ Original Design OS + Luxury Direction:
 - Deployment checklist
 - Success metrics
 
-**Use:** 
+**Use:**
+
 1. Copy entire contents
 2. Paste into next Claude Code session
 3. Follow week-by-week
@@ -83,17 +89,20 @@ Original Design OS + Luxury Direction:
 ## File Reading Order
 
 **Before you code:**
+
 1. LUXURY-VISUAL-DIRECTION.md (30 min) — understand aesthetic
 2. LUXURY-FEATURES-ADDENDUM.md (45 min) — understand features
 3. LUXURY-IMPLEMENTATION-PROMPT.md (15 min) — understand timeline
 4. phase-8-frontend-architecture.md (30 min) — codebase layout
 
 **While you code (reference):**
+
 - phase-4-page-blueprints.md — building a page? See spec here
 - phase-6-component-library.md — building a component? See spec here
 - phase-7-design-tokens.md + LUXURY-VISUAL-DIRECTION.md — token values
 
 **At the end (verify):**
+
 - phase-10-qa-checklist.md — pre-launch verification
 
 ---
@@ -101,6 +110,7 @@ Original Design OS + Luxury Direction:
 ## What's the Same?
 
 **Unchanged from core Design OS:**
+
 - Phases 1-3 (strategy, UX, IA) — just repositioned for luxury segment
 - Phase 8 (architecture) — same folder structure, supports luxury tables
 - Phase 10 (QA) — same testing standards, same checklist
@@ -112,12 +122,14 @@ Original Design OS + Luxury Direction:
 ## What's Different?
 
 **Design (Phase 7):**
+
 - Color: Charcoal primary (was blue) + burnt orange (was orange)
 - Typography: Thin, elegant (was neutral sans-serif)
 - Spacing: Extreme, generous whitespace (was standard)
 - Feel: Dark luxury minimalism (was professional corporate)
 
 **Features (New):**
+
 - Private viewings (appointment-only)
 - Concierge (white-glove service)
 - VIP tiers (exclusive access)
@@ -126,6 +138,7 @@ Original Design OS + Luxury Direction:
 - Documents (secure vault)
 
 **Timeline:**
+
 - Core: 1120 hours
 - Luxury features: +370 hours
 - Total: ~1490 hours (still 16 weeks with 5-6 engineers)
@@ -136,9 +149,9 @@ Original Design OS + Luxury Direction:
 
 1. **New Claude Code session**
 2. **Copy this file:**
-   ```
-   c:\Users\emman\Downloads\Personal\js\web\real-estate\frontend\design-os\LUXURY-IMPLEMENTATION-PROMPT.md
-   ```
+    ```
+    c:\Users\emman\Downloads\Personal\js\web\real-estate\frontend\design-os\LUXURY-IMPLEMENTATION-PROMPT.md
+    ```
 3. **Paste entire contents into new session**
 4. **That prompt has everything.** Follow it sprint-by-sprint.
 5. **Reference other design phase files** as needed (they're all in `/design-os/`)
@@ -147,21 +160,22 @@ Original Design OS + Luxury Direction:
 
 ## Quick Stats
 
-| Metric | Core | + Luxury | Total |
-|--------|------|----------|-------|
-| **Hours** | 1120 | 370 | 1490 |
-| **Weeks** | 16 | (integrated) | 16 |
-| **Engineers** | 5-6 | (same team) | 5-6 |
-| **Pages** | 21 | +0 | 21 |
-| **Features** | Core marketplace | +6 luxury | 27 features |
-| **Components** | 80 | (restyled) | 80 |
-| **Sprints** | 8 | (updated) | 8 |
+| Metric         | Core             | + Luxury     | Total       |
+| -------------- | ---------------- | ------------ | ----------- |
+| **Hours**      | 1120             | 370          | 1490        |
+| **Weeks**      | 16               | (integrated) | 16          |
+| **Engineers**  | 5-6              | (same team)  | 5-6         |
+| **Pages**      | 21               | +0           | 21          |
+| **Features**   | Core marketplace | +6 luxury    | 27 features |
+| **Components** | 80               | (restyled)   | 80          |
+| **Sprints**    | 8                | (updated)    | 8           |
 
 ---
 
 ## Success Looks Like
 
 **Week 16:**
+
 - ✓ All 21 pages live
 - ✓ 6 luxury features working
 - ✓ Dark luxury aesthetic (Horizon Grove)
@@ -170,6 +184,7 @@ Original Design OS + Luxury Direction:
 - ✓ Ready for launch
 
 **Market Impact:**
+
 - ✓ Luxury positioning (not generic)
 - ✓ VIP tier adoption >30%
 - ✓ Average deal size $1M+ (vs $400k mass market)

@@ -1,60 +1,63 @@
-import { config } from '@/lib/constants'
-import type { Listing } from '@/lib/types'
+import { config } from "@/lib/constants";
+import type { Listing } from "@/lib/types";
 
 export const listingsAPI = {
-  async search(query: Record<string, unknown>) {
-    const params = new URLSearchParams()
-    Object.entries(query).forEach(([key, value]) => {
-      if (value) params.append(key, String(value))
-    })
+    async search(query: Record<string, unknown>) {
+        const params = new URLSearchParams();
+        Object.entries(query).forEach(([key, value]) => {
+            if (value) params.append(key, String(value));
+        });
 
-    const response = await fetch(`${config.api.base}/api/listings?${params}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
+        const response = await fetch(
+            `${config.api.base}/api/listings?${params}`,
+            {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            },
+        );
 
-    if (!response.ok) throw new Error('Failed to fetch listings')
-    return response.json() as Promise<{ listings: Listing[] }>
-  },
+        if (!response.ok) throw new Error("Failed to fetch listings");
+        return response.json() as Promise<{ listings: Listing[] }>;
+    },
 
-  async getById(id: string) {
-    const response = await fetch(`${config.api.base}/api/listings/${id}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
+    async getById(id: string) {
+        const response = await fetch(`${config.api.base}/api/listings/${id}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        });
 
-    if (!response.ok) throw new Error('Failed to fetch listing')
-    return response.json() as Promise<Listing>
-  },
+        if (!response.ok) throw new Error("Failed to fetch listing");
+        return response.json() as Promise<Listing>;
+    },
 
-  async create(data: Record<string, unknown>) {
-    const response = await fetch(`${config.api.base}/api/listings`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
+    async create(data: Record<string, unknown>) {
+        const response = await fetch(`${config.api.base}/api/listings`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
 
-    if (!response.ok) throw new Error('Failed to create listing')
-    return response.json() as Promise<Listing>
-  },
+        if (!response.ok) throw new Error("Failed to create listing");
+        return response.json() as Promise<Listing>;
+    },
 
-  async update(id: string, data: Partial<Listing>) {
-    const response = await fetch(`${config.api.base}/api/listings/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
+    async update(id: string, data: Partial<Listing>) {
+        const response = await fetch(`${config.api.base}/api/listings/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
 
-    if (!response.ok) throw new Error('Failed to update listing')
-    return response.json() as Promise<Listing>
-  },
+        if (!response.ok) throw new Error("Failed to update listing");
+        return response.json() as Promise<Listing>;
+    },
 
-  async delete(id: string) {
-    const response = await fetch(`${config.api.base}/api/listings/${id}`, {
-      method: 'DELETE',
-    })
+    async delete(id: string) {
+        const response = await fetch(`${config.api.base}/api/listings/${id}`, {
+            method: "DELETE",
+        });
 
-    if (!response.ok) throw new Error('Failed to delete listing')
-    return response.json()
-  },
-}
+        if (!response.ok) throw new Error("Failed to delete listing");
+        return response.json();
+    },
+};

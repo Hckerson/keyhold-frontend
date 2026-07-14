@@ -7,6 +7,7 @@
 ## Overview
 
 Reusable sections that compose pages. Each includes:
+
 - Content model (data structure)
 - Layout pattern
 - Interaction behavior
@@ -18,9 +19,11 @@ Reusable sections that compose pages. Each includes:
 ## HERO SECTIONS (5)
 
 ### Section 1: Hero Search
+
 **Used on:** Home, potentially dashboard
 
 **Content Model:**
+
 - Headline: "Find Your Next Home"
 - Subheadline: "Search 10k+ properties"
 - Background image (aspirational lifestyle)
@@ -30,21 +33,25 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Full-width, centered text overlay on image
 
 **Interactions:**
+
 - Input autocomplete on location
 - Price slider on focus
 - Enter key triggers search
 - Click Search button → navigate to /search
 
 **Responsive:**
+
 - Mobile: Single column, text centered, image smaller
 - Desktop: Side-by-side text/image
 
 ---
 
 ### Section 2: Featured Carousel
+
 **Used on:** Home, dashboard
 
 **Content Model:**
+
 - 6-12 property cards
 - Image, price, address, beds/baths
 - Agent name + photo
@@ -53,12 +60,14 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Horizontal scrollable carousel on mobile, 2-3 column grid on desktop
 
 **Interactions:**
+
 - Swipe to next on mobile
 - Hover → enlarge on desktop
 - Click → navigate to listing detail
 - Star icon → save listing
 
 **Responsive:**
+
 - Mobile: 1 column + swipe
 - Tablet: 2 columns
 - Desktop: 3 columns
@@ -66,9 +75,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 3: Trust Signals
+
 **Used on:** Home, sign up page
 
 **Content Model:**
+
 - Stat card: "10k+ buyers"
 - Stat card: "$500M+ transactions"
 - Review: "5 stars - Great experience"
@@ -77,30 +88,36 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Grid (2x2 on desktop, 1 on mobile)
 
 **Interactions:**
+
 - Click stat → modal with details
 - Testimonial → link to full review
 
 ---
 
 ### Section 4: How It Works
+
 **Used on:** Home, sign up page
 
 **Content Model:**
+
 - 4 steps: Search, View, Offer, Close
 - Each step: icon + headline + description
 
 **Layout:** Timeline visual or 4-column grid
 
 **Interactions:**
+
 - Hover step → highlight
 - Click → expand description (mobile)
 
 ---
 
 ### Section 5: CTA Banner
+
 **Used on:** Home, bottom of many pages
 
 **Content Model:**
+
 - Headline: "Ready to get started?"
 - Subheadline: "Join 10k+ buyers today"
 - CTA buttons: Sign Up, Learn More
@@ -108,6 +125,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Full-width, centered text
 
 **Interactions:**
+
 - Button click → navigate or open modal
 
 ---
@@ -115,9 +133,11 @@ Reusable sections that compose pages. Each includes:
 ## LISTING SECTIONS (15)
 
 ### Section 6: Listing Gallery
+
 **Used on:** Listing detail
 
 **Content Model:**
+
 - Array of images (10-30)
 - Captions (optional)
 - Photographer credit (optional)
@@ -125,21 +145,25 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Hero image + carousel, thumbnails below
 
 **Interactions:**
+
 - Swipe next/prev
 - Click thumbnail → jump to image
 - Full-screen button → modal
 - Keyboard arrows (← →) to navigate
 
 **Responsive:**
+
 - Mobile: Full-width, tall aspect ratio
 - Desktop: Wider, shorter aspect ratio
 
 ---
 
 ### Section 7: Listing Price Bar (Sticky)
+
 **Used on:** Listing detail
 
 **Content Model:**
+
 - Price (large)
 - Status badge
 - Address
@@ -150,6 +174,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Horizontal bar, sticky on scroll
 
 **Interactions:**
+
 - Star toggle → save/unsave
 - Share → copy link / open share sheet
 - Message → scroll to agent card or open chat
@@ -158,23 +183,28 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 8: Listing Key Facts
+
 **Used on:** Listing detail, search card
 
 **Content Model:**
+
 - Beds, Baths, Sq Ft, Lot Size, Year Built
 - Optional: Garage, Basement, Pool
 
 **Layout:** 3-5 boxes in row
 
 **Interactions:**
+
 - Hover box → tooltip with description
 
 ---
 
 ### Section 9: Listing Description
+
 **Used on:** Listing detail
 
 **Content Model:**
+
 - Full text description
 - Highlights (renovations, features) in bullet points
 - Optional: Video tour link
@@ -182,15 +212,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Text block, expandable on mobile
 
 **Interactions:**
+
 - Read More button expands text (mobile)
 - Click video link → modal with embed
 
 ---
 
 ### Section 10: Neighborhood Map
+
 **Used on:** Listing detail
 
 **Content Model:**
+
 - Google Map centered on address
 - Markers: Schools, Transit, Parks, Restaurants
 - Legend with counts
@@ -198,6 +231,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Full-width map container, 400px min height
 
 **Interactions:**
+
 - Pan/zoom map
 - Click marker → popup with info
 - Legend checkbox → toggle marker type
@@ -205,24 +239,29 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 11: Comparables
+
 **Used on:** Listing detail
 
 **Content Model:**
+
 - 3-5 recent sales nearby
 - Each: image, price, date sold, address, beds/baths
 
 **Layout:** Table on desktop, cards on mobile
 
 **Interactions:**
+
 - Click row/card → navigate to listing detail (if still available)
 - Sort by price/date
 
 ---
 
 ### Section 12: Agent Card
+
 **Used on:** Listing detail
 
 **Content Model:**
+
 - Photo
 - Name, license #
 - Agency name
@@ -235,6 +274,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Vertical card, 300px wide
 
 **Interactions:**
+
 - Photo click → full profile modal
 - Call → tel: link
 - Message → scroll to message section or open chat
@@ -243,9 +283,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 13: Listing Card (Search Results)
+
 **Used on:** Search results, saved listings, featured sections
 
 **Content Model:**
+
 - Image
 - Price
 - Address
@@ -257,6 +299,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Grid card (2-3 per row desktop, 1 mobile)
 
 **Interactions:**
+
 - Click card → navigate to listing detail
 - Star icon → save/unsave
 - Hover → enlarge/shadow
@@ -265,9 +308,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 14: Listing Status Timeline
+
 **Used on:** Offer detail, CRM
 
 **Content Model:**
+
 - Timeline of listing events
 - Date listed, first offer, offer accepted, inspection, appraisal, closed
 - Each event: date, status, notes
@@ -275,15 +320,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Vertical timeline or horizontal progress
 
 **Interactions:**
+
 - Click event → detail modal
 - Estimated close date shown
 
 ---
 
 ### Section 15: Listing Moderation Queue
+
 **Used on:** Admin listings
 
 **Content Model:**
+
 - Flagged listing
 - Photos, description, location
 - Reason for flag
@@ -292,6 +340,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Card with buttons below
 
 **Interactions:**
+
 - Approve button → move to approved
 - Reject → reason required
 - Request Changes → send feedback to agent
@@ -301,9 +350,11 @@ Reusable sections that compose pages. Each includes:
 ## OFFER SECTIONS (10)
 
 ### Section 16: Offer Form
+
 **Used on:** Make offer dialog/page
 
 **Content Model:**
+
 - Listing address (read-only)
 - Offer amount (input, validation)
 - Move-in date (date picker)
@@ -315,21 +366,25 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Form in modal or full page
 
 **Interactions:**
+
 - Amount input → format as currency
 - Contingencies checkboxes → toggle requirements
 - Submit → review summary modal → confirm submit
 - Cancel → dismiss
 
 **Responsive:**
+
 - Mobile: Stack fields vertically
 - Desktop: 2-column grid
 
 ---
 
 ### Section 17: Offer Status Card
+
 **Used on:** My offers, agent pipeline
 
 **Content Model:**
+
 - Listing address
 - Your offer amount
 - Current status (Submitted / Countered / Accepted / Rejected)
@@ -339,15 +394,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Horizontal card or table row
 
 **Interactions:**
+
 - Click → expand to full offer detail
 - Status badge → tooltip with explanation
 
 ---
 
 ### Section 18: Offer Timeline
+
 **Used on:** Offer detail
 
 **Content Model:**
+
 - Vertical timeline of all offers/counters
 - Date, time, amount, status for each
 - Message history interleaved
@@ -355,15 +413,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Vertical timeline
 
 **Interactions:**
+
 - Click offer → show full details
 - Hover message → show timestamp
 
 ---
 
 ### Section 19: Counter Offer Form
+
 **Used on:** Offer detail (when offer countered)
 
 **Content Model:**
+
 - Your original offer amount
 - Seller's counter amount
 - Your new counter amount (input)
@@ -372,15 +433,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Form with comparison of amounts
 
 **Interactions:**
+
 - Counter amount input → format as currency
 - Submit → confirmation modal
 
 ---
 
 ### Section 20: Offer Comparison
+
 **Used on:** Offer detail
 
 **Content Model:**
+
 - Column 1: Your offer
 - Column 2: Current counter
 - Rows: Amount, Contingencies, Earnest money, Move-in date, Conditions
@@ -388,15 +452,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** 2-column table or cards side-by-side
 
 **Interactions:**
+
 - Hover row → highlight both cells
 - Click cell → expand detail
 
 ---
 
 ### Section 21: Inspection/Appraisal Tracker
+
 **Used on:** Offer detail (post-accepted)
 
 **Content Model:**
+
 - Inspection date (scheduled, completed, report)
 - Appraisal date (scheduled, completed, value)
 - Financing contingency (deadline, status)
@@ -405,6 +472,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Checklist with dates and status badges
 
 **Interactions:**
+
 - Click item → upload document or change date
 - Document → view/download in-app
 
@@ -413,9 +481,11 @@ Reusable sections that compose pages. Each includes:
 ## MESSAGING SECTIONS (8)
 
 ### Section 22: Message Thread
+
 **Used on:** Messages page, offer detail chat
 
 **Content Model:**
+
 - Array of messages
 - Timestamp, sender, content
 - Typing indicator (if agent typing)
@@ -423,6 +493,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Chat bubble style (mine on right, theirs on left)
 
 **Interactions:**
+
 - Scroll to load older messages
 - Typing indicator → show "Agent is typing..."
 - Click name → profile modal
@@ -430,9 +501,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 23: Message Input
+
 **Used on:** Messages page, chat sections
 
 **Content Model:**
+
 - Text input field
 - Attach button (files, photos)
 - Send button
@@ -440,6 +513,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Fixed at bottom or inline
 
 **Interactions:**
+
 - Type → grow input height (max 4 lines)
 - Attach → file picker
 - Send (Enter key or button) → submit message
@@ -448,9 +522,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 24: Message Notification
+
 **Used on:** Messages list
 
 **Content Model:**
+
 - Sender name + avatar
 - Last message preview (truncated)
 - Timestamp
@@ -459,6 +535,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** List item
 
 **Interactions:**
+
 - Click → navigate to thread
 - Unread dot → cleared on view
 - Long press → mark as read / delete / snooze (mobile)
@@ -466,9 +543,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 25: Document Share
+
 **Used on:** Messaging, offer detail
 
 **Content Model:**
+
 - Document thumbnail (preview)
 - Filename
 - Uploaded by, date
@@ -478,6 +557,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Card or list item
 
 **Interactions:**
+
 - Click → full screen viewer
 - Download → local file
 - Share → copy link or send message
@@ -491,9 +571,11 @@ Reusable sections that compose pages. Each includes:
 ## FORM SECTIONS (10)
 
 ### Section 30: Input Field
+
 **Used on:** All forms
 
 **Content Model:**
+
 - Label (required indicator if needed)
 - Placeholder text
 - Help text (optional)
@@ -502,6 +584,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Label above input
 
 **Interactions:**
+
 - Focus → label color change, border highlight
 - Type → validate in real-time
 - Blur → show error if invalid
@@ -510,9 +593,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 31: Checkbox Group
+
 **Used on:** Offer form, filter panel
 
 **Content Model:**
+
 - Label
 - Array of checkbox items
 - Help text per item
@@ -520,29 +605,35 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Stack vertically
 
 **Interactions:**
+
 - Click → toggle checkbox
 - Keyboard: Space to toggle
 
 ---
 
 ### Section 32: Radio Button Group
+
 **Used on:** Filters, forms (single selection)
 
 **Content Model:**
+
 - Label
 - Array of radio options
 
 **Layout:** Stack or grid
 
 **Interactions:**
+
 - Click → select (previous deselected)
 
 ---
 
 ### Section 33: Dropdown/Select
+
 **Used on:** Forms, filters
 
 **Content Model:**
+
 - Label
 - Placeholder
 - Array of options
@@ -551,6 +642,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Closed by default, opens on click
 
 **Interactions:**
+
 - Click → expand options
 - Type → filter options
 - Arrow keys → navigate
@@ -560,9 +652,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 34: Date Picker
+
 **Used on:** Viewing scheduling, offer form
 
 **Content Model:**
+
 - Label
 - Calendar widget
 - Month/year controls
@@ -571,6 +665,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Input + popup calendar
 
 **Interactions:**
+
 - Click input → show calendar
 - Click date → select (close calendar)
 - Next/prev month → navigate
@@ -579,9 +674,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 35: Price Slider
+
 **Used on:** Filter panel
 
 **Content Model:**
+
 - Label
 - Min/max values
 - Current range selected
@@ -590,6 +687,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Range input or dual slider
 
 **Interactions:**
+
 - Drag → update range
 - Input numbers in text field → update slider
 - Reset button → default range
@@ -597,9 +695,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 36: Toggle/Switch
+
 **Used on:** Settings, notification preferences
 
 **Content Model:**
+
 - Label
 - On/off state
 - Help text
@@ -607,15 +707,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Horizontal, toggle on right
 
 **Interactions:**
+
 - Click toggle or label → switch state
 - Keyboard: Space to toggle
 
 ---
 
 ### Section 37: Search Input (Autocomplete)
+
 **Used on:** Location search, listing search
 
 **Content Model:**
+
 - Placeholder
 - Debounce suggestions (300ms)
 - Recent searches (if applicable)
@@ -623,6 +726,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Input with dropdown suggestions
 
 **Interactions:**
+
 - Type → show suggestions
 - Click suggestion → fill input / submit
 - Keyboard: Arrow up/down navigate, Enter select, Escape close
@@ -630,9 +734,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 38: File Upload
+
 **Used on:** Messages, admin uploads
 
 **Content Model:**
+
 - Drag-drop zone
 - "Choose file" button
 - File type restrictions
@@ -641,6 +747,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Dropzone area
 
 **Interactions:**
+
 - Drag file over → highlight
 - Drop → upload
 - Click → open file picker
@@ -649,9 +756,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 39: Multi-Step Form
+
 **Used on:** Sign up, complex workflows
 
 **Content Model:**
+
 - Step indicator (1/3, 2/3, 3/3)
 - Form fields for current step
 - Validation per step
@@ -660,6 +769,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Vertical progress indicator + form
 
 **Interactions:**
+
 - Next → validate current step, advance if valid
 - Back → return to previous step
 - Submit → validate all steps, submit if valid
@@ -670,9 +780,11 @@ Reusable sections that compose pages. Each includes:
 ## DASHBOARD & DATA SECTIONS (7)
 
 ### Section 40: Stat Card
+
 **Used on:** Dashboards
 
 **Content Model:**
+
 - Label (e.g., "Saved Listings")
 - Value (e.g., "5")
 - Trend (up/down with %)
@@ -681,15 +793,18 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Card (100-150px)
 
 **Interactions:**
+
 - Click → navigate to detail page
 - Hover → show description
 
 ---
 
 ### Section 41: Data Table
+
 **Used on:** Offers, listings, admin, agent dashboard
 
 **Content Model:**
+
 - Column headers (sortable)
 - Data rows (each column is cell)
 - Pagination or infinite scroll
@@ -698,6 +813,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Scrollable table (responsive: becomes cards on mobile)
 
 **Interactions:**
+
 - Click header → sort (ascending/descending)
 - Click row → detail modal or navigate
 - Checkbox → select for bulk action
@@ -706,9 +822,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 42: Pipeline Card (CRM-style)
+
 **Used on:** Agent pipeline
 
 **Content Model:**
+
 - Listing address
 - Buyer/offer amount
 - Status
@@ -719,6 +837,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Card with drag handle
 
 **Interactions:**
+
 - Drag → change status (column)
 - Click → detail modal
 - Click notes → expand
@@ -726,37 +845,45 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 43: Activity Feed
+
 **Used on:** Dashboard, offer detail
 
 **Content Model:**
+
 - Array of events (viewed, saved, offer made, offer countered, etc.)
 - Timestamp, icon, description
 
 **Layout:** Timeline style, newest first
 
 **Interactions:**
+
 - Click event → detail or navigate
 
 ---
 
 ### Section 44: Quick Stats Widget
+
 **Used on:** Dashboard, admin overview
 
 **Content Model:**
+
 - 3-4 key metrics (number + trend)
 - Icon per metric
 
 **Layout:** Grid (1-4 cards)
 
 **Interactions:**
+
 - Click card → navigate to detail
 
 ---
 
 ### Section 45: Calendar Widget
+
 **Used on:** Viewing calendar, agent calendar
 
 **Content Model:**
+
 - Month view
 - Events marked on dates
 - Event count per day
@@ -764,6 +891,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Standard calendar grid
 
 **Interactions:**
+
 - Click date → list events for that day
 - Click event → detail modal
 - Next/prev month → navigate
@@ -771,9 +899,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 46: Chart/Graph
+
 **Used on:** Agent analytics, admin reports
 
 **Content Model:**
+
 - Bar chart, line chart, pie chart (varies by metric)
 - Data points, legend
 - Tooltip on hover
@@ -781,6 +911,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Responsive container
 
 **Interactions:**
+
 - Hover → show tooltip
 - Click legend → toggle series
 - Tap on mobile → show data point details
@@ -790,9 +921,11 @@ Reusable sections that compose pages. Each includes:
 ## LAYOUT SECTIONS (3)
 
 ### Section 47: Header
+
 **Used on:** All pages
 
 **Content Model:**
+
 - Logo (clickable → home)
 - Nav links (search, saved, messages, etc. for logged-in)
 - User menu (profile, settings, logout)
@@ -803,9 +936,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 48: Footer
+
 **Used on:** All pages (public pages)
 
 **Content Model:**
+
 - Links: About, Help, Blog, Privacy, Terms
 - Social media icons
 - Newsletter signup
@@ -816,9 +951,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 49: Sidebar Navigation
+
 **Used on:** Dashboard, agent, admin
 
 **Content Model:**
+
 - Logo
 - Menu items (Dashboard, Saved, Offers, etc.)
 - Active indicator
@@ -831,9 +968,11 @@ Reusable sections that compose pages. Each includes:
 ## STATE & FEEDBACK SECTIONS (3)
 
 ### Section 50: Toast Notification
+
 **Used on:** Everywhere (save, send, error, etc.)
 
 **Content Model:**
+
 - Message
 - Icon (success, error, info, warning)
 - Close button (optional)
@@ -842,6 +981,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Fixed bottom-right (or top-right), slides out/in
 
 **Interactions:**
+
 - Click close → dismiss
 - Auto-dismiss after 5s
 - Stack multiple toasts
@@ -849,9 +989,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 51: Modal/Dialog
+
 **Used on:** Confirm actions, forms, details
 
 **Content Model:**
+
 - Title
 - Content (text, form, image, etc.)
 - Buttons (OK, Cancel, Delete, etc.)
@@ -860,6 +1002,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Centered overlay, darken background
 
 **Interactions:**
+
 - Click button → action or close
 - Click X → close
 - Click outside (if dismissible) → close
@@ -868,9 +1011,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 52: Empty State
+
 **Used on:** No results, no data
 
 **Content Model:**
+
 - Icon or illustration
 - Headline
 - Description
@@ -879,6 +1024,7 @@ Reusable sections that compose pages. Each includes:
 **Layout:** Centered, centered vertically within container
 
 **Interactions:**
+
 - Click CTA → action (search, create, etc.)
 
 ---
@@ -886,9 +1032,11 @@ Reusable sections that compose pages. Each includes:
 ## ERROR PAGES (3)
 
 ### Section 53: 404 Not Found
+
 **Used on:** Invalid routes
 
 **Content Model:**
+
 - "404" or icon
 - "Page not found" headline
 - Helpful description
@@ -897,9 +1045,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 54: 500 Server Error
+
 **Used on:** Server errors
 
 **Content Model:**
+
 - "500" or icon
 - "Something went wrong" headline
 - Description (vague for security)
@@ -909,9 +1059,11 @@ Reusable sections that compose pages. Each includes:
 ---
 
 ### Section 55: Offline/No Connection
+
 **Used on:** Network errors
 
 **Content Model:**
+
 - Icon
 - "No connection" headline
 - "Check your internet" description

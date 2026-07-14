@@ -47,6 +47,7 @@
 ### Component Library (Essential Set)
 
 **New Components:**
+
 - Button (3 variants, 3 sizes)
 - Card (with sub-components: Header, Title, Description, Content, Footer)
 - Container (responsive max-widths)
@@ -56,6 +57,7 @@
 - App Layout (integration wrapper)
 
 **Existing Enhanced:**
+
 - Avatar, Badge, Checkbox, Divider, Icon, Input, Select, Skeleton, Tag
 
 **Total:** 3 new + 6+ existing + 3 layout = 12+ components (foundation for 80+)
@@ -63,6 +65,7 @@
 ### Core Logic Layer (100% Complete)
 
 **API Client Pattern:**
+
 ```typescript
 // lib/api/listings.ts — Pure async functions
 export const listingsAPI = { search, getById, create, update, delete }
@@ -72,11 +75,13 @@ export function useListings(query) { return useQuery(...) }
 ```
 
 **Types & Validation:**
+
 - User, Listing, Offer, Message, ViewingRequest types
 - Zod schemas for auth, listing CRUD
 - Type exports from z.infer (no loose types)
 
 **Constants (No Hardcoding):**
+
 - API base URL, pagination limits
 - User tiers, viewing types, offer status
 - Request timeout, stale time, cache time
@@ -106,20 +111,20 @@ export function useListings(query) { return useQuery(...) }
 
 ### Sprint 1-2 Goals (From LUXURY-IMPLEMENTATION-PROMPT.md)
 
-| Goal | Target | Result |
-|------|--------|--------|
-| TypeScript strict | ✓ Enabled | ✓ Passing |
-| Design tokens | ✓ All defined | ✓ 50+ tokens |
-| RootLayout ready | ✓ With providers | ✓ Complete |
-| Tailwind config | ✓ Luxury palette | ✓ Extended theme |
-| CSS globals | ✓ Utilities + defaults | ✓ Complete |
-| Component library | ✓ Essentials | ✓ 12+ (foundation) |
-| Dark mode primary | ✓ Default | ✓ All dark-first |
-| Color contrast | ✓ WCAG AA | ✓ Charcoal + off-white verified |
-| Typography tested | ✓ Thin fonts | ✓ Space Grotesk + Instrument Serif |
-| Build succeeds | ✓ No errors | ✓ Production build passing |
-| Type check passes | ✓ 0 errors | ✓ Strict mode clean |
-| Lint passes | ✓ 0 errors | ✓ ESLint clean |
+| Goal              | Target                 | Result                             |
+| ----------------- | ---------------------- | ---------------------------------- |
+| TypeScript strict | ✓ Enabled              | ✓ Passing                          |
+| Design tokens     | ✓ All defined          | ✓ 50+ tokens                       |
+| RootLayout ready  | ✓ With providers       | ✓ Complete                         |
+| Tailwind config   | ✓ Luxury palette       | ✓ Extended theme                   |
+| CSS globals       | ✓ Utilities + defaults | ✓ Complete                         |
+| Component library | ✓ Essentials           | ✓ 12+ (foundation)                 |
+| Dark mode primary | ✓ Default              | ✓ All dark-first                   |
+| Color contrast    | ✓ WCAG AA              | ✓ Charcoal + off-white verified    |
+| Typography tested | ✓ Thin fonts           | ✓ Space Grotesk + Instrument Serif |
+| Build succeeds    | ✓ No errors            | ✓ Production build passing         |
+| Type check passes | ✓ 0 errors             | ✓ Strict mode clean                |
+| Lint passes       | ✓ 0 errors             | ✓ ESLint clean                     |
 
 ### Deliverable (From Guidelines)
 
@@ -200,6 +205,7 @@ Modified Files:
 **Commit:** e4491e2 (development branch)
 
 **Message:**
+
 ```
 feat: Sprint 1-2 foundation complete — luxury design system + architecture
 
@@ -239,12 +245,14 @@ Ready for Sprint 2-3: 80+ component library.
 ## Quick Links
 
 **Documentation:**
+
 - `SETUP.md` — Development setup guide
 - `CLAUDE.md` — Non-negotiable rules
 - `design-os/` — Phases 1-10 design system
 - `SPRINT_1-2_COMPLETION.md` — Detailed checklist
 
 **Start Working:**
+
 ```bash
 cd /path/to/frontend
 pnpm install
@@ -252,6 +260,7 @@ pnpm dev      # http://localhost:3000
 ```
 
 **Quality Checks:**
+
 ```bash
 pnpm type-check   # TypeScript
 pnpm lint         # ESLint
@@ -274,15 +283,15 @@ All proven in Sprint 1-2 foundation. Ready to scale.
 
 ## Success Metrics
 
-| Metric | Target | Achieved |
-|--------|--------|----------|
-| TypeScript compliance | 100% | ✓ 100% (0 `any` types) |
-| Code quality | Passing | ✓ Lint + type-check clean |
-| Build success | Yes | ✓ Production build passing |
-| Component library | Essentials | ✓ 12+ (foundation for 80+) |
-| Design system | Complete | ✓ 50+ tokens, all applied |
-| Documentation | Clear | ✓ SETUP.md + completion guide |
-| Deployment ready | Yes | ✓ Ready to build Sprint 2-3 |
+| Metric                | Target     | Achieved                      |
+| --------------------- | ---------- | ----------------------------- |
+| TypeScript compliance | 100%       | ✓ 100% (0 `any` types)        |
+| Code quality          | Passing    | ✓ Lint + type-check clean     |
+| Build success         | Yes        | ✓ Production build passing    |
+| Component library     | Essentials | ✓ 12+ (foundation for 80+)    |
+| Design system         | Complete   | ✓ 50+ tokens, all applied     |
+| Documentation         | Clear      | ✓ SETUP.md + completion guide |
+| Deployment ready      | Yes        | ✓ Ready to build Sprint 2-3   |
 
 ---
 

@@ -6,15 +6,15 @@
 
 ## Overall Progress
 
-| Sprint | Phase | Status | Commits | Pages | Components |
-|--------|-------|--------|---------|-------|------------|
-| 1-2 | Foundation | ✓ Complete | e4491e2 | — | 6 |
-| 2-3 | Component Library | ✓ Complete | 20dfab7 | — | 30+ |
-| 3-4 | Search & Discovery | ✓ Complete | 9ee8479 | 3 | — |
-| 4-5 | Authentication | ✓ Complete | 42f9bdf | 3 | — |
-| 5-6 | Buyer Dashboard | ✓ Complete | 5e8f8f9 | 7 | — |
-| 6-7 | Agent Dashboard | ✓ Complete | 8f1fad9 | 7 | — |
-| 7-8 | Admin Dashboard | ✓ Complete | 759bb0b | 7 | — |
+| Sprint | Phase              | Status     | Commits | Pages | Components |
+| ------ | ------------------ | ---------- | ------- | ----- | ---------- |
+| 1-2    | Foundation         | ✓ Complete | e4491e2 | —     | 6          |
+| 2-3    | Component Library  | ✓ Complete | 20dfab7 | —     | 30+        |
+| 3-4    | Search & Discovery | ✓ Complete | 9ee8479 | 3     | —          |
+| 4-5    | Authentication     | ✓ Complete | 42f9bdf | 3     | —          |
+| 5-6    | Buyer Dashboard    | ✓ Complete | 5e8f8f9 | 7     | —          |
+| 6-7    | Agent Dashboard    | ✓ Complete | 8f1fad9 | 7     | —          |
+| 7-8    | Admin Dashboard    | ✓ Complete | 759bb0b | 7     | —          |
 
 **Total: 28 live pages, 32+ components, 7 commits, 100% build passing**
 
@@ -26,6 +26,7 @@
 **Deliverable:** Boilerplate styled, tokens loaded, typography working
 
 ### Design System
+
 - **50+ CSS variables** (tokens.css)
 - **Color palette:** Charcoal #0a0e27 + Burnt Orange #ff7a3d
 - **Typography:** 10 sizes (H1-H6, body, labels)
@@ -34,6 +35,7 @@
 - **Shadows, borders, z-index, breakpoints**
 
 ### Root Infrastructure
+
 - Root layout with metadata
 - TanStack Query provider (configured)
 - Auth provider setup (ready)
@@ -41,6 +43,7 @@
 - All global styles applied
 
 ### Quality Metrics
+
 - ✓ TypeScript strict (0 `any` types)
 - ✓ Type check: passing
 - ✓ Lint: clean
@@ -54,47 +57,57 @@
 **Deliverable:** All variants styled, patterns proven, scalable
 
 ### UI Primitives (23)
+
 **Form Inputs:**
+
 - Input, Select, Checkbox, Textarea, Switch
 - Button (3 variants, 3 sizes)
 
 **Display:**
+
 - Card (compound: Header, Title, Description, Content, Footer)
 - Image (4 variants: hero, card, avatar, thumbnail)
 - Badge (6 variants)
 - Avatar, Icon, Tag, Divider, Skeleton
 
 **Feedback:**
+
 - Spinner (3 sizes)
 - Progress (with value/max)
 - Tooltip (4 positions)
 
 **Navigation & Layout:**
+
 - Container (responsive max-widths)
 - Breadcrumb (with separators)
 
 **Interactive:**
+
 - Modal (compound: Content, Header, Title, Body, Footer)
 - Tabs (List, Trigger, Content)
 - Accordion (Item, Trigger, Content)
 - Pagination (List, Item, Link)
 
 ### Pattern Components (3)
+
 - **FilterPanel** — Multi-group filters with accordion & checkboxes
 - **DataTable** — Generic table with columns, rows, hover states
 - **DropdownMenu** — Trigger-based menu with items
 
 ### Section Components (3)
+
 - **FeaturedListings** — Responsive grid of property cards
 - **HowItWorks** — 4-step process display
 - **TrustSignals** — Stats showcase with accent colors
 
 ### Layout Components (3)
+
 - **Header** — Sticky navigation, logo, auth buttons
 - **Footer** — Multi-column links, copyright, social
 - **AppLayout** — Integration wrapper (Header + children + Footer)
 
 ### Quality Metrics
+
 - ✓ All typed (interfaces exported)
 - ✓ Dark luxury styled (charcoal + accent)
 - ✓ WCAG 2.2 AA accessible
@@ -115,8 +128,9 @@
 ### Pages (3)
 
 **Home (/)** — Hero + Featured + Trust + Process
+
 ```
-GET / 
+GET /
 ├── HeroSection (full-bleed, CTAs)
 ├── TrustSignals (stats with accent numbers)
 ├── FeaturedListings (3 featured cards)
@@ -124,6 +138,7 @@ GET /
 ```
 
 **Search Results (/search)** — Filters + Grid + Pagination
+
 ```
 GET /search
 ├── FilterPanel (price, bedrooms, type)
@@ -133,6 +148,7 @@ GET /search
 ```
 
 **Listing Detail (/listing/:id)** — Gallery + Info + Tabs + Agent
+
 ```
 GET /listing/[id]
 ├── Hero Gallery (full-width image)
@@ -146,6 +162,7 @@ GET /listing/[id]
 ```
 
 ### Components Used
+
 - All 30+ components from Sprint 2-3
 - FilterPanel for search
 - DataTable-ready patterns
@@ -153,6 +170,7 @@ GET /listing/[id]
 - Cards, Button, Image, Badge, Container
 
 ### Quality Metrics
+
 - ✓ Type check: passing
 - ✓ Build: production passing
 - ✓ All pages rendering
@@ -170,6 +188,7 @@ GET /listing/[id]
 ### Pages (3)
 
 **Login (/login)** — Email/password authentication
+
 ```
 POST /api/auth/login
 ├── Email input (validation)
@@ -179,6 +198,7 @@ POST /api/auth/login
 ```
 
 **Signup (/signup)** — User registration
+
 ```
 POST /api/auth/signup
 ├── Full name (3+ chars)
@@ -190,6 +210,7 @@ POST /api/auth/signup
 ```
 
 **Reset Password (/reset-password)** — Email-based reset
+
 ```
 POST /api/auth/reset-password
 ├── Email input (validation)
@@ -198,15 +219,17 @@ POST /api/auth/reset-password
 ```
 
 ### Validation
+
 - **Zod schemas** (auth.ts)
-  - `loginSchema` (email, password)
-  - `signupSchema` (fullName, email, password, confirmPassword)
-  - `resetPasswordSchema` (email)
+    - `loginSchema` (email, password)
+    - `signupSchema` (fullName, email, password, confirmPassword)
+    - `resetPasswordSchema` (email)
 - **Client-side validation** with error display
 - **Loading states** on all forms
 - **Cross-field validation** (password confirmation)
 
 ### Database Schema (Ready)
+
 ```
 users
 ├── id (nanoid)
@@ -227,6 +250,7 @@ user_verifications
 ```
 
 ### Quality Metrics
+
 - ✓ Zod validation working
 - ✓ Error display per field
 - ✓ Success feedback (reset password)
@@ -238,30 +262,34 @@ user_verifications
 
 ## Live Pages Summary
 
-| Route | Purpose | Components | Status |
-|-------|---------|-----------|--------|
-| / | Home with search | HeroSection, TrustSignals, FeaturedListings, HowItWorks | ✓ |
-| /login | User login | Card, Input, Button | ✓ |
-| /signup | User registration | Card, Input, Button | ✓ |
-| /reset-password | Password reset | Card, Input, Button | ✓ |
-| /search | Property search | FilterPanel, Grid, Pagination | ✓ |
-| /listing/[id] | Property details | Tabs, Card, Image, Badge | ✓ |
-| /_not-found | 404 page | (auto) | ✓ |
+| Route           | Purpose           | Components                                              | Status |
+| --------------- | ----------------- | ------------------------------------------------------- | ------ |
+| /               | Home with search  | HeroSection, TrustSignals, FeaturedListings, HowItWorks | ✓      |
+| /login          | User login        | Card, Input, Button                                     | ✓      |
+| /signup         | User registration | Card, Input, Button                                     | ✓      |
+| /reset-password | Password reset    | Card, Input, Button                                     | ✓      |
+| /search         | Property search   | FilterPanel, Grid, Pagination                           | ✓      |
+| /listing/[id]   | Property details  | Tabs, Card, Image, Badge                                | ✓      |
+| /\_not-found    | 404 page          | (auto)                                                  | ✓      |
 
 ---
 
 ## Component Inventory
 
 ### UI Primitives: 23
+
 Button, Card, Container, Image, Input, Select, Checkbox, Avatar, Badge, Icon, Modal, Tabs, Accordion, Pagination, Progress, Spinner, Textarea, Switch, Breadcrumb, Tooltip, Tag, Divider, Skeleton
 
 ### Patterns: 3
+
 FilterPanel, DataTable, DropdownMenu
 
 ### Sections: 3
+
 FeaturedListings, HowItWorks, TrustSignals
 
 ### Layouts: 3
+
 Header, Footer, AppLayout
 
 **Total: 32 components**
@@ -287,6 +315,7 @@ Header, Footer, AppLayout
 ## Ready for Next Phases
 
 ### Sprint 5-6: Buyer Dashboard
+
 - /dashboard (overview)
 - /dashboard/saved (saved listings)
 - /dashboard/offers (offer tracking)
@@ -296,6 +325,7 @@ Header, Footer, AppLayout
 - /dashboard/settings (profile, preferences)
 
 ### Sprint 6-7: Agent Dashboard
+
 - /agent/dashboard (pipeline overview)
 - /agent/listings (property management)
 - /agent/leads (inquiry tracking)
@@ -305,6 +335,7 @@ Header, Footer, AppLayout
 - /agent/concierge (VIP client management)
 
 ### Sprint 7-8: Admin Dashboard
+
 - /admin (system overview)
 - /admin/listings (content moderation)
 - /admin/users (user management)
@@ -318,33 +349,37 @@ Header, Footer, AppLayout
 ## Architecture Proven
 
 ### Pattern 1: Page Layout
+
 ```tsx
 <Container>
-  <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-    <main>...</main>
-    <aside>...</aside>
-  </div>
+    <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+        <main>...</main>
+        <aside>...</aside>
+    </div>
 </Container>
 ```
 
 ### Pattern 2: Component Compound
+
 ```tsx
 <Card>
-  <CardHeader>
-    <CardTitle>Title</CardTitle>
-  </CardHeader>
-  <CardContent>Content</CardContent>
+    <CardHeader>
+        <CardTitle>Title</CardTitle>
+    </CardHeader>
+    <CardContent>Content</CardContent>
 </Card>
 ```
 
 ### Pattern 3: Form with Validation
+
 ```tsx
-const [errors, setErrors] = useState({})
-const result = schema.parse(data)
+const [errors, setErrors] = useState({});
+const result = schema.parse(data);
 // Display errors per field
 ```
 
 ### Pattern 4: Responsive Grid
+
 ```tsx
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   {items.map(...)}
@@ -368,6 +403,7 @@ const result = schema.parse(data)
 **Deliverable:** 7 dashboard pages with white-glove concierge access
 
 ### Pages (7)
+
 - `/dashboard` — Overview with stats, recent activity, quick actions
 - `/dashboard/saved` — Saved listings with image gallery and details
 - `/dashboard/offers` — Offer tracking with price comparison and status
@@ -377,6 +413,7 @@ const result = schema.parse(data)
 - `/dashboard/settings` — Profile, preferences, account security
 
 ### Features
+
 - Persistent sidebar navigation (collapsible)
 - Dashboard layout wrapper with top bar
 - Stats cards with quick links
@@ -394,6 +431,7 @@ const result = schema.parse(data)
 **Deliverable:** 7 dashboard pages with lead management and deal pipeline
 
 ### Pages (7)
+
 - `/agent` — Dashboard with pipeline overview and performance metrics
 - `/agent/listings` — Property management (active, under-offer, sold)
 - `/agent/leads` — Lead pipeline with hot/warm/cold status tracking
@@ -403,6 +441,7 @@ const result = schema.parse(data)
 - `/agent/concierge` — VIP client management and white-glove services
 
 ### Features
+
 - Sales pipeline visualization with progress tracking
 - Lead management with status and action tracking
 - Deal workflow with multiple stages (showing → offer → negotiating → closing)
@@ -420,6 +459,7 @@ const result = schema.parse(data)
 **Deliverable:** 7 dashboard pages with system governance and reporting
 
 ### Pages (7)
+
 - `/admin` — Dashboard with system alerts and health metrics
 - `/admin/listings` — Content moderation (approve/flag/reject listings)
 - `/admin/users` — User management with role/tier tracking and suspension
@@ -429,6 +469,7 @@ const result = schema.parse(data)
 - `/admin/reports` — Platform analytics and market insights by region
 
 ### Features
+
 - Content moderation workflow with flagging system
 - User management with role-based access (buyer/agent/admin)
 - Transaction tracking with commission calculations
@@ -446,6 +487,7 @@ const result = schema.parse(data)
 **Project Complete: MVP 2.0 Ready**
 
 Platform now includes:
+
 1. **Public marketplace** (3 pages) — Browse & discover properties
 2. **Buyer experience** (7 pages) — Search, save, offer, schedule viewings
 3. **Agent experience** (7 pages) — Listings, leads, pipeline, analytics
@@ -470,4 +512,4 @@ All 28 pages built, styled, and deployed.
 
 **Foundation is solid. All patterns proven. Ready to scale to 21 pages + 80+ components.**
 
-*Last updated: 2026-07-13*
+_Last updated: 2026-07-13_

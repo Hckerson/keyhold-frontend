@@ -7,6 +7,7 @@
 ## Overview
 
 Complete information architecture covering:
+
 - Site structure and page hierarchy
 - Role-based navigation models
 - Permissions matrix
@@ -66,16 +67,19 @@ Complete information architecture covering:
 **Primary Navigation:** Home → Search → Listing Detail → Sign Up
 
 **Header:**
+
 - Logo (home link)
 - Search icon/bar
 - Sign In / Sign Up buttons
 
 **Footer:**
+
 - About, Help, Blog links
 - Social media
 - Privacy, Terms
 
 **Restrictions:**
+
 - Cannot save listings
 - Cannot create offers
 - Cannot message agents
@@ -88,6 +92,7 @@ Complete information architecture covering:
 **Primary Navigation:** Home → Search → Saved/Offers/Viewings/Messages
 
 **Header:**
+
 - Logo
 - Search + filter icon
 - Saved count badge
@@ -95,6 +100,7 @@ Complete information architecture covering:
 - User menu (Profile, Settings, Logout)
 
 **Sidebar (Mobile Hamburger):**
+
 - Saved Listings
 - My Offers
 - My Viewings
@@ -103,6 +109,7 @@ Complete information architecture covering:
 - Settings
 
 **Quick Actions:**
+
 - "Save" button on listings
 - "Schedule Viewing" button on detail
 - "Make Offer" button on detail
@@ -114,12 +121,14 @@ Complete information architecture covering:
 **Primary Navigation:** Dashboard → Listings → Leads → Pipeline → Calendar → Analytics
 
 **Header:**
+
 - Logo
 - Search (for listings to preview)
 - Notifications (new leads, showing requests)
 - User menu
 
 **Sidebar:**
+
 - Dashboard (overview)
 - My Listings (grid, actions)
 - Leads (inquiries, qualification)
@@ -129,6 +138,7 @@ Complete information architecture covering:
 - Settings
 
 **Quick Actions:**
+
 - "Upload Listing" button
 - "Import CSV" for bulk actions
 - "Create Listing" dialog
@@ -140,12 +150,14 @@ Complete information architecture covering:
 **Primary Navigation:** Overview → Moderation → Users → Transactions → Payments → Reports
 
 **Header:**
+
 - Logo
 - System health (uptime, error rate)
 - Alerts badge
 - Admin menu
 
 **Sidebar:**
+
 - Dashboard (health overview)
 - Listings (moderation queue)
 - Users (verification, suspension)
@@ -155,6 +167,7 @@ Complete information architecture covering:
 - Settings (system config)
 
 **Quick Actions:**
+
 - "Approve Listing" (bulk)
 - "Suspend User"
 - "Refund Payment"
@@ -163,26 +176,27 @@ Complete information architecture covering:
 
 ## Permissions Matrix
 
-| Action | Anonymous | Buyer | Agent | Seller | Admin |
-|--------|-----------|-------|-------|--------|-------|
-| View listings | ✓ | ✓ | ✓ | - | ✓ |
-| Save listing | - | ✓ | - | - | - |
-| Create offer | - | ✓ | - | - | - |
-| Schedule viewing | - | ✓ | ✓ | ✓ | - |
-| Message agent | - | ✓ | ✓ | ✓ | - |
-| Upload listing | - | - | ✓ | ✓ | - |
-| Edit listing | - | - | ✓ (own) | ✓ (own) | ✓ (all) |
-| View offers | - | ✓ (own) | ✓ (own) | ✓ (own) | ✓ (all) |
-| Moderate listing | - | - | - | - | ✓ |
-| Suspend user | - | - | - | - | ✓ |
-| View analytics | - | - | ✓ (own) | ✓ (own) | ✓ (all) |
-| Download data | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Action           | Anonymous | Buyer   | Agent   | Seller  | Admin   |
+| ---------------- | --------- | ------- | ------- | ------- | ------- |
+| View listings    | ✓         | ✓       | ✓       | -       | ✓       |
+| Save listing     | -         | ✓       | -       | -       | -       |
+| Create offer     | -         | ✓       | -       | -       | -       |
+| Schedule viewing | -         | ✓       | ✓       | ✓       | -       |
+| Message agent    | -         | ✓       | ✓       | ✓       | -       |
+| Upload listing   | -         | -       | ✓       | ✓       | -       |
+| Edit listing     | -         | -       | ✓ (own) | ✓ (own) | ✓ (all) |
+| View offers      | -         | ✓ (own) | ✓ (own) | ✓ (own) | ✓ (all) |
+| Moderate listing | -         | -       | -       | -       | ✓       |
+| Suspend user     | -         | -       | -       | -       | ✓       |
+| View analytics   | -         | -       | ✓ (own) | ✓ (own) | ✓ (all) |
+| Download data    | ✓         | ✓       | ✓       | ✓       | ✓       |
 
 ---
 
 ## Content Taxonomy
 
 ### Property Types
+
 - Single-Family Home
 - Condo / Townhouse
 - Multi-Family (2-4 units)
@@ -191,6 +205,7 @@ Complete information architecture covering:
 - Commercial (varies by market)
 
 ### Price Ranges
+
 - $0-300k
 - $300k-500k
 - $500k-1M
@@ -198,6 +213,7 @@ Complete information architecture covering:
 - $2M+
 
 ### Listing Status
+
 - Draft (not published)
 - Published (active)
 - Pending Offer
@@ -206,6 +222,7 @@ Complete information architecture covering:
 - Expired (old/stale)
 
 ### Offer Status
+
 - Submitted
 - Countered
 - Accepted
@@ -218,6 +235,7 @@ Complete information architecture covering:
 ## Labeling Conventions
 
 ### Actions
+
 - "Save" (bookmark a listing)
 - "View" (schedule a showing)
 - "Offer" (make an offer)
@@ -225,6 +243,7 @@ Complete information architecture covering:
 - "Share" (forward listing)
 
 ### Status Badges
+
 - "New" (posted <7 days)
 - "Hot" (many saves, multiple offers)
 - "Price Reduced" (recently lowered)
@@ -232,6 +251,7 @@ Complete information architecture covering:
 - "Sold" (deal closed)
 
 ### Navigation Labels
+
 - "Saved" (not "Favorites", not "Bookmarks")
 - "My Offers" (not "Offers Made", not "Pending Offers")
 - "My Viewings" (not "Scheduled", not "Showings")
@@ -239,6 +259,7 @@ Complete information architecture covering:
 - "Settings" (not "Preferences", not "Admin")
 
 ### Empty States
+
 - "No listings saved yet. Start exploring."
 - "No offers to show. Ready to make one?"
 - "No messages. Connect with an agent."
@@ -248,6 +269,7 @@ Complete information architecture covering:
 ## Information Priority (Page Hierarchy)
 
 ### Listing Detail Page
+
 1. **Hero image** (largest, first)
 2. **Price + status** (prominent)
 3. **Address + key facts** (beds, baths, sq ft)
@@ -259,6 +281,7 @@ Complete information architecture covering:
 9. **CTAs** (Schedule Viewing, Make Offer, Save)
 
 ### Search Results
+
 1. **Filters** (sticky on desktop, collapsible on mobile)
 2. **Result count** (12 in metro, 20 nearby, etc.)
 3. **Sorting options** (Price: Low-High, Newest, Most Saved)
@@ -267,6 +290,7 @@ Complete information architecture covering:
 6. **Map toggle** (see results on map)
 
 ### Dashboard (Buyer)
+
 1. **Quick stats** (Saved: 5, Offers: 2, Viewings: 1)
 2. **Recent activity** (Last viewed, saved today)
 3. **Upcoming** (Viewing scheduled for Saturday)

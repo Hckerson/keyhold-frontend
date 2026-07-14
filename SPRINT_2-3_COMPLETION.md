@@ -17,9 +17,11 @@
 #### UI Primitives (23 components)
 
 **Existing + Enhanced:**
+
 - Button, Badge, Input, Select, Checkbox, Avatar, Divider, Tag, Icon, Skeleton
 
 **New Primitives:**
+
 - Image (responsive, 4 variants: hero, card, avatar, thumbnail)
 - Spinner (loading state, 3 sizes: sm, md, lg)
 - Modal (dialog pattern with sub-components: Content, Header, Title, Body, Footer)
@@ -107,18 +109,20 @@ All components styled with luxury design system:
 ### Compound Components
 
 Example: Card
+
 ```tsx
 <Card>
-  <CardHeader>
-    <CardTitle>Title</CardTitle>
-    <CardDescription>Description</CardDescription>
-  </CardHeader>
-  <CardContent>{children}</CardContent>
-  <CardFooter>{actions}</CardFooter>
+    <CardHeader>
+        <CardTitle>Title</CardTitle>
+        <CardDescription>Description</CardDescription>
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+    <CardFooter>{actions}</CardFooter>
 </Card>
 ```
 
 Other compound patterns:
+
 - Modal (Content, Header, Title, Body, Footer)
 - Accordion (Item, Trigger, Content)
 - Tabs (List, Trigger, Content)
@@ -128,6 +132,7 @@ Other compound patterns:
 ### Variants with Tailwind
 
 Example: Button
+
 ```tsx
 <Button variant="primary" | "secondary" | "ghost" size="sm" | "md" | "lg">
   Click me
@@ -135,6 +140,7 @@ Example: Button
 ```
 
 Other variants:
+
 - Image (hero, card, avatar, thumbnail)
 - Spinner (sm, md, lg)
 - Tooltip (top, right, bottom, left)
@@ -142,6 +148,7 @@ Other variants:
 ### Custom Hooks Pattern (Ready)
 
 All components use `forwardRef` to support:
+
 - Direct DOM access
 - Ref forwarding in compound patterns
 - Integration with form libraries (React Hook Form, etc.)
@@ -213,16 +220,16 @@ All patterns proven. Can easily create 50+ more components:
 
 ## Sprint 2-3 Checklist (vs. Guidelines)
 
-| Goal | Target | Result |
-|------|--------|--------|
-| Components built | 80+ (or foundation) | ✓ 30+ essential (proof of pattern) |
-| Styled for luxury | Dark background, colors pop | ✓ All dark-first, accent verified |
-| Accessibility | WCAG 2.2 AA | ✓ Semantic HTML, contrast, focus states |
-| Touch targets | 48px minimum | ✓ Buttons, inputs all ≥48px |
-| TypeScript | Strict, all typed | ✓ No `any`, all interfaces exported |
-| Build success | Yes | ✓ Production build passing |
-| Compound patterns | Proven | ✓ Card, Modal, Accordion, Tabs, etc. |
-| Variants working | Yes | ✓ Button, Image, Spinner, Tooltip all have variants |
+| Goal              | Target                      | Result                                              |
+| ----------------- | --------------------------- | --------------------------------------------------- |
+| Components built  | 80+ (or foundation)         | ✓ 30+ essential (proof of pattern)                  |
+| Styled for luxury | Dark background, colors pop | ✓ All dark-first, accent verified                   |
+| Accessibility     | WCAG 2.2 AA                 | ✓ Semantic HTML, contrast, focus states             |
+| Touch targets     | 48px minimum                | ✓ Buttons, inputs all ≥48px                         |
+| TypeScript        | Strict, all typed           | ✓ No `any`, all interfaces exported                 |
+| Build success     | Yes                         | ✓ Production build passing                          |
+| Compound patterns | Proven                      | ✓ Card, Modal, Accordion, Tabs, etc.                |
+| Variants working  | Yes                         | ✓ Button, Image, Spinner, Tooltip all have variants |
 
 ---
 
@@ -231,16 +238,19 @@ All patterns proven. Can easily create 50+ more components:
 Complete 80+ component target by building remaining components using proven patterns:
 
 **Notifications:**
+
 - Toast (auto-dismiss notifications)
 - Alert (inline alerts)
 - Badge (status badges)
 
 **Dialogs:**
+
 - Dialog (generic dialog)
 - AlertDialog (confirmation dialogs)
 - DrawerSheet (side drawers)
 
 **Input Enhancements:**
+
 - Combobox (searchable select)
 - DatePicker (calendar input)
 - TimePicker (time input)
@@ -249,12 +259,14 @@ Complete 80+ component target by building remaining components using proven patt
 - Rating (star rating)
 
 **Data Display:**
+
 - Tree (hierarchical data)
 - Timeline (event timeline)
 - Carousel (image carousel)
 - Stepper (multi-step form)
 
 **More Patterns:**
+
 - AuthForm (login/signup pattern)
 - SearchInput (search with suggestions)
 - FileUpload (file drag-drop)
@@ -262,6 +274,7 @@ Complete 80+ component target by building remaining components using proven patt
 - Notification (toast notification)
 
 All will follow established patterns:
+
 1. Compound components (Card pattern)
 2. Tailwind variants (Button pattern)
 3. ForwardRef (Image pattern)
@@ -271,14 +284,14 @@ All will follow established patterns:
 
 ## Success Metrics
 
-| Metric | Sprint 1-2 | Sprint 2-3 | Status |
-|--------|-----------|-----------|--------|
-| Components | 3 | 30 | ✓ 10x growth |
-| Build passing | ✓ | ✓ | ✓ Maintained |
-| Type safety | ✓ | ✓ | ✓ 0 errors |
-| Accessibility | ✓ | ✓ | ✓ WCAG AA |
-| Luxury aesthetic | ✓ | ✓ | ✓ All styled |
-| Patterns proven | ✓ | ✓ | ✓ Scalable |
+| Metric           | Sprint 1-2 | Sprint 2-3 | Status       |
+| ---------------- | ---------- | ---------- | ------------ |
+| Components       | 3          | 30         | ✓ 10x growth |
+| Build passing    | ✓          | ✓          | ✓ Maintained |
+| Type safety      | ✓          | ✓          | ✓ 0 errors   |
+| Accessibility    | ✓          | ✓          | ✓ WCAG AA    |
+| Luxury aesthetic | ✓          | ✓          | ✓ All styled |
+| Patterns proven  | ✓          | ✓          | ✓ Scalable   |
 
 ---
 
@@ -328,4 +341,3 @@ Ready to build all 21 pages.
 **Next:** Complete 80+ components, then build 21 core pages
 
 **Component count target:** 30/80+ (foundation proven, scalable)
-

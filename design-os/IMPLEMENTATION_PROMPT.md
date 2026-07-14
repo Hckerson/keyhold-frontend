@@ -11,6 +11,7 @@ You are implementing **Phase 8-10 of the Real Estate Platform Design Operating S
 **Design OS Location:** `/design-os/` folder in project root.
 
 **Read These First (In Order):**
+
 1. `design-os/DESIGN-OS-COMPLETE.md` – Master index, overview, how to use
 2. `design-os/phase-8-frontend-architecture.md` – Codebase structure (you are here)
 3. `design-os/phase-4-page-blueprints.html` – Page specifications (what to build)
@@ -36,12 +37,13 @@ You are implementing **Phase 8-10 of the Real Estate Platform Design Operating S
 **File:** `design-os/phase-8-frontend-architecture.md`
 
 This specifies:
+
 - Folder structure (where every file goes)
 - Route organization (App Router)
 - Layouts (RootLayout, AppLayout, DashboardLayout, etc.)
 - Providers (Auth, Query, Theme, Motion)
 - Hooks (API hooks, UI hooks, utils)
-- API organization (lib/api/*)
+- API organization (lib/api/\*)
 - State management (TanStack Query + Context, no unnecessary Zustand)
 - Type safety (TypeScript strict, Zod validation)
 - Environment variables
@@ -56,16 +58,16 @@ This specifies:
 
 **16-Week Sprints:**
 
-| Sprint | Weeks | Focus | Owner | Hours |
-|--------|-------|-------|-------|-------|
-| 1-2 | 1-2 | Foundation, architecture, tooling | Lead Eng | 80 |
-| 2-3 | 3-4 | Component library (primitives + patterns) | Frontend | 120 |
-| 3-4 | 5-6 | Search & discovery (home, search, listing, map) | 2-3 Eng | 160 |
-| 4-5 | 7-8 | Authentication (signup, login, reset, OAuth) | 1-2 Eng | 100 |
-| 5-6 | 9-10 | Buyer dashboard (saved, offers, viewings, messages) | 2-3 Eng | 200 |
-| 6-7 | 11-12 | Agent dashboard (listings, leads, pipeline) | 2-3 Eng | 180 |
-| 7-8 | 13-14 | Admin dashboard (moderation, users, transactions) | 1-2 Eng | 120 |
-| 8 | 15-16 | QA, accessibility, deployment | QA + Eng | 160 |
+| Sprint | Weeks | Focus                                               | Owner    | Hours |
+| ------ | ----- | --------------------------------------------------- | -------- | ----- |
+| 1-2    | 1-2   | Foundation, architecture, tooling                   | Lead Eng | 80    |
+| 2-3    | 3-4   | Component library (primitives + patterns)           | Frontend | 120   |
+| 3-4    | 5-6   | Search & discovery (home, search, listing, map)     | 2-3 Eng  | 160   |
+| 4-5    | 7-8   | Authentication (signup, login, reset, OAuth)        | 1-2 Eng  | 100   |
+| 5-6    | 9-10  | Buyer dashboard (saved, offers, viewings, messages) | 2-3 Eng  | 200   |
+| 6-7    | 11-12 | Agent dashboard (listings, leads, pipeline)         | 2-3 Eng  | 180   |
+| 7-8    | 13-14 | Admin dashboard (moderation, users, transactions)   | 1-2 Eng  | 120   |
+| 8      | 15-16 | QA, accessibility, deployment                       | QA + Eng | 160   |
 
 **Total:** ~1120 hours, 4-5 engineers, 16 weeks.
 
@@ -78,6 +80,7 @@ This specifies:
 **File:** `design-os/phase-4-page-blueprints.html` (open in browser)
 
 For each page you build, this spec defines:
+
 - Purpose & objectives
 - Primary tasks
 - Modules & sections required
@@ -87,6 +90,7 @@ For each page you build, this spec defines:
 - Dependencies (which APIs, services)
 
 **Example: Search Results Page**
+
 - Purpose: Find properties matching criteria
 - Modules: Filter Panel, Results Grid, Pagination, Map Toggle
 - Data: Listings API (search with filters)
@@ -102,6 +106,7 @@ For each page you build, this spec defines:
 **File:** `design-os/phase-10-qa-checklist.md`
 
 Before launching, verify:
+
 - ✓ Accessibility (WCAG 2.2 AA)
 - ✓ Responsive (320px-1440px+)
 - ✓ Cross-browser (Chrome, Firefox, Safari, Edge)
@@ -120,6 +125,7 @@ Before launching, verify:
 ### Week 1: Setup
 
 **Tasks:**
+
 - [ ] Read `phase-8-frontend-architecture.md` in full
 - [ ] Review existing folder structure (`app/`, `components/`, `lib/`, `hooks/`)
 - [ ] Create missing folders per Phase 8 spec
@@ -127,6 +133,7 @@ Before launching, verify:
 - [ ] Install dependencies: TanStack Query, React Hook Form, Zod, Framer Motion, Lucide
 
 **Dependencies to Add:**
+
 ```bash
 pnpm add @tanstack/react-query @tanstack/react-query-devtools
 pnpm add react-hook-form @hookform/resolvers
@@ -136,6 +143,7 @@ pnpm add clsx
 ```
 
 **Dev Dependencies:**
+
 ```bash
 pnpm add -D @types/node @types/react @types/react-dom
 pnpm add -D vitest @testing-library/react @testing-library/jest-dom
@@ -151,6 +159,7 @@ pnpm add -D eslint prettier
 ### Week 2: Architecture
 
 **Tasks:**
+
 - [ ] Create all providers (`components/providers/`: AuthProvider, QueryProvider, ThemeProvider, MotionProvider)
 - [ ] Create layout components (`components/layout/`: Header, Footer, Sidebar, AppLayout, DashboardLayout, AuthLayout)
 - [ ] Create all API client functions (`lib/api/`: listings.ts, offers.ts, messages.ts, auth.ts, users.ts)
@@ -161,6 +170,7 @@ pnpm add -D eslint prettier
 **No UI components yet. Just infrastructure.**
 
 **Output by end of week 2:**
+
 - ✓ Boilerplate ready for pages
 - ✓ Type-safe API layer
 - ✓ Environment config
@@ -176,11 +186,13 @@ pnpm add -D eslint prettier
 **Reference:** `design-os/phase-6-component-library.html`
 
 Build all primitives + patterns:
+
 - **Primitives:** Button, Input, Select, Checkbox, Badge, Icon, Image, Skeleton
 - **Patterns:** Modal, Toast, Banner, Tabs, Date Picker, Multi-Step Form
 - **Composed:** Listing Card, Filter Panel, Data Table (if needed week 5+)
 
 **Each component:**
+
 - TypeScript strict types
 - All variants per spec
 - Accessibility (keyboard, ARIA, focus)
@@ -192,18 +204,21 @@ Build all primitives + patterns:
 **Reference:** `design-os/phase-4-page-blueprints.html` (pages 1-3)
 
 Build:
+
 - [ ] Home page (/ route)
 - [ ] Search Results (/search route)
 - [ ] Listing Details (/listing/:id route)
 - [ ] Map View (/map route, optional week 6)
 
 Each page uses sections from Phase 5:
+
 - Listing Card (grid, lazy-load, save action)
 - Filter Panel (sticky, collapsible, real-time)
 - Hero Search (autocomplete, property type)
 - Photo Gallery (hero + thumbnails, swipeable)
 
 **API Integration:**
+
 - [ ] listingsAPI.search() with filters
 - [ ] listingsAPI.getById() with full details
 - [ ] Save listing (authenticated)
@@ -267,12 +282,14 @@ export function SearchResults() {
 ## Testing Strategy (Phase 10)
 
 ### Unit Tests (Vitest)
+
 - All `lib/` functions (utilities, validators, formatters)
 - All Zod schemas (validation logic)
 - Component logic (not snapshots, behavior-focused)
 - Target: >80% coverage on lib/, hooks/
 
 ### E2E Tests (Playwright)
+
 - Signup flow
 - Search flow (filter, sort, pagination)
 - Listing details navigation
@@ -280,12 +297,14 @@ export function SearchResults() {
 - Make offer (if built)
 
 ### Accessibility Tests
+
 - axe DevTools (automated)
 - Manual keyboard navigation
 - Screen reader testing (NVDA/JAWS/VoiceOver)
 - WCAG 2.2 AA compliance
 
 ### Performance Testing (Lighthouse CI)
+
 - Every page >90 score
 - LCP <2.5s, FID <100ms, CLS <0.1
 - Bundle size <250kb (gzipped)
@@ -295,6 +314,7 @@ export function SearchResults() {
 ## Deployment Checklist (Week 16)
 
 Before deploying:
+
 - [ ] All tests pass (unit + integration + E2E)
 - [ ] Type check passes (`tsc --noEmit`)
 - [ ] Lint passes (`npm run lint`)
@@ -309,24 +329,25 @@ Before deploying:
 
 ## Key References
 
-| Phase | File | Use For |
-|-------|------|---------|
-| 1 | `phase-1-product-vision.html` | Strategy, personas, KPIs (team alignment) |
-| 2 | `phase-2-experience-maps.html` | User flows, decision points (when building flows) |
-| 3 | `phase-3-information-architecture.html` | Navigation, IA, permissions (routing, auth) |
-| 4 | `phase-4-page-blueprints.html` | Page specs (REFERENCE FOR EVERY PAGE) |
-| 5 | `phase-5-section-blueprints.html` | Section specs (what sections compose pages) |
-| 6 | `phase-6-component-library.html` | Component specs (what components are in sections) |
-| 7 | `phase-7-design-tokens.html` | Token system (colors, spacing, typography) |
-| 8 | `phase-8-frontend-architecture.md` | Codebase structure (REFERENCE CONSTANTLY) |
-| 9 | `phase-9-implementation-roadmap.md` | Sprint breakdown, timelines (project planning) |
-| 10 | `phase-10-qa-checklist.md` | QA requirements (pre-launch verification) |
+| Phase | File                                    | Use For                                           |
+| ----- | --------------------------------------- | ------------------------------------------------- |
+| 1     | `phase-1-product-vision.html`           | Strategy, personas, KPIs (team alignment)         |
+| 2     | `phase-2-experience-maps.html`          | User flows, decision points (when building flows) |
+| 3     | `phase-3-information-architecture.html` | Navigation, IA, permissions (routing, auth)       |
+| 4     | `phase-4-page-blueprints.html`          | Page specs (REFERENCE FOR EVERY PAGE)             |
+| 5     | `phase-5-section-blueprints.html`       | Section specs (what sections compose pages)       |
+| 6     | `phase-6-component-library.html`        | Component specs (what components are in sections) |
+| 7     | `phase-7-design-tokens.html`            | Token system (colors, spacing, typography)        |
+| 8     | `phase-8-frontend-architecture.md`      | Codebase structure (REFERENCE CONSTANTLY)         |
+| 9     | `phase-9-implementation-roadmap.md`     | Sprint breakdown, timelines (project planning)    |
+| 10    | `phase-10-qa-checklist.md`              | QA requirements (pre-launch verification)         |
 
 ---
 
 ## Success Metrics
 
 **Sprint Completion:**
+
 - [ ] All tasks complete
 - [ ] Tests passing (>80% unit, critical E2E)
 - [ ] Zero TypeScript errors
@@ -335,12 +356,14 @@ Before deploying:
 - [ ] QA sign-off
 
 **Phase Completion:**
+
 - [ ] Architecture: Boilerplate ready, types correct, providers working
 - [ ] Components: All primitives + patterns built, accessible, tested
 - [ ] Pages: Implemented per Phase 4 spec, responsive, performant
 - [ ] QA: WCAG AA, performance, security, all passing
 
 **MVP 1.5 Launch:**
+
 - [ ] 21 pages live
 - [ ] Lighthouse >90 (all pages)
 - [ ] WCAG 2.2 AA compliant

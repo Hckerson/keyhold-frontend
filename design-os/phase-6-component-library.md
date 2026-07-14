@@ -7,6 +7,7 @@
 ## Overview
 
 Three-tier component system:
+
 1. **Primitives** (12): Button, Input, Select, Checkbox, Badge, Icon, Image, Skeleton, etc.
 2. **Patterns** (20): Modal, Toast, Table, Date Picker, Filter Panel, etc.
 3. **Composed** (48): Listing Card, Offer Form, Agent Card, Dashboard, etc.
@@ -18,6 +19,7 @@ Three-tier component system:
 ### 1. Button
 
 **Variants:**
+
 - Primary (solid, on brand color)
 - Secondary (outline, neutral border)
 - Danger (solid red, for delete/reject)
@@ -26,6 +28,7 @@ Three-tier component system:
 **Sizes:** Small (32px), Medium (40px), Large (48px)
 
 **States:**
+
 - Default
 - Hover (darken/brighten)
 - Active/Pressed (deeper color)
@@ -33,6 +36,7 @@ Three-tier component system:
 - Loading (spinner, disabled)
 
 **Props:**
+
 - `variant`: 'primary' | 'secondary' | 'danger' | 'ghost'
 - `size`: 'sm' | 'md' | 'lg'
 - `disabled`: boolean
@@ -47,6 +51,7 @@ Three-tier component system:
 ### 2. Input
 
 **Variants:**
+
 - Text (default)
 - Email
 - Password
@@ -55,6 +60,7 @@ Three-tier component system:
 - Url
 
 **States:**
+
 - Default (light border)
 - Focus (blue border, shadow)
 - Filled (gray background)
@@ -62,6 +68,7 @@ Three-tier component system:
 - Disabled (gray background, no input)
 
 **Props:**
+
 - `type`: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url'
 - `placeholder`: string
 - `value`: string
@@ -80,6 +87,7 @@ Three-tier component system:
 **States:** Closed, Open, Selected, Disabled
 
 **Props:**
+
 - `options`: Array<{label: string, value: string}>
 - `value`: string
 - `onChange`: (value: string) => void
@@ -96,6 +104,7 @@ Three-tier component system:
 **States:** Unchecked, Checked, Indeterminate, Disabled
 
 **Props:**
+
 - `checked`: boolean
 - `onChange`: (checked: boolean) => void
 - `disabled`: boolean
@@ -109,6 +118,7 @@ Three-tier component system:
 ### 5. Radio Button
 
 **Props:**
+
 - `name`: string (group identifier)
 - `value`: string (this option's value)
 - `checked`: boolean
@@ -127,6 +137,7 @@ Three-tier component system:
 **Sizes:** Small, Medium
 
 **Props:**
+
 - `variant`: 'success' | 'warning' | 'error' | 'info' | 'default'
 - `size`: 'sm' | 'md'
 - `children`: string | ReactNode
@@ -138,6 +149,7 @@ Three-tier component system:
 ### 7. Icon
 
 **Props:**
+
 - `name`: string (icon identifier, e.g., 'heart', 'message', 'pin')
 - `size`: 'sm' (16px) | 'md' (24px) | 'lg' (32px)
 - `color`: string (CSS color or token name)
@@ -145,6 +157,7 @@ Three-tier component system:
 - `aria-label`: string (for accessibility)
 
 **Types:**
+
 - Lucide React icons
 - Custom SVG icons for brand-specific needs
 
@@ -155,6 +168,7 @@ Three-tier component system:
 ### 8. Image
 
 **Props:**
+
 - `src`: string
 - `alt`: string
 - `width`: number
@@ -164,6 +178,7 @@ Three-tier component system:
 - `lazy`: boolean (lazy-load)
 
 **Behavior:**
+
 - Prevents layout shift (width/height specified)
 - Responsive (responsive prop generates srcset)
 - Lazy-loaded by default
@@ -176,6 +191,7 @@ Three-tier component system:
 ### 9. Skeleton
 
 **Props:**
+
 - `width`: number | string
 - `height`: number | string
 - `variant`: 'text' | 'circular' | 'rectangular'
@@ -188,12 +204,14 @@ Three-tier component system:
 ### 10. Avatar
 
 **Props:**
+
 - `src`: string (image URL)
 - `name`: string (fallback to initials)
 - `size`: 'sm' (32px) | 'md' (40px) | 'lg' (56px)
 - `fallback`: ReactNode (custom fallback)
 
 **Behavior:**
+
 - Image with fallback to initials
 - Circular with background color based on name hash
 
@@ -202,6 +220,7 @@ Three-tier component system:
 ### 11. Tag/Label
 
 **Props:**
+
 - `text`: string
 - `onRemove`: () => void (if removable)
 - `color`: string
@@ -213,6 +232,7 @@ Three-tier component system:
 ### 12. Divider
 
 **Props:**
+
 - `orientation`: 'horizontal' | 'vertical'
 - `margin`: number (spacing around)
 - `color`: string
@@ -224,6 +244,7 @@ Three-tier component system:
 ### 13. Modal / Dialog
 
 **Props:**
+
 - `isOpen`: boolean
 - `onClose`: () => void
 - `title`: string
@@ -233,6 +254,7 @@ Three-tier component system:
 - `closeButton`: boolean
 
 **Behavior:**
+
 - Overlay darkens background
 - Center modal, trap focus
 - Escape key closes
@@ -245,6 +267,7 @@ Three-tier component system:
 ### 14. Toast / Alert
 
 **Props:**
+
 - `message`: string
 - `type`: 'success' | 'error' | 'info' | 'warning'
 - `duration`: number (ms, 0 for persistent)
@@ -252,6 +275,7 @@ Three-tier component system:
 - `onClose`: () => void
 
 **Behavior:**
+
 - Fixed position (bottom-right)
 - Auto-dismiss after duration
 - Stack multiple toasts
@@ -264,12 +288,14 @@ Three-tier component system:
 ### 15. Tooltip
 
 **Props:**
+
 - `content`: string | ReactNode
 - `children`: ReactNode (element that triggers tooltip)
 - `position`: 'top' | 'bottom' | 'left' | 'right'
 - `delay`: number (ms before show)
 
 **Behavior:**
+
 - Show on hover
 - Hide after mouse leave or 5s
 - Smart positioning (don't go off-screen)
@@ -279,11 +305,13 @@ Three-tier component system:
 ### 16. Tabs
 
 **Props:**
+
 - `tabs`: Array<{label: string, content: ReactNode, disabled?: boolean}>
 - `activeTab`: string | number
 - `onTabChange`: (tab: string | number) => void
 
 **Behavior:**
+
 - Click tab → switch content
 - Active tab highlighted
 - Keyboard: Arrow keys navigate
@@ -295,10 +323,12 @@ Three-tier component system:
 ### 17. Accordion
 
 **Props:**
+
 - `items`: Array<{label: string, content: ReactNode, disabled?: boolean}>
 - `allowMultiple`: boolean
 
 **Behavior:**
+
 - Click label → toggle content
 - Single or multiple open (prop controls)
 - Smooth expand/collapse animation
@@ -310,12 +340,14 @@ Three-tier component system:
 ### 18. Pagination
 
 **Props:**
+
 - `currentPage`: number
 - `totalPages`: number
 - `onPageChange`: (page: number) => void
 - `showPreviousNext`: boolean
 
 **Display:**
+
 - First, Previous, page numbers (show only nearby pages), Next, Last
 - Current page highlighted
 - Ellipsis (...) for skipped pages
@@ -325,6 +357,7 @@ Three-tier component system:
 ### 19. Spinner / Loading
 
 **Props:**
+
 - `size`: 'sm' | 'md' | 'lg'
 - `color`: string
 
@@ -335,6 +368,7 @@ Three-tier component system:
 ### 20. Date Picker
 
 **Props:**
+
 - `value`: Date
 - `onChange`: (date: Date) => void
 - `minDate`: Date (optional)
@@ -343,6 +377,7 @@ Three-tier component system:
 - `placeholder`: string
 
 **Behavior:**
+
 - Click input → show calendar
 - Click date → select and close
 - Keyboard: Arrow keys navigate dates
@@ -354,12 +389,14 @@ Three-tier component system:
 ### 21. Time Picker
 
 **Props:**
+
 - `value`: string (HH:MM)
 - `onChange`: (time: string) => void
 - `step`: number (minutes, e.g., 30)
 - `is24Hour`: boolean
 
 **Behavior:**
+
 - Dropdown of times or input with spinner
 
 ---
@@ -367,6 +404,7 @@ Three-tier component system:
 ### 22. Price Input
 
 **Props:**
+
 - `value`: number
 - `onChange`: (value: number) => void
 - `min`: number
@@ -374,6 +412,7 @@ Three-tier component system:
 - `step`: number
 
 **Behavior:**
+
 - Formats input as currency ($50,000)
 - Allows manual typing of numbers
 - Shows formatted value
@@ -383,6 +422,7 @@ Three-tier component system:
 ### 23. Price Range Slider
 
 **Props:**
+
 - `min`: number
 - `max`: number
 - `minValue`: number
@@ -391,6 +431,7 @@ Three-tier component system:
 - `step`: number
 
 **Behavior:**
+
 - Two draggable handles
 - Show current range
 - Keyboard: Arrow keys adjust values
@@ -400,6 +441,7 @@ Three-tier component system:
 ### 24. Search / Autocomplete Input
 
 **Props:**
+
 - `value`: string
 - `onChange`: (value: string) => void
 - `onSearch`: (query: string) => void (for async search)
@@ -408,6 +450,7 @@ Three-tier component system:
 - `debounce`: number (ms)
 
 **Behavior:**
+
 - Show suggestions dropdown
 - Arrow keys navigate suggestions
 - Enter selects
@@ -418,12 +461,14 @@ Three-tier component system:
 ### 25. File Upload / Dropzone
 
 **Props:**
+
 - `onFiles`: (files: File[]) => void
-- `accept`: string (file types, e.g., 'image/*')
+- `accept`: string (file types, e.g., 'image/\*')
 - `maxSize`: number (bytes)
 - `multiple`: boolean
 
 **Behavior:**
+
 - Drag-drop zone highlights on drag over
 - Click to open file picker
 - Show progress bar during upload
@@ -436,6 +481,7 @@ Three-tier component system:
 ### 26. Progress Bar
 
 **Props:**
+
 - `value`: number (0-100)
 - `max`: number
 - `label`: string (optional)
@@ -448,9 +494,11 @@ Three-tier component system:
 ### 27. Breadcrumb
 
 **Props:**
+
 - `items`: Array<{label: string, href: string}>
 
 **Behavior:**
+
 - Links separated by "/"
 - Last item not a link
 - Navigable or just context
@@ -460,10 +508,12 @@ Three-tier component system:
 ### 28. Badge Count / Avatar Group
 
 **Props:**
+
 - `avatars`: Array<{name: string, src: string}>
 - `max`: number (max to show, rest in +N badge)
 
 **Behavior:**
+
 - Show first N avatars
 - Badge with remaining count: "+3"
 - Click badge → show list
@@ -473,10 +523,12 @@ Three-tier component system:
 ### 29. Dropdown Menu
 
 **Props:**
+
 - `trigger`: ReactNode (button/link that opens menu)
 - `items`: Array<{label: string, onClick: () => void, icon?: ReactNode, divider?: boolean}>
 
 **Behavior:**
+
 - Click trigger → open menu
 - Click item → action and close
 - Keyboard: Arrow keys, Enter, Escape
@@ -486,6 +538,7 @@ Three-tier component system:
 ### 30. Switch / Toggle
 
 **Props:**
+
 - `checked`: boolean
 - `onChange`: (checked: boolean) => void
 - `disabled`: boolean
@@ -504,6 +557,7 @@ Three-tier component system:
 These are built from primitives + patterns, specific to the real estate domain:
 
 **Listing Components:**
+
 - ListingCard (image, price, address, save button)
 - ListingGallery (carousel + thumbnails)
 - ListingDetails (description, facts, neighborhood)
@@ -511,24 +565,28 @@ These are built from primitives + patterns, specific to the real estate domain:
 - AgentCard (photo, name, rating, contact)
 
 **Search Components:**
+
 - SearchFilters (location, price, beds, baths filters)
 - SearchResults (grid of listing cards)
 - MapView (Google Map with listing pins)
 - SortDropdown (Price, Newest, Saved)
 
 **Offer Components:**
+
 - OfferForm (amount, contingencies, notes)
 - OfferStatus (current status card)
 - OfferTimeline (timeline of all offers)
 - CounterOfferForm (new amount + message)
 
 **Messaging Components:**
+
 - MessageThread (chat bubbles, typing indicator)
 - MessageInput (text input + send button)
 - ConversationList (list of conversations)
 - DocumentShare (preview + download)
 
 **Dashboard Components:**
+
 - DashboardStats (quick stats cards)
 - RecentActivity (activity feed)
 - UpcomingViewings (list of scheduled showings)
@@ -536,24 +594,28 @@ These are built from primitives + patterns, specific to the real estate domain:
 - MyOffers (table of active offers)
 
 **Agent Components:**
+
 - ListingGrid (agent's listings with actions)
 - LeadsList (qualified/unqualified leads)
 - PipelineCard (offer in pipeline, draggable)
 - Calendar (showing schedule)
 
 **Admin Components:**
+
 - ModerationQueue (listings to approve/reject)
 - UserTable (users with status, actions)
 - TransactionsList (payments, disputes)
 - ReportsChart (analytics visualizations)
 
 **Auth Components:**
+
 - SignUpForm (email, password, persona)
 - SignInForm (email, password)
 - OTPInput (6-digit code)
 - PasswordStrengthMeter
 
 **Layout Components:**
+
 - Header (logo, nav, user menu)
 - Footer (links, social, newsletter)
 - Sidebar (navigation menu)
@@ -578,9 +640,9 @@ type ButtonProps = {
 }
 
 // Usage
-<Button 
-  variant="primary" 
-  size="md" 
+<Button
+  variant="primary"
+  size="md"
   onClick={handleClick}
 >
   Click me
@@ -592,6 +654,7 @@ type ButtonProps = {
 ## Accessibility Standards
 
 All components meet:
+
 - ✓ WCAG 2.2 Level AA
 - ✓ Keyboard navigation
 - ✓ Screen reader support (ARIA roles, labels)
@@ -604,6 +667,7 @@ All components meet:
 ## Testing
 
 All components have:
+
 - ✓ Unit tests (Vitest) >80% coverage
 - ✓ Accessibility tests (jest-axe)
 - ✓ Visual regression tests (screenshot)

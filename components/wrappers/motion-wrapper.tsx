@@ -4,8 +4,6 @@ import { PropsWithChildren } from "react";
 export const slow = 0.2;
 export const fast = 0.1;
 
-
-
 interface Props extends PropsWithChildren {
     delay?: number;
     duration?: number;

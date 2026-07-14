@@ -7,6 +7,7 @@
 ## Overview
 
 Production-ready QA checklist ensuring:
+
 - WCAG 2.2 AA accessibility compliance
 - Responsive design (320px - 1440px+)
 - Cross-browser compatibility
@@ -22,12 +23,14 @@ Production-ready QA checklist ensuring:
 ## Accessibility (WCAG 2.2 AA)
 
 ### Color & Contrast
+
 - [ ] All text has contrast ≥4.5:1 (normal) or ≥3:1 (large text)
 - [ ] No status conveyed by color alone (use icon + text)
 - [ ] Form errors use icon + text, not color
 - [ ] Test with color blindness filters (Protanopia, Deuteranopia)
 
 ### Keyboard Navigation
+
 - [ ] Tab order is logical (left-to-right, top-to-bottom)
 - [ ] Focus indicators visible on all interactive elements
 - [ ] No keyboard traps (Tab never gets stuck)
@@ -35,6 +38,7 @@ Production-ready QA checklist ensuring:
 - [ ] ESC closes modals, Enter activates buttons
 
 ### Screen Reader
+
 - [ ] Headings in order (h1 → h2 → h3, no skips)
 - [ ] Semantic HTML (<button>, <input>, <nav>, <main>)
 - [ ] All inputs have associated labels
@@ -44,6 +48,7 @@ Production-ready QA checklist ensuring:
 - [ ] Dynamic content updates announced (aria-live)
 
 ### Forms & Inputs
+
 - [ ] Every input has <label htmlFor>
 - [ ] Required fields marked with aria-required
 - [ ] Error messages clear and actionable
@@ -55,6 +60,7 @@ Production-ready QA checklist ensuring:
 ## Responsive Design
 
 ### Mobile (320-479px)
+
 - [ ] No horizontal scroll (content fits viewport)
 - [ ] Touch targets ≥48px
 - [ ] Text readable without zoom (14-16px minimum)
@@ -62,18 +68,21 @@ Production-ready QA checklist ensuring:
 - [ ] Images responsive (max-width: 100%)
 
 ### Tablet (480-1023px)
+
 - [ ] 2-column layout works (sidebar + content)
 - [ ] Touch targets ≥44px (acceptable for tablets)
 - [ ] Portrait + landscape both work
 - [ ] Navigation clear (sidebar or hamburger)
 
 ### Desktop (1024px+)
+
 - [ ] 3-column layout optimized (not stretched)
 - [ ] Max content width ~1200px
 - [ ] Hover states visible
 - [ ] Whitespace adequate
 
 ### Orientation Changes
+
 - [ ] Portrait → Landscape: layout adapts, no content lost
 - [ ] Landscape → Portrait: layout adapts, no scroll
 - [ ] No fixed widths (use %)
@@ -83,12 +92,14 @@ Production-ready QA checklist ensuring:
 ## Cross-Browser Testing
 
 ### Desktop Browsers
+
 - [ ] Chrome (latest + 1)
 - [ ] Firefox (latest + 1)
 - [ ] Safari (latest + 1)
 - [ ] Edge (latest)
 
 **Each browser:**
+
 - [ ] No console errors/warnings (except third-party)
 - [ ] Layout renders correctly
 - [ ] All features work
@@ -96,6 +107,7 @@ Production-ready QA checklist ensuring:
 - [ ] Flexbox/Grid renders as expected
 
 ### Mobile Browsers
+
 - [ ] iOS Safari (iPhone 12, SE)
 - [ ] Chrome Android (Pixel, Galaxy)
 - [ ] Tap targets work
@@ -108,18 +120,21 @@ Production-ready QA checklist ensuring:
 ## Performance (Core Web Vitals)
 
 ### Lighthouse Audit
+
 ```bash
 npm run lighthouse:audit
 # Or: Chrome DevTools → Lighthouse tab
 ```
 
 **Targets:**
+
 - [ ] LCP (Largest Contentful Paint) <2.5s
 - [ ] FID (First Input Delay) <100ms
 - [ ] CLS (Cumulative Layout Shift) <0.1
 - [ ] Performance Score >90
 
 **Test Each Page:**
+
 - [ ] Homepage
 - [ ] Search Results
 - [ ] Listing Details
@@ -127,6 +142,7 @@ npm run lighthouse:audit
 - [ ] Agent Dashboard
 
 ### Metrics
+
 - [ ] LCP <2.5s: Hero image optimized, lazy-load below fold
 - [ ] FID <100ms: No JS blocking interactions
 - [ ] CLS <0.1: Space reserved for images, no late-loading ads
@@ -134,17 +150,20 @@ npm run lighthouse:audit
 - [ ] FCP <1.8s: Paint quick, no render-blocking CSS/JS
 
 ### Bundle Size
+
 ```bash
 npm run build
 # Check: .next/static size
 ```
 
 **Targets:**
+
 - [ ] JS (gzipped) <250kb
 - [ ] CSS (gzipped) <50kb
 - [ ] Total <300kb
 
 ### Image Optimization
+
 - [ ] WebP format with JPEG fallback
 - [ ] Responsive (srcset for different sizes)
 - [ ] Lazy-loaded by default
@@ -156,16 +175,19 @@ npm run build
 ## Code Quality & Security
 
 ### TypeScript
+
 - [ ] Strict mode enabled (`"strict": true`)
 - [ ] No `any` types
 - [ ] Build passes (`tsc --noEmit`)
 
 ### ESLint & Prettier
+
 - [ ] No lint errors (`npm run lint` passes)
 - [ ] Code formatted (`npm run format`)
 - [ ] Pre-commit hook runs linter
 
 ### Security
+
 - [ ] `npm audit` passes (no high/critical CVEs)
 - [ ] Secrets not in code (.env.local not committed)
 - [ ] No API keys in client code
@@ -174,6 +196,7 @@ npm run build
 - [ ] Rate limiting on API routes
 
 ### Testing
+
 - [ ] Unit tests >80% (lib/, hooks/)
 - [ ] Integration tests >60% (components/)
 - [ ] E2E tests cover critical paths
@@ -232,6 +255,7 @@ npm run build
 ## Post-Launch Monitoring
 
 **First 24 Hours:**
+
 - [ ] Error rate <0.5% (Sentry)
 - [ ] Page load time <2.5s (Analytics)
 - [ ] Uptime 99.95% (Monitoring)
@@ -242,11 +266,11 @@ npm run build
 
 ## Sign-Off
 
-**QA Lead:** _________________ **Date:** _________
+**QA Lead:** ********\_******** **Date:** ****\_****
 
-**Product Manager:** _________________ **Date:** _________
+**Product Manager:** ********\_******** **Date:** ****\_****
 
-**Engineering Lead:** _________________ **Date:** _________
+**Engineering Lead:** ********\_******** **Date:** ****\_****
 
 ---
 

@@ -8,33 +8,37 @@
 
 ✅ **Complete 10-Phase Design Operating System**  
 ✅ **Ready for Implementation (Phases 8-10)**  
-✅ **All Master Documents in This Folder**  
+✅ **All Master Documents in This Folder**
 
 ---
 
 ## Files in This Folder
 
-| File | Purpose | Action |
-|------|---------|--------|
-| **IMPLEMENTATION_PROMPT.md** | Master implementation guide | ⭐ **COPY TO NEXT SESSION** |
-| **README.md** | Quick start, 5-minute guide | Read first if new |
-| **ARTIFACT_INDEX.md** | Links to all 10 phases | Bookmark for reference |
-| **phase-8-frontend-architecture.md** | Codebase structure spec | Read before coding |
+| File                                 | Purpose                     | Action                      |
+| ------------------------------------ | --------------------------- | --------------------------- |
+| **IMPLEMENTATION_PROMPT.md**         | Master implementation guide | ⭐ **COPY TO NEXT SESSION** |
+| **README.md**                        | Quick start, 5-minute guide | Read first if new           |
+| **ARTIFACT_INDEX.md**                | Links to all 10 phases      | Bookmark for reference      |
+| **phase-8-frontend-architecture.md** | Codebase structure spec     | Read before coding          |
 
 ---
 
 ## What To Do Right Now
 
 ### Step 1: Read This (2 min)
+
 You're reading it now. ✓
 
 ### Step 2: Read README.md (3 min)
+
 Open `design-os/README.md` in your editor. Quick overview of everything.
 
 ### Step 3: Copy IMPLEMENTATION_PROMPT.md for Next Session (1 min)
+
 This is your complete guide to building Phases 8-10.
 
 **Next time you code:**
+
 1. Open a new Claude Code session
 2. Copy entire contents of `IMPLEMENTATION_PROMPT.md`
 3. Paste into new session
@@ -64,7 +68,9 @@ That one prompt contains everything you need to implement the entire system.
 ## All Phases (Reference)
 
 ### Phases 1-7: Design & Strategy (Published Online)
+
 View these in browser:
+
 - **Phase 1:** https://claude.ai/code/artifact/257167b4-d827-4556-8bb7-21b664726b71
 - **Phase 2:** https://claude.ai/code/artifact/73797095-b2c6-42c8-a29c-e89363470caa
 - **Phase 3:** https://claude.ai/code/artifact/63ef5a57-d3fe-44b1-bdce-67e4fd3ad2e3
@@ -76,6 +82,7 @@ View these in browser:
 See `ARTIFACT_INDEX.md` for detailed descriptions of each phase.
 
 ### Phases 8-10: Implementation (Local Files)
+
 - **Phase 8:** `phase-8-frontend-architecture.md` (codebase structure)
 - **Phase 9:** Referenced in `IMPLEMENTATION_PROMPT.md` (sprint breakdown)
 - **Phase 10:** Referenced in `IMPLEMENTATION_PROMPT.md` (QA checklist)
@@ -99,16 +106,16 @@ See `ARTIFACT_INDEX.md` for detailed descriptions of each phase.
 
 ## Quick Reference
 
-| I want to... | Go to... |
-|---|---|
-| Understand the strategy | Phase 1 link (ARTIFACT_INDEX.md) |
-| See page specifications | Phase 4 link (ARTIFACT_INDEX.md) |
-| Find component specs | Phase 6 link (ARTIFACT_INDEX.md) |
-| Get token values | Phase 7 link (ARTIFACT_INDEX.md) |
-| Know what to build | IMPLEMENTATION_PROMPT.md |
-| Understand codebase setup | phase-8-frontend-architecture.md |
-| See sprint breakdown | IMPLEMENTATION_PROMPT.md (Phase 9 section) |
-| Verify before shipping | IMPLEMENTATION_PROMPT.md (Phase 10 section) |
+| I want to...              | Go to...                                    |
+| ------------------------- | ------------------------------------------- |
+| Understand the strategy   | Phase 1 link (ARTIFACT_INDEX.md)            |
+| See page specifications   | Phase 4 link (ARTIFACT_INDEX.md)            |
+| Find component specs      | Phase 6 link (ARTIFACT_INDEX.md)            |
+| Get token values          | Phase 7 link (ARTIFACT_INDEX.md)            |
+| Know what to build        | IMPLEMENTATION_PROMPT.md                    |
+| Understand codebase setup | phase-8-frontend-architecture.md            |
+| See sprint breakdown      | IMPLEMENTATION_PROMPT.md (Phase 9 section)  |
+| Verify before shipping    | IMPLEMENTATION_PROMPT.md (Phase 10 section) |
 
 ---
 

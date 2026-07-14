@@ -11,6 +11,7 @@ Build a premium real estate marketplace (not mass-market) with Horizon Grove aes
 **Not Zillow. Not Redfin. Something Better for Luxury.**
 
 A marketplace for high-net-worth buyers, luxury agents, and premium developers. Features:
+
 - ✓ 21 core pages (home, search, listing detail, dashboards, etc.)
 - ✓ Luxury visual direction (charcoal + burnt orange, thin typography, extreme whitespace)
 - ✓ Private viewing system (appointment-only properties)
@@ -22,20 +23,20 @@ A marketplace for high-net-worth buyers, luxury agents, and premium developers. 
 
 **Timeline:** 16 weeks (same as core MVP 1.5)  
 **Effort:** ~1120 hours (core) + ~370 hours (luxury features) = ~1490 hours total  
-**Team:** 5-6 engineers  
+**Team:** 5-6 engineers
 
 ---
 
 ## Phase Summary
 
-| Phase | What | Status |
-|-------|------|--------|
-| **1-3** | Strategy, UX, IA | ✓ Complete (reference only) |
-| **4-7** | Design specs, components, tokens | ✓ Complete (+ luxury visual direction) |
-| **8** | Codebase architecture | ✓ Complete (supports luxury schema) |
-| **9** | 16-week roadmap | ✓ Complete (+ luxury features integrated) |
-| **10** | QA checklist | ✓ Complete (same standards) |
-| **Luxury Addendum** | Premium features | ⭐ New (6 features, 370 hours) |
+| Phase               | What                             | Status                                    |
+| ------------------- | -------------------------------- | ----------------------------------------- |
+| **1-3**             | Strategy, UX, IA                 | ✓ Complete (reference only)               |
+| **4-7**             | Design specs, components, tokens | ✓ Complete (+ luxury visual direction)    |
+| **8**               | Codebase architecture            | ✓ Complete (supports luxury schema)       |
+| **9**               | 16-week roadmap                  | ✓ Complete (+ luxury features integrated) |
+| **10**              | QA checklist                     | ✓ Complete (same standards)               |
+| **Luxury Addendum** | Premium features                 | ⭐ New (6 features, 370 hours)            |
 
 ---
 
@@ -44,6 +45,7 @@ A marketplace for high-net-worth buyers, luxury agents, and premium developers. 
 Use the spec in `/design-os/phase-8-frontend-architecture.md` exactly as-is. Architecture supports luxury features.
 
 **Database Schema Additions:**
+
 ```
 -- Tier system
 users.tier: 'standard' | 'premium' | 'platinum'
@@ -74,11 +76,12 @@ market_reports.data, generated_at, buyer_id
 **Goal:** Boilerplate ready + visual design system loaded
 
 **Work:**
+
 - TypeScript strict, ESLint, Prettier
 - Design tokens (Phase 7 + Luxury Visual Direction)
-  - Charcoal primary, burnt orange accent
-  - Thin typography (Instrument Serif, Space Grotesk)
-  - Extreme spacing (more generous than core)
+    - Charcoal primary, burnt orange accent
+    - Thin typography (Instrument Serif, Space Grotesk)
+    - Extreme spacing (more generous than core)
 - RootLayout, all Providers (Auth, Query, Theme, Motion)
 - Tailwind config with luxury tokens
 - CSS variables (styles/tokens.css)
@@ -86,7 +89,8 @@ market_reports.data, generated_at, buyer_id
 
 **Deliverable:** Boilerplate styled, token system loaded, typography working
 
-**Luxury-Specific:** 
+**Luxury-Specific:**
+
 - Implement dark mode as primary (no light mode yet)
 - Test color contrast (charcoal + off-white must be WCAG AA)
 - Typography tests (thin fonts rendering correctly)
@@ -98,6 +102,7 @@ market_reports.data, generated_at, buyer_id
 **Goal:** All 80 components built with luxury aesthetic
 
 **Work:**
+
 - Primitives: Button (with burnt orange), Input, Select, Checkbox, Badge, Icon, Image, Skeleton, Avatar, Tag, Divider
 - Patterns: Modal, Toast, Tooltip, Tabs, Accordion, Pagination, Spinner, Date Picker, Time Picker, Price Input, Search, File Upload, Progress, Breadcrumb, Dropdown, Switch
 - Accessibility: WCAG 2.2 AA, keyboard nav, screen reader support
@@ -107,6 +112,7 @@ market_reports.data, generated_at, buyer_id
 **Deliverable:** Component library complete, all variants styled for dark luxury aesthetic
 
 **Luxury-Specific:**
+
 - Test all components on dark background
 - Verify accent color (burnt orange) pops enough on charcoal
 - Test touch targets on mobile (48px minimum)
@@ -118,39 +124,41 @@ market_reports.data, generated_at, buyer_id
 **Goal:** Buyer can find properties end-to-end
 
 **Work:**
-- Home (/) 
-  - Hero: Full-bleed image, large thin headline, search bar, CTA
-  - Featured listings: Photography-first, generous spacing
-  - How it works: Timeline visual, minimal text
-  - Trust signals: Stats, testimonials, badges
-  - Footer: Links, newsletter, social
+
+- Home (/)
+    - Hero: Full-bleed image, large thin headline, search bar, CTA
+    - Featured listings: Photography-first, generous spacing
+    - How it works: Timeline visual, minimal text
+    - Trust signals: Stats, testimonials, badges
+    - Footer: Links, newsletter, social
 
 - Search Results (/search)
-  - Filter panel: Sticky on desktop, drawer on mobile
-  - Results grid: 2-3 columns, photography-driven cards
-  - Map view: Google Map with pins
-  - Sorting: Price, Newest, Most Saved
-  - Pagination: 20 per page
+    - Filter panel: Sticky on desktop, drawer on mobile
+    - Results grid: 2-3 columns, photography-driven cards
+    - Map view: Google Map with pins
+    - Sorting: Price, Newest, Most Saved
+    - Pagination: 20 per page
 
 - Listing Detail (/listing/:id)
-  - Gallery: Hero carousel + thumbnails
-  - Price bar (sticky): Price, status, save, share, message
-  - Key facts: Beds, baths, sqft in subtle row
-  - Description: Full text, expandable on mobile
-  - Neighborhood: Interactive map + schools, transit, walkability
-  - Comparables: 10-15 recent sales (luxury-specific: more data)
-  - Agent card: Photo, name, rating, response time, call/message
-  - CTAs: Schedule Viewing, Make Offer, Save
+    - Gallery: Hero carousel + thumbnails
+    - Price bar (sticky): Price, status, save, share, message
+    - Key facts: Beds, baths, sqft in subtle row
+    - Description: Full text, expandable on mobile
+    - Neighborhood: Interactive map + schools, transit, walkability
+    - Comparables: 10-15 recent sales (luxury-specific: more data)
+    - Agent card: Photo, name, rating, response time, call/message
+    - CTAs: Schedule Viewing, Make Offer, Save
 
 - Map View (/map)
-  - Full-screen Google Map
-  - Listing pins clickable → preview card
-  - Filter sidebar
-  - Legend (price ranges)
+    - Full-screen Google Map
+    - Listing pins clickable → preview card
+    - Filter sidebar
+    - Legend (price ranges)
 
 **Deliverable:** Search flow works, all pages styled with luxury aesthetic
 
 **Luxury-Specific:**
+
 - Listing detail includes market analysis section
 - Private viewings: Show "Request Viewing" for appointment-only properties
 - VIP tiers: Premium/Platinum buyers see exclusive properties
@@ -164,12 +172,14 @@ market_reports.data, generated_at, buyer_id
 **Work:**
 
 **Auth Pages:**
+
 - Signup (/signup): Email, OTP, password, persona (Buyer/Agent/Seller), optional social
 - Login (/login): Email, password, social OAuth
 - Reset Password: Email, OTP, new password
 - Persona selector: Buyer vs. Agent vs. Seller
 
 **Concierge Setup:**
+
 - User roles: buyer, agent, concierge, admin
 - Agent can assign concierge
 - Messages priority routing (VIP badges)
@@ -180,6 +190,7 @@ market_reports.data, generated_at, buyer_id
 **Deliverable:** Auth system live, concierge messaging infrastructure ready
 
 **Luxury-Specific:**
+
 - Onboarding screens highlight concierge service
 - Agent profile shows concierge badge + response time SLA
 - Messages show VIP indicator and SLA status
@@ -193,6 +204,7 @@ market_reports.data, generated_at, buyer_id
 **Work:**
 
 **Buyer Dashboard Pages:**
+
 - Overview: Quick stats (saved, offers, viewings), recent activity, upcoming viewings, alerts
 - Saved (/dashboard/saved): Grid of saved listings, sort/filter
 - Offers (/dashboard/offers): Table of all offers, status, counters, messaging
@@ -202,6 +214,7 @@ market_reports.data, generated_at, buyer_id
 - Settings (/dashboard/settings): Profile, preferences, communication settings
 
 **VIP Tier System:**
+
 - Tier levels: Standard (default), Premium ($500k+ income), Platinum (invite-only)
 - Tier upgrade page: /tier/upgrade (submit docs)
 - Admin approval workflow: /admin/verifications (review submissions)
@@ -209,6 +222,7 @@ market_reports.data, generated_at, buyer_id
 - Buyer sees filtered listings based on tier
 
 **Document Vault (Private):**
+
 - Upload secure documents (agent → buyer)
 - Encryption at rest
 - Watermarking (document marked with buyer name)
@@ -219,6 +233,7 @@ market_reports.data, generated_at, buyer_id
 **Deliverable:** Buyer can save, track offers, schedule viewings, access concierge. Tiers restrict premium properties.
 
 **Luxury-Specific:**
+
 - Tier verification UI (upload financial docs)
 - VIP badge on conversations (concierge priority)
 - Document manager integrated in dashboard
@@ -233,6 +248,7 @@ market_reports.data, generated_at, buyer_id
 **Work:**
 
 **Agent Dashboard Pages:**
+
 - Dashboard (/agent/dashboard): Pipeline overview, stats, recent leads, upcoming showings
 - Listings (/agent/listings): Grid of agent's listings, status, views, offers, bulk actions (publish, draft, delete)
 - Leads (/agent/leads): Inquiries, qualification status, scoring (hot/warm/cold), message/call buttons
@@ -242,6 +258,7 @@ market_reports.data, generated_at, buyer_id
 - Concierge (/agent/concierge): Manage VIP clients, response time dashboard, bulk actions
 
 **Agent CRM Features:**
+
 - Buyer profiles: Full communication history, preferences, motivation, custom notes
 - Deal tracking: All buyer's offers, key dates (appraisal, inspection, closing), next steps
 - Follow-up automation: Set reminders, auto-email templates
@@ -249,6 +266,7 @@ market_reports.data, generated_at, buyer_id
 - Opportunity scoring: Likelihood to convert, deal size, timeline
 
 **Private Viewings:**
+
 - Agent can tag property "Private Viewing Required"
 - Buyer sees "Request Viewing" button
 - Request → approval workflow
@@ -258,6 +276,7 @@ market_reports.data, generated_at, buyer_id
 **Deliverable:** Agent can manage listings, leads, pipeline, VIP clients. CRM enables relationship management.
 
 **Luxury-Specific:**
+
 - Concierge dashboard (if concierge staff)
 - VIP client profile (communication history, deal status)
 - Private viewing approval workflow
@@ -272,6 +291,7 @@ market_reports.data, generated_at, buyer_id
 **Work:**
 
 **Admin Pages:**
+
 - Overview (/admin): System health (uptime, error rate), volume metrics (listings, users, deals), revenue, alerts
 - Listings Moderation (/admin/listings): Flagged listings queue, photo review, description check, approve/reject/request changes
 - Users (/admin/users): Search, verify, suspend, tier management
@@ -282,6 +302,7 @@ market_reports.data, generated_at, buyer_id
 - Settings (/admin/settings): System config, feature flags, email templates
 
 **Market Data Integration:**
+
 - Comparable sales API (MLS, Zillow, Redfin)
 - Property valuation (estimate vs. list price)
 - Neighborhood analysis (Walkscore, crime, schools)
@@ -293,6 +314,7 @@ market_reports.data, generated_at, buyer_id
 **Deliverable:** Admin can moderate content, manage users, tiers, verify docs. Market data available for all users.
 
 **Luxury-Specific:**
+
 - Tier verification admin UI
 - Enhanced comps for luxury properties (10-15 sales, not 3-5)
 - Market reports (PDF generation)
@@ -307,6 +329,7 @@ market_reports.data, generated_at, buyer_id
 **Work:**
 
 **Testing:**
+
 - Unit tests: >80% (lib/, hooks/)
 - Integration tests: >60% (components/, pages/)
 - E2E tests: Critical paths 100% (sign up → search → offer → close)
@@ -316,11 +339,13 @@ market_reports.data, generated_at, buyer_id
 - Security: npm audit pass, no hardcoded secrets, XSS/CSRF prevention
 
 **Compliance:**
+
 - Privacy: GDPR, CCPA (data export, deletion)
 - Payment: PCI DSS (if handling payments, or use Stripe)
 - Real estate: Fair Housing Act (no discrimination in search results)
 
 **Optimization:**
+
 - Bundle size: <250kb gzipped JS
 - Image optimization: WebP + JPEG, responsive, lazy-loaded
 - Code splitting: Route-based, lazy load dashboards
@@ -328,12 +353,14 @@ market_reports.data, generated_at, buyer_id
 - Caching: Redis for search results, comps, market data
 
 **Monitoring Setup:**
+
 - Sentry (error tracking)
 - Google Analytics (user behavior)
 - Lighthouse CI (performance per PR)
 - Uptime monitoring (99.95% target)
 
 **Launch Checklist:**
+
 - [ ] All tests passing
 - [ ] Type check passes (tsc --noEmit)
 - [ ] Lint passes (npm run lint)
@@ -365,6 +392,7 @@ market_reports.data, generated_at, buyer_id
 7. **Minimize LOC.** Shorter = better when equally maintainable.
 
 **API Pattern (Critical):**
+
 ```typescript
 // lib/api/listings.ts (pure async, no hooks)
 export const listingsAPI = {
@@ -388,12 +416,14 @@ export function SearchPage() {
 ```
 
 **TypeScript:**
+
 - Strict mode enabled
 - All types from Zod schemas or `z.infer<typeof schema>`
 - No loose types for API responses
 - Use `nanoid` (not `uuid` or `Date.now()`)
 
 **Styling:**
+
 - Token-first: All colors, spacing, motion via CSS variables
 - No inline styles: `style={{ color: '#...' }}` forbidden
 - No hardcoded values: `padding: 16px` → `padding: var(--pad-md)`
@@ -403,13 +433,13 @@ export function SearchPage() {
 
 ## Testing Strategy
 
-| Type | Coverage | Framework | Tool |
-|------|----------|-----------|------|
-| **Unit** | >80% lib/, hooks/ | Vitest | `npm run test:unit` |
-| **Integration** | >60% components/ | Vitest | `npm run test:integration` |
-| **E2E** | 100% critical paths | Playwright | `npm run test:e2e` |
-| **Accessibility** | All pages | jest-axe | `npm run test:a11y` |
-| **Performance** | All pages | Lighthouse | `npm run lighthouse` |
+| Type              | Coverage            | Framework  | Tool                       |
+| ----------------- | ------------------- | ---------- | -------------------------- |
+| **Unit**          | >80% lib/, hooks/   | Vitest     | `npm run test:unit`        |
+| **Integration**   | >60% components/    | Vitest     | `npm run test:integration` |
+| **E2E**           | 100% critical paths | Playwright | `npm run test:e2e`         |
+| **Accessibility** | All pages           | jest-axe   | `npm run test:a11y`        |
+| **Performance**   | All pages           | Lighthouse | `npm run lighthouse`       |
 
 ---
 
@@ -453,6 +483,7 @@ vercel --prod
 ## File Structure Checklist
 
 Verify Phase 8 architecture is exact:
+
 - [ ] `/app` routes organized (auth, browse, dashboard, agent, admin)
 - [ ] `/components` (ui/, patterns/, sections/, layout/)
 - [ ] `/hooks` (api/, ui/, utils/)
@@ -465,6 +496,7 @@ Verify Phase 8 architecture is exact:
 ## Success Metrics (MVP 1.5 + Luxury)
 
 **Technical:**
+
 - ✓ 21 pages live
 - ✓ 80 components, all tested
 - ✓ Lighthouse >90 (all pages)
@@ -474,6 +506,7 @@ Verify Phase 8 architecture is exact:
 - ✓ Bundle <250kb gzipped
 
 **Business (Luxury-Specific):**
+
 - ✓ VIP tier adoption >30% (week 12)
 - ✓ Average deal size $1M+ (vs. $400k mass market)
 - ✓ Concierge SLA 95%+ (2-hour response)
@@ -486,6 +519,7 @@ Verify Phase 8 architecture is exact:
 ## Reference Files
 
 **Design Phases (Read While Building):**
+
 - Phase 1: Strategy, personas, KPIs → `/design-os/phase-1-product-vision.md`
 - Phase 2: User journeys → `/design-os/phase-2-experience-maps.md`
 - Phase 3: Navigation, permissions → `/design-os/phase-3-information-architecture.md`
@@ -495,11 +529,13 @@ Verify Phase 8 architecture is exact:
 - Phase 7: Tokens (colors, spacing, motion) → `/design-os/phase-7-design-tokens.md` (+ LUXURY-VISUAL-DIRECTION.md)
 
 **Implementation Guides:**
+
 - Phase 8: Codebase setup → `/design-os/phase-8-frontend-architecture.md`
 - Phase 9: Sprint breakdown → This document
 - Phase 10: QA checklist → `/design-os/phase-10-qa-checklist.md`
 
 **Luxury Guides:**
+
 - Visual direction → `/design-os/LUXURY-VISUAL-DIRECTION.md`
 - Features → `/design-os/LUXURY-FEATURES-ADDENDUM.md`
 
@@ -514,7 +550,7 @@ Verify Phase 8 architecture is exact:
 **Week 9-10:** Buyer dashboard + Tiers ✓  
 **Week 11-12:** Agent dashboard + CRM ✓  
 **Week 13-14:** Admin + Market data ✓  
-**Week 15-16:** QA, polish, launch ✓  
+**Week 15-16:** QA, polish, launch ✓
 
 ---
 

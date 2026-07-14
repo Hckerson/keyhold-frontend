@@ -82,7 +82,7 @@ export const query = {
 
 apiClient.interceptors.request.use((config) => {
     // Extract token from Zustand store directly
-    const token = `${0}`
+    const token = `${0}`;
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

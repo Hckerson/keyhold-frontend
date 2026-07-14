@@ -2,317 +2,380 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @import "./tokens.css";
 
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+  --color-accent: var(--color-accent);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-accent-light: var(--color-accent-light);
+  --color-success: var(--color-success);
+  --color-success-light: var(--color-success-light);
+  --color-warning: var(--color-warning);
+  --color-warning-light: var(--color-warning-light);
+  --color-error: var(--color-error);
+  --color-error-light: var(--color-error-light);
+  --color-info: var(--color-info);
+  --color-info-light: var(--color-info-light);
+  --color-background: var(--color-background);
+  --color-background-alt: var(--color-background-alt);
+  --color-background-muted: var(--color-background-muted);
+  --color-border: var(--color-border);
+  --color-border-light: var(--color-border-light);
+  --color-border-dark: var(--color-border-dark);
+  --color-text: var(--color-text);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-inverse: var(--color-text-inverse);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --text-h1: var(--text-h1);
+  --text-h2: var(--text-h2);
+  --text-h3: var(--text-h3);
+  --text-h4: var(--text-h4);
+  --text-h5: var(--text-h5);
+  --text-h6: var(--text-h6);
+  --text-lg: var(--text-lg);
+  --text-base: var(--text-base);
+  --text-sm: var(--text-sm);
+  --text-xs: var(--text-xs);
+  --space-0: var(--space-0);
+  --space-1: var(--space-1);
+  --space-2: var(--space-2);
+  --space-3: var(--space-3);
+  --space-4: var(--space-4);
+  --space-5: var(--space-5);
+  --space-6: var(--space-6);
+  --space-8: var(--space-8);
+  --space-10: var(--space-10);
+  --space-12: var(--space-12);
+  --space-16: var(--space-16);
+  --space-20: var(--space-20);
+  --space-24: var(--space-24);
+  --space-32: var(--space-32);
+  --gap-xs: var(--gap-xs);
+  --gap-sm: var(--gap-sm);
+  --gap-md: var(--gap-md);
+  --gap-lg: var(--gap-lg);
+  --gap-xl: var(--gap-xl);
+  --pad-xs: var(--pad-xs);
+  --pad-sm: var(--pad-sm);
+  --pad-md: var(--pad-md);
+  --pad-lg: var(--pad-lg);
+  --pad-xl: var(--pad-xl);
+  --pad-2xl: var(--pad-2xl);
+  --motion-fast: var(--motion-fast);
+  --motion-normal: var(--motion-normal);
+  --motion-slow: var(--motion-slow);
+  --motion-slower: var(--motion-slower);
+  --ease-in: var(--ease-in);
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
+  --ease-smooth: var(--ease-smooth);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --breakpoint-xs: var(--breakpoint-xs);
+  --breakpoint-sm: var(--breakpoint-sm);
+  --breakpoint-md: var(--breakpoint-md);
+  --breakpoint-lg: var(--breakpoint-lg);
+  --breakpoint-xl: var(--breakpoint-xl);
+}
+
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
 }
 
 html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-text);
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: var(--line-relaxed);
-  font-weight: var(--font-normal);
-  overflow-x: hidden;
-  transition: background-color var(--motion-normal) var(--ease-smooth);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--line-relaxed);
+    font-weight: var(--font-normal);
+    overflow-x: hidden;
+    transition: background-color var(--motion-normal) var(--ease-smooth);
 }
 
-/* ============================================
-   TYPOGRAPHY SCALE — Fluid responsive
-   ============================================ */
-
 h1 {
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--font-light);
-  line-height: var(--line-tight);
-  letter-spacing: var(--letter-tight);
-  color: var(--color-text);
-  margin-bottom: var(--space-6);
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: var(--font-light);
+    line-height: var(--line-tight);
+    letter-spacing: var(--letter-tight);
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
 }
 
 h2 {
-  font-family: var(--font-display);
-  font-size: var(--text-h2);
-  font-weight: var(--font-light);
-  line-height: 1.2;
-  letter-spacing: var(--letter-tight);
-  color: var(--color-text);
-  margin-bottom: var(--space-5);
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    font-weight: var(--font-light);
+    line-height: 1.2;
+    letter-spacing: var(--letter-tight);
+    color: var(--color-text);
+    margin-bottom: var(--space-5);
 }
 
 h3 {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--font-normal);
-  line-height: 1.2;
-  color: var(--color-text);
-  margin-bottom: var(--space-4);
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: var(--font-normal);
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: var(--space-4);
 }
 
 h4 {
-  font-family: var(--font-body);
-  font-size: var(--text-h4);
-  font-weight: var(--font-normal);
-  line-height: 1.3;
-  color: var(--color-text);
-  margin-bottom: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-h4);
+    font-weight: var(--font-normal);
+    line-height: 1.3;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
 }
 
 h5 {
-  font-family: var(--font-body);
-  font-size: var(--text-h5);
-  font-weight: var(--font-normal);
-  line-height: 1.4;
-  color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-h5);
+    font-weight: var(--font-normal);
+    line-height: 1.4;
+    color: var(--color-text);
 }
 
 h6 {
-  font-family: var(--font-body);
-  font-size: var(--text-h6);
-  font-weight: var(--font-semibold);
-  line-height: 1.5;
-  color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-h6);
+    font-weight: var(--font-semibold);
+    line-height: 1.5;
+    color: var(--color-text);
 }
 
 p {
-  margin-bottom: var(--space-4);
-  color: var(--color-text);
+    margin-bottom: var(--space-4);
+    color: var(--color-text);
 }
 
 a {
-  color: var(--color-accent);
-  text-decoration: none;
-  transition: color var(--motion-fast) var(--ease-smooth);
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--motion-fast) var(--ease-smooth);
 }
 
 a:hover {
-  color: var(--color-accent-dark);
+    color: var(--color-accent-dark);
 }
 
-/* ============================================
-   UTILITY CLASSES — Spacing & Layout
-   ============================================ */
-
 .pad {
-  padding: var(--pad-md);
+    padding: var(--pad-md);
 }
 
 .pad-x {
-  padding-left: var(--pad-md);
-  padding-right: var(--pad-md);
+    padding-left: var(--pad-md);
+    padding-right: var(--pad-md);
 }
 
 .pad-y {
-  padding-top: var(--pad-md);
-  padding-bottom: var(--pad-md);
+    padding-top: var(--pad-md);
+    padding-bottom: var(--pad-md);
 }
 
 .gap {
-  gap: var(--gap-md);
+    gap: var(--gap-md);
 }
 
 .gap-x {
-  column-gap: var(--gap-md);
+    column-gap: var(--gap-md);
 }
 
 .gap-y {
-  row-gap: var(--gap-md);
+    row-gap: var(--gap-md);
 }
 
 .large-pad {
-  padding: var(--pad-xl);
+    padding: var(--pad-xl);
 }
 
 .md-pad {
-  padding: var(--pad-lg);
+    padding: var(--pad-lg);
 }
 
 .large-pady {
-  padding-top: var(--pad-2xl);
-  padding-bottom: var(--pad-2xl);
+    padding-top: var(--pad-2xl);
+    padding-bottom: var(--pad-2xl);
 }
 
 .md-pady {
-  padding-top: var(--pad-xl);
-  padding-bottom: var(--pad-xl);
+    padding-top: var(--pad-xl);
+    padding-bottom: var(--pad-xl);
 }
 
 .smooth {
-  transition: all var(--motion-normal) var(--ease-smooth);
+    transition: all var(--motion-normal) var(--ease-smooth);
 }
-
-/* ============================================
-   COMPONENTS — Luxury-styled elements
-   ============================================ */
 
 button,
 a.btn {
-  padding: var(--pad-md) var(--pad-lg);
-  border-radius: var(--radius-xl);
-  font-weight: var(--font-semibold);
-  font-size: var(--text-base);
-  border: none;
-  cursor: pointer;
-  transition: all var(--motion-fast) var(--ease-smooth);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    padding: var(--pad-md) var(--pad-lg);
+    border-radius: var(--radius-xl);
+    font-weight: var(--font-semibold);
+    font-size: var(--text-base);
+    border: none;
+    cursor: pointer;
+    transition: all var(--motion-fast) var(--ease-smooth);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button.btn-primary {
-  background-color: var(--color-accent);
-  color: var(--color-text);
+    background-color: var(--color-accent);
+    color: var(--color-text);
 }
 
 button.btn-primary:hover {
-  background-color: var(--color-accent-dark);
-  box-shadow: 0 0 0 4px rgba(255, 122, 61, 0.15);
+    background-color: var(--color-accent-dark);
+    box-shadow: 0 0 0 4px rgba(255, 122, 61, 0.15);
 }
 
 button.btn-secondary {
-  background-color: transparent;
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
 }
 
 button.btn-secondary:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
-/* Forms */
 input,
 textarea,
 select {
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  background-color: var(--color-background-muted);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  padding: var(--pad-sm) var(--pad-md);
-  transition: all var(--motion-fast) var(--ease-smooth);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    background-color: var(--color-background-muted);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--pad-sm) var(--pad-md);
+    transition: all var(--motion-fast) var(--ease-smooth);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-  outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(255, 122, 61, 0.1);
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 122, 61, 0.1);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--color-text-muted);
+    color: var(--color-text-muted);
 }
 
-/* Cards */
 .card {
-  background-color: var(--color-background-muted);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-sm);
-  padding: var(--pad-xl);
-  box-shadow: var(--shadow-sm);
-  transition: all var(--motion-normal) var(--ease-smooth);
+    background-color: var(--color-background-muted);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    padding: var(--pad-xl);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--motion-normal) var(--ease-smooth);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--color-border);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border);
 }
 
-/* Images */
 img {
-  max-width: 100%;
-  display: block;
-  border-radius: var(--radius-sm);
+    max-width: 100%;
+    display: block;
+    border-radius: var(--radius-sm);
 }
 
 .image-hero {
-  width: 100%;
-  height: 600px;
-  object-fit: cover;
-  display: block;
-  border-radius: var(--radius-sm);
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--radius-sm);
 }
 
 @media (max-width: 768px) {
-  .image-hero {
-    height: 400px;
-  }
+    .image-hero {
+        height: 400px;
+    }
 }
 
-/* Lists */
 ul,
 ol {
-  margin-left: var(--space-6);
-  margin-bottom: var(--space-4);
+    margin-left: var(--space-6);
+    margin-bottom: var(--space-4);
 }
 
 li {
-  margin-bottom: var(--space-2);
-  color: var(--color-text);
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
 }
-
-/* ============================================
-   ACCESSIBILITY & BROWSER FIXES
-   ============================================ */
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 30px var(--color-background-muted) inset !important;
-  -webkit-text-fill-color: var(--color-text) !important;
+    -webkit-box-shadow: 0 0 0 30px var(--color-background-muted) inset !important;
+    -webkit-text-fill-color: var(--color-text) !important;
 }
 
-/* Focus visible for better keyboard navigation */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
 }
 
-/* Selection styling */
 ::selection {
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
 }
 
 ::-moz-selection {
-  background-color: var(--color-accent);
-  color: var(--color-text-inverse);
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-background-muted);
+    background: var(--color-background-muted);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 4px;
+    background: var(--color-border);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-dark);
+    background: var(--color-border-dark);
 }

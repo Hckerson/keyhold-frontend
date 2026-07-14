@@ -105,7 +105,7 @@ Extended theme with:
 - Offer (with status workflow)
 - Message, ViewingRequest
 
-**Validations:** 
+**Validations:**
 
 - `lib/validations/auth.ts` — Login, Signup, Reset password schemas
 - `lib/validations/listing.ts` — Listing CRUD schemas
@@ -148,10 +148,12 @@ Extended theme with:
 ### 11. Development Experience ✓
 
 **Auto-formatting hook** — `.claude/settings.json`
+
 - Runs `prettier --write` after every Write/Edit
 - Zero friction for style consistency
 
 **Setup guide** — `SETUP.md`
+
 - Quick start
 - Project structure
 - Design system overview
@@ -164,12 +166,14 @@ Extended theme with:
 ## Checklist: Sprint 1-2 Goals
 
 ### TypeScript Strict ✓
+
 - [x] Strict mode enabled
 - [x] No `any` types
 - [x] All types from Zod or precise definitions
 - [x] Type-checked on build
 
 ### Design Tokens ✓
+
 - [x] Color system (charcoal + burnt orange)
 - [x] Typography (thin, elegant, luxury scale)
 - [x] Spacing (extreme, generous)
@@ -178,12 +182,14 @@ Extended theme with:
 - [x] Single source of truth
 
 ### RootLayout ✓
+
 - [x] Metadata
 - [x] Viewport config
 - [x] Providers (Query, setup for Auth/Theme/Motion)
 - [x] Layout integration
 
 ### Tailwind Config ✓
+
 - [x] Luxury color palette
 - [x] Typography scale
 - [x] Spacing scale
@@ -191,22 +197,26 @@ Extended theme with:
 - [x] Responsive breakpoints
 
 ### Component Library ✓
+
 - [x] Primitives (Button, Card, Container)
 - [x] Layout components (Header, Footer, AppLayout)
 - [x] Page sections (Hero)
 - [x] All exported via index files
 
 ### Validation Schemas ✓
+
 - [x] Auth schemas (login, signup, reset)
 - [x] Listing schemas (create, update)
 - [x] Zod-based, typed exports
 
 ### API Client ✓
+
 - [x] Listings API (search, getById, create, update, delete)
 - [x] Pure async functions
 - [x] Hook wrappers (useListings, useListing)
 
 ### Code Standards ✓
+
 - [x] No comments (code reads clearly)
 - [x] No hardcoding (constants centralized)
 - [x] No `any` types (all precise)
@@ -214,11 +224,13 @@ Extended theme with:
 - [x] Framework used natively
 
 ### Dark Mode ✓
+
 - [x] Primary experience (viewport colorScheme: dark)
 - [x] All CSS variables optimized for dark
 - [x] Light mode fallback included
 
 ### Luxury Aesthetic ✓
+
 - [x] Charcoal + burnt orange palette
 - [x] Thin, elegant typography
 - [x] Extreme whitespace/spacing
@@ -227,6 +239,7 @@ Extended theme with:
 - [x] Smooth motion (200-800ms)
 
 ### Build & Quality ✓
+
 - [x] Type-check passes
 - [x] Lint passes
 - [x] Build succeeds
@@ -306,19 +319,19 @@ All components follow established patterns. No architecture surprises.
 
 ## Success Metrics (Sprint 1-2)
 
-| Metric | Target | Result |
-|--------|--------|--------|
-| TypeScript strict | 100% compliance | ✓ Pass |
-| No `any` types | 0 instances | ✓ Pass |
-| Build succeeds | Yes | ✓ Pass |
-| Type-check passes | 0 errors | ✓ Pass |
-| Lint passes | 0 errors | ✓ Pass |
-| Design tokens | All defined | ✓ 50+ tokens |
-| Color contrast | WCAG AA | ✓ Charcoal + off-white verified |
-| Components created | 3+ | ✓ Button, Card, Container + 6+ existing |
-| API pattern | Clean, no hooks in components | ✓ Established |
-| Hook pattern | useQuery wrapping API | ✓ Established |
-| Documentation | Clear setup guide | ✓ SETUP.md |
+| Metric             | Target                        | Result                                  |
+| ------------------ | ----------------------------- | --------------------------------------- |
+| TypeScript strict  | 100% compliance               | ✓ Pass                                  |
+| No `any` types     | 0 instances                   | ✓ Pass                                  |
+| Build succeeds     | Yes                           | ✓ Pass                                  |
+| Type-check passes  | 0 errors                      | ✓ Pass                                  |
+| Lint passes        | 0 errors                      | ✓ Pass                                  |
+| Design tokens      | All defined                   | ✓ 50+ tokens                            |
+| Color contrast     | WCAG AA                       | ✓ Charcoal + off-white verified         |
+| Components created | 3+                            | ✓ Button, Card, Container + 6+ existing |
+| API pattern        | Clean, no hooks in components | ✓ Established                           |
+| Hook pattern       | useQuery wrapping API         | ✓ Established                           |
+| Documentation      | Clear setup guide             | ✓ SETUP.md                              |
 
 ---
 

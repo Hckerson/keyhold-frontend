@@ -14,26 +14,26 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 
 ## Required patterns
 
-| Need | Use |
-|------|-----|
-| Styling | Token-first: named scale classes in `styles/globals.css` (`.base-text`, `.pad`, `.gap`, `.smooth`). Never inline responsive utility chains. Add colors/animations as theme tokens. See STYLE.md › Styling. |
-| Component patterns | Reuse `components/ui/` (primitives) and `components/<feature>/` (feature parts) before writing JSX from scratch. New patterns must promote to a primitive once used twice. |
-| State management | TanStack Query for server state. `useState` / `useReducer` / URL params for local state. `useSyncExternalStore` + `localStorage` for persistence. Avoid global stores unless complexity demands it. |
-| Validation | Zod schemas. Derive types with `z.infer`. Never use loose types for API responses. |
-| IDs | `nanoid`. Never `uuid` or `Date.now()`. |
-| Async flows | Keep API functions in `lib/api/<resource>.ts`, wrap in hooks in `hooks/api/use-<resource>.ts`. Components consume hooks — never call API functions directly. |
+| Need               | Use                                                                                                                                                                                                        |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Styling            | Token-first: named scale classes in `styles/globals.css` (`.base-text`, `.pad`, `.gap`, `.smooth`). Never inline responsive utility chains. Add colors/animations as theme tokens. See STYLE.md › Styling. |
+| Component patterns | Reuse `components/ui/` (primitives) and `components/<feature>/` (feature parts) before writing JSX from scratch. New patterns must promote to a primitive once used twice.                                 |
+| State management   | TanStack Query for server state. `useState` / `useReducer` / URL params for local state. `useSyncExternalStore` + `localStorage` for persistence. Avoid global stores unless complexity demands it.        |
+| Validation         | Zod schemas. Derive types with `z.infer`. Never use loose types for API responses.                                                                                                                         |
+| IDs                | `nanoid`. Never `uuid` or `Date.now()`.                                                                                                                                                                    |
+| Async flows        | Keep API functions in `lib/api/<resource>.ts`, wrap in hooks in `hooks/api/use-<resource>.ts`. Components consume hooks — never call API functions directly.                                               |
 
 ## Folder Structure
 
-| Route | Immediate Subfolders | Purpose |
-|-------|----------------------|---------|
-| `/app` | *(flat)* | Next.js App Router pages and layout. |
-| `/components` | `common` • `general` • `icons` • `providers` • `routes` • `ui` • `wrappers` | Component hierarchy: primitives in `ui/`, feature components co-located, wrappers for patterns. |
-| `/components/ui` | `auth` • `cards` • `charts` • `forms` • `skeletons` | Reusable UI primitives and patterns. |
-| `/hooks` | *(empty — use `/lib/hooks`)* | Root-level hooks reserved for global patterns only. Feature hooks live in `/lib/hooks/`. |
-| `/lib` | `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer: types, utilities, API setup, validation schemas. |
-| `/public` | `fonts` | Static assets. |
-| `/styles` | *(flat)* | Global styles and token exports. |
+| Route            | Immediate Subfolders                                                         | Purpose                                                                                         |
+| ---------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `/app`           | _(flat)_                                                                     | Next.js App Router pages and layout.                                                            |
+| `/components`    | `common` • `general` • `icons` • `providers` • `routes` • `ui` • `wrappers`  | Component hierarchy: primitives in `ui/`, feature components co-located, wrappers for patterns. |
+| `/components/ui` | `auth` • `cards` • `charts` • `forms` • `skeletons`                          | Reusable UI primitives and patterns.                                                            |
+| `/hooks`         | _(empty — use `/lib/hooks`)_                                                 | Root-level hooks reserved for global patterns only. Feature hooks live in `/lib/hooks/`.        |
+| `/lib`           | `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer: types, utilities, API setup, validation schemas.                              |
+| `/public`        | `fonts`                                                                      | Static assets.                                                                                  |
+| `/styles`        | _(flat)_                                                                     | Global styles and token exports.                                                                |
 
 ## File rules
 

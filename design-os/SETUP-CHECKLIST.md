@@ -43,28 +43,27 @@ These are in your project folder now:
 In your `app/layout.tsx`:
 
 ```tsx
-import '@/styles/tokens.css';
-import '@/styles/globals.css';
-import '@/styles/animations.css'; // (create this)
+import "@/styles/tokens.css";
+import "@/styles/globals.css";
+import "@/styles/animations.css"; // (create this)
 
 export default function RootLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className="bg-primary text-text">
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className="bg-primary text-text">{children}</body>
+        </html>
+    );
 }
 ```
 
 ### Step 2: Verify Tailwind Config
 
 Your `tailwind.config.ts` now has:
+
 - ✅ Luxury colors (charcoal, orange, grays)
 - ✅ Font families (Merriweather, Space Grotesk, JetBrains Mono)
 - ✅ Spacing scale (8px base unit)
@@ -74,16 +73,16 @@ Your `tailwind.config.ts` now has:
 ### Step 3: Test with Example Component
 
 ```tsx
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
-  return (
-    <div>
-      <h1>Luxury Real Estate</h1>
-      <Button variant="primary">Get Started</Button>
-      <Button variant="secondary">Learn More</Button>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Luxury Real Estate</h1>
+            <Button variant="primary">Get Started</Button>
+            <Button variant="secondary">Learn More</Button>
+        </div>
+    );
 }
 ```
 
@@ -95,14 +94,14 @@ Result: You'll see burnt orange button on dark charcoal background ✓
 
 When building each page, reference:
 
-| Page Type | Reference File |
-|-----------|---|
-| Home / Hero | phase-4-page-blueprints.md (Page 1) + phase-5-section-blueprints.md (Sections 1-5) |
-| Search Results | phase-4-page-blueprints.md (Page 2) + phase-5 (Sections 6-9) |
-| Listing Detail | phase-4-page-blueprints.md (Page 3) + phase-5 (Sections 10-15) |
-| Dashboards | phase-4-page-blueprints.md (Pages 8-21) |
-| Components | phase-6-component-library.md (all 80 components) |
-| Tokens | phase-7-design-tokens.md + LUXURY-VISUAL-DIRECTION.md |
+| Page Type      | Reference File                                                                     |
+| -------------- | ---------------------------------------------------------------------------------- |
+| Home / Hero    | phase-4-page-blueprints.md (Page 1) + phase-5-section-blueprints.md (Sections 1-5) |
+| Search Results | phase-4-page-blueprints.md (Page 2) + phase-5 (Sections 6-9)                       |
+| Listing Detail | phase-4-page-blueprints.md (Page 3) + phase-5 (Sections 10-15)                     |
+| Dashboards     | phase-4-page-blueprints.md (Pages 8-21)                                            |
+| Components     | phase-6-component-library.md (all 80 components)                                   |
+| Tokens         | phase-7-design-tokens.md + LUXURY-VISUAL-DIRECTION.md                              |
 
 ---
 
@@ -113,13 +112,13 @@ When building each page, reference:
 ```css
 /* Use CSS variables in your CSS */
 .button {
-  background-color: var(--color-accent);  /* #ff7a3d */
-  color: var(--color-text);               /* #f5f7f9 */
-  border: 1px solid var(--color-border);  /* #3f4556 */
+    background-color: var(--color-accent); /* #ff7a3d */
+    color: var(--color-text); /* #f5f7f9 */
+    border: 1px solid var(--color-border); /* #3f4556 */
 }
 
 .button:hover {
-  background-color: var(--color-accent-dark); /* #e66a2d */
+    background-color: var(--color-accent-dark); /* #e66a2d */
 }
 ```
 
@@ -127,10 +126,10 @@ When building each page, reference:
 
 ```tsx
 // Use Tailwind class names
-<div className="bg-primary text-text border border-border">
-  <button className="bg-accent text-primary hover:bg-accent-dark">
-    Click me
-  </button>
+<div className="border-border border bg-primary text-text">
+    <button className="bg-accent text-primary hover:bg-accent-dark">
+        Click me
+    </button>
 </div>
 ```
 
@@ -138,27 +137,27 @@ When building each page, reference:
 
 ```css
 h1 {
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--text-h1-weight);
-  line-height: var(--text-h1-line);
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    font-weight: var(--text-h1-weight);
+    line-height: var(--text-h1-line);
 }
 ```
 
 ### Motion (JavaScript)
 
 ```tsx
-import { tokens } from '@/lib/tokens';
+import { tokens } from "@/lib/tokens";
 
 const variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: parseFloat(tokens.motion.normal),
-      ease: tokens.motion.easing.out,
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: parseFloat(tokens.motion.normal),
+            ease: tokens.motion.easing.out,
+        },
     },
-  },
 };
 ```
 
@@ -183,45 +182,52 @@ When you build a component, follow this pattern:
 ```tsx
 // components/ui/my-component.tsx
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const componentVariants = cva(
-  // base styles (always applied)
-  'flex items-center transition-all duration-200 ease-out',
-  {
-    variants: {
-      variant: {
-        primary: 'bg-accent text-primary hover:bg-accent-dark',
-        secondary: 'bg-transparent border border-border text-text',
-      },
-      size: {
-        sm: 'px-4 py-2 text-sm',
-        md: 'px-6 py-3 text-base',
-      },
+    // base styles (always applied)
+    "flex items-center transition-all duration-200 ease-out",
+    {
+        variants: {
+            variant: {
+                primary: "bg-accent text-primary hover:bg-accent-dark",
+                secondary: "bg-transparent border border-border text-text",
+            },
+            size: {
+                sm: "px-4 py-2 text-sm",
+                md: "px-6 py-3 text-base",
+            },
+        },
+        defaultVariants: {
+            variant: "primary",
+            size: "md",
+        },
     },
-    defaultVariants: {
-      variant: 'primary',
-      size: 'md',
-    },
-  }
 );
 
 export interface MyComponentProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof componentVariants> {}
+    extends
+        React.HTMLAttributes<HTMLDivElement>,
+        VariantProps<typeof componentVariants> {}
 
-export function MyComponent({ className, variant, size, ...props }: MyComponentProps) {
-  return (
-    <div
-      className={cn(componentVariants({ variant, size, className }))}
-      {...props}
-    />
-  );
+export function MyComponent({
+    className,
+    variant,
+    size,
+    ...props
+}: MyComponentProps) {
+    return (
+        <div
+            className={cn(componentVariants({ variant, size, className }))}
+            {...props}
+        />
+    );
 }
 ```
 
 **Key Pattern:**
+
 1. Use CVA for variants (class-variance-authority)
 2. All colors/spacing via tokens (CSS classes, not hardcoded)
 3. Dark mode ready (tokens already include dark mode)
@@ -302,7 +308,7 @@ All ready to reference:
 ✅ Luxury visual direction defined  
 ✅ 6 luxury features specified  
 ✅ Code foundation (tokens, config, example component)  
-✅ Implementation prompt ready to copy  
+✅ Implementation prompt ready to copy
 
 **Next session:** Copy `LUXURY-IMPLEMENTATION-PROMPT.md` and start building.
 

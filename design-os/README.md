@@ -33,47 +33,51 @@ A comprehensive design system that transforms business strategy into an implemen
 
 ## All Files
 
-| File | Purpose | Read This If... |
-|------|---------|-----------------|
-| **DESIGN-OS-COMPLETE.md** | Master index + summary | You want the 30-second overview |
-| **IMPLEMENTATION_PROMPT.md** | How to execute Phase 8-10 | You're building the code |
-| **phase-1-product-vision.html** | Business strategy, personas, KPIs | You need strategy alignment |
-| **phase-2-experience-maps.html** | User journeys, decision points, flows | You're designing new features |
-| **phase-3-information-architecture.html** | Sitemap, navigation, permissions | You're setting up routing/auth |
-| **phase-4-page-blueprints.html** | 21 page specs with modules | You're building a page (START HERE) |
-| **phase-5-section-blueprints.html** | 55 reusable section specs | You're composing pages into sections |
-| **phase-6-component-library.html** | 80 component specs, variants, props | You're implementing components |
-| **phase-7-design-tokens.html** | Colors, spacing, typography, motion | You need token values for styling |
-| **phase-8-frontend-architecture.md** | Codebase structure, folder layout | You're setting up the project |
-| **phase-9-implementation-roadmap.md** | 16-week sprint breakdown | You're planning sprints/timeline |
-| **phase-10-qa-checklist.md** | Accessibility, performance, security | You're verifying before launch |
+| File                                      | Purpose                               | Read This If...                      |
+| ----------------------------------------- | ------------------------------------- | ------------------------------------ |
+| **DESIGN-OS-COMPLETE.md**                 | Master index + summary                | You want the 30-second overview      |
+| **IMPLEMENTATION_PROMPT.md**              | How to execute Phase 8-10             | You're building the code             |
+| **phase-1-product-vision.html**           | Business strategy, personas, KPIs     | You need strategy alignment          |
+| **phase-2-experience-maps.html**          | User journeys, decision points, flows | You're designing new features        |
+| **phase-3-information-architecture.html** | Sitemap, navigation, permissions      | You're setting up routing/auth       |
+| **phase-4-page-blueprints.html**          | 21 page specs with modules            | You're building a page (START HERE)  |
+| **phase-5-section-blueprints.html**       | 55 reusable section specs             | You're composing pages into sections |
+| **phase-6-component-library.html**        | 80 component specs, variants, props   | You're implementing components       |
+| **phase-7-design-tokens.html**            | Colors, spacing, typography, motion   | You need token values for styling    |
+| **phase-8-frontend-architecture.md**      | Codebase structure, folder layout     | You're setting up the project        |
+| **phase-9-implementation-roadmap.md**     | 16-week sprint breakdown              | You're planning sprints/timeline     |
+| **phase-10-qa-checklist.md**              | Accessibility, performance, security  | You're verifying before launch       |
 
 ---
 
 ## How to Use Each Phase
 
 ### Product/Leadership
+
 → Read **Phase 1** (Product Vision)  
 → Share **Phase 2** (Experiences) to team  
-→ Use **Phase 9** (Roadmap) for timeline  
+→ Use **Phase 9** (Roadmap) for timeline
 
 ### Designers
+
 → Reference **Phase 4** (Pages) for layout  
 → Use **Phase 5** (Sections) to build new flows  
 → Apply **Phase 7** (Tokens) for all styling  
-→ Extend **Phase 6** (Components) as patterns emerge  
+→ Extend **Phase 6** (Components) as patterns emerge
 
 ### Engineers
+
 → Read **Phase 8** (Architecture) first  
 → Follow **Phase 4** (Pages) spec per page  
 → Reference **Phase 6** (Components) while building  
 → Use **Phase 9** (Roadmap) for sprint planning  
-→ Verify **Phase 10** (QA) before shipping  
+→ Verify **Phase 10** (QA) before shipping
 
 ### QA/Testing
+
 → Use **Phase 10** (QA Checklist) as verification suite  
 → Reference **Phase 4** (Pages) for test cases  
-→ Check **Phase 2** (Experiences) for edge cases  
+→ Check **Phase 2** (Experiences) for edge cases
 
 ---
 
@@ -125,6 +129,7 @@ That prompt is self-contained and guides the entire build.
 Use **`IMPLEMENTATION_PROMPT.md`** as your complete guide.
 
 That single file:
+
 - Explains what to build
 - Lists phases to reference
 - Provides sprint breakdown
