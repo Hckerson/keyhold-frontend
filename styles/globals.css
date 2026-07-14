@@ -27,9 +27,11 @@
   --color-text-secondary: var(--color-text-secondary);
   --color-text-muted: var(--color-text-muted);
   --color-text-inverse: var(--color-text-inverse);
+
   --font-display: var(--font-display);
   --font-body: var(--font-body);
   --font-mono: var(--font-mono);
+
   --text-h1: var(--text-h1);
   --text-h2: var(--text-h2);
   --text-h3: var(--text-h3);
@@ -40,6 +42,7 @@
   --text-base: var(--text-base);
   --text-sm: var(--text-sm);
   --text-xs: var(--text-xs);
+
   --space-0: var(--space-0);
   --space-1: var(--space-1);
   --space-2: var(--space-2);
@@ -54,35 +57,42 @@
   --space-20: var(--space-20);
   --space-24: var(--space-24);
   --space-32: var(--space-32);
+
   --gap-xs: var(--gap-xs);
   --gap-sm: var(--gap-sm);
   --gap-md: var(--gap-md);
   --gap-lg: var(--gap-lg);
   --gap-xl: var(--gap-xl);
+
   --pad-xs: var(--pad-xs);
   --pad-sm: var(--pad-sm);
   --pad-md: var(--pad-md);
   --pad-lg: var(--pad-lg);
   --pad-xl: var(--pad-xl);
   --pad-2xl: var(--pad-2xl);
+
   --motion-fast: var(--motion-fast);
   --motion-normal: var(--motion-normal);
   --motion-slow: var(--motion-slow);
   --motion-slower: var(--motion-slower);
+
   --ease-in: var(--ease-in);
   --ease-out: var(--ease-out);
   --ease-in-out: var(--ease-in-out);
   --ease-smooth: var(--ease-smooth);
+
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+
   --breakpoint-xs: var(--breakpoint-xs);
   --breakpoint-sm: var(--breakpoint-sm);
   --breakpoint-md: var(--breakpoint-md);
