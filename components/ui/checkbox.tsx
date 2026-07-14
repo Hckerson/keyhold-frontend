@@ -20,7 +20,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
         {...props}
       />
       {label && (
-        <label htmlFor={id} className="text-sm text-text-primary cursor-pointer">
+        <label htmlFor={id} className="text-sm text-text cursor-pointer">
           {label}
         </label>
       )}

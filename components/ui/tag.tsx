@@ -7,10 +7,10 @@ const tagVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-background-muted text-text-primary border border-border',
+        default: 'bg-background-muted text-text border border-border',
         primary: 'bg-accent text-white border border-accent',
-        secondary: 'bg-background-alt text-text-primary border border-border',
-        outline: 'border border-border text-text-primary hover:border-accent hover:text-accent',
+        secondary: 'bg-background-alt text-text border border-border',
+        outline: 'border border-border text-text hover:border-accent hover:text-accent',
       },
       removable: {
         true: 'pr-1',

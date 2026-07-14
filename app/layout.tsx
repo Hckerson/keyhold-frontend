@@ -6,8 +6,8 @@ import { AppLayout } from '@/components/layout/app-layout'
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  colorScheme: 'dark',
-  themeColor: '#0a0e27',
+  colorScheme: 'light',
+  themeColor: '#ffffff',
 }
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" />
