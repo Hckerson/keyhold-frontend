@@ -154,7 +154,7 @@ export default function AgentDashboardPage() {
                                         </div>
                                         <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
                                             <div
-                                                className="from-accent to-accent-dark h-full bg-gradient-to-r"
+                                                className="from-accent to-accent-dark h-full bg-linear-to-r"
                                                 style={{
                                                     width: `${Math.min((stage.count / 12) * 100, 100)}%`,
                                                 }}

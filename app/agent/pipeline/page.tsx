@@ -146,7 +146,7 @@ export default function AgentPipelinePage() {
                                     </div>
                                     <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
                                         <div
-                                            className="from-accent to-accent-dark h-full bg-gradient-to-r transition-all"
+                                            className="from-accent to-accent-dark h-full bg-linear-to-r transition-all"
                                             style={{
                                                 width: `${getStageProgress(deal.stage)}%`,
                                             }}

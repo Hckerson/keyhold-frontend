@@ -114,7 +114,7 @@ export default function AgentAnalyticsPage() {
                                     </div>
                                     <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
                                         <div
-                                            className="from-accent to-accent-dark h-full bg-gradient-to-r"
+                                            className="from-accent to-accent-dark h-full bg-linear-to-r"
                                             style={{
                                                 width: `${(data.volume / maxVolume) * 100}%`,
                                             }}

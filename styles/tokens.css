@@ -247,6 +247,41 @@
     --opacity-80: 0.8;
     --opacity-90: 0.9;
     --opacity-100: 1;
+
+    /* ============================================
+     STAT CARD & METRIC TOKENS
+     ============================================ */
+
+    /* Sidebar Colors (Dark Theme) */
+    --color-sidebar: #15171f;
+    --color-sidebar-border: rgba(255, 255, 255, 0.06);
+    --color-sidebar-hover: rgba(255, 255, 255, 0.06);
+    --color-sidebar-active: rgba(255, 255, 255, 0.1);
+    --color-sidebar-text: rgba(255, 255, 255, 0.55);
+    --color-sidebar-text-active: #ffffff;
+
+    /* Stat Card Base */
+    --stat-card-bg: var(--color-background);
+    --stat-card-border: var(--color-border-light);
+    --stat-card-border-hover: var(--color-border);
+    --stat-card-padding: var(--pad-md);
+    --stat-card-radius: var(--radius-lg);
+    --stat-card-shadow: var(--shadow-sm);
+    --stat-card-shadow-hover: var(--shadow-md);
+
+    /* Metric Type Colors */
+    --color-metric-pipeline: #ff7a3d;
+    --color-metric-success: #2da44e;
+    --color-metric-activity: #4f46e5;
+    --color-metric-warning: #d08a2a;
+
+    /* Icon Sizing */
+    --icon-size-sm: 20px;
+    --icon-size-md: 24px;
+    --icon-size-lg: 32px;
+
+    /* Metric Icon Background Opacity */
+    --icon-bg-opacity: 0.12;
 }
 
 /* ============================================

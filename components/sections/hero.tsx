@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 export function HeroSection() {
     return (
         <section className="bg-background relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
-            <div className="from-primary-light/20 to-background pointer-events-none absolute inset-0 bg-gradient-to-b" />
+            <div className="from-primary-light/20 to-background pointer-events-none absolute inset-0 bg-linear-to-b" />
 
             <div className="relative z-10 max-w-4xl space-y-8 px-6 text-center md:px-12">
                 <h1 className="text-h1 font-display text-text leading-tight font-light">
@@ -26,7 +26,7 @@ export function HeroSection() {
                 </div>
             </div>
 
-            <div className="from-background pointer-events-none absolute right-0 bottom-0 left-0 h-32 bg-gradient-to-t to-transparent" />
+            <div className="from-background pointer-events-none absolute right-0 bottom-0 left-0 h-32 bg-linear-to-t to-transparent" />
         </section>
     );
 }
