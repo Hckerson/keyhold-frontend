@@ -57,6 +57,29 @@ Styling
 * CSS Variables
 * Design Tokens
 
+## Styling Architecture Agreement
+
+**CRITICAL:** Globals.css and component styling operate under a strict separation-of-concerns agreement. See [STYLING_ARCHITECTURE.md](STYLING_ARCHITECTURE.md) for complete documentation.
+
+**Globals.css owns:**
+- CSS reset (box-sizing, font smoothing, scroll behavior)
+- Design tokens (@theme variables for colors, spacing, fonts, shadows, easing, motion)
+- Typography defaults (h1–h6, p, a, li, ul, ol)
+- Form baseline (font-family, font-size only)
+- Spacing utilities (.pad, .gap, .smooth)
+- Accessibility defaults (:focus-visible, ::selection)
+- Browser UI (scrollbars)
+
+**Components own:**
+- All visual styling (colors, sizing, borders, shadows)
+- All variant styling (primary, secondary, danger, etc.)
+- All interactive states (hover, active, focus, disabled)
+- Complete encapsulation (zero dependency on globals selectors)
+
+**Core Principle:** A component must work perfectly even if globals.css is deleted. It references tokens but never relies on element selectors or class rules.
+
+**Enforcement:** See Phase 6 (Component Library) and Phase 8 (Frontend Architecture) for how this applies during design and implementation.
+
 State
 
 * Zustand
@@ -118,6 +141,35 @@ Avoid assumptions unless necessary.
 When assumptions are required:
 
 Create an "Assumptions" section.
+
+## Styling Separation of Concerns
+
+**Never define component styling in globals.css.**
+
+Component visual appearance (colors, sizing, borders, shadows, variants) belongs *in the component*, not in a global stylesheet. This prevents:
+- Hidden dependencies between globals and components
+- Specificity conflicts that cause styling bugs (e.g., buttons rendering at same height despite size variants)
+- Maintenance nightmares when styling is split across two places
+- Components failing if globals.css is removed
+
+**Rule:** Every component uses inline Tailwind, CVA, or CSS modules for its complete visual styling. Globals.css provides *values* (tokens), never *rules* (selectors).
+
+**Decision Tree:**
+
+```
+Where should this style live?
+├─ "Is it a design token or timing value?"
+│  └─ YES → globals.css @theme
+├─ "Is it base typography (h1-h6, p, a)?"
+│  └─ YES → globals.css
+├─ "Is it form input baseline (font/size only)?"
+│  └─ YES → globals.css
+├─ "Is it a utility (spacing, padding)?"
+│  └─ YES → globals.css
+├─ "Is it accessibility (focus, selection)?"
+│  └─ YES → globals.css
+└─ "Is it a component or component variant?"
+   └─ YES → Component (inline Tailwind/CVA)
 
 ---
 
@@ -439,6 +491,13 @@ Props
 
 Slots
 
+**Styling Approach** (REQUIRED)
+
+- Specify: inline Tailwind, CVA, or CSS module
+- List all design tokens consumed (e.g., --color-accent, --space-3)
+- Verify: Component has ZERO dependencies on globals.css selectors
+- State: "This component is fully self-contained and works without globals.css"
+
 Tokens
 
 States
@@ -469,7 +528,7 @@ Do
 
 Don't
 
-Anti-patterns
+Anti-patterns (add: "Never make styling depend on globals.css", "Never use .btn-primary class selectors in globals")
 
 Dependencies
 
@@ -481,9 +540,43 @@ Avoid page-specific components.
 
 ---
 
+## Component Styling Standards
+
+Every component must meet these requirements:
+
+1. **Self-contained styling** — All visual appearance defined in the component
+2. **Token consumption** — References design tokens (CSS variables) but doesn't create dependencies
+3. **No globals reliance** — Zero references to globals.css class selectors
+4. **Variant clarity** — All variants (primary, secondary, sm, lg, etc.) defined inline
+5. **Responsive completeness** — All breakpoint behaviors defined in component, not globals
+6. **Testability** — Component styling works in isolation (can be tested without globals.css)
+
+Failure to meet these standards indicates a design problem that must be reworked.
+
+---
+
 # PHASE 7 — Design Tokens
 
-Generate a scalable token system.
+Generate a scalable token system that provides *values*, not *styling rules*.
+
+## Token Responsibility
+
+Tokens **enable consistency** but do **not enforce component styling**. Components *consume* tokens via CSS variables or Tailwind, but components define how to apply them.
+
+**Example:**
+```css
+/* globals.css @theme */
+--color-accent: #ff7a3d;   ✓ Token defined
+
+/* Button component */
+"bg-linear-to-b from-accent to-accent-dark"  ✓ Token consumed
+```
+
+**Never:**
+```css
+/* globals.css — WRONG */
+button.btn-primary { background: var(--color-accent); }  ❌ Component rule in globals
+```
 
 Include:
 
@@ -523,13 +616,36 @@ Dark Mode
 
 Semantic Tokens
 
-Component Tokens
+Component Tokens (provide values; don't apply to elements)
 
 ---
 
 # PHASE 8 — Frontend Architecture
 
 Design the frontend architecture.
+
+## Styling Organization (CRITICAL)
+
+**CSS Reset Strategy:**
+- Globals.css contains minimal reset: box-sizing, font smoothing, scroll behavior
+- No color, sizing, border, or shadow rules on HTML elements
+- Let components define their own visual appearance
+
+**Globals.css Structure:**
+- **Lines 1–50:** @import Tailwind, @custom-variant, @import tokens.css
+- **Lines 51–150:** @theme (design tokens: colors, fonts, spacing, shadows, easing, motion)
+- **Lines 151–250:** HTML element defaults (h1–h6, p, a, typography only)
+- **Lines 251–300:** Form baseline (input, textarea, select: font-family, font-size only)
+- **Lines 301–350:** Utilities (.pad, .gap, .smooth)
+- **Lines 351–400:** Accessibility (:focus-visible, ::selection, browser UI)
+
+**Component Styling Standards:**
+- All component styling lives *in the component* (inline Tailwind or CVA)
+- Never reference globals.css selectors from components
+- Reference design tokens (CSS variables) only
+- Every variant, size, color, shadow must be defined in the component
+
+**Reference:** [STYLING_ARCHITECTURE.md](STYLING_ARCHITECTURE.md) for complete patterns and examples.
 
 Generate:
 
@@ -761,9 +877,22 @@ This phase produces 6 navigation, reference, and setup documents.
 **Content:**
 - Overview (what this prompt does, how to use it)
 - References to Phases 1-7 (required reading before coding)
+- **Styling Architecture Principles** (REQUIRED NEW SECTION)
+  * Reference STYLING_ARCHITECTURE.md
+  * Globals.css responsibility (reset + tokens only)
+  * Component styling responsibility (complete encapsulation)
+  * Component Styling Checklist:
+    - [ ] All visual styling defined in component
+    - [ ] Zero globals.css selector dependencies
+    - [ ] All design tokens consumed (not applied in globals)
+    - [ ] Variants, sizes, colors all inline
+    - [ ] Works without globals.css
+  * Decision guide: "Where should this style live?"
+  * Common anti-patterns and fixes
 - Phase 8 Implementation (Architecture setup)
   * Folder structure (exact paths)
   * Route structure (exact routes)
+  * Styling organization (globals.css structure + component standards)
   * Providers and contexts
   * Hooks organization
   * Component organization
@@ -773,14 +902,23 @@ This phase produces 6 navigation, reference, and setup documents.
   * Which pages/components per sprint
   * Dependencies and sequencing
   * Milestones and deliverables
+  * **Styling compliance by sprint** (ensure each sprint components meet standards)
 - Phase 10 Implementation (QA checklist)
   * Pre-launch QA items (200+ items organized by category)
+  * **Styling QA checklist:**
+    - Globals.css has no component-specific rules
+    - All components are self-contained
+    - No specificity conflicts between globals and components
+    - Design tokens properly used
+    - All variant sizes/colors render correctly
   * Accessibility verification
   * Performance targets
   * Browser compatibility
   * Responsive design verification
   * Component library completeness
 - Code patterns and standards
+  * **Component styling template** (inline Tailwind example)
+  * **CVA component template** (variant-heavy components)
   * Component structure template
   * Page template
   * Hook patterns
@@ -793,11 +931,14 @@ This phase produces 6 navigation, reference, and setup documents.
   * Integration test priorities
   * E2E test scenarios
   * Accessibility testing
+  * **Component styling tests** (verify sizing, colors, variants work)
 - Pre-merge checklist
+  * Styling checklist: Component is self-contained and has no globals dependencies
 - Deployment readiness
 - References to all other phases for context lookups
+- Reference to STYLING_ARCHITECTURE.md throughout
 
-**Length:** ~800-1200 lines (comprehensive)
+**Length:** ~900-1300 lines (comprehensive, includes styling)
 
 **Tone:** Technical, directive, reference
 
@@ -1029,6 +1170,10 @@ All files must:
 ---
 
 # Complete Deliverables Summary
+
+## Critical References
+
+**STYLING_ARCHITECTURE.md** — The canonical document defining the separation between globals.css and component styling. This document is referenced throughout all 10 phases and implementation. All engineering must follow this agreement to prevent styling conflicts.
 
 ## Phase 1-10: Core Design OS (10 files)
 - phase-1-product-vision.md

@@ -247,39 +247,10 @@ a:hover {
     transition: all var(--motion-normal) var(--ease-smooth);
 }
 
-button,
-a.btn {
-    padding: var(--pad-md) var(--pad-lg);
-    border-radius: var(--radius-xl);
-    font-weight: var(--font-semibold);
-    font-size: var(--text-base);
-    border: none;
+button {
     cursor: pointer;
-    transition: all var(--motion-fast) var(--ease-smooth);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-button.btn-primary {
-    background-color: var(--color-accent);
-    color: var(--color-text);
-}
-
-button.btn-primary:hover {
-    background-color: var(--color-accent-dark);
-    box-shadow: 0 0 0 4px rgba(255, 122, 61, 0.15);
-}
-
-button.btn-secondary {
-    background-color: transparent;
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-}
-
-button.btn-secondary:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
 }
 
 input,
@@ -287,20 +258,6 @@ textarea,
 select {
     font-family: var(--font-body);
     font-size: var(--text-base);
-    background-color: var(--color-background-muted);
-    color: var(--color-text);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    padding: var(--pad-sm) var(--pad-md);
-    transition: all var(--motion-fast) var(--ease-smooth);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(255, 122, 61, 0.1);
 }
 
 input::placeholder,
@@ -308,19 +265,6 @@ textarea::placeholder {
     color: var(--color-text-muted);
 }
 
-.card {
-    background-color: var(--color-background-muted);
-    border: 1px solid var(--color-border-light);
-    border-radius: var(--radius-sm);
-    padding: var(--pad-xl);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--motion-normal) var(--ease-smooth);
-}
-
-.card:hover {
-    box-shadow: var(--shadow-md);
-    border-color: var(--color-border);
-}
 
 img {
     max-width: 100%;
@@ -351,13 +295,6 @@ ol {
 li {
     margin-bottom: var(--space-2);
     color: var(--color-text);
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0 30px var(--color-background-muted) inset !important;
-    -webkit-text-fill-color: var(--color-text) !important;
 }
 
 button:focus-visible,
