@@ -53,10 +53,10 @@ const PaginationLink = forwardRef<HTMLAnchorElement, PaginationLinkProps>(
             ref={ref}
             href={href}
             className={cn(
-                "border-border rounded-sm border px-3 py-2 text-sm transition-all duration-200",
+                "border-border rounded-lg border px-3 py-2 text-sm font-medium transition-all duration-200",
                 isActive
-                    ? "bg-accent text-text border-accent"
-                    : "text-text-secondary hover:border-accent hover:text-accent",
+                    ? "bg-accent text-primary border-accent shadow-sm"
+                    : "text-text-secondary hover:border-accent hover:text-accent hover:shadow-sm",
                 className,
             )}
             {...props}

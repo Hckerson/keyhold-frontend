@@ -21,7 +21,7 @@ const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
                 {children}
                 <div
                     className={cn(
-                        "bg-text text-background-alt absolute z-50 hidden rounded-sm px-2 py-1 text-xs whitespace-nowrap group-hover:block",
+                        "bg-text text-background-alt absolute z-50 hidden rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-lg group-hover:block",
                         positionClasses[side],
                         className,
                     )}

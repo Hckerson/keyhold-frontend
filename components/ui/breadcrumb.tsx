@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { Icon } from "@/components/ui/icon";
 
 interface BreadcrumbProps extends HTMLAttributes<HTMLElement> {
     children: ReactNode;
@@ -54,7 +55,7 @@ const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
             ref={ref}
             href={href}
             className={cn(
-                "text-text-secondary hover:text-text transition-colors",
+                "text-text-secondary hover:text-accent transition-colors text-sm font-medium",
                 className,
             )}
             {...props}
@@ -66,8 +67,8 @@ BreadcrumbLink.displayName = "BreadcrumbLink";
 
 const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     ({ className, ...props }, ref) => (
-        <li ref={ref} className={cn("text-text-muted", className)} {...props}>
-            /
+        <li ref={ref} className={cn("text-text-muted flex items-center", className)} {...props}>
+            <Icon name="ChevronRight" size={14} />
         </li>
     ),
 );
