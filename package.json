@@ -6,9 +6,19 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "next lint",
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
         "format": "prettier --write .",
-        "type-check": "npx tsc --noEmit"
+        "type-check": "npx tsc --noEmit",
+        "prepare": "husky install"
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.{json,md,css}": [
+            "prettier --write"
+        ]
     },
     "dependencies": {
         "@tanstack/react-query": "^5.96.2",
@@ -38,6 +48,8 @@
         "baseline-browser-mapping": "^2.10.21",
         "eslint": "^10.1.0",
         "eslint-plugin-unused-imports": "^4.4.1",
+        "husky": "^9.1.7",
+        "lint-staged": "^17.0.8",
         "prettier": "^3.7.4",
         "prettier-plugin-tailwindcss": "^0.7.2",
         "tailwindcss": "^4.1.18",
