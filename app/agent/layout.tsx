@@ -1,8 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { deleteCookie } from "@/lib/utils/cookies";
 
 interface NavItem {
     label: string;
@@ -25,7 +28,26 @@ export default function AgentLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
+    const user = useAuthStore((state) => state.user);
+    const clearAuth = useAuthStore((state) => state.clearAuth);
     const [sidebarOpen, setSidebarOpen] = useState(true);
+
+    const getUserInitials = () => {
+        if (!user) return "";
+        return user.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    };
+
+    const handleLogout = () => {
+        clearAuth();
+        deleteCookie("access_token");
+        router.push("/");
+    };
 
     return (
         <div className="bg-primary flex h-screen">
@@ -81,12 +103,16 @@ export default function AgentLayout({
                             <div className="flex items-center gap-4">
                                 <div className="text-text-secondary text-sm">
                                     <p className="text-text font-medium">
-                                        Sarah Chen
+                                        {user?.name || "Agent"}
                                     </p>
                                     <p className="text-xs">Premium Agent</p>
                                 </div>
-                                <button className="bg-accent/20 hover:bg-accent/30 text-accent flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors">
-                                    SC
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-accent/20 hover:bg-accent/30 text-accent flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors"
+                                    title="Logout"
+                                >
+                                    {getUserInitials()}
                                 </button>
                             </div>
                         </Container>

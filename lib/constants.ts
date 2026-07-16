@@ -1,6 +1,6 @@
 export const config = {
     api: {
-        base: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
+        base: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api",
     },
     isDev: process.env.NODE_ENV === "development",
 };

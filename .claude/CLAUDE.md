@@ -11,6 +11,10 @@ This is a reusable **Next.js App Router starter**. It ships architecture, conven
 5. **Use the framework natively.** Reach for Next.js features and libs already in use (Query / Zustand / Zod / motion / CSS `clamp()`) before adding dependencies. Build what the tool already does.
 6. **Single source of truth.** Name recurring decisions once as a semantic token and reference it everywhere. Define once, change in one place.
 7. **Minimize LOC.** Prefer the shorter solution when equally maintainable.
+8. **Run `pnpm lint` before committing.** ESLint must pass with zero warnings. Fix all violations, never suppress.
+9. **Run `pnpm type-check` before committing.** TypeScript must be strict with zero errors. No type assertions (`as`), no `// @ts-ignore`.
+10. **Run `pnpm format` before committing.** Prettier formats all code consistently. Never override formatting manually.
+11. **No `console.log`, `console.error`, or debug statements** in committed code. Use proper logging only in services.
 
 ## Required patterns
 

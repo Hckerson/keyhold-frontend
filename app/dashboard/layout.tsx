@@ -1,9 +1,12 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { deleteCookie } from "@/lib/utils/cookies";
 
 interface NavItem {
     label: string;
@@ -26,7 +29,26 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
+    const user = useAuthStore((state) => state.user);
+    const clearAuth = useAuthStore((state) => state.clearAuth);
     const [sidebarOpen, setSidebarOpen] = useState(true);
+
+    const getUserInitials = () => {
+        if (!user) return "";
+        return user.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    };
+
+    const handleLogout = () => {
+        clearAuth();
+        deleteCookie("access_token");
+        router.push("/");
+    };
 
     return (
         <div className="bg-primary flex h-screen">
@@ -80,8 +102,12 @@ export default function DashboardLayout({
                                 Dashboard
                             </h2>
                             <div className="flex items-center gap-4">
-                                <button className="bg-accent/20 hover:bg-accent/30 text-accent flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors">
-                                    JD
+                                <button
+                                    onClick={handleLogout}
+                                    className="bg-accent/20 hover:bg-accent/30 text-accent flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors"
+                                    title="Logout"
+                                >
+                                    {getUserInitials()}
                                 </button>
                             </div>
                         </Container>

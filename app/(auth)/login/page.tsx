@@ -1,13 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { loginSchema } from "@/lib/validations/auth";
+import { query } from "@/lib/api-client";
+import type { AuthResponse } from "@/lib/types/auth";
+import { useAuthStore } from "@/lib/stores/auth-store";
+import { setCookie } from "@/lib/utils/cookies";
+import { devLoginAs } from "@/lib/utils/dev-auth";
+
+const DEV_MODE = process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
 
 export default function LoginPage() {
+    const router = useRouter();
+    const setAuth = useAuthStore((state) => state.setAuth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -20,8 +30,24 @@ export default function LoginPage() {
 
         try {
             const result = loginSchema.parse({ email, password });
-            console.log("Login attempt:", result);
-            // TODO: Call login API
+            const response = await query.post<AuthResponse>("/auth/login", result);
+
+            if (!response.data || !response.data.user || !response.data.accessToken) {
+                setErrors({ submit: response.message || "Login failed. Please try again." });
+                setIsLoading(false);
+                return;
+            }
+
+            const { user, accessToken } = response.data;
+            setAuth(user, accessToken);
+            setCookie("access_token", accessToken, 7);
+
+            const portalMap: Record<string, string> = {
+                ADMIN: "/admin",
+                BUYER: "/dashboard",
+                SELLER: "/agent",
+            };
+            router.push(portalMap[user.role] || "/");
         } catch (error: any) {
             if (error.errors) {
                 const newErrors: Record<string, string> = {};
@@ -31,6 +57,8 @@ export default function LoginPage() {
                     }
                 });
                 setErrors(newErrors);
+            } else {
+                setErrors({ submit: "An unexpected error occurred." });
             }
         } finally {
             setIsLoading(false);
@@ -97,6 +125,52 @@ export default function LoginPage() {
                         >
                             {isLoading ? "Signing in..." : "Sign In"}
                         </Button>
+
+                        {errors.submit && (
+                            <p className="text-error text-sm text-center">
+                                {errors.submit}
+                            </p>
+                        )}
+
+                        {DEV_MODE && (
+                            <div className="pt-4 border-t border-border space-y-2">
+                                <p className="text-text-secondary text-xs text-center">
+                                    Development Mode - Quick Login
+                                </p>
+                                <div className="grid grid-cols-3 gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            devLoginAs("ADMIN");
+                                            router.push("/admin");
+                                        }}
+                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                    >
+                                        Admin
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            devLoginAs("BUYER");
+                                            router.push("/dashboard");
+                                        }}
+                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                    >
+                                        Buyer
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            devLoginAs("SELLER");
+                                            router.push("/agent");
+                                        }}
+                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                    >
+                                        Seller
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </form>
                 </CardContent>
             </Card>
