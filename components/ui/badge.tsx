@@ -13,6 +13,7 @@ const badgeVariants = cva(
                 warning: "bg-warning-light text-warning",
                 error: "bg-error-light text-error",
                 accent: "bg-accent-light text-accent-dark",
+                highlight: "bg-highlight text-white shadow-sm",
             },
             size: {
                 sm: "px-2 py-0.5 text-xs",

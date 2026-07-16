@@ -6,44 +6,49 @@
      COLORS — Light theme palette
      ============================================ */
 
-    /* Primary (Warm Light Neutral) */
-    --color-primary: #f5f4f1;
-    --color-primary-dark: #e8e6e1;
+    /* Primary (Cool Light Neutral) */
+    --color-primary: #F8F9FB;
+    --color-primary-dark: #E2E8F0;
     --color-primary-light: #ffffff;
 
-    /* Accent (Burnt Orange — kept consistent across themes) */
-    --color-accent: #ff7a3d;
-    --color-accent-dark: #e0672a;
-    --color-accent-light: #fff1e8;
+    /* Accent (Indigo — brand/CTA) */
+    --color-accent: #4F46E5;
+    --color-accent-dark: #4338CA;
+    --color-accent-light: #EEF2FF;
+
+    /* Highlight (Coral — featured/pop moments) */
+    --color-highlight: #FF6B4A;
+    --color-highlight-dark: #E1552F;
+    --color-highlight-light: #FFE9E2;
 
     /* Status Colors */
-    --color-success: #2da44e;
-    --color-success-light: #d1f1e0;
-    --color-warning: #d08a2a;
-    --color-warning-light: #f5e6d3;
-    --color-error: #c72e35;
-    --color-error-light: #ffebee;
-    --color-info: #ff7a3d;
-    --color-info-light: #ffe6d5;
+    --color-success: #16A34A;
+    --color-success-light: #DCFCE7;
+    --color-warning: #D97706;
+    --color-warning-light: #FEF3C7;
+    --color-error: #DC2626;
+    --color-error-light: #FEE2E2;
+    --color-info: #4F46E5;
+    --color-info-light: #EEF2FF;
 
     /* Backgrounds */
-    --color-background: #ffffff;
-    --color-background-alt: #f7f6f4;
-    --color-background-muted: #f0eee9;
+    --color-background: #FFFFFF;
+    --color-background-alt: #F8F9FB;
+    --color-background-muted: #F1F2F6;
 
     /* Text */
-    --color-text: #1a1d2e;
-    --color-text-secondary: #5b5f6d;
-    --color-text-muted: #8a8d99;
-    --color-text-inverse: #1a1d2e;
+    --color-text: #0F172A;
+    --color-text-secondary: #475569;
+    --color-text-muted: #94A3B8;
+    --color-text-inverse: #FFFFFF;
 
     /* Borders */
-    --color-border: #e2e0da;
-    --color-border-light: #ececea;
-    --color-border-dark: #c9c6bd;
+    --color-border: #E2E8F0;
+    --color-border-light: #F1F5F9;
+    --color-border-dark: #CBD5E1;
 
     /* Overlays */
-    --color-overlay: rgba(10, 14, 39, 0.4);
+    --color-overlay: rgba(15, 23, 42, 0.4);
 
     /* ============================================
      TYPOGRAPHY — Font families & scales
@@ -253,7 +258,7 @@
      ============================================ */
 
     /* Sidebar Colors (Dark Theme) */
-    --color-sidebar: #15171f;
+    --color-sidebar: #14132B;
     --color-sidebar-border: rgba(255, 255, 255, 0.06);
     --color-sidebar-hover: rgba(255, 255, 255, 0.06);
     --color-sidebar-active: rgba(255, 255, 255, 0.1);
@@ -270,10 +275,10 @@
     --stat-card-shadow-hover: var(--shadow-md);
 
     /* Metric Type Colors */
-    --color-metric-pipeline: #ff7a3d;
-    --color-metric-success: #2da44e;
-    --color-metric-activity: #4f46e5;
-    --color-metric-warning: #d08a2a;
+    --color-metric-pipeline: #4F46E5;
+    --color-metric-success: #16A34A;
+    --color-metric-activity: #0EA5E9;
+    --color-metric-warning: #D97706;
 
     /* Icon Sizing */
     --icon-size-sm: 20px;

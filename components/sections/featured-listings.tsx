@@ -48,7 +48,7 @@ export function FeaturedListings({ listings }: FeaturedListingsProps) {
                                         className="transition-transform duration-300 group-hover:scale-105"
                                     />
                                     {listing.featured && (
-                                        <Badge className="bg-accent text-text absolute top-4 right-4">
+                                        <Badge variant="highlight" className="absolute top-4 right-4">
                                             Featured
                                         </Badge>
                                     )}
