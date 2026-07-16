@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,19 +14,17 @@ export default function ResetPasswordPage() {
     const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
         setIsLoading(true);
 
         try {
-            const result = resetPasswordSchema.parse({ email });
-            console.log("Reset password request:", result);
+            resetPasswordSchema.parse({ email });
             setSuccess(true);
-            // TODO: Call reset password API
-        } catch (error: any) {
-            if (error.errors) {
-                setError(error.errors[0]?.message || "An error occurred");
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                setError(error.issues[0]?.message || "An error occurred");
             }
         } finally {
             setIsLoading(false);

@@ -19,7 +19,7 @@ interface BreadcrumbLinkProps extends HTMLAttributes<HTMLAnchorElement> {
     children: ReactNode;
 }
 
-interface BreadcrumbSeparatorProps extends HTMLAttributes<HTMLLIElement> {}
+type BreadcrumbSeparatorProps = HTMLAttributes<HTMLLIElement>;
 
 const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
     ({ className, ...props }, ref) => (

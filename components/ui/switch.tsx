@@ -1,11 +1,11 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-interface SwitchProps extends InputHTMLAttributes<HTMLInputElement> {}
+type SwitchProps = InputHTMLAttributes<HTMLInputElement>;
 
 const Switch = forwardRef<HTMLInputElement, SwitchProps>(
     ({ className, ...props }, ref) => (
-        <div className="relative inline-flex">
+        <div className={cn("relative inline-flex", className)}>
             <input ref={ref} type="checkbox" className="hidden" {...props} />
             <div
                 className={cn(

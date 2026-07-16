@@ -20,8 +20,6 @@ interface ListingDetailPageProps {
 }
 
 export default function ListingDetailPage({ params }: ListingDetailPageProps) {
-    const isSaved = false;
-
     const listing = {
         id: params.id,
         title: "Luxury Modern Villa",

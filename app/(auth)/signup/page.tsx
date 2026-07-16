@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,12 +58,12 @@ export default function SignupPage() {
                 SELLER: "/agent",
             };
             router.push(portalMap[user.role] || "/");
-        } catch (error: any) {
-            if (error.errors) {
+        } catch (error) {
+            if (error instanceof z.ZodError) {
                 const newErrors: Record<string, string> = {};
-                error.errors.forEach((err: any) => {
-                    if (err.path[0]) {
-                        newErrors[err.path[0]] = err.message;
+                error.issues.forEach((issue) => {
+                    if (issue.path.length > 0) {
+                        newErrors[String(issue.path[0])] = issue.message;
                     }
                 });
                 setErrors(newErrors);
@@ -90,7 +91,7 @@ export default function SignupPage() {
                     <CardTitle className="text-h5">Create Account</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
                         <div className="space-y-2">
                             <label className="text-text text-sm font-medium">
                                 Full Name

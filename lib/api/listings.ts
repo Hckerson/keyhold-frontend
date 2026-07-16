@@ -5,7 +5,10 @@ export const listingsAPI = {
     async search(query: Record<string, unknown>) {
         const params = new URLSearchParams();
         Object.entries(query).forEach(([key, value]) => {
-            if (value) params.append(key, String(value));
+            if (value === undefined || value === null) return;
+            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+                params.append(key, String(value));
+            }
         });
 
         const response = await fetch(
@@ -58,6 +61,6 @@ export const listingsAPI = {
         });
 
         if (!response.ok) throw new Error("Failed to delete listing");
-        return response.json();
+        return response.json() as Promise<{ success: boolean }>;
     },
 };
