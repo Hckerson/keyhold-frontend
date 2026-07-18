@@ -2,14 +2,25 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import { Avatar } from "@/components/ui/avatar";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 import {
     Breadcrumb,
     BreadcrumbList,
@@ -19,19 +30,30 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Divider } from "@/components/ui/divider";
 import { Tag } from "@/components/ui/tag";
-import { Pagination, PaginationList, PaginationItem, PaginationLink } from "@/components/ui/pagination";
+import {
+    Pagination,
+    PaginationList,
+    PaginationItem,
+    PaginationLink,
+} from "@/components/ui/pagination";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip } from "@/components/ui/tooltip";
 
 export default function ComponentShowcase() {
-    const [openAccordion, setOpenAccordion] = useState<string | null>("buttons");
+    const [openAccordion, setOpenAccordion] = useState<string | null>(
+        "buttons",
+    );
 
     return (
-        <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
+        <div className="bg-background min-h-screen px-4 py-8 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-6xl">
                 <header className="mb-12">
-                    <h1 className="text-h3 font-display text-text mb-2">Component Showcase</h1>
-                    <p className="text-text-secondary text-lg">Explore your design system components</p>
+                    <h1 className="text-h3 font-display text-text mb-2">
+                        Component Showcase
+                    </h1>
+                    <p className="text-text-secondary text-lg">
+                        Explore your design system components
+                    </p>
                 </header>
 
                 <Accordion className="space-y-4">
@@ -39,19 +61,29 @@ export default function ComponentShowcase() {
                     <AccordionItem value="buttons">
                         <AccordionTrigger
                             onClick={() =>
-                                setOpenAccordion(openAccordion === "buttons" ? null : "buttons")
+                                setOpenAccordion(
+                                    openAccordion === "buttons"
+                                        ? null
+                                        : "buttons",
+                                )
                             }
                         >
-                            <span className="font-semibold">Buttons & CTAs</span>
+                            <span className="font-semibold">
+                                Buttons & CTAs
+                            </span>
                         </AccordionTrigger>
                         <AccordionContent>
                             <div className="space-y-6 p-4">
                                 <div>
-                                    <p className="text-text-secondary mb-4 text-sm font-medium uppercase">
+                                    <p className="text-success mb-4 text-sm font-medium uppercase">
                                         Primary Buttons
                                     </p>
                                     <div className="flex flex-wrap gap-4">
-                                        <Button variant="primary" size="sm">
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            className="text-xs"
+                                        >
                                             Small
                                         </Button>
                                         <Button variant="primary" size="md">
@@ -88,7 +120,9 @@ export default function ComponentShowcase() {
                                         Ghost Buttons
                                     </p>
                                     <div className="flex flex-wrap gap-4">
-                                        <Button variant="ghost">Ghost Button</Button>
+                                        <Button variant="ghost">
+                                            Ghost Button
+                                        </Button>
                                         <Button variant="ghost" disabled>
                                             Disabled
                                         </Button>
@@ -103,7 +137,11 @@ export default function ComponentShowcase() {
                                         <Button variant="danger" size="md">
                                             Delete
                                         </Button>
-                                        <Button variant="danger" size="md" disabled>
+                                        <Button
+                                            variant="danger"
+                                            size="md"
+                                            disabled
+                                        >
                                             Disabled
                                         </Button>
                                     </div>
@@ -116,7 +154,11 @@ export default function ComponentShowcase() {
                     <AccordionItem value="badges">
                         <AccordionTrigger
                             onClick={() =>
-                                setOpenAccordion(openAccordion === "badges" ? null : "badges")
+                                setOpenAccordion(
+                                    openAccordion === "badges"
+                                        ? null
+                                        : "badges",
+                                )
                             }
                         >
                             <span className="font-semibold">Badges & Tags</span>
@@ -174,10 +216,14 @@ export default function ComponentShowcase() {
                     <AccordionItem value="cards">
                         <AccordionTrigger
                             onClick={() =>
-                                setOpenAccordion(openAccordion === "cards" ? null : "cards")
+                                setOpenAccordion(
+                                    openAccordion === "cards" ? null : "cards",
+                                )
                             }
                         >
-                            <span className="font-semibold">Cards & Containers</span>
+                            <span className="font-semibold">
+                                Cards & Containers
+                            </span>
                         </AccordionTrigger>
                         <AccordionContent>
                             <div className="space-y-6 p-4">
@@ -190,15 +236,22 @@ export default function ComponentShowcase() {
                                             </CardDescription>
                                         </CardHeader>
                                         <CardContent>
-                                            <p className="text-text-secondary text-sm mb-4">
-                                                Premium waterfront property with modern
-                                                architecture and resort amenities.
+                                            <p className="text-text-secondary mb-4 text-sm">
+                                                Premium waterfront property with
+                                                modern architecture and resort
+                                                amenities.
                                             </p>
                                             <div className="flex gap-2">
-                                                <Badge variant="primary" size="sm">
+                                                <Badge
+                                                    variant="primary"
+                                                    size="sm"
+                                                >
                                                     Featured
                                                 </Badge>
-                                                <Badge variant="accent" size="sm">
+                                                <Badge
+                                                    variant="accent"
+                                                    size="sm"
+                                                >
                                                     Luxury
                                                 </Badge>
                                             </div>
@@ -214,7 +267,7 @@ export default function ComponentShowcase() {
                                         </CardHeader>
                                         <CardContent>
                                             <div className="space-y-3">
-                                                <div className="flex justify-between items-center">
+                                                <div className="flex items-center justify-between">
                                                     <span className="text-text-secondary">
                                                         Active Listings
                                                     </span>
@@ -223,7 +276,7 @@ export default function ComponentShowcase() {
                                                     </span>
                                                 </div>
                                                 <Divider />
-                                                <div className="flex justify-between items-center">
+                                                <div className="flex items-center justify-between">
                                                     <span className="text-text-secondary">
                                                         New This Week
                                                     </span>
@@ -263,10 +316,18 @@ export default function ComponentShowcase() {
                                         </CardHeader>
                                         <CardContent>
                                             <div className="flex flex-col gap-2">
-                                                <Button variant="secondary" size="sm" className="w-full">
+                                                <Button
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    className="w-full"
+                                                >
                                                     View Details
                                                 </Button>
-                                                <Button variant="ghost" size="sm" className="w-full">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="w-full"
+                                                >
                                                     Learn More
                                                 </Button>
                                             </div>
@@ -281,7 +342,9 @@ export default function ComponentShowcase() {
                     <AccordionItem value="forms">
                         <AccordionTrigger
                             onClick={() =>
-                                setOpenAccordion(openAccordion === "forms" ? null : "forms")
+                                setOpenAccordion(
+                                    openAccordion === "forms" ? null : "forms",
+                                )
                             }
                         >
                             <span className="font-semibold">Form Inputs</span>
@@ -328,14 +391,25 @@ export default function ComponentShowcase() {
                                 </div>
 
                                 <div className="max-w-sm">
-                                    <label htmlFor="select" className="text-text mb-2 block text-sm font-medium">
+                                    <label
+                                        htmlFor="select"
+                                        className="text-text mb-2 block text-sm font-medium"
+                                    >
                                         Select Option
                                     </label>
                                     <Select id="select">
-                                        <option value="">Choose an option</option>
-                                        <option value="option1">Option 1</option>
-                                        <option value="option2">Option 2</option>
-                                        <option value="option3">Option 3</option>
+                                        <option value="">
+                                            Choose an option
+                                        </option>
+                                        <option value="option1">
+                                            Option 1
+                                        </option>
+                                        <option value="option2">
+                                            Option 2
+                                        </option>
+                                        <option value="option3">
+                                            Option 3
+                                        </option>
                                     </Select>
                                 </div>
 
@@ -344,7 +418,7 @@ export default function ComponentShowcase() {
                                         <Checkbox id="checkbox1" />
                                         <label
                                             htmlFor="checkbox1"
-                                            className="text-text text-sm cursor-pointer"
+                                            className="text-text cursor-pointer text-sm"
                                         >
                                             I agree to the terms
                                         </label>
@@ -353,7 +427,7 @@ export default function ComponentShowcase() {
                                         <Checkbox id="checkbox2" checked />
                                         <label
                                             htmlFor="checkbox2"
-                                            className="text-text text-sm cursor-pointer"
+                                            className="text-text cursor-pointer text-sm"
                                         >
                                             Subscribe to updates
                                         </label>
@@ -362,13 +436,19 @@ export default function ComponentShowcase() {
 
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <label htmlFor="switch1" className="text-text text-sm">
+                                        <label
+                                            htmlFor="switch1"
+                                            className="text-text text-sm"
+                                        >
                                             Dark Mode
                                         </label>
                                         <Switch id="switch1" />
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <label htmlFor="switch2" className="text-text text-sm">
+                                        <label
+                                            htmlFor="switch2"
+                                            className="text-text text-sm"
+                                        >
                                             Notifications
                                         </label>
                                         <Switch id="switch2" checked />
@@ -382,10 +462,16 @@ export default function ComponentShowcase() {
                     <AccordionItem value="utilities">
                         <AccordionTrigger
                             onClick={() =>
-                                setOpenAccordion(openAccordion === "utilities" ? null : "utilities")
+                                setOpenAccordion(
+                                    openAccordion === "utilities"
+                                        ? null
+                                        : "utilities",
+                                )
                             }
                         >
-                            <span className="font-semibold">Utilities & Display</span>
+                            <span className="font-semibold">
+                                Utilities & Display
+                            </span>
                         </AccordionTrigger>
                         <AccordionContent>
                             <div className="space-y-6 p-4">
@@ -396,7 +482,9 @@ export default function ComponentShowcase() {
                                     <Breadcrumb>
                                         <BreadcrumbList>
                                             <BreadcrumbItem>
-                                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                                <BreadcrumbLink href="/">
+                                                    Home
+                                                </BreadcrumbLink>
                                             </BreadcrumbItem>
                                             <BreadcrumbSeparator />
                                             <BreadcrumbItem>
@@ -405,7 +493,9 @@ export default function ComponentShowcase() {
                                                 </BreadcrumbLink>
                                             </BreadcrumbItem>
                                             <BreadcrumbSeparator />
-                                            <BreadcrumbItem>Luxury Homes</BreadcrumbItem>
+                                            <BreadcrumbItem>
+                                                Luxury Homes
+                                            </BreadcrumbItem>
                                         </BreadcrumbList>
                                     </Breadcrumb>
                                 </div>
@@ -416,11 +506,17 @@ export default function ComponentShowcase() {
                                     </p>
                                     <Card>
                                         <CardContent className="space-y-4">
-                                            <p className="text-text-secondary">Section 1</p>
+                                            <p className="text-text-secondary">
+                                                Section 1
+                                            </p>
                                             <Divider />
-                                            <p className="text-text-secondary">Section 2</p>
+                                            <p className="text-text-secondary">
+                                                Section 2
+                                            </p>
                                             <Divider />
-                                            <p className="text-text-secondary">Section 3</p>
+                                            <p className="text-text-secondary">
+                                                Section 3
+                                            </p>
                                         </CardContent>
                                     </Card>
                                 </div>
@@ -432,25 +528,39 @@ export default function ComponentShowcase() {
                                     <Pagination>
                                         <PaginationList>
                                             <PaginationItem>
-                                                <PaginationLink href="#">← Prev</PaginationLink>
+                                                <PaginationLink href="#">
+                                                    ← Prev
+                                                </PaginationLink>
                                             </PaginationItem>
                                             <PaginationItem>
-                                                <PaginationLink href="#">1</PaginationLink>
+                                                <PaginationLink href="#">
+                                                    1
+                                                </PaginationLink>
                                             </PaginationItem>
                                             <PaginationItem>
-                                                <PaginationLink isActive>2</PaginationLink>
+                                                <PaginationLink isActive>
+                                                    2
+                                                </PaginationLink>
                                             </PaginationItem>
                                             <PaginationItem>
-                                                <PaginationLink href="#">3</PaginationLink>
+                                                <PaginationLink href="#">
+                                                    3
+                                                </PaginationLink>
                                             </PaginationItem>
                                             <PaginationItem>
-                                                <PaginationLink href="#">4</PaginationLink>
+                                                <PaginationLink href="#">
+                                                    4
+                                                </PaginationLink>
                                             </PaginationItem>
                                             <PaginationItem>
-                                                <PaginationLink href="#">5</PaginationLink>
+                                                <PaginationLink href="#">
+                                                    5
+                                                </PaginationLink>
                                             </PaginationItem>
                                             <PaginationItem>
-                                                <PaginationLink href="#">Next →</PaginationLink>
+                                                <PaginationLink href="#">
+                                                    Next →
+                                                </PaginationLink>
                                             </PaginationItem>
                                         </PaginationList>
                                     </Pagination>
@@ -462,7 +572,7 @@ export default function ComponentShowcase() {
                                     </p>
                                     <div className="flex gap-4">
                                         <Tooltip content="This is helpful information">
-                                            <span className="cursor-help border-b border-dotted border-text-secondary">
+                                            <span className="border-text-secondary cursor-help border-b border-dotted">
                                                 Hover me
                                             </span>
                                         </Tooltip>

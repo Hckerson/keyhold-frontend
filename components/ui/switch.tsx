@@ -4,19 +4,26 @@ import { cn } from "@/lib/utils";
 type SwitchProps = InputHTMLAttributes<HTMLInputElement>;
 
 const Switch = forwardRef<HTMLInputElement, SwitchProps>(
-    ({ className, ...props }, ref) => (
+    ({ className, checked, onChange, ...props }, ref) => (
         <div className={cn("relative inline-flex", className)}>
-            <input ref={ref} type="checkbox" className="hidden" {...props} />
+            <input
+                ref={ref}
+                type="checkbox"
+                className="hidden"
+                checked={checked ?? false}
+                onChange={onChange ?? (() => {})}
+                {...props}
+            />
             <div
                 className={cn(
                     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200",
-                    props.checked ? "bg-accent" : "bg-border",
+                    checked ? "bg-accent" : "bg-border",
                 )}
             >
                 <span
                     className={cn(
                         "bg-background inline-block h-4 w-4 transform rounded-full transition-transform duration-200",
-                        props.checked ? "translate-x-6" : "translate-x-1",
+                        checked ? "translate-x-6" : "translate-x-1",
                     )}
                 />
             </div>
