@@ -87,6 +87,7 @@ The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text
 - Everything interactive transitions (`transition-colors`/`transition-all duration-200 ease-smooth`). Entrances use `animate-in fade-in zoom-in-95`. Don't add reduced-motion guards — `styles/tokens.css` already does it globally.
 - **lucide icons at `strokeWidth={1.5}`** (thin stroke is a core elegance tell); default `size-4` (16px) in the application register, `size-5` only for editorial/hero; colored via the text ramp.
 - a11y: `aria-label` on icon-only buttons, `sr-only` labels, `select-none` on chrome, real `focus-visible:ring-2 focus-visible:ring-accent`, `type="button"` on non-submit buttons, keyboard handlers for overlays (Esc to close).
+- **Imagery:** distinct real photos, one per item — NEVER a single repeated local placeholder like `/images/hero.jpg`. **Centralize a curated pool** in `lib/config/sample-images.ts` and pull from it (don't scatter hardcoded URLs across pages). Good free sources: **Unsplash** (`images.unsplash.com/photo-…?w=800&q=80`, best architecture library), **Pexels** (`images.pexels.com/photos/…`), **loremflickr** (`loremflickr.com/800/600/mansion` — dynamic, keyword-based, no IDs). Ensure the host is allowlisted in `next.config.ts` `remotePatterns`.
 
 ## Create workflow
 

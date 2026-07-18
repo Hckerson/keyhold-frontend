@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { Trash2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Image } from "@/components/ui/image";
+import { PageHeader } from "@/components/ui/page-header";
+import { ListingRow } from "@/components/ui/listing-row";
+import { EmptyState } from "@/components/ui/empty-state";
+import { propertyImages } from "@/lib/config/sample-images";
 
 interface SavedListing {
     id: string;
@@ -17,7 +20,7 @@ interface SavedListing {
 const savedListings: SavedListing[] = [
     {
         id: "1",
-        image: "/images/hero.jpg",
+        image: propertyImages[0],
         address: "456 Oak Avenue, Beverly Hills, CA",
         price: 3200000,
         beds: 4,
@@ -27,7 +30,7 @@ const savedListings: SavedListing[] = [
     },
     {
         id: "2",
-        image: "/images/hero.jpg",
+        image: propertyImages[1],
         address: "789 Sunset Blvd, West Hollywood, CA",
         price: 2950000,
         beds: 3,
@@ -37,7 +40,7 @@ const savedListings: SavedListing[] = [
     },
     {
         id: "3",
-        image: "/images/hero.jpg",
+        image: propertyImages[2],
         address: "234 Oak Street, Bel Air, CA",
         price: 4500000,
         beds: 5,
@@ -49,125 +52,79 @@ const savedListings: SavedListing[] = [
 
 export default function SavedListingsPage() {
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Saved Listings
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        {savedListings.length} properties saved
-                    </p>
-                </div>
-                <Link href="/search" className="block">
-                    <Button variant="primary">Continue Browsing</Button>
-                </Link>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Saved Listings"
+                description={`${savedListings.length} propert${
+                    savedListings.length === 1 ? "y" : "ies"
+                } saved`}
+                action={
+                    <Link href="/search">
+                        <Button variant="primary" size="sm">
+                            Continue Browsing
+                        </Button>
+                    </Link>
+                }
+            />
 
-            <div className="space-y-4">
-                {savedListings.length > 0 ? (
-                    savedListings.map((listing) => (
-                        <Link
+            {savedListings.length > 0 ? (
+                <div className="space-y-4">
+                    {savedListings.map((listing) => (
+                        <ListingRow
                             key={listing.id}
                             href={`/listing/${listing.id}`}
-                            className="group"
-                        >
-                            <Card className="hover:border-accent/50 overflow-hidden transition-all">
-                                <CardContent className="p-0">
-                                    <div className="flex gap-6">
-                                        <div className="bg-primary-dark h-48 w-48 flex-shrink-0 overflow-hidden rounded-l-lg">
-                                            <Image
-                                                src={listing.image}
-                                                alt={listing.address}
-                                                className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                                                variant="card"
-                                            />
-                                        </div>
-
-                                        <div className="flex flex-1 flex-col justify-between py-6 pr-6">
-                                            <div>
-                                                <h3 className="text-h6 text-text group-hover:text-accent font-light transition-colors">
-                                                    {listing.address}
-                                                </h3>
-
-                                                <div className="mt-3 flex items-baseline gap-2">
-                                                    <span className="text-h5 text-accent font-light">
-                                                        $
-                                                        {(
-                                                            listing.price /
-                                                            1000000
-                                                        ).toFixed(2)}
-                                                        M
-                                                    </span>
-                                                </div>
-
-                                                <div className="text-text-secondary mt-4 flex gap-6 text-sm">
-                                                    <div>
-                                                        <span className="text-text font-medium">
-                                                            {listing.beds}
-                                                        </span>{" "}
-                                                        Bed
-                                                        {listing.beds !== 1
-                                                            ? "s"
-                                                            : ""}
-                                                    </div>
-                                                    <div>
-                                                        <span className="text-text font-medium">
-                                                            {listing.baths}
-                                                        </span>{" "}
-                                                        Bath
-                                                        {listing.baths !== 1
-                                                            ? "s"
-                                                            : ""}
-                                                    </div>
-                                                    <div>
-                                                        <span className="text-text font-medium">
-                                                            {listing.sqft.toLocaleString()}
-                                                        </span>{" "}
-                                                        sqft
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <p className="text-text-secondary text-xs">
-                                                Saved {listing.savedDate}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex flex-col justify-center gap-3 pr-6">
-                                            <Button
-                                                variant="secondary"
-                                                className="w-32"
-                                            >
-                                                View Details
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="w-32"
-                                            >
-                                                Remove
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            imageUrl={listing.image}
+                            address={listing.address}
+                            price={listing.price}
+                            beds={listing.beds}
+                            baths={listing.baths}
+                            sqft={listing.sqft}
+                            meta={`Saved ${listing.savedDate}`}
+                            actions={
+                                <>
+                                    <Link
+                                        href={`/listing/${listing.id}`}
+                                        className="block"
+                                    >
+                                        <Button
+                                            variant="secondary"
+                                            size="sm"
+                                            className="w-full sm:w-28"
+                                        >
+                                            View Details
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="text-error hover:text-error w-full sm:w-28"
+                                    >
+                                        <Trash2
+                                            size={14}
+                                            strokeWidth={1.5}
+                                            className="mr-1.5"
+                                        />
+                                        Remove
+                                    </Button>
+                                </>
+                            }
+                        />
+                    ))}
+                </div>
+            ) : (
+                <EmptyState
+                    icon={Heart}
+                    title="No saved listings yet"
+                    description="Properties you save will appear here."
+                    action={
+                        <Link href="/search">
+                            <Button variant="primary" size="sm">
+                                Start Browsing
+                            </Button>
                         </Link>
-                    ))
-                ) : (
-                    <Card>
-                        <CardContent className="py-12 text-center">
-                            <p className="text-text-secondary mb-6">
-                                No saved listings yet
-                            </p>
-                            <Link href="/search" className="inline-block">
-                                <Button variant="primary">
-                                    Start Browsing
-                                </Button>
-                            </Link>
-                        </CardContent>
-                    </Card>
-                )}
-            </div>
+                    }
+                />
+            )}
         </div>
     );
 }
