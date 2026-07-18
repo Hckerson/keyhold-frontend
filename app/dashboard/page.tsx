@@ -7,6 +7,7 @@ import {
     MessageSquare,
     CalendarClock,
     ChevronRight,
+    type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
@@ -22,30 +23,52 @@ import {
     type QuickAction,
 } from "@/components/dashboard/quick-actions";
 
-const stats = [
+type StatItem = {
+    label: string;
+    value: number;
+    icon: LucideIcon;
+    href: string;
+    change: string;
+    trend: "up" | "down";
+    series: number[];
+};
+
+const stats: StatItem[] = [
     {
         label: "Saved Listings",
         value: 8,
         icon: Heart,
         href: "/dashboard/saved",
+        change: "+2",
+        trend: "up",
+        series: [3, 4, 4, 5, 6, 6, 8],
     },
     {
         label: "Active Offers",
         value: 2,
         icon: FileText,
         href: "/dashboard/offers",
+        change: "+1",
+        trend: "up",
+        series: [0, 1, 1, 1, 1, 2, 2],
     },
     {
         label: "Scheduled Viewings",
         value: 3,
         icon: CalendarDays,
         href: "/dashboard/viewings",
+        change: "+1",
+        trend: "up",
+        series: [1, 2, 2, 3, 2, 3, 3],
     },
     {
         label: "New Messages",
         value: 1,
         icon: MessageSquare,
         href: "/dashboard/messages",
+        change: "+1",
+        trend: "up",
+        series: [0, 1, 0, 1, 0, 0, 1],
     },
 ];
 
@@ -131,13 +154,7 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat) => (
-                    <StatCard
-                        key={stat.label}
-                        label={stat.label}
-                        value={stat.value}
-                        icon={stat.icon}
-                        href={stat.href}
-                    />
+                    <StatCard key={stat.label} {...stat} />
                 ))}
             </div>
 
@@ -177,7 +194,10 @@ export default function DashboardPage() {
                         </div>
                     </section>
 
-                    <Panel title="Recent Activity">
+                    <Panel
+                        title="Recent Activity"
+                        count={recentActivity.length}
+                    >
                         <ActivityFeed entries={recentActivity} />
                     </Panel>
                 </div>
@@ -189,6 +209,7 @@ export default function DashboardPage() {
 
                     <Panel
                         title="Price Alerts"
+                        count={priceAlerts.length}
                         action={
                             <Link
                                 href="/dashboard/alerts"

@@ -16,7 +16,7 @@ export function SummaryRow({ label, value, className }: SummaryRowProps) {
             )}
         >
             <span className="text-text-secondary">{label}</span>
-            <span className="text-text font-medium">{value}</span>
+            <span className="text-text font-medium tabular-nums">{value}</span>
         </div>
     );
 }
