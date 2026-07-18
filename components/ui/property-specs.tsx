@@ -29,7 +29,9 @@ export function PropertySpecs({
                         className="text-text-muted shrink-0"
                     />
                     <span className="text-text-secondary text-sm">
-                        <span className="text-text font-medium">{value}</span>{" "}
+                        <span className="text-text font-medium tabular-nums">
+                            {value}
+                        </span>{" "}
                         {label}
                     </span>
                 </div>

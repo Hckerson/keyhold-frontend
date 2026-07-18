@@ -71,7 +71,7 @@ export function ListingRow({
                                 {address}
                             </p>
                         )}
-                        <p className="text-h5 font-display text-accent font-light">
+                        <p className="text-h5 font-display text-accent font-light tabular-nums">
                             {priceLabel}
                         </p>
                     </div>

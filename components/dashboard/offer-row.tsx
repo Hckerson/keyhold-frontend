@@ -35,10 +35,12 @@ function Metric({
 }) {
     return (
         <div className="min-w-0">
-            <p className="text-text-secondary text-xs">{label}</p>
+            <p className="text-text-muted text-caption font-medium tracking-wide uppercase">
+                {label}
+            </p>
             <p
                 className={cn(
-                    "font-display mt-0.5 text-lg font-light",
+                    "font-display mt-0.5 text-lg font-light tabular-nums",
                     className,
                 )}
             >

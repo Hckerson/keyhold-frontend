@@ -86,11 +86,11 @@ export function AlertRow({
                         </p>
                         {price !== undefined && (
                             <div className="mt-2 flex items-center gap-3">
-                                <span className="text-text text-sm font-medium">
+                                <span className="text-text text-sm font-medium tabular-nums">
                                     {toMillions(price)}
                                 </span>
                                 {previousPrice !== undefined && (
-                                    <span className="text-text-muted text-xs line-through">
+                                    <span className="text-text-muted text-xs tabular-nums line-through">
                                         {toMillions(previousPrice)}
                                     </span>
                                 )}

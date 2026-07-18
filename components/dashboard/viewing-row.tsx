@@ -58,19 +58,23 @@ export function ViewingRow({
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 <div>
-                    <p className="text-text-secondary text-xs">
+                    <p className="text-text-muted text-caption font-medium tracking-wide uppercase">
                         Date &amp; Time
                     </p>
-                    <p className="text-text mt-0.5 text-sm font-medium">
+                    <p className="text-text mt-0.5 text-sm font-medium tabular-nums">
                         {formatDate(date)} at {time}
                     </p>
                 </div>
                 <div>
-                    <p className="text-text-secondary text-xs">Agent</p>
+                    <p className="text-text-muted text-caption font-medium tracking-wide uppercase">
+                        Agent
+                    </p>
                     <p className="text-text mt-0.5 text-sm font-medium">
                         {agent}
                     </p>
-                    <p className="text-text-muted text-xs">{agentPhone}</p>
+                    <p className="text-text-muted text-xs tabular-nums">
+                        {agentPhone}
+                    </p>
                 </div>
             </div>
 
