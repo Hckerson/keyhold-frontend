@@ -1,15 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import {
-    BedDouble,
-    Bath,
-    Ruler,
-    Heart,
-    MapPin,
-    ArrowUpRight,
-} from "lucide-react";
+import { Heart, MapPin, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PropertySpecs } from "@/components/ui/property-specs";
 
 /* --------------------------------- Types --------------------------------- */
 
@@ -66,37 +60,6 @@ function SaveButton({
                 className={cn(saved && "fill-highlight text-highlight")}
             />
         </button>
-    );
-}
-
-/* -------------------------------- Spec list ------------------------------- */
-
-function SpecList({
-    beds,
-    baths,
-    sqft,
-}: Pick<Property, "beds" | "baths" | "sqft">) {
-    const specs = [
-        { icon: BedDouble, value: beds, label: beds === 1 ? "Bed" : "Beds" },
-        { icon: Bath, value: baths, label: baths === 1 ? "Bath" : "Baths" },
-        { icon: Ruler, value: sqft.toLocaleString(), label: "Sq Ft" },
-    ];
-    return (
-        <div className="border-border-light flex items-center gap-5 border-t pt-4">
-            {specs.map(({ icon: Icon, value, label }) => (
-                <div key={label} className="flex items-center gap-2">
-                    <Icon
-                        size={16}
-                        strokeWidth={1.5}
-                        className="text-text-muted shrink-0"
-                    />
-                    <span className="text-text-secondary text-sm">
-                        <span className="text-text font-medium">{value}</span>{" "}
-                        {label}
-                    </span>
-                </div>
-            ))}
-        </div>
     );
 }
 
@@ -185,10 +148,11 @@ export function PropertyCard({
                     </div>
                 </div>
 
-                <SpecList
+                <PropertySpecs
                     beds={property.beds}
                     baths={property.baths}
                     sqft={property.sqft}
+                    className="border-border-light border-t pt-4"
                 />
 
                 <button
