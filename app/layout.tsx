@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import Provider from "@/components/providers/provider";
-import { AppLayout } from "@/components/layout/app-layout";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -45,9 +44,7 @@ export default function RootLayout({
                 <link rel="icon" href="/favicon.ico" />
             </head>
             <body className="bg-background text-text antialiased">
-                <Provider>
-                    <AppLayout>{children}</AppLayout>
-                </Provider>
+                <Provider>{children}</Provider>
             </body>
         </html>
     );
