@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Panel } from "@/components/ui/panel";
+import { PageHeader } from "@/components/ui/page-header";
+import { StepList, type Step } from "@/components/ui/step-list";
+import { ContactRow, type BadgeTone } from "@/components/dashboard/contact-row";
+
+type LeadStatus = "hot" | "warm" | "cold";
 
 interface Lead {
     id: string;
@@ -14,7 +13,7 @@ interface Lead {
     phone: string;
     budget: number;
     interests: string[];
-    status: "hot" | "warm" | "cold";
+    status: LeadStatus;
     lastContact: string;
     nextAction: string;
 }
@@ -66,180 +65,115 @@ const leads: Lead[] = [
     },
 ];
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "hot":
-            return "text-success bg-success/10 border-success/20";
-        case "warm":
-            return "text-warning bg-warning/10 border-warning/20";
-        case "cold":
-            return "text-text-secondary bg-text-secondary/10 border-text-secondary/20";
-        default:
-            return "text-text-secondary";
-    }
+const statusMeta: Record<LeadStatus, { tone: BadgeTone; label: string }> = {
+    hot: { tone: "success", label: "Hot Lead" },
+    warm: { tone: "warning", label: "Warm Lead" },
+    cold: { tone: "neutral", label: "Cold Lead" },
 };
 
-const getStatusLabel = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1) + " Lead";
-};
+const tips: Step[] = [
+    {
+        title: "Respond fast to hot leads",
+        description:
+            "Contact hot leads within 24 hours with personalized property suggestions.",
+    },
+    {
+        title: "Nurture warm leads",
+        description:
+            "Send warm leads monthly market reports and new listing alerts.",
+    },
+    {
+        title: "Keep cold leads engaged",
+        description:
+            "Establish a nurture campaign with educational content for cold leads.",
+    },
+];
 
 export default function AgentLeadsPage() {
-    const hotLeads = leads.filter((l) => l.status === "hot");
-    const warmLeads = leads.filter((l) => l.status === "warm");
+    const count = (status: LeadStatus) =>
+        leads.filter((l) => l.status === status).length;
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Lead Pipeline
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        {hotLeads.length} hot • {warmLeads.length} warm •{" "}
-                        {leads.filter((l) => l.status === "cold").length} cold
-                    </p>
-                </div>
-                <Button variant="primary">Add Lead</Button>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Lead Pipeline"
+                description={`${count("hot")} hot · ${count("warm")} warm · ${count("cold")} cold`}
+                action={
+                    <Button variant="primary" size="sm">
+                        Add Lead
+                    </Button>
+                }
+            />
 
             <div className="space-y-4">
                 {leads.map((lead) => (
-                    <Card
+                    <ContactRow
                         key={lead.id}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="mb-3 flex items-start gap-4">
-                                        <div>
-                                            <h3 className="text-h6 text-text font-light">
-                                                {lead.name}
-                                            </h3>
-                                            <p className="text-text-secondary mt-1 text-sm">
-                                                {lead.email} • {lead.phone}
-                                            </p>
-                                        </div>
-                                        <span
-                                            className={`rounded-full border px-3 py-1 text-xs font-medium whitespace-nowrap ${getStatusColor(lead.status)}`}
-                                        >
-                                            {getStatusLabel(lead.status)}
-                                        </span>
+                        name={lead.name}
+                        subtitle={`${lead.email} · ${lead.phone}`}
+                        badge={statusMeta[lead.status]}
+                        fields={[
+                            {
+                                label: "Budget",
+                                value: (
+                                    <span className="tabular-nums">
+                                        ${(lead.budget / 1_000_000).toFixed(2)}M
+                                    </span>
+                                ),
+                            },
+                            {
+                                label: "Interests",
+                                value: (
+                                    <div className="flex flex-wrap gap-1">
+                                        {lead.interests.map((interest) => (
+                                            <span
+                                                key={interest}
+                                                className="bg-accent-light text-accent rounded px-2 py-0.5 text-xs font-normal"
+                                            >
+                                                {interest}
+                                            </span>
+                                        ))}
                                     </div>
-
-                                    <div className="border-border mb-4 grid grid-cols-1 gap-6 border-t pt-3 md:grid-cols-3">
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Budget
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                $
-                                                {(
-                                                    lead.budget / 1000000
-                                                ).toFixed(2)}
-                                                M
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Interests
-                                            </p>
-                                            <div className="flex flex-wrap gap-1">
-                                                {lead.interests.map(
-                                                    (interest) => (
-                                                        <span
-                                                            key={interest}
-                                                            className="bg-accent/10 text-accent rounded px-2 py-1 text-xs"
-                                                        >
-                                                            {interest}
-                                                        </span>
-                                                    ),
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Last Contact
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {lead.lastContact}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="text-text-secondary text-sm">
-                                        <span className="text-accent font-medium">
-                                            Next action:{" "}
-                                        </span>
-                                        {lead.nextAction}
-                                    </div>
-                                </div>
-
-                                <div className="ml-6 flex flex-col gap-2">
-                                    <Button
-                                        variant="secondary"
-                                        className="w-32 text-sm"
-                                    >
-                                        Call
-                                    </Button>
-                                    <Button
-                                        variant="secondary"
-                                        className="w-32 text-sm"
-                                    >
-                                        Email
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        className="w-32 text-sm"
-                                    >
-                                        Details
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                                ),
+                            },
+                            { label: "Last Contact", value: lead.lastContact },
+                        ]}
+                        nextAction={lead.nextAction}
+                        actions={
+                            <>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="w-full sm:w-28"
+                                >
+                                    Call
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="w-full sm:w-28"
+                                >
+                                    Email
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="w-full sm:w-28"
+                                >
+                                    Details
+                                </Button>
+                            </>
+                        }
+                    />
                 ))}
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Lead Management Tips</CardTitle>
-                    <CardDescription>
-                        Best practices for converting leads to sales
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 text-sm font-medium">
-                            1.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Contact hot leads within 24 hours with personalized
-                            property suggestions
-                        </p>
-                    </div>
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 text-sm font-medium">
-                            2.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Send warm leads monthly market reports and new
-                            listing alerts
-                        </p>
-                    </div>
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 text-sm font-medium">
-                            3.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            For cold leads, establish a nurture campaign with
-                            educational content
-                        </p>
-                    </div>
-                </CardContent>
-            </Card>
+            <Panel
+                title="Lead Management Tips"
+                description="Best practices for converting leads to sales"
+            >
+                <StepList steps={tips} />
+            </Panel>
         </div>
     );
 }

@@ -1,22 +1,46 @@
+import { Plane, Castle, Sparkles, Banknote } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Panel } from "@/components/ui/panel";
+import { PageHeader } from "@/components/ui/page-header";
+import { ServiceCard } from "@/components/ui/service-card";
+import { StepList, type Step } from "@/components/ui/step-list";
+import { ContactRow, type BadgeTone } from "@/components/dashboard/contact-row";
+
+type Tier = "platinum" | "premium" | "vip";
 
 interface VIPClient {
     id: string;
     name: string;
-    tier: "platinum" | "premium" | "vip";
+    tier: Tier;
     budget: number;
     deals: number;
     status: string;
     lastContact: string;
     nextAction: string;
 }
+
+const services = [
+    {
+        icon: Plane,
+        title: "International Relocation",
+        description: "Luxury property search worldwide",
+    },
+    {
+        icon: Castle,
+        title: "Estate Services",
+        description: "Multi-property portfolio management",
+    },
+    {
+        icon: Sparkles,
+        title: "Concierge Support",
+        description: "24/7 white-glove service",
+    },
+    {
+        icon: Banknote,
+        title: "Investment Advisory",
+        description: "Real estate investment strategy",
+    },
+];
 
 const vipClients: VIPClient[] = [
     {
@@ -51,239 +75,129 @@ const vipClients: VIPClient[] = [
     },
 ];
 
-const services = [
+const tierMeta: Record<Tier, { tone: BadgeTone; label: string }> = {
+    platinum: { tone: "info", label: "Platinum" },
+    premium: { tone: "neutral", label: "Premium" },
+    vip: { tone: "success", label: "VIP" },
+};
+
+const tips: Step[] = [
     {
-        icon: "✈️",
-        title: "International Relocation",
-        description: "Luxury property search worldwide",
+        title: "Monthly check-ins",
+        description:
+            "Schedule monthly check-ins with Platinum clients to discuss market trends and opportunities.",
     },
     {
-        icon: "🏰",
-        title: "Estate Services",
-        description: "Multi-property portfolio management",
+        title: "Exclusive access",
+        description:
+            "Provide exclusive access to off-market and pocket listings.",
     },
     {
-        icon: "🎨",
-        title: "Concierge Support",
-        description: "24/7 white-glove service",
+        title: "White-glove services",
+        description:
+            "Arrange home staging, photography, and design consultation.",
     },
     {
-        icon: "💰",
-        title: "Investment Advisory",
-        description: "Real estate investment strategy",
+        title: "Coordinate specialists",
+        description:
+            "Loop in contractors, architects, and interior designers for client needs.",
     },
 ];
 
-const getTierColor = (tier: string) => {
-    switch (tier) {
-        case "platinum":
-            return "text-accent bg-accent/10 border-accent/20";
-        case "premium":
-            return "text-info bg-info/10 border-info/20";
-        case "vip":
-            return "text-success bg-success/10 border-success/20";
-        default:
-            return "text-text-secondary";
-    }
-};
-
-const getTierLabel = (tier: string) => {
-    return tier.charAt(0).toUpperCase() + tier.slice(1);
-};
-
-export default function VIPConciergePagePage() {
+export default function VIPConciergePage() {
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        VIP Concierge
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        Manage your premium clients and white-glove services
-                    </p>
-                </div>
-                <Button variant="primary">Add VIP Client</Button>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="VIP Concierge"
+                description="Manage your premium clients and white-glove services"
+                action={
+                    <Button variant="primary" size="sm">
+                        Add VIP Client
+                    </Button>
+                }
+            />
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {services.map((service) => (
-                    <Card
+                    <ServiceCard
                         key={service.title}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start gap-4">
-                                <span className="flex-shrink-0 text-3xl">
-                                    {service.icon}
-                                </span>
-                                <div>
-                                    <h3 className="text-text text-sm font-medium">
-                                        {service.title}
-                                    </h3>
-                                    <p className="text-text-secondary mt-2 text-xs">
-                                        {service.description}
-                                    </p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                        icon={service.icon}
+                        title={service.title}
+                        description={service.description}
+                    />
                 ))}
             </div>
 
             <div className="space-y-4">
-                <h2 className="text-h5 text-text font-light">
+                <h2 className="text-h6 font-display text-text font-light">
                     Active VIP Clients
                 </h2>
                 {vipClients.map((client) => (
-                    <Card
+                    <ContactRow
                         key={client.id}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="mb-3 flex items-start gap-4">
-                                        <div>
-                                            <h3 className="text-h6 text-text font-light">
-                                                {client.name}
-                                            </h3>
-                                            <p className="text-text-secondary mt-1 text-sm">
-                                                {client.status}
-                                            </p>
-                                        </div>
-                                        <span
-                                            className={`rounded-full border px-3 py-1 text-xs font-medium whitespace-nowrap ${getTierColor(client.tier)}`}
-                                        >
-                                            {getTierLabel(client.tier)}
-                                        </span>
-                                    </div>
-
-                                    <div className="border-border grid grid-cols-1 gap-6 border-y py-4 md:grid-cols-3">
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Budget
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                $
-                                                {(
-                                                    client.budget / 1000000
-                                                ).toFixed(1)}
-                                                M
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Transactions
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {client.deals} closed deal
-                                                {client.deals !== 1 ? "s" : ""}
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Last Contact
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {client.lastContact}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-4">
-                                        <p className="text-sm">
-                                            <span className="text-text-secondary">
-                                                Next Action:{" "}
-                                            </span>
-                                            <span className="text-text font-medium">
-                                                {client.nextAction}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="ml-6 flex flex-col gap-2">
-                                    <Button
-                                        variant="secondary"
-                                        className="w-32 text-sm"
-                                    >
-                                        Call
-                                    </Button>
-                                    <Button
-                                        variant="secondary"
-                                        className="w-32 text-sm"
-                                    >
-                                        Email
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        className="w-32 text-sm"
-                                    >
-                                        Profile
-                                    </Button>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                        name={client.name}
+                        subtitle={client.status}
+                        badge={tierMeta[client.tier]}
+                        fields={[
+                            {
+                                label: "Budget",
+                                value: (
+                                    <span className="tabular-nums">
+                                        $
+                                        {(client.budget / 1_000_000).toFixed(1)}
+                                        M
+                                    </span>
+                                ),
+                            },
+                            {
+                                label: "Transactions",
+                                value: (
+                                    <span className="tabular-nums">
+                                        {client.deals} closed
+                                    </span>
+                                ),
+                            },
+                            {
+                                label: "Last Contact",
+                                value: client.lastContact,
+                            },
+                        ]}
+                        nextAction={client.nextAction}
+                        actions={
+                            <>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="w-full sm:w-28"
+                                >
+                                    Call
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="w-full sm:w-28"
+                                >
+                                    Email
+                                </Button>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="w-full sm:w-28"
+                                >
+                                    Profile
+                                </Button>
+                            </>
+                        }
+                    />
                 ))}
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Concierge Best Practices</CardTitle>
-                    <CardDescription>
-                        Tips for VIP client retention
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 font-medium">
-                            1.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Schedule monthly check-ins with Platinum clients to
-                            discuss market trends and opportunities
-                        </p>
-                    </div>
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 font-medium">
-                            2.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Provide exclusive access to off-market listings and
-                            pocket listings
-                        </p>
-                    </div>
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 font-medium">
-                            3.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Arrange white-glove services including home staging,
-                            photography, and design consultation
-                        </p>
-                    </div>
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 font-medium">
-                            4.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Coordinate with specialists (contractors,
-                            architects, interior designers) for client needs
-                        </p>
-                    </div>
-                    <div className="flex gap-3">
-                        <span className="text-accent flex-shrink-0 font-medium">
-                            5.
-                        </span>
-                        <p className="text-text-secondary text-sm">
-                            Send personalized market reports and investment
-                            insights quarterly
-                        </p>
-                    </div>
-                </CardContent>
-            </Card>
+            <Panel
+                title="Concierge Best Practices"
+                description="Tips for VIP client retention"
+            >
+                <StepList steps={tips} />
+            </Panel>
         </div>
     );
 }
