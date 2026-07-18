@@ -50,7 +50,7 @@ Tailwind v4, tokens defined in `styles/tokens.css` + `@theme` in `styles/globals
 
 1. **Decompose aggressively.** One job per component. A screen is a shell composing many small named pieces (`WorkspaceSwitcher`, `NavItem`, `SectionTitle`), not one 300-line function. Group them with `/* ── section ── */` banners.
 2. **Data-driven rendering.** Content lives in a typed array/map above the render; JSX maps over it. Declare the shape (`type NavItemData = { id: string; title: string; icon: React.ElementType; children?: NavItemData[] }`). Recurse when the UI nests (an item renderer that renders itself for `children`).
-3. **Match the house primitive pattern**, not shadcn's `data-slot` style: `forwardRef` + explicit `HTMLAttributes<…>` props + `displayName`; `cva` for variants (mirror `components/ui/button.tsx` and `card.tsx`). Reuse existing primitives from `@/components/ui` (Button, Card, Input, Modal, Badge, …) before building new ones — check `components/ui/index.ts` first.
+3. **Match the house primitive pattern**, not shadcn's `data-slot` style: `forwardRef` + explicit `HTMLAttributes<…>` props + `displayName`; `cva` for variants (mirror `components/ui/button.tsx` and `card.tsx`). Reuse existing primitives from `@/components/ui` (Button, Card, Input, Modal, Badge, …) before building new ones — check `components/ui/index.ts` first. House gotchas: **`Button` has no `asChild`/Slot** — for a link, wrap `<Link>` around `<Button>`; **`Card` bakes in `p-6`** that `cn` can't strip — build a standalone shell when you need different padding (e.g. media cards, stat tiles).
 4. **Controlled + uncontrolled duality** where a parent may or may not own state: `const current = value ?? internal`.
 5. **`cn` = clsx only (no tailwind-merge).** `className` will NOT override a base utility of the same CSS property — it just appends. Compose additively; put variability in `cva` variants, not in override-by-merge.
 6. **Import `cn` from `@/lib/utils`**, icons from `lucide-react`, absolute `@/` paths only. 4-space indent.
@@ -69,16 +69,23 @@ Tailwind v4, tokens defined in `styles/tokens.css` + `@theme` in `styles/globals
 - Elevation is restrained: `shadow-sm` at rest → `shadow-md`/`lg` on hover, paired with a `hover:-translate-y-px`/`-0.5` lift and `ease-smooth`.
 - Dark surfaces (nav rails, command palettes) use the `sidebar-*` ramp.
 
-## Typography
+## Typography & density — two registers
 
-- **The luxury signal:** headings and hero numbers in `font-display` at `font-light` (300) — e.g. `text-h3 font-display font-light`. Big serif, thin weight.
-- Body/labels in `font-body`; micro-labels `text-caption`/`text-xs` `uppercase tracking-wide text-text-secondary`; keyboard hints in `font-mono`.
+The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text-h3` 40px · `text-h4` 30px · `text-h5` 24px · `text-h6` 20px) with airy `1.75` body leading. It is NOT one size for every context — pick the register, or dense app UI reads oversized (the #1 "everything feels big" cause here).
+
+- **Editorial register** — landing / marketing / hero / section headers / big empty states. The statement: `text-h1…text-h3 font-display font-light`, generous spacing, `text-lg` lede.
+- **Application register — the DEFAULT for dashboards, cards, panels, tables, sidebars, forms, menus.** Step the scale DOWN and tighten:
+    - Page/section titles `text-h5` / `text-h4` (never `text-h3`); focal numbers/prices `text-h6` / `text-lg`.
+    - Body & rows `text-sm`; secondary/meta `text-xs`; micro-labels `text-caption uppercase tracking-wide`.
+    - Icons `size-4` (16px); rows ≈ `h-9`; compact padding. Do NOT use `text-h1…h3` or `text-lg` body leading in this register.
+
+- **The luxury signal is weight, not size:** `font-display font-light` on whatever heading the register calls for — a `text-h5` thin serif is still unmistakably premium. Body/labels `font-body`; keyboard hints `font-mono`.
 - Always guard overflow: `truncate` + a `max-w-*`.
 
 ## Motion, icons, a11y (defaults, not extras)
 
 - Everything interactive transitions (`transition-colors`/`transition-all duration-200 ease-smooth`). Entrances use `animate-in fade-in zoom-in-95`. Don't add reduced-motion guards — `styles/tokens.css` already does it globally.
-- **lucide icons at `strokeWidth={1.5}`** (thin stroke is a core elegance tell), sized `size-4`/`w-[18px]`, colored via the text ramp.
+- **lucide icons at `strokeWidth={1.5}`** (thin stroke is a core elegance tell); default `size-4` (16px) in the application register, `size-5` only for editorial/hero; colored via the text ramp.
 - a11y: `aria-label` on icon-only buttons, `sr-only` labels, `select-none` on chrome, real `focus-visible:ring-2 focus-visible:ring-accent`, `type="button"` on non-submit buttons, keyboard handlers for overlays (Esc to close).
 
 ## Create workflow

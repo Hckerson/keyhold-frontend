@@ -168,7 +168,7 @@ export function PropertyCard({
                 onToggleSave={toggleSave}
             />
 
-            <div className="flex flex-col gap-4 p-6">
+            <div className="flex flex-col gap-2 p-4">
                 <div className="space-y-1">
                     <p className="text-h4 font-display text-text font-light tracking-tight">
                         ${property.price.toLocaleString()}

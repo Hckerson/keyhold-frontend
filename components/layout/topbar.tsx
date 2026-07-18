@@ -92,17 +92,17 @@ function SearchField() {
     return (
         <form onSubmit={submit} className="relative hidden md:block">
             <Search
-                size={16}
+                size={15}
                 strokeWidth={1.5}
-                className="text-text-muted pointer-events-none absolute top-1/2 left-3 -translate-y-1/2"
+                className="text-text-muted pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2"
             />
             <input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search properties…"
+                placeholder="Search…"
                 aria-label="Search properties"
-                className="border-border bg-background-alt text-text placeholder:text-text-muted focus:border-accent focus:ring-accent/20 ease-smooth h-9 w-56 rounded-lg border pr-3 pl-9 text-sm transition-colors focus:ring-2 focus:outline-none"
+                className="border-border bg-background-alt text-text placeholder:text-text-muted focus:border-accent focus:ring-accent/15 ease-smooth h-8 w-48 rounded-lg border pr-3 pl-8 text-sm transition-colors focus:ring-2 focus:outline-none"
             />
         </form>
     );
@@ -119,11 +119,11 @@ function NotificationLink({ route }: { route: TopbarRoute }) {
             aria-label={
                 count > 0 ? `${route.label}, ${count} new` : route.label
             }
-            className="text-text-secondary hover:bg-background-muted hover:text-text ease-smooth relative grid size-9 place-items-center rounded-lg transition-colors"
+            className="text-text-secondary hover:bg-background-muted hover:text-text ease-smooth relative grid size-8 place-items-center rounded-lg transition-colors"
         >
-            <Icon size={18} strokeWidth={1.5} />
+            <Icon size={16} strokeWidth={1.5} />
             {count > 0 && (
-                <span className="bg-highlight text-text-inverse absolute -top-0.5 -right-0.5 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] font-semibold">
+                <span className="bg-highlight text-text-inverse ring-background absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] leading-none font-semibold ring-2">
                     {count}
                 </span>
             )}
@@ -163,17 +163,19 @@ export function Topbar({ routes, rootLabel, rootHref, user }: TopbarProps) {
                 <div className="flex items-center gap-2">
                     <SearchField />
 
-                    {notifications.map((route) => (
-                        <NotificationLink key={route.href} route={route} />
-                    ))}
+                    <div className="flex items-center gap-0.5">
+                        {notifications.map((route) => (
+                            <NotificationLink key={route.href} route={route} />
+                        ))}
+                    </div>
 
                     {user && (
                         <>
-                            <span className="bg-border mx-1 hidden h-6 w-px sm:block" />
+                            <span className="bg-border mx-0.5 hidden h-5 w-px sm:block" />
                             <Link
                                 href={settingsHref}
                                 aria-label="Account settings"
-                                className="bg-accent-light text-accent ring-accent/15 ease-smooth grid size-9 shrink-0 place-items-center rounded-full text-xs font-semibold ring-1 transition-transform hover:scale-105"
+                                className="bg-accent-light text-accent ring-accent/15 ease-smooth grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold ring-1 transition-transform hover:scale-105"
                             >
                                 {initialsOf(user.name)}
                             </Link>

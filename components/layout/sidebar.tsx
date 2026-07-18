@@ -30,7 +30,7 @@ export interface SidebarProps {
 }
 
 const rowBase =
-    "group relative flex h-10 items-center gap-3 rounded-lg text-sm transition-colors duration-200 ease-smooth";
+    "group relative flex h-9 items-center gap-3 rounded-lg text-sm transition-colors duration-200 ease-smooth";
 const rowIdle =
     "text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active";
 
@@ -59,16 +59,16 @@ function Brand({
                 collapsed ? "justify-center px-0" : "gap-3 px-4",
             )}
         >
-            <div className="from-highlight/25 to-highlight/5 ring-highlight/25 grid size-10 shrink-0 place-items-center rounded-xl bg-linear-to-br ring-1">
+            <div className="from-highlight/25 to-highlight/5 ring-highlight/25 grid size-9 shrink-0 place-items-center rounded-xl bg-linear-to-br ring-1">
                 <Building2
-                    size={18}
+                    size={16}
                     strokeWidth={1.5}
                     className="text-highlight"
                 />
             </div>
             {!collapsed && (
                 <div className="min-w-0">
-                    <p className="text-sidebar-text-active font-display truncate text-lg leading-none font-light">
+                    <p className="text-sidebar-text-active font-display truncate text-base leading-none font-light">
                         {brand.full}
                     </p>
                     {brand.tagline && (
@@ -108,10 +108,10 @@ function NavLink({
             )}
         >
             {active && (
-                <span className="bg-highlight shadow-highlight/60 absolute top-1/2 left-0 h-6 w-0.75 -translate-y-1/2 rounded-r-full shadow-[0_0_12px_0]" />
+                <span className="bg-highlight shadow-highlight/60 absolute top-1/2 left-0 h-5 w-0.75 -translate-y-1/2 rounded-r-full shadow-[0_0_12px_0]" />
             )}
             <Icon
-                size={18}
+                size={16}
                 strokeWidth={1.5}
                 className={cn(
                     "ease-smooth shrink-0 transition-transform duration-200 group-hover:translate-x-0.5",
@@ -142,7 +142,7 @@ function UserCard({ user, collapsed }: { user: AuthUser; collapsed: boolean }) {
             )}
         >
             <div className="relative shrink-0">
-                <div className="from-highlight/30 to-highlight/10 text-sidebar-text-active ring-highlight/20 grid size-9 place-items-center rounded-full bg-linear-to-br text-xs font-semibold ring-1">
+                <div className="from-highlight/30 to-highlight/10 text-sidebar-text-active ring-highlight/20 grid size-8 place-items-center rounded-full bg-linear-to-br text-xs font-semibold ring-1">
                     {initialsOf(user.name)}
                 </div>
                 <span className="bg-success ring-sidebar absolute -right-0.5 -bottom-0.5 size-2.5 rounded-full ring-2" />
@@ -188,7 +188,7 @@ export function Sidebar({
         <aside
             className={cn(
                 "bg-sidebar border-sidebar-border ease-smooth relative flex h-screen shrink-0 flex-col border-r transition-[width] duration-300",
-                collapsed ? "w-16" : "w-60",
+                collapsed ? "w-14" : "w-56",
                 className,
             )}
         >
@@ -261,7 +261,7 @@ export function Sidebar({
                         )}
                     >
                         <LogOut
-                            size={18}
+                            size={16}
                             strokeWidth={1.5}
                             className="ease-smooth shrink-0 transition-transform duration-200 group-hover:translate-x-0.5"
                         />
