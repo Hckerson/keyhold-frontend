@@ -1,27 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Phone, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
+import { cn } from "@/lib/utils";
 
-interface Message {
-    id: string;
-    sender: string;
-    senderRole: "user" | "agent";
-    content: string;
-    timestamp: string;
-    avatar: string;
-}
+/* --------------------------------- Types --------------------------------- */
 
 interface Conversation {
     id: string;
     agent: string;
     agentTitle: string;
-    agentAvatar: string;
+    avatar: string;
     lastMessage: string;
     lastMessageTime: string;
     unread: number;
+}
+
+interface Message {
+    id: string;
+    senderRole: "user" | "agent";
+    content: string;
+    timestamp: string;
+    avatar: string;
 }
 
 const conversations: Conversation[] = [
@@ -29,7 +32,7 @@ const conversations: Conversation[] = [
         id: "1",
         agent: "Sarah Chen",
         agentTitle: "Senior Real Estate Agent",
-        agentAvatar: "SC",
+        avatar: "SC",
         lastMessage:
             "I can arrange the viewing for tomorrow at 2 PM if that works for you",
         lastMessageTime: "2 hours ago",
@@ -39,7 +42,7 @@ const conversations: Conversation[] = [
         id: "2",
         agent: "Michael Rodriguez",
         agentTitle: "Real Estate Concierge",
-        agentAvatar: "MR",
+        avatar: "MR",
         lastMessage: "Your offer has been accepted! Congratulations!",
         lastMessageTime: "5 hours ago",
         unread: 0,
@@ -48,7 +51,7 @@ const conversations: Conversation[] = [
         id: "3",
         agent: "Jennifer Martinez",
         agentTitle: "Property Manager",
-        agentAvatar: "JM",
+        avatar: "JM",
         lastMessage: "Here are the updated inspection reports...",
         lastMessageTime: "1 day ago",
         unread: 0,
@@ -58,7 +61,6 @@ const conversations: Conversation[] = [
 const sampleMessages: Message[] = [
     {
         id: "1",
-        sender: "Sarah Chen",
         senderRole: "agent",
         content:
             "Hello! I saw your interest in 456 Oak Avenue. Would you like to schedule a viewing?",
@@ -67,7 +69,6 @@ const sampleMessages: Message[] = [
     },
     {
         id: "2",
-        sender: "You",
         senderRole: "user",
         content: "Yes, I would love to see it! What times are available?",
         timestamp: "10:45 AM",
@@ -75,7 +76,6 @@ const sampleMessages: Message[] = [
     },
     {
         id: "3",
-        sender: "Sarah Chen",
         senderRole: "agent",
         content:
             "I can arrange the viewing for tomorrow at 2 PM if that works for you. The property is absolutely stunning!",
@@ -84,164 +84,261 @@ const sampleMessages: Message[] = [
     },
 ];
 
-export default function MessagesPage() {
-    const [selectedConversation, setSelectedConversation] =
-        useState<string>("1");
-    const [messageText, setMessageText] = useState("");
+/* -------------------------------- Avatar --------------------------------- */
 
-    const selected = conversations.find((c) => c.id === selectedConversation);
+function AvatarTile({
+    initials,
+    className,
+}: {
+    initials: string;
+    className?: string;
+}) {
+    return (
+        <span
+            className={cn(
+                "bg-accent-light text-accent grid shrink-0 place-items-center rounded-full text-xs font-semibold",
+                className,
+            )}
+        >
+            {initials}
+        </span>
+    );
+}
 
-    const handleSendMessage = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (messageText.trim()) {
-            setMessageText("");
-        }
+/* --------------------------- Conversation list --------------------------- */
+
+function ConversationItem({
+    conversation,
+    active,
+    onClick,
+}: {
+    conversation: Conversation;
+    active: boolean;
+    onClick: () => void;
+}) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            aria-current={active ? "true" : undefined}
+            className={cn(
+                "border-border-light ease-smooth w-full border-b px-4 py-3 text-left transition-colors",
+                active ? "bg-accent-light/50" : "hover:bg-background-alt",
+            )}
+        >
+            <div className="flex items-start gap-3">
+                <AvatarTile initials={conversation.avatar} className="size-9" />
+                <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                        <p className="text-text truncate text-sm font-medium">
+                            {conversation.agent}
+                        </p>
+                        {conversation.unread > 0 && (
+                            <span className="bg-highlight text-text-inverse grid h-4 min-w-4 shrink-0 place-items-center rounded-full px-1 text-[10px] font-semibold">
+                                {conversation.unread}
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-text-muted truncate text-xs">
+                        {conversation.agentTitle}
+                    </p>
+                    <p className="text-text-secondary mt-1 line-clamp-1 text-xs">
+                        {conversation.lastMessage}
+                    </p>
+                    <p className="text-text-muted mt-1 text-xs">
+                        {conversation.lastMessageTime}
+                    </p>
+                </div>
+            </div>
+        </button>
+    );
+}
+
+function ConversationList({
+    items,
+    selectedId,
+    onSelect,
+    className,
+}: {
+    items: Conversation[];
+    selectedId: string;
+    onSelect: (id: string) => void;
+    className?: string;
+}) {
+    return (
+        <section
+            className={cn(
+                "bg-background-muted border-border-light flex flex-col overflow-hidden rounded-xl border shadow-sm lg:h-full",
+                className,
+            )}
+        >
+            <div className="border-border-light border-b px-4 py-3">
+                <h2 className="text-text text-sm font-semibold">
+                    Conversations
+                </h2>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto">
+                {items.map((conversation) => (
+                    <ConversationItem
+                        key={conversation.id}
+                        conversation={conversation}
+                        active={conversation.id === selectedId}
+                        onClick={() => onSelect(conversation.id)}
+                    />
+                ))}
+            </div>
+        </section>
+    );
+}
+
+/* ------------------------------ Message thread --------------------------- */
+
+function MessageBubble({ message }: { message: Message }) {
+    const isUser = message.senderRole === "user";
+    return (
+        <div className={cn("flex gap-2.5", isUser && "flex-row-reverse")}>
+            <AvatarTile initials={message.avatar} className="size-8" />
+            <div
+                className={cn(
+                    "flex max-w-[75%] flex-col gap-1",
+                    isUser ? "items-end" : "items-start",
+                )}
+            >
+                <div
+                    className={cn(
+                        "px-3.5 py-2 text-sm",
+                        isUser
+                            ? "bg-accent text-text-inverse rounded-2xl rounded-br-sm"
+                            : "bg-background border-border-light text-text rounded-2xl rounded-bl-sm border",
+                    )}
+                >
+                    {message.content}
+                </div>
+                <span className="text-text-muted text-xs">
+                    {message.timestamp}
+                </span>
+            </div>
+        </div>
+    );
+}
+
+function MessageComposer() {
+    const [text, setText] = useState("");
+
+    const submit = (event: React.FormEvent) => {
+        event.preventDefault();
+        setText("");
     };
 
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-h3 font-display text-text font-light">
-                    Messages
-                </h1>
-                <p className="text-text-secondary mt-2">
-                    Chat with your real estate agents and concierge
-                </p>
-            </div>
+        <form
+            onSubmit={submit}
+            className="border-border-light flex items-center gap-2 border-t p-3"
+        >
+            <Input
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                placeholder="Type your message…"
+                aria-label="Message"
+                className="flex-1"
+            />
+            <Button
+                variant="primary"
+                size="sm"
+                type="submit"
+                aria-label="Send message"
+            >
+                <Send size={16} strokeWidth={1.5} />
+            </Button>
+        </form>
+    );
+}
 
-            <div className="grid h-[600px] grid-cols-1 gap-6 lg:grid-cols-3">
-                <Card className="flex flex-col lg:col-span-1">
-                    <CardContent className="flex h-full flex-col p-0">
-                        <div className="border-border border-b p-4">
-                            <h2 className="text-text text-sm font-medium">
-                                Conversations
-                            </h2>
+function MessageThread({
+    conversation,
+    messages,
+    className,
+}: {
+    conversation?: Conversation;
+    messages: Message[];
+    className?: string;
+}) {
+    return (
+        <section
+            className={cn(
+                "bg-background-muted border-border-light flex flex-col overflow-hidden rounded-xl border shadow-sm lg:h-full",
+                className,
+            )}
+        >
+            {conversation ? (
+                <>
+                    <div className="border-border-light flex items-center justify-between gap-3 border-b px-4 py-3">
+                        <div className="flex min-w-0 items-center gap-3">
+                            <AvatarTile
+                                initials={conversation.avatar}
+                                className="size-8"
+                            />
+                            <div className="min-w-0">
+                                <p className="text-text truncate text-sm font-medium">
+                                    {conversation.agent}
+                                </p>
+                                <p className="text-text-muted truncate text-xs">
+                                    {conversation.agentTitle}
+                                </p>
+                            </div>
                         </div>
+                        <Button variant="secondary" size="sm">
+                            <Phone
+                                size={14}
+                                strokeWidth={1.5}
+                                className="mr-1.5"
+                            />
+                            Call
+                        </Button>
+                    </div>
 
-                        <div className="flex-1 overflow-y-auto">
-                            {conversations.map((conversation) => (
-                                <button
-                                    key={conversation.id}
-                                    onClick={() =>
-                                        setSelectedConversation(conversation.id)
-                                    }
-                                    className={`border-border hover:bg-primary-dark w-full border-b px-4 py-4 text-left transition-colors ${
-                                        selectedConversation === conversation.id
-                                            ? "bg-primary-dark border-l-accent border-l-2"
-                                            : ""
-                                    }`}
-                                >
-                                    <div className="mb-2 flex items-start justify-between">
-                                        <p className="text-text text-sm font-medium">
-                                            {conversation.agent}
-                                        </p>
-                                        {conversation.unread > 0 && (
-                                            <span className="bg-accent rounded-full px-2 py-0.5 text-xs text-white">
-                                                {conversation.unread}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <p className="text-text-secondary mb-2 text-xs">
-                                        {conversation.agentTitle}
-                                    </p>
-                                    <p className="text-text-secondary line-clamp-2 text-xs">
-                                        {conversation.lastMessage}
-                                    </p>
-                                    <p className="text-text-secondary/50 mt-2 text-xs">
-                                        {conversation.lastMessageTime}
-                                    </p>
-                                </button>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
+                    <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
+                        {messages.map((message) => (
+                            <MessageBubble key={message.id} message={message} />
+                        ))}
+                    </div>
 
-                <Card className="flex flex-col lg:col-span-2">
-                    {selected ? (
-                        <>
-                            <div className="border-border flex items-center justify-between border-b p-4">
-                                <div>
-                                    <h2 className="text-text text-sm font-medium">
-                                        {selected.agent}
-                                    </h2>
-                                    <p className="text-text-secondary mt-1 text-xs">
-                                        {selected.agentTitle}
-                                    </p>
-                                </div>
-                                <Button
-                                    variant="secondary"
-                                    className="h-8 text-xs"
-                                >
-                                    Call
-                                </Button>
-                            </div>
+                    <MessageComposer />
+                </>
+            ) : (
+                <div className="text-text-secondary flex flex-1 items-center justify-center p-6 text-sm">
+                    Select a conversation to start messaging
+                </div>
+            )}
+        </section>
+    );
+}
 
-                            <div className="flex-1 space-y-4 overflow-y-auto p-4">
-                                {sampleMessages.map((message) => (
-                                    <div
-                                        key={message.id}
-                                        className={`flex gap-3 ${message.senderRole === "user" ? "flex-row-reverse" : ""}`}
-                                    >
-                                        <div className="bg-accent/20 text-accent flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-medium">
-                                            {message.avatar}
-                                        </div>
-                                        <div
-                                            className={`flex max-w-xs flex-col gap-1 ${
-                                                message.senderRole === "user"
-                                                    ? "items-end"
-                                                    : "items-start"
-                                            }`}
-                                        >
-                                            <div
-                                                className={`rounded-lg px-4 py-2 text-sm ${
-                                                    message.senderRole ===
-                                                    "user"
-                                                        ? "bg-accent text-white"
-                                                        : "bg-primary-dark border-border text-text border"
-                                                }`}
-                                            >
-                                                {message.content}
-                                            </div>
-                                            <span className="text-text-secondary text-xs">
-                                                {message.timestamp}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
+/* --------------------------------- Page ---------------------------------- */
 
-                            <div className="border-border border-t p-4">
-                                <form
-                                    onSubmit={handleSendMessage}
-                                    className="flex gap-2"
-                                >
-                                    <Input
-                                        type="text"
-                                        placeholder="Type your message..."
-                                        value={messageText}
-                                        onChange={(e) =>
-                                            setMessageText(e.target.value)
-                                        }
-                                        className="flex-1"
-                                    />
-                                    <Button
-                                        variant="primary"
-                                        type="submit"
-                                        className="h-10 px-4 text-xs"
-                                    >
-                                        Send
-                                    </Button>
-                                </form>
-                            </div>
-                        </>
-                    ) : (
-                        <CardContent className="flex h-full items-center justify-center">
-                            <p className="text-text-secondary">
-                                Select a conversation to start messaging
-                            </p>
-                        </CardContent>
-                    )}
-                </Card>
+export default function MessagesPage() {
+    const [selectedId, setSelectedId] = useState("1");
+    const selected = conversations.find((c) => c.id === selectedId);
+
+    return (
+        <div className="space-y-6">
+            <PageHeader
+                title="Messages"
+                description="Chat with your real estate agents and concierge"
+            />
+
+            <div className="grid grid-cols-1 gap-4 lg:h-150 lg:grid-cols-3">
+                <ConversationList
+                    items={conversations}
+                    selectedId={selectedId}
+                    onSelect={setSelectedId}
+                    className="lg:col-span-1"
+                />
+                <MessageThread
+                    conversation={selected}
+                    messages={sampleMessages}
+                    className="lg:col-span-2"
+                />
             </div>
         </div>
     );
