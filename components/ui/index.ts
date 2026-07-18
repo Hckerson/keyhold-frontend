@@ -36,6 +36,13 @@ export {
     CardFooter,
 } from "./card";
 
+export { PropertyCard } from "./property-card";
+export type {
+    Property,
+    PropertyCardProps,
+    PropertyStatus,
+} from "./property-card";
+
 export { Container } from "./container";
 
 export { Image } from "./image";
