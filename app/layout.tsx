@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import type { Metadata, Viewport } from "next";
 import Provider from "@/components/providers/provider";
+import { display, sans, mono } from "@/public/fonts/font";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -38,12 +39,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html
+            lang="en"
+            className={`${display.variable} ${sans.variable} ${mono.variable}`}
+        >
             <head>
                 <meta charSet="utf-8" />
                 <link rel="icon" href="/favicon.ico" />
             </head>
-            <body className="bg-background text-text antialiased">
+            <body className="bg-background text-text font-body antialiased">
                 <Provider>{children}</Provider>
             </body>
         </html>
