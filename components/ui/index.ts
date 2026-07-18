@@ -49,6 +49,12 @@ export type { PageHeaderProps } from "./page-header";
 export { StatCard } from "./stat-card";
 export type { StatCardProps } from "./stat-card";
 
+export { ProgressBar } from "./progress-bar";
+export type { ProgressBarProps } from "./progress-bar";
+
+export { Sparkline } from "./sparkline";
+export type { SparklineProps } from "./sparkline";
+
 export { Panel } from "./panel";
 export type { PanelProps } from "./panel";
 
