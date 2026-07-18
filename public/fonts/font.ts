@@ -1,14 +1,25 @@
-import { Inter, Poppins } from "next/font/google";
+import { Fraunces, Libre_Franklin, JetBrains_Mono } from "next/font/google";
 
-const inter = Inter({
-    fallback: ["system-ui", "arial"],
+const display = Fraunces({
     subsets: ["latin"],
+    style: ["normal", "italic"],
+    variable: "--nf-display",
+    display: "swap",
+    fallback: ["Georgia", "Times New Roman", "serif"],
 });
 
-const poppins = Poppins({
-    fallback: ["system-ui", "arial"],
-    weight: ["400", "500", "600", "700"],
+const sans = Libre_Franklin({
     subsets: ["latin"],
+    variable: "--nf-body",
+    display: "swap",
+    fallback: ["system-ui", "Segoe UI", "sans-serif"],
 });
 
-export { inter, poppins };
+const mono = JetBrains_Mono({
+    subsets: ["latin"],
+    variable: "--nf-mono",
+    display: "swap",
+    fallback: ["ui-monospace", "monospace"],
+});
+
+export { display, sans, mono };

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import Image from "next/image";
-import { poppins } from "@/public/fonts/font";
+import { sans } from "@/public/fonts/font";
 import React, { useEffect, useRef, useState } from "react";
 
 interface TemplateProps {
@@ -48,9 +48,7 @@ export default function InputTemplate({
                         </div>
                     </div>
                 </div>
-                <div
-                    className={clsx("pad flex-1 p-4 pt-0!", poppins.className)}
-                >
+                <div className={clsx("pad flex-1 p-4 pt-0!", sans.className)}>
                     {children}
                 </div>
             </div>

@@ -42,7 +42,7 @@ Tailwind v4, tokens defined in `styles/tokens.css` + `@theme` in `styles/globals
 `sidebar` · `sidebar-border` · `sidebar-hover` · `sidebar-active` · `sidebar-text` · `sidebar-text-active` — the dark nav ramp
 `overlay` — modal scrims
 
-**Type:** families `font-display` (Merriweather serif) · `font-body` (Space Grotesk) · `font-mono`. Scale `text-h1…text-h6`, `text-lg/base/sm/xs`, `text-label`, `text-caption`. Weights `font-light` (300) … `font-bold` (700).
+**Type:** families `font-display` (Fraunces serif) · `font-body` (Libre Franklin) · `font-mono` (JetBrains Mono). Scale `text-h1…text-h6`, `text-lg/base/sm/xs`, `text-label`, `text-caption`. Weights `font-light` (300) … `font-bold` (700).
 
 **Radius** `rounded-xs sm md lg xl full` (xl = 12px, the ceiling). **Shadow** `shadow-sm md lg xl 2xl`. **Motion** easing `ease-smooth` (default), `ease-out`; duration `duration-200` (hover) / `duration-300` (layout). **Z-index** via tokens (`z-modal`, `z-popover`, …).
 
