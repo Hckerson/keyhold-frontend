@@ -41,7 +41,9 @@ export default function DashboardLayout({
                 />
 
                 <div className="py-6">
-                    <Container>{children}</Container>
+                    <Container>
+                        <div className="w-full min-w-0">{children}</div>
+                    </Container>
                 </div>
             </main>
         </div>
