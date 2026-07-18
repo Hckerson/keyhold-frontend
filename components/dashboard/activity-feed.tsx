@@ -2,12 +2,19 @@ import {
     CalendarDays,
     FileText,
     MessageSquare,
+    Eye,
+    Home,
     Bell,
     type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type ActivityType = "viewing" | "offer" | "message";
+export type ActivityType =
+    | "viewing"
+    | "offer"
+    | "message"
+    | "showing"
+    | "listing";
 
 export interface ActivityEntry {
     id: string | number;
@@ -21,6 +28,8 @@ const typeIcon: Record<ActivityType, LucideIcon> = {
     viewing: CalendarDays,
     offer: FileText,
     message: MessageSquare,
+    showing: Eye,
+    listing: Home,
 };
 
 function ActivityItem({ entry }: { entry: ActivityEntry }) {

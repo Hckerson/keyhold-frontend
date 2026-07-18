@@ -9,6 +9,7 @@ export interface StatCardProps {
     icon?: LucideIcon;
     change?: string;
     trend?: "up" | "down";
+    caption?: string;
     series?: number[];
     href?: string;
     className?: string;
@@ -20,6 +21,7 @@ function StatBody({
     icon: Icon,
     change,
     trend,
+    caption,
     series,
 }: StatCardProps) {
     return (
@@ -59,6 +61,10 @@ function StatBody({
                     </span>
                 )}
             </div>
+
+            {caption && (
+                <p className="text-text-muted mt-1 text-xs">{caption}</p>
+            )}
 
             {series && series.length > 1 && (
                 <Sparkline data={series} className="mt-3" />
