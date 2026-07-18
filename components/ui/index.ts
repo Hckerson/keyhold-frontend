@@ -76,6 +76,12 @@ export type { Step } from "./step-list";
 export { ToggleRow } from "./toggle-row";
 export type { ToggleRowProps } from "./toggle-row";
 
+export { FormField } from "./form-field";
+export type { FormFieldProps } from "./form-field";
+
+export { ActionRow } from "./action-row";
+export type { ActionRowProps } from "./action-row";
+
 export { Container } from "./container";
 
 export { Image } from "./image";
