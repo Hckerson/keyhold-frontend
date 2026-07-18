@@ -88,6 +88,9 @@ export type { FormFieldProps } from "./form-field";
 export { ActionRow } from "./action-row";
 export type { ActionRowProps } from "./action-row";
 
+export { ServiceCard } from "./service-card";
+export type { ServiceCardProps } from "./service-card";
+
 export { Container } from "./container";
 
 export { Image } from "./image";
