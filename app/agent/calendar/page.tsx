@@ -8,20 +8,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { MiniCalendar } from "@/components/dashboard/mini-calendar";
 import {
     AppointmentRow,
-    type AppointmentType,
+    type Appointment,
 } from "@/components/dashboard/appointment-row";
 import { cn } from "@/lib/utils";
-
-interface Appointment {
-    id: string;
-    type: AppointmentType;
-    title: string;
-    property: string;
-    client: string;
-    time: string;
-    duration: string;
-    notes: string;
-}
 
 const appointments: Appointment[] = [
     {
@@ -126,13 +115,7 @@ export default function AgentCalendarPage() {
                             {appointments.map((appointment) => (
                                 <AppointmentRow
                                     key={appointment.id}
-                                    type={appointment.type}
-                                    title={appointment.title}
-                                    property={appointment.property}
-                                    client={appointment.client}
-                                    time={appointment.time}
-                                    duration={appointment.duration}
-                                    notes={appointment.notes}
+                                    appointment={appointment}
                                 />
                             ))}
                         </div>

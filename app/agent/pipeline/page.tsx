@@ -1,17 +1,7 @@
 import { Panel } from "@/components/ui/panel";
 import { PageHeader } from "@/components/ui/page-header";
 import { cn } from "@/lib/utils";
-import { DealRow, type DealStage } from "@/components/dashboard/deal-row";
-
-interface Deal {
-    id: string;
-    property: string;
-    buyer: string;
-    price: number;
-    stage: DealStage;
-    daysInStage: number;
-    nextStep: string;
-}
+import { DealRow, type Deal } from "@/components/dashboard/deal-row";
 
 const deals: Deal[] = [
     {
@@ -88,15 +78,7 @@ export default function AgentPipelinePage() {
 
             <div className="space-y-4">
                 {deals.map((deal) => (
-                    <DealRow
-                        key={deal.id}
-                        property={deal.property}
-                        buyer={deal.buyer}
-                        price={deal.price}
-                        stage={deal.stage}
-                        daysInStage={deal.daysInStage}
-                        nextStep={deal.nextStep}
-                    />
+                    <DealRow key={deal.id} deal={deal} />
                 ))}
             </div>
 

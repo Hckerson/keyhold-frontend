@@ -177,7 +177,6 @@ export default function AdminUsersPage() {
                                     <td className="px-4 py-3">
                                         <StatusBadge
                                             tone={statusMeta[user.status].tone}
-                                            dot
                                         >
                                             {statusMeta[user.status].label}
                                         </StatusBadge>

@@ -4,23 +4,10 @@ import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
     ListingManageRow,
-    type ListingStatus,
+    type ManagedListing,
 } from "@/components/dashboard/listing-manage-row";
 
-interface Listing {
-    id: string;
-    address: string;
-    price: number;
-    beds: number;
-    baths: number;
-    sqft: number;
-    status: ListingStatus;
-    listDate: string;
-    showings: number;
-    offers: number;
-}
-
-const listings: Listing[] = [
+const listings: ManagedListing[] = [
     {
         id: "1",
         address: "456 Oak Avenue, Beverly Hills, CA",
@@ -79,18 +66,7 @@ export default function AgentListingsPage() {
             {listings.length > 0 ? (
                 <div className="space-y-4">
                     {listings.map((listing) => (
-                        <ListingManageRow
-                            key={listing.id}
-                            address={listing.address}
-                            price={listing.price}
-                            beds={listing.beds}
-                            baths={listing.baths}
-                            sqft={listing.sqft}
-                            status={listing.status}
-                            listDate={listing.listDate}
-                            showings={listing.showings}
-                            offers={listing.offers}
-                        />
+                        <ListingManageRow key={listing.id} listing={listing} />
                     ))}
                 </div>
             ) : (

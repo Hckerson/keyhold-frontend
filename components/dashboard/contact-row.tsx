@@ -9,25 +9,22 @@ export interface ContactField {
     value: ReactNode;
 }
 
-export interface ContactRowProps {
+export interface ContactRowData {
     name: string;
     subtitle: string;
     badge: { label: string; tone: BadgeTone };
     fields: ContactField[];
     nextAction: string;
+}
+
+export interface ContactRowProps {
+    contact: ContactRowData;
     actions: ReactNode;
     className?: string;
 }
 
-export function ContactRow({
-    name,
-    subtitle,
-    badge,
-    fields,
-    nextAction,
-    actions,
-    className,
-}: ContactRowProps) {
+export function ContactRow({ contact, actions, className }: ContactRowProps) {
+    const { name, subtitle, badge, fields, nextAction } = contact;
     return (
         <article
             className={cn(
@@ -45,9 +42,7 @@ export function ContactRow({
                             {subtitle}
                         </p>
                     </div>
-                    <StatusBadge tone={badge.tone} dot>
-                        {badge.label}
-                    </StatusBadge>
+                    <StatusBadge tone={badge.tone}>{badge.label}</StatusBadge>
                 </div>
 
                 <div className="border-border-light mt-4 grid gap-4 border-t pt-4 sm:grid-cols-3">

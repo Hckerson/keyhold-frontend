@@ -15,7 +15,7 @@ export type AlertType =
     | "under-offer"
     | "status-change";
 
-export interface AlertRowProps {
+export interface Alert {
     id: string;
     type: AlertType;
     title: string;
@@ -25,6 +25,10 @@ export interface AlertRowProps {
     previousPrice?: number;
     timestamp: string;
     read: boolean;
+}
+
+export interface AlertRowProps {
+    alert: Alert;
     className?: string;
 }
 
@@ -37,18 +41,18 @@ const typeConfig: Record<AlertType, { icon: LucideIcon; tint: string }> = {
 
 const toMillions = (value: number) => `$${(value / 1_000_000).toFixed(2)}M`;
 
-export function AlertRow({
-    id,
-    type,
-    title,
-    description,
-    address,
-    price,
-    previousPrice,
-    timestamp,
-    read,
-    className,
-}: AlertRowProps) {
+export function AlertRow({ alert, className }: AlertRowProps) {
+    const {
+        id,
+        type,
+        title,
+        description,
+        address,
+        price,
+        previousPrice,
+        timestamp,
+        read,
+    } = alert;
     const { icon: Icon, tint } = typeConfig[type] ?? {
         icon: Bell,
         tint: "bg-background-muted text-text-muted",

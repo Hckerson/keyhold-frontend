@@ -162,7 +162,6 @@ export default function AdminTransactionsPage() {
                                         <td className="px-4 py-3">
                                             <StatusBadge
                                                 tone={statusMeta[t.status].tone}
-                                                dot
                                             >
                                                 {statusMeta[t.status].label}
                                             </StatusBadge>

@@ -4,31 +4,31 @@ import { Image } from "@/components/ui/image";
 import { PropertySpecs } from "@/components/ui/property-specs";
 import { cn } from "@/lib/utils";
 
-export interface ListingRowProps {
-    href?: string;
+export interface ListingRowData {
     imageUrl: string;
     address: string;
     price: number;
     beds: number;
     baths: number;
     sqft: number;
+}
+
+export interface ListingRowProps {
+    listing: ListingRowData;
+    href?: string;
     meta?: string;
     actions?: ReactNode;
     className?: string;
 }
 
 export function ListingRow({
+    listing,
     href,
-    imageUrl,
-    address,
-    price,
-    beds,
-    baths,
-    sqft,
     meta,
     actions,
     className,
 }: ListingRowProps) {
+    const { imageUrl, address, price, beds, baths, sqft } = listing;
     const priceLabel = `$${(price / 1_000_000).toFixed(2)}M`;
     const media = (
         <Image
