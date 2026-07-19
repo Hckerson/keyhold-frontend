@@ -5,18 +5,7 @@ import { Panel } from "@/components/ui/panel";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ToggleRow } from "@/components/ui/toggle-row";
-import { AlertRow, type AlertType } from "@/components/dashboard/alert-row";
-
-interface Alert {
-    id: string;
-    type: AlertType;
-    title: string;
-    description: string;
-    address: string;
-    property?: { price?: number; previousPrice?: number };
-    timestamp: string;
-    read: boolean;
-}
+import { AlertRow, type Alert } from "@/components/dashboard/alert-row";
 
 const alerts: Alert[] = [
     {
@@ -25,7 +14,8 @@ const alerts: Alert[] = [
         title: "Price Reduction",
         description: "The price has been reduced by $150,000",
         address: "456 Oak Avenue, Beverly Hills, CA",
-        property: { price: 3200000, previousPrice: 3350000 },
+        price: 3200000,
+        previousPrice: 3350000,
         timestamp: "2 hours ago",
         read: false,
     },
@@ -35,7 +25,7 @@ const alerts: Alert[] = [
         title: "New Listing Match",
         description: "A new property matching your criteria just listed",
         address: "678 Elm Street, Bel Air, CA",
-        property: { price: 3800000 },
+        price: 3800000,
         timestamp: "5 hours ago",
         read: false,
     },
@@ -100,18 +90,7 @@ export default function AlertsPage() {
             {alerts.length > 0 ? (
                 <div className="space-y-3">
                     {alerts.map((alert) => (
-                        <AlertRow
-                            key={alert.id}
-                            id={alert.id}
-                            type={alert.type}
-                            title={alert.title}
-                            description={alert.description}
-                            address={alert.address}
-                            price={alert.property?.price}
-                            previousPrice={alert.property?.previousPrice}
-                            timestamp={alert.timestamp}
-                            read={alert.read}
-                        />
+                        <AlertRow key={alert.id} alert={alert} />
                     ))}
                 </div>
             ) : (

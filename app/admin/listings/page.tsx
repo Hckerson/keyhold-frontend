@@ -92,7 +92,7 @@ export default function AdminModerationPage() {
                                         <h3 className="text-text truncate text-sm font-medium">
                                             {listing.address}
                                         </h3>
-                                        <StatusBadge tone={meta.tone} dot>
+                                        <StatusBadge tone={meta.tone}>
                                             {meta.label}
                                         </StatusBadge>
                                     </div>
@@ -142,9 +142,9 @@ export default function AdminModerationPage() {
                                         {primary}
                                     </Button>
                                     <Button
-                                        variant="ghost"
+                                        variant="outline-danger"
                                         size="sm"
-                                        className="text-error hover:text-error w-full sm:w-28"
+                                        className="w-full sm:w-28"
                                     >
                                         {danger}
                                     </Button>

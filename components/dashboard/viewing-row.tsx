@@ -5,13 +5,18 @@ import { cn } from "@/lib/utils";
 
 export type ViewingStatus = "confirmed" | "pending" | "cancelled";
 
-export interface ViewingRowProps {
+export interface Viewing {
+    id: string;
     address: string;
     date: string;
     time: string;
     agent: string;
     agentPhone: string;
     status: ViewingStatus;
+}
+
+export interface ViewingRowProps {
+    viewing: Viewing;
     className?: string;
 }
 
@@ -29,15 +34,8 @@ function formatDate(date: string) {
     });
 }
 
-export function ViewingRow({
-    address,
-    date,
-    time,
-    agent,
-    agentPhone,
-    status,
-    className,
-}: ViewingRowProps) {
+export function ViewingRow({ viewing, className }: ViewingRowProps) {
+    const { address, date, time, agent, agentPhone, status } = viewing;
     const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
 
     return (
@@ -51,7 +49,7 @@ export function ViewingRow({
                 <h3 className="text-text min-w-0 flex-1 truncate text-sm font-medium">
                     {address}
                 </h3>
-                <StatusBadge tone={statusTone[status]} dot>
+                <StatusBadge tone={statusTone[status]}>
                     {statusLabel}
                 </StatusBadge>
             </div>

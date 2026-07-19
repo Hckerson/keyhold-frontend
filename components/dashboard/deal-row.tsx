@@ -26,25 +26,23 @@ const stageTone = {
     closing: "success",
 } as const;
 
-export interface DealRowProps {
+export interface Deal {
+    id: string;
     property: string;
     buyer: string;
     price: number;
     stage: DealStage;
     daysInStage: number;
     nextStep: string;
+}
+
+export interface DealRowProps {
+    deal: Deal;
     className?: string;
 }
 
-export function DealRow({
-    property,
-    buyer,
-    price,
-    stage,
-    daysInStage,
-    nextStep,
-    className,
-}: DealRowProps) {
+export function DealRow({ deal, className }: DealRowProps) {
+    const { property, buyer, price, stage, daysInStage, nextStep } = deal;
     const index = STAGES.findIndex((s) => s.id === stage);
     const progress = Math.round(((index + 1) / STAGES.length) * 100);
     const label = STAGES[index]?.label ?? "Unknown";
@@ -65,9 +63,7 @@ export function DealRow({
                         {buyer}
                     </p>
                 </div>
-                <StatusBadge tone={stageTone[stage]} dot>
-                    {label}
-                </StatusBadge>
+                <StatusBadge tone={stageTone[stage]}>{label}</StatusBadge>
             </div>
 
             <div className="flex items-baseline gap-2">

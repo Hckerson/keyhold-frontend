@@ -135,34 +135,38 @@ export default function VIPConciergePage() {
                 {vipClients.map((client) => (
                     <ContactRow
                         key={client.id}
-                        name={client.name}
-                        subtitle={client.status}
-                        badge={tierMeta[client.tier]}
-                        fields={[
-                            {
-                                label: "Budget",
-                                value: (
-                                    <span className="tabular-nums">
-                                        $
-                                        {(client.budget / 1_000_000).toFixed(1)}
-                                        M
-                                    </span>
-                                ),
-                            },
-                            {
-                                label: "Transactions",
-                                value: (
-                                    <span className="tabular-nums">
-                                        {client.deals} closed
-                                    </span>
-                                ),
-                            },
-                            {
-                                label: "Last Contact",
-                                value: client.lastContact,
-                            },
-                        ]}
-                        nextAction={client.nextAction}
+                        contact={{
+                            name: client.name,
+                            subtitle: client.status,
+                            badge: tierMeta[client.tier],
+                            fields: [
+                                {
+                                    label: "Budget",
+                                    value: (
+                                        <span className="tabular-nums">
+                                            $
+                                            {(
+                                                client.budget / 1_000_000
+                                            ).toFixed(1)}
+                                            M
+                                        </span>
+                                    ),
+                                },
+                                {
+                                    label: "Transactions",
+                                    value: (
+                                        <span className="tabular-nums">
+                                            {client.deals} closed
+                                        </span>
+                                    ),
+                                },
+                                {
+                                    label: "Last Contact",
+                                    value: client.lastContact,
+                                },
+                            ],
+                            nextAction: client.nextAction,
+                        }}
                         actions={
                             <>
                                 <Button

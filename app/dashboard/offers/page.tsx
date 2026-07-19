@@ -3,16 +3,7 @@ import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { OfferRow, type OfferStatus } from "@/components/dashboard/offer-row";
-
-interface Offer {
-    id: string;
-    address: string;
-    offerPrice: number;
-    listPrice: number;
-    status: OfferStatus;
-    daysOld: number;
-}
+import { OfferRow, type Offer } from "@/components/dashboard/offer-row";
 
 const offers: Offer[] = [
     {
@@ -53,15 +44,7 @@ export default function OffersPage() {
             {offers.length > 0 ? (
                 <div className="space-y-4">
                     {offers.map((offer) => (
-                        <OfferRow
-                            key={offer.id}
-                            id={offer.id}
-                            address={offer.address}
-                            offerPrice={offer.offerPrice}
-                            listPrice={offer.listPrice}
-                            status={offer.status}
-                            daysOld={offer.daysOld}
-                        />
+                        <OfferRow key={offer.id} offer={offer} />
                     ))}
                 </div>
             ) : (

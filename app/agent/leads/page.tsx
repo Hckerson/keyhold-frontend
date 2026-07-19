@@ -109,36 +109,45 @@ export default function AgentLeadsPage() {
                 {leads.map((lead) => (
                     <ContactRow
                         key={lead.id}
-                        name={lead.name}
-                        subtitle={`${lead.email} · ${lead.phone}`}
-                        badge={statusMeta[lead.status]}
-                        fields={[
-                            {
-                                label: "Budget",
-                                value: (
-                                    <span className="tabular-nums">
-                                        ${(lead.budget / 1_000_000).toFixed(2)}M
-                                    </span>
-                                ),
-                            },
-                            {
-                                label: "Interests",
-                                value: (
-                                    <div className="flex flex-wrap gap-1">
-                                        {lead.interests.map((interest) => (
-                                            <span
-                                                key={interest}
-                                                className="bg-accent-light text-accent rounded px-2 py-0.5 text-xs font-normal"
-                                            >
-                                                {interest}
-                                            </span>
-                                        ))}
-                                    </div>
-                                ),
-                            },
-                            { label: "Last Contact", value: lead.lastContact },
-                        ]}
-                        nextAction={lead.nextAction}
+                        contact={{
+                            name: lead.name,
+                            subtitle: `${lead.email} · ${lead.phone}`,
+                            badge: statusMeta[lead.status],
+                            fields: [
+                                {
+                                    label: "Budget",
+                                    value: (
+                                        <span className="tabular-nums">
+                                            $
+                                            {(lead.budget / 1_000_000).toFixed(
+                                                2,
+                                            )}
+                                            M
+                                        </span>
+                                    ),
+                                },
+                                {
+                                    label: "Interests",
+                                    value: (
+                                        <div className="flex flex-wrap gap-1">
+                                            {lead.interests.map((interest) => (
+                                                <span
+                                                    key={interest}
+                                                    className="bg-accent-light text-accent rounded px-2 py-0.5 text-xs font-normal"
+                                                >
+                                                    {interest}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ),
+                                },
+                                {
+                                    label: "Last Contact",
+                                    value: lead.lastContact,
+                                },
+                            ],
+                            nextAction: lead.nextAction,
+                        }}
                         actions={
                             <>
                                 <Button

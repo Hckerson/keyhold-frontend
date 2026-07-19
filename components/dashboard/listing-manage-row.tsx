@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 
 export type ListingStatus = "active" | "under-offer" | "sold";
 
-export interface ListingManageRowProps {
+export interface ManagedListing {
+    id: string;
     address: string;
     price: number;
     beds: number;
@@ -14,6 +15,10 @@ export interface ListingManageRowProps {
     listDate: string;
     showings: number;
     offers: number;
+}
+
+export interface ListingManageRowProps {
+    listing: ManagedListing;
     className?: string;
 }
 
@@ -63,17 +68,20 @@ function Field({
 }
 
 export function ListingManageRow({
-    address,
-    price,
-    beds,
-    baths,
-    sqft,
-    status,
-    listDate,
-    showings,
-    offers,
+    listing,
     className,
 }: ListingManageRowProps) {
+    const {
+        address,
+        price,
+        beds,
+        baths,
+        sqft,
+        status,
+        listDate,
+        showings,
+        offers,
+    } = listing;
     return (
         <article
             className={cn(
@@ -86,7 +94,7 @@ export function ListingManageRow({
                     <h3 className="text-text truncate text-sm font-medium">
                         {address}
                     </h3>
-                    <StatusBadge tone={statusTone[status]} dot>
+                    <StatusBadge tone={statusTone[status]}>
                         {statusLabel[status]}
                     </StatusBadge>
                 </div>

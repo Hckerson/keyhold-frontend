@@ -5,20 +5,7 @@ import { Panel } from "@/components/ui/panel";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StepList, type Step } from "@/components/ui/step-list";
-import {
-    ViewingRow,
-    type ViewingStatus,
-} from "@/components/dashboard/viewing-row";
-
-interface Viewing {
-    id: string;
-    address: string;
-    date: string;
-    time: string;
-    agent: string;
-    agentPhone: string;
-    status: ViewingStatus;
-}
+import { ViewingRow, type Viewing } from "@/components/dashboard/viewing-row";
 
 const viewings: Viewing[] = [
     {
@@ -87,15 +74,7 @@ export default function ViewingsPage() {
             {viewings.length > 0 ? (
                 <div className="space-y-4">
                     {viewings.map((viewing) => (
-                        <ViewingRow
-                            key={viewing.id}
-                            address={viewing.address}
-                            date={viewing.date}
-                            time={viewing.time}
-                            agent={viewing.agent}
-                            agentPhone={viewing.agentPhone}
-                            status={viewing.status}
-                        />
+                        <ViewingRow key={viewing.id} viewing={viewing} />
                     ))}
                 </div>
             ) : (

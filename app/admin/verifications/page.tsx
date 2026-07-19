@@ -76,19 +76,18 @@ const statusMeta: Record<Status, { tone: BadgeTone; label: string }> = {
 
 type Action = {
     label: string;
-    variant: "primary" | "secondary" | "ghost";
-    danger?: boolean;
+    variant: "primary" | "secondary" | "ghost" | "outline-danger";
 };
 
 const actionsByStatus: Record<Status, Action[]> = {
     pending: [
         { label: "Approve", variant: "primary" },
         { label: "Review Docs", variant: "secondary" },
-        { label: "Reject", variant: "ghost", danger: true },
+        { label: "Reject", variant: "outline-danger" },
     ],
     approved: [
         { label: "View Details", variant: "secondary" },
-        { label: "Revoke", variant: "ghost", danger: true },
+        { label: "Revoke", variant: "outline-danger" },
     ],
     rejected: [
         { label: "View Reason", variant: "secondary" },
@@ -128,7 +127,7 @@ export default function AdminVerificationsPage() {
                 }
             />
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {verifications.map((request) => {
                     const meta = statusMeta[request.status];
                     const kind =
@@ -138,98 +137,80 @@ export default function AdminVerificationsPage() {
                     return (
                         <article
                             key={request.id}
-                            className="bg-background-muted border-border-light hover:border-border ease-smooth rounded-xl border p-4 shadow-sm transition-all duration-300 hover:shadow-md"
+                            className="bg-background-muted border-border-light hover:border-border ease-smooth flex flex-col rounded-xl border p-4 shadow-sm transition-all duration-300 hover:shadow-md"
                         >
-                            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex min-w-0 items-center gap-2.5">
-                                            <span className="bg-accent-light text-accent grid size-9 shrink-0 place-items-center rounded-full text-xs font-semibold">
-                                                {initials(request.name)}
-                                            </span>
-                                            <div className="min-w-0">
-                                                <h3 className="text-text truncate text-sm font-medium">
-                                                    {request.name}
-                                                </h3>
-                                                <p className="text-text-muted truncate text-xs">
-                                                    {request.email}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <StatusBadge tone={meta.tone} dot>
-                                            {meta.label}
-                                        </StatusBadge>
-                                    </div>
-
-                                    <div className="bg-background-alt mt-3 flex items-center gap-4 rounded-lg px-4 py-2.5">
-                                        <div>
-                                            <p className={tierLabel}>Current</p>
-                                            <p
-                                                className={cn(
-                                                    "text-sm font-medium",
-                                                    tierColor[
-                                                        request.currentTier
-                                                    ],
-                                                )}
-                                            >
-                                                {cap(request.currentTier)}
-                                            </p>
-                                        </div>
-                                        <ArrowRight
-                                            size={16}
-                                            strokeWidth={1.5}
-                                            className="text-text-muted shrink-0"
-                                        />
-                                        <div>
-                                            <p className={tierLabel}>
-                                                Requested
-                                            </p>
-                                            <p
-                                                className={cn(
-                                                    "font-display text-h6 font-light",
-                                                    tierColor[
-                                                        request.requestedTier
-                                                    ],
-                                                )}
-                                            >
-                                                {cap(request.requestedTier)}
-                                            </p>
-                                        </div>
-                                        <div className="ml-auto text-right">
-                                            <p className={tierLabel}>Docs</p>
-                                            <p className="text-text text-sm font-medium tabular-nums">
-                                                {request.documents}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="text-text-muted mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-                                        <span>{kind}</span>
-                                        <span>·</span>
-                                        <span>
-                                            Submitted {request.submittedDate}
-                                        </span>
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex min-w-0 items-center gap-2.5">
+                                    <span className="bg-accent-light text-accent grid size-9 shrink-0 place-items-center rounded-full text-xs font-semibold">
+                                        {initials(request.name)}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <h3 className="text-text truncate text-sm font-medium">
+                                            {request.name}
+                                        </h3>
+                                        <p className="text-text-muted truncate text-xs">
+                                            {request.email}
+                                        </p>
                                     </div>
                                 </div>
+                                <StatusBadge tone={meta.tone}>
+                                    {meta.label}
+                                </StatusBadge>
+                            </div>
 
-                                <div className="flex shrink-0 gap-2 lg:w-32 lg:flex-col">
-                                    {actionsByStatus[request.status].map(
-                                        (action) => (
-                                            <Button
-                                                key={action.label}
-                                                variant={action.variant}
-                                                size="sm"
-                                                className={cn(
-                                                    "w-full",
-                                                    action.danger &&
-                                                        "text-error hover:text-error",
-                                                )}
-                                            >
-                                                {action.label}
-                                            </Button>
-                                        ),
-                                    )}
+                            <div className="bg-background-alt mt-3 flex items-center gap-3 rounded-lg px-3 py-2">
+                                <div className="min-w-0">
+                                    <p className={tierLabel}>Current</p>
+                                    <p
+                                        className={cn(
+                                            "truncate text-sm font-medium",
+                                            tierColor[request.currentTier],
+                                        )}
+                                    >
+                                        {cap(request.currentTier)}
+                                    </p>
                                 </div>
+                                <ArrowRight
+                                    size={15}
+                                    strokeWidth={1.5}
+                                    className="text-text-muted shrink-0"
+                                />
+                                <div className="min-w-0">
+                                    <p className={tierLabel}>Requested</p>
+                                    <p
+                                        className={cn(
+                                            "font-display text-h6 truncate font-light",
+                                            tierColor[request.requestedTier],
+                                        )}
+                                    >
+                                        {cap(request.requestedTier)}
+                                    </p>
+                                </div>
+                                <div className="ml-auto shrink-0 text-right">
+                                    <p className={tierLabel}>Docs</p>
+                                    <p className="text-text text-sm font-medium tabular-nums">
+                                        {request.documents}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p className="text-text-muted mt-2 truncate text-xs">
+                                {kind} · Submitted {request.submittedDate}
+                            </p>
+
+                            <div className="mt-4 flex gap-2">
+                                {actionsByStatus[request.status].map(
+                                    (action) => (
+                                        <Button
+                                            key={action.label}
+                                            variant={action.variant}
+                                            size="sm"
+                                            className="flex-1"
+                                        >
+                                            {action.label}
+                                        </Button>
+                                    ),
+                                )}
                             </div>
                         </article>
                     );

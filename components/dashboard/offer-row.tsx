@@ -5,13 +5,17 @@ import { cn } from "@/lib/utils";
 
 export type OfferStatus = "pending" | "accepted" | "rejected" | "countered";
 
-export interface OfferRowProps {
+export interface Offer {
     id: string;
     address: string;
     offerPrice: number;
     listPrice: number;
     status: OfferStatus;
     daysOld: number;
+}
+
+export interface OfferRowProps {
+    offer: Offer;
     className?: string;
 }
 
@@ -50,15 +54,8 @@ function Metric({
     );
 }
 
-export function OfferRow({
-    id,
-    address,
-    offerPrice,
-    listPrice,
-    status,
-    daysOld,
-    className,
-}: OfferRowProps) {
+export function OfferRow({ offer, className }: OfferRowProps) {
+    const { id, address, offerPrice, listPrice, status, daysOld } = offer;
     const below = offerPrice < listPrice;
     const difference = Math.abs(listPrice - offerPrice);
     const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
@@ -97,7 +94,7 @@ export function OfferRow({
                     <span className="text-text-muted text-xs">
                         Submitted {daysOld} days ago
                     </span>
-                    <StatusBadge tone={statusTone[status]} dot>
+                    <StatusBadge tone={statusTone[status]}>
                         {statusLabel}
                     </StatusBadge>
                 </div>

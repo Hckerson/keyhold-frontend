@@ -73,12 +73,14 @@ export default function SavedListingsPage() {
                         <ListingRow
                             key={listing.id}
                             href={`/listing/${listing.id}`}
-                            imageUrl={listing.image}
-                            address={listing.address}
-                            price={listing.price}
-                            beds={listing.beds}
-                            baths={listing.baths}
-                            sqft={listing.sqft}
+                            listing={{
+                                imageUrl: listing.image,
+                                address: listing.address,
+                                price: listing.price,
+                                beds: listing.beds,
+                                baths: listing.baths,
+                                sqft: listing.sqft,
+                            }}
                             meta={`Saved ${listing.savedDate}`}
                             actions={
                                 <>

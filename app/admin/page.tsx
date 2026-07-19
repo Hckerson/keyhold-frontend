@@ -147,7 +147,7 @@ export default function AdminDashboardPage() {
                         value={metric.value}
                         icon={metric.icon}
                         badge={
-                            <StatusBadge tone={metric.tone} dot>
+                            <StatusBadge tone={metric.tone}>
                                 {metric.status}
                             </StatusBadge>
                         }

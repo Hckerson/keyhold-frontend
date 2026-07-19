@@ -13,7 +13,8 @@ export type AppointmentType = "showing" | "meeting" | "inspection" | "closing";
 
 type Tone = "info" | "neutral" | "warning" | "success";
 
-export interface AppointmentRowProps {
+export interface Appointment {
+    id: string;
     type: AppointmentType;
     title: string;
     property: string;
@@ -21,6 +22,10 @@ export interface AppointmentRowProps {
     time: string;
     duration: string;
     notes: string;
+}
+
+export interface AppointmentRowProps {
+    appointment: Appointment;
     className?: string;
 }
 
@@ -55,15 +60,11 @@ const typeConfig: Record<
 };
 
 export function AppointmentRow({
-    type,
-    title,
-    property,
-    client,
-    time,
-    duration,
-    notes,
+    appointment,
     className,
 }: AppointmentRowProps) {
+    const { type, title, property, client, time, duration, notes } =
+        appointment;
     const { icon: Icon, tint, tone, label } = typeConfig[type];
     return (
         <div
@@ -91,9 +92,7 @@ export function AppointmentRow({
                             {property}
                         </p>
                     </div>
-                    <StatusBadge tone={tone} dot>
-                        {label}
-                    </StatusBadge>
+                    <StatusBadge tone={tone}>{label}</StatusBadge>
                 </div>
 
                 <div className="text-text-secondary mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
