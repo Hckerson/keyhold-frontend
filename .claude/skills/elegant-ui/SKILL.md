@@ -65,27 +65,42 @@ Tailwind v4, tokens defined in `styles/tokens.css` + `@theme` in `styles/globals
 ## Color & elevation
 
 - Establish hierarchy with the **text ramp** (`text-text` → `text-secondary` → `text-muted`) and **subtle surface shifts** (`bg-background` → `bg-background-muted`), not with saturated fills.
-- Interaction/active state = a quiet wash + border, e.g. `hover:bg-background-muted hover:border-border`, active `bg-accent-light text-accent`. Accent and highlight appear rarely — a CTA, a badge, one focal number.
-- Elevation is restrained: `shadow-sm` at rest → `shadow-md`/`lg` on hover, paired with a `hover:-translate-y-px`/`-0.5` lift and `ease-smooth`.
+- Interaction/active state = a quiet wash + border, e.g. `hover:bg-background-muted hover:border-border`, active `bg-accent-light text-accent`.
+- **Restraint governs the FIELD, not the FOCAL POINT.** The quiet ramp covers ~90% of a view — but the ONE hero element earns a bold moment (brass glow, filled CTA, pine gradient). Timid-everywhere IS the flatness trap. See **Craft** below.
+- Elevation is restrained but **not uniform**: peers `shadow-sm`, the focal element `shadow-md` + a tonal lift. Hover adds `-translate-y-0.5` + `ease-smooth`.
 - Dark surfaces (nav rails, command palettes) use the `sidebar-*` ramp.
+
+## Craft — depth, focal hierarchy, composition (the anti-generic layer)
+
+Token-correct ≠ designed. A 5-sample audit found the SAME failures every time: **undersized focal · too roomy · flat opaque fills · uniform grids.** These are HARD RULES — the model reverts to generic without them.
+
+1. **Hierarchy is a size RATIO, not decoration (the #1 gap).** Give each card/row **exactly one focal datum** (number/price/title); the label→value jump must be **≥3 type steps** (e.g. `text-[10px]` mono label vs a `text-h4` value). In the application register the focal caps at **`text-h4` (30px)**, peers sit at **`text-sm`/`text-xs`** — the hero reads as hero because everything around it is _tiny_, not because it's big. **At most one element per card exceeds `text-h6`**; price + 3 specs all at `text-base` = co-equal numbers fighting for focus. The focal number is **solid, max-contrast** (`text-text` / `text-highlight-dark`) — **never** gradient `bg-clip-text` on the primary datum (that's for an editorial hero _headline_ only).
+2. **Rank by scale + position, never by a badge.** A "Featured/Recommended/Primary" pill may _annotate_ but is not the ranking mechanism — **the hero must still read as hero with every badge removed.** Differentiation must be **structural** (scale, `col-span`/`row-span`, an added data point), **never cosmetic** — a recolored clone with the same footprint is an automatic hierarchy fail (this is exactly why one refined audit sample didn't improve).
+3. **Depth is mandatory — ban the flat opaque fill.** Every non-trivial component needs **≥1 translucent, blurred surface**: `bg-background/60 backdrop-blur-md` over a soft glow (a `shadow-*` + dot-grid is NOT depth). **Tonal nesting is required:** wrap secondary metrics in an inset plane — `rounded-md bg-background-muted/60 p-2` — so every card has **≥2 tonal planes**, stepping tone via **alpha** (`bg-highlight/8`, `bg-text/5`), never by swapping `bg-background-*` tokens. The featured element gets a real light source: an absolute `blur-3xl bg-highlight/30` radial blob behind the focal number (`pointer-events-none -z-10`) + **exactly one** edge treatment (`ring-1 ring-highlight/20` **or** `border-highlight/25`, not both) + `shadow-md`. Glow colors derive from tokens (`drop-shadow-[0_2px_10px_var(--color-highlight)]`), never raw `rgba()`/hex. Atmosphere for big surfaces: a masked dot-grid (`bg-[radial-gradient(var(--color-text)_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.04] [mask-image:radial-gradient(ellipse_at_center,#000,transparent)]`).
+4. **Composition must be a DEVICE, not a grid.** "One hero among peers" ⇒ **mandate an asymmetric / bento layout** — `grid-cols-3` with the hero `col-span-2 row-span-2`, or a hero tile + a condensed sibling rail. **Forbid `grid-cols-N` + a hero flag.** Peers must not mirror the hero — vary their treatment (a stacked table-row: thumbnail + inline specs + right-aligned price). Comparison tables: the lifted featured column gets `-translate-y-2 + shadow-lg + ring-1` (never `scale-*` — it desyncs the colgroup); one surface owner per featured band (fill the `<col>` OR the cells, never both). Restrict `hover:-translate-y-0.5` to the **one** focal/clickable tile; quiet peers get `transition-colors` only — a lift always signals "this is focal."
+
+**Signature details.** Icon in a **bordered-circle chip** (`grid place-items-center rounded-full border p-1.5`), not always a filled tile. **Mono eyebrows** `font-mono text-[10px]/[11px] uppercase tracking-wide text-text-muted` — and an eyebrow must carry a NEW dimension (count/status/timestamp), never restate the title. Encode state in the **data layer** via a token lookup (today→`text-highlight`, overdue→`text-warning`), not uniform `text-text-muted`. Chips derive tone from the row's accent and cap with a `+N` overflow. **Never `truncate` the only descriptive line** — `line-clamp-2` or cut it. Snap to the scale — off-token `size={17}`/`py-[13px]` is a craft fail.
+
+**Self-check before done:** Name the ONE focal datum — is its label→value gap ≥3 type steps? Remove every badge — does the hero still read as hero (scale/position)? Is there ≥1 translucent/blurred surface and ≥2 tonal planes? Is the layout an asymmetric _device_ or a uniform grid? Any "no" → fix before finishing.
 
 ## Typography & density — two registers
 
 The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text-h3` 40px · `text-h4` 30px · `text-h5` 24px · `text-h6` 20px) with airy `1.75` body leading. It is NOT one size for every context — pick the register, or dense app UI reads oversized (the #1 "everything feels big" cause here).
 
 - **Editorial register** — landing / marketing / hero / section headers / big empty states. The statement: `text-h1…text-h3 font-display font-light`, generous spacing, `text-lg` lede.
-- **Application register — the DEFAULT for dashboards, cards, panels, tables, sidebars, forms, menus.** Step the scale DOWN and tighten:
-    - Page/section titles `text-h5` / `text-h4` (never `text-h3`); focal numbers/prices `text-h6` / `text-lg`.
-    - Body & rows `text-sm`; secondary/meta `text-xs`; micro-labels `text-caption uppercase tracking-wide`.
-    - Icons `size-4` (16px); rows ≈ `h-9`; compact padding. Do NOT use `text-h1…h3` or `text-lg` body leading in this register.
+- **Application register — the DEFAULT for dashboards, cards, panels, tables, sidebars, forms, menus. Dense by default:**
+    - **Padding:** dense rows/cards `p-3` (`gap-2`, max `gap-3`); table cells `px-3 py-2`. `p-4` is for the ONE featured/hero tile only — **never `p-5+`** on a card body here.
+    - **Type:** section titles `text-h5`/`text-h4` (never `text-h3`); the ONE focal number `text-h4`→`text-lg`; body/rows `text-sm`; secondary/meta `text-xs`; micro-labels **`text-[10px]`/`text-[11px]` `font-mono uppercase tracking-wide`** (not `text-caption`).
+    - **Icons:** glyphs (check/minus/inline detail) `size-3` (12px); chip icons in a `size-6` circle; only a hero/identity icon reaches `size-4`. `strokeWidth={1.5}`.
+    - **Rhythm:** build vertical spacing with one `flex flex-col gap-4`, not stacked `mt-5/mt-6`; section padding `py-10`, not `py-16`. Ban `rounded-full place-items-center` icon circles on _every_ row (pure roominess) — use a compact inline stat cluster. Do NOT use `text-h1…h3` or `text-lg` body leading here.
 
 - **The luxury signal is weight, not size:** `font-display font-light` on whatever heading the register calls for — a `text-h5` thin serif is still unmistakably premium. Body/labels `font-body`; keyboard hints `font-mono`.
-- Always guard overflow: `truncate` + a `max-w-*`.
+- Guard overflow: `line-clamp-2` for descriptive lines, `truncate` only for single labels/tokens (**never** the sole descriptive line) — pair with a `max-w-*`.
 
 ## Motion, icons, a11y (defaults, not extras)
 
 - Everything interactive transitions (`transition-colors`/`transition-all duration-200 ease-smooth`). Entrances use `animate-in fade-in zoom-in-95`. Don't add reduced-motion guards — `styles/tokens.css` already does it globally.
-- **lucide icons at `strokeWidth={1.5}`** (thin stroke is a core elegance tell); default `size-4` (16px) in the application register, `size-5` only for editorial/hero; colored via the text ramp.
+- **lucide icons at `strokeWidth={1.5}`** (thin stroke is a core elegance tell); application register: inline/glyph icons `size-3`–`size-4` (12–16px), chip icons in a `size-6` circle, `size-5+` only for editorial/hero; colored via the text ramp.
 - a11y: `aria-label` on icon-only buttons, `sr-only` labels, `select-none` on chrome, real `focus-visible:ring-2 focus-visible:ring-accent`, `type="button"` on non-submit buttons, keyboard handlers for overlays (Esc to close).
 - **Imagery:** distinct real photos, one per item — NEVER a single repeated local placeholder like `/images/hero.jpg`. **Centralize a curated pool** in `lib/config/sample-images.ts` and pull from it (don't scatter hardcoded URLs across pages). Good free sources: **Unsplash** (`images.unsplash.com/photo-…?w=800&q=80`, best architecture library), **Pexels** (`images.pexels.com/photos/…`), **loremflickr** (`loremflickr.com/800/600/mansion` — dynamic, keyword-based, no IDs). Ensure the host is allowlisted in `next.config.ts` `remotePatterns`.
 
@@ -108,5 +123,13 @@ The type scale is **marketing-grade** (`text-h1` 72px · `text-h2` 56px · `text
 - A monolithic component that should be decomposed; JSX with content hardcoded inline instead of mapped from typed data.
 - Relying on `cn`/`className` to override a base utility (no tailwind-merge here).
 - Thick default icon strokes; missing hover/focus states; saturated fills where a text-ramp/surface shift would do.
+- **A uniform grid/stack of identical cards or rows with no elevated focal element** — the #1 generic tell.
+- **Flat opaque fills with no depth** — no atmosphere, translucency, or tonal nesting between surfaces.
+- **Equal columns + identical spacing everywhere** instead of a deliberate composition (comparison table, asymmetric split, featured tile).
+- **A recolored/badge-flagged "hero" that shares the peers' footprint** — differentiation must be structural (scale/span), not cosmetic.
+- **Gradient `bg-clip-text` on a primary datum** (price/KPI), or a "Featured/Recommended" pill used as the _ranking mechanism_.
+- **A totally flat card** — one opaque background fill with nothing layered on it: no nested inset a shade different (a `bg-background-muted/60` block) _and_ no translucent/blurred surface (`bg-background/60 backdrop-blur`). A drop-shadow or a decorative dot-grid does NOT count as depth.
+- **`p-5+` on a dense card body, or `size-4` on every icon** — the one-notch-loose density smell.
+- **Truncating the sole descriptive line**; off-token arbitrary values (`size={17}`, `py-[13px]`).
 - `data-slot` shadcn-style primitives instead of the house `forwardRef` + `displayName` + `cva` pattern.
 - Deep-relative imports (`../../../`) instead of `@/`.
