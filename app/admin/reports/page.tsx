@@ -1,51 +1,27 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel } from "@/components/ui/panel";
+import { StatCard } from "@/components/ui/stat-card";
+import {
+    ProgressBar,
+    type ProgressBarProps,
+} from "@/components/ui/progress-bar";
+import { SummaryRow } from "@/components/ui/summary-row";
 
-interface ReportMetric {
-    label: string;
-    value: string | number;
-    trend: string;
-    isPositive: boolean;
-}
-
-const metrics: ReportMetric[] = [
-    {
-        label: "Total GMV (YTD)",
-        value: "$847M",
-        trend: "+22% vs 2023",
-        isPositive: true,
-    },
-    {
-        label: "Active Listings",
-        value: 342,
-        trend: "+18% month-over-month",
-        isPositive: true,
-    },
-    {
-        label: "User Growth",
-        value: "+14%",
-        trend: "1,247 active users",
-        isPositive: true,
-    },
-    {
-        label: "Avg Transaction Value",
-        value: "$2.47M",
-        trend: "+8% vs market",
-        isPositive: true,
-    },
-];
+type Tone = NonNullable<ProgressBarProps["tone"]>;
 
 interface RegionMetric {
     region: string;
     listings: number;
     volume: number;
     avgPrice: number;
+}
+
+interface Distribution {
+    label: string;
+    count: number;
+    pct: number;
+    tone: Tone;
 }
 
 const regionData: RegionMetric[] = [
@@ -56,209 +32,136 @@ const regionData: RegionMetric[] = [
     { region: "Santa Monica", listings: 82, volume: 166, avgPrice: 2.0 },
 ];
 
+const userBreakdown: Distribution[] = [
+    { label: "Buyers", count: 722, pct: 58, tone: "info" },
+    { label: "Agents", count: 435, pct: 35, tone: "accent" },
+    { label: "Admins", count: 90, pct: 7, tone: "neutral" },
+];
+
+const tierDistribution: Distribution[] = [
+    { label: "Standard", count: 845, pct: 68, tone: "neutral" },
+    { label: "Premium", count: 315, pct: 25, tone: "info" },
+    { label: "Platinum", count: 87, pct: 7, tone: "highlight" },
+];
+
 export default function AdminReportsPage() {
-    const totalVolume = regionData.reduce((sum, r) => sum + r.volume, 0);
+    const ranked = [...regionData].sort((a, b) => b.volume - a.volume);
+    const maxVolume = Math.max(...regionData.map((r) => r.volume));
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Analytics & Reports
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        Platform performance metrics and market insights
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="secondary" className="text-sm">
-                        Download Report
-                    </Button>
-                    <Button variant="primary" className="text-sm">
-                        Generate Custom
-                    </Button>
-                </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Analytics & Reports"
+                description="Platform performance and market insights"
+                action={
+                    <div className="flex gap-2">
+                        <Button variant="secondary" size="sm">
+                            Download
+                        </Button>
+                        <Button variant="primary" size="sm">
+                            Generate Custom
+                        </Button>
+                    </div>
+                }
+            />
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <StatCard
+                    label="GMV (YTD)"
+                    value="$847M"
+                    change="+22%"
+                    trend="up"
+                    caption="vs 2023"
+                    featured
+                />
+                <StatCard
+                    label="Active Listings"
+                    value={342}
+                    change="+18%"
+                    trend="up"
+                    caption="month over month"
+                />
+                <StatCard
+                    label="User Growth"
+                    value="+14%"
+                    caption="1,247 active users"
+                />
+                <StatCard
+                    label="Avg Transaction"
+                    value="$2.47M"
+                    change="+8%"
+                    trend="up"
+                    caption="vs market"
+                />
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {metrics.map((metric) => (
-                    <Card key={metric.label}>
-                        <CardContent className="pt-6">
-                            <div className="space-y-2">
-                                <p className="text-text-secondary text-sm">
-                                    {metric.label}
-                                </p>
-                                <p className="text-h4 text-text font-light">
-                                    {metric.value}
-                                </p>
-                                <p
-                                    className={`text-xs ${metric.isPositive ? "text-success" : "text-error"}`}
-                                >
-                                    {metric.trend}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Market by Region</CardTitle>
-                        <CardDescription>
-                            Listing volume and average sale prices
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {regionData.map((region) => (
-                                <div key={region.region}>
-                                    <div className="mb-2 flex items-center justify-between">
-                                        <span className="text-text text-sm font-medium">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <Panel
+                    title="Market by Region"
+                    description="Ranked by transaction volume"
+                    className="lg:col-span-2"
+                >
+                    <ul className="space-y-4">
+                        {ranked.map((region, i) => (
+                            <li key={region.region}>
+                                <div className="mb-1.5 flex items-baseline justify-between gap-3">
+                                    <div className="flex min-w-0 items-center gap-2.5">
+                                        <span className="text-text-muted font-mono text-[10px] tabular-nums">
+                                            {String(i + 1).padStart(2, "0")}
+                                        </span>
+                                        <span className="text-text truncate text-sm font-medium">
                                             {region.region}
                                         </span>
-                                        <span className="text-text-secondary text-sm">
-                                            ${(region.volume / 1000).toFixed(0)}
-                                            M
-                                        </span>
                                     </div>
-                                    <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                        <div
-                                            className="from-accent to-accent-dark h-full bg-linear-to-r"
-                                            style={{
-                                                width: `${(region.volume / totalVolume) * 100}%`,
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="text-text-secondary mt-1 flex justify-between text-xs">
-                                        <span>{region.listings} listings</span>
-                                        <span>
-                                            Avg: ${region.avgPrice.toFixed(1)}M
-                                        </span>
-                                    </div>
+                                    <span className="text-text shrink-0 text-sm font-medium tabular-nums">
+                                        ${region.volume}M
+                                    </span>
+                                </div>
+                                <ProgressBar
+                                    value={(region.volume / maxVolume) * 100}
+                                    tone={i === 0 ? "highlight" : "accent"}
+                                />
+                                <div className="text-text-muted mt-1 flex justify-between text-xs tabular-nums">
+                                    <span>{region.listings} listings</span>
+                                    <span>
+                                        Avg ${region.avgPrice.toFixed(1)}M
+                                    </span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </Panel>
+
+                <div className="space-y-4">
+                    <Panel title="User Breakdown">
+                        <div className="space-y-4">
+                            {userBreakdown.map((d) => (
+                                <div key={d.label}>
+                                    <SummaryRow
+                                        label={`${d.label} (${d.pct}%)`}
+                                        value={d.count.toLocaleString()}
+                                        className="mb-1.5"
+                                    />
+                                    <ProgressBar value={d.pct} tone={d.tone} />
                                 </div>
                             ))}
                         </div>
-                    </CardContent>
-                </Card>
+                    </Panel>
 
-                <div className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>User Breakdown</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Buyers (58%)
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        722
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div
-                                        className="bg-info h-full w-full rounded-full"
-                                        style={{ width: "58%" }}
+                    <Panel title="Tier Distribution">
+                        <div className="space-y-4">
+                            {tierDistribution.map((d) => (
+                                <div key={d.label}>
+                                    <SummaryRow
+                                        label={`${d.label} (${d.pct}%)`}
+                                        value={d.count.toLocaleString()}
+                                        className="mb-1.5"
                                     />
+                                    <ProgressBar value={d.pct} tone={d.tone} />
                                 </div>
-                            </div>
-
-                            <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Agents (35%)
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        435
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div
-                                        className="bg-accent h-full rounded-full"
-                                        style={{ width: "35%" }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Admins (7%)
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        90
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div
-                                        className="bg-error h-full rounded-full"
-                                        style={{ width: "7%" }}
-                                    />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Tier Distribution</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Standard
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        845 (68%)
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div
-                                        className="bg-text-secondary/50 h-full rounded-full"
-                                        style={{ width: "68%" }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Premium
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        315 (25%)
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div
-                                        className="bg-info h-full rounded-full"
-                                        style={{ width: "25%" }}
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Platinum
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        87 (7%)
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div
-                                        className="bg-accent h-full rounded-full"
-                                        style={{ width: "7%" }}
-                                    />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            ))}
+                        </div>
+                    </Panel>
                 </div>
             </div>
         </div>

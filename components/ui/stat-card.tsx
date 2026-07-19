@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { TrendingUp, TrendingDown, type LucideIcon } from "lucide-react";
 import { Sparkline } from "@/components/ui/sparkline";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ export interface StatCardProps {
     change?: string;
     trend?: "up" | "down";
     caption?: string;
+    badge?: ReactNode;
     series?: number[];
     href?: string;
     featured?: boolean;
@@ -23,6 +25,7 @@ function StatBody({
     change,
     trend,
     caption,
+    badge,
     series,
     featured,
 }: StatCardProps) {
@@ -73,6 +76,8 @@ function StatBody({
                     </span>
                 )}
             </div>
+
+            {badge && <div className="mt-2">{badge}</div>}
 
             {caption && (
                 <p className="text-text-muted mt-1 text-xs">{caption}</p>

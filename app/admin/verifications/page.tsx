@@ -1,13 +1,20 @@
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusBadge } from "@/components/ui/status-badge";
+import type { BadgeTone } from "@/components/dashboard/contact-row";
+import { cn } from "@/lib/utils";
+
+type Tier = "standard" | "premium" | "platinum";
+type Status = "pending" | "approved" | "rejected";
 
 interface VerificationRequest {
     id: string;
     name: string;
     email: string;
-    requestedTier: "premium" | "platinum";
-    currentTier: "standard" | "premium";
-    status: "pending" | "approved" | "rejected";
+    requestedTier: Exclude<Tier, "standard">;
+    currentTier: Exclude<Tier, "platinum">;
+    status: Status;
     submittedDate: string;
     documents: number;
 }
@@ -55,212 +62,178 @@ const verifications: VerificationRequest[] = [
     },
 ];
 
-const getTierColor = (tier: string) => {
-    switch (tier) {
-        case "platinum":
-            return "text-accent";
-        case "premium":
-            return "text-info";
-        case "standard":
-            return "text-text-secondary";
-        default:
-            return "text-text-secondary";
-    }
+const tierColor: Record<Tier, string> = {
+    platinum: "text-highlight-dark",
+    premium: "text-info",
+    standard: "text-text-muted",
 };
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "pending":
-            return "text-warning bg-warning/10 border-warning/20";
-        case "approved":
-            return "text-success bg-success/10 border-success/20";
-        case "rejected":
-            return "text-error bg-error/10 border-error/20";
-        default:
-            return "text-text-secondary";
-    }
+const statusMeta: Record<Status, { tone: BadgeTone; label: string }> = {
+    pending: { tone: "warning", label: "Pending" },
+    approved: { tone: "success", label: "Approved" },
+    rejected: { tone: "error", label: "Rejected" },
 };
 
-const getStatusLabel = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
+type Action = {
+    label: string;
+    variant: "primary" | "secondary" | "ghost";
+    danger?: boolean;
 };
+
+const actionsByStatus: Record<Status, Action[]> = {
+    pending: [
+        { label: "Approve", variant: "primary" },
+        { label: "Review Docs", variant: "secondary" },
+        { label: "Reject", variant: "ghost", danger: true },
+    ],
+    approved: [
+        { label: "View Details", variant: "secondary" },
+        { label: "Revoke", variant: "ghost", danger: true },
+    ],
+    rejected: [
+        { label: "View Reason", variant: "secondary" },
+        { label: "Allow Resubmit", variant: "ghost" },
+    ],
+};
+
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+function initials(name: string) {
+    return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+}
+
+const tierLabel =
+    "text-text-muted font-mono text-[10px] tracking-wide uppercase";
 
 export default function AdminVerificationsPage() {
-    const pendingCount = verifications.filter(
-        (v) => v.status === "pending",
-    ).length;
-    const approvedCount = verifications.filter(
+    const pending = verifications.filter((v) => v.status === "pending").length;
+    const approved = verifications.filter(
         (v) => v.status === "approved",
     ).length;
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Tier Verifications
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        {pendingCount} pending • {approvedCount} approved
-                    </p>
-                </div>
-                <Button variant="secondary" className="text-sm">
-                    Export Report
-                </Button>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Tier Verifications"
+                description={`${pending} pending · ${approved} approved`}
+                action={
+                    <Button variant="secondary" size="sm">
+                        Export Report
+                    </Button>
+                }
+            />
 
             <div className="space-y-4">
-                {verifications.map((request) => (
-                    <Card
-                        key={request.id}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="mb-3 flex items-start justify-between">
+                {verifications.map((request) => {
+                    const meta = statusMeta[request.status];
+                    const kind =
+                        request.requestedTier === "platinum"
+                            ? "High-value buyer / agent"
+                            : "Professional agent";
+                    return (
+                        <article
+                            key={request.id}
+                            className="bg-background-muted border-border-light hover:border-border ease-smooth rounded-xl border p-4 shadow-sm transition-all duration-300 hover:shadow-md"
+                        >
+                            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex min-w-0 items-center gap-2.5">
+                                            <span className="bg-accent-light text-accent grid size-9 shrink-0 place-items-center rounded-full text-xs font-semibold">
+                                                {initials(request.name)}
+                                            </span>
+                                            <div className="min-w-0">
+                                                <h3 className="text-text truncate text-sm font-medium">
+                                                    {request.name}
+                                                </h3>
+                                                <p className="text-text-muted truncate text-xs">
+                                                    {request.email}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <StatusBadge tone={meta.tone} dot>
+                                            {meta.label}
+                                        </StatusBadge>
+                                    </div>
+
+                                    <div className="bg-background-alt mt-3 flex items-center gap-4 rounded-lg px-4 py-2.5">
                                         <div>
-                                            <h3 className="text-h6 text-text font-light">
-                                                {request.name}
-                                            </h3>
-                                            <p className="text-text-secondary mt-1 text-sm">
-                                                {request.email}
+                                            <p className={tierLabel}>Current</p>
+                                            <p
+                                                className={cn(
+                                                    "text-sm font-medium",
+                                                    tierColor[
+                                                        request.currentTier
+                                                    ],
+                                                )}
+                                            >
+                                                {cap(request.currentTier)}
                                             </p>
                                         </div>
-                                        <span
-                                            className={`rounded-full border px-3 py-1 text-xs font-medium ${getStatusColor(request.status)}`}
-                                        >
-                                            {getStatusLabel(request.status)}
+                                        <ArrowRight
+                                            size={16}
+                                            strokeWidth={1.5}
+                                            className="text-text-muted shrink-0"
+                                        />
+                                        <div>
+                                            <p className={tierLabel}>
+                                                Requested
+                                            </p>
+                                            <p
+                                                className={cn(
+                                                    "font-display text-h6 font-light",
+                                                    tierColor[
+                                                        request.requestedTier
+                                                    ],
+                                                )}
+                                            >
+                                                {cap(request.requestedTier)}
+                                            </p>
+                                        </div>
+                                        <div className="ml-auto text-right">
+                                            <p className={tierLabel}>Docs</p>
+                                            <p className="text-text text-sm font-medium tabular-nums">
+                                                {request.documents}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="text-text-muted mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                                        <span>{kind}</span>
+                                        <span>·</span>
+                                        <span>
+                                            Submitted {request.submittedDate}
                                         </span>
-                                    </div>
-
-                                    <div className="border-border grid grid-cols-1 gap-6 border-y py-4 md:grid-cols-4">
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Current Tier
-                                            </p>
-                                            <p
-                                                className={`text-sm font-medium ${getTierColor(request.currentTier)}`}
-                                            >
-                                                {request.currentTier
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    request.currentTier.slice(
-                                                        1,
-                                                    )}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Requested Tier
-                                            </p>
-                                            <p
-                                                className={`text-sm font-medium ${getTierColor(request.requestedTier)}`}
-                                            >
-                                                {request.requestedTier
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    request.requestedTier.slice(
-                                                        1,
-                                                    )}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Documents
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {request.documents} submitted
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Submitted
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {request.submittedDate}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-3">
-                                        <p className="text-sm">
-                                            <span className="text-text-secondary">
-                                                Verification Type:{" "}
-                                            </span>
-                                            <span className="text-text font-medium">
-                                                {request.requestedTier ===
-                                                "platinum"
-                                                    ? "High-value buyer/agent"
-                                                    : "Professional agent"}
-                                            </span>
-                                        </p>
                                     </div>
                                 </div>
 
-                                <div className="ml-6 flex flex-col gap-2">
-                                    {request.status === "pending" && (
-                                        <>
+                                <div className="flex shrink-0 gap-2 lg:w-32 lg:flex-col">
+                                    {actionsByStatus[request.status].map(
+                                        (action) => (
                                             <Button
-                                                variant="primary"
-                                                className="w-32 text-sm"
+                                                key={action.label}
+                                                variant={action.variant}
+                                                size="sm"
+                                                className={cn(
+                                                    "w-full",
+                                                    action.danger &&
+                                                        "text-error hover:text-error",
+                                                )}
                                             >
-                                                Approve
+                                                {action.label}
                                             </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="text-error w-32 text-sm"
-                                            >
-                                                Reject
-                                            </Button>
-                                            <Button
-                                                variant="secondary"
-                                                className="w-32 text-sm"
-                                            >
-                                                Review Docs
-                                            </Button>
-                                        </>
-                                    )}
-                                    {request.status === "approved" && (
-                                        <>
-                                            <Button
-                                                variant="secondary"
-                                                className="w-32 text-sm"
-                                            >
-                                                View Details
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="text-error w-32 text-sm"
-                                            >
-                                                Revoke
-                                            </Button>
-                                        </>
-                                    )}
-                                    {request.status === "rejected" && (
-                                        <>
-                                            <Button
-                                                variant="secondary"
-                                                className="w-32 text-sm"
-                                            >
-                                                View Reason
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="w-32 text-sm"
-                                            >
-                                                Allow Resubmit
-                                            </Button>
-                                        </>
+                                        ),
                                     )}
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                        </article>
+                    );
+                })}
             </div>
         </div>
     );

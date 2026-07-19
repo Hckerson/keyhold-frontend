@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 export interface ProgressBarProps {
     value: number;
-    tone?: "accent" | "success" | "warning" | "info";
+    tone?: "accent" | "success" | "warning" | "info" | "highlight" | "neutral";
     className?: string;
 }
 
@@ -11,6 +11,8 @@ const toneFill = {
     success: "bg-success",
     warning: "bg-warning",
     info: "bg-info",
+    highlight: "bg-highlight",
+    neutral: "bg-text-muted/50",
 };
 
 export function ProgressBar({

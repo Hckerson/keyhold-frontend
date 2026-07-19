@@ -1,14 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusBadge } from "@/components/ui/status-badge";
+import type { BadgeTone } from "@/components/dashboard/contact-row";
+import { cn } from "@/lib/utils";
+
+type Role = "buyer" | "agent" | "admin";
+type Tier = "standard" | "premium" | "platinum";
+type Status = "active" | "suspended" | "inactive";
 
 interface User {
     id: string;
     name: string;
     email: string;
-    role: "buyer" | "agent" | "admin";
-    tier: "standard" | "premium" | "platinum";
+    role: Role;
+    tier: Tier;
     joinDate: string;
-    status: "active" | "suspended" | "inactive";
+    status: Status;
     transactions: number;
 }
 
@@ -55,187 +62,155 @@ const users: User[] = [
     },
 ];
 
-const getRoleColor = (role: string) => {
-    switch (role) {
-        case "admin":
-            return "text-error bg-error/10";
-        case "agent":
-            return "text-accent bg-accent/10";
-        case "buyer":
-            return "text-info bg-info/10";
-        default:
-            return "text-text-secondary";
-    }
+const roleMeta: Record<Role, { label: string; cls: string }> = {
+    admin: { label: "Admin", cls: "bg-error/10 text-error" },
+    agent: { label: "Agent", cls: "bg-accent-light text-accent" },
+    buyer: { label: "Buyer", cls: "bg-info/10 text-info" },
 };
 
-const getTierColor = (tier: string) => {
-    switch (tier) {
-        case "platinum":
-            return "text-accent";
-        case "premium":
-            return "text-info";
-        case "standard":
-            return "text-text-secondary";
-        default:
-            return "text-text-secondary";
-    }
+const tierColor: Record<Tier, string> = {
+    platinum: "text-highlight-dark",
+    premium: "text-info",
+    standard: "text-text-muted",
 };
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "active":
-            return "text-success bg-success/10 border-success/20";
-        case "suspended":
-            return "text-error bg-error/10 border-error/20";
-        case "inactive":
-            return "text-text-secondary bg-text-secondary/10 border-text-secondary/20";
-        default:
-            return "text-text-secondary";
-    }
+const statusMeta: Record<Status, { tone: BadgeTone; label: string }> = {
+    active: { tone: "success", label: "Active" },
+    suspended: { tone: "error", label: "Suspended" },
+    inactive: { tone: "neutral", label: "Inactive" },
 };
+
+const th =
+    "px-4 py-2.5 text-left font-mono text-[10px] font-medium uppercase tracking-wide text-text-muted";
+
+function initials(name: string) {
+    return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+}
 
 export default function AdminUsersPage() {
+    const active = users.filter((u) => u.status === "active").length;
+
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        User Management
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        {users.filter((u) => u.status === "active").length}{" "}
-                        active user
-                        {users.filter((u) => u.status === "active").length !== 1
-                            ? "s"
-                            : ""}
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="secondary" className="text-sm">
-                        Filter
-                    </Button>
-                    <Button variant="primary" className="text-sm">
-                        Add User
-                    </Button>
-                </div>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="User Management"
+                description={`${active} active user${active !== 1 ? "s" : ""} · ${users.length} total`}
+                action={
+                    <div className="flex gap-2">
+                        <Button variant="secondary" size="sm">
+                            Filter
+                        </Button>
+                        <Button variant="primary" size="sm">
+                            Add User
+                        </Button>
+                    </div>
+                }
+            />
 
-            <div className="space-y-4">
-                {users.map((user) => (
-                    <Card
-                        key={user.id}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="mb-3 flex items-start gap-3">
-                                        <div className="bg-accent/20 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full">
-                                            <span className="text-accent text-sm font-medium">
-                                                {user.name
-                                                    .split(" ")
-                                                    .map((n) => n[0])
-                                                    .join("")}
+            <div className="bg-background-muted border-border-light overflow-hidden rounded-xl border shadow-sm">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                        <thead>
+                            <tr className="border-border-light border-b">
+                                <th className={th}>User</th>
+                                <th className={th}>Role</th>
+                                <th className={th}>Tier</th>
+                                <th className={th}>Joined</th>
+                                <th className={cn(th, "text-right")}>Deals</th>
+                                <th className={th}>Status</th>
+                                <th className={cn(th, "text-right")}>
+                                    <span className="sr-only">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-border-light divide-y">
+                            {users.map((user) => (
+                                <tr
+                                    key={user.id}
+                                    className="hover:bg-background-alt ease-smooth transition-colors"
+                                >
+                                    <td className="px-4 py-3">
+                                        <div className="flex items-center gap-2.5">
+                                            <span className="bg-accent-light text-accent grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold">
+                                                {initials(user.name)}
                                             </span>
+                                            <div className="min-w-0">
+                                                <p className="text-text truncate font-medium">
+                                                    {user.name}
+                                                </p>
+                                                <p className="text-text-muted truncate text-xs">
+                                                    {user.email}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h3 className="text-h6 text-text font-light">
-                                                {user.name}
-                                            </h3>
-                                            <p className="text-text-secondary text-sm">
-                                                {user.email}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="border-border grid grid-cols-1 gap-6 border-y py-4 md:grid-cols-4">
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Role
-                                            </p>
-                                            <p
-                                                className={`text-sm font-medium ${getRoleColor(user.role)}`}
-                                            >
-                                                {user.role
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    user.role.slice(1)}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Tier
-                                            </p>
-                                            <p
-                                                className={`text-sm font-medium ${getTierColor(user.tier)}`}
-                                            >
-                                                {user.tier
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    user.tier.slice(1)}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Joined
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {user.joinDate}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Transactions
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {user.transactions}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-3">
+                                    </td>
+                                    <td className="px-4 py-3">
                                         <span
-                                            className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${getStatusColor(user.status)}`}
+                                            className={cn(
+                                                "rounded-full px-2 py-0.5 text-xs font-medium",
+                                                roleMeta[user.role].cls,
+                                            )}
                                         >
-                                            {user.status
-                                                .charAt(0)
-                                                .toUpperCase() +
-                                                user.status.slice(1)}
+                                            {roleMeta[user.role].label}
                                         </span>
-                                    </div>
-                                </div>
-
-                                <div className="ml-6 flex flex-col gap-2">
-                                    <Button
-                                        variant="secondary"
-                                        className="w-32 text-sm"
+                                    </td>
+                                    <td
+                                        className={cn(
+                                            "px-4 py-3 font-medium",
+                                            tierColor[user.tier],
+                                        )}
                                     >
-                                        View Profile
-                                    </Button>
-                                    {user.status === "active" && (
-                                        <Button
-                                            variant="ghost"
-                                            className="text-error w-32 text-sm"
+                                        {user.tier.charAt(0).toUpperCase() +
+                                            user.tier.slice(1)}
+                                    </td>
+                                    <td className="text-text-secondary px-4 py-3 whitespace-nowrap tabular-nums">
+                                        {user.joinDate}
+                                    </td>
+                                    <td className="text-text px-4 py-3 text-right font-medium tabular-nums">
+                                        {user.transactions}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <StatusBadge
+                                            tone={statusMeta[user.status].tone}
+                                            dot
                                         >
-                                            Suspend
-                                        </Button>
-                                    )}
-                                    {user.status === "suspended" && (
-                                        <Button
-                                            variant="secondary"
-                                            className="w-32 text-sm"
-                                        >
-                                            Reactivate
-                                        </Button>
-                                    )}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                                            {statusMeta[user.status].label}
+                                        </StatusBadge>
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <div className="flex justify-end gap-1">
+                                            <Button variant="ghost" size="sm">
+                                                View
+                                            </Button>
+                                            {user.status === "active" && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="text-error hover:text-error"
+                                                >
+                                                    Suspend
+                                                </Button>
+                                            )}
+                                            {user.status === "suspended" && (
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                >
+                                                    Reactivate
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
