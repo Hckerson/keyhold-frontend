@@ -1,240 +1,234 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+    Users,
+    Home,
+    ShieldCheck,
+    Flag,
+    Database,
+    Server,
+    HardDrive,
+    BarChart3,
+    type LucideIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Panel } from "@/components/ui/panel";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import {
+    QuickActions,
+    type QuickAction,
+} from "@/components/dashboard/quick-actions";
+import { cn } from "@/lib/utils";
 
-interface SystemMetric {
+type MetricTone = "success" | "warning" | "error";
+
+const metrics: {
     label: string;
     value: string | number;
-    status: "healthy" | "warning" | "critical";
-}
-
-const metrics: SystemMetric[] = [
-    { label: "Total Users", value: "1,247", status: "healthy" },
-    { label: "Active Listings", value: "342", status: "healthy" },
-    { label: "Pending Verifications", value: 18, status: "warning" },
-    { label: "Flagged Content", value: 3, status: "critical" },
+    icon: LucideIcon;
+    tone: MetricTone;
+    status: string;
+}[] = [
+    {
+        label: "Total Users",
+        value: "1,247",
+        icon: Users,
+        tone: "success",
+        status: "Healthy",
+    },
+    {
+        label: "Active Listings",
+        value: "342",
+        icon: Home,
+        tone: "success",
+        status: "Healthy",
+    },
+    {
+        label: "Pending Verifications",
+        value: 18,
+        icon: ShieldCheck,
+        tone: "warning",
+        status: "Attention",
+    },
+    {
+        label: "Flagged Content",
+        value: 3,
+        icon: Flag,
+        tone: "error",
+        status: "Action needed",
+    },
 ];
 
-const alerts = [
+type AlertTone = "info" | "error" | "warning";
+
+const alerts: {
+    id: number;
+    title: string;
+    description: string;
+    time: string;
+    tone: AlertTone;
+}[] = [
     {
         id: 1,
-        type: "verification",
         title: "High-Value Agent Verification",
         description:
             "Robert Chen (Agent) requesting Platinum tier verification",
         time: "1 hour ago",
+        tone: "info",
     },
     {
         id: 2,
-        type: "content",
         title: "Inappropriate Listing Image",
         description: "Listing #4521 flagged for explicit content",
         time: "2 hours ago",
+        tone: "error",
     },
     {
         id: 3,
-        type: "transaction",
         title: "Large Transaction Alert",
         description: "$8.5M transaction pending escrow confirmation",
         time: "4 hours ago",
+        tone: "warning",
     },
 ];
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "healthy":
-            return "text-success bg-success/10";
-        case "warning":
-            return "text-warning bg-warning/10";
-        case "critical":
-            return "text-error bg-error/10";
-        default:
-            return "text-text-secondary";
-    }
+const dotTone: Record<AlertTone, string> = {
+    info: "bg-info",
+    error: "bg-error",
+    warning: "bg-warning",
 };
 
-const getAlertColor = (type: string) => {
-    switch (type) {
-        case "verification":
-            return "border-l-accent";
-        case "content":
-            return "border-l-error";
-        case "transaction":
-            return "border-l-warning";
-        default:
-            return "border-l-text-secondary";
-    }
-};
+const quickActions: QuickAction[] = [
+    {
+        label: "Manage Users",
+        href: "/admin/users",
+        icon: Users,
+        description: "Members & roles",
+    },
+    {
+        label: "Review Listings",
+        href: "/admin/listings",
+        icon: Home,
+        description: "Moderate listings",
+    },
+    {
+        label: "Process Verifications",
+        href: "/admin/verifications",
+        icon: ShieldCheck,
+        description: "7 pending",
+    },
+    {
+        label: "View Reports",
+        href: "/admin/reports",
+        icon: BarChart3,
+        description: "Platform analytics",
+    },
+];
+
+const systems: { label: string; icon: LucideIcon }[] = [
+    { label: "Database", icon: Database },
+    { label: "API Gateway", icon: Server },
+    { label: "File Storage", icon: HardDrive },
+];
 
 export default function AdminDashboardPage() {
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-h3 font-display text-text mb-2 font-light">
-                    Admin Dashboard
-                </h1>
-                <p className="text-text-secondary">
-                    System health, user management, and content moderation
-                </p>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Admin Dashboard"
+                description="System health, user management, and content moderation"
+            />
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {metrics.map((metric) => (
-                    <Card key={metric.label}>
-                        <CardContent className="pt-6">
-                            <div className="space-y-2">
-                                <p className="text-text-secondary text-sm">
-                                    {metric.label}
-                                </p>
-                                <p className="text-h4 text-text font-light">
-                                    {metric.value}
-                                </p>
-                                <div
-                                    className={`inline-block rounded px-2 py-1 text-xs font-medium ${getStatusColor(metric.status)}`}
-                                >
-                                    {metric.status === "healthy" && "✓ Healthy"}
-                                    {metric.status === "warning" &&
-                                        "⚠ Attention"}
-                                    {metric.status === "critical" &&
-                                        "✕ Action Required"}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                    <StatCard
+                        key={metric.label}
+                        label={metric.label}
+                        value={metric.value}
+                        icon={metric.icon}
+                        badge={
+                            <StatusBadge tone={metric.tone} dot>
+                                {metric.status}
+                            </StatusBadge>
+                        }
+                    />
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                <div className="lg:col-span-2">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>System Alerts</CardTitle>
-                            <CardDescription>
-                                Recent notifications requiring attention
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            {alerts.map((alert) => (
-                                <div
-                                    key={alert.id}
-                                    className={`border-border flex gap-4 border-b border-l-2 pb-3 pl-4 last:border-b-0 last:pb-0 ${getAlertColor(alert.type)}`}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <Panel
+                    title="System Alerts"
+                    description="Recent notifications requiring attention"
+                    count={alerts.length}
+                    className="lg:col-span-2"
+                >
+                    <ul className="divide-border-light divide-y">
+                        {alerts.map((alert) => (
+                            <li
+                                key={alert.id}
+                                className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+                            >
+                                <span
+                                    className={cn(
+                                        "mt-1.5 size-2 shrink-0 rounded-full",
+                                        dotTone[alert.tone],
+                                    )}
+                                />
+                                <div className="min-w-0 flex-1">
+                                    <h4 className="text-text text-sm font-medium">
+                                        {alert.title}
+                                    </h4>
+                                    <p className="text-text-secondary mt-0.5 text-sm">
+                                        {alert.description}
+                                    </p>
+                                    <p className="text-text-muted mt-1 text-xs">
+                                        {alert.time}
+                                    </p>
+                                </div>
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    className="shrink-0"
                                 >
-                                    <div className="min-w-0 flex-1">
-                                        <h4 className="text-text text-sm font-medium">
-                                            {alert.title}
-                                        </h4>
-                                        <p className="text-text-secondary mt-1 text-sm">
-                                            {alert.description}
-                                        </p>
-                                        <p className="text-text-secondary mt-2 text-xs">
-                                            {alert.time}
-                                        </p>
+                                    Review
+                                </Button>
+                            </li>
+                        ))}
+                    </ul>
+                </Panel>
+
+                <div className="space-y-4">
+                    <Panel title="Quick Actions">
+                        <QuickActions actions={quickActions} />
+                    </Panel>
+
+                    <Panel title="System Status">
+                        <ul className="flex flex-col gap-3">
+                            {systems.map((system) => (
+                                <li
+                                    key={system.label}
+                                    className="flex items-center justify-between gap-3"
+                                >
+                                    <div className="flex min-w-0 items-center gap-2">
+                                        <system.icon
+                                            size={16}
+                                            strokeWidth={1.5}
+                                            className="text-text-muted shrink-0"
+                                        />
+                                        <span className="text-text text-sm">
+                                            {system.label}
+                                        </span>
                                     </div>
-                                    <Link href="#" className="block">
-                                        <Button
-                                            variant="secondary"
-                                            className="h-8 flex-shrink-0 text-xs"
-                                        >
-                                            Review
-                                        </Button>
-                                    </Link>
-                                </div>
+                                    <span className="flex shrink-0 items-center gap-1.5">
+                                        <span className="bg-success size-1.5 rounded-full" />
+                                        <span className="text-text-secondary text-xs">
+                                            Operational
+                                        </span>
+                                    </span>
+                                </li>
                             ))}
-                        </CardContent>
-                    </Card>
-                </div>
-
-                <div className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-h5">
-                                Quick Actions
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                            <Link href="/admin/users" className="block">
-                                <Button
-                                    variant="secondary"
-                                    className="w-full text-sm"
-                                >
-                                    Manage Users
-                                </Button>
-                            </Link>
-                            <Link href="/admin/listings" className="block">
-                                <Button
-                                    variant="secondary"
-                                    className="w-full text-sm"
-                                >
-                                    Review Listings
-                                </Button>
-                            </Link>
-                            <Link href="/admin/verifications" className="block">
-                                <Button
-                                    variant="secondary"
-                                    className="w-full text-sm"
-                                >
-                                    Process Verifications
-                                </Button>
-                            </Link>
-                            <Link href="/admin/reports" className="block">
-                                <Button
-                                    variant="secondary"
-                                    className="w-full text-sm"
-                                >
-                                    View Reports
-                                </Button>
-                            </Link>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-h5">
-                                System Status
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3 text-sm">
-                            <div>
-                                <p className="text-text-secondary mb-1">
-                                    Database
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    <div className="bg-success h-2 w-2 rounded-full" />
-                                    <span className="text-text font-medium">
-                                        Operational
-                                    </span>
-                                </div>
-                            </div>
-                            <div>
-                                <p className="text-text-secondary mb-1">
-                                    API Gateway
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    <div className="bg-success h-2 w-2 rounded-full" />
-                                    <span className="text-text font-medium">
-                                        Operational
-                                    </span>
-                                </div>
-                            </div>
-                            <div>
-                                <p className="text-text-secondary mb-1">
-                                    File Storage
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    <div className="bg-success h-2 w-2 rounded-full" />
-                                    <span className="text-text font-medium">
-                                        Operational
-                                    </span>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                        </ul>
+                    </Panel>
                 </div>
             </div>
         </div>

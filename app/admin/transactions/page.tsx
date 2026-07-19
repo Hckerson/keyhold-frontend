@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatCard } from "@/components/ui/stat-card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import type { BadgeTone } from "@/components/dashboard/contact-row";
+import { cn } from "@/lib/utils";
+
+type Status = "pending" | "escrow" | "completed" | "failed";
 
 interface Transaction {
     id: string;
@@ -7,7 +13,7 @@ interface Transaction {
     buyer: string;
     agent: string;
     price: number;
-    status: "pending" | "escrow" | "completed" | "failed";
+    status: Status;
     initiatedDate: string;
 }
 
@@ -50,140 +56,141 @@ const transactions: Transaction[] = [
     },
 ];
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "pending":
-            return "text-info bg-info/10 border-info/20";
-        case "escrow":
-            return "text-warning bg-warning/10 border-warning/20";
-        case "completed":
-            return "text-success bg-success/10 border-success/20";
-        case "failed":
-            return "text-error bg-error/10 border-error/20";
-        default:
-            return "text-text-secondary";
-    }
+const statusMeta: Record<Status, { tone: BadgeTone; label: string }> = {
+    pending: { tone: "info", label: "Pending" },
+    escrow: { tone: "warning", label: "Escrow" },
+    completed: { tone: "success", label: "Completed" },
+    failed: { tone: "error", label: "Failed" },
 };
 
-const getStatusLabel = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
-};
+const th =
+    "px-4 py-2.5 text-left font-mono text-[10px] font-medium uppercase tracking-wide text-text-muted";
 
 export default function AdminTransactionsPage() {
-    const totalVolume = transactions.reduce((sum, t) => sum + t.price, 0);
-    const completedCount = transactions.filter(
+    const totalVolume = transactions.reduce((s, t) => s + t.price, 0);
+    const totalCommission = totalVolume * 0.025;
+    const completed = transactions.filter(
         (t) => t.status === "completed",
     ).length;
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Transactions
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        ${(totalVolume / 1000000).toFixed(1)}M volume •{" "}
-                        {completedCount} completed
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="secondary" className="text-sm">
-                        Filter
-                    </Button>
-                    <Button variant="secondary" className="text-sm">
-                        Export
-                    </Button>
-                </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Transactions"
+                description="Deal flow, escrow, and commission across the marketplace"
+                action={
+                    <div className="flex gap-2">
+                        <Button variant="secondary" size="sm">
+                            Filter
+                        </Button>
+                        <Button variant="secondary" size="sm">
+                            Export
+                        </Button>
+                    </div>
+                }
+            />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <StatCard
+                    label="Total Volume"
+                    value={`$${(totalVolume / 1_000_000).toFixed(2)}M`}
+                    caption={`${transactions.length} transactions`}
+                    featured
+                />
+                <StatCard
+                    label="Commission (2.5%)"
+                    value={`$${Math.round(totalCommission / 1000)}K`}
+                    caption="platform revenue"
+                />
+                <StatCard
+                    label="Completed"
+                    value={completed}
+                    caption={`of ${transactions.length} deals`}
+                />
             </div>
 
-            <div className="space-y-4">
-                {transactions.map((transaction) => (
-                    <Card
-                        key={transaction.id}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="mb-3 flex items-start justify-between">
-                                        <div>
-                                            <h3 className="text-h6 text-text font-light">
-                                                {transaction.property}
-                                            </h3>
-                                            <p className="text-text-secondary mt-1 text-sm">
-                                                {transaction.buyer} →{" "}
-                                                {transaction.agent}
-                                            </p>
-                                        </div>
-                                        <span
-                                            className={`rounded-full border px-3 py-1 text-xs font-medium ${getStatusColor(transaction.status)}`}
-                                        >
-                                            {getStatusLabel(transaction.status)}
-                                        </span>
-                                    </div>
-
-                                    <div className="border-border grid grid-cols-1 gap-6 border-y py-4 md:grid-cols-3">
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Sale Price
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                $
-                                                {(
-                                                    transaction.price / 1000000
-                                                ).toFixed(2)}
-                                                M
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Commission (2.5%)
-                                            </p>
-                                            <p className="text-accent text-sm font-medium">
-                                                $
-                                                {(
-                                                    (transaction.price *
-                                                        0.025) /
-                                                    1000
-                                                ).toFixed(0)}
-                                                K
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="text-text-secondary mb-1 text-xs">
-                                                Initiated
-                                            </p>
-                                            <p className="text-text text-sm font-medium">
-                                                {transaction.initiatedDate}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="ml-6 flex flex-col gap-2">
-                                    <Button
-                                        variant="secondary"
-                                        className="w-32 text-sm"
+            <div className="bg-background-muted border-border-light overflow-hidden rounded-xl border shadow-sm">
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                        <thead>
+                            <tr className="border-border-light border-b">
+                                <th className={th}>Property</th>
+                                <th className={cn(th, "text-right")}>
+                                    Sale Price
+                                </th>
+                                <th className={cn(th, "text-right")}>
+                                    Commission
+                                </th>
+                                <th className={th}>Initiated</th>
+                                <th className={th}>Status</th>
+                                <th className={cn(th, "text-right")}>
+                                    <span className="sr-only">Actions</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-border-light divide-y">
+                            {transactions.map((t) => {
+                                const inProgress =
+                                    t.status !== "completed" &&
+                                    t.status !== "failed";
+                                return (
+                                    <tr
+                                        key={t.id}
+                                        className="hover:bg-background-alt ease-smooth transition-colors"
                                     >
-                                        View Details
-                                    </Button>
-                                    {transaction.status !== "completed" &&
-                                        transaction.status !== "failed" && (
-                                            <Button
-                                                variant="ghost"
-                                                className="w-32 text-sm"
+                                        <td className="px-4 py-3">
+                                            <p className="text-text font-medium">
+                                                {t.property}
+                                            </p>
+                                            <p className="text-text-muted truncate text-xs">
+                                                {t.buyer} → {t.agent}
+                                            </p>
+                                        </td>
+                                        <td className="text-text px-4 py-3 text-right font-medium whitespace-nowrap tabular-nums">
+                                            ${(t.price / 1_000_000).toFixed(2)}M
+                                        </td>
+                                        <td className="text-accent px-4 py-3 text-right font-medium whitespace-nowrap tabular-nums">
+                                            $
+                                            {Math.round(
+                                                (t.price * 0.025) / 1000,
+                                            )}
+                                            K
+                                        </td>
+                                        <td className="text-text-secondary px-4 py-3 whitespace-nowrap tabular-nums">
+                                            {t.initiatedDate}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <StatusBadge
+                                                tone={statusMeta[t.status].tone}
+                                                dot
                                             >
-                                                Monitor
-                                            </Button>
-                                        )}
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                                                {statusMeta[t.status].label}
+                                            </StatusBadge>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <div className="flex justify-end gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                >
+                                                    View
+                                                </Button>
+                                                {inProgress && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                    >
+                                                        Monitor
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

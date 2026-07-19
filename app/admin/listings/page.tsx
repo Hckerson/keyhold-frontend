@@ -1,12 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { Callout } from "@/components/ui/callout";
+import type { BadgeTone } from "@/components/dashboard/contact-row";
+
+type ListingStatus = "approved" | "flagged" | "pending";
 
 interface Listing {
     id: string;
     address: string;
     agent: string;
     price: number;
-    status: "approved" | "flagged" | "pending";
+    status: ListingStatus;
     reason?: string;
     submittedDate: string;
 }
@@ -39,154 +44,115 @@ const listings: Listing[] = [
     },
 ];
 
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "approved":
-            return "text-success bg-success/10 border-success/20";
-        case "flagged":
-            return "text-error bg-error/10 border-error/20";
-        case "pending":
-            return "text-warning bg-warning/10 border-warning/20";
-        default:
-            return "text-text-secondary";
-    }
+const statusMeta: Record<ListingStatus, { tone: BadgeTone; label: string }> = {
+    approved: { tone: "success", label: "Approved" },
+    flagged: { tone: "error", label: "Flagged" },
+    pending: { tone: "warning", label: "Pending" },
 };
 
-const getStatusLabel = (status: string) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
+const actionsByStatus: Record<ListingStatus, [string, string]> = {
+    pending: ["Approve", "Reject"],
+    flagged: ["Review", "Remove"],
+    approved: ["View", "Unpublish"],
 };
 
-export default function AdminListingsPage() {
-    const flaggedCount = listings.filter((l) => l.status === "flagged").length;
-    const pendingCount = listings.filter((l) => l.status === "pending").length;
+export default function AdminModerationPage() {
+    const flagged = listings.filter((l) => l.status === "flagged").length;
+    const pending = listings.filter((l) => l.status === "pending").length;
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Content Moderation
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        {flaggedCount} flagged • {pendingCount} pending review
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <Button variant="secondary" className="text-sm">
-                        Filter
-                    </Button>
-                    <Button variant="secondary" className="text-sm">
-                        Export
-                    </Button>
-                </div>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Content Moderation"
+                description={`${flagged} flagged · ${pending} pending review`}
+                action={
+                    <div className="flex gap-2">
+                        <Button variant="secondary" size="sm">
+                            Filter
+                        </Button>
+                        <Button variant="secondary" size="sm">
+                            Export
+                        </Button>
+                    </div>
+                }
+            />
 
             <div className="space-y-4">
-                {listings.map((listing) => (
-                    <Card
-                        key={listing.id}
-                        className="hover:border-accent/50 transition-colors"
-                    >
-                        <CardContent className="p-6">
-                            <div className="flex items-start justify-between gap-6">
-                                <div className="flex-1">
-                                    <div className="mb-3 flex items-start justify-between">
-                                        <h3 className="text-h6 text-text font-light">
+                {listings.map((listing) => {
+                    const meta = statusMeta[listing.status];
+                    const [primary, danger] = actionsByStatus[listing.status];
+                    return (
+                        <article
+                            key={listing.id}
+                            className="bg-background-muted border-border-light hover:border-border ease-smooth rounded-xl border p-4 shadow-sm transition-all duration-300 hover:shadow-md"
+                        >
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <h3 className="text-text truncate text-sm font-medium">
                                             {listing.address}
                                         </h3>
-                                        <span
-                                            className={`rounded-full border px-3 py-1 text-xs font-medium ${getStatusColor(listing.status)}`}
-                                        >
-                                            {getStatusLabel(listing.status)}
-                                        </span>
+                                        <StatusBadge tone={meta.tone} dot>
+                                            {meta.label}
+                                        </StatusBadge>
                                     </div>
 
-                                    <div className="mb-4 flex items-center gap-4 text-sm">
+                                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
                                         <span className="text-text-secondary">
-                                            Agent: {listing.agent}
+                                            Agent · {listing.agent}
                                         </span>
-                                        <span className="text-text-secondary">
-                                            •
+                                        <span className="text-text-muted">
+                                            ·
                                         </span>
-                                        <span className="text-text font-medium">
+                                        <span className="text-text font-medium tabular-nums">
                                             $
-                                            {(listing.price / 1000000).toFixed(
-                                                2,
-                                            )}
+                                            {(
+                                                listing.price / 1_000_000
+                                            ).toFixed(2)}
                                             M
+                                        </span>
+                                        <span className="text-text-muted">
+                                            ·
+                                        </span>
+                                        <span className="text-text-muted">
+                                            Submitted {listing.submittedDate}
                                         </span>
                                     </div>
 
                                     {listing.reason && (
-                                        <div className="bg-error/10 border-error/20 mb-4 rounded border p-3">
-                                            <p className="text-error text-sm font-medium">
-                                                Flagged Reason
-                                            </p>
-                                            <p className="text-error/70 mt-1 text-sm">
-                                                {listing.reason}
-                                            </p>
-                                        </div>
+                                        <Callout
+                                            variant="error"
+                                            title="Flagged reason"
+                                            description={listing.reason}
+                                            className="mt-3"
+                                        />
                                     )}
-
-                                    <p className="text-text-secondary text-xs">
-                                        Submitted {listing.submittedDate}
-                                    </p>
                                 </div>
 
-                                <div className="ml-6 flex flex-col gap-2">
-                                    {listing.status === "pending" && (
-                                        <>
-                                            <Button
-                                                variant="primary"
-                                                className="w-32 text-sm"
-                                            >
-                                                Approve
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="text-error w-32 text-sm"
-                                            >
-                                                Reject
-                                            </Button>
-                                        </>
-                                    )}
-                                    {listing.status === "flagged" && (
-                                        <>
-                                            <Button
-                                                variant="secondary"
-                                                className="w-32 text-sm"
-                                            >
-                                                Review
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="text-error w-32 text-sm"
-                                            >
-                                                Remove
-                                            </Button>
-                                        </>
-                                    )}
-                                    {listing.status === "approved" && (
-                                        <>
-                                            <Button
-                                                variant="secondary"
-                                                className="w-32 text-sm"
-                                            >
-                                                View
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                className="w-32 text-sm"
-                                            >
-                                                Unpublish
-                                            </Button>
-                                        </>
-                                    )}
+                                <div className="flex shrink-0 gap-2 sm:flex-col">
+                                    <Button
+                                        variant={
+                                            listing.status === "pending"
+                                                ? "primary"
+                                                : "secondary"
+                                        }
+                                        size="sm"
+                                        className="w-full sm:w-28"
+                                    >
+                                        {primary}
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="text-error hover:text-error w-full sm:w-28"
+                                    >
+                                        {danger}
+                                    </Button>
                                 </div>
                             </div>
-                        </CardContent>
-                    </Card>
-                ))}
+                        </article>
+                    );
+                })}
             </div>
         </div>
     );

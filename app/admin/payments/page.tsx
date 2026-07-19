@@ -1,51 +1,16 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-interface RevenueMetric {
-    label: string;
-    value: string;
-    change: string;
-    isPositive: boolean;
-}
+import { PageHeader } from "@/components/ui/page-header";
+import { Panel } from "@/components/ui/panel";
+import { StatCard } from "@/components/ui/stat-card";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { SummaryRow } from "@/components/ui/summary-row";
+import { Callout } from "@/components/ui/callout";
 
 interface MonthlyRevenue {
     month: string;
     commission: number;
     fees: number;
 }
-
-const metrics: RevenueMetric[] = [
-    {
-        label: "Total Revenue (YTD)",
-        value: "$1.24M",
-        change: "+18% vs last year",
-        isPositive: true,
-    },
-    {
-        label: "Monthly Avg",
-        value: "$176K",
-        change: "+5% trend",
-        isPositive: true,
-    },
-    {
-        label: "Commission Revenue",
-        value: "$950K",
-        change: "76% of total",
-        isPositive: true,
-    },
-    {
-        label: "Outstanding Payments",
-        value: "$42K",
-        change: "3 pending transactions",
-        isPositive: false,
-    },
-];
 
 const monthlyData: MonthlyRevenue[] = [
     { month: "Jan", commission: 145000, fees: 28000 },
@@ -59,181 +24,148 @@ const monthlyData: MonthlyRevenue[] = [
 
 const maxRevenue = Math.max(...monthlyData.map((d) => d.commission + d.fees));
 
+const k = (n: number) => `$${Math.round(n / 1000)}K`;
+
 export default function AdminPaymentsPage() {
     return (
-        <div className="space-y-8">
-            <div>
-                <h1 className="text-h3 font-display text-text font-light">
-                    Payment & Revenue
-                </h1>
-                <p className="text-text-secondary mt-2">
-                    Track commissions, fees, and platform revenue
-                </p>
+        <div className="space-y-6">
+            <PageHeader
+                title="Payment & Revenue"
+                description="Commissions, platform fees, and payouts"
+                action={
+                    <Button variant="secondary" size="sm">
+                        Export
+                    </Button>
+                }
+            />
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <StatCard
+                    label="Revenue YTD"
+                    value="$1.24M"
+                    change="+18%"
+                    trend="up"
+                    caption="vs last year"
+                    featured
+                />
+                <StatCard
+                    label="Monthly Avg"
+                    value="$176K"
+                    change="+5%"
+                    trend="up"
+                    caption="6-month trend"
+                />
+                <StatCard
+                    label="Commission"
+                    value="$950K"
+                    caption="76% of total"
+                />
+                <StatCard
+                    label="Outstanding"
+                    value="$42K"
+                    caption="3 pending transactions"
+                />
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-                {metrics.map((metric) => (
-                    <Card key={metric.label}>
-                        <CardContent className="pt-6">
-                            <div className="space-y-2">
-                                <p className="text-text-secondary text-sm">
-                                    {metric.label}
-                                </p>
-                                <p className="text-h4 text-text font-light">
-                                    {metric.value}
-                                </p>
-                                <p
-                                    className={`text-xs ${metric.isPositive ? "text-success" : "text-warning"}`}
-                                >
-                                    {metric.change}
-                                </p>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Monthly Revenue</CardTitle>
-                        <CardDescription>
-                            Commission vs platform fees
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {monthlyData.map((data) => {
-                                const total = data.commission + data.fees;
-                                return (
-                                    <div key={data.month}>
-                                        <div className="mb-2 flex items-center justify-between">
-                                            <span className="text-text text-sm font-medium">
-                                                {data.month}
-                                            </span>
-                                            <span className="text-text-secondary text-sm">
-                                                ${(total / 1000).toFixed(0)}K
-                                            </span>
-                                        </div>
-                                        <div className="bg-primary-dark flex h-2 gap-0.5 overflow-hidden rounded-full">
-                                            <div
-                                                className="bg-accent"
-                                                style={{
-                                                    width: `${(data.commission / maxRevenue) * 100}%`,
-                                                }}
-                                                title="Commission"
-                                            />
-                                            <div
-                                                className="bg-info"
-                                                style={{
-                                                    width: `${(data.fees / maxRevenue) * 100}%`,
-                                                }}
-                                                title="Platform Fees"
-                                            />
-                                        </div>
-                                        <div className="text-text-secondary mt-1 flex gap-4 text-xs">
-                                            <span>
-                                                Commission: $
-                                                {(
-                                                    data.commission / 1000
-                                                ).toFixed(0)}
-                                                K
-                                            </span>
-                                            <span>
-                                                Fees: $
-                                                {(data.fees / 1000).toFixed(0)}K
-                                            </span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <Panel
+                    title="Monthly Revenue"
+                    description="Commission vs platform fees"
+                    className="lg:col-span-2"
+                    action={
+                        <div className="flex items-center gap-3 text-xs">
+                            <span className="text-text-secondary flex items-center gap-1.5">
+                                <span className="bg-accent size-2 rounded-full" />
+                                Commission
+                            </span>
+                            <span className="text-text-secondary flex items-center gap-1.5">
+                                <span className="bg-info size-2 rounded-full" />
+                                Fees
+                            </span>
                         </div>
-                    </CardContent>
-                </Card>
+                    }
+                >
+                    <ul className="space-y-3.5">
+                        {monthlyData.map((data) => {
+                            const total = data.commission + data.fees;
+                            return (
+                                <li key={data.month}>
+                                    <div className="mb-1.5 flex items-baseline justify-between">
+                                        <span className="text-text-muted font-mono text-[10px] tracking-wide uppercase">
+                                            {data.month}
+                                        </span>
+                                        <span className="text-text text-xs font-medium tabular-nums">
+                                            {k(total)}
+                                        </span>
+                                    </div>
+                                    <div className="bg-background-alt flex h-2 gap-0.5 overflow-hidden rounded-full">
+                                        <div
+                                            className="bg-accent ease-smooth transition-all duration-500"
+                                            style={{
+                                                width: `${(data.commission / maxRevenue) * 100}%`,
+                                            }}
+                                        />
+                                        <div
+                                            className="bg-info ease-smooth transition-all duration-500"
+                                            style={{
+                                                width: `${(data.fees / maxRevenue) * 100}%`,
+                                            }}
+                                        />
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </Panel>
 
-                <div className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Revenue Breakdown</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
+                <div className="space-y-4">
+                    <Panel title="Revenue Breakdown">
+                        <div className="space-y-4">
                             <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Commission (2.5%)
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        76%
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div className="bg-accent h-full w-3/4 rounded-full" />
-                                </div>
-                                <p className="text-text-secondary mt-1 text-xs">
+                                <SummaryRow
+                                    label="Commission (2.5%)"
+                                    value="76%"
+                                    className="mb-1.5"
+                                />
+                                <ProgressBar value={76} tone="accent" />
+                                <p className="text-text-muted mt-1 text-xs tabular-nums">
                                     $950K YTD
                                 </p>
                             </div>
-
                             <div>
-                                <div className="mb-2 flex justify-between">
-                                    <span className="text-text-secondary text-sm">
-                                        Platform Fees
-                                    </span>
-                                    <span className="text-text text-sm font-medium">
-                                        24%
-                                    </span>
-                                </div>
-                                <div className="bg-primary-dark h-2 w-full overflow-hidden rounded-full">
-                                    <div className="bg-info h-full w-1/4 rounded-full" />
-                                </div>
-                                <p className="text-text-secondary mt-1 text-xs">
+                                <SummaryRow
+                                    label="Platform Fees"
+                                    value="24%"
+                                    className="mb-1.5"
+                                />
+                                <ProgressBar value={24} tone="info" />
+                                <p className="text-text-muted mt-1 text-xs tabular-nums">
                                     $290K YTD
                                 </p>
                             </div>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </Panel>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Payment Processing</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            <div className="bg-primary-dark flex items-center justify-between rounded p-3">
-                                <div>
-                                    <p className="text-text text-sm font-medium">
-                                        Pending Payouts
-                                    </p>
-                                    <p className="text-text-secondary mt-1 text-xs">
-                                        Agent commission payments
-                                    </p>
-                                </div>
-                                <p className="text-h5 text-warning font-light">
-                                    $42K
-                                </p>
-                            </div>
-
-                            <div className="bg-primary-dark flex items-center justify-between rounded p-3">
-                                <div>
-                                    <p className="text-text text-sm font-medium">
-                                        Processing Time
-                                    </p>
-                                    <p className="text-text-secondary mt-1 text-xs">
-                                        Average payment time
-                                    </p>
-                                </div>
-                                <p className="text-text text-sm font-medium">
-                                    3-5 days
-                                </p>
-                            </div>
-
-                            <Button
-                                variant="secondary"
-                                className="w-full text-sm"
-                            >
-                                Process Payouts
+                    <Panel
+                        title="Payment Processing"
+                        action={
+                            <Button variant="secondary" size="sm">
+                                Process
                             </Button>
-                        </CardContent>
-                    </Card>
+                        }
+                    >
+                        <div className="space-y-3">
+                            <Callout
+                                variant="warning"
+                                title="Pending payouts"
+                                description="$42K in agent commission payments awaiting release"
+                            />
+                            <SummaryRow
+                                label="Avg. processing time"
+                                value="3–5 days"
+                            />
+                        </div>
+                    </Panel>
                 </div>
             </div>
         </div>
