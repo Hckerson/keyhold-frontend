@@ -29,6 +29,7 @@ type StatItem = {
     change?: string;
     trend?: "up" | "down";
     caption?: string;
+    featured?: boolean;
 };
 
 const stats: StatItem[] = [
@@ -38,6 +39,7 @@ const stats: StatItem[] = [
         icon: BarChart3,
         href: "/agent/pipeline",
         caption: "25 active deals",
+        featured: true,
     },
     {
         label: "Active Listings",
