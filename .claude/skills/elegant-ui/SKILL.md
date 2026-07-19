@@ -35,8 +35,8 @@ Tailwind v4, tokens defined in `styles/tokens.css` + `@theme` in `styles/globals
 **Color** (prefix `bg-` / `text-` / `border-`):
 `background` · `background-alt` · `background-muted` — surfaces
 `text` · `text-secondary` · `text-muted` · `text-inverse` — foreground ramp
-`accent` · `accent-dark` · `accent-light` — indigo, CTAs / interactive / emphasis (use sparingly)
-`highlight` · `highlight-dark` · `highlight-light` — coral, featured / "pop" moments only
+`accent` · `accent-dark` · `accent-light` — pine green, CTAs / interactive / emphasis (use sparingly)
+`highlight` · `highlight-dark` · `highlight-light` — brass, featured / "pop" moments only
 `border` · `border-light` · `border-dark` — 1px dividers
 `success` · `error` · `warning` · `info` (+ each `-light`) — status only
 `sidebar` · `sidebar-border` · `sidebar-hover` · `sidebar-active` · `sidebar-text` · `sidebar-text-active` — the dark nav ramp
