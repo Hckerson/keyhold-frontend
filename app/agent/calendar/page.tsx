@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { Eye, Briefcase, Search, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Panel } from "@/components/ui/panel";
+import { PageHeader } from "@/components/ui/page-header";
+import { MiniCalendar } from "@/components/dashboard/mini-calendar";
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+    AppointmentRow,
+    type AppointmentType,
+} from "@/components/dashboard/appointment-row";
+import { cn } from "@/lib/utils";
 
 interface Appointment {
     id: string;
-    type: "showing" | "meeting" | "inspection" | "closing";
+    type: AppointmentType;
     title: string;
     property: string;
     client: string;
@@ -21,7 +23,7 @@ interface Appointment {
     notes: string;
 }
 
-const upcomingAppointments: Appointment[] = [
+const appointments: Appointment[] = [
     {
         id: "1",
         type: "showing",
@@ -54,237 +56,109 @@ const upcomingAppointments: Appointment[] = [
     },
 ];
 
-const getTypeIcon = (type: string) => {
-    switch (type) {
-        case "showing":
-            return "👀";
-        case "meeting":
-            return "💼";
-        case "inspection":
-            return "🔍";
-        case "closing":
-            return "✅";
-        default:
-            return "📅";
-    }
-};
+const legend = [
+    { icon: Eye, label: "Showing", tint: "text-info" },
+    { icon: Briefcase, label: "Meeting", tint: "text-text-secondary" },
+    { icon: Search, label: "Inspection", tint: "text-warning" },
+    { icon: CheckCircle2, label: "Closing", tint: "text-success" },
+];
 
-const getTypeColor = (type: string) => {
-    switch (type) {
-        case "showing":
-            return "text-info bg-info/10 border-info/20";
-        case "meeting":
-            return "text-accent bg-accent/10 border-accent/20";
-        case "inspection":
-            return "text-warning bg-warning/10 border-warning/20";
-        case "closing":
-            return "text-success bg-success/10 border-success/20";
-        default:
-            return "text-text-secondary";
-    }
-};
+const weekSummary = [
+    { label: "Showings", value: "3" },
+    { label: "Meetings", value: "2" },
+    { label: "Inspections", value: "1" },
+    { label: "Closings", value: "1", accent: true },
+];
 
 export default function AgentCalendarPage() {
-    const [selectedDate, setSelectedDate] = useState("2024-07-13");
+    const [selected, setSelected] = useState(13);
 
     return (
-        <div className="space-y-8">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-h3 font-display text-text font-light">
-                        Calendar
-                    </h1>
-                    <p className="text-text-secondary mt-2">
-                        {upcomingAppointments.length} appointments today
-                    </p>
-                </div>
-                <Button variant="primary">Schedule Appointment</Button>
-            </div>
+        <div className="space-y-6">
+            <PageHeader
+                title="Calendar"
+                description={`${appointments.length} appointments today`}
+                action={
+                    <Button variant="primary" size="sm">
+                        Schedule Appointment
+                    </Button>
+                }
+            />
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-                <div className="lg:col-span-1">
-                    <Card>
-                        <CardContent className="p-0">
-                            <div className="border-border border-b p-4">
-                                <p className="text-text mb-3 text-sm font-medium">
-                                    July 2024
-                                </p>
-                                <div className="space-y-2">
-                                    <div className="text-text-secondary mb-2 grid grid-cols-7 gap-1 text-center text-xs">
-                                        <span>Sun</span>
-                                        <span>Mon</span>
-                                        <span>Tue</span>
-                                        <span>Wed</span>
-                                        <span>Thu</span>
-                                        <span>Fri</span>
-                                        <span>Sat</span>
-                                    </div>
-                                    <div className="grid grid-cols-7 gap-1">
-                                        {Array.from({ length: 31 }).map(
-                                            (_, i) => (
-                                                <button
-                                                    key={i}
-                                                    onClick={() =>
-                                                        setSelectedDate(
-                                                            `2024-07-${String(i + 1).padStart(2, "0")}`,
-                                                        )
-                                                    }
-                                                    className={`flex aspect-square items-center justify-center rounded text-xs transition-colors ${
-                                                        `2024-07-${String(i + 1).padStart(2, "0")}` ===
-                                                        selectedDate
-                                                            ? "bg-accent font-medium text-white"
-                                                            : "hover:bg-primary-dark"
-                                                    }`}
-                                                >
-                                                    {i + 1}
-                                                </button>
-                                            ),
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-4">
-                                <p className="text-text mb-3 text-sm font-medium">
-                                    Legend
-                                </p>
-                                <div className="space-y-2 text-xs">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-info">👀</span>
-                                        <span className="text-text-secondary">
-                                            Showing
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span>💼</span>
-                                        <span className="text-text-secondary">
-                                            Meeting
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span>🔍</span>
-                                        <span className="text-text-secondary">
-                                            Inspection
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span>✅</span>
-                                        <span className="text-text-secondary">
-                                            Closing
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+            <div className="grid gap-4 lg:grid-cols-4">
+                <div className="space-y-4 lg:col-span-1">
+                    <Panel title="July 2024">
+                        <MiniCalendar
+                            days={31}
+                            selected={selected}
+                            onSelect={setSelected}
+                            marked={[13, 15, 20]}
+                        />
+                    </Panel>
 
-                <div className="space-y-6 lg:col-span-3">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Today's Schedule</CardTitle>
-                            <CardDescription>
-                                Saturday, July 13, 2024
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {upcomingAppointments.map((appointment) => (
+                    <Panel title="Legend">
+                        <div className="space-y-2">
+                            {legend.map((item) => (
                                 <div
-                                    key={appointment.id}
-                                    className="border-border flex gap-4 border-b pb-4 last:border-b-0 last:pb-0"
+                                    key={item.label}
+                                    className="flex items-center gap-2 text-xs"
                                 >
-                                    <div className="flex-shrink-0 text-2xl">
-                                        {getTypeIcon(appointment.type)}
-                                    </div>
-
-                                    <div className="min-w-0 flex-1">
-                                        <div className="mb-2 flex items-start justify-between">
-                                            <div>
-                                                <h4 className="text-text text-sm font-medium">
-                                                    {appointment.title}
-                                                </h4>
-                                                <p className="text-text-secondary mt-1 text-sm">
-                                                    {appointment.property}
-                                                </p>
-                                            </div>
-                                            <span
-                                                className={`rounded px-2 py-1 text-xs font-medium whitespace-nowrap ${getTypeColor(
-                                                    appointment.type,
-                                                )}`}
-                                            >
-                                                {appointment.type
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    appointment.type.slice(1)}
-                                            </span>
-                                        </div>
-
-                                        <div className="text-text-secondary mt-2 grid grid-cols-3 gap-4 text-xs">
-                                            <div>
-                                                <span className="text-text font-medium">
-                                                    {appointment.time}
-                                                </span>
-                                            </div>
-                                            <div>{appointment.client}</div>
-                                            <div>{appointment.duration}</div>
-                                        </div>
-
-                                        <p className="text-text-secondary mt-2 text-xs">
-                                            {appointment.notes}
-                                        </p>
-                                    </div>
-
-                                    <Button
-                                        variant="ghost"
-                                        className="h-8 flex-shrink-0 text-xs"
-                                    >
-                                        Edit
-                                    </Button>
+                                    <item.icon
+                                        size={14}
+                                        strokeWidth={1.5}
+                                        className={item.tint}
+                                    />
+                                    <span className="text-text-secondary">
+                                        {item.label}
+                                    </span>
                                 </div>
                             ))}
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </Panel>
+                </div>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>This Week's Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                                <div>
-                                    <p className="text-text-secondary mb-2 text-xs">
-                                        Showings
+                <div className="space-y-4 lg:col-span-3">
+                    <Panel
+                        title="Today's Schedule"
+                        description="Saturday, July 13, 2024"
+                    >
+                        <div className="space-y-4">
+                            {appointments.map((appointment) => (
+                                <AppointmentRow
+                                    key={appointment.id}
+                                    type={appointment.type}
+                                    title={appointment.title}
+                                    property={appointment.property}
+                                    client={appointment.client}
+                                    time={appointment.time}
+                                    duration={appointment.duration}
+                                    notes={appointment.notes}
+                                />
+                            ))}
+                        </div>
+                    </Panel>
+
+                    <Panel title="This Week's Summary">
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                            {weekSummary.map((metric) => (
+                                <div key={metric.label}>
+                                    <p className="text-text-muted text-caption font-medium tracking-wide uppercase">
+                                        {metric.label}
                                     </p>
-                                    <p className="text-h5 text-text font-light">
-                                        3
+                                    <p
+                                        className={cn(
+                                            "font-display text-h5 mt-1 font-light tabular-nums",
+                                            metric.accent
+                                                ? "text-accent"
+                                                : "text-text",
+                                        )}
+                                    >
+                                        {metric.value}
                                     </p>
                                 </div>
-                                <div>
-                                    <p className="text-text-secondary mb-2 text-xs">
-                                        Meetings
-                                    </p>
-                                    <p className="text-h5 text-text font-light">
-                                        2
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-text-secondary mb-2 text-xs">
-                                        Inspections
-                                    </p>
-                                    <p className="text-h5 text-text font-light">
-                                        1
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-text-secondary mb-2 text-xs">
-                                        Closings
-                                    </p>
-                                    <p className="text-h5 text-accent font-light">
-                                        1
-                                    </p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            ))}
+                        </div>
+                    </Panel>
                 </div>
             </div>
         </div>
