@@ -5,7 +5,7 @@ export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-border bg-background-muted border-t">
+        <footer className="border-border-light bg-background-muted border-t">
             <Container className="py-12 md:py-16">
                 <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-4">
                     <div className="space-y-4">
@@ -115,7 +115,7 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="border-border flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
+                <div className="border-border-light flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
                     <p className="text-text-muted text-sm">
                         © {currentYear} Luxury Real Estate. All rights reserved.
                     </p>

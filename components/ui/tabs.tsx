@@ -39,7 +39,7 @@ const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn("border-border flex gap-4 border-b", className)}
+            className={cn("border-border-light flex gap-4 border-b", className)}
             role="tablist"
             {...props}
         />

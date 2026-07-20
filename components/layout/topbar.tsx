@@ -152,7 +152,7 @@ export function Topbar({ routes, rootLabel, rootHref, user }: TopbarProps) {
         rootHref;
 
     return (
-        <header className="border-border bg-background/80 sticky top-0 z-40 border-b backdrop-blur">
+        <header className="border-border-light bg-background/80 sticky top-0 z-40 border-b backdrop-blur">
             <Container className="flex h-16 items-center justify-between gap-4">
                 <Breadcrumb
                     rootLabel={rootLabel}

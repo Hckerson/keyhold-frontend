@@ -40,7 +40,7 @@ export function FilterPanel({
 }: FilterPanelProps) {
     return (
         <Card className={cn("", className)}>
-            <div className="border-border flex items-center justify-between border-b p-6">
+            <div className="border-border-light flex items-center justify-between border-b p-6">
                 <h3 className="text-h6 font-body font-semibold">{title}</h3>
                 <button
                     onClick={onReset}
@@ -89,7 +89,7 @@ export function FilterPanel({
                 </Accordion>
             </div>
 
-            <div className="border-border flex gap-3 border-t p-6">
+            <div className="border-border-light flex gap-3 border-t p-6">
                 <Button variant="primary" size="sm" className="flex-1">
                     Apply
                 </Button>

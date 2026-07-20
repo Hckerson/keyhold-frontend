@@ -40,10 +40,20 @@ export default function SignupPage() {
                 confirmPassword,
                 role,
             });
-            const response = await query.post<AuthResponse>("/auth/register", result);
+            const response = await query.post<AuthResponse>(
+                "/auth/register",
+                result,
+            );
 
-            if (!response.data || !response.data.user || !response.data.accessToken) {
-                setErrors({ submit: response.message || "Signup failed. Please try again." });
+            if (
+                !response.data ||
+                !response.data.user ||
+                !response.data.accessToken
+            ) {
+                setErrors({
+                    submit:
+                        response.message || "Signup failed. Please try again.",
+                });
                 setIsLoading(false);
                 return;
             }
@@ -91,7 +101,10 @@ export default function SignupPage() {
                     <CardTitle className="text-h5">Create Account</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
+                    <form
+                        onSubmit={(e) => void handleSubmit(e)}
+                        className="space-y-6"
+                    >
                         <div className="space-y-2">
                             <label className="text-text text-sm font-medium">
                                 Full Name
@@ -171,27 +184,43 @@ export default function SignupPage() {
                                 Account Type
                             </label>
                             <div className="flex gap-4">
-                                <label className="flex items-center gap-2 cursor-pointer">
+                                <label className="flex cursor-pointer items-center gap-2">
                                     <input
                                         type="radio"
                                         name="role"
                                         value="BUYER"
                                         checked={role === "BUYER"}
-                                        onChange={(e) => setRole(e.target.value as "BUYER" | "SELLER")}
+                                        onChange={(e) =>
+                                            setRole(
+                                                e.target.value as
+                                                    | "BUYER"
+                                                    | "SELLER",
+                                            )
+                                        }
                                         disabled={isLoading}
                                     />
-                                    <span className="text-text text-sm">Buyer</span>
+                                    <span className="text-text text-sm">
+                                        Buyer
+                                    </span>
                                 </label>
-                                <label className="flex items-center gap-2 cursor-pointer">
+                                <label className="flex cursor-pointer items-center gap-2">
                                     <input
                                         type="radio"
                                         name="role"
                                         value="SELLER"
                                         checked={role === "SELLER"}
-                                        onChange={(e) => setRole(e.target.value as "BUYER" | "SELLER")}
+                                        onChange={(e) =>
+                                            setRole(
+                                                e.target.value as
+                                                    | "BUYER"
+                                                    | "SELLER",
+                                            )
+                                        }
                                         disabled={isLoading}
                                     />
-                                    <span className="text-text text-sm">Seller/Agent</span>
+                                    <span className="text-text text-sm">
+                                        Seller/Agent
+                                    </span>
                                 </label>
                             </div>
                             {errors.role && (
@@ -212,14 +241,14 @@ export default function SignupPage() {
                         </Button>
 
                         {errors.submit && (
-                            <p className="text-error text-sm text-center">
+                            <p className="text-error text-center text-sm">
                                 {errors.submit}
                             </p>
                         )}
 
                         {DEV_MODE && (
-                            <div className="pt-4 border-t border-border space-y-2">
-                                <p className="text-text-secondary text-xs text-center">
+                            <div className="border-border-light space-y-2 border-t pt-4">
+                                <p className="text-text-secondary text-center text-xs">
                                     Development Mode - Quick Login
                                 </p>
                                 <div className="grid grid-cols-3 gap-2">
@@ -229,7 +258,7 @@ export default function SignupPage() {
                                             devLoginAs("ADMIN");
                                             router.push("/admin");
                                         }}
-                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                        className="bg-background border-border text-text hover:border-accent hover:text-accent rounded border px-2 py-1 text-xs transition-colors"
                                     >
                                         Admin
                                     </button>
@@ -239,7 +268,7 @@ export default function SignupPage() {
                                             devLoginAs("BUYER");
                                             router.push("/dashboard");
                                         }}
-                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                        className="bg-background border-border text-text hover:border-accent hover:text-accent rounded border px-2 py-1 text-xs transition-colors"
                                     >
                                         Buyer
                                     </button>
@@ -249,7 +278,7 @@ export default function SignupPage() {
                                             devLoginAs("SELLER");
                                             router.push("/agent");
                                         }}
-                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                        className="bg-background border-border text-text hover:border-accent hover:text-accent rounded border px-2 py-1 text-xs transition-colors"
                                     >
                                         Seller
                                     </button>

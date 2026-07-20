@@ -1,21 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { StatusBadge } from "@/components/ui/status-badge";
-import type { BadgeTone } from "@/components/dashboard/contact-row";
-import { cn } from "@/lib/utils";
-
-type Status = "pending" | "escrow" | "completed" | "failed";
-
-interface Transaction {
-    id: string;
-    property: string;
-    buyer: string;
-    agent: string;
-    price: number;
-    status: Status;
-    initiatedDate: string;
-}
+import {
+    TransactionTable,
+    DEFAULT_COMMISSION_RATE,
+    type Transaction,
+} from "@/components/patterns/transaction-table";
 
 const transactions: Transaction[] = [
     {
@@ -56,25 +46,15 @@ const transactions: Transaction[] = [
     },
 ];
 
-const statusMeta: Record<Status, { tone: BadgeTone; label: string }> = {
-    pending: { tone: "info", label: "Pending" },
-    escrow: { tone: "warning", label: "Escrow" },
-    completed: { tone: "success", label: "Completed" },
-    failed: { tone: "error", label: "Failed" },
-};
-
-const th =
-    "px-4 py-2.5 text-left font-mono text-[10px] font-medium uppercase tracking-wide text-text-muted";
-
 export default function AdminTransactionsPage() {
-    const totalVolume = transactions.reduce((s, t) => s + t.price, 0);
-    const totalCommission = totalVolume * 0.025;
+    const totalVolume = transactions.reduce((sum, t) => sum + t.price, 0);
+    const totalCommission = totalVolume * DEFAULT_COMMISSION_RATE;
     const completed = transactions.filter(
         (t) => t.status === "completed",
     ).length;
 
     return (
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
             <PageHeader
                 title="Transactions"
                 description="Deal flow, escrow, and commission across the marketplace"
@@ -90,11 +70,12 @@ export default function AdminTransactionsPage() {
                 }
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
                 <StatCard
                     label="Total Volume"
                     value={`$${(totalVolume / 1_000_000).toFixed(2)}M`}
                     caption={`${transactions.length} transactions`}
+                    className="sm:col-span-2"
                     featured
                 />
                 <StatCard
@@ -109,88 +90,7 @@ export default function AdminTransactionsPage() {
                 />
             </div>
 
-            <div className="bg-background-muted border-border-light overflow-hidden rounded-xl border shadow-sm">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="border-border-light border-b">
-                                <th className={th}>Property</th>
-                                <th className={cn(th, "text-right")}>
-                                    Sale Price
-                                </th>
-                                <th className={cn(th, "text-right")}>
-                                    Commission
-                                </th>
-                                <th className={th}>Initiated</th>
-                                <th className={th}>Status</th>
-                                <th className={cn(th, "text-right")}>
-                                    <span className="sr-only">Actions</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-border-light divide-y">
-                            {transactions.map((t) => {
-                                const inProgress =
-                                    t.status !== "completed" &&
-                                    t.status !== "failed";
-                                return (
-                                    <tr
-                                        key={t.id}
-                                        className="hover:bg-background-alt ease-smooth transition-colors"
-                                    >
-                                        <td className="px-4 py-3">
-                                            <p className="text-text font-medium">
-                                                {t.property}
-                                            </p>
-                                            <p className="text-text-muted truncate text-xs">
-                                                {t.buyer} → {t.agent}
-                                            </p>
-                                        </td>
-                                        <td className="text-text px-4 py-3 text-right font-medium whitespace-nowrap tabular-nums">
-                                            ${(t.price / 1_000_000).toFixed(2)}M
-                                        </td>
-                                        <td className="text-accent px-4 py-3 text-right font-medium whitespace-nowrap tabular-nums">
-                                            $
-                                            {Math.round(
-                                                (t.price * 0.025) / 1000,
-                                            )}
-                                            K
-                                        </td>
-                                        <td className="text-text-secondary px-4 py-3 whitespace-nowrap tabular-nums">
-                                            {t.initiatedDate}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <StatusBadge
-                                                tone={statusMeta[t.status].tone}
-                                            >
-                                                {statusMeta[t.status].label}
-                                            </StatusBadge>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <div className="flex justify-end gap-1">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                >
-                                                    View
-                                                </Button>
-                                                {inProgress && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                    >
-                                                        Monitor
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <TransactionTable transactions={transactions} />
         </div>
     );
 }

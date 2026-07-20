@@ -1,74 +1,140 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-interface Column<T> {
-    key: keyof T;
+/* --------------------------------- Types --------------------------------- */
+
+export interface DataTableColumn<T> {
+    id: string;
     label: string;
+    align?: "left" | "right";
     width?: string;
-    render?: (value: any, row: T) => ReactNode;
+    srOnlyLabel?: boolean;
+    render: (row: T) => ReactNode;
+    footer?: (rows: T[]) => ReactNode;
 }
 
-interface DataTableProps<T> {
-    columns: Column<T>[];
+export interface DataTableProps<T> {
+    columns: DataTableColumn<T>[];
     data: T[];
+    rowKey: (row: T) => string;
+    caption: string;
+    emptyMessage?: string;
+    rowClassName?: (row: T) => string | undefined;
     className?: string;
-    rowClassName?: string;
 }
 
-export type { DataTableProps };
+const alignClass = {
+    left: "text-left",
+    right: "text-right",
+} as const;
 
-export function DataTable<T extends Record<string, any>>({
+const headCell =
+    "px-3 py-2 font-mono text-[10px] font-medium uppercase tracking-wide text-text-muted";
+
+/* -------------------------------- Table ---------------------------------- */
+
+export function DataTable<T>({
     columns,
     data,
-    className,
+    rowKey,
+    caption,
+    emptyMessage = "Nothing to show",
     rowClassName,
+    className,
 }: DataTableProps<T>) {
+    const hasFooter = columns.some((column) => column.footer);
+
     return (
-        <div className={cn("w-full overflow-x-auto", className)}>
-            <table className="w-full border-collapse">
-                <thead>
-                    <tr className="border-border bg-background-muted border-b">
-                        {columns.map((column) => (
-                            <th
-                                key={String(column.key)}
-                                className="text-text-secondary px-6 py-4 text-left text-sm font-semibold"
-                                style={{ width: column.width }}
-                            >
-                                {column.label}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((row, rowIndex) => (
-                        <tr
-                            key={rowIndex}
-                            className={cn(
-                                "border-border hover:bg-background-muted border-b transition-colors",
-                                rowClassName,
-                            )}
-                        >
+        <div
+            className={cn(
+                "bg-background-muted border-border-dark overflow-hidden rounded-xl border shadow-sm",
+                className,
+            )}
+        >
+            <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                    <caption className="sr-only">{caption}</caption>
+
+                    <thead className="bg-background/80 border-border-dark sticky top-0 z-10 border-b backdrop-blur-md">
+                        <tr>
                             {columns.map((column) => (
-                                <td
-                                    key={String(column.key)}
-                                    className="text-text px-6 py-4 text-sm"
+                                <th
+                                    key={column.id}
+                                    scope="col"
                                     style={{ width: column.width }}
+                                    className={cn(
+                                        headCell,
+                                        alignClass[column.align ?? "left"],
+                                    )}
                                 >
-                                    {column.render
-                                        ? column.render(row[column.key], row)
-                                        : row[column.key]}
-                                </td>
+                                    <span
+                                        className={cn(
+                                            column.srOnlyLabel && "sr-only",
+                                        )}
+                                    >
+                                        {column.label}
+                                    </span>
+                                </th>
                             ))}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
 
-            {data.length === 0 && (
-                <div className="text-text-muted py-8 text-center">
-                    No data available
-                </div>
-            )}
+                    <tbody className="divide-border divide-y">
+                        {data.map((row) => (
+                            <tr
+                                key={rowKey(row)}
+                                className={cn(
+                                    "hover:bg-background-alt/60 ease-smooth transition-colors duration-200",
+                                    rowClassName?.(row),
+                                )}
+                            >
+                                {columns.map((column) => (
+                                    <td
+                                        key={column.id}
+                                        className={cn(
+                                            "px-3 py-2",
+                                            alignClass[column.align ?? "left"],
+                                        )}
+                                    >
+                                        {column.render(row)}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+
+                        {data.length === 0 && (
+                            <tr>
+                                <td
+                                    colSpan={columns.length}
+                                    className="text-text-muted px-3 py-10 text-center text-sm"
+                                >
+                                    {emptyMessage}
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+
+                    {hasFooter && data.length > 0 && (
+                        <tfoot className="bg-background/60 border-border-dark border-t backdrop-blur-md">
+                            <tr>
+                                {columns.map((column) => (
+                                    <td
+                                        key={column.id}
+                                        className={cn(
+                                            "px-3 py-2",
+                                            alignClass[column.align ?? "left"],
+                                        )}
+                                    >
+                                        {column.footer?.(data)}
+                                    </td>
+                                ))}
+                            </tr>
+                        </tfoot>
+                    )}
+                </table>
+            </div>
         </div>
     );
 }
+
+DataTable.displayName = "DataTable";
