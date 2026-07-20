@@ -37,6 +37,7 @@
     --color-sidebar-hover: var(--colors-sidebar-hover);
     --color-sidebar-active: var(--colors-sidebar-active);
     --color-sidebar-text: var(--colors-sidebar-text);
+    --color-sidebar-text-muted: var(--colors-sidebar-text-muted);
     --color-sidebar-text-active: var(--colors-sidebar-text-active);
     --color-metric-pipeline: var(--colors-metric-pipeline);
     --color-metric-success: var(--colors-metric-success);
