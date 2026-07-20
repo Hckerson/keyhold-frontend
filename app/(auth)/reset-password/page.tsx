@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { MailCheck } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { resetPasswordSchema } from "@/lib/validations/auth";
 
@@ -22,9 +22,9 @@ export default function ResetPasswordPage() {
         try {
             resetPasswordSchema.parse({ email });
             setSuccess(true);
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                setError(error.issues[0]?.message || "An error occurred");
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                setError(err.issues[0]?.message || "An error occurred");
             }
         } finally {
             setIsLoading(false);
@@ -33,80 +33,73 @@ export default function ResetPasswordPage() {
 
     if (success) {
         return (
-            <div className="space-y-8">
-                <div className="space-y-4 text-center">
-                    <div className="bg-success/20 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
-                        <span className="text-2xl">✓</span>
-                    </div>
+            <div className="space-y-6 text-center">
+                <span className="bg-success/10 text-success mx-auto grid size-14 place-items-center rounded-full">
+                    <MailCheck size={22} strokeWidth={1.5} />
+                </span>
+                <div className="space-y-1.5">
                     <h1 className="text-h3 font-display text-text font-light">
-                        Check Your Email
+                        Check your email
                     </h1>
-                    <p className="text-text-secondary text-base">
-                        We've sent a password reset link to your email address.
+                    <p className="text-text-secondary text-sm">
+                        We&apos;ve sent a password reset link to{" "}
+                        <span className="text-text font-medium">{email}</span>.
                         Follow the link to set a new password.
                     </p>
                 </div>
-
-                <Link href="/login" className="block text-center">
-                    <Button variant="secondary" className="w-full">
-                        Back to Sign In
-                    </Button>
+                <Link
+                    href="/login"
+                    className={buttonVariants({
+                        variant: "secondary",
+                        className: "w-full",
+                    })}
+                >
+                    Back to Sign In
                 </Link>
             </div>
         );
     }
 
     return (
-        <div className="space-y-8">
-            <div className="space-y-2 text-center">
+        <div className="space-y-6">
+            <header className="space-y-1.5 text-center">
                 <h1 className="text-h3 font-display text-text font-light">
-                    Reset Password
+                    Reset password
                 </h1>
-                <p className="text-text-secondary text-base">
-                    Enter your email to receive a password reset link
+                <p className="text-text-secondary text-sm">
+                    Enter your email to receive a reset link
                 </p>
+            </header>
+
+            <div className="bg-background-muted border-border-light rounded-xl border p-6 shadow-sm">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <Input
+                        label="Email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={error}
+                        disabled={isLoading}
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        className="w-full"
+                        isLoading={isLoading}
+                    >
+                        Send Reset Link
+                    </Button>
+                </form>
             </div>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="text-h5">
-                        Reset Your Password
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-text text-sm font-medium">
-                                Email
-                            </label>
-                            <Input
-                                type="email"
-                                placeholder="you@example.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                disabled={isLoading}
-                            />
-                            {error && (
-                                <p className="text-error text-sm">{error}</p>
-                            )}
-                        </div>
-
-                        <Button
-                            variant="primary"
-                            className="w-full"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? "Sending..." : "Send Reset Link"}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
 
             <p className="text-text-secondary text-center text-sm">
                 Remember your password?{" "}
                 <Link
                     href="/login"
-                    className="text-accent hover:text-accent-dark font-medium transition-colors"
+                    className="text-accent hover:text-accent-dark ease-smooth font-medium transition-colors"
                 >
                     Sign in
                 </Link>
