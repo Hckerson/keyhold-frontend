@@ -229,7 +229,7 @@ export function Sidebar({
                                     <div className="bg-sidebar-border mx-auto my-1 h-px w-5" />
                                 )
                             ) : (
-                                <p className="text-sidebar-text/60 text-caption px-3 pb-1 font-medium tracking-[0.14em] uppercase">
+                                <p className="text-sidebar-text-muted text-caption px-3 pb-1 font-medium tracking-[0.14em] uppercase">
                                     {section.label}
                                 </p>
                             ))}
