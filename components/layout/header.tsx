@@ -38,7 +38,7 @@ export function Header() {
     };
 
     return (
-        <header className="border-border bg-background-alt/95 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
+        <header className="border-border-light bg-background-alt/95 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
             <Container className="flex items-center justify-between py-4 md:py-6">
                 <Link href="/" className="flex items-center space-x-2">
                     <div className="bg-accent flex h-8 w-8 items-center justify-center rounded-lg">
@@ -77,13 +77,13 @@ export function Header() {
                         <div className="flex gap-4">
                             <Link
                                 href="/login"
-                                className="bg-background border border-border text-text hover:border-accent hover:text-accent hover:shadow-sm transition-colors h-8 px-3 text-xs rounded-lg font-medium inline-flex items-center justify-center"
+                                className="bg-background border-border text-text hover:border-accent hover:text-accent inline-flex h-8 items-center justify-center rounded-lg border px-3 text-xs font-medium transition-colors hover:shadow-sm"
                             >
                                 Sign In
                             </Link>
                             <Link
                                 href="/signup"
-                                className="bg-linear-to-b from-accent to-accent-dark text-primary shadow-sm hover:shadow-md hover:-translate-y-px active:translate-y-0 active:opacity-90 h-8 px-3 text-xs rounded-lg font-medium inline-flex items-center justify-center transition-all duration-200 ease-out"
+                                className="from-accent to-accent-dark text-primary inline-flex h-8 items-center justify-center rounded-lg bg-linear-to-b px-3 text-xs font-medium shadow-sm transition-all duration-200 ease-out hover:-translate-y-px hover:shadow-md active:translate-y-0 active:opacity-90"
                             >
                                 Get Started
                             </Link>
@@ -93,8 +93,10 @@ export function Header() {
 
                 {user && (
                     <div className="flex items-center gap-4">
-                        <div className="text-right hidden sm:block">
-                            <p className="text-text text-sm font-medium">{user.name}</p>
+                        <div className="hidden text-right sm:block">
+                            <p className="text-text text-sm font-medium">
+                                {user.name}
+                            </p>
                             <p className="text-text-secondary text-xs capitalize">
                                 {user.role.toLowerCase()}
                             </p>
@@ -107,7 +109,7 @@ export function Header() {
                             </Link>
                             <button
                                 onClick={handleLogout}
-                                className="bg-background border border-border text-text hover:border-accent hover:text-accent hover:shadow-sm transition-colors h-8 px-3 text-xs rounded-lg font-medium inline-flex items-center justify-center"
+                                className="bg-background border-border text-text hover:border-accent hover:text-accent inline-flex h-8 items-center justify-center rounded-lg border px-3 text-xs font-medium transition-colors hover:shadow-sm"
                             >
                                 Log out
                             </button>

@@ -133,7 +133,7 @@ const systems: { label: string; icon: LucideIcon }[] = [
 
 export default function AdminDashboardPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Admin Dashboard"
                 description="System health, user management, and content moderation"
@@ -197,7 +197,7 @@ export default function AdminDashboardPage() {
                     </ul>
                 </Panel>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <Panel title="Quick Actions">
                         <QuickActions actions={quickActions} />
                     </Panel>

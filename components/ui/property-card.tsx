@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Heart, MapPin, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PropertySpecs } from "@/components/ui/property-specs";
@@ -27,6 +28,7 @@ export interface PropertyCardProps {
     saved?: boolean;
     onSaveChange?: (saved: boolean) => void;
     onView?: (id: string) => void;
+    href?: string;
     className?: string;
 }
 
@@ -102,11 +104,23 @@ function PropertyMedia({
 
 /* -------------------------------- Property -------------------------------- */
 
+const viewDetailsClass =
+    "group/btn text-accent hover:text-accent-dark ease-smooth mt-1 inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200";
+
+const viewDetailsArrow = (
+    <ArrowUpRight
+        size={16}
+        strokeWidth={2}
+        className="ease-smooth transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
+    />
+);
+
 export function PropertyCard({
     property,
     saved,
     onSaveChange,
     onView,
+    href,
     className,
 }: PropertyCardProps) {
     const [internalSaved, setInternalSaved] = useState(false);
@@ -155,18 +169,21 @@ export function PropertyCard({
                     className="border-border-light border-t pt-4"
                 />
 
-                <button
-                    type="button"
-                    onClick={() => onView?.(property.id)}
-                    className="group/btn text-accent hover:text-accent-dark ease-smooth mt-1 inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200"
-                >
-                    View details
-                    <ArrowUpRight
-                        size={16}
-                        strokeWidth={2}
-                        className="ease-smooth transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
-                    />
-                </button>
+                {href ? (
+                    <Link href={href} className={viewDetailsClass}>
+                        View details
+                        {viewDetailsArrow}
+                    </Link>
+                ) : (
+                    <button
+                        type="button"
+                        onClick={() => onView?.(property.id)}
+                        className={viewDetailsClass}
+                    >
+                        View details
+                        {viewDetailsArrow}
+                    </button>
+                )}
             </div>
         </article>
     );

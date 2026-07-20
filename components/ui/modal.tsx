@@ -66,7 +66,7 @@ const ModalHeader = forwardRef<HTMLDivElement, ModalHeaderProps>(
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn("border-border border-b p-6", className)}
+            className={cn("border-border-light border-b p-6", className)}
             {...props}
         />
     ),
@@ -99,7 +99,7 @@ const ModalFooter = forwardRef<HTMLDivElement, ModalFooterProps>(
         <div
             ref={ref}
             className={cn(
-                "border-border flex justify-end gap-4 border-t p-6",
+                "border-border-light flex justify-end gap-4 border-t p-6",
                 className,
             )}
             {...props}

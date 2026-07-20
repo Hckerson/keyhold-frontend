@@ -1,9 +1,9 @@
+import { Check } from "lucide-react";
 import { Container } from "@/components/ui/container";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Panel } from "@/components/ui/panel";
 import { Button } from "@/components/ui/button";
-import { Image } from "@/components/ui/image";
+import { PropertySpecs } from "@/components/ui/property-specs";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 
 export const metadata = {
     title: "Property Details | Luxury Real Estate",
@@ -11,12 +11,37 @@ export const metadata = {
 };
 
 interface ListingDetailPageProps {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
-export default function ListingDetailPage({ params }: ListingDetailPageProps) {
+const FEATURES = [
+    "Smart Home Technology",
+    "Swimming Pool",
+    "Home Theater",
+    "Wine Cellar",
+    "Chef's Kitchen",
+    "Master Suite",
+    "Private Gym",
+    "Guest House",
+];
+
+const COMPARABLES = [
+    { address: "145 Beverly Hills Drive", price: 2500000, soldMonthsAgo: 1 },
+    { address: "982 Canon Terrace", price: 2600000, soldMonthsAgo: 2 },
+    { address: "310 Rodeo Crest", price: 2700000, soldMonthsAgo: 3 },
+    { address: "77 Whittier Lane", price: 2800000, soldMonthsAgo: 4 },
+];
+
+const specLabel =
+    "text-text-muted font-mono text-[10px] tracking-wide uppercase";
+
+export default async function ListingDetailPage({
+    params,
+}: ListingDetailPageProps) {
+    const { id } = await params;
+
     const listing = {
-        id: params.id,
+        id,
         title: "Luxury Modern Villa",
         price: 2500000,
         beds: 4,
@@ -43,264 +68,212 @@ export default function ListingDetailPage({ params }: ListingDetailPageProps) {
         },
     };
 
+    const specs = [
+        { label: "Property Type", value: listing.propertyType },
+        { label: "Year Built", value: String(listing.yearBuilt) },
+        {
+            label: "Price / Sq Ft",
+            value: `$${Math.round(listing.price / listing.sqft).toLocaleString()}`,
+        },
+    ];
+
     return (
-        <div className="bg-background min-h-screen">
-            {/* Hero Gallery */}
-            <div className="w-full">
-                <Image
-                    src={listing.images[0]}
-                    alt={listing.title}
-                    className="h-96 w-full object-cover md:h-600"
-                />
+        <Container className="py-8">
+            <div className="grid h-[300px] grid-cols-1 gap-2 md:h-[420px] md:grid-cols-3 md:grid-rows-2">
+                <div className="relative overflow-hidden rounded-xl md:col-span-2 md:row-span-2">
+                    <img
+                        src={listing.images[0]}
+                        alt={listing.title}
+                        className="size-full object-cover"
+                    />
+                </div>
+                {listing.images.slice(1, 3).map((src, i) => (
+                    <div
+                        key={src}
+                        className="relative hidden overflow-hidden rounded-xl md:block"
+                    >
+                        <img
+                            src={src}
+                            alt={`${listing.title} view ${i + 2}`}
+                            className="size-full object-cover"
+                        />
+                    </div>
+                ))}
             </div>
 
-            <Container className="py-12">
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-                    {/* Main Content */}
-                    <div className="space-y-12 lg:col-span-2">
-                        {/* Price & Key Info */}
-                        <div className="space-y-6">
-                            <div className="space-y-2">
-                                <h1 className="text-h2 font-display text-text font-light">
-                                    ${listing.price.toLocaleString()}
-                                </h1>
-                                <p className="text-text-secondary text-lg">
-                                    {listing.address}
-                                </p>
-                                <p className="text-text-muted text-base">
-                                    {listing.city}, {listing.zipcode}
-                                </p>
-                            </div>
-
-                            <div className="flex flex-wrap gap-4">
-                                <Badge variant="primary">
-                                    {listing.beds} Bedrooms
-                                </Badge>
-                                <Badge variant="default">
-                                    {listing.baths} Bathrooms
-                                </Badge>
-                                <Badge variant="default">
-                                    {listing.sqft.toLocaleString()} sqft
-                                </Badge>
-                            </div>
-
-                            <div className="border-border grid grid-cols-2 gap-4 border-y py-6 md:grid-cols-4">
-                                <div>
-                                    <p className="text-text-muted text-sm">
-                                        Property Type
-                                    </p>
-                                    <p className="text-text text-base font-medium">
-                                        {listing.propertyType}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-text-muted text-sm">
-                                        Year Built
-                                    </p>
-                                    <p className="text-text text-base font-medium">
-                                        {listing.yearBuilt}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-text-muted text-sm">
-                                        Beds / Baths
-                                    </p>
-                                    <p className="text-text text-base font-medium">
-                                        {listing.beds} / {listing.baths}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p className="text-text-muted text-sm">
-                                        Square Feet
-                                    </p>
-                                    <p className="text-text text-base font-medium">
-                                        {listing.sqft.toLocaleString()}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Description & Details */}
-                        <div className="space-y-4">
-                            <h2 className="text-h4 font-body text-text font-normal">
-                                About This Property
-                            </h2>
-                            <p className="text-text-secondary text-base leading-relaxed">
-                                {listing.description}
+            <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
+                <div className="space-y-10 lg:col-span-2">
+                    <div className="space-y-5">
+                        <div className="space-y-1">
+                            <h1 className="text-h2 font-display text-text font-light tabular-nums">
+                                ${listing.price.toLocaleString()}
+                            </h1>
+                            <p className="text-text-secondary text-lg">
+                                {listing.address}
+                            </p>
+                            <p className="text-text-muted text-sm">
+                                {listing.city}, {listing.zipcode}
                             </p>
                         </div>
 
-                        {/* Tabs for additional info */}
-                        <Tabs defaultValue="features">
-                            <TabsList>
-                                <TabsTrigger value="features">
-                                    Features
-                                </TabsTrigger>
-                                <TabsTrigger value="neighborhood">
-                                    Neighborhood
-                                </TabsTrigger>
-                                <TabsTrigger value="comparables">
-                                    Comparables
-                                </TabsTrigger>
-                            </TabsList>
+                        <PropertySpecs
+                            beds={listing.beds}
+                            baths={listing.baths}
+                            sqft={listing.sqft}
+                        />
 
-                            <TabsContent value="features" className="pt-6">
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                    {[
-                                        "Smart Home Technology",
-                                        "Swimming Pool",
-                                        "Home Theater",
-                                        "Wine Cellar",
-                                        "Chef's Kitchen",
-                                        "Master Suite",
-                                        "Private Gym",
-                                        "Guest House",
-                                    ].map((feature) => (
-                                        <div
-                                            key={feature}
-                                            className="bg-background-muted flex items-center gap-3 rounded-sm p-3"
-                                        >
-                                            <span className="text-accent">
-                                                ✓
-                                            </span>
-                                            <span className="text-text">
-                                                {feature}
-                                            </span>
+                        <dl className="border-border-light grid grid-cols-2 gap-4 border-y py-5 md:grid-cols-3">
+                            {specs.map((spec) => (
+                                <div key={spec.label}>
+                                    <dt className={specLabel}>{spec.label}</dt>
+                                    <dd className="text-text mt-1 text-sm font-medium">
+                                        {spec.value}
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+
+                    <section className="space-y-3">
+                        <h2 className="text-h5 font-display text-text font-light">
+                            About This Property
+                        </h2>
+                        <p className="text-text-secondary leading-relaxed">
+                            {listing.description}
+                        </p>
+                    </section>
+
+                    <Tabs defaultValue="features">
+                        <TabsList>
+                            <TabsTrigger value="features">Features</TabsTrigger>
+                            <TabsTrigger value="neighborhood">
+                                Neighborhood
+                            </TabsTrigger>
+                            <TabsTrigger value="comparables">
+                                Comparables
+                            </TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="features" className="pt-6">
+                            <ul className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                {FEATURES.map((feature) => (
+                                    <li
+                                        key={feature}
+                                        className="bg-background-muted border-border-light flex items-center gap-2.5 rounded-lg border px-3 py-2.5"
+                                    >
+                                        <Check
+                                            size={14}
+                                            strokeWidth={1.5}
+                                            className="text-accent shrink-0"
+                                        />
+                                        <span className="text-text text-sm">
+                                            {feature}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </TabsContent>
+
+                        <TabsContent value="neighborhood" className="pt-6">
+                            <div className="space-y-4">
+                                <p className="text-text-secondary leading-relaxed">
+                                    This prestigious neighborhood is known for
+                                    its exclusivity and privacy. Close to fine
+                                    dining, shopping, and entertainment.
+                                </p>
+                                <div>
+                                    <p className={specLabel}>Nearby Schools</p>
+                                    <p className="text-text mt-1 text-sm">
+                                        Top-rated private schools within walking
+                                        distance
+                                    </p>
+                                </div>
+                            </div>
+                        </TabsContent>
+
+                        <TabsContent value="comparables" className="pt-6">
+                            <ul className="divide-border-light border-border-light divide-y rounded-xl border">
+                                {COMPARABLES.map((comp) => (
+                                    <li
+                                        key={comp.address}
+                                        className="flex items-center justify-between gap-4 px-4 py-3"
+                                    >
+                                        <div className="min-w-0">
+                                            <p className="text-text truncate text-sm font-medium">
+                                                {comp.address}
+                                            </p>
+                                            <p className="text-text-muted text-xs">
+                                                Sold {comp.soldMonthsAgo} month
+                                                {comp.soldMonthsAgo > 1
+                                                    ? "s"
+                                                    : ""}{" "}
+                                                ago
+                                            </p>
                                         </div>
-                                    ))}
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="neighborhood" className="pt-6">
-                                <div className="space-y-4">
-                                    <p className="text-text-secondary">
-                                        This prestigious neighborhood is known
-                                        for its exclusivity and privacy. Close
-                                        to fine dining, shopping, and
-                                        entertainment.
-                                    </p>
-                                    <div className="space-y-2">
-                                        <p className="text-text-muted text-sm">
-                                            Nearby Schools
+                                        <p className="text-text shrink-0 text-sm font-medium tabular-nums">
+                                            ${comp.price.toLocaleString()}
                                         </p>
-                                        <p className="text-text">
-                                            Top-rated private schools within
-                                            walking distance
-                                        </p>
-                                    </div>
-                                </div>
-                            </TabsContent>
-
-                            <TabsContent value="comparables" className="pt-6">
-                                <div className="space-y-4">
-                                    <p className="text-text-secondary">
-                                        Recent comparable sales in the area show
-                                        strong market demand for luxury
-                                        properties.
-                                    </p>
-                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                        {[1, 2, 3, 4].map((i) => (
-                                            <div
-                                                key={i}
-                                                className="border-border space-y-2 rounded-sm border p-4"
-                                            >
-                                                <p className="text-text-muted text-sm">
-                                                    Similar Property {i}
-                                                </p>
-                                                <p className="text-h6 text-text">
-                                                    $
-                                                    {(
-                                                        2400000 +
-                                                        i * 100000
-                                                    ).toLocaleString()}
-                                                </p>
-                                                <p className="text-text-secondary text-sm">
-                                                    Sold {i} month
-                                                    {i > 1 ? "s" : ""} ago
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </TabsContent>
-                        </Tabs>
-                    </div>
-
-                    {/* Sidebar */}
-                    <div className="space-y-6 lg:col-span-1">
-                        {/* CTA Sticky */}
-                        <Card className="sticky top-24">
-                            <CardHeader>
-                                <CardTitle className="text-h5">
-                                    Ready to View?
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-3">
-                                    <Button
-                                        variant="primary"
-                                        className="w-full"
-                                    >
-                                        Request Viewing
-                                    </Button>
-                                    <Button
-                                        variant="secondary"
-                                        className="w-full"
-                                    >
-                                        Save Property
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Agent Card */}
-                        <Card>
-                            <CardContent className="space-y-4 p-6">
-                                <h3 className="text-h6 font-body text-text font-medium">
-                                    Your Agent
-                                </h3>
-
-                                <div className="flex gap-4">
-                                    <Image
-                                        src={listing.agent.image}
-                                        alt={listing.agent.name}
-                                        variant="avatar"
-                                    />
-                                    <div className="flex-1 space-y-1">
-                                        <p className="text-text font-medium">
-                                            {listing.agent.name}
-                                        </p>
-                                        <p className="text-text-secondary text-sm">
-                                            Luxury Specialist
-                                        </p>
-                                        <p className="text-text-muted text-xs">
-                                            Response:{" "}
-                                            {listing.agent.responseTime}
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="border-border space-y-2 border-t pt-4">
-                                    <Button
-                                        variant="secondary"
-                                        size="sm"
-                                        className="w-full"
-                                    >
-                                        Call {listing.agent.phone}
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="w-full"
-                                    >
-                                        Message
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </TabsContent>
+                    </Tabs>
                 </div>
-            </Container>
-        </div>
+
+                <aside className="space-y-4 lg:col-span-1">
+                    <Panel
+                        title="Ready to View?"
+                        className="lg:sticky lg:top-24"
+                    >
+                        <div className="space-y-2.5">
+                            <Button variant="primary" className="w-full">
+                                Request Viewing
+                            </Button>
+                            <Button variant="secondary" className="w-full">
+                                Save Property
+                            </Button>
+                        </div>
+                    </Panel>
+
+                    <Panel title="Your Agent">
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={listing.agent.image}
+                                alt={listing.agent.name}
+                                className="size-12 shrink-0 rounded-full object-cover"
+                            />
+                            <div className="min-w-0">
+                                <p className="text-text truncate text-sm font-medium">
+                                    {listing.agent.name}
+                                </p>
+                                <p className="text-text-secondary truncate text-xs">
+                                    Luxury Specialist
+                                </p>
+                                <p className="text-text-muted mt-0.5 text-xs">
+                                    Responds in {listing.agent.responseTime}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="border-border-light mt-4 space-y-2 border-t pt-4">
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                className="w-full"
+                            >
+                                Call {listing.agent.phone}
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="w-full"
+                            >
+                                Message
+                            </Button>
+                        </div>
+                    </Panel>
+                </aside>
+            </div>
+        </Container>
     );
 }

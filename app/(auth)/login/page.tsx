@@ -31,10 +31,20 @@ export default function LoginPage() {
 
         try {
             const result = loginSchema.parse({ email, password });
-            const response = await query.post<AuthResponse>("/auth/login", result);
+            const response = await query.post<AuthResponse>(
+                "/auth/login",
+                result,
+            );
 
-            if (!response.data || !response.data.user || !response.data.accessToken) {
-                setErrors({ submit: response.message || "Login failed. Please try again." });
+            if (
+                !response.data ||
+                !response.data.user ||
+                !response.data.accessToken
+            ) {
+                setErrors({
+                    submit:
+                        response.message || "Login failed. Please try again.",
+                });
                 setIsLoading(false);
                 return;
             }
@@ -82,7 +92,10 @@ export default function LoginPage() {
                     <CardTitle className="text-h5">Sign In</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
+                    <form
+                        onSubmit={(e) => void handleSubmit(e)}
+                        className="space-y-6"
+                    >
                         <div className="space-y-2">
                             <label className="text-text text-sm font-medium">
                                 Email
@@ -128,14 +141,14 @@ export default function LoginPage() {
                         </Button>
 
                         {errors.submit && (
-                            <p className="text-error text-sm text-center">
+                            <p className="text-error text-center text-sm">
                                 {errors.submit}
                             </p>
                         )}
 
                         {DEV_MODE && (
-                            <div className="pt-4 border-t border-border space-y-2">
-                                <p className="text-text-secondary text-xs text-center">
+                            <div className="border-border-light space-y-2 border-t pt-4">
+                                <p className="text-text-secondary text-center text-xs">
                                     Development Mode - Quick Login
                                 </p>
                                 <div className="grid grid-cols-3 gap-2">
@@ -145,7 +158,7 @@ export default function LoginPage() {
                                             devLoginAs("ADMIN");
                                             router.push("/admin");
                                         }}
-                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                        className="bg-background border-border text-text hover:border-accent hover:text-accent rounded border px-2 py-1 text-xs transition-colors"
                                     >
                                         Admin
                                     </button>
@@ -155,7 +168,7 @@ export default function LoginPage() {
                                             devLoginAs("BUYER");
                                             router.push("/dashboard");
                                         }}
-                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                        className="bg-background border-border text-text hover:border-accent hover:text-accent rounded border px-2 py-1 text-xs transition-colors"
                                     >
                                         Buyer
                                     </button>
@@ -165,7 +178,7 @@ export default function LoginPage() {
                                             devLoginAs("SELLER");
                                             router.push("/agent");
                                         }}
-                                        className="bg-background border border-border text-text hover:border-accent hover:text-accent text-xs rounded px-2 py-1 transition-colors"
+                                        className="bg-background border-border text-text hover:border-accent hover:text-accent rounded border px-2 py-1 text-xs transition-colors"
                                     >
                                         Seller
                                     </button>
