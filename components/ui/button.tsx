@@ -11,7 +11,9 @@ const buttonVariants = cva(
                     "bg-linear-to-b from-accent to-accent-dark text-primary shadow-sm hover:shadow-md hover:-translate-y-px active:translate-y-0 active:opacity-90",
                 secondary:
                     "bg-background border border-border text-text hover:border-accent hover:text-accent hover:shadow-sm transition-colors",
-                ghost: "bg-transparent text-text hover:text-accent transition-colors",
+                ghost: "bg-transparent text-text hover:bg-background-alt hover:text-accent transition-colors",
+                "outline-danger":
+                    "bg-background border border-error/40 text-error hover:border-error hover:bg-error/5 transition-colors",
                 danger: "bg-error text-white shadow-sm hover:shadow-md hover:-translate-y-px active:translate-y-0 active:opacity-80",
             },
             size: {
