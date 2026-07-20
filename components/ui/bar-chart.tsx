@@ -10,18 +10,8 @@ import {
     ResponsiveContainer,
     type RenderableText,
 } from "recharts";
-import { type ChartTone } from "@/components/ui/donut-chart";
 import { useMounted } from "@/lib/hooks/use-mounted";
-
-const toneVar: Record<ChartTone, string> = {
-    accent: "var(--color-accent)",
-    info: "var(--color-info)",
-    highlight: "var(--color-highlight)",
-    neutral: "var(--color-text-muted)",
-    success: "var(--color-success)",
-    warning: "var(--color-warning)",
-    error: "var(--color-error)",
-};
+import { chartToneVar as toneVar, type ChartTone } from "@/lib/chart-tones";
 
 export interface BarDatum {
     label: string;

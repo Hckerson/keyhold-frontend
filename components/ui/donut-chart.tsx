@@ -2,26 +2,8 @@
 
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
+import { chartToneVar as toneVar, type ChartTone } from "@/lib/chart-tones";
 import { cn } from "@/lib/utils";
-
-export type ChartTone =
-    | "accent"
-    | "info"
-    | "highlight"
-    | "neutral"
-    | "success"
-    | "warning"
-    | "error";
-
-const toneVar: Record<ChartTone, string> = {
-    accent: "var(--color-accent)",
-    info: "var(--color-info)",
-    highlight: "var(--color-highlight)",
-    neutral: "var(--color-text-muted)",
-    success: "var(--color-success)",
-    warning: "var(--color-warning)",
-    error: "var(--color-error)",
-};
 
 export interface DonutSegment {
     name: string;
@@ -34,6 +16,8 @@ export interface DonutChartProps {
     total?: string | number;
     unit?: string;
     size?: number;
+    valuePrefix?: string;
+    valueSuffix?: string;
     className?: string;
 }
 
@@ -42,6 +26,8 @@ export function DonutChart({
     total,
     unit,
     size = 132,
+    valuePrefix = "",
+    valueSuffix = "",
     className,
 }: DonutChartProps) {
     const mounted = useMounted();
@@ -104,7 +90,9 @@ export function DonutChart({
                                 {d.name}
                             </span>
                             <span className="text-text ml-auto font-medium tabular-nums">
+                                {valuePrefix}
                                 {d.value.toLocaleString()}
+                                {valueSuffix}
                                 <span className="text-text-muted ml-1.5 font-normal">
                                     {pct}%
                                 </span>
