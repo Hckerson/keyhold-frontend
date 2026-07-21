@@ -50,17 +50,17 @@
     --font-mono: var(--fonts-mono);
 
     --text-h1: var(--font-sizes-h1);
-    --text-h1-line: var(--line-heights-h1);
+    --text-h1--line-height: var(--line-heights-h1);
     --text-h2: var(--font-sizes-h2);
-    --text-h2-line: var(--line-heights-h2);
+    --text-h2--line-height: var(--line-heights-h2);
     --text-h3: var(--font-sizes-h3);
-    --text-h3-line: var(--line-heights-h3);
+    --text-h3--line-height: var(--line-heights-h3);
     --text-h4: var(--font-sizes-h4);
-    --text-h4-line: var(--line-heights-h4);
+    --text-h4--line-height: var(--line-heights-h4);
     --text-h5: var(--font-sizes-h5);
-    --text-h5-line: var(--line-heights-h5);
+    --text-h5--line-height: var(--line-heights-h5);
     --text-h6: var(--font-sizes-h6);
-    --text-h6-line: var(--line-heights-h6);
+    --text-h6--line-height: var(--line-heights-h6);
     --text-lg: var(--font-sizes-lg);
     --text-lg-line: var(--line-heights-lg);
     --text-base: var(--font-sizes-base);
