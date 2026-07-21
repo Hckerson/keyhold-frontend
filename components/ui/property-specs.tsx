@@ -20,15 +20,20 @@ export function PropertySpecs({
         { icon: Ruler, value: sqft.toLocaleString(), label: "Sq Ft" },
     ];
     return (
-        <div className={cn("flex items-center gap-5", className)}>
+        <div
+            className={cn(
+                "flex flex-wrap items-center gap-x-4 gap-y-1",
+                className,
+            )}
+        >
             {specs.map(({ icon: Icon, value, label }) => (
-                <div key={label} className="flex items-center gap-2">
+                <div key={label} className="flex items-center gap-1.5">
                     <Icon
-                        size={16}
+                        size={14}
                         strokeWidth={1.5}
                         className="text-text-muted shrink-0"
                     />
-                    <span className="text-text-secondary text-sm">
+                    <span className="text-text-secondary text-xs whitespace-nowrap">
                         <span className="text-text font-medium tabular-nums">
                             {value}
                         </span>{" "}
