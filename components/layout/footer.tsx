@@ -1,146 +1,94 @@
 import Link from "next/link";
-import { Container } from "@/components/ui/container";
+import { SectionShell } from "@/components/sections/section-shell";
+import { Wordmark } from "@/components/ui/wordmark";
+
+interface FooterColumn {
+    title: string;
+    links: { label: string; href: string }[];
+}
+
+const COLUMNS: FooterColumn[] = [
+    {
+        title: "Properties",
+        links: [
+            { label: "Browse", href: "/search" },
+            { label: "Luxury Listings", href: "/search?type=luxury" },
+            { label: "New Listings", href: "/search?new=true" },
+        ],
+    },
+    {
+        title: "Company",
+        links: [
+            { label: "About", href: "/about" },
+            { label: "Careers", href: "/careers" },
+            { label: "Press", href: "/press" },
+        ],
+    },
+    {
+        title: "Legal",
+        links: [
+            { label: "Privacy", href: "/privacy" },
+            { label: "Terms", href: "/terms" },
+            { label: "Contact", href: "/contact" },
+        ],
+    },
+];
+
+const SOCIALS = ["Twitter", "LinkedIn", "Instagram"];
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="border-border-light bg-background-muted border-t">
-            <Container className="py-12 md:py-16">
-                <div className="mb-12 grid grid-cols-1 gap-8 md:grid-cols-4">
-                    <div className="space-y-4">
-                        <h3 className="text-h6 font-body text-text font-semibold">
-                            Luxury RE
-                        </h3>
-                        <p className="text-text-secondary text-sm">
-                            Premium real estate marketplace for discerning
-                            buyers and luxury agents.
+        <footer className="bg-sidebar">
+            <SectionShell className="py-14 md:py-16">
+                <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+                    <div className="col-span-2 space-y-4">
+                        <Wordmark tone="dark" />
+                        <p className="text-sidebar-text max-w-xs text-sm leading-relaxed">
+                            A private marketplace for exceptional homes and the
+                            people who love them.
                         </p>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="text-text letter-spacing-wide text-sm font-semibold uppercase">
-                            Properties
-                        </h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/search"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Browse
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/search?type=luxury"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Luxury Listings
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/search?new=true"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    New Listings
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-4">
-                        <h4 className="text-text letter-spacing-wide text-sm font-semibold uppercase">
-                            Company
-                        </h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/about"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    About
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/careers"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Careers
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/press"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Press
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div className="space-y-4">
-                        <h4 className="text-text letter-spacing-wide text-sm font-semibold uppercase">
-                            Legal
-                        </h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/privacy"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Privacy
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/terms"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Terms
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/contact"
-                                    className="text-text-secondary hover:text-text text-sm transition-colors"
-                                >
-                                    Contact
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+                    {COLUMNS.map((column) => (
+                        <nav key={column.title} className="space-y-3">
+                            <p className="text-sidebar-text-active text-caption font-mono tracking-wide uppercase">
+                                {column.title}
+                            </p>
+                            <ul className="space-y-2">
+                                {column.links.map((link) => (
+                                    <li key={link.href}>
+                                        <Link
+                                            href={link.href}
+                                            className="text-sidebar-text hover:text-sidebar-text-active ease-smooth text-sm transition-colors"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
+                    ))}
                 </div>
 
-                <div className="border-border-light flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
-                    <p className="text-text-muted text-sm">
+                <div className="border-sidebar-border mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
+                    <p className="text-sidebar-text text-sm">
                         © {currentYear} Luxury Real Estate. All rights reserved.
                     </p>
                     <div className="flex gap-6">
-                        <a
-                            href="#"
-                            className="text-text-muted hover:text-text transition-colors"
-                        >
-                            Twitter
-                        </a>
-                        <a
-                            href="#"
-                            className="text-text-muted hover:text-text transition-colors"
-                        >
-                            LinkedIn
-                        </a>
-                        <a
-                            href="#"
-                            className="text-text-muted hover:text-text transition-colors"
-                        >
-                            Instagram
-                        </a>
+                        {SOCIALS.map((social) => (
+                            <a
+                                key={social}
+                                href="#"
+                                className="text-sidebar-text hover:text-sidebar-text-active ease-smooth text-sm transition-colors"
+                            >
+                                {social}
+                            </a>
+                        ))}
                     </div>
                 </div>
-            </Container>
+            </SectionShell>
         </footer>
     );
 }
