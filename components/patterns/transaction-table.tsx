@@ -131,7 +131,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
             label: "Property",
             render: (row) => <PropertyCell transaction={row} />,
             footer: () => (
-                <span className="text-text-muted font-mono text-[10px] font-medium tracking-wide uppercase">
+                <span className="text-text-muted text-caption font-mono font-medium tracking-wide uppercase">
                     Total
                 </span>
             ),

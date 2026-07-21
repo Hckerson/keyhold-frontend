@@ -88,7 +88,7 @@ export function DealRow({ deal, className }: DealRowProps) {
                     value={progress}
                     tone={stage === "closing" ? "success" : "accent"}
                 />
-                <div className="mt-2 flex justify-between text-[10px]">
+                <div className="text-caption mt-2 flex justify-between">
                     {STAGES.map((s, i) => (
                         <span
                             key={s.id}

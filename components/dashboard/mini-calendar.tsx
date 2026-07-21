@@ -19,7 +19,7 @@ export function MiniCalendar({
 }: MiniCalendarProps) {
     return (
         <div className={className}>
-            <div className="text-text-muted mb-2 grid grid-cols-7 gap-1 text-center text-[10px] font-medium tracking-wide uppercase">
+            <div className="text-text-muted text-caption mb-2 grid grid-cols-7 gap-1 text-center font-medium tracking-wide uppercase">
                 {WEEKDAYS.map((day) => (
                     <span key={day}>{day}</span>
                 ))}

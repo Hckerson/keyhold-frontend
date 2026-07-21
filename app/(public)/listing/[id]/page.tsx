@@ -33,7 +33,7 @@ const COMPARABLES = [
 ];
 
 const specLabel =
-    "text-text-muted font-mono text-[10px] tracking-wide uppercase";
+    "text-text-muted font-mono text-caption tracking-wide uppercase";
 
 export default async function ListingDetailPage({
     params,
