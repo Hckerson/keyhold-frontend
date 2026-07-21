@@ -82,56 +82,55 @@
     --font-weights-semibold: 600;
     --font-weights-bold: 700;
 
-    /* Type Scale (Headings) — fluid: min @375px viewport … max @1440px */
-    --font-sizes-h1: clamp(2.5rem, 1.796rem + 3vw, 4.5rem);
-    --line-heights-h1: 1.1;
+    /* Type Scale — mobile base; steps up at 768 / 1024 (see @media at end) */
+    --font-sizes-h1: 2.75rem;
+    --line-heights-h1: 1.05;
     --font-weights-h1: 300;
 
-    --font-sizes-h2: clamp(2rem, 1.472rem + 2.25vw, 3.5rem);
-    --line-heights-h2: 1.2;
+    --font-sizes-h2: 2.3125rem;
+    --line-heights-h2: 1.1;
     --font-weights-h2: 300;
 
-    --font-sizes-h3: clamp(1.625rem, 1.317rem + 1.31vw, 2.5rem);
-    --line-heights-h3: 1.2;
+    --font-sizes-h3: 1.875rem;
+    --line-heights-h3: 1.1;
     --font-weights-h3: 400;
 
-    --font-sizes-h4: clamp(1.375rem, 1.199rem + 0.75vw, 1.875rem);
-    --line-heights-h4: 1.3;
+    --font-sizes-h4: 1.5625rem;
+    --line-heights-h4: 1.2;
     --font-weights-h4: 400;
 
-    --font-sizes-h5: clamp(1.25rem, 1.162rem + 0.38vw, 1.5rem);
-    --line-heights-h5: 1.4;
+    --font-sizes-h5: 1.375rem;
+    --line-heights-h5: 1.25;
     --font-weights-h5: 400;
 
-    --font-sizes-h6: clamp(1.125rem, 1.081rem + 0.19vw, 1.25rem);
-    --line-heights-h6: 1.5;
+    --font-sizes-h6: 1.1875rem;
+    --line-heights-h6: 1.3;
     --font-weights-h6: 500;
 
-    /* Type Scale (Body) — fluid */
-    --font-sizes-lg: clamp(1rem, 0.956rem + 0.19vw, 1.125rem);
-    --line-heights-lg: 1.75;
+    /* Type Scale (Body) */
+    --font-sizes-lg: 1rem;
+    --line-heights-lg: 1.6;
     --font-weights-lg: 400;
 
-    --font-sizes-base: clamp(0.9375rem, 0.916rem + 0.09vw, 1rem);
-    --line-heights-base: 1.75;
+    --font-sizes-base: 0.9375rem;
+    --line-heights-base: 1.6;
     --font-weights-base: 400;
 
-    --font-sizes-sm: clamp(0.84375rem, 0.833rem + 0.05vw, 0.875rem);
-    --line-heights-sm: 1.6;
+    --font-sizes-sm: 0.84375rem;
+    --line-heights-sm: 1.5;
     --font-weights-sm: 400;
 
-    /* xs & caption stay fixed — the legibility floor; fluid would only shrink them */
     --font-sizes-xs: 0.75rem;
     --line-heights-xs: 1.5;
     --font-weights-xs: 400;
 
-    /* Labels & Captions */
-    --font-sizes-label: clamp(0.84375rem, 0.833rem + 0.05vw, 0.875rem);
+    /* Labels & Captions — 12px floor */
+    --font-sizes-label: 0.84375rem;
     --line-heights-label: 1.4;
     --font-weights-label: 600;
 
-    --font-sizes-caption: 0.6875rem;
-    --line-heights-caption: 1.4;
+    --font-sizes-caption: 0.75rem;
+    --line-heights-caption: 1.45;
     --font-weights-caption: 500;
 
     /* Line Heights */
@@ -291,5 +290,36 @@
         animation-duration: 1ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 1ms !important;
+    }
+}
+
+/* ============================================
+   TYPE SCALE — BREAKPOINT STEP-UPS
+   Tablet ≥768 · Desktop ≥1024 (mobile base lives in :root)
+   ============================================ */
+
+@media (min-width: 768px) {
+    :root {
+        --font-sizes-h1: 4rem;
+        --font-sizes-h2: 3.125rem;
+        --font-sizes-h3: 2.5rem;
+        --font-sizes-h4: 1.9375rem;
+        --font-sizes-h5: 1.5625rem;
+        --font-sizes-h6: 1.25rem;
+        --font-sizes-lg: 1.125rem;
+        --font-sizes-base: 1rem;
+        --font-sizes-sm: 0.875rem;
+        --font-sizes-label: 0.875rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    :root {
+        --font-sizes-h1: 5.25rem;
+        --font-sizes-h2: 4rem;
+        --font-sizes-h3: 3rem;
+        --font-sizes-h4: 2.25rem;
+        --font-sizes-h5: 1.75rem;
+        --font-sizes-h6: 1.375rem;
     }
 }
