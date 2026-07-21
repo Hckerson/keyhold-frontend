@@ -107,7 +107,7 @@ function initials(name: string) {
 }
 
 const tierLabel =
-    "text-text-muted font-mono text-[10px] tracking-wide uppercase";
+    "text-text-muted font-mono text-caption tracking-wide uppercase";
 
 export default function AdminVerificationsPage() {
     const pending = verifications.filter((v) => v.status === "pending").length;

@@ -135,7 +135,7 @@ export default function AgentAnalyticsPage() {
                                         <p className="text-text mt-2 text-center text-xs font-medium tabular-nums">
                                             {bar.value}
                                         </p>
-                                        <p className="text-text-muted text-center text-[10px] tracking-wide uppercase">
+                                        <p className="text-text-muted text-caption text-center tracking-wide uppercase">
                                             {bar.label}
                                         </p>
                                     </div>

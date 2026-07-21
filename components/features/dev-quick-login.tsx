@@ -19,7 +19,7 @@ export function DevQuickLogin() {
 
     return (
         <div className="border-border-light space-y-2 border-t pt-4">
-            <p className="text-text-muted text-center font-mono text-[10px] tracking-wide uppercase">
+            <p className="text-text-muted text-caption text-center font-mono tracking-wide uppercase">
                 Dev mode · quick login
             </p>
             <div className="grid grid-cols-3 gap-2">

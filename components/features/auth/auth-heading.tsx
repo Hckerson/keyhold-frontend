@@ -8,7 +8,7 @@ export function AuthHeading({ eyebrow, title, subtitle }: AuthHeadingProps) {
     return (
         <header className="space-y-2">
             {eyebrow && (
-                <p className="text-text-muted font-mono text-[11px] tracking-wide uppercase">
+                <p className="text-text-muted text-caption font-mono tracking-wide uppercase">
                     {eyebrow}
                 </p>
             )}

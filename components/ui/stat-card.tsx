@@ -32,7 +32,7 @@ function StatBody({
     return (
         <div className="relative z-10">
             <div className="flex items-center justify-between gap-2">
-                <p className="text-text-muted font-mono text-[11px] tracking-wide uppercase">
+                <p className="text-text-muted text-caption font-mono tracking-wide uppercase">
                     {label}
                 </p>
                 {Icon && (

@@ -134,7 +134,7 @@ function ConversationItem({
                             {conversation.agent}
                         </p>
                         {conversation.unread > 0 && (
-                            <span className="bg-highlight text-text-inverse grid h-4 min-w-4 shrink-0 place-items-center rounded-full px-1 text-[10px] font-semibold">
+                            <span className="bg-highlight text-text-inverse text-caption grid h-4 min-w-4 shrink-0 place-items-center rounded-full px-1 font-semibold">
                                 {conversation.unread}
                             </span>
                         )}

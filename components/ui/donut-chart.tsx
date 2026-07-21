@@ -65,7 +65,7 @@ export function DonutChart({
                                 {total}
                             </p>
                             {unit && (
-                                <p className="text-text-muted mt-1 font-mono text-[10px] tracking-wide uppercase">
+                                <p className="text-text-muted text-caption mt-1 font-mono tracking-wide uppercase">
                                     {unit}
                                 </p>
                             )}

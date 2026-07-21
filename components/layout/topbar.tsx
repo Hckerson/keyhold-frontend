@@ -123,7 +123,7 @@ function NotificationLink({ route }: { route: TopbarRoute }) {
         >
             <Icon size={16} strokeWidth={1.5} />
             {count > 0 && (
-                <span className="bg-highlight text-text-inverse ring-background absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full px-1 text-[10px] leading-none font-semibold ring-2">
+                <span className="bg-highlight text-text-inverse ring-background text-caption absolute -top-1 -right-1 grid h-4 min-w-4 place-items-center rounded-full px-1 leading-none font-semibold ring-2">
                     {count}
                 </span>
             )}
