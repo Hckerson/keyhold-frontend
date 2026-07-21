@@ -5,7 +5,10 @@ import { useState } from "react";
 import { z } from "zod";
 import { MailCheck } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+    AuthFieldGroup,
+    AuthField,
+} from "@/components/features/auth/auth-field";
 import { AuthHeading } from "@/components/features/auth/auth-heading";
 import { resetPasswordSchema } from "@/lib/validations/auth";
 
@@ -39,7 +42,7 @@ export function ResetPasswordForm() {
                     <MailCheck size={20} strokeWidth={1.5} />
                 </span>
                 <div className="space-y-2">
-                    <p className="text-text-muted font-mono text-[11px] tracking-wide uppercase">
+                    <p className="text-text-muted text-caption font-mono tracking-wide uppercase">
                         Account Recovery
                     </p>
                     <h1 className="font-display text-text text-h4 font-light">
@@ -73,17 +76,19 @@ export function ResetPasswordForm() {
             />
 
             <form onSubmit={handleSubmit} className="space-y-4">
-                <Input
-                    id="email"
-                    label="Email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    error={error}
-                    disabled={isLoading}
-                />
+                <AuthFieldGroup>
+                    <AuthField
+                        id="email"
+                        label="Email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={error}
+                        disabled={isLoading}
+                    />
+                </AuthFieldGroup>
 
                 <Button
                     type="submit"

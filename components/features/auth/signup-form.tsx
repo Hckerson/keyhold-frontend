@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Callout } from "@/components/ui/callout";
-import { PasswordField } from "@/components/features/auth/password-field";
+import {
+    AuthFieldGroup,
+    AuthField,
+} from "@/components/features/auth/auth-field";
 import {
     RoleSelect,
     type RoleOption,
@@ -96,51 +98,52 @@ export function SignupForm() {
 
     return (
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
-            <Input
-                id="fullName"
-                label="Full Name"
-                type="text"
-                autoComplete="name"
-                placeholder="John Doe"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                error={errors.fullName}
-                disabled={isLoading}
-            />
-
-            <Input
-                id="email"
-                label="Email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                error={errors.email}
-                disabled={isLoading}
-            />
-
-            <PasswordField
-                id="password"
-                label="Password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                error={errors.password}
-                disabled={isLoading}
-            />
-
-            <PasswordField
-                id="confirmPassword"
-                label="Confirm Password"
-                autoComplete="new-password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                error={errors.confirmPassword}
-                disabled={isLoading}
-            />
+            <AuthFieldGroup>
+                <AuthField
+                    id="fullName"
+                    label="Full Name"
+                    type="text"
+                    autoComplete="name"
+                    placeholder="John Doe"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    error={errors.fullName}
+                    disabled={isLoading}
+                />
+                <AuthField
+                    id="email"
+                    label="Email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    error={errors.email}
+                    disabled={isLoading}
+                />
+                <AuthField
+                    id="password"
+                    label="Password"
+                    secure
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    error={errors.password}
+                    disabled={isLoading}
+                />
+                <AuthField
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    secure
+                    autoComplete="new-password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    error={errors.confirmPassword}
+                    disabled={isLoading}
+                />
+            </AuthFieldGroup>
 
             <RoleSelect
                 label="Account Type"
