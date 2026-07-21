@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Callout } from "@/components/ui/callout";
-import { PasswordField } from "@/components/features/auth/password-field";
+import {
+    AuthFieldGroup,
+    AuthField,
+} from "@/components/features/auth/auth-field";
 import { DevQuickLogin } from "@/components/features/dev-quick-login";
 import { loginSchema } from "@/lib/validations/auth";
 import { query } from "@/lib/api-client";
@@ -78,29 +80,31 @@ export function LoginForm() {
 
     return (
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
-            <Input
-                id="email"
-                label="Email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                error={errors.email}
-                disabled={isLoading}
-            />
-
-            <div className="space-y-1.5">
-                <PasswordField
-                    id="password"
-                    label="Password"
-                    autoComplete="current-password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    error={errors.password}
-                    disabled={isLoading}
-                />
+            <div className="space-y-2">
+                <AuthFieldGroup>
+                    <AuthField
+                        id="email"
+                        label="Email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={errors.email}
+                        disabled={isLoading}
+                    />
+                    <AuthField
+                        id="password"
+                        label="Password"
+                        secure
+                        autoComplete="current-password"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        error={errors.password}
+                        disabled={isLoading}
+                    />
+                </AuthFieldGroup>
                 <div className="flex justify-end">
                     <Link
                         href="/reset-password"
