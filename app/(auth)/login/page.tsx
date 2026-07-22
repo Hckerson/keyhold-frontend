@@ -13,17 +13,14 @@ export default function LoginPage() {
             <AuthHeading
                 eyebrow="Member Access"
                 title="Welcome back"
-                subtitle="Sign in to your luxury real estate account"
+                subtitle="Sign in to your account"
             />
 
             <LoginForm />
 
-            <p className="text-text-secondary text-sm">
+            <p className="text-text-secondary text-center text-[12px]">
                 New to Luxury RE?{" "}
-                <Link
-                    href="/signup"
-                    className="text-accent hover:text-accent-dark ease-smooth font-medium transition-colors"
-                >
+                <Link href="/signup" className="text-accent font-medium">
                     Create an account
                 </Link>
             </p>

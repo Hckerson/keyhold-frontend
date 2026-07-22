@@ -100,12 +100,9 @@ export function ResetPasswordForm() {
                 </Button>
             </form>
 
-            <p className="text-text-secondary text-sm">
+            <p className="text-text-secondary text-center text-[12px]">
                 Remember your password?{" "}
-                <Link
-                    href="/login"
-                    className="text-accent hover:text-accent-dark ease-smooth font-medium transition-colors"
-                >
+                <Link href="/login" className="text-accent font-medium">
                     Sign in
                 </Link>
             </p>

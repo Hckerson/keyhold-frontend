@@ -6,17 +6,19 @@ export interface AuthHeadingProps {
 
 export function AuthHeading({ eyebrow, title, subtitle }: AuthHeadingProps) {
     return (
-        <header className="space-y-2">
+        <header>
             {eyebrow && (
-                <p className="text-text-muted text-caption font-mono tracking-wide uppercase">
+                <p className="text-text-muted font-mono text-[11px] tracking-[0.1em] uppercase">
                     {eyebrow}
                 </p>
             )}
-            <h1 className="font-display text-text text-h4 font-light">
+            <h1 className="font-display text-text mt-2 text-[28px] leading-[1.1] font-light">
                 {title}
             </h1>
             {subtitle && (
-                <p className="text-text-secondary text-sm">{subtitle}</p>
+                <p className="text-text-secondary mt-1.5 text-[14px]">
+                    {subtitle}
+                </p>
             )}
         </header>
     );

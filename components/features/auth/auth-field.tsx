@@ -13,7 +13,7 @@ export function AuthFieldGroup({ children, className }: AuthFieldGroupProps) {
     return (
         <div
             className={cn(
-                "border-border divide-border-light bg-background-alt focus-within:border-accent/50 focus-within:ring-accent/10 ease-smooth divide-y overflow-hidden rounded-xl border shadow-sm transition-all focus-within:ring-[3px]",
+                "border-border divide-border-light bg-background-alt divide-y overflow-hidden rounded-xl border",
                 className,
             )}
         >
@@ -47,18 +47,16 @@ export function AuthField({
     const inputType = secure ? (visible ? "text" : "password") : type;
 
     return (
-        <div className={cn("px-3.5 py-2", error && "bg-error/5")}>
+        <div className={cn("px-3.5 py-[9px]", error && "bg-error/5")}>
             <div className="flex items-center justify-between gap-2">
                 <label
                     htmlFor={id}
-                    className="text-text-muted text-caption font-mono tracking-wide uppercase"
+                    className="text-text-muted font-mono text-[10px] tracking-[0.06em] uppercase"
                 >
                     {label}
                 </label>
                 {error && (
-                    <span className="text-error text-caption font-medium">
-                        {error}
-                    </span>
+                    <span className="text-error text-[10px]">{error}</span>
                 )}
             </div>
             <div className="flex items-center gap-2">
@@ -66,7 +64,7 @@ export function AuthField({
                     id={id}
                     type={inputType}
                     className={cn(
-                        "text-text placeholder:text-text-muted w-full border-0 bg-transparent py-0.5 text-sm outline-none disabled:opacity-50",
+                        "text-text placeholder:text-text-muted w-full border-0 bg-transparent py-0.5 text-[14px] outline-none disabled:opacity-50",
                         className,
                     )}
                     {...props}
