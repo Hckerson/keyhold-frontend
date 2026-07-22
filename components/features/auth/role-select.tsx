@@ -29,7 +29,7 @@ export function RoleSelect<T extends string>({
     return (
         <fieldset disabled={disabled}>
             {label && (
-                <legend className="text-text mb-2 text-sm font-medium">
+                <legend className="text-text-muted text-caption mb-2 font-mono tracking-wide uppercase">
                     {label}
                 </legend>
             )}
