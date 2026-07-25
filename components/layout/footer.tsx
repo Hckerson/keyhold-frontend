@@ -1,92 +1,91 @@
+import { Fragment } from "react";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { SectionShell } from "@/components/sections/section-shell";
 import { Wordmark } from "@/components/ui/wordmark";
+import styles from "@/components/layout/footer.module.css";
 
-interface FooterColumn {
-    title: string;
-    links: { label: string; href: string }[];
-}
-
-const COLUMNS: FooterColumn[] = [
-    {
-        title: "Properties",
-        links: [
-            { label: "Browse", href: "/search" },
-            { label: "Luxury Listings", href: "/search?type=luxury" },
-            { label: "New Listings", href: "/search?new=true" },
-        ],
-    },
-    {
-        title: "Company",
-        links: [
-            { label: "About", href: "/about" },
-            { label: "Careers", href: "/careers" },
-            { label: "Press", href: "/press" },
-        ],
-    },
-    {
-        title: "Legal",
-        links: [
-            { label: "Privacy", href: "/privacy" },
-            { label: "Terms", href: "/terms" },
-            { label: "Contact", href: "/contact" },
-        ],
-    },
+const NEIGHBORHOODS = [
+    "Beverly Hills",
+    "Malibu",
+    "Bel Air",
+    "Pacific Heights",
+    "Santa Monica",
+    "Holmby Hills",
+    "Brentwood",
+    "Hidden Hills",
 ];
 
-const SOCIALS = ["Twitter", "LinkedIn", "Instagram"];
+const LINKS = [
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
+    { label: "Contact", href: "/contact" },
+];
+
+function MarqueeRow() {
+    return (
+        <>
+            {NEIGHBORHOODS.map((name) => (
+                <Fragment key={name}>
+                    <span className={styles.item}>{name}</span>
+                    <span className={styles.dot} aria-hidden="true">
+                        ·
+                    </span>
+                </Fragment>
+            ))}
+        </>
+    );
+}
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className="bg-sidebar">
-            <SectionShell className="py-14 md:py-16">
-                <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
-                    <div className="col-span-2 space-y-4">
-                        <Wordmark tone="dark" />
-                        <p className="text-sidebar-text max-w-xs text-sm leading-relaxed">
-                            A private marketplace for exceptional homes and the
-                            people who love them.
-                        </p>
-                    </div>
+        <footer className={styles.footer}>
+            <div className={styles.glow} aria-hidden="true" />
+            <div className={styles.grain} aria-hidden="true" />
 
-                    {COLUMNS.map((column) => (
-                        <nav key={column.title} className="space-y-3">
-                            <p className="text-sidebar-text-active text-caption font-mono tracking-wide uppercase">
-                                {column.title}
-                            </p>
-                            <ul className="space-y-2">
-                                {column.links.map((link) => (
-                                    <li key={link.href}>
-                                        <Link
-                                            href={link.href}
-                                            className="text-sidebar-text hover:text-sidebar-text-active ease-smooth text-sm transition-colors"
-                                        >
-                                            {link.label}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </nav>
-                    ))}
+            <SectionShell>
+                <div className="relative z-10">
+                    <p className={styles.eyebrow}>The Concierge</p>
+                    <h2 className={styles.statement}>
+                        A home worthy of the <em>life you&apos;ve built.</em>
+                    </h2>
+                    <div className={styles.ctaRow}>
+                        <Link href="/search" className={styles.cta}>
+                            Begin your search
+                            <ArrowRight size={18} strokeWidth={1.5} />
+                        </Link>
+                        <span className={styles.call}>
+                            or call <b>+1 310 555 0100</b>
+                        </span>
+                    </div>
                 </div>
+            </SectionShell>
 
-                <div className="border-sidebar-border mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
-                    <p className="text-sidebar-text text-sm">
-                        © {currentYear} Luxury Real Estate. All rights reserved.
-                    </p>
-                    <div className="flex gap-6">
-                        {SOCIALS.map((social) => (
-                            <a
-                                key={social}
-                                href="#"
-                                className="text-sidebar-text hover:text-sidebar-text-active ease-smooth text-sm transition-colors"
-                            >
-                                {social}
-                            </a>
+            <div
+                className={`${styles.marquee} relative z-10`}
+                aria-hidden="true"
+            >
+                <div className={styles.track}>
+                    <MarqueeRow />
+                    <MarqueeRow />
+                </div>
+            </div>
+
+            <SectionShell>
+                <div className={`${styles.bottom} relative z-10`}>
+                    <Wordmark tone="dark" />
+                    <nav className={styles.links}>
+                        {LINKS.map((link) => (
+                            <Link key={link.href} href={link.href}>
+                                {link.label}
+                            </Link>
                         ))}
-                    </div>
+                    </nav>
+                    <span className={styles.copy}>
+                        © {currentYear} Luxury RE
+                    </span>
                 </div>
             </SectionShell>
         </footer>
