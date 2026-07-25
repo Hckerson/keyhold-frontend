@@ -4,13 +4,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
-import { Eye, EyeOff, Check, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
+
 import { loginSchema } from "@/lib/validations/auth";
 import { query } from "@/lib/api-client";
 import type { AuthResponse } from "@/lib/types/auth";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { setCookie } from "@/lib/utils/cookies";
-import styles from "@/components/features/auth/login-concierge.module.css";
+
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Callout } from "@/components/ui/callout";
+import { AuthHeading } from "@/components/features/auth/auth-heading";
+import {
+    AuthFieldGroup,
+    AuthField,
+} from "@/components/features/auth/auth-field";
 
 const PORTAL_BY_ROLE: Record<string, string> = {
     ADMIN: "/admin",
@@ -20,7 +29,7 @@ const PORTAL_BY_ROLE: Record<string, string> = {
 
 function GoogleGlyph() {
     return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="size-[17px]">
             <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.76h3.56c2.08-1.92 3.28-4.74 3.28-8.09Z"
@@ -43,7 +52,12 @@ function GoogleGlyph() {
 
 function AppleGlyph() {
     return (
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+            className="size-[17px]"
+        >
             <path d="M16.36 12.9c.02 2.5 2.2 3.34 2.22 3.35-.02.06-.35 1.2-1.15 2.37-.7 1.02-1.42 2.03-2.56 2.05-1.12.02-1.48-.66-2.76-.66-1.28 0-1.68.64-2.74.68-1.1.04-1.94-1.1-2.64-2.11-1.44-2.09-2.54-5.9-1.06-8.48.73-1.28 2.05-2.09 3.48-2.11 1.08-.02 2.1.73 2.76.73.66 0 1.9-.9 3.2-.77.55.02 2.08.22 3.07 1.67-.08.05-1.83 1.07-1.81 3.19M14.3 5.4c.58-.7.98-1.68.87-2.65-.84.03-1.86.56-2.47 1.26-.54.62-1.02 1.62-.89 2.57.94.07 1.9-.48 2.49-1.18" />
         </svg>
     );
@@ -54,7 +68,6 @@ export function LoginForm() {
     const setAuth = useAuthStore((state) => state.setAuth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [visible, setVisible] = useState(false);
     const [remember, setRemember] = useState(true);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
@@ -106,112 +119,110 @@ export function LoginForm() {
         }
     };
 
-    const errorMessage = errors.email || errors.password || errors.submit;
-
     return (
-        <div className={styles.form}>
-            <p className={styles.eyebrow}>Member Access</p>
-            <h1 className={styles.title}>Welcome back</h1>
-            <p className={styles.subtitle}>
-                Sign in to your private portfolio and continue where you left
-                off.
-            </p>
+        <div className="mx-auto w-full max-w-[360px]">
+            <AuthHeading
+                eyebrow="Member Access"
+                title="Welcome back"
+                subtitle="Sign in to your private portfolio and continue where you left off."
+            />
 
-            <div className={styles.social}>
-                <button type="button" className={styles.socialBtn}>
+            <div className="mt-[28px] flex flex-col gap-2.5">
+                <button
+                    type="button"
+                    className="ease-smooth border-border-dark text-text hover:border-text-muted hover:bg-background-alt bg-background font-body flex h-11 w-full items-center justify-center gap-2.5 rounded-lg border text-[13.5px] font-normal transition-all hover:-translate-y-px"
+                >
                     <GoogleGlyph />
                     Continue with Google
                 </button>
-                <button type="button" className={styles.socialBtn}>
+                <button
+                    type="button"
+                    className="ease-smooth border-border-dark text-text hover:border-text-muted hover:bg-background-alt bg-background font-body flex h-11 w-full items-center justify-center gap-2.5 rounded-lg border text-[13.5px] font-normal transition-all hover:-translate-y-px"
+                >
                     <AppleGlyph />
                     Continue with Apple
                 </button>
             </div>
 
-            <div className={styles.divider}>
-                <span>or sign in with email</span>
+            <div className="my-[22px] flex items-center gap-3.5">
+                <div className="bg-border h-px flex-1" />
+                <span className="text-text-muted font-mono text-[9.5px] tracking-[1.6px] whitespace-nowrap uppercase">
+                    or sign in with email
+                </span>
+                <div className="bg-border h-px flex-1" />
             </div>
 
-            <form onSubmit={(e) => void handleSubmit(e)}>
-                <div className={styles.fields}>
-                    <div className={styles.field}>
-                        <label htmlFor="email">Email</label>
-                        <input
-                            id="email"
-                            type="email"
-                            autoComplete="email"
-                            placeholder="you@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            disabled={isLoading}
-                        />
-                    </div>
-                    <div className={styles.field}>
-                        <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            type={visible ? "text" : "password"}
-                            autoComplete="current-password"
-                            placeholder="••••••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            disabled={isLoading}
-                        />
-                        <button
-                            type="button"
-                            className={styles.eye}
-                            onClick={() => setVisible((v) => !v)}
-                            aria-pressed={visible}
-                            aria-label={
-                                visible ? "Hide password" : "Show password"
-                            }
-                        >
-                            {visible ? (
-                                <Eye size={17} strokeWidth={1.5} />
-                            ) : (
-                                <EyeOff size={17} strokeWidth={1.5} />
-                            )}
-                        </button>
-                    </div>
-                </div>
+            <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+                <AuthFieldGroup>
+                    <AuthField
+                        id="email"
+                        label="Email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        error={errors.email}
+                        disabled={isLoading}
+                    />
+                    <AuthField
+                        id="password"
+                        label="Password"
+                        secure
+                        autoComplete="current-password"
+                        placeholder="••••••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        error={errors.password}
+                        disabled={isLoading}
+                    />
+                </AuthFieldGroup>
 
-                {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+                {errors.submit && (
+                    <Callout variant="error" title={errors.submit} />
+                )}
 
-                <div className={styles.options}>
-                    <label className={styles.check}>
-                        <input
-                            type="checkbox"
-                            checked={remember}
-                            onChange={(e) => setRemember(e.target.checked)}
-                        />
-                        <span className={styles.checkBox}>
-                            <Check strokeWidth={3} />
-                        </span>
-                        <span className={styles.checkLabel}>
-                            Keep me signed in
-                        </span>
-                    </label>
-                    <Link href="/reset-password" className={styles.forgot}>
+                <div className="flex items-center justify-between">
+                    <Checkbox
+                        id="remember"
+                        label="Keep me signed in"
+                        checked={remember}
+                        onChange={(e) => setRemember(e.target.checked)}
+                    />
+                    <Link
+                        href="/reset-password"
+                        className="ease-smooth text-highlight-dark hover:text-accent text-[12.5px] transition-colors"
+                    >
                         Forgot password?
                     </Link>
                 </div>
 
-                <button
+                <Button
                     type="submit"
-                    className={styles.cta}
+                    variant="primary"
+                    className="mt-[22px] w-full"
                     disabled={isLoading}
+                    isLoading={isLoading}
                 >
-                    {isLoading ? "Signing in…" : "Sign In"}
-                </button>
+                    Sign In
+                </Button>
             </form>
 
-            <div className={styles.trust}>
+            <div className="text-text-muted mt-4 flex items-center justify-center gap-[7px]">
                 <Lock size={12} strokeWidth={1.5} />
-                <span>256-bit encrypted · Private by design</span>
+                <span className="text-text-muted font-mono text-[10px] tracking-[0.8px]">
+                    256-bit encrypted · Private by design
+                </span>
             </div>
 
-            <div className={styles.foot}>
-                New to Luxury RE? <Link href="/signup">Create an account</Link>
+            <div className="border-border-light text-text-secondary mt-[30px] border-t pt-[22px] text-center text-[13px] font-light">
+                New to Luxury RE?{" "}
+                <Link
+                    href="/signup"
+                    className="ease-smooth text-accent hover:text-highlight-dark font-medium transition-colors"
+                >
+                    Create an account
+                </Link>
             </div>
         </div>
     );
