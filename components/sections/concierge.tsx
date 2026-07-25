@@ -6,6 +6,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { SectionShell } from "@/components/sections/section-shell";
+import { SectionHeading } from "@/components/sections/section-heading";
 
 interface ProcessStep {
     idx: string;
@@ -45,20 +46,47 @@ const STEPS: ProcessStep[] = [
     },
 ];
 
+/* ── step row ── */
+
+function StepRow({ step }: { step: ProcessStep }) {
+    return (
+        <li className="border-border grid grid-cols-[auto_auto_1fr] items-start gap-4 border-b py-4">
+            <span className="text-highlight pt-0.5 font-mono text-[10px] tracking-[0.12em] tabular-nums">
+                {step.idx}
+            </span>
+            <span className="border-border text-accent grid size-6 shrink-0 place-items-center rounded-full border">
+                <step.icon size={12} strokeWidth={1.5} />
+            </span>
+            <div className="flex flex-col gap-1">
+                <h3 className="text-text text-xs font-semibold">
+                    {step.title}
+                </h3>
+                <p className="text-text-secondary line-clamp-2 max-w-[62ch] text-xs leading-[1.8]">
+                    {step.description}
+                </p>
+            </div>
+        </li>
+    );
+}
+
 export function ConciergeSection() {
     return (
-        <section className="bg-background-muted py-20 md:py-24">
+        <section className="bg-background-muted py-16 md:py-20">
             <SectionShell>
-                <div className="grid gap-12 lg:grid-cols-[40%_1fr] lg:gap-18">
-                    <div>
-                        <p className="text-highlight-dark text-caption font-mono tracking-[0.14em] uppercase">
-                            The Concierge
-                        </p>
-                        <h2 className="font-display text-text text-h3 mt-4 mb-6 font-light">
-                            Considered from first call to{" "}
-                            <span className="text-accent italic">keys.</span>
-                        </h2>
-                        <p className="text-text-secondary max-w-[42ch] text-base">
+                <div className="grid gap-10 lg:grid-cols-[38%_1fr] lg:gap-16">
+                    <div className="flex flex-col gap-4">
+                        <SectionHeading
+                            eyebrow="The concierge · 4 steps"
+                            title={
+                                <>
+                                    Considered from first call to{" "}
+                                    <span className="text-accent italic">
+                                        keys.
+                                    </span>
+                                </>
+                            }
+                        />
+                        <p className="text-text-secondary max-w-[44ch] text-xs leading-[1.9]">
                             A single point of contact, discretion at every step,
                             and a process shaped entirely around you. No
                             listings feed, no noise — only the work of finding
@@ -66,29 +94,9 @@ export function ConciergeSection() {
                         </p>
                     </div>
 
-                    <ol className="border-border-light border-t">
+                    <ol className="border-border border-t">
                         {STEPS.map((step) => (
-                            <li
-                                key={step.idx}
-                                className="border-border-light grid grid-cols-[auto_auto_1fr] items-start gap-5 border-b py-6"
-                            >
-                                <span className="text-highlight pt-1 font-mono text-sm font-medium tabular-nums">
-                                    {step.idx}
-                                </span>
-                                <step.icon
-                                    size={18}
-                                    strokeWidth={1.5}
-                                    className="text-accent mt-0.5 shrink-0"
-                                />
-                                <div>
-                                    <h3 className="font-display text-text text-h6 mb-1 font-normal">
-                                        {step.title}
-                                    </h3>
-                                    <p className="text-text-secondary text-sm">
-                                        {step.description}
-                                    </p>
-                                </div>
-                            </li>
+                            <StepRow key={step.idx} step={step} />
                         ))}
                     </ol>
                 </div>

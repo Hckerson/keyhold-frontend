@@ -1,14 +1,48 @@
 import Link from "next/link";
-import { Star, Heart } from "lucide-react";
+import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface GalleryTileData {
     id: string;
     imageUrl: string;
     price: string;
-    address?: string;
+    address: string;
     specs: string;
     featured?: boolean;
+}
+
+/* ── featured: glass panel, the one focal price in the grid ── */
+
+function FeaturedCaption({ tile }: { tile: GalleryTileData }) {
+    return (
+        <div className="bg-sidebar/80 border-sidebar-border absolute bottom-4 left-4 flex w-fit max-w-[75%] flex-col gap-1.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-md">
+            <span className="text-highlight-light font-mono text-[10px] tracking-[0.14em] uppercase">
+                {tile.specs}
+            </span>
+            <span className="font-display text-text-inverse text-h5 leading-none font-light tracking-tight tabular-nums">
+                {tile.price}
+            </span>
+            <span className="text-sidebar-text text-xs">{tile.address}</span>
+        </div>
+    );
+}
+
+/* ── peer: flat scrim, compact line ── */
+
+function PeerCaption({ tile }: { tile: GalleryTileData }) {
+    return (
+        <div className="absolute right-3.5 bottom-3.5 left-3.5 flex flex-col gap-0.5">
+            <span className="text-text-inverse text-xs font-semibold tabular-nums">
+                {tile.price}
+            </span>
+            <span className="text-sidebar-text truncate text-[11px]">
+                {tile.address}
+            </span>
+            <span className="text-sidebar-text-muted font-mono text-[10px] tracking-[0.12em] uppercase">
+                {tile.specs}
+            </span>
+        </div>
+    );
 }
 
 export function GalleryTile({
@@ -22,45 +56,43 @@ export function GalleryTile({
         <Link
             href={`/listing/${tile.id}`}
             className={cn(
-                "group ease-smooth relative overflow-hidden rounded-2xl shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg",
-                large && "sm:col-span-2 sm:row-span-2",
+                "group ease-smooth focus-visible:ring-accent relative overflow-hidden rounded-xl transition-all duration-300 focus-visible:ring-2 focus-visible:outline-none",
+                large
+                    ? "shadow-md hover:-translate-y-1 hover:shadow-lg sm:col-span-2 sm:row-span-2"
+                    : "shadow-sm hover:shadow-md",
             )}
         >
             <img
                 src={tile.imageUrl}
-                alt={tile.address ?? "Property"}
+                alt={tile.address}
                 className="ease-smooth size-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div
                 aria-hidden="true"
-                className="from-sidebar/70 absolute inset-0 bg-gradient-to-t to-transparent to-[46%]"
+                className={cn(
+                    "absolute inset-0 bg-linear-to-t to-transparent",
+                    large
+                        ? "from-sidebar/85 via-sidebar/20 via-40% to-72%"
+                        : "from-sidebar/95 via-sidebar/55 via-28% to-68%",
+                )}
             />
 
             {tile.featured && (
-                <span className="bg-highlight text-text-inverse text-caption absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono tracking-[0.1em] uppercase">
-                    <Star size={13} strokeWidth={1.5} />
+                <span className="bg-sidebar/75 text-text-inverse ring-highlight/30 absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase ring-1 backdrop-blur-md">
+                    <Star
+                        size={11}
+                        strokeWidth={1.5}
+                        className="text-highlight"
+                    />
                     Featured
                 </span>
             )}
 
-            <span className="bg-background/90 text-text group-hover:text-error ease-smooth absolute top-3.5 right-3.5 grid size-8 place-items-center rounded-full backdrop-blur-sm transition-colors">
-                <Heart size={15} strokeWidth={1.5} />
-            </span>
-
-            <div className="bg-sidebar/60 absolute bottom-4 left-4 rounded-xl px-3.5 py-2.5 backdrop-blur-sm">
-                <p
-                    className={cn(
-                        "font-display text-text-inverse font-normal",
-                        large ? "text-h6" : "text-base",
-                    )}
-                >
-                    {tile.price}
-                    {tile.address && ` · ${tile.address}`}
-                </p>
-                <p className="text-text-inverse/70 mt-1 font-mono text-[9.5px] tracking-wide uppercase">
-                    {tile.specs}
-                </p>
-            </div>
+            {large ? (
+                <FeaturedCaption tile={tile} />
+            ) : (
+                <PeerCaption tile={tile} />
+            )}
         </Link>
     );
 }
