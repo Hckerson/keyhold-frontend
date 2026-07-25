@@ -3,15 +3,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
-import {
-    AuthFieldGroup,
-    AuthField,
-} from "@/components/features/auth/auth-field";
+import { CredentialSlat } from "@/components/features/auth/join/credential-slat";
+import { RoleDossier } from "@/components/features/auth/join/role-dossier";
 import type { JoinRoleOption } from "@/components/features/auth/join/join-roles";
+import {
+    CONFIRM_FIELD,
+    IDENTITY_FIELDS,
+    PASSWORD_FIELD,
+    SESSION_DAYS,
+    SIGNUP_COPY,
+    SIGNUP_FIELDS,
+    STRENGTH_TIERS,
+    strengthOf,
+    type SignupFieldId,
+} from "@/components/features/auth/join/signup-fields";
 import { signupSchema } from "@/lib/validations/auth";
 import { query } from "@/lib/api-client";
 import type { AuthResponse } from "@/lib/types/auth";
@@ -19,126 +27,182 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { setCookie } from "@/lib/utils/cookies";
 import { cn } from "@/lib/utils";
 
-const SESSION_DAYS = 7;
+/* ── password strength gauge, spans the credential plane ── */
 
-type FieldId = "fullName" | "email" | "password" | "confirmPassword";
+function StrengthLedger({ value }: { value: string }) {
+    if (value.length === 0) {
+        return (
+            <span className="text-sidebar-text font-mono text-[10px] tracking-[0.14em] uppercase">
+                {SIGNUP_COPY.strengthHint}
+            </span>
+        );
+    }
 
-interface SignupField {
-    id: FieldId;
-    label: string;
-    placeholder: string;
-    type?: React.HTMLInputTypeAttribute;
-    autoComplete: string;
-    secure?: boolean;
-}
-
-const SIGNUP_FIELDS: readonly SignupField[] = [
-    {
-        id: "fullName",
-        label: "Name",
-        placeholder: "Jonathan Doe",
-        autoComplete: "name",
-    },
-    {
-        id: "email",
-        label: "Email",
-        placeholder: "you@example.com",
-        type: "email",
-        autoComplete: "email",
-    },
-    {
-        id: "password",
-        label: "Password",
-        placeholder: "At least 8 characters",
-        autoComplete: "new-password",
-        secure: true,
-    },
-    {
-        id: "confirmPassword",
-        label: "Confirm",
-        placeholder: "Repeat password",
-        autoComplete: "new-password",
-        secure: true,
-    },
-];
-
-const EMPTY_VALUES: Record<FieldId, string> = {
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-};
-
-const STRENGTH_TIERS = [
-    { label: "Weak", tone: "bg-error" },
-    { label: "Fair", tone: "bg-warning" },
-    { label: "Strong", tone: "bg-success" },
-] as const;
-
-const strengthOf = (value: string) => {
-    if (value.length < 8) return 0;
-    const varied = /[a-z]/.test(value) && /[A-Z0-9]/.test(value);
-    return varied && value.length >= 12 ? 2 : 1;
-};
-
-/* ── inline strength readout, lives in the password row ── */
-
-function StrengthMeter({ value }: { value: string }) {
     const score = strengthOf(value);
     const tier = STRENGTH_TIERS[score];
 
     return (
-        <span className="flex items-center gap-1.5">
-            <span className="text-text-muted font-mono text-[10px] tracking-[0.1em] uppercase">
+        <div className="flex items-center gap-2">
+            <span
+                className={cn(
+                    "shrink-0 font-mono text-[10px] tracking-[0.14em] uppercase",
+                    tier.word,
+                )}
+            >
                 {tier.label}
             </span>
-            <span className="flex gap-0.5" aria-hidden="true">
-                {STRENGTH_TIERS.map((step, i) => (
+            <span aria-hidden="true" className="flex flex-1 gap-0.5">
+                {STRENGTH_TIERS.map((step, index) => (
                     <span
                         key={step.label}
                         className={cn(
-                            "ease-smooth h-0.5 w-3 rounded-full transition-colors duration-200",
-                            i <= score ? tier.tone : "bg-border-dark",
+                            "ease-smooth h-0.5 flex-1 rounded-full transition-colors duration-200",
+                            index <= score ? tier.bar : "bg-sidebar-active",
                         )}
                     />
                 ))}
             </span>
-        </span>
+        </div>
     );
+}
+
+StrengthLedger.displayName = "StrengthLedger";
+
+/* ── one toggle governing both secure fields ── */
+
+function SecureToggle({
+    visible,
+    onToggle,
+}: {
+    visible: boolean;
+    onToggle: () => void;
+}) {
+    return (
+        <button
+            type="button"
+            onClick={onToggle}
+            aria-pressed={visible}
+            aria-controls="password confirmPassword"
+            className="border-sidebar-border text-sidebar-text hover:text-text-inverse hover:border-highlight/40 focus-visible:ring-highlight ease-smooth inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2 py-0.5 font-mono text-[10px] tracking-[0.1em] uppercase transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+        >
+            {visible ? (
+                <EyeOff size={12} strokeWidth={1.5} aria-hidden="true" />
+            ) : (
+                <Eye size={12} strokeWidth={1.5} aria-hidden="true" />
+            )}
+            {visible ? SIGNUP_COPY.hideLabel : SIGNUP_COPY.showLabel}
+        </button>
+    );
+}
+
+SecureToggle.displayName = "SecureToggle";
+
+/* ── submit-level failure, dark-native replacement for Callout ── */
+
+function SubmitAlert({ message }: { message: string }) {
+    return (
+        <p
+            role="alert"
+            className="border-error/40 bg-error/10 text-error-light flex items-start gap-2 rounded-md border p-2 text-xs leading-[1.5]"
+        >
+            <AlertCircle
+                size={12}
+                strokeWidth={1.5}
+                aria-hidden="true"
+                className="mt-0.5 shrink-0"
+            />
+            {message}
+        </p>
+    );
+}
+
+SubmitAlert.displayName = "SubmitAlert";
+
+/* ── legal ── */
+
+function LegalNote() {
+    return (
+        <p className="text-sidebar-text text-xs leading-[1.7]">
+            {SIGNUP_COPY.legalLead}{" "}
+            <Link
+                href="/terms"
+                className="text-text-inverse hover:text-highlight ease-smooth underline underline-offset-2 transition-colors duration-200"
+            >
+                {SIGNUP_COPY.termsLabel}
+            </Link>{" "}
+            and{" "}
+            <Link
+                href="/privacy"
+                className="text-text-inverse hover:text-highlight ease-smooth underline underline-offset-2 transition-colors duration-200"
+            >
+                {SIGNUP_COPY.privacyLabel}
+            </Link>
+            .
+        </p>
+    );
+}
+
+LegalNote.displayName = "LegalNote";
+
+/* ── shell ── */
+
+export interface CredentialsStepProps {
+    option: JoinRoleOption;
+    values: Record<SignupFieldId, string>;
+    onChange: (id: SignupFieldId, value: string) => void;
+    onBack: () => void;
 }
 
 export function CredentialsStep({
     option,
+    values,
+    onChange,
     onBack,
-}: {
-    option: JoinRoleOption;
-    onBack: () => void;
-}) {
+}: CredentialsStepProps) {
     const router = useRouter();
     const setAuth = useAuthStore((state) => state.setAuth);
-    const [values, setValues] = useState<Record<FieldId, string>>(EMPTY_VALUES);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isLoading, setIsLoading] = useState(false);
+    const [secureVisible, setSecureVisible] = useState(false);
+    const [announcement, setAnnouncement] = useState("");
 
     useEffect(() => {
-        const onKeyDown = (e: KeyboardEvent) => {
-            if (e.key === "Escape" && !isLoading) onBack();
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key !== "Escape" || isLoading) return;
+            if ((event.target as HTMLElement | null)?.tagName === "INPUT")
+                return;
+            onBack();
         };
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
     }, [isLoading, onBack]);
 
     const parsed = signupSchema.safeParse({ ...values, role: option.value });
-    const isValid = (id: FieldId) =>
+    const isValid = (id: SignupFieldId) =>
         values[id].length > 0 &&
         (parsed.success ||
             !parsed.error.issues.some((issue) => issue.path[0] === id));
 
-    const setValue = (id: FieldId, value: string) =>
-        setValues((current) => ({ ...current, [id]: value }));
+    const handleChange = (id: SignupFieldId, value: string) => {
+        onChange(id, value);
+        setErrors((current) => {
+            if (!current[id] && !current.submit) return current;
+            const next = { ...current };
+            delete next[id];
+            delete next.submit;
+            return next;
+        });
+    };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleBlur = () => {
+        const complete = SIGNUP_FIELDS.filter((field) =>
+            isValid(field.id),
+        ).length;
+        setAnnouncement(SIGNUP_COPY.progressTemplate(complete));
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
         setErrors({});
         setIsLoading(true);
 
@@ -158,8 +222,7 @@ export function CredentialsStep({
                 !response.data.accessToken
             ) {
                 setErrors({
-                    submit:
-                        response.message || "Signup failed. Please try again.",
+                    submit: response.message || SIGNUP_COPY.failedError,
                 });
                 setIsLoading(false);
                 return;
@@ -179,119 +242,129 @@ export function CredentialsStep({
                 });
                 setErrors(newErrors);
             } else {
-                setErrors({
-                    submit: "Something went wrong. Please try again.",
-                });
+                setErrors({ submit: SIGNUP_COPY.genericError });
             }
             setIsLoading(false);
         }
     };
 
+    const hasSecureError = Boolean(errors.password || errors.confirmPassword);
+
     return (
-        <div className="animate-in fade-in zoom-in-95 mx-auto w-full max-w-96 duration-300">
-            <div className="bg-background ring-highlight/20 flex flex-col gap-4 rounded-xl p-5 shadow-2xl ring-1">
-                <div className="flex items-center justify-between gap-3">
-                    <button
-                        type="button"
-                        onClick={onBack}
-                        disabled={isLoading}
-                        className="border-border text-text-secondary hover:border-accent hover:text-accent focus-visible:ring-accent ease-smooth inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:opacity-50"
+        <div className="animate-in fade-in mx-auto flex w-full max-w-4xl flex-col gap-4 duration-300">
+            <form
+                onSubmit={(event) => void handleSubmit(event)}
+                className="grid gap-4 md:grid-cols-[0.85fr_1.15fr] md:items-start"
+            >
+                <RoleDossier
+                    option={option}
+                    onBack={onBack}
+                    disabled={isLoading}
+                />
+
+                <div className="border-sidebar-border bg-sidebar/45 animate-in fade-in slide-in-from-bottom-2 fill-mode-both flex flex-col gap-3 rounded-xl border p-3 backdrop-blur-md delay-75 duration-300">
+                    <div className="flex flex-col gap-2">
+                        <span className="text-sidebar-text font-mono text-[10px] tracking-[0.14em] uppercase">
+                            {SIGNUP_COPY.identityLabel}
+                        </span>
+                        <div className="grid gap-2 lg:grid-cols-2">
+                            {IDENTITY_FIELDS.map((field, index) => (
+                                <CredentialSlat
+                                    key={field.id}
+                                    spec={field}
+                                    value={values[field.id]}
+                                    valid={isValid(field.id)}
+                                    error={errors[field.id]}
+                                    secureVisible={secureVisible}
+                                    disabled={isLoading}
+                                    autoFocus={index === 0}
+                                    onChange={(value) =>
+                                        handleChange(field.id, value)
+                                    }
+                                    onBlur={handleBlur}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div
+                        className={cn(
+                            "bg-sidebar-active/60 flex flex-col gap-2.5 rounded-lg p-3",
+                            hasSecureError && "ring-error/40 ring-1",
+                        )}
                     >
-                        <ArrowLeft size={12} strokeWidth={1.5} />
-                        {option.label}
-                    </button>
-                    <span className="text-text-muted font-mono text-[10px] tracking-[0.16em] uppercase">
-                        Step 02 of 02
-                    </span>
-                </div>
-
-                <div className="flex flex-col gap-1">
-                    <h1 className="font-display text-text text-h6 leading-[1.2] font-light tracking-tight">
-                        Create your account
-                    </h1>
-                    <p className="text-text-secondary text-xs">
-                        {option.headline} — four details and your portal is
-                        ready.
-                    </p>
-                </div>
-
-                <form
-                    onSubmit={(e) => void handleSubmit(e)}
-                    className="flex flex-col gap-3.5"
-                >
-                    <AuthFieldGroup>
-                        {SIGNUP_FIELDS.map((field, i) => (
-                            <AuthField
-                                key={field.id}
-                                id={field.id}
-                                label={field.label}
-                                type={field.type}
-                                secure={field.secure}
-                                autoComplete={field.autoComplete}
-                                placeholder={field.placeholder}
-                                autoFocus={i === 0}
-                                value={values[field.id]}
-                                onChange={(e) =>
-                                    setValue(field.id, e.target.value)
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-sidebar-text font-mono text-[10px] tracking-[0.14em] uppercase">
+                                {SIGNUP_COPY.credentialLabel}
+                            </span>
+                            <SecureToggle
+                                visible={secureVisible}
+                                onToggle={() =>
+                                    setSecureVisible((current) => !current)
                                 }
-                                error={errors[field.id]}
-                                valid={isValid(field.id)}
-                                status={
-                                    field.id === "password" &&
-                                    values.password.length > 0 &&
-                                    !errors.password ? (
-                                        <StrengthMeter
-                                            value={values.password}
-                                        />
-                                    ) : undefined
-                                }
-                                disabled={isLoading}
                             />
-                        ))}
-                    </AuthFieldGroup>
+                        </div>
 
-                    {errors.submit && (
-                        <Callout variant="error" title={errors.submit} />
-                    )}
+                        <CredentialSlat
+                            spec={PASSWORD_FIELD}
+                            value={values.password}
+                            valid={isValid("password")}
+                            error={errors.password}
+                            secureVisible={secureVisible}
+                            disabled={isLoading}
+                            onChange={(value) =>
+                                handleChange("password", value)
+                            }
+                            onBlur={handleBlur}
+                        />
 
-                    <p className="text-text-muted text-[10px] leading-[1.7]">
-                        By continuing you agree to our{" "}
-                        <Link
-                            href="/terms"
-                            className="text-text-secondary hover:text-accent ease-smooth underline underline-offset-2 transition-colors duration-200"
-                        >
-                            Terms
-                        </Link>{" "}
-                        and{" "}
-                        <Link
-                            href="/privacy"
-                            className="text-text-secondary hover:text-accent ease-smooth underline underline-offset-2 transition-colors duration-200"
-                        >
-                            Privacy Policy
-                        </Link>
-                        .
-                    </p>
+                        <StrengthLedger value={values.password} />
+
+                        <div className="border-sidebar-border border-l pl-3">
+                            <CredentialSlat
+                                spec={CONFIRM_FIELD}
+                                value={values.confirmPassword}
+                                valid={isValid("confirmPassword")}
+                                error={errors.confirmPassword}
+                                secureVisible={secureVisible}
+                                disabled={isLoading}
+                                onChange={(value) =>
+                                    handleChange("confirmPassword", value)
+                                }
+                                onBlur={handleBlur}
+                            />
+                        </div>
+                    </div>
+
+                    {errors.submit && <SubmitAlert message={errors.submit} />}
+
+                    <LegalNote />
 
                     <Button
                         type="submit"
                         variant="primary"
-                        className="w-full"
+                        size="md"
+                        className="w-full [--btn-ring:var(--color-highlight)]"
                         isLoading={isLoading}
                     >
-                        Create account
+                        {SIGNUP_COPY.submitLabel}
                     </Button>
-                </form>
 
-                <p className="text-text-secondary border-border border-t pt-3.5 text-center text-xs">
-                    Already have an account?{" "}
-                    <Link
-                        href="/login"
-                        className="text-accent hover:text-accent-dark ease-smooth font-medium transition-colors duration-200"
-                    >
-                        Sign in
-                    </Link>
-                </p>
-            </div>
+                    <p className="sr-only" role="status" aria-live="polite">
+                        {announcement}
+                    </p>
+                </div>
+            </form>
+
+            <p className="text-sidebar-text text-xs">
+                {SIGNUP_COPY.accountPrompt}{" "}
+                <Link
+                    href="/login"
+                    className="text-text-inverse hover:text-highlight ease-smooth font-medium underline-offset-4 transition-colors duration-200 hover:underline"
+                >
+                    {SIGNUP_COPY.signInLabel}
+                </Link>
+            </p>
         </div>
     );
 }
