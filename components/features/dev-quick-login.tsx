@@ -18,8 +18,8 @@ export function DevQuickLogin() {
     if (!DEV_MODE) return null;
 
     return (
-        <div className="border-border-light space-y-2 border-t pt-4">
-            <p className="text-text-muted text-caption text-center font-mono tracking-wide uppercase">
+        <div className="border-sidebar-border bg-sidebar/60 mx-auto flex w-full max-w-96 flex-col gap-2 rounded-xl border p-3 backdrop-blur-md">
+            <p className="text-sidebar-text text-center font-mono text-[10px] tracking-[0.16em] uppercase">
                 Dev mode · quick login
             </p>
             <div className="grid grid-cols-3 gap-2">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface AuthFieldGroupProps {
@@ -13,7 +13,7 @@ export function AuthFieldGroup({ children, className }: AuthFieldGroupProps) {
     return (
         <div
             className={cn(
-                "border-border divide-border-light bg-background-alt divide-y overflow-hidden rounded-xl border",
+                "border-border divide-border bg-background-alt divide-y overflow-hidden rounded-xl border",
                 className,
             )}
         >
@@ -31,6 +31,8 @@ export interface AuthFieldProps extends Omit<
     label: string;
     error?: string;
     secure?: boolean;
+    valid?: boolean;
+    status?: ReactNode;
     type?: React.HTMLInputTypeAttribute;
 }
 
@@ -38,6 +40,8 @@ export function AuthField({
     label,
     error,
     secure,
+    valid,
+    status,
     type = "text",
     id,
     className,
@@ -47,44 +51,66 @@ export function AuthField({
     const inputType = secure ? (visible ? "text" : "password") : type;
 
     return (
-        <div className={cn("px-3.5 py-[9px]", error && "bg-error/5")}>
-            <div className="flex items-center justify-between gap-2">
-                <label
-                    htmlFor={id}
-                    className="text-text-muted font-mono text-[10px] tracking-[0.06em] uppercase"
-                >
-                    {label}
-                </label>
-                {error && (
-                    <span className="text-error text-[10px]">{error}</span>
+        <div
+            className={cn(
+                "ease-smooth focus-within:bg-accent-light/40 focus-within:ring-accent grid grid-cols-[76px_1fr_auto] items-center gap-2 px-3 py-2 transition-colors duration-200 focus-within:ring-1 focus-within:ring-inset",
+                error && "bg-error/5",
+            )}
+        >
+            <label
+                htmlFor={id}
+                className="text-text-muted truncate font-mono text-[10px] tracking-[0.1em] uppercase select-none"
+            >
+                {label}
+            </label>
+
+            <input
+                id={id}
+                type={inputType}
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? `${id}-error` : undefined}
+                className={cn(
+                    "text-text placeholder:text-text-muted w-full min-w-0 border-0 bg-transparent text-xs outline-none disabled:opacity-50",
+                    className,
                 )}
-            </div>
-            <div className="flex items-center gap-2">
-                <input
-                    id={id}
-                    type={inputType}
-                    className={cn(
-                        "text-text placeholder:text-text-muted w-full border-0 bg-transparent py-0.5 text-[14px] outline-none disabled:opacity-50",
-                        className,
-                    )}
-                    {...props}
-                />
+                {...props}
+            />
+
+            <span className="flex items-center gap-2 justify-self-end">
+                {error ? (
+                    <span
+                        id={`${id}-error`}
+                        className="text-error max-w-32 truncate text-[10px]"
+                    >
+                        {error}
+                    </span>
+                ) : (
+                    (status ??
+                    (valid && (
+                        <Check
+                            size={12}
+                            strokeWidth={1.5}
+                            className="animate-in fade-in text-success"
+                        />
+                    )))
+                )}
+
                 {secure && (
                     <button
                         type="button"
                         onClick={() => setVisible((v) => !v)}
                         aria-pressed={visible}
                         aria-label={visible ? "Hide password" : "Show password"}
-                        className="text-text-muted hover:text-text ease-smooth shrink-0 transition-colors"
+                        className="text-text-muted hover:text-text focus-visible:ring-accent ease-smooth shrink-0 rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                     >
                         {visible ? (
-                            <EyeOff size={15} strokeWidth={1.5} />
+                            <EyeOff size={13} strokeWidth={1.5} />
                         ) : (
-                            <Eye size={15} strokeWidth={1.5} />
+                            <Eye size={13} strokeWidth={1.5} />
                         )}
                     </button>
                 )}
-            </div>
+            </span>
         </div>
     );
 }
