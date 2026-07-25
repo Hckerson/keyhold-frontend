@@ -1,5 +1,4 @@
 import { JoinCanvas } from "@/components/features/auth/join/join-canvas";
-import { JoinFlow } from "@/components/features/auth/join/join-flow";
 
 export const metadata = {
     title: "Begin your application | Luxury Real Estate",
@@ -8,9 +7,5 @@ export const metadata = {
 };
 
 export default function SignupPage() {
-    return (
-        <JoinCanvas>
-            <JoinFlow />
-        </JoinCanvas>
-    );
+    return <JoinCanvas>{null}</JoinCanvas>;
 }
