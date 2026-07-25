@@ -35,7 +35,7 @@ const TESTIMONIALS = [
 
 export function BrandPanel() {
     return (
-        <aside className="bg-sidebar relative hidden overflow-hidden p-12 lg:flex lg:flex-col lg:justify-between">
+        <aside className="bg-sidebar relative hidden overflow-hidden p-12 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-between">
             <div className={styles.stage} aria-hidden="true">
                 {IMAGES.map((src) => (
                     <img key={src} src={src} alt="" />

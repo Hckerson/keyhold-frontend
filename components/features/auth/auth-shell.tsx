@@ -22,4 +22,4 @@ export function AuthShell({ children }: AuthShellProps) {
     );
 }
 
-AuthShell.displayNfame = "AuthShell";
+AuthShell.displayName = "AuthShell";
