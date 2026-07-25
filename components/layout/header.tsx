@@ -2,14 +2,55 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Container } from "@/components/ui/container";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
+import { cn } from "@/lib/utils";
+import styles from "@/components/layout/header.module.css";
+
+const PORTAL_BY_ROLE: Record<string, string> = {
+    ADMIN: "/admin",
+    BUYER: "/dashboard",
+    SELLER: "/agent",
+};
+
+const NAV = [
+    { label: "Search", href: "/search" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+];
 
 export function Header() {
     const router = useRouter();
     const user = useAuthStore((state) => state.user);
     const clearAuth = useAuthStore((state) => state.clearAuth);
+    const [contracted, setContracted] = useState(false);
+
+    useEffect(() => {
+        let ticking = false;
+        const onScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    setContracted(window.scrollY > 40);
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        onScroll();
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    const portalHref = user ? PORTAL_BY_ROLE[user.role] || "/" : "/";
+    const initials = user
+        ? user.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+        : "";
 
     const handleLogout = () => {
         clearAuth();
@@ -17,106 +58,75 @@ export function Header() {
         router.push("/");
     };
 
-    const getPortalHref = () => {
-        if (!user) return "/";
-        const portalMap: Record<string, string> = {
-            ADMIN: "/admin",
-            BUYER: "/dashboard",
-            SELLER: "/agent",
-        };
-        return portalMap[user.role] || "/";
-    };
-
-    const getUserInitials = () => {
-        if (!user) return "";
-        return user.name
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase()
-            .slice(0, 2);
-    };
-
     return (
-        <header className="border-border-light bg-background-alt/95 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
-            <Container className="flex items-center justify-between py-4 md:py-6">
-                <Link href="/" className="flex items-center space-x-2">
-                    <div className="bg-accent flex h-8 w-8 items-center justify-center rounded-lg">
-                        <span className="text-text-inverse text-sm font-bold">
-                            LRE
-                        </span>
-                    </div>
-                    <span className="font-display text-text hidden text-xl font-light sm:inline">
-                        Luxury RE
+        <div className={styles.wrap}>
+            <header
+                className={cn(styles.capsule, contracted && styles.contract)}
+            >
+                <Link href="/" className={styles.brand} aria-label="Luxury RE">
+                    <span className={styles.mark}>LRE</span>
+                    <span className={styles.word}>
+                        Luxury <em>RE</em>
                     </span>
                 </Link>
 
-                {!user && (
-                    <>
-                        <nav className="hidden gap-8 md:flex">
-                            <Link
-                                href="/search"
-                                className="text-text-secondary hover:text-text transition-colors"
-                            >
+                <span className={styles.divider} aria-hidden="true" />
+
+                <nav className={styles.nav} aria-label="Primary">
+                    {user ? (
+                        <>
+                            <Link href="/search" className={styles.navLink}>
                                 Search
                             </Link>
-                            <Link
-                                href="/about"
-                                className="text-text-secondary hover:text-text transition-colors"
-                            >
-                                About
+                            <Link href={portalHref} className={styles.navLink}>
+                                Dashboard
                             </Link>
+                        </>
+                    ) : (
+                        NAV.map((item) => (
                             <Link
-                                href="/contact"
-                                className="text-text-secondary hover:text-text transition-colors"
+                                key={item.href}
+                                href={item.href}
+                                className={styles.navLink}
                             >
-                                Contact
+                                {item.label}
                             </Link>
-                        </nav>
+                        ))
+                    )}
+                </nav>
 
-                        <div className="flex gap-4">
-                            <Link
-                                href="/login"
-                                className="bg-background border-border text-text hover:border-accent hover:text-accent inline-flex h-8 items-center justify-center rounded-lg border px-3 text-xs font-medium transition-colors hover:shadow-sm"
-                            >
-                                Sign In
-                            </Link>
-                            <Link
-                                href="/signup"
-                                className="from-accent to-accent-dark text-primary inline-flex h-8 items-center justify-center rounded-lg bg-linear-to-b px-3 text-xs font-medium shadow-sm transition-all duration-200 ease-out hover:-translate-y-px hover:shadow-md active:translate-y-0 active:opacity-90"
-                            >
-                                Get Started
-                            </Link>
-                        </div>
-                    </>
-                )}
+                <span className={styles.divider} aria-hidden="true" />
 
-                {user && (
-                    <div className="flex items-center gap-4">
-                        <div className="hidden text-right sm:block">
-                            <p className="text-text text-sm font-medium">
-                                {user.name}
-                            </p>
-                            <p className="text-text-secondary text-xs capitalize">
-                                {user.role.toLowerCase()}
-                            </p>
-                        </div>
-                        <div className="flex gap-2">
-                            <Link href={getPortalHref()}>
-                                <button className="bg-accent/20 hover:bg-accent/30 text-accent flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors">
-                                    {getUserInitials()}
-                                </button>
-                            </Link>
+                <div className={styles.actions}>
+                    {user ? (
+                        <>
                             <button
+                                type="button"
                                 onClick={handleLogout}
-                                className="bg-background border-border text-text hover:border-accent hover:text-accent inline-flex h-8 items-center justify-center rounded-lg border px-3 text-xs font-medium transition-colors hover:shadow-sm"
+                                className={styles.signin}
                             >
                                 Log out
                             </button>
-                        </div>
-                    </div>
-                )}
-            </Container>
-        </header>
+                            <Link
+                                href={portalHref}
+                                className={styles.avatar}
+                                aria-label="Your portal"
+                            >
+                                {initials}
+                            </Link>
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/login" className={styles.signin}>
+                                Sign In
+                            </Link>
+                            <Link href="/signup" className={styles.pill}>
+                                Get Started
+                            </Link>
+                        </>
+                    )}
+                </div>
+            </header>
+        </div>
     );
 }
