@@ -7,11 +7,10 @@ import type {
 } from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
-import { ACCESS_TOKEN_COOKIE, AUTH_ROUTES } from "@/lib/constants";
+import { ACCESS_TOKEN_COOKIE, AUTH_ROUTES, config } from "@/lib/constants";
 
 const defaultConfig: AxiosRequestConfig = {
-    baseURL:
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api",
+    baseURL: config.api.base,
     headers: {
         "Content-Type": "application/json",
     },
