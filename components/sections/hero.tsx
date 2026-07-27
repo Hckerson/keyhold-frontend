@@ -1,28 +1,41 @@
 import { SectionShell } from "@/components/sections/section-shell";
+import { SectionEyebrow } from "@/components/sections/section-heading";
 import { HeroSearch } from "@/components/sections/hero-search";
 import { CityChips } from "@/components/sections/city-chips";
+import { propertyImage } from "@/lib/config/sample-images";
 
-const HERO_IMAGE =
-    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80";
+const HERO_IMAGE = propertyImage(0);
+
+const HERO_CAPTION = {
+    place: "Bel Air · Off-market",
+    name: "The Ridge House",
+};
 
 export function HeroSection() {
     return (
-        <section className="bg-background-alt flex min-h-[70vh] items-center py-20 md:py-24">
+        <section className="bg-background-alt relative isolate -mt-[88px] flex min-h-[70vh] items-center overflow-hidden pt-[112px] pb-16 md:pb-20">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-text)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,#000,transparent)] bg-[size:32px_32px] opacity-[0.04]"
+            />
+
             <SectionShell>
-                <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
-                    <div>
-                        <p className="text-text-muted text-caption font-mono tracking-[0.14em] uppercase">
-                            Curated Luxury Real Estate
-                        </p>
-                        <h1 className="font-display text-text text-h2 mt-5 mb-6 max-w-[12ch] leading-[1.08] font-light tracking-tight">
-                            Find the home that finds{" "}
-                            <span className="text-accent italic">you.</span>
-                        </h1>
-                        <p className="text-text-secondary mb-8 max-w-[44ch] text-lg">
-                            A quiet, considered approach to extraordinary
-                            property. Off-market estates and architectural
-                            landmarks, presented with discretion.
-                        </p>
+                <div className="grid items-center gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-16">
+                    <div className="flex flex-col gap-7">
+                        <div className="flex flex-col gap-4">
+                            <SectionEyebrow tone="muted">
+                                Curated luxury real estate
+                            </SectionEyebrow>
+                            <h1 className="font-display text-text text-h1 max-w-[11ch] leading-[1.02] font-light tracking-tight">
+                                Find the home that finds{" "}
+                                <span className="text-accent italic">you.</span>
+                            </h1>
+                            <p className="text-text-secondary max-w-[46ch] text-xs leading-[1.9]">
+                                A quiet, considered approach to extraordinary
+                                property. Off-market estates and architectural
+                                landmarks, presented with discretion.
+                            </p>
+                        </div>
 
                         <HeroSearch />
                         <CityChips />
@@ -37,8 +50,16 @@ export function HeroSection() {
                             src={HERO_IMAGE}
                             alt=""
                             aria-hidden="true"
-                            className="relative h-[540px] w-[420px] translate-x-3.5 rounded-2xl object-cover shadow-2xl"
+                            className="relative h-130 w-102 translate-x-3.5 rounded-xl object-cover shadow-2xl"
                         />
+                        <div className="bg-sidebar/80 border-sidebar-border absolute right-1 bottom-5 flex flex-col gap-1 rounded-xl border px-3.5 py-2.5 shadow-lg backdrop-blur-md">
+                            <span className="text-highlight-light font-mono text-[10px] tracking-[0.14em] uppercase">
+                                {HERO_CAPTION.place}
+                            </span>
+                            <span className="text-text-inverse text-xs font-semibold">
+                                {HERO_CAPTION.name}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </SectionShell>

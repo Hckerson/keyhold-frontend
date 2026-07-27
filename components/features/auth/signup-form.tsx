@@ -1,172 +1,270 @@
 "use client";
 
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
 import {
-    AuthFieldGroup,
     AuthField,
-} from "@/components/features/auth/auth-field";
+    AuthFooterLink,
+    AuthFormError,
+    AuthFormHeader,
+    AuthRoleChoice,
+    AuthSubmit,
+    SocialAuthRow,
+    type SignupRole,
+} from "@/components/patterns/auth";
+import { Checkbox } from "@/components/ui/checkbox";
+import { apiClient } from "@/lib/api-client";
 import {
-    RoleSelect,
-    type RoleOption,
-} from "@/components/features/auth/role-select";
-import { DevQuickLogin } from "@/components/features/dev-quick-login";
-import { signupSchema } from "@/lib/validations/auth";
-import { query } from "@/lib/api-client";
-import type { AuthResponse } from "@/lib/types/auth";
+    ACCESS_TOKEN_COOKIE,
+    AUTH_ENDPOINTS,
+    AUTH_ROUTES,
+    SESSION_DAYS,
+    portalForRole,
+} from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import type { AuthResponse } from "@/lib/types/auth";
 import { setCookie } from "@/lib/utils/cookies";
+import { errorMessage } from "@/lib/utils/api-error";
+import {
+    MIN_PASSWORD_LENGTH,
+    fieldErrorFor,
+    signupSchema,
+    toFieldErrors,
+    type FieldErrors,
+} from "@/lib/validations/auth";
 
-type Role = "BUYER" | "SELLER";
-
-const ROLE_OPTIONS: readonly RoleOption<Role>[] = [
-    { value: "BUYER", label: "Buyer", description: "I'm looking to buy" },
-    { value: "SELLER", label: "Seller / Agent", description: "I'm listing" },
-];
-
-const PORTAL_BY_ROLE: Record<Role, string> = {
-    BUYER: "/dashboard",
-    SELLER: "/agent",
+const INITIAL_VALUES = {
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
 };
+
+const SIGN_UP_FAILED =
+    "We couldn't create your account. Review your details and try again.";
+
+const LEGAL_LINK_CLASS =
+    "text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth rounded-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
 export function SignupForm() {
     const router = useRouter();
     const setAuth = useAuthStore((state) => state.setAuth);
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState<Role>("BUYER");
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrors({});
-        setIsLoading(true);
+    const [values, setValues] = useState(INITIAL_VALUES);
+    const [role, setRole] = useState<SignupRole | null>(null);
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const [errors, setErrors] = useState<FieldErrors>({});
+    const [formError, setFormError] = useState<string | null>(null);
+    const [pending, setPending] = useState(false);
+
+    const submission = { ...values, role, acceptedTerms };
+    const parsed = signupSchema.safeParse(submission);
+
+    const handleChange =
+        (field: keyof typeof INITIAL_VALUES) =>
+        (event: ChangeEvent<HTMLInputElement>) => {
+            const { value } = event.target;
+            setValues((current) => ({ ...current, [field]: value }));
+            setErrors((current) => ({ ...current, [field]: undefined }));
+            setFormError(null);
+        };
+
+    const handleBlur = (field: keyof typeof INITIAL_VALUES) => () =>
+        setErrors((current) => ({
+            ...current,
+            [field]: fieldErrorFor(signupSchema, submission, field),
+        }));
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (pending) return;
+        if (!parsed.success) {
+            setErrors(toFieldErrors(parsed.error));
+            return;
+        }
+
+        setPending(true);
+        setFormError(null);
 
         try {
-            const result = signupSchema.parse({
-                fullName,
-                email,
-                password,
-                confirmPassword,
-                role,
-            });
-            const response = await query.post<AuthResponse>(
-                "/auth/register",
-                result,
+            const { data } = await apiClient.post<{ data: AuthResponse }>(
+                AUTH_ENDPOINTS.register,
+                {
+                    fullName: parsed.data.fullName,
+                    email: parsed.data.email,
+                    password: parsed.data.password,
+                    role: parsed.data.role,
+                },
             );
+            const { user, accessToken } = data.data;
 
-            if (
-                !response.data ||
-                !response.data.user ||
-                !response.data.accessToken
-            ) {
-                setErrors({
-                    submit:
-                        response.message || "Signup failed. Please try again.",
-                });
-                setIsLoading(false);
-                return;
-            }
-
-            const { user, accessToken } = response.data;
             setAuth(user, accessToken);
-            setCookie("access_token", accessToken, 7);
-            router.push(PORTAL_BY_ROLE[role]);
+            setCookie(ACCESS_TOKEN_COOKIE, accessToken, SESSION_DAYS);
+            router.replace(portalForRole(user.role));
         } catch (error) {
-            if (error instanceof z.ZodError) {
-                const newErrors: Record<string, string> = {};
-                error.issues.forEach((issue) => {
-                    if (issue.path.length > 0) {
-                        newErrors[String(issue.path[0])] = issue.message;
-                    }
-                });
-                setErrors(newErrors);
-            } else {
-                setErrors({
-                    submit: "Something went wrong. Please try again.",
-                });
-            }
-            setIsLoading(false);
+            setFormError(errorMessage(error, SIGN_UP_FAILED));
+            setPending(false);
         }
     };
 
     return (
-        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
-            <AuthFieldGroup>
-                <AuthField
-                    id="fullName"
-                    label="Full Name"
-                    type="text"
-                    autoComplete="name"
-                    placeholder="John Doe"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    error={errors.fullName}
-                    disabled={isLoading}
-                />
-                <AuthField
-                    id="email"
-                    label="Email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    error={errors.email}
-                    disabled={isLoading}
-                />
-                <AuthField
-                    id="password"
-                    label="Password"
-                    secure
-                    autoComplete="new-password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    error={errors.password}
-                    disabled={isLoading}
-                />
-                <AuthField
-                    id="confirmPassword"
-                    label="Confirm Password"
-                    secure
-                    autoComplete="new-password"
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    error={errors.confirmPassword}
-                    disabled={isLoading}
-                />
-            </AuthFieldGroup>
-
-            <RoleSelect
-                label="Account Type"
-                value={role}
-                options={ROLE_OPTIONS}
-                onChange={setRole}
-                error={errors.role}
-                disabled={isLoading}
+        <div className="flex flex-col gap-6">
+            <AuthFormHeader
+                title="Begin your application"
+                description="Apply for access to the marketplace — as a buyer seeking a residence, or an agent presenting one."
             />
 
-            {errors.submit && <Callout variant="error" title={errors.submit} />}
+            <AuthFormError title="Application failed" message={formError} />
 
-            <Button
-                type="submit"
-                variant="primary"
-                className="w-full"
-                isLoading={isLoading}
+            <form
+                onSubmit={(event) => void handleSubmit(event)}
+                noValidate
+                className="flex flex-col gap-4"
             >
-                Create Account
-            </Button>
+                <fieldset disabled={pending} className="flex flex-col gap-3">
+                    <AuthRoleChoice
+                        name="role"
+                        legend="I'm here for"
+                        value={role}
+                        error={errors.role}
+                        onChange={(next) => {
+                            setRole(next);
+                            setErrors((current) => ({
+                                ...current,
+                                role: undefined,
+                            }));
+                            setFormError(null);
+                        }}
+                    />
 
-            <DevQuickLogin />
-        </form>
+                    <AuthField
+                        label="Full name"
+                        name="fullName"
+                        autoComplete="name"
+                        placeholder="Elena Voss"
+                        value={values.fullName}
+                        error={errors.fullName}
+                        onChange={handleChange("fullName")}
+                        onBlur={handleBlur("fullName")}
+                    />
+
+                    <AuthField
+                        label="Email"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        value={values.email}
+                        error={errors.email}
+                        onChange={handleChange("email")}
+                        onBlur={handleBlur("email")}
+                    />
+
+                    <AuthField
+                        label="Password"
+                        name="password"
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+                        value={values.password}
+                        error={errors.password}
+                        onChange={handleChange("password")}
+                        onBlur={handleBlur("password")}
+                    />
+
+                    <AuthField
+                        label="Confirm password"
+                        name="confirmPassword"
+                        type="password"
+                        autoComplete="new-password"
+                        placeholder="Repeat your password"
+                        value={values.confirmPassword}
+                        error={errors.confirmPassword}
+                        onChange={handleChange("confirmPassword")}
+                        onBlur={handleBlur("confirmPassword")}
+                    />
+
+                    <div className="flex flex-col gap-1">
+                        <Checkbox
+                            id="acceptedTerms"
+                            name="acceptedTerms"
+                            checked={acceptedTerms}
+                            aria-invalid={
+                                errors.acceptedTerms ? true : undefined
+                            }
+                            aria-describedby={
+                                errors.acceptedTerms
+                                    ? "acceptedTerms-error"
+                                    : undefined
+                            }
+                            onChange={(event) => {
+                                setAcceptedTerms(event.target.checked);
+                                setErrors((current) => ({
+                                    ...current,
+                                    acceptedTerms: undefined,
+                                }));
+                            }}
+                            onBlur={() =>
+                                setErrors((current) => ({
+                                    ...current,
+                                    acceptedTerms: fieldErrorFor(
+                                        signupSchema,
+                                        submission,
+                                        "acceptedTerms",
+                                    ),
+                                }))
+                            }
+                            label={
+                                <>
+                                    I agree to the{" "}
+                                    <Link
+                                        href={AUTH_ROUTES.terms}
+                                        className={LEGAL_LINK_CLASS}
+                                    >
+                                        Terms
+                                    </Link>{" "}
+                                    and{" "}
+                                    <Link
+                                        href={AUTH_ROUTES.privacy}
+                                        className={LEGAL_LINK_CLASS}
+                                    >
+                                        Privacy Policy
+                                    </Link>
+                                </>
+                            }
+                        />
+                        {errors.acceptedTerms && (
+                            <p
+                                id="acceptedTerms-error"
+                                className="text-error text-xs"
+                            >
+                                {errors.acceptedTerms}
+                            </p>
+                        )}
+                    </div>
+                </fieldset>
+
+                <AuthSubmit
+                    label="Create account"
+                    pendingLabel="Creating account"
+                    pending={pending}
+                    disabled={!parsed.success}
+                />
+            </form>
+
+            <SocialAuthRow
+                action="Sign up"
+                label="Or apply with"
+                disabled={pending}
+            />
+
+            <AuthFooterLink
+                prompt="Already have an account?"
+                href={AUTH_ROUTES.login}
+                label="Sign in"
+            />
+        </div>
     );
 }
 

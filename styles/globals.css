@@ -236,6 +236,27 @@
     color: var(--colors-text-inverse);
 }
 
+/* Chrome/WebKit force an opaque light fill and near-black text on autofilled
+   inputs, which destroys transparent fields sitting on the dark join canvas.
+   background-clip:text plus the parked transition keeps the glass showing
+   through; -webkit-text-fill-color overrides the forced text color. */
+.field-on-glass:-webkit-autofill,
+.field-on-glass:-webkit-autofill:hover,
+.field-on-glass:-webkit-autofill:focus,
+.field-on-glass:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--colors-text-inverse);
+    caret-color: var(--colors-highlight);
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+.field-on-glass:autofill {
+    -webkit-text-fill-color: var(--colors-text-inverse);
+    caret-color: var(--colors-highlight);
+    transition: background-color 9999s ease-in-out 0s;
+}
+
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

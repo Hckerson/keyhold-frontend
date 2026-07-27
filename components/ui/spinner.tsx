@@ -3,23 +3,30 @@ import { cn } from "@/lib/utils";
 
 interface SpinnerProps extends SVGAttributes<SVGSVGElement> {
     size?: "sm" | "md" | "lg";
+    tone?: "accent" | "current";
 }
 
 export type { SpinnerProps };
 
 const Spinner = forwardRef<SVGSVGElement, SpinnerProps>(
-    ({ className, size = "md", ...props }, ref) => {
+    ({ className, size = "md", tone = "accent", ...props }, ref) => {
         const sizes = {
             sm: "w-4 h-4",
             md: "w-8 h-8",
             lg: "w-12 h-12",
         };
 
+        const tones = {
+            accent: "text-accent",
+            current: "text-current",
+        };
+
         return (
             <svg
                 ref={ref}
                 className={cn(
-                    "text-accent animate-spin",
+                    "animate-spin",
+                    tones[tone],
                     sizes[size],
                     className,
                 )}

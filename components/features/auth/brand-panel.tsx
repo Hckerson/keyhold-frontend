@@ -1,59 +1,95 @@
 import { Wordmark } from "@/components/ui/wordmark";
-import { propertyImage } from "@/lib/config/sample-images";
+import styles from "@/components/features/auth/brand-panel.module.css";
 
-/* ── testimonial ── */
+const IMAGES = [
+    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=80",
+    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1400&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=80",
+    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1400&q=80",
+];
 
-function TrustQuote() {
-    return (
-        <figure className="border-highlight/50 border-l-2 pl-4">
-            <blockquote className="text-sidebar-text-active font-display text-lg leading-relaxed font-light">
-                &ldquo;The most discerning marketplace we&apos;ve listed with —
-                every home feels genuinely curated.&rdquo;
-            </blockquote>
-            <figcaption className="mt-3 flex items-center gap-2 text-xs">
-                <span className="text-sidebar-text-active font-medium">
-                    Anthony Sterling
-                </span>
-                <span className="text-sidebar-text">·</span>
-                <span className="text-sidebar-text">Sterling &amp; Co.</span>
-            </figcaption>
-        </figure>
-    );
-}
+const WORDS: { text: string; ital?: boolean }[] = [
+    { text: "Where" },
+    { text: "extraordinary" },
+    { text: "homes" },
+    { text: "find their owners.", ital: true },
+];
 
-/* ── brand panel ── */
+const TESTIMONIALS = [
+    {
+        quote: "Every home felt genuinely curated — not a listings feed.",
+        name: "Anthony Sterling",
+        firm: "Sterling & Co.",
+    },
+    {
+        quote: "Discretion at every step. The Canyon House was ours in a week.",
+        name: "Elena Voss",
+        firm: "Private Client",
+    },
+    {
+        quote: "A quiet, considered process. Exactly how it should feel.",
+        name: "M. Laurent",
+        firm: "Bel Air",
+    },
+];
 
 export function BrandPanel() {
     return (
-        <aside className="bg-sidebar relative hidden overflow-hidden p-10 lg:flex lg:flex-col lg:justify-between">
-            <img
-                src={propertyImage(3)}
-                alt=""
+        <aside className="bg-sidebar relative hidden overflow-hidden p-12 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-between">
+            <div className={styles.stage} aria-hidden="true">
+                {IMAGES.map((src) => (
+                    <img key={src} src={src} alt="" />
+                ))}
+            </div>
+            <div className={styles.scrim} aria-hidden="true" />
+            <div
+                className={`${styles.aurora} ${styles.a1}`}
                 aria-hidden="true"
-                className="absolute inset-0 size-full object-cover"
             />
             <div
+                className={`${styles.aurora} ${styles.a2}`}
                 aria-hidden="true"
-                className="from-sidebar via-sidebar/85 to-sidebar/55 absolute inset-0 bg-gradient-to-t"
             />
             <div
+                className={`${styles.aurora} ${styles.a3}`}
                 aria-hidden="true"
-                className="absolute inset-0 bg-[radial-gradient(var(--color-background)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,#000,transparent)] bg-[size:32px_32px] opacity-[0.05]"
             />
-            <div
-                aria-hidden="true"
-                className="bg-highlight/20 pointer-events-none absolute -top-16 -right-16 size-72 rounded-full blur-3xl"
-            />
+            <div className={styles.grain} aria-hidden="true" />
 
-            <div className="relative z-10">
+            <div className={`${styles.reveal} relative z-10`}>
                 <Wordmark tone="dark" />
             </div>
 
-            <div className="relative z-10 space-y-8">
-                <h2 className="text-sidebar-text-active font-display text-h2 max-w-md leading-[1.1] font-light tracking-tight">
-                    Where extraordinary homes find their owners.
+            <div className="relative z-10">
+                <p className={styles.eyebrow}>Members&apos; Entrance</p>
+                <h2 className={styles.headline}>
+                    {WORDS.map((word) => (
+                        <span
+                            key={word.text}
+                            className={word.ital ? styles.ital : undefined}
+                        >
+                            {word.text}
+                        </span>
+                    ))}
                 </h2>
-                <TrustQuote />
+
+                <div className={styles.rot}>
+                    {TESTIMONIALS.map((t) => (
+                        <figure key={t.name}>
+                            <blockquote>&ldquo;{t.quote}&rdquo;</blockquote>
+                            <figcaption>
+                                <b>{t.name}</b> · {t.firm}
+                            </figcaption>
+                        </figure>
+                    ))}
+                </div>
+
+                <div className={styles.dots}>
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                </div>
             </div>
         </aside>
     );

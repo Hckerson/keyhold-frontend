@@ -1,133 +1,186 @@
 "use client";
 
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
 import {
-    AuthFieldGroup,
     AuthField,
-} from "@/components/features/auth/auth-field";
-import { DevQuickLogin } from "@/components/features/dev-quick-login";
-import { loginSchema } from "@/lib/validations/auth";
-import { query } from "@/lib/api-client";
-import type { AuthResponse } from "@/lib/types/auth";
+    AuthFooterLink,
+    AuthFormError,
+    AuthFormHeader,
+    AuthSubmit,
+    SocialAuthRow,
+} from "@/components/patterns/auth";
+import { Checkbox } from "@/components/ui/checkbox";
+import { apiClient } from "@/lib/api-client";
+import {
+    ACCESS_TOKEN_COOKIE,
+    AUTH_ENDPOINTS,
+    AUTH_ROUTES,
+    SESSION_DAYS,
+    isSafeRedirect,
+    portalForRole,
+} from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import type { AuthResponse } from "@/lib/types/auth";
 import { setCookie } from "@/lib/utils/cookies";
+import { errorMessage } from "@/lib/utils/api-error";
+import {
+    fieldErrorFor,
+    loginSchema,
+    toFieldErrors,
+    type FieldErrors,
+} from "@/lib/validations/auth";
 
-const PORTAL_BY_ROLE: Record<string, string> = {
-    ADMIN: "/admin",
-    BUYER: "/dashboard",
-    SELLER: "/agent",
-};
+const INITIAL_VALUES = { email: "", password: "" };
 
-export function LoginForm() {
+const SIGN_IN_FAILED =
+    "We couldn't sign you in. Check your email and password, then try again.";
+
+export interface LoginFormProps {
+    redirectTo?: string;
+}
+
+export function LoginForm({ redirectTo }: LoginFormProps) {
     const router = useRouter();
     const setAuth = useAuthStore((state) => state.setAuth);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setErrors({});
-        setIsLoading(true);
+    const [values, setValues] = useState(INITIAL_VALUES);
+    const [remember, setRemember] = useState(true);
+    const [errors, setErrors] = useState<FieldErrors>({});
+    const [formError, setFormError] = useState<string | null>(null);
+    const [pending, setPending] = useState(false);
+
+    const parsed = loginSchema.safeParse(values);
+
+    const handleChange =
+        (field: keyof typeof INITIAL_VALUES) =>
+        (event: ChangeEvent<HTMLInputElement>) => {
+            const { value } = event.target;
+            setValues((current) => ({ ...current, [field]: value }));
+            setErrors((current) => ({ ...current, [field]: undefined }));
+            setFormError(null);
+        };
+
+    const handleBlur = (field: keyof typeof INITIAL_VALUES) => () =>
+        setErrors((current) => ({
+            ...current,
+            [field]: fieldErrorFor(loginSchema, values, field),
+        }));
+
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (pending) return;
+        if (!parsed.success) {
+            setErrors(toFieldErrors(parsed.error));
+            return;
+        }
+
+        setPending(true);
+        setFormError(null);
 
         try {
-            const result = loginSchema.parse({ email, password });
-            const response = await query.post<AuthResponse>(
-                "/auth/login",
-                result,
+            const { data } = await apiClient.post<{ data: AuthResponse }>(
+                AUTH_ENDPOINTS.login,
+                parsed.data,
+            );
+            const { user, accessToken } = data.data;
+
+            setAuth(user, accessToken);
+            setCookie(
+                ACCESS_TOKEN_COOKIE,
+                accessToken,
+                remember ? SESSION_DAYS : null,
             );
 
-            if (
-                !response.data ||
-                !response.data.user ||
-                !response.data.accessToken
-            ) {
-                setErrors({
-                    submit:
-                        response.message || "Login failed. Please try again.",
-                });
-                setIsLoading(false);
-                return;
-            }
-
-            const { user, accessToken } = response.data;
-            setAuth(user, accessToken);
-            setCookie("access_token", accessToken, 7);
-            router.push(PORTAL_BY_ROLE[user.role] || "/");
+            router.replace(
+                isSafeRedirect(redirectTo)
+                    ? redirectTo
+                    : portalForRole(user.role),
+            );
         } catch (error) {
-            if (error instanceof z.ZodError) {
-                const newErrors: Record<string, string> = {};
-                error.issues.forEach((issue) => {
-                    if (issue.path.length > 0) {
-                        newErrors[String(issue.path[0])] = issue.message;
-                    }
-                });
-                setErrors(newErrors);
-            } else {
-                setErrors({
-                    submit: "Something went wrong. Please try again.",
-                });
-            }
-            setIsLoading(false);
+            setFormError(errorMessage(error, SIGN_IN_FAILED));
+            setPending(false);
         }
     };
 
     return (
-        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
-            <div className="space-y-2">
-                <AuthFieldGroup>
+        <div className="flex flex-col gap-6">
+            <AuthFormHeader
+                title="Sign in to your account"
+                description="Access saved residences, private viewings and your advisor's notes."
+            />
+
+            <AuthFormError title="Sign in failed" message={formError} />
+
+            <form
+                onSubmit={(event) => void handleSubmit(event)}
+                noValidate
+                className="flex flex-col gap-4"
+            >
+                <fieldset disabled={pending} className="flex flex-col gap-3">
                     <AuthField
-                        id="email"
                         label="Email"
+                        name="email"
                         type="email"
                         autoComplete="email"
+                        autoFocus
                         placeholder="you@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={values.email}
                         error={errors.email}
-                        disabled={isLoading}
+                        onChange={handleChange("email")}
+                        onBlur={handleBlur("email")}
                     />
+
                     <AuthField
-                        id="password"
                         label="Password"
-                        secure
+                        name="password"
+                        type="password"
                         autoComplete="current-password"
-                        placeholder="••••••••"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Your password"
+                        value={values.password}
                         error={errors.password}
-                        disabled={isLoading}
+                        onChange={handleChange("password")}
+                        onBlur={handleBlur("password")}
+                        hint={
+                            <Link
+                                href={AUTH_ROUTES.resetPassword}
+                                className="text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth rounded-sm text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                            >
+                                Forgot password?
+                            </Link>
+                        }
                     />
-                </AuthFieldGroup>
-                <div className="flex justify-end">
-                    <Link
-                        href="/reset-password"
-                        className="text-text-secondary hover:text-accent ease-smooth text-xs transition-colors"
-                    >
-                        Forgot password?
-                    </Link>
-                </div>
-            </div>
 
-            {errors.submit && <Callout variant="error" title={errors.submit} />}
+                    <Checkbox
+                        id="remember"
+                        name="remember"
+                        label="Keep me signed in on this device"
+                        checked={remember}
+                        onChange={(event) => setRemember(event.target.checked)}
+                    />
+                </fieldset>
 
-            <Button
-                type="submit"
-                variant="primary"
-                className="w-full"
-                isLoading={isLoading}
-            >
-                Sign In
-            </Button>
+                <AuthSubmit
+                    label="Sign in"
+                    pendingLabel="Signing in"
+                    pending={pending}
+                    disabled={!parsed.success}
+                />
+            </form>
 
-            <DevQuickLogin />
-        </form>
+            <SocialAuthRow
+                action="Sign in"
+                redirectTo={redirectTo}
+                disabled={pending}
+            />
+
+            <AuthFooterLink
+                prompt="No account yet?"
+                href={AUTH_ROUTES.signup}
+                label="Apply for access"
+            />
+        </div>
     );
 }
 

@@ -9,7 +9,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     return (
         <div className="flex min-h-screen flex-col">
             <Header />
-            <main className="w-full grow">{children}</main>
+            <main className="w-full grow pt-[88px]">{children}</main>
             <Footer />
         </div>
     );

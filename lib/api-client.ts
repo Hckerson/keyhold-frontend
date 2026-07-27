@@ -7,9 +7,10 @@ import type {
 } from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
+import { ACCESS_TOKEN_COOKIE, AUTH_ROUTES, config } from "@/lib/constants";
 
 const defaultConfig: AxiosRequestConfig = {
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3001/api",
+    baseURL: config.api.base,
     headers: {
         "Content-Type": "application/json",
     },
@@ -95,9 +96,12 @@ apiClient.interceptors.response.use(
     (error: AxiosError) => {
         if (error.response?.status === 401) {
             useAuthStore.getState().clearAuth();
-            deleteCookie("access_token");
-            if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
-                window.location.href = "/login";
+            deleteCookie(ACCESS_TOKEN_COOKIE);
+            if (
+                typeof window !== "undefined" &&
+                !window.location.pathname.startsWith(AUTH_ROUTES.login)
+            ) {
+                window.location.href = AUTH_ROUTES.login;
             }
         }
         return Promise.reject(error);

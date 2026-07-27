@@ -38,7 +38,7 @@ export function Callout({
         <div className={cn(calloutVariants({ variant }), className)}>
             <p
                 className={cn(
-                    "text-sm font-medium",
+                    "text-xs font-medium",
                     titleColor[variant ?? "neutral"],
                 )}
             >
