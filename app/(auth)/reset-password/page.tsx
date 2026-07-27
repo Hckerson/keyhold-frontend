@@ -5,6 +5,12 @@ export const metadata = {
     description: "Reset your luxury real estate account password.",
 };
 
-export default function ResetPasswordPage() {
-    return <ResetPasswordForm />;
+export default async function ResetPasswordPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ token?: string }>;
+}) {
+    const { token } = await searchParams;
+
+    return <ResetPasswordForm token={token} />;
 }

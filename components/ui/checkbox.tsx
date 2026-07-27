@@ -1,8 +1,11 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-export interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label?: string;
+export interface CheckboxProps extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    "type"
+> {
+    label?: React.ReactNode;
 }
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
@@ -15,7 +18,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
                 checked={checked ?? false}
                 onChange={onChange ?? (() => {})}
                 className={cn(
-                    "border-border bg-background-alt accent-accent focus:ring-accent h-5 w-5 cursor-pointer rounded border transition-all duration-300 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+                    "border-border bg-background-alt accent-accent focus-visible:ring-accent ease-smooth size-4 cursor-pointer rounded-xs border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
                     className,
                 )}
                 {...props}
@@ -23,7 +26,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
             {label && (
                 <label
                     htmlFor={id}
-                    className="text-text cursor-pointer text-sm"
+                    className="text-text-secondary cursor-pointer text-xs"
                 >
                     {label}
                 </label>

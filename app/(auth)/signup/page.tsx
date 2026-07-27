@@ -1,32 +1,11 @@
-import Link from "next/link";
-import { AuthHeading } from "@/components/features/auth/auth-heading";
 import { SignupForm } from "@/components/features/auth/signup-form";
 
 export const metadata = {
-    title: "Create Account | Luxury Real Estate",
-    description: "Join the premium real estate marketplace.",
+    title: "Begin your application | Luxury Real Estate",
+    description:
+        "Apply for access to the marketplace — as a buyer seeking a residence, or an agent presenting one.",
 };
 
 export default function SignupPage() {
-    return (
-        <div className="space-y-8">
-            <AuthHeading
-                eyebrow="Get Started"
-                title="Create your account"
-                subtitle="Join the premium real estate marketplace"
-            />
-
-            <SignupForm />
-
-            <p className="text-text-secondary text-sm">
-                Already have an account?{" "}
-                <Link
-                    href="/login"
-                    className="text-accent hover:text-accent-dark ease-smooth font-medium transition-colors"
-                >
-                    Sign in
-                </Link>
-            </p>
-        </div>
-    );
+    return <SignupForm />;
 }
