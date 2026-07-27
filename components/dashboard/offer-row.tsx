@@ -3,49 +3,67 @@ import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 
-export type OfferStatus = "pending" | "accepted" | "rejected" | "countered";
+export type OfferStatus =
+    | "submitted"
+    | "countered"
+    | "accepted"
+    | "rejected"
+    | "withdrawn";
 
 export interface Offer {
     id: string;
     address: string;
     offerPrice: number;
     listPrice: number;
+    counterPrice?: number;
     status: OfferStatus;
-    daysOld: number;
+    lastActivity: string;
 }
 
 export interface OfferRowProps {
     offer: Offer;
+    onWithdraw?: (id: string) => void;
     className?: string;
 }
 
 const statusTone = {
-    pending: "warning",
+    submitted: "warning",
+    countered: "info",
     accepted: "success",
     rejected: "error",
-    countered: "info",
+    withdrawn: "neutral",
 } as const;
 
-const toMillions = (value: number) => `$${(value / 1_000_000).toFixed(2)}M`;
+export const OFFER_STATUS_LABEL: Record<OfferStatus, string> = {
+    submitted: "Submitted",
+    countered: "Countered",
+    accepted: "Accepted",
+    rejected: "Rejected",
+    withdrawn: "Withdrawn",
+};
+
+export const formatUsd = (value: number) =>
+    `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+
+const microLabel =
+    "text-text-muted font-mono text-[10px] font-medium tracking-wide uppercase";
 
 function Metric({
     label,
     value,
-    className,
+    valueClassName,
 }: {
     label: string;
     value: string;
-    className?: string;
+    valueClassName?: string;
 }) {
     return (
         <div className="min-w-0">
-            <p className="text-text-muted text-caption font-medium tracking-wide uppercase">
-                {label}
-            </p>
+            <p className={microLabel}>{label}</p>
             <p
                 className={cn(
-                    "font-display mt-0.5 text-lg font-light tabular-nums",
-                    className,
+                    "mt-0.5 text-xs font-medium tabular-nums",
+                    valueClassName,
                 )}
             >
                 {value}
@@ -54,67 +72,95 @@ function Metric({
     );
 }
 
-export function OfferRow({ offer, className }: OfferRowProps) {
-    const { id, address, offerPrice, listPrice, status, daysOld } = offer;
+export function OfferRow({ offer, onWithdraw, className }: OfferRowProps) {
+    const { id, address, offerPrice, listPrice, counterPrice, status } = offer;
     const below = offerPrice < listPrice;
     const difference = Math.abs(listPrice - offerPrice);
-    const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+    const isOpen = status === "submitted" || status === "countered";
 
     return (
         <article
             className={cn(
-                "group bg-background-muted border-border-light hover:border-border ease-smooth flex flex-col gap-4 rounded-xl border p-5 shadow-sm transition-all duration-300 hover:shadow-md sm:flex-row sm:items-start sm:justify-between",
+                "group bg-background-muted border-border-light hover:border-border ease-smooth flex flex-col gap-3 rounded-xl border p-3 shadow-sm transition-all duration-300 hover:shadow-md sm:flex-row sm:items-start sm:justify-between",
                 className,
             )}
         >
             <div className="min-w-0 flex-1">
-                <h3 className="text-text truncate text-sm font-medium">
-                    {address}
-                </h3>
+                <div className="flex flex-wrap items-center gap-2">
+                    <Link
+                        href={`/dashboard/offers/${id}`}
+                        className="text-text hover:text-accent ease-smooth min-w-0 truncate text-xs font-medium transition-colors"
+                    >
+                        {address}
+                    </Link>
+                    <StatusBadge tone={statusTone[status]}>
+                        {status === "countered" && counterPrice !== undefined
+                            ? `Countered at ${formatUsd(counterPrice)}`
+                            : OFFER_STATUS_LABEL[status]}
+                    </StatusBadge>
+                </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
-                    <Metric
-                        label="Your Offer"
-                        value={toMillions(offerPrice)}
-                        className="text-accent"
-                    />
+                <div className="mt-3">
+                    <p className={microLabel}>Your Offer</p>
+                    <p className="font-display text-accent mt-0.5 text-lg font-light tabular-nums">
+                        {formatUsd(offerPrice)}
+                    </p>
+                </div>
+
+                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                     <Metric
                         label="List Price"
-                        value={toMillions(listPrice)}
-                        className="text-text"
+                        value={formatUsd(listPrice)}
+                        valueClassName="text-text"
                     />
                     <Metric
                         label="Difference"
-                        value={`${below ? "-" : "+"}${toMillions(difference)}`}
-                        className={below ? "text-warning" : "text-success"}
+                        value={`${below ? "-" : "+"}${formatUsd(difference)}`}
+                        valueClassName={below ? "text-warning" : "text-success"}
+                    />
+                    <Metric
+                        label="Counter"
+                        value={
+                            counterPrice === undefined
+                                ? "—"
+                                : formatUsd(counterPrice)
+                        }
+                        valueClassName="text-text"
                     />
                 </div>
 
-                <div className="mt-4 flex items-center gap-3">
-                    <span className="text-text-muted text-xs">
-                        Submitted {daysOld} days ago
-                    </span>
-                    <StatusBadge tone={statusTone[status]}>
-                        {statusLabel}
-                    </StatusBadge>
-                </div>
+                <p className="text-text-muted mt-3 text-xs">
+                    Last activity {offer.lastActivity}
+                </p>
             </div>
 
-            <div className="flex shrink-0 gap-2 sm:flex-col">
-                <Link href={`/listing/${id}`} className="block">
+            <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col">
+                <Link href={`/dashboard/offers/${id}`} className="block">
                     <Button
                         variant="secondary"
                         size="sm"
                         className="w-full sm:w-32"
                     >
-                        View Property
+                        View Details
                     </Button>
                 </Link>
-                {status === "pending" && (
+                {status === "countered" && (
+                    <Link href={`/dashboard/offers/${id}`} className="block">
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            className="w-full sm:w-32"
+                        >
+                            Counter
+                        </Button>
+                    </Link>
+                )}
+                {isOpen && onWithdraw && (
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full sm:w-32"
+                        className="text-error hover:text-error w-full sm:w-32"
+                        onClick={() => onWithdraw(id)}
                     >
                         Withdraw
                     </Button>
