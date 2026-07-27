@@ -1,30 +1,24 @@
+"use client";
+
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { cn } from "@/lib/utils";
 
-export type DealStage =
-    | "showing"
-    | "offer"
-    | "negotiating"
-    | "inspection"
-    | "closing";
+export type DealStage = "leads" | "offers" | "pending" | "closed";
 
-const STAGES: { id: DealStage; label: string }[] = [
-    { id: "showing", label: "Showing" },
-    { id: "offer", label: "Offer" },
-    { id: "negotiating", label: "Negotiating" },
-    { id: "inspection", label: "Inspection" },
-    { id: "closing", label: "Closing" },
+export const DEAL_STAGES: {
+    id: DealStage;
+    label: string;
+    tone: "info" | "warning" | "success" | "neutral";
+}[] = [
+    { id: "leads", label: "Leads", tone: "neutral" },
+    { id: "offers", label: "Offers", tone: "info" },
+    { id: "pending", label: "Pending", tone: "warning" },
+    { id: "closed", label: "Closed", tone: "success" },
 ];
-
-const stageTone = {
-    showing: "info",
-    offer: "warning",
-    negotiating: "warning",
-    inspection: "warning",
-    closing: "success",
-} as const;
 
 export interface Deal {
     id: string;
@@ -33,52 +27,77 @@ export interface Deal {
     price: number;
     stage: DealStage;
     daysInStage: number;
+    daysToClose: number;
+    lastActivity: string;
     nextStep: string;
+    notes: string;
 }
 
 export interface DealRowProps {
     deal: Deal;
+    actionLabel: string;
+    onAdvance: (id: string) => void;
     className?: string;
 }
 
-export function DealRow({ deal, className }: DealRowProps) {
-    const { property, buyer, price, stage, daysInStage, nextStep } = deal;
-    const index = STAGES.findIndex((s) => s.id === stage);
-    const progress = Math.round(((index + 1) / STAGES.length) * 100);
-    const label = STAGES[index]?.label ?? "Unknown";
+export function DealRow({
+    deal,
+    actionLabel,
+    onAdvance,
+    className,
+}: DealRowProps) {
+    const [expanded, setExpanded] = useState(false);
+    const {
+        id,
+        property,
+        buyer,
+        price,
+        stage,
+        daysInStage,
+        daysToClose,
+        lastActivity,
+        nextStep,
+        notes,
+    } = deal;
+
+    const index = DEAL_STAGES.findIndex((item) => item.id === stage);
+    const progress = Math.round(((index + 1) / DEAL_STAGES.length) * 100);
+    const { label, tone } = DEAL_STAGES[index];
 
     return (
         <article
             className={cn(
-                "bg-background-muted border-border-light hover:border-border ease-smooth space-y-4 rounded-xl border p-5 shadow-sm transition-all duration-300 hover:shadow-md",
+                "bg-background-muted border-border-light hover:border-border ease-smooth space-y-3 rounded-xl border p-3 shadow-sm transition-all duration-300 hover:shadow-md",
                 className,
             )}
         >
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                    <h3 className="text-text truncate text-sm font-medium">
+                    <h3 className="text-text truncate text-xs font-medium">
                         {property}
                     </h3>
-                    <p className="text-text-secondary mt-0.5 text-xs">
+                    <p className="text-text-secondary mt-0.5 truncate text-xs">
                         {buyer}
                     </p>
                 </div>
-                <StatusBadge tone={stageTone[stage]}>{label}</StatusBadge>
+                <StatusBadge tone={tone}>{label}</StatusBadge>
             </div>
 
             <div className="flex items-baseline gap-2">
-                <span className="text-h5 font-display text-accent font-light tabular-nums">
+                <span className="text-h6 font-display text-accent font-light tabular-nums">
                     ${(price / 1_000_000).toFixed(2)}M
                 </span>
                 <span className="text-text-muted text-xs tabular-nums">
-                    {daysInStage} days in stage
+                    {daysInStage}d in stage
                 </span>
             </div>
 
             <div>
-                <div className="mb-1.5 flex items-center justify-between">
-                    <span className="text-text-muted text-caption font-medium tracking-wide uppercase">
-                        Deal Progress
+                <div className="mb-1.5 flex items-center justify-between gap-2">
+                    <span className="text-text-muted font-mono text-[10px] tracking-wide uppercase">
+                        {stage === "closed"
+                            ? "Complete"
+                            : `${daysToClose}d to close`}
                     </span>
                     <span className="text-accent text-xs font-medium tabular-nums">
                         {progress}%
@@ -86,37 +105,55 @@ export function DealRow({ deal, className }: DealRowProps) {
                 </div>
                 <ProgressBar
                     value={progress}
-                    tone={stage === "closing" ? "success" : "accent"}
+                    tone={stage === "closed" ? "success" : "accent"}
                 />
-                <div className="text-caption mt-2 flex justify-between">
-                    {STAGES.map((s, i) => (
-                        <span
-                            key={s.id}
-                            className={cn(
-                                i <= index
-                                    ? "text-text-secondary font-medium"
-                                    : "text-text-muted",
-                            )}
-                        >
-                            {s.label}
-                        </span>
-                    ))}
-                </div>
             </div>
 
-            <div className="border-border-light border-t pt-3 text-sm">
-                <span className="text-text-secondary">Next: </span>
-                <span className="text-text font-medium">{nextStep}</span>
+            <p className="text-text-secondary truncate text-xs">
+                {lastActivity}
+            </p>
+
+            <div className="border-border border-t pt-3">
+                <button
+                    type="button"
+                    aria-expanded={expanded}
+                    onClick={() => setExpanded((prev) => !prev)}
+                    className="group ease-smooth focus-visible:ring-accent flex w-full items-start gap-1.5 rounded-md text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                >
+                    <ChevronDown
+                        size={12}
+                        strokeWidth={1.5}
+                        className={cn(
+                            "text-text-muted ease-smooth mt-0.5 shrink-0 transition-transform duration-200",
+                            expanded && "rotate-180",
+                        )}
+                    />
+                    <span
+                        className={cn(
+                            "text-text-secondary group-hover:text-text text-xs",
+                            !expanded && "truncate",
+                        )}
+                    >
+                        {notes}
+                    </span>
+                </button>
+
+                {expanded && (
+                    <p className="text-text mt-2 text-xs">
+                        <span className="text-text-secondary">Next: </span>
+                        <span className="font-medium">{nextStep}</span>
+                    </p>
+                )}
             </div>
 
-            <div className="flex gap-2">
-                <Button variant="secondary" size="sm" className="flex-1">
-                    Update Status
-                </Button>
-                <Button variant="ghost" size="sm" className="flex-1">
-                    View Details
-                </Button>
-            </div>
+            <Button
+                variant="secondary"
+                size="sm"
+                className="w-full"
+                onClick={() => onAdvance(id)}
+            >
+                {actionLabel}
+            </Button>
         </article>
     );
 }
