@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
     StatusBadge,
@@ -30,6 +33,8 @@ export interface ManagedUser {
 
 export interface UserTableProps {
     users: ManagedUser[];
+    onStatusChange?: (ids: string[], status: UserStatus) => void;
+    pageSize?: number;
     className?: string;
 }
 
@@ -39,11 +44,12 @@ const roleMeta: Record<UserRole, { label: string; cls: string }> = {
     buyer: { label: "Buyer", cls: "bg-info/10 text-info" },
 };
 
-const tierMeta: Record<UserTier, { label: string; cls: string }> = {
-    platinum: { label: "Platinum", cls: "text-highlight-dark" },
-    premium: { label: "Premium", cls: "text-info" },
-    standard: { label: "Standard", cls: "text-text-muted" },
-};
+const tierMeta: Record<UserTier, { label: string; cls: string; rank: number }> =
+    {
+        platinum: { label: "Platinum", cls: "text-highlight-dark", rank: 3 },
+        premium: { label: "Premium", cls: "text-info", rank: 2 },
+        standard: { label: "Standard", cls: "text-text-muted", rank: 1 },
+    };
 
 const statusMeta: Record<
     UserStatus,
@@ -57,6 +63,8 @@ const statusMeta: Record<
     },
     inactive: { tone: "neutral", label: "Inactive" },
 };
+
+const DEFAULT_PAGE_SIZE = 10;
 
 function initialsOf(name: string) {
     return name
@@ -83,7 +91,13 @@ function UserCell({ user }: { user: ManagedUser }) {
     );
 }
 
-function RowActions({ user }: { user: ManagedUser }) {
+function RowActions({
+    user,
+    onStatusChange,
+}: {
+    user: ManagedUser;
+    onStatusChange?: (ids: string[], status: UserStatus) => void;
+}) {
     return (
         <div className="flex justify-end gap-1">
             <Button variant="ghost" size="sm">
@@ -94,12 +108,17 @@ function RowActions({ user }: { user: ManagedUser }) {
                     variant="ghost"
                     size="sm"
                     className="text-error hover:text-error"
+                    onClick={() => onStatusChange?.([user.id], "suspended")}
                 >
                     Suspend
                 </Button>
             )}
             {user.status === "suspended" && (
-                <Button variant="ghost" size="sm">
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onStatusChange?.([user.id], "active")}
+                >
                     Reactivate
                 </Button>
             )}
@@ -109,75 +128,97 @@ function RowActions({ user }: { user: ManagedUser }) {
 
 /* -------------------------------- Columns -------------------------------- */
 
-const columns: DataTableColumn<ManagedUser>[] = [
-    {
-        id: "user",
-        label: "User",
-        render: (row) => <UserCell user={row} />,
-    },
-    {
-        id: "role",
-        label: "Role",
-        render: (row) => (
-            <span
-                className={cn(
-                    "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-                    roleMeta[row.role].cls,
-                )}
-            >
-                {roleMeta[row.role].label}
-            </span>
-        ),
-    },
-    {
-        id: "tier",
-        label: "Tier",
-        render: (row) => (
-            <span className={cn("font-medium", tierMeta[row.tier].cls)}>
-                {tierMeta[row.tier].label}
-            </span>
-        ),
-    },
-    {
-        id: "joined",
-        label: "Joined",
-        render: (row) => (
-            <span className="text-text-secondary whitespace-nowrap tabular-nums">
-                {row.joinDate}
-            </span>
-        ),
-    },
-    {
-        id: "transactions",
-        label: "Deals",
-        align: "right",
-        render: (row) => (
-            <span className="text-text font-medium tabular-nums">
-                {row.transactions}
-            </span>
-        ),
-    },
-    {
-        id: "status",
-        label: "Status",
-        render: (row) => (
-            <StatusBadge tone={statusMeta[row.status].tone}>
-                {statusMeta[row.status].label}
-            </StatusBadge>
-        ),
-    },
-    {
-        id: "actions",
-        label: "Actions",
-        align: "right",
-        srOnlyLabel: true,
-        render: (row) => <RowActions user={row} />,
-    },
-];
+function buildColumns(
+    onStatusChange?: (ids: string[], status: UserStatus) => void,
+): DataTableColumn<ManagedUser>[] {
+    return [
+        {
+            id: "user",
+            label: "User",
+            sortValue: (row) => row.name,
+            render: (row) => <UserCell user={row} />,
+        },
+        {
+            id: "role",
+            label: "Role",
+            sortValue: (row) => roleMeta[row.role].label,
+            render: (row) => (
+                <span
+                    className={cn(
+                        "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
+                        roleMeta[row.role].cls,
+                    )}
+                >
+                    {roleMeta[row.role].label}
+                </span>
+            ),
+        },
+        {
+            id: "tier",
+            label: "Tier",
+            sortValue: (row) => tierMeta[row.tier].rank,
+            render: (row) => (
+                <span className={cn("font-medium", tierMeta[row.tier].cls)}>
+                    {tierMeta[row.tier].label}
+                </span>
+            ),
+        },
+        {
+            id: "joined",
+            label: "Joined",
+            sortValue: (row) => row.joinDate,
+            render: (row) => (
+                <span className="text-text-secondary whitespace-nowrap tabular-nums">
+                    {row.joinDate}
+                </span>
+            ),
+        },
+        {
+            id: "transactions",
+            label: "Deals",
+            align: "right",
+            sortValue: (row) => row.transactions,
+            render: (row) => (
+                <span className="text-text font-medium tabular-nums">
+                    {row.transactions}
+                </span>
+            ),
+        },
+        {
+            id: "status",
+            label: "Status",
+            sortValue: (row) => statusMeta[row.status].label,
+            render: (row) => (
+                <StatusBadge tone={statusMeta[row.status].tone}>
+                    {statusMeta[row.status].label}
+                </StatusBadge>
+            ),
+        },
+        {
+            id: "actions",
+            label: "Actions",
+            align: "right",
+            srOnlyLabel: true,
+            render: (row) => (
+                <RowActions user={row} onStatusChange={onStatusChange} />
+            ),
+        },
+    ];
+}
 
 /* --------------------------------- Table --------------------------------- */
 
-export function UserTable({ users, className }: UserTableProps) {
+export function UserTable({
+    users,
+    onStatusChange,
+    pageSize = DEFAULT_PAGE_SIZE,
+    className,
+}: UserTableProps) {
+    const columns = useMemo(
+        () => buildColumns(onStatusChange),
+        [onStatusChange],
+    );
+
     return (
         <DataTable
             columns={columns}
@@ -186,6 +227,37 @@ export function UserTable({ users, className }: UserTableProps) {
             rowClassName={(row) => statusMeta[row.status].rowTone}
             caption="Platform users with role, tier, join date, deal count and account status"
             emptyMessage="No users to show"
+            defaultSort={{ id: "user", direction: "asc" }}
+            selectable
+            pageSize={pageSize}
+            bulkActions={(rows) => (
+                <>
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() =>
+                            onStatusChange?.(
+                                rows.map((row) => row.id),
+                                "active",
+                            )
+                        }
+                    >
+                        Reactivate
+                    </Button>
+                    <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() =>
+                            onStatusChange?.(
+                                rows.map((row) => row.id),
+                                "suspended",
+                            )
+                        }
+                    >
+                        Suspend
+                    </Button>
+                </>
+            )}
             className={className}
         />
     );
