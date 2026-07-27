@@ -10,6 +10,7 @@ import { AlertRow, type Alert } from "@/components/dashboard/alert-row";
 const alerts: Alert[] = [
     {
         id: "1",
+        listingId: "1",
         type: "price-drop",
         title: "Price Reduction",
         description: "The price has been reduced by $150,000",
@@ -21,6 +22,7 @@ const alerts: Alert[] = [
     },
     {
         id: "2",
+        listingId: "2",
         type: "new-listing",
         title: "New Listing Match",
         description: "A new property matching your criteria just listed",
@@ -31,6 +33,7 @@ const alerts: Alert[] = [
     },
     {
         id: "3",
+        listingId: "3",
         type: "under-offer",
         title: "Status Update",
         description: "This property is now under offer",
@@ -40,6 +43,7 @@ const alerts: Alert[] = [
     },
     {
         id: "4",
+        listingId: "4",
         type: "status-change",
         title: "Market Alert",
         description: "Market conditions in your favorite area have changed",
