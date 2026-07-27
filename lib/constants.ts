@@ -58,6 +58,7 @@ export const oauthStartUrl = (provider: string, redirectTo?: string) => {
 export const LISTINGS_PER_PAGE = 20;
 export const DEBOUNCE_DELAY = 300;
 export const PAGINATION_LIMIT = 20;
+export const DEFAULT_COMMISSION_RATE = 0.025;
 
 export const USER_TIERS = {
     STANDARD: "standard",

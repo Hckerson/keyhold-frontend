@@ -9,6 +9,7 @@ import {
     DataTable,
     type DataTableColumn,
 } from "@/components/patterns/data-table";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 /* --------------------------------- Types --------------------------------- */
@@ -33,8 +34,6 @@ export interface TransactionTableProps {
     pageSize?: number;
     className?: string;
 }
-
-export const DEFAULT_COMMISSION_RATE = 0.025;
 
 const DEFAULT_PAGE_SIZE = 10;
 
