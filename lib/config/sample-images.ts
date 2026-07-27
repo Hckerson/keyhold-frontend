@@ -9,8 +9,21 @@ export const propertyImages = [
     "https://images.pexels.com/photos/1732414/pexels-photo-1732414.jpeg?auto=compress&cs=tinysrgb&w=800",
 ];
 
-export const propertyImage = (seed: number) =>
-    propertyImages[
-        ((seed % propertyImages.length) + propertyImages.length) %
-            propertyImages.length
-    ];
+export const agentPortraits = [
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80",
+    "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80",
+    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80",
+];
+
+const pick = <T>(pool: readonly T[], seed: number) =>
+    pool[((seed % pool.length) + pool.length) % pool.length];
+
+export const propertyImage = (seed: number) => pick(propertyImages, seed);
+
+export const agentPortrait = (seed: number) => pick(agentPortraits, seed);
+
+export const propertyGallery = (seed: number, count: number) =>
+    Array.from({ length: Math.min(count, propertyImages.length) }, (_, index) =>
+        propertyImage(seed + index),
+    );

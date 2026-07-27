@@ -3,9 +3,9 @@ import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
 import {
     TransactionTable,
-    DEFAULT_COMMISSION_RATE,
     type Transaction,
 } from "@/components/patterns/transaction-table";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 
 const transactions: Transaction[] = [
     {
@@ -79,7 +79,7 @@ export default function AdminTransactionsPage() {
                     featured
                 />
                 <StatCard
-                    label="Commission (2.5%)"
+                    label={`Commission (${DEFAULT_COMMISSION_RATE * 100}%)`}
                     value={`$${Math.round(totalCommission / 1000)}K`}
                     caption="platform revenue"
                 />
