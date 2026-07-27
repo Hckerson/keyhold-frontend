@@ -4,11 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { Heart, MapPin, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Avatar } from "@/components/ui/avatar";
 import { PropertySpecs } from "@/components/ui/property-specs";
+import { PROPERTY_STATUS_LABELS, type PropertyStatus } from "@/lib/enums/enums";
 
 /* --------------------------------- Types --------------------------------- */
 
-export type PropertyStatus = "for-sale" | "for-rent" | "new" | "sold";
+export type { PropertyStatus };
+
+export interface PropertyAgent {
+    name: string;
+    avatarUrl?: string;
+}
 
 export interface Property {
     id: string;
@@ -21,6 +28,7 @@ export interface Property {
     imageUrl: string;
     status?: PropertyStatus;
     featured?: boolean;
+    agent?: PropertyAgent;
 }
 
 export interface PropertyCardProps {
@@ -31,13 +39,6 @@ export interface PropertyCardProps {
     href?: string;
     className?: string;
 }
-
-const statusLabels: Record<PropertyStatus, string> = {
-    "for-sale": "For Sale",
-    "for-rent": "For Rent",
-    new: "New Listing",
-    sold: "Sold",
-};
 
 /* ------------------------------- Save button ------------------------------ */
 
@@ -87,12 +88,17 @@ function PropertyMedia({
                 <div className="flex flex-col items-start gap-2">
                     {property.status && (
                         <span className="bg-background/80 text-text-secondary border-border-light text-caption rounded-full border px-3 py-1 font-medium tracking-wide uppercase backdrop-blur-sm">
-                            {statusLabels[property.status]}
+                            {PROPERTY_STATUS_LABELS[property.status]}
                         </span>
                     )}
                     {property.featured && (
                         <span className="bg-highlight text-text-inverse text-caption rounded-full px-3 py-1 font-medium tracking-wide uppercase">
                             Featured
+                        </span>
+                    )}
+                    {saved && (
+                        <span className="bg-accent text-text-inverse text-caption rounded-full px-3 py-1 font-medium tracking-wide uppercase">
+                            Saved
                         </span>
                     )}
                 </div>
@@ -105,15 +111,31 @@ function PropertyMedia({
 /* -------------------------------- Property -------------------------------- */
 
 const viewDetailsClass =
-    "group/btn text-accent hover:text-accent-dark ease-smooth mt-1 inline-flex items-center gap-1.5 text-sm font-medium transition-colors duration-200";
+    "group/btn text-accent hover:text-accent-dark ease-smooth inline-flex items-center gap-1.5 text-xs font-medium transition-colors duration-200";
 
 const viewDetailsArrow = (
     <ArrowUpRight
-        size={16}
-        strokeWidth={2}
+        size={12}
+        strokeWidth={1.5}
         className="ease-smooth transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
     />
 );
+
+function AgentByline({ agent }: { agent: PropertyAgent }) {
+    return (
+        <div className="flex min-w-0 items-center gap-2">
+            <Avatar
+                size="sm"
+                src={agent.avatarUrl}
+                alt={agent.name}
+                initials={agent.name.charAt(0)}
+            />
+            <span className="text-text-secondary truncate text-xs">
+                {agent.name}
+            </span>
+        </div>
+    );
+}
 
 export function PropertyCard({
     property,
@@ -145,14 +167,14 @@ export function PropertyCard({
                 onToggleSave={toggleSave}
             />
 
-            <div className="flex flex-col gap-2 p-4">
+            <div className="flex flex-col gap-3 p-3">
                 <div className="space-y-1">
-                    <p className="text-h4 font-display text-text font-light tracking-tight">
+                    <p className="text-h5 font-display text-text font-light tracking-tight tabular-nums">
                         ${property.price.toLocaleString()}
                     </p>
-                    <div className="text-text-secondary flex items-center gap-1.5 text-sm">
+                    <div className="text-text-secondary flex items-center gap-1.5 text-xs">
                         <MapPin
-                            size={14}
+                            size={12}
                             strokeWidth={1.5}
                             className="text-text-muted shrink-0"
                         />
@@ -166,24 +188,32 @@ export function PropertyCard({
                     beds={property.beds}
                     baths={property.baths}
                     sqft={property.sqft}
-                    className="border-border-light border-t pt-4"
+                    className="border-border border-t pt-3"
                 />
 
-                {href ? (
-                    <Link href={href} className={viewDetailsClass}>
-                        View details
-                        {viewDetailsArrow}
-                    </Link>
-                ) : (
-                    <button
-                        type="button"
-                        onClick={() => onView?.(property.id)}
-                        className={viewDetailsClass}
-                    >
-                        View details
-                        {viewDetailsArrow}
-                    </button>
-                )}
+                <div className="border-border flex items-center justify-between gap-3 border-t pt-3">
+                    {property.agent ? (
+                        <AgentByline agent={property.agent} />
+                    ) : (
+                        <span />
+                    )}
+
+                    {href ? (
+                        <Link href={href} className={viewDetailsClass}>
+                            View details
+                            {viewDetailsArrow}
+                        </Link>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => onView?.(property.id)}
+                            className={viewDetailsClass}
+                        >
+                            View details
+                            {viewDetailsArrow}
+                        </button>
+                    )}
+                </div>
             </div>
         </article>
     );
