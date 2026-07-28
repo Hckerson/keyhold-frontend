@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+export const sectionEyebrowClass =
+    "font-mono text-[10px] tracking-[0.18em] uppercase";
+
 export function SectionEyebrow({
     children,
     tone = "brass",
@@ -11,7 +14,7 @@ export function SectionEyebrow({
     return (
         <p
             className={cn(
-                "font-mono text-[10px] tracking-[0.18em] uppercase",
+                sectionEyebrowClass,
                 tone === "brass" ? "text-highlight-dark" : "text-text-muted",
             )}
         >

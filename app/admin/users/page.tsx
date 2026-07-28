@@ -1,8 +1,15 @@
+"use client";
+
+import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import { UserTable, type ManagedUser } from "@/components/patterns/user-table";
+import {
+    UserTable,
+    type ManagedUser,
+    type UserStatus,
+} from "@/components/patterns/user-table";
 
-const users: ManagedUser[] = [
+const INITIAL_USERS: ManagedUser[] = [
     {
         id: "1",
         name: "John Doe",
@@ -46,6 +53,19 @@ const users: ManagedUser[] = [
 ];
 
 export default function AdminUsersPage() {
+    const [users, setUsers] = useState(INITIAL_USERS);
+
+    const handleStatusChange = useCallback(
+        (ids: string[], status: UserStatus) => {
+            setUsers((current) =>
+                current.map((user) =>
+                    ids.includes(user.id) ? { ...user, status } : user,
+                ),
+            );
+        },
+        [],
+    );
+
     const active = users.filter((user) => user.status === "active").length;
 
     return (
@@ -65,7 +85,7 @@ export default function AdminUsersPage() {
                 }
             />
 
-            <UserTable users={users} />
+            <UserTable users={users} onStatusChange={handleStatusChange} />
         </div>
     );
 }
