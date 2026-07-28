@@ -8,21 +8,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-export type ActivityType =
-    | "viewing"
-    | "offer"
-    | "message"
-    | "showing"
-    | "listing";
-
-export interface ActivityEntry {
-    id: string | number;
-    type: ActivityType;
-    title: string;
-    description: string;
-    time: string;
-}
+import type { ActivityEntry, ActivityType } from "@/lib/types";
 
 const typeIcon: Record<ActivityType, LucideIcon> = {
     viewing: CalendarDays,

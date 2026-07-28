@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { Wordmark } from "@/components/ui/wordmark";
-import { propertyImage } from "@/lib/config/sample-images";
+import { Wordmark } from "@/components/layout/wordmark";
+import { propertyImage } from "@/lib/data/sample-images";
 
 const CANVAS_IMAGE = propertyImage(7);
 
@@ -10,8 +10,6 @@ const LEGAL = [
     { label: "Privacy", href: "/privacy" },
     { label: "Terms", href: "/terms" },
 ];
-
-/* ── atmosphere ── */
 
 function CanvasBackdrop() {
     return (

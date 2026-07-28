@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Image } from "@/components/ui/image";
-import { PropertySpecs } from "@/components/ui/property-specs";
-import { cn } from "@/lib/utils";
+import { PropertySpecs } from "@/components/features/listings/property-specs";
+import { cn, formatMillions } from "@/lib/utils";
 
 export interface ListingRowData {
     imageUrl: string;
@@ -29,7 +29,7 @@ export function ListingRow({
     className,
 }: ListingRowProps) {
     const { imageUrl, address, price, beds, baths, sqft } = listing;
-    const priceLabel = `$${(price / 1_000_000).toFixed(2)}M`;
+    const priceLabel = formatMillions(price, 2);
     const media = (
         <Image
             src={imageUrl}

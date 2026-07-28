@@ -1,13 +1,7 @@
 import Link from "next/link";
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-export interface QuickAction {
-    label: string;
-    href: string;
-    icon: LucideIcon;
-    description?: string;
-}
+import type { QuickAction } from "@/lib/types";
 
 export function QuickActions({
     actions,

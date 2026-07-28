@@ -10,9 +10,9 @@ import {
     AuthFormHeader,
     AuthSubmit,
     SocialAuthRow,
-} from "@/components/patterns/auth";
-import { Checkbox } from "@/components/ui/checkbox";
-import { apiClient } from "@/lib/api-client";
+} from "@/components/features/auth/parts";
+import { Checkbox } from "@/components/ui/forms/checkbox";
+import { apiClient } from "@/lib/api/client";
 import {
     ACCESS_TOKEN_COOKIE,
     AUTH_ENDPOINTS,

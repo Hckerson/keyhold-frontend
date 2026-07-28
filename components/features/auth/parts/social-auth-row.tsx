@@ -1,6 +1,6 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
-import { PROVIDER_MARKS } from "@/components/patterns/auth/provider-marks";
+import { PROVIDER_MARKS } from "@/components/features/auth/parts/provider-marks";
 import { AUTH_PROVIDERS, oauthStartUrl } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 

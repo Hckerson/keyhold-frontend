@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { FormField, type FormFieldProps } from "@/components/ui/form-field";
+import {
+    FormField,
+    type FormFieldProps,
+} from "@/components/ui/forms/form-field";
 
 export interface AuthFieldProps extends Omit<FormFieldProps, "endSlot"> {
     type?: "text" | "email" | "password";
