@@ -5,7 +5,6 @@ import {
     FileText,
     CalendarDays,
     MessageSquare,
-    CalendarClock,
     ChevronRight,
     type LucideIcon,
 } from "lucide-react";
@@ -13,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { SummaryRow } from "@/components/ui/summary-row";
 import {
     ActivityFeed,
     type ActivityEntry,
@@ -22,6 +20,8 @@ import {
     QuickActions,
     type QuickAction,
 } from "@/components/dashboard/quick-actions";
+import { UpcomingViewings } from "@/components/dashboard/upcoming-viewings";
+import type { Viewing } from "@/components/dashboard/viewing-row";
 
 type StatItem = {
     label: string;
@@ -97,6 +97,52 @@ const recentActivity: ActivityEntry[] = [
             "Your concierge agent has sent you a message about 234 Oak Street",
         time: "1 day ago",
     },
+    {
+        id: 4,
+        type: "listing",
+        title: "Price Drop",
+        description:
+            "456 Oak Avenue dropped $150,000 since you saved it last week",
+        time: "2 days ago",
+    },
+    {
+        id: 5,
+        type: "showing",
+        title: "Listing Viewed",
+        description:
+            "You viewed 567 Palm Drive, Malibu for the third time this month",
+        time: "3 days ago",
+    },
+];
+
+const upcomingViewings: Viewing[] = [
+    {
+        id: "1",
+        address: "456 Oak Avenue, Beverly Hills, CA",
+        date: "2026-07-28",
+        time: "3:00 PM",
+        agent: "Sarah Chen",
+        agentPhone: "(310) 555-0123",
+        status: "confirmed",
+    },
+    {
+        id: "2",
+        address: "234 Oak Street, Bel Air, CA",
+        date: "2026-07-30",
+        time: "10:00 AM",
+        agent: "Michael Rodriguez",
+        agentPhone: "(310) 555-0456",
+        status: "confirmed",
+    },
+    {
+        id: "3",
+        address: "567 Palm Drive, Malibu, CA",
+        date: "2026-08-03",
+        time: "2:00 PM",
+        agent: "Jennifer Martinez",
+        agentPhone: "(310) 555-0789",
+        status: "pending",
+    },
 ];
 
 const quickActions: QuickAction[] = [
@@ -123,6 +169,12 @@ const quickActions: QuickAction[] = [
         href: "/dashboard/viewings",
         icon: CalendarDays,
         description: "3 upcoming",
+    },
+    {
+        label: "Messages",
+        href: "/dashboard/messages",
+        icon: MessageSquare,
+        description: "1 unread",
     },
 ];
 
@@ -152,47 +204,29 @@ export default function DashboardPage() {
                 }
             />
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat) => (
                     <StatCard key={stat.label} {...stat} />
                 ))}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
                 <div className="space-y-3 lg:col-span-2">
-                    <section className="bg-background-muted border-border-light relative overflow-hidden rounded-xl border p-5 shadow-sm">
-                        <span
-                            aria-hidden="true"
-                            className="bg-accent absolute inset-y-0 left-0 w-0.75"
-                        />
-                        <div className="flex items-center gap-2">
-                            <CalendarClock
-                                size={16}
-                                strokeWidth={1.5}
-                                className="text-accent"
-                            />
-                            <span className="text-accent text-caption font-medium tracking-wide uppercase">
-                                Upcoming Viewing · Today
-                            </span>
-                        </div>
-                        <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
-                            <div>
-                                <p className="text-text-secondary text-sm">
-                                    456 Oak Avenue, Beverly Hills
-                                </p>
-                                <p className="text-h4 font-display text-text mt-1 font-light">
-                                    $3.2M
-                                </p>
-                            </div>
-                            <Button variant="primary" size="sm">
-                                View Details
-                            </Button>
-                        </div>
-                        <div className="border-border-light mt-4 grid grid-cols-2 gap-x-6 gap-y-2 border-t pt-4">
-                            <SummaryRow label="Time" value="3:00 PM" />
-                            <SummaryRow label="Agent" value="Sarah Chen" />
-                        </div>
-                    </section>
+                    <Panel
+                        title="Upcoming Viewings"
+                        count={upcomingViewings.length}
+                        action={
+                            <Link
+                                href="/dashboard/viewings"
+                                className="text-accent hover:text-accent-dark ease-smooth inline-flex items-center gap-1 text-xs font-medium transition-colors"
+                            >
+                                View all
+                                <ChevronRight size={12} strokeWidth={1.5} />
+                            </Link>
+                        }
+                    >
+                        <UpcomingViewings initialViewings={upcomingViewings} />
+                    </Panel>
 
                     <Panel
                         title="Recent Activity"
@@ -203,30 +237,30 @@ export default function DashboardPage() {
                 </div>
 
                 <div className="space-y-3">
-                    <Panel title="Quick Actions">
+                    <Panel title="Quick Links">
                         <QuickActions actions={quickActions} />
                     </Panel>
 
                     <Panel
-                        title="Price Alerts"
+                        title="New Alerts"
                         count={priceAlerts.length}
                         action={
                             <Link
                                 href="/dashboard/alerts"
-                                className="text-accent hover:text-accent-dark ease-smooth inline-flex items-center gap-1 text-sm font-medium transition-colors"
+                                className="text-accent hover:text-accent-dark ease-smooth inline-flex items-center gap-1 text-xs font-medium transition-colors"
                             >
                                 View all
-                                <ChevronRight size={14} strokeWidth={2} />
+                                <ChevronRight size={12} strokeWidth={1.5} />
                             </Link>
                         }
                     >
-                        <ul className="flex flex-col gap-3">
+                        <ul className="flex flex-col gap-2">
                             {priceAlerts.map((alert) => (
                                 <li
                                     key={alert.id}
                                     className="flex items-center justify-between gap-3"
                                 >
-                                    <span className="text-text truncate text-sm">
+                                    <span className="text-text truncate text-xs">
                                         {alert.address}
                                     </span>
                                     <span
