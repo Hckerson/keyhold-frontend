@@ -6,12 +6,8 @@ import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import {
-    OfferRow,
-    type Offer,
-    type OfferStatus,
-} from "@/components/dashboard/offer-row";
-
+import { OfferRow } from "@/components/features/dashboard/offer-row";
+import type { Offer, OfferStatus } from "@/lib/types";
 type OfferFilter = "all" | OfferStatus;
 
 const filters: { value: OfferFilter; label: string }[] = [

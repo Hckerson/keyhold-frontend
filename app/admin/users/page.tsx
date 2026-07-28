@@ -3,12 +3,8 @@
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-    UserTable,
-    type ManagedUser,
-    type UserStatus,
-} from "@/components/patterns/user-table";
-
+import { UserTable } from "@/components/features/admin/user-table";
+import type { ManagedUser, UserStatus } from "@/lib/types";
 const INITIAL_USERS: ManagedUser[] = [
     {
         id: "1",

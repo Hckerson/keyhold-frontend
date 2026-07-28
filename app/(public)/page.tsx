@@ -1,21 +1,21 @@
-import { HeroSection } from "@/components/sections/hero";
-import { PremierListing } from "@/components/sections/premier-listing";
-import { FeaturedGallery } from "@/components/sections/featured-gallery";
-import { StatsBand } from "@/components/sections/stats-band";
-import { TestimonialsSection } from "@/components/sections/testimonials";
-import { ConciergeSection } from "@/components/sections/concierge";
+import { HeroSection } from "@/components/sections/home/hero";
+import { PremierListing } from "@/components/sections/home/premier-listing";
+import { FeaturedGallery } from "@/components/sections/home/featured-gallery";
+import { StatsBand } from "@/components/sections/home/stats-band";
+import { TestimonialsSection } from "@/components/sections/home/testimonials";
+import { ConciergeSection } from "@/components/sections/home/concierge";
 import {
     LatestSales,
     type LatestSaleData,
-} from "@/components/sections/latest-sales";
-import { CtaBanner } from "@/components/sections/cta-banner";
-import type { GalleryTileData } from "@/components/sections/gallery-tile";
+} from "@/components/sections/home/latest-sales";
+import { CtaBanner } from "@/components/sections/home/cta-banner";
+import type { GalleryTileData } from "@/components/sections/home/gallery-tile";
 import {
     FEATURED_LISTINGS,
     RECENT_SALES,
     formatPrice,
-    formatCompactPrice,
-} from "@/app/(public)/_data/listings";
+} from "@/lib/data/listings";
+import { formatCompactUsd } from "@/lib/utils";
 
 export const metadata = {
     title: "Home | Luxury Real Estate Marketplace",
@@ -38,7 +38,7 @@ const SALES: LatestSaleData[] = RECENT_SALES.map((listing) => ({
     imageUrl: listing.images[0],
     address: listing.address,
     locality: listing.locality,
-    price: formatCompactPrice(listing.price),
+    price: formatCompactUsd(listing.price),
     specs: `${listing.beds} Bd · ${listing.baths} Ba`,
     soldLabel: `Sold ${listing.soldMonthsAgo}mo ago`,
     daysOnMarket: 12 + Number(listing.id) * 2,

@@ -1,180 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Panel } from "@/components/ui/panel";
-import { PageHeader } from "@/components/ui/page-header";
-import { FormField } from "@/components/ui/form-field";
-import { ToggleRow } from "@/components/ui/toggle-row";
-import { ActionRow } from "@/components/ui/action-row";
 import { Callout } from "@/components/ui/callout";
+import { PageHeader } from "@/components/ui/page-header";
+import { ConfigPanel } from "@/components/features/settings/config-panel";
+import { TogglePanel } from "@/components/features/settings/toggle-panel";
+import { AdminMaintenancePanel } from "@/components/features/settings/admin-maintenance-panel";
+import {
+    INITIAL_ADMIN_CONFIG,
+    MARKETPLACE_FIELDS,
+    MODERATION_TOGGLES,
+    OPERATIONS_TOGGLES,
+    PLATFORM_FIELDS,
+} from "@/lib/data/admin-settings";
 
-interface ConfigField {
-    name: keyof typeof INITIAL_CONFIG;
-    label: string;
-    placeholder: string;
-    type?: string;
-    prefix?: string;
-    suffix?: string;
-}
-
-const INITIAL_CONFIG = {
-    platformName: "Luxury Estates",
-    supportEmail: "support@luxuryestates.com",
-    baseCurrency: "USD",
-    timezone: "America/Los_Angeles",
-    commissionRate: "2.5",
-    platformFee: "495",
-    listingExpiryDays: "90",
-    maxPhotosPerListing: "24",
-    autoApproveThreshold: "1000000",
-    escrowHoldDays: "3",
-};
-
-const PLATFORM_FIELDS: ConfigField[] = [
-    {
-        name: "platformName",
-        label: "Platform Name",
-        placeholder: "Luxury Estates",
-    },
-    {
-        name: "supportEmail",
-        label: "Support Email",
-        placeholder: "support@luxuryestates.com",
-        type: "email",
-    },
-    { name: "baseCurrency", label: "Base Currency", placeholder: "USD" },
-    {
-        name: "timezone",
-        label: "Reporting Timezone",
-        placeholder: "America/Los_Angeles",
-    },
-];
-
-const MARKETPLACE_FIELDS: ConfigField[] = [
-    {
-        name: "commissionRate",
-        label: "Commission Rate",
-        placeholder: "2.5",
-        suffix: "%",
-    },
-    {
-        name: "platformFee",
-        label: "Listing Fee",
-        placeholder: "495",
-        prefix: "$",
-    },
-    {
-        name: "listingExpiryDays",
-        label: "Listing Expiry",
-        placeholder: "90",
-        suffix: "days",
-    },
-    {
-        name: "maxPhotosPerListing",
-        label: "Max Photos Per Listing",
-        placeholder: "24",
-    },
-    {
-        name: "autoApproveThreshold",
-        label: "Auto-Approve Below",
-        placeholder: "1000000",
-        prefix: "$",
-    },
-    {
-        name: "escrowHoldDays",
-        label: "Escrow Hold",
-        placeholder: "3",
-        suffix: "days",
-    },
-];
-
-const MODERATION_TOGGLES = [
-    {
-        title: "Automatic Photo Scanning",
-        description: "Flag listings whose images fail the content scan",
-        defaultChecked: true,
-    },
-    {
-        title: "Require Agent License Verification",
-        description: "Block publishing until a license is on file",
-        defaultChecked: true,
-    },
-    {
-        title: "Manual Review Above Threshold",
-        description: "Route high-value listings to a human moderator",
-        defaultChecked: true,
-    },
-    {
-        title: "Auto-Suspend On Repeat Rejections",
-        description: "Suspend an agent after three rejected listings",
-        defaultChecked: false,
-    },
-];
-
-const OPERATIONS_TOGGLES = [
-    {
-        title: "Maintenance Mode",
-        description: "Take the marketplace offline for everyone but admins",
-        defaultChecked: false,
-    },
-    {
-        title: "New Signups",
-        description: "Allow buyers and agents to create accounts",
-        defaultChecked: true,
-    },
-    {
-        title: "Daily Health Digest",
-        description: "Email uptime and error-rate summaries to admins",
-        defaultChecked: true,
-    },
-    {
-        title: "Payout Automation",
-        description: "Release agent commissions once escrow clears",
-        defaultChecked: true,
-    },
-];
+const FORM_ID = "admin-settings-form";
 
 export default function AdminSettingsPage() {
-    const [config, setConfig] = useState(INITIAL_CONFIG);
+    const [config, setConfig] = useState(INITIAL_ADMIN_CONFIG);
     const [saved, setSaved] = useState(false);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setConfig((current) => ({ ...current, [name]: value }));
         setSaved(false);
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         setSaved(true);
     };
 
     const handleReset = () => {
-        setConfig(INITIAL_CONFIG);
+        setConfig(INITIAL_ADMIN_CONFIG);
         setSaved(false);
     };
-
-    const renderFields = (fields: ConfigField[]) =>
-        fields.map((field) => (
-            <FormField
-                key={field.name}
-                label={field.label}
-                name={field.name}
-                type={field.type ?? "text"}
-                value={config[field.name]}
-                onChange={handleChange}
-                placeholder={field.placeholder}
-                prefix={field.prefix}
-                endSlot={
-                    field.suffix ? (
-                        <span className="text-text-muted text-xs">
-                            {field.suffix}
-                        </span>
-                    ) : undefined
-                }
-            />
-        ));
 
     return (
         <div className="max-w-3xl space-y-3">
@@ -195,7 +57,7 @@ export default function AdminSettingsPage() {
                             variant="primary"
                             size="sm"
                             type="submit"
-                            form="admin-settings-form"
+                            form={FORM_ID}
                         >
                             {saved ? "Saved" : "Save Changes"}
                         </Button>
@@ -211,97 +73,37 @@ export default function AdminSettingsPage() {
                 />
             )}
 
-            <form
-                id="admin-settings-form"
-                onSubmit={handleSubmit}
-                className="space-y-3"
-            >
-                <Panel
+            <form id={FORM_ID} onSubmit={handleSubmit} className="space-y-3">
+                <ConfigPanel
                     title="Platform"
                     description="Identity and defaults used across every surface"
-                >
-                    <div className="grid gap-3 sm:grid-cols-2">
-                        {renderFields(PLATFORM_FIELDS)}
-                    </div>
-                </Panel>
+                    fields={PLATFORM_FIELDS}
+                    values={config}
+                    onChange={handleChange}
+                />
 
-                <Panel
+                <ConfigPanel
                     title="Marketplace Rules"
                     description="Fees, limits, and thresholds applied to new listings"
-                >
-                    <div className="grid gap-3 sm:grid-cols-2">
-                        {renderFields(MARKETPLACE_FIELDS)}
-                    </div>
-                </Panel>
+                    fields={MARKETPLACE_FIELDS}
+                    values={config}
+                    onChange={handleChange}
+                />
             </form>
 
-            <Panel
+            <TogglePanel
                 title="Moderation Policy"
                 description="How listings and agents are screened"
-            >
-                <div className="space-y-2">
-                    {MODERATION_TOGGLES.map((item) => (
-                        <ToggleRow
-                            key={item.title}
-                            title={item.title}
-                            description={item.description}
-                            defaultChecked={item.defaultChecked}
-                        />
-                    ))}
-                </div>
-            </Panel>
+                toggles={MODERATION_TOGGLES}
+            />
 
-            <Panel
+            <TogglePanel
                 title="Operations"
                 description="Availability, signups, and automated payouts"
-            >
-                <div className="space-y-2">
-                    {OPERATIONS_TOGGLES.map((item) => (
-                        <ToggleRow
-                            key={item.title}
-                            title={item.title}
-                            description={item.description}
-                            defaultChecked={item.defaultChecked}
-                        />
-                    ))}
-                </div>
-            </Panel>
+                toggles={OPERATIONS_TOGGLES}
+            />
 
-            <Panel
-                title="Maintenance"
-                description="Operations that affect the entire platform"
-            >
-                <div className="space-y-2">
-                    <ActionRow
-                        title="Rotate API Keys"
-                        description="Issue new server keys and revoke the current pair"
-                        action={
-                            <Button variant="secondary" size="sm">
-                                Rotate
-                            </Button>
-                        }
-                    />
-                    <ActionRow
-                        title="Export Audit Log"
-                        description="Download every moderation and payout action"
-                        action={
-                            <Button variant="secondary" size="sm">
-                                Export
-                            </Button>
-                        }
-                    />
-                    <ActionRow
-                        danger
-                        title="Purge Listing Cache"
-                        description="Force a full re-index of the public marketplace"
-                        action={
-                            <Button variant="outline-danger" size="sm">
-                                Purge
-                            </Button>
-                        }
-                    />
-                </div>
-            </Panel>
+            <AdminMaintenancePanel />
         </div>
     );
 }

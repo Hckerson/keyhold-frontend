@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import {
-    TransactionTable,
-    type Transaction,
-} from "@/components/patterns/transaction-table";
+import { TransactionTable } from "@/components/features/admin/transaction-table";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 
+import type { Transaction } from "@/lib/types";
+import { formatMillions } from "@/lib/utils";
 const transactions: Transaction[] = [
     {
         id: "1",
@@ -73,7 +72,7 @@ export default function AdminTransactionsPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
                 <StatCard
                     label="Total Volume"
-                    value={`$${(totalVolume / 1_000_000).toFixed(2)}M`}
+                    value={formatMillions(totalVolume, 2)}
                     caption={`${transactions.length} transactions`}
                     className="sm:col-span-2"
                     featured
