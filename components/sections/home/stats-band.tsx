@@ -1,4 +1,4 @@
-import { SectionShell } from "@/components/sections/section-shell";
+import { SectionShell } from "@/components/patterns/section-shell";
 import { cn } from "@/lib/utils";
 
 interface Stat {

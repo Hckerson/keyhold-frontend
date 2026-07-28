@@ -2,8 +2,8 @@
 
 import { MapPin, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/forms/checkbox";
+import { Input } from "@/components/ui/forms/input";
 import {
     FILTER_GROUPS,
     type FilterGroupKey,
@@ -13,6 +13,10 @@ import { cn } from "@/lib/utils";
 
 const groupLegend =
     "font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted";
+
+const locationIcon = (
+    <MapPin size={14} strokeWidth={1.5} className="text-text-muted" />
+);
 
 interface SearchFiltersPanelProps {
     draft: SearchFilters;
@@ -42,6 +46,8 @@ export function SearchFiltersPanel({
                 : [...current, optionId],
         });
     };
+
+    const setLocation = (location: string) => onChange({ ...draft, location });
 
     return (
         <form
@@ -76,20 +82,9 @@ export function SearchFiltersPanel({
                     <Input
                         id="filter-location"
                         value={draft.location}
-                        onChange={(event) =>
-                            onChange({
-                                ...draft,
-                                location: event.target.value,
-                            })
-                        }
+                        onChange={(event) => setLocation(event.target.value)}
                         placeholder="City or neighbourhood"
-                        endSlot={
-                            <MapPin
-                                size={14}
-                                strokeWidth={1.5}
-                                className="text-text-muted"
-                            />
-                        }
+                        endSlot={locationIcon}
                     />
                 </div>
 
@@ -99,30 +94,26 @@ export function SearchFiltersPanel({
                         className="flex flex-col gap-2 border-0 p-0"
                     >
                         <legend className={groupLegend}>{group.label}</legend>
-                        {group.options.map((option) => {
-                            const count = counts[group.key][option.id] ?? 0;
-                            const inputId = `${group.key}-${option.id}`;
-                            return (
-                                <div
-                                    key={option.id}
-                                    className="flex items-center justify-between gap-2"
-                                >
-                                    <Checkbox
-                                        id={inputId}
-                                        label={option.label}
-                                        checked={draft[group.key].includes(
-                                            option.id,
-                                        )}
-                                        onChange={() =>
-                                            toggle(group.key, option.id)
-                                        }
-                                    />
-                                    <span className="text-text-muted text-xs tabular-nums">
-                                        {count}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                        {group.options.map((option) => (
+                            <div
+                                key={option.id}
+                                className="flex items-center justify-between gap-2"
+                            >
+                                <Checkbox
+                                    id={`${group.key}-${option.id}`}
+                                    label={option.label}
+                                    checked={draft[group.key].includes(
+                                        option.id,
+                                    )}
+                                    onChange={() =>
+                                        toggle(group.key, option.id)
+                                    }
+                                />
+                                <span className="text-text-muted text-xs tabular-nums">
+                                    {counts[group.key][option.id] ?? 0}
+                                </span>
+                            </div>
+                        ))}
                     </fieldset>
                 ))}
             </div>

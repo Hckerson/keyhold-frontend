@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight, TrendingUp } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { SectionHeading } from "@/components/patterns/section-heading";
 
 export interface LatestSaleData {
     id: string;

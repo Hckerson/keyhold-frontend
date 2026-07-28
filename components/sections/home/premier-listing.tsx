@@ -9,10 +9,10 @@ import {
     ArrowRight,
     type LucideIcon,
 } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { SectionHeading } from "@/components/patterns/section-heading";
 import { Button } from "@/components/ui/button";
-import { FEATURED_LISTINGS, formatPrice } from "@/app/(public)/_data/listings";
+import { FEATURED_LISTINGS, formatPrice } from "@/lib/data/listings";
 
 interface Spec {
     icon: LucideIcon;
@@ -38,8 +38,6 @@ const SPECS: Spec[] = [
     { icon: Ruler, value: SOURCE.sqft.toLocaleString(), label: "Sq Ft" },
 ];
 
-/* ── media ── */
-
 function ListingMedia() {
     return (
         <div className="relative">
@@ -55,8 +53,6 @@ function ListingMedia() {
         </div>
     );
 }
-
-/* ── specs ── */
 
 function SpecCluster() {
     return (
