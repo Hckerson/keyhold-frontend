@@ -10,7 +10,10 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
-import { chartToneVar as toneVar, type ChartTone } from "@/lib/chart-tones";
+import {
+    chartToneVar as toneVar,
+    type ChartTone,
+} from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 
 export interface ColumnSeries {

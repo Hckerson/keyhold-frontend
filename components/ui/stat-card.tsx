@@ -1,20 +1,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { TrendingUp, TrendingDown, type LucideIcon } from "lucide-react";
-import { Sparkline } from "@/components/ui/sparkline";
+import { TrendingUp, TrendingDown } from "lucide-react";
+import { Sparkline } from "@/components/ui/charts/sparkline";
 import { cn } from "@/lib/utils";
+import type { StatItem } from "@/lib/types";
 
-export interface StatCardProps {
-    label: string;
-    value: string | number;
-    icon?: LucideIcon;
-    change?: string;
-    trend?: "up" | "down";
-    caption?: string;
+export interface StatCardProps extends StatItem {
     badge?: ReactNode;
-    series?: number[];
-    href?: string;
-    featured?: boolean;
     className?: string;
 }
 

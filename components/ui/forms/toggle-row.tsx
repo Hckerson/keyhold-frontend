@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/ui/forms/switch";
 import { cn } from "@/lib/utils";
 
 export interface ToggleRowProps {
