@@ -1,5 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface GalleryTileData {
@@ -8,14 +11,35 @@ export interface GalleryTileData {
     price: string;
     address: string;
     specs: string;
+    agentName: string;
     featured?: boolean;
+}
+
+function SaveTileButton({ address }: { address: string }) {
+    const [saved, setSaved] = useState(false);
+
+    return (
+        <button
+            type="button"
+            onClick={() => setSaved((previous) => !previous)}
+            aria-pressed={saved}
+            aria-label={saved ? `Unsave ${address}` : `Save ${address}`}
+            className="bg-sidebar/70 text-text-inverse ring-sidebar-border hover:text-highlight focus-visible:ring-highlight ease-smooth absolute top-3.5 right-3.5 z-20 grid size-8 place-items-center rounded-full ring-1 backdrop-blur-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+        >
+            <Heart
+                size={14}
+                strokeWidth={1.5}
+                className={cn(saved && "fill-highlight text-highlight")}
+            />
+        </button>
+    );
 }
 
 /* ── featured: glass panel, the one focal price in the grid ── */
 
 function FeaturedCaption({ tile }: { tile: GalleryTileData }) {
     return (
-        <div className="bg-sidebar/80 border-sidebar-border absolute bottom-4 left-4 flex w-fit max-w-[75%] flex-col gap-1.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-md">
+        <div className="bg-sidebar/80 border-sidebar-border pointer-events-none absolute bottom-4 left-4 z-10 flex w-fit max-w-[75%] flex-col gap-1.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-md">
             <span className="text-highlight-light font-mono text-[10px] tracking-[0.14em] uppercase">
                 {tile.specs}
             </span>
@@ -23,6 +47,9 @@ function FeaturedCaption({ tile }: { tile: GalleryTileData }) {
                 {tile.price}
             </span>
             <span className="text-sidebar-text text-xs">{tile.address}</span>
+            <span className="text-sidebar-text-muted text-xs">
+                {tile.agentName}
+            </span>
         </div>
     );
 }
@@ -31,7 +58,7 @@ function FeaturedCaption({ tile }: { tile: GalleryTileData }) {
 
 function PeerCaption({ tile }: { tile: GalleryTileData }) {
     return (
-        <div className="absolute right-3.5 bottom-3.5 left-3.5 flex flex-col gap-0.5">
+        <div className="pointer-events-none absolute right-3.5 bottom-3.5 left-3.5 z-10 flex flex-col gap-0.5">
             <span className="text-text-inverse text-xs font-semibold tabular-nums">
                 {tile.price}
             </span>
@@ -40,6 +67,9 @@ function PeerCaption({ tile }: { tile: GalleryTileData }) {
             </span>
             <span className="text-sidebar-text-muted font-mono text-[10px] tracking-[0.12em] uppercase">
                 {tile.specs}
+            </span>
+            <span className="text-sidebar-text-muted truncate text-[11px]">
+                {tile.agentName}
             </span>
         </div>
     );
@@ -53,10 +83,9 @@ export function GalleryTile({
     large?: boolean;
 }) {
     return (
-        <Link
-            href={`/listing/${tile.id}`}
+        <article
             className={cn(
-                "group ease-smooth focus-visible:ring-accent relative overflow-hidden rounded-xl transition-all duration-300 focus-visible:ring-2 focus-visible:outline-none",
+                "group ease-smooth relative overflow-hidden rounded-xl transition-all duration-300",
                 large
                     ? "shadow-md hover:-translate-y-1 hover:shadow-lg sm:col-span-2 sm:row-span-2"
                     : "shadow-sm hover:shadow-md",
@@ -77,8 +106,14 @@ export function GalleryTile({
                 )}
             />
 
+            <Link
+                href={`/listing/${tile.id}`}
+                aria-label={`${tile.address} — ${tile.price}`}
+                className="focus-visible:ring-accent absolute inset-0 z-10 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
+            />
+
             {tile.featured && (
-                <span className="bg-sidebar/75 text-text-inverse ring-highlight/30 absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase ring-1 backdrop-blur-md">
+                <span className="bg-sidebar/75 text-text-inverse ring-highlight/30 pointer-events-none absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase ring-1 backdrop-blur-md">
                     <Star
                         size={11}
                         strokeWidth={1.5}
@@ -88,12 +123,14 @@ export function GalleryTile({
                 </span>
             )}
 
+            <SaveTileButton address={tile.address} />
+
             {large ? (
                 <FeaturedCaption tile={tile} />
             ) : (
                 <PeerCaption tile={tile} />
             )}
-        </Link>
+        </article>
     );
 }
 
