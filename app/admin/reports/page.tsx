@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Panel } from "@/components/ui/panel";
 import { StatCard } from "@/components/ui/stat-card";
-import { BarChart } from "@/components/ui/bar-chart";
-import { DonutChart, type DonutSegment } from "@/components/ui/donut-chart";
+import { BarChart } from "@/components/ui/charts/bar-chart";
+import {
+    DonutChart,
+    type DonutSegment,
+} from "@/components/ui/charts/donut-chart";
 
 interface RegionMetric {
     region: string;
