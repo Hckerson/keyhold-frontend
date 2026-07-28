@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { cn } from "@/lib/utils";
+import { cn, formatMillions } from "@/lib/utils";
 
 export type DealStage = "leads" | "offers" | "pending" | "closed";
 
@@ -85,7 +85,7 @@ export function DealRow({
 
             <div className="flex items-baseline gap-2">
                 <span className="text-h6 font-display text-accent font-light tabular-nums">
-                    ${(price / 1_000_000).toFixed(2)}M
+                    {formatMillions(price, 2)}
                 </span>
                 <span className="text-text-muted text-xs tabular-nums">
                     {daysInStage}d in stage
