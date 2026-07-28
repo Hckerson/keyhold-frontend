@@ -11,8 +11,10 @@ const Divider = React.forwardRef<HTMLHRElement, DividerProps>(
             ref={ref}
             className={cn(
                 "border-0",
-                orientation === "horizontal" && "h-px w-full bg-linear-to-r from-transparent via-border to-transparent",
-                orientation === "vertical" && "w-px h-full bg-linear-to-b from-transparent via-border to-transparent",
+                orientation === "horizontal" &&
+                    "via-border h-px w-full bg-linear-to-r from-transparent to-transparent",
+                orientation === "vertical" &&
+                    "via-border h-full w-px bg-linear-to-b from-transparent to-transparent",
                 className,
             )}
             {...props}

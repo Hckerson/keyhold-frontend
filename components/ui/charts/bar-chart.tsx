@@ -11,7 +11,10 @@ import {
     type RenderableText,
 } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
-import { chartToneVar as toneVar, type ChartTone } from "@/lib/chart-tones";
+import {
+    chartToneVar as toneVar,
+    type ChartTone,
+} from "@/lib/config/chart-tones";
 
 export interface BarDatum {
     label: string;
