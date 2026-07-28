@@ -1,29 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/forms/checkbox";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { cn } from "@/lib/utils";
-
-export type ListingStatus =
-    | "active"
-    | "under-offer"
-    | "sold"
-    | "draft"
-    | "expired";
-
-export interface ManagedListing {
-    id: string;
-    address: string;
-    price: number;
-    beds: number;
-    baths: number;
-    sqft: number;
-    status: ListingStatus;
-    listDate: string;
-    views: number;
-    saves: number;
-    showings: number;
-    offers: number;
-}
+import { cn, formatMillions } from "@/lib/utils";
+import type { ManagedListing, ManagedListingStatus } from "@/lib/types";
 
 export interface ListingManageRowProps {
     listing: ManagedListing;
@@ -33,7 +12,7 @@ export interface ListingManageRowProps {
 }
 
 export const LISTING_STATUSES: Record<
-    ListingStatus,
+    ManagedListingStatus,
     {
         tone: "success" | "warning" | "neutral" | "info" | "error";
         label: string;
@@ -134,7 +113,7 @@ export function ListingManageRow({
 
                     <div className="mt-2 flex items-baseline gap-2">
                         <span className="text-h6 font-display text-accent font-light tabular-nums">
-                            ${(price / 1_000_000).toFixed(2)}M
+                            {formatMillions(price, 2)}
                         </span>
                         <span className="text-text-muted text-xs tabular-nums">
                             Listed {listDate} · {daysOnMarket(listDate)} days on
