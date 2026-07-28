@@ -1,24 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { cn } from "@/lib/utils";
-
-export type OfferStatus =
-    | "submitted"
-    | "countered"
-    | "accepted"
-    | "rejected"
-    | "withdrawn";
-
-export interface Offer {
-    id: string;
-    address: string;
-    offerPrice: number;
-    listPrice: number;
-    counterPrice?: number;
-    status: OfferStatus;
-    lastActivity: string;
-}
+import { cn, formatUsd } from "@/lib/utils";
+import type { Offer, OfferStatus } from "@/lib/types";
 
 export interface OfferRowProps {
     offer: Offer;
@@ -42,12 +26,6 @@ export const OFFER_STATUS_LABEL: Record<OfferStatus, string> = {
     withdrawn: "Withdrawn",
 };
 
-export const formatUsd = (value: number) =>
-    `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
-
-const microLabel =
-    "text-text-muted font-mono text-[10px] font-medium tracking-wide uppercase";
-
 function Metric({
     label,
     value,
@@ -59,7 +37,7 @@ function Metric({
 }) {
     return (
         <div className="min-w-0">
-            <p className={microLabel}>{label}</p>
+            <p className="micro-label">{label}</p>
             <p
                 className={cn(
                     "mt-0.5 text-xs font-medium tabular-nums",
@@ -101,7 +79,7 @@ export function OfferRow({ offer, onWithdraw, className }: OfferRowProps) {
                 </div>
 
                 <div className="mt-3">
-                    <p className={microLabel}>Your Offer</p>
+                    <p className="micro-label">Your Offer</p>
                     <p className="font-display text-accent mt-0.5 text-lg font-light tabular-nums">
                         {formatUsd(offerPrice)}
                     </p>
