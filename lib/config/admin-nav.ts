@@ -6,6 +6,7 @@ import {
     CreditCard,
     ShieldCheck,
     BarChart3,
+    Settings,
     type LucideIcon,
 } from "lucide-react";
 
@@ -21,6 +22,8 @@ export interface AdminNavSection {
     label: string;
     items: AdminNavItem[];
 }
+
+export const PENDING_VERIFICATIONS = 7;
 
 export const ADMIN_NAV: AdminNavSection[] = [
     {
@@ -69,18 +72,6 @@ export const ADMIN_NAV: AdminNavSection[] = [
         ],
     },
     {
-        label: "Trust & Safety",
-        items: [
-            {
-                label: "Verifications",
-                href: "/admin/verifications",
-                icon: ShieldCheck,
-                description: "Identity & listing checks",
-                badge: 7,
-            },
-        ],
-    },
-    {
         label: "Insights",
         items: [
             {
@@ -88,6 +79,29 @@ export const ADMIN_NAV: AdminNavSection[] = [
                 href: "/admin/reports",
                 icon: BarChart3,
                 description: "Analytics & reports",
+            },
+        ],
+    },
+    {
+        label: "Trust & Safety",
+        items: [
+            {
+                label: "Verifications",
+                href: "/admin/verifications",
+                icon: ShieldCheck,
+                description: "Identity & listing checks",
+                badge: PENDING_VERIFICATIONS,
+            },
+        ],
+    },
+    {
+        label: "System",
+        items: [
+            {
+                label: "Settings",
+                href: "/admin/settings",
+                icon: Settings,
+                description: "Platform configuration",
             },
         ],
     },

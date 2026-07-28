@@ -4,7 +4,7 @@ export type { FilterPanelProps } from "./filter-panel";
 export { DataTable } from "./data-table";
 export type { DataTableProps, DataTableColumn } from "./data-table";
 
-export { TransactionTable, DEFAULT_COMMISSION_RATE } from "./transaction-table";
+export { TransactionTable } from "./transaction-table";
 export type {
     Transaction,
     TransactionStatus,

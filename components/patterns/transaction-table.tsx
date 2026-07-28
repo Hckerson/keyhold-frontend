@@ -1,3 +1,5 @@
+"use client";
+
 import { Eye, Activity, type LucideIcon } from "lucide-react";
 import {
     StatusBadge,
@@ -7,6 +9,7 @@ import {
     DataTable,
     type DataTableColumn,
 } from "@/components/patterns/data-table";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 /* --------------------------------- Types --------------------------------- */
@@ -28,10 +31,11 @@ export interface Transaction {
 export interface TransactionTableProps {
     transactions: Transaction[];
     commissionRate?: number;
+    pageSize?: number;
     className?: string;
 }
 
-export const DEFAULT_COMMISSION_RATE = 0.025;
+const DEFAULT_PAGE_SIZE = 10;
 
 const statusMeta: Record<
     TransactionStatus,
@@ -40,6 +44,7 @@ const statusMeta: Record<
         label: string;
         dateTone: string;
         settled: boolean;
+        rank: number;
         rowTone?: string;
     }
 > = {
@@ -48,24 +53,28 @@ const statusMeta: Record<
         label: "Pending",
         dateTone: "text-info",
         settled: false,
+        rank: 1,
     },
     escrow: {
         tone: "warning",
         label: "Escrow",
         dateTone: "text-warning",
         settled: false,
+        rank: 2,
     },
     completed: {
         tone: "success",
         label: "Completed",
         dateTone: "text-text-muted",
         settled: true,
+        rank: 3,
     },
     failed: {
         tone: "error",
         label: "Failed",
         dateTone: "text-error",
         settled: true,
+        rank: 4,
         rowTone: "bg-error/[0.035]",
     },
 };
@@ -129,6 +138,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
         {
             id: "property",
             label: "Property",
+            sortValue: (row) => row.property,
             render: (row) => <PropertyCell transaction={row} />,
             footer: () => (
                 <span className="text-text-muted text-caption font-mono font-medium tracking-wide uppercase">
@@ -140,6 +150,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
             id: "price",
             label: "Sale Price",
             align: "right",
+            sortValue: (row) => row.price,
             render: (row) => (
                 <span className="font-display text-text text-lg leading-none font-light tabular-nums">
                     {toMillions(row.price)}
@@ -155,6 +166,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
             id: "commission",
             label: "Commission",
             align: "right",
+            sortValue: (row) => row.price * commissionRate,
             render: (row) => (
                 <span className="bg-accent/8 text-accent inline-flex rounded-md px-2 py-0.5 text-xs font-medium tabular-nums">
                     {toThousands(row.price * commissionRate)}
@@ -169,6 +181,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
         {
             id: "initiated",
             label: "Initiated",
+            sortValue: (row) => row.initiatedDate,
             render: (row) => (
                 <span
                     className={cn(
@@ -183,6 +196,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
         {
             id: "status",
             label: "Status",
+            sortValue: (row) => statusMeta[row.status].rank,
             render: (row) => (
                 <StatusBadge tone={statusMeta[row.status].tone}>
                     {statusMeta[row.status].label}
@@ -204,6 +218,7 @@ function buildColumns(commissionRate: number): DataTableColumn<Transaction>[] {
 export function TransactionTable({
     transactions,
     commissionRate = DEFAULT_COMMISSION_RATE,
+    pageSize = DEFAULT_PAGE_SIZE,
     className,
 }: TransactionTableProps) {
     return (
@@ -214,6 +229,8 @@ export function TransactionTable({
             rowClassName={(row) => statusMeta[row.status].rowTone}
             caption="Marketplace transactions with sale price, commission, initiation date and status"
             emptyMessage="No transactions to show"
+            defaultSort={{ id: "initiated", direction: "desc" }}
+            pageSize={pageSize}
             className={className}
         />
     );

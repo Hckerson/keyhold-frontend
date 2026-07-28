@@ -1,7 +1,10 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { SectionShell } from "@/components/sections/section-shell";
 import { SectionEyebrow } from "@/components/sections/section-heading";
 import { HeroSearch } from "@/components/sections/hero-search";
 import { CityChips } from "@/components/sections/city-chips";
+import { Button } from "@/components/ui/button";
 import { propertyImage } from "@/lib/config/sample-images";
 
 const HERO_IMAGE = propertyImage(0);
@@ -38,6 +41,23 @@ export function HeroSection() {
                         </div>
 
                         <HeroSearch />
+
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Link href="/signup">
+                                <Button variant="secondary" size="sm">
+                                    Sign Up
+                                    <ArrowUpRight
+                                        size={13}
+                                        strokeWidth={1.5}
+                                        className="ml-1.5"
+                                    />
+                                </Button>
+                            </Link>
+                            <span className="text-text-muted text-xs">
+                                Free to join · Save listings and track offers
+                            </span>
+                        </div>
+
                         <CityChips />
                     </div>
 

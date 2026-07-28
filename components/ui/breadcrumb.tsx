@@ -21,6 +21,9 @@ interface BreadcrumbLinkProps extends HTMLAttributes<HTMLAnchorElement> {
 
 type BreadcrumbSeparatorProps = HTMLAttributes<HTMLLIElement>;
 
+const breadcrumbLinkClass =
+    "text-text-secondary hover:text-accent ease-smooth text-xs font-medium transition-colors duration-200";
+
 const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
     ({ className, ...props }, ref) => (
         <nav ref={ref} className={cn("", className)} {...props} />
@@ -54,10 +57,7 @@ const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
         <a
             ref={ref}
             href={href}
-            className={cn(
-                "text-text-secondary hover:text-accent transition-colors text-sm font-medium",
-                className,
-            )}
+            className={cn(breadcrumbLinkClass, className)}
             {...props}
         />
     ),
@@ -67,7 +67,11 @@ BreadcrumbLink.displayName = "BreadcrumbLink";
 
 const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
     ({ className, ...props }, ref) => (
-        <li ref={ref} className={cn("text-text-muted flex items-center", className)} {...props}>
+        <li
+            ref={ref}
+            className={cn("text-text-muted flex items-center", className)}
+            {...props}
+        >
             <Icon name="ChevronRight" size={14} />
         </li>
     ),
@@ -81,4 +85,5 @@ export {
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbSeparator,
+    breadcrumbLinkClass,
 };

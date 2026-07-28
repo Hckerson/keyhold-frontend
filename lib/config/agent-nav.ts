@@ -6,6 +6,7 @@ import {
     LineChart,
     CalendarDays,
     Sparkles,
+    Settings,
     type LucideIcon,
 } from "lucide-react";
 
@@ -83,6 +84,17 @@ export const AGENT_NAV: AgentNavSection[] = [
                 href: "/agent/concierge",
                 icon: Sparkles,
                 description: "White-glove client services",
+            },
+        ],
+    },
+    {
+        label: "Account",
+        items: [
+            {
+                label: "Settings",
+                href: "/agent/settings",
+                icon: Settings,
+                description: "Profile, preferences, and notifications",
             },
         ],
     },

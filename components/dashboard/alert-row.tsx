@@ -4,19 +4,25 @@ import {
     Sparkles,
     Home,
     BarChart3,
+    FileText,
+    CalendarCheck,
     Bell,
     type LucideIcon,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export type AlertType =
     | "price-drop"
     | "new-listing"
     | "under-offer"
-    | "status-change";
+    | "status-change"
+    | "offer-response"
+    | "viewing-confirmation";
 
 export interface Alert {
     id: string;
+    listingId: string;
     type: AlertType;
     title: string;
     description: string;
@@ -29,6 +35,7 @@ export interface Alert {
 
 export interface AlertRowProps {
     alert: Alert;
+    onMarkRead?: (id: string) => void;
     className?: string;
 }
 
@@ -37,13 +44,19 @@ const typeConfig: Record<AlertType, { icon: LucideIcon; tint: string }> = {
     "new-listing": { icon: Sparkles, tint: "bg-accent-light text-accent" },
     "under-offer": { icon: Home, tint: "bg-warning/10 text-warning" },
     "status-change": { icon: BarChart3, tint: "bg-info/10 text-info" },
+    "offer-response": { icon: FileText, tint: "bg-info/10 text-info" },
+    "viewing-confirmation": {
+        icon: CalendarCheck,
+        tint: "bg-success/10 text-success",
+    },
 };
 
 const toMillions = (value: number) => `$${(value / 1_000_000).toFixed(2)}M`;
 
-export function AlertRow({ alert, className }: AlertRowProps) {
+export function AlertRow({ alert, onMarkRead, className }: AlertRowProps) {
     const {
         id,
+        listingId,
         type,
         title,
         description,
@@ -59,18 +72,17 @@ export function AlertRow({ alert, className }: AlertRowProps) {
     };
 
     return (
-        <Link
-            href={`/listing/${id}`}
+        <article
             className={cn(
-                "group bg-background-muted border-border-light hover:border-border ease-smooth block rounded-xl border p-5 shadow-sm transition-all duration-300 hover:shadow-md",
+                "group bg-background-muted border-border-light hover:border-border ease-smooth rounded-xl border p-3 shadow-sm transition-all duration-300 hover:shadow-md",
                 !read && "border-l-accent border-l-2",
                 className,
             )}
         >
-            <div className="flex gap-4">
+            <div className="flex gap-3">
                 <span
                     className={cn(
-                        "grid size-9 shrink-0 place-items-center rounded-lg",
+                        "grid size-8 shrink-0 place-items-center rounded-lg",
                         tint,
                     )}
                 >
@@ -79,18 +91,21 @@ export function AlertRow({ alert, className }: AlertRowProps) {
 
                 <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
                     <div className="min-w-0">
-                        <h3 className="text-text group-hover:text-accent ease-smooth text-sm font-medium transition-colors">
+                        <Link
+                            href={`/listing/${listingId}`}
+                            className="text-text hover:text-accent ease-smooth text-xs font-medium transition-colors"
+                        >
                             {title}
-                        </h3>
-                        <p className="text-text-secondary mt-0.5 text-sm">
+                        </Link>
+                        <p className="text-text-secondary mt-0.5 text-xs">
                             {description}
                         </p>
-                        <p className="text-text mt-1 truncate text-sm font-medium">
+                        <p className="text-text-muted mt-1 truncate text-xs">
                             {address}
                         </p>
                         {price !== undefined && (
-                            <div className="mt-2 flex items-center gap-3">
-                                <span className="text-text text-sm font-medium tabular-nums">
+                            <div className="mt-2 flex items-center gap-2">
+                                <span className="font-display text-accent text-lg font-light tabular-nums">
                                     {toMillions(price)}
                                 </span>
                                 {previousPrice !== undefined && (
@@ -106,13 +121,22 @@ export function AlertRow({ alert, className }: AlertRowProps) {
                         <span className="text-text-muted text-xs">
                             {timestamp}
                         </span>
-                        {!read && (
+                        {!read && onMarkRead && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => onMarkRead(id)}
+                            >
+                                Mark read
+                            </Button>
+                        )}
+                        {!read && !onMarkRead && (
                             <span className="bg-accent size-2 rounded-full" />
                         )}
                     </div>
                 </div>
             </div>
-        </Link>
+        </article>
     );
 }
 

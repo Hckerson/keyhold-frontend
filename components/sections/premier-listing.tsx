@@ -12,7 +12,7 @@ import {
 import { SectionShell } from "@/components/sections/section-shell";
 import { SectionHeading } from "@/components/sections/section-heading";
 import { Button } from "@/components/ui/button";
-import { propertyImage } from "@/lib/config/sample-images";
+import { FEATURED_LISTINGS, formatPrice } from "@/app/(public)/_data/listings";
 
 interface Spec {
     icon: LucideIcon;
@@ -20,20 +20,22 @@ interface Spec {
     label: string;
 }
 
+const SOURCE = FEATURED_LISTINGS[0];
+
 const LISTING = {
-    id: "1",
-    image: propertyImage(3),
-    place: "Beverly Hills · Off-market",
-    name: "The Canyon House",
-    address: "123 Beverly Hills Drive, Los Angeles, CA",
-    price: "$8,750,000",
+    id: SOURCE.id,
+    image: SOURCE.images[0],
+    place: `${SOURCE.locality.split(",")[0]} · Off-market`,
+    name: SOURCE.title,
+    address: `${SOURCE.address}, ${SOURCE.locality}`,
+    price: formatPrice(SOURCE.price),
     priceLabel: "Guide price",
 };
 
 const SPECS: Spec[] = [
-    { icon: BedDouble, value: "5", label: "Bedrooms" },
-    { icon: Bath, value: "6", label: "Bathrooms" },
-    { icon: Ruler, value: "8,400", label: "Sq Ft" },
+    { icon: BedDouble, value: String(SOURCE.beds), label: "Bedrooms" },
+    { icon: Bath, value: String(SOURCE.baths), label: "Bathrooms" },
+    { icon: Ruler, value: SOURCE.sqft.toLocaleString(), label: "Sq Ft" },
 ];
 
 /* ── media ── */
