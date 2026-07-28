@@ -8,9 +8,9 @@ import {
     Youtube,
     type LucideIcon,
 } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { NewsletterForm } from "@/components/sections/newsletter-form";
-import { Wordmark } from "@/components/ui/wordmark";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { NewsletterForm } from "@/components/layout/newsletter-form";
+import { Wordmark } from "@/components/layout/wordmark";
 import styles from "@/components/layout/footer.module.css";
 
 const NEIGHBORHOODS = [
