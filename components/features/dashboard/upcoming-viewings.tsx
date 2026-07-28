@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/forms/input";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
     Modal,
@@ -13,9 +13,10 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import { ViewingRow, type Viewing } from "@/components/dashboard/viewing-row";
+import { ViewingRow } from "@/components/features/dashboard/viewing-row";
 import { cn } from "@/lib/utils";
 
+import type { Viewing } from "@/lib/types";
 export interface UpcomingViewingsProps {
     initialViewings: Viewing[];
     limit?: number;

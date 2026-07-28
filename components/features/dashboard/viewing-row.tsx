@@ -3,18 +3,7 @@ import { Phone, CalendarClock, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
-
-export type ViewingStatus = "confirmed" | "pending" | "cancelled";
-
-export interface Viewing {
-    id: string;
-    address: string;
-    date: string;
-    time: string;
-    agent: string;
-    agentPhone: string;
-    status: ViewingStatus;
-}
+import type { Viewing } from "@/lib/types";
 
 export interface ViewingRowProps {
     viewing: Viewing;
@@ -29,9 +18,6 @@ const statusTone = {
     pending: "warning",
     cancelled: "error",
 } as const;
-
-const microLabel =
-    "text-text-muted font-mono text-[10px] font-medium tracking-wide uppercase";
 
 export function formatViewingDate(date: string) {
     const [year, month, day] = date.split("-").map(Number);
@@ -71,13 +57,13 @@ export function ViewingRow({
 
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div>
-                    <p className={microLabel}>Date &amp; Time</p>
+                    <p className="micro-label">Date &amp; Time</p>
                     <p className="text-text mt-0.5 text-xs font-medium tabular-nums">
                         {formatViewingDate(date)} at {time}
                     </p>
                 </div>
                 <div>
-                    <p className={microLabel}>Agent</p>
+                    <p className="micro-label">Agent</p>
                     <p className="text-text mt-0.5 text-xs font-medium">
                         {agent}
                     </p>

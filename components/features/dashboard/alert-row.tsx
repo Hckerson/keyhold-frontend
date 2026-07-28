@@ -10,28 +10,8 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-
-export type AlertType =
-    | "price-drop"
-    | "new-listing"
-    | "under-offer"
-    | "status-change"
-    | "offer-response"
-    | "viewing-confirmation";
-
-export interface Alert {
-    id: string;
-    listingId: string;
-    type: AlertType;
-    title: string;
-    description: string;
-    address: string;
-    price?: number;
-    previousPrice?: number;
-    timestamp: string;
-    read: boolean;
-}
+import { cn, formatMillions } from "@/lib/utils";
+import type { Alert, AlertType } from "@/lib/types";
 
 export interface AlertRowProps {
     alert: Alert;
@@ -50,8 +30,6 @@ const typeConfig: Record<AlertType, { icon: LucideIcon; tint: string }> = {
         tint: "bg-success/10 text-success",
     },
 };
-
-const toMillions = (value: number) => `$${(value / 1_000_000).toFixed(2)}M`;
 
 export function AlertRow({ alert, onMarkRead, className }: AlertRowProps) {
     const {
@@ -106,11 +84,11 @@ export function AlertRow({ alert, onMarkRead, className }: AlertRowProps) {
                         {price !== undefined && (
                             <div className="mt-2 flex items-center gap-2">
                                 <span className="font-display text-accent text-lg font-light tabular-nums">
-                                    {toMillions(price)}
+                                    {formatMillions(price, 2)}
                                 </span>
                                 {previousPrice !== undefined && (
                                     <span className="text-text-muted text-xs tabular-nums line-through">
-                                        {toMillions(previousPrice)}
+                                        {formatMillions(previousPrice, 2)}
                                     </span>
                                 )}
                             </div>
