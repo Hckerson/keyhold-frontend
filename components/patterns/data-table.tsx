@@ -9,10 +9,8 @@ import {
     ChevronsUpDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/forms/checkbox";
 import { cn } from "@/lib/utils";
-
-/* --------------------------------- Types --------------------------------- */
 
 export type SortDirection = "asc" | "desc";
 
@@ -64,8 +62,6 @@ function compare(a: string | number, b: string | number) {
     if (typeof a === "number" && typeof b === "number") return a - b;
     return String(a).localeCompare(String(b));
 }
-
-/* ------------------------------- Head cell ------------------------------- */
 
 function HeadCell<T>({
     column,
@@ -122,8 +118,6 @@ function HeadCell<T>({
         </th>
     );
 }
-
-/* -------------------------------- Table ---------------------------------- */
 
 export function DataTable<T>({
     columns,
