@@ -1,7 +1,7 @@
 import { Quote, ShieldCheck, Lock, BadgeCheck, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { SectionHeading } from "@/components/patterns/section-heading";
 import { Avatar } from "@/components/ui/avatar";
 
 interface Testimonial {

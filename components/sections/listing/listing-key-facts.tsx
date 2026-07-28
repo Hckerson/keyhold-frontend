@@ -7,10 +7,10 @@ import {
     TrendingUp,
     type LucideIcon,
 } from "lucide-react";
-import type { Listing } from "@/app/(public)/_data/listings";
 import { FactCell } from "@/components/sections/listing/fact-cell";
-import { SectionEyebrow } from "@/components/sections/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-heading";
 
+import type { Listing } from "@/lib/types";
 const SQFT_PER_ACRE = 43560;
 
 interface KeyFact {

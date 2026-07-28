@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { SectionEyebrow } from "@/components/sections/section-heading";
-import { HeroSearch } from "@/components/sections/hero-search";
-import { CityChips } from "@/components/sections/city-chips";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { SectionEyebrow } from "@/components/patterns/section-heading";
+import { HeroSearch } from "@/components/sections/home/hero-search";
+import { CityChips } from "@/components/sections/home/city-chips";
 import { Button } from "@/components/ui/button";
-import { propertyImage } from "@/lib/config/sample-images";
+import { propertyImage } from "@/lib/data/sample-images";
 
 const HERO_IMAGE = propertyImage(0);
 

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { SectionHeading } from "@/components/sections/section-heading";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { SectionHeading } from "@/components/patterns/section-heading";
 import {
     GalleryTile,
     type GalleryTileData,
-} from "@/components/sections/gallery-tile";
+} from "@/components/sections/home/gallery-tile";
 
 interface FeaturedGalleryProps {
     tiles: GalleryTileData[];

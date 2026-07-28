@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { SectionShell } from "@/components/sections/section-shell";
-import { SectionEyebrow } from "@/components/sections/section-heading";
+import { SectionShell } from "@/components/patterns/section-shell";
+import { SectionEyebrow } from "@/components/patterns/section-heading";
 import { Button } from "@/components/ui/button";
 
 export function CtaBanner() {

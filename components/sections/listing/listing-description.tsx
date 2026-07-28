@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SectionEyebrow } from "@/components/sections/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-heading";
 
 interface ListingDescriptionProps {
     description: string;

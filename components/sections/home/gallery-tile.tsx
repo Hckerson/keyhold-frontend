@@ -35,8 +35,6 @@ function SaveTileButton({ address }: { address: string }) {
     );
 }
 
-/* ── featured: glass panel, the one focal price in the grid ── */
-
 function FeaturedCaption({ tile }: { tile: GalleryTileData }) {
     return (
         <div className="bg-sidebar/80 border-sidebar-border pointer-events-none absolute bottom-4 left-4 z-10 flex w-fit max-w-[75%] flex-col gap-1.5 rounded-xl border px-4 py-3 shadow-lg backdrop-blur-md">
@@ -53,8 +51,6 @@ function FeaturedCaption({ tile }: { tile: GalleryTileData }) {
         </div>
     );
 }
-
-/* ── peer: flat scrim, compact line ── */
 
 function PeerCaption({ tile }: { tile: GalleryTileData }) {
     return (
