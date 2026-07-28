@@ -26,11 +26,11 @@ export function QuickActions({
                             href={action.href}
                             className="group hover:bg-background ease-smooth flex items-center gap-3 rounded-lg p-2 transition-colors"
                         >
-                            <span className="bg-accent-light text-accent grid size-9 shrink-0 place-items-center rounded-lg">
-                                <Icon size={16} strokeWidth={1.5} />
+                            <span className="bg-accent-light text-accent grid size-7 shrink-0 place-items-center rounded-lg">
+                                <Icon size={14} strokeWidth={1.5} />
                             </span>
                             <div className="min-w-0 flex-1">
-                                <p className="text-text text-sm font-medium">
+                                <p className="text-text text-xs font-medium">
                                     {action.label}
                                 </p>
                                 {action.description && (
@@ -40,7 +40,7 @@ export function QuickActions({
                                 )}
                             </div>
                             <ChevronRight
-                                size={16}
+                                size={12}
                                 strokeWidth={1.5}
                                 className="text-text-muted group-hover:text-accent ease-smooth shrink-0 transition-all duration-200 group-hover:translate-x-0.5"
                             />
