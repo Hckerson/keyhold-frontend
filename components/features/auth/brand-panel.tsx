@@ -1,4 +1,4 @@
-import { Wordmark } from "@/components/ui/wordmark";
+import { Wordmark } from "@/components/layout/wordmark";
 import styles from "@/components/features/auth/brand-panel.module.css";
 
 const IMAGES = [
