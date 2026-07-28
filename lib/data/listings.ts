@@ -1,29 +1,10 @@
-﻿import { agentPortrait, propertyGallery } from "@/lib/config/sample-images";
-import type { PropertyStatus } from "@/lib/enums/enums";
-
-export type ListingStatus = Exclude<PropertyStatus, "for-rent">;
-
-export type ListingType =
-    | "estate"
-    | "villa"
-    | "penthouse"
-    | "townhouse"
-    | "condo";
-
-export interface ListingAgent {
-    id: string;
-    name: string;
-    title: string;
-    agency: string;
-    license: string;
-    phone: string;
-    email: string;
-    avatarUrl: string;
-    rating: number;
-    reviews: number;
-    responseTime: string;
-    activeListings: number;
-}
+﻿import { agentPortrait, propertyGallery } from "@/lib/data/sample-images";
+import type {
+    Listing,
+    ListingAgent,
+    ListingSeed,
+    ListingType,
+} from "@/lib/types";
 
 export const AGENTS: Record<string, ListingAgent> = {
     sarah: {
@@ -102,30 +83,6 @@ const FEATURE_POOL = [
     "Rooftop deck",
     "Detached studio",
 ];
-
-interface ListingSeed {
-    id: string;
-    title: string;
-    price: number;
-    beds: number;
-    baths: number;
-    sqft: number;
-    lotSqft: number;
-    yearBuilt: number;
-    type: ListingType;
-    status: ListingStatus;
-    address: string;
-    locality: string;
-    zipcode: string;
-    listedDaysAgo: number;
-    saves: number;
-    walkScore: number;
-    agentId: keyof typeof AGENTS;
-    blurb: string;
-    imageSeed: number;
-    featureOffset: number;
-    soldMonthsAgo?: number;
-}
 
 const SEEDS: ListingSeed[] = [
     {
@@ -884,17 +841,6 @@ const SEEDS: ListingSeed[] = [
     },
 ];
 
-export interface Listing extends Omit<
-    ListingSeed,
-    "blurb" | "imageSeed" | "featureOffset"
-> {
-    agent: ListingAgent;
-    images: string[];
-    description: string;
-    features: string[];
-    pricePerSqft: number;
-}
-
 const GALLERY_SIZE = 5;
 
 const FEATURES_PER_LISTING = 6;
@@ -960,10 +906,4 @@ export const TYPE_LABELS: Record<ListingType, string> = {
 
 export function formatPrice(price: number): string {
     return `$${price.toLocaleString()}`;
-}
-
-export function formatCompactPrice(price: number): string {
-    return price >= 1_000_000
-        ? `$${(price / 1_000_000).toFixed(2)}M`
-        : `$${Math.round(price / 1000)}K`;
 }

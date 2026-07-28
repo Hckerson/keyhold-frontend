@@ -1,12 +1,16 @@
 import { config } from "@/lib/constants";
-import type { Listing } from "@/lib/types";
+import type { ListingDto } from "@/lib/validations/listing";
 
 export const listingsAPI = {
     async search(query: Record<string, unknown>) {
         const params = new URLSearchParams();
         Object.entries(query).forEach(([key, value]) => {
             if (value === undefined || value === null) return;
-            if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+            if (
+                typeof value === "string" ||
+                typeof value === "number" ||
+                typeof value === "boolean"
+            ) {
                 params.append(key, String(value));
             }
         });
@@ -20,7 +24,7 @@ export const listingsAPI = {
         );
 
         if (!response.ok) throw new Error("Failed to fetch listings");
-        return response.json() as Promise<{ listings: Listing[] }>;
+        return response.json() as Promise<{ listings: ListingDto[] }>;
     },
 
     async getById(id: string) {
@@ -30,7 +34,7 @@ export const listingsAPI = {
         });
 
         if (!response.ok) throw new Error("Failed to fetch listing");
-        return response.json() as Promise<Listing>;
+        return response.json() as Promise<ListingDto>;
     },
 
     async create(data: Record<string, unknown>) {
@@ -41,10 +45,10 @@ export const listingsAPI = {
         });
 
         if (!response.ok) throw new Error("Failed to create listing");
-        return response.json() as Promise<Listing>;
+        return response.json() as Promise<ListingDto>;
     },
 
-    async update(id: string, data: Partial<Listing>) {
+    async update(id: string, data: Partial<ListingDto>) {
         const response = await fetch(`${config.api.base}/api/listings/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
@@ -52,7 +56,7 @@ export const listingsAPI = {
         });
 
         if (!response.ok) throw new Error("Failed to update listing");
-        return response.json() as Promise<Listing>;
+        return response.json() as Promise<ListingDto>;
     },
 
     async delete(id: string) {

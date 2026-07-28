@@ -1,0 +1,27 @@
+const MILLION = 1_000_000;
+
+export const formatUsd = (value: number) =>
+    `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+
+export const formatCompactUsd = (value: number) =>
+    value >= MILLION
+        ? `$${(value / MILLION).toFixed(2)}M`
+        : `$${Math.round(value / 1_000)}K`;
+
+export const formatMillions = (value: number, fractionDigits = 1) =>
+    `$${(value / MILLION).toFixed(fractionDigits)}M`;
+
+export const toDigits = (value: string) => value.replace(/\D/g, "");
+
+export const formatCurrencyInput = (value: string) => {
+    const digits = toDigits(value);
+    return digits ? `$${Number(digits).toLocaleString("en-US")}` : "";
+};
+
+export const initialsOf = (name: string) =>
+    name
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
