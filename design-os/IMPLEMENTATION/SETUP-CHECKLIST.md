@@ -126,7 +126,7 @@ When building each page, reference:
 
 ```tsx
 // Use Tailwind class names
-<div className="border-border border bg-primary text-text">
+<div className="border-border bg-primary text-text border">
     <button className="bg-accent text-primary hover:bg-accent-dark">
         Click me
     </button>
