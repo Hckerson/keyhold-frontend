@@ -20,6 +20,53 @@ export function isSortValue(value: string): value is SortValue {
     return SORT_OPTIONS.some((option) => option.value === value);
 }
 
+export interface ActiveFilter {
+    key: FilterGroupKey | "location";
+    id: string;
+    group: string;
+    label: string;
+}
+
+export function buildActiveFilters(filters: SearchFilters): ActiveFilter[] {
+    const active: ActiveFilter[] = [];
+    const location = filters.location.trim();
+
+    if (location) {
+        active.push({
+            key: "location",
+            id: location,
+            group: "Location",
+            label: location,
+        });
+    }
+
+    for (const group of FILTER_GROUPS) {
+        for (const option of group.options) {
+            if (filters[group.key].includes(option.id)) {
+                active.push({
+                    key: group.key,
+                    id: option.id,
+                    group: group.label,
+                    label: option.label,
+                });
+            }
+        }
+    }
+
+    return active;
+}
+
+export function removeActiveFilter(
+    filters: SearchFilters,
+    target: ActiveFilter,
+): SearchFilters {
+    if (target.key === "location") return { ...filters, location: "" };
+    return {
+        ...filters,
+        [target.key]: filters[target.key].filter((id) => id !== target.id),
+    };
+}
+
 function matchesPrice(listing: Listing, selected: string[]): boolean {
     if (selected.length === 0) return true;
     return selected.some((band) => {

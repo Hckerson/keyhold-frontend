@@ -2,7 +2,6 @@
 
 import { MapPin, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/forms/checkbox";
 import { Input } from "@/components/ui/forms/input";
 import {
     FILTER_GROUPS,
@@ -13,6 +12,9 @@ import { cn } from "@/lib/utils";
 
 const groupLegend =
     "font-mono text-[10px] uppercase tracking-[0.14em] text-text-muted";
+
+const optionChip =
+    "ease-smooth focus-visible:ring-accent inline-flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40";
 
 const locationIcon = (
     <MapPin size={14} strokeWidth={1.5} className="text-text-muted" />
@@ -93,27 +95,40 @@ export function SearchFiltersPanel({
                         key={group.key}
                         className="flex flex-col gap-2 border-0 p-0"
                     >
-                        <legend className={groupLegend}>{group.label}</legend>
-                        {group.options.map((option) => (
-                            <div
-                                key={option.id}
-                                className="flex items-center justify-between gap-2"
-                            >
-                                <Checkbox
-                                    id={`${group.key}-${option.id}`}
-                                    label={option.label}
-                                    checked={draft[group.key].includes(
-                                        option.id,
-                                    )}
-                                    onChange={() =>
-                                        toggle(group.key, option.id)
-                                    }
-                                />
-                                <span className="text-text-muted text-xs tabular-nums">
-                                    {counts[group.key][option.id] ?? 0}
-                                </span>
-                            </div>
-                        ))}
+                        <legend className={cn(groupLegend, "mb-2")}>
+                            {group.label}
+                        </legend>
+                        <div className="flex flex-wrap gap-1.5">
+                            {group.options.map((option) => {
+                                const active = draft[group.key].includes(
+                                    option.id,
+                                );
+                                const count = counts[group.key][option.id] ?? 0;
+
+                                return (
+                                    <button
+                                        key={option.id}
+                                        type="button"
+                                        onClick={() =>
+                                            toggle(group.key, option.id)
+                                        }
+                                        aria-pressed={active}
+                                        disabled={count === 0}
+                                        className={cn(
+                                            optionChip,
+                                            active
+                                                ? "border-accent bg-accent-light text-accent font-medium"
+                                                : "border-border bg-background text-text-secondary hover:border-border-dark hover:text-text",
+                                        )}
+                                    >
+                                        {option.label}
+                                        <span className="text-text-muted tabular-nums">
+                                            {count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </fieldset>
                 ))}
             </div>
