@@ -17,6 +17,7 @@ const VIEW_OPTIONS: { id: ViewMode; label: string; icon: LucideIcon }[] = [
 
 interface SearchToolbarProps {
     resultCount: number;
+    totalCount: number;
     view: ViewMode;
     onViewChange: (next: ViewMode) => void;
     sort: SortValue;
@@ -25,16 +26,21 @@ interface SearchToolbarProps {
 
 export function SearchToolbar({
     resultCount,
+    totalCount,
     view,
     onViewChange,
     sort,
     onSortChange,
 }: SearchToolbarProps) {
+    const narrowed = resultCount < totalCount;
+
     return (
         <div className="border-border flex flex-wrap items-end justify-between gap-3 border-b pb-4">
             <div className="flex flex-col gap-1">
-                <p className="text-text-muted font-mono text-[10px] tracking-[0.14em] uppercase">
-                    The market
+                <p className="micro-label tracking-[0.14em]">
+                    {narrowed
+                        ? `${resultCount} of ${totalCount} residences`
+                        : "The market"}
                 </p>
                 <h1 className="text-h5 font-display text-text font-light tracking-tight">
                     Found {resultCount} home
@@ -57,7 +63,7 @@ export function SearchToolbar({
                             className={cn(
                                 toggleBase,
                                 view === option.id
-                                    ? "bg-accent text-primary"
+                                    ? "bg-accent text-text-inverse"
                                     : "text-text-secondary hover:text-accent",
                             )}
                         >

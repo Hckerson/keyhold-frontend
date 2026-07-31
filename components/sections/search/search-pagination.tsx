@@ -8,6 +8,31 @@ import {
 } from "@/components/ui/pagination";
 import { SEARCH_PAGE_SIZE } from "@/lib/utils/search";
 
+const EDGE_PAGES = 1;
+const SIBLING_PAGES = 1;
+const MAX_INLINE_PAGES = 7;
+
+type PageSlot = number | "gap-start" | "gap-end";
+
+function buildPageSlots(currentPage: number, pageCount: number): PageSlot[] {
+    if (pageCount <= MAX_INLINE_PAGES) {
+        return Array.from({ length: pageCount }, (_, index) => index + 1);
+    }
+
+    const first = 1;
+    const last = pageCount;
+    const start = Math.max(first + EDGE_PAGES, currentPage - SIBLING_PAGES);
+    const end = Math.min(last - EDGE_PAGES, currentPage + SIBLING_PAGES);
+
+    const slots: PageSlot[] = [first];
+    if (start > first + EDGE_PAGES) slots.push("gap-start");
+    for (let page = start; page <= end; page += 1) slots.push(page);
+    if (end < last - EDGE_PAGES) slots.push("gap-end");
+    slots.push(last);
+
+    return slots;
+}
+
 interface SearchPaginationProps {
     currentPage: number;
     pageCount: number;
@@ -46,23 +71,31 @@ export function SearchPagination({
                             Previous
                         </PaginationLink>
                     </PaginationItem>
-                    {Array.from(
-                        { length: pageCount },
-                        (_, index) => index + 1,
-                    ).map((number) => (
-                        <PaginationItem key={number}>
-                            <PaginationLink
-                                href="#results"
-                                isActive={number === currentPage}
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    onPageChange(number);
-                                }}
-                            >
-                                {number}
-                            </PaginationLink>
-                        </PaginationItem>
-                    ))}
+                    {buildPageSlots(currentPage, pageCount).map((slot) =>
+                        typeof slot === "number" ? (
+                            <PaginationItem key={slot}>
+                                <PaginationLink
+                                    href="#results"
+                                    isActive={slot === currentPage}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        onPageChange(slot);
+                                    }}
+                                >
+                                    {slot}
+                                </PaginationLink>
+                            </PaginationItem>
+                        ) : (
+                            <PaginationItem key={slot}>
+                                <span
+                                    aria-hidden="true"
+                                    className="text-text-muted px-2 text-xs"
+                                >
+                                    &hellip;
+                                </span>
+                            </PaginationItem>
+                        ),
+                    )}
                     <PaginationItem>
                         <PaginationLink
                             href="#results"

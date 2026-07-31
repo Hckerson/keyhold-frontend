@@ -11,14 +11,18 @@ import {
 import { SearchResultsGrid } from "@/components/sections/search/search-results-grid";
 import { SearchResultsList } from "@/components/sections/search/search-results-list";
 import { SearchEmpty } from "@/components/sections/search/search-empty";
+import { SearchActiveFilters } from "@/components/sections/search/search-active-filters";
 import { SearchPagination } from "@/components/sections/search/search-pagination";
 import { EMPTY_FILTERS, type SearchFilters } from "@/lib/config/search-filters";
 import { AVAILABLE_LISTINGS } from "@/lib/data/listings";
 import {
     SEARCH_PAGE_SIZE,
+    buildActiveFilters,
     buildFilterCounts,
     matchesSearchFilters,
+    removeActiveFilter,
     sortListings,
+    type ActiveFilter,
     type SortValue,
 } from "@/lib/utils/search";
 import { cn } from "@/lib/utils";
@@ -56,11 +60,19 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
     );
 
     const dirty = JSON.stringify(draft) !== JSON.stringify(applied);
+    const activeFilters = useMemo(() => buildActiveFilters(applied), [applied]);
 
     const apply = () => {
         setApplied(draft);
         setPage(1);
         setPanelOpen(false);
+    };
+
+    const removeFilter = (filter: ActiveFilter) => {
+        const next = removeActiveFilter(applied, filter);
+        setDraft(next);
+        setApplied(next);
+        setPage(1);
     };
 
     const reset = () => {
@@ -112,14 +124,25 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
             <div className="flex min-w-0 flex-col gap-5" id="results">
                 <SearchToolbar
                     resultCount={results.length}
+                    totalCount={AVAILABLE_LISTINGS.length}
                     view={view}
                     onViewChange={setView}
                     sort={sort}
                     onSortChange={changeSort}
                 />
 
+                <SearchActiveFilters
+                    filters={activeFilters}
+                    onRemove={removeFilter}
+                    onClear={reset}
+                />
+
                 {visible.length === 0 ? (
-                    <SearchEmpty onReset={reset} />
+                    <SearchEmpty
+                        activeFilters={activeFilters}
+                        onRemove={removeFilter}
+                        onReset={reset}
+                    />
                 ) : view === "grid" ? (
                     <SearchResultsGrid listings={visible} />
                 ) : (
