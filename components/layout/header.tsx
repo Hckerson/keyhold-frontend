@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LogoMark } from "@/components/brand/logo-mark";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
 import { cn } from "@/lib/utils";
@@ -64,7 +65,9 @@ export function Header() {
                 className={cn(styles.capsule, contracted && styles.contract)}
             >
                 <Link href="/" className={styles.brand} aria-label="Luxury RE">
-                    <span className={styles.mark}>LRE</span>
+                    <span className={styles.mark}>
+                        <LogoMark size="sm" />
+                    </span>
                     <span className={styles.word}>
                         Luxury <em>RE</em>
                     </span>

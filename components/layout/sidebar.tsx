@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Building2, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
+import { LogoChip } from "@/components/brand/logo-chip";
 import {
     SidebarNav,
     type SidebarSection,
@@ -17,7 +18,7 @@ export type {
 } from "@/components/layout/sidebar-nav";
 
 export interface SidebarProps {
-    brand: { full: string; short: string; tagline?: string };
+    brand: { full: string; tagline?: string };
     sections: SidebarSection[];
     user?: AuthUser | null;
     onLogout?: () => void;
@@ -38,13 +39,7 @@ function Brand({
                 collapsed ? "justify-center px-0" : "gap-3 px-4",
             )}
         >
-            <div className="from-highlight/25 to-highlight/5 ring-highlight/25 grid size-9 shrink-0 place-items-center rounded-xl bg-linear-to-br ring-1">
-                <Building2
-                    size={16}
-                    strokeWidth={1.5}
-                    className="text-highlight"
-                />
-            </div>
+            <LogoChip tone="dark" size="md" />
             {!collapsed && (
                 <div className="min-w-0">
                     <p className="text-sidebar-text-active font-display truncate text-base leading-none font-light">

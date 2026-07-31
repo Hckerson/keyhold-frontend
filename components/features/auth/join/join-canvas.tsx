@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { Wordmark } from "@/components/layout/wordmark";
+import { Wordmark } from "@/components/brand/wordmark";
 import { propertyImage } from "@/lib/data/sample-images";
 
 const CANVAS_IMAGE = propertyImage(7);
@@ -36,7 +36,7 @@ export function JoinCanvas({ children }: { children: ReactNode }) {
             <CanvasBackdrop />
 
             <header className="flex items-center justify-between px-6 py-6 md:px-10">
-                <Wordmark tone="dark" />
+                <Wordmark tone="dark" size="md" />
                 <Link
                     href="/"
                     className="text-sidebar-text hover:text-text-inverse focus-visible:ring-highlight ease-smooth inline-flex items-center gap-1.5 text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
