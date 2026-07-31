@@ -43,10 +43,6 @@ export default function RootLayout({
             lang="en"
             className={`${display.variable} ${sans.variable} ${mono.variable}`}
         >
-            <head>
-                <meta charSet="utf-8" />
-                <link rel="icon" href="/favicon.ico" />
-            </head>
             <body className="bg-background text-text font-body antialiased">
                 <Provider>{children}</Provider>
             </body>
