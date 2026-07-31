@@ -65,22 +65,14 @@
     width: 28px;
     height: 28px;
     flex: 0 0 28px;
-    border-radius: 8px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(
-        150deg,
-        var(--color-highlight) 0%,
-        var(--color-highlight-dark) 100%
-    );
-    color: var(--color-text-inverse);
-    font-family: var(--font-display);
-    font-weight: 400;
-    font-size: 11px;
-    letter-spacing: 0.03em;
+    background: var(--color-accent);
+    color: var(--color-highlight);
     box-shadow: 0 1px 3px
-        color-mix(in srgb, var(--color-highlight-dark) 40%, transparent);
+        color-mix(in srgb, var(--color-accent-dark) 45%, transparent);
 }
 .word {
     font-family: var(--font-display);
