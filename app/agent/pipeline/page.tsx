@@ -49,7 +49,7 @@ export default function AgentPipelinePage() {
         );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Sales Pipeline"
                 description={`${openDeals.length} open deals worth $${totalValue.toFixed(2)}M`}

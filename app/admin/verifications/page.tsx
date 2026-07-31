@@ -10,7 +10,7 @@ export default function AdminVerificationsPage() {
     ).length;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Tier Verifications"
                 description={`${pending} pending · ${approved} approved`}

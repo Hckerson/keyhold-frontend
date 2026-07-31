@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { PropertySpecs } from "@/components/features/listings/property-specs";
 
@@ -11,7 +11,6 @@ export interface PropertyAgent {
 }
 
 export interface PropertyCardBodyProps {
-    price: number;
     address: string;
     locality: string;
     beds: number;
@@ -23,7 +22,7 @@ export interface PropertyCardBodyProps {
 }
 
 const viewDetailsClass =
-    "group/btn text-accent hover:text-accent-dark ease-smooth inline-flex items-center gap-1.5 text-xs font-medium transition-colors duration-200";
+    "group/btn text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth inline-flex shrink-0 items-center gap-1 rounded text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
 const viewDetailsArrow = (
     <ArrowUpRight
@@ -34,7 +33,6 @@ const viewDetailsArrow = (
 );
 
 export function PropertyCardBody({
-    price,
     address,
     locality,
     beds,
@@ -45,33 +43,26 @@ export function PropertyCardBody({
     onView,
 }: PropertyCardBodyProps) {
     return (
-        <div className="flex flex-col gap-3 p-3">
-            <div className="space-y-1">
-                <p className="text-h5 font-display text-text font-light tracking-tight tabular-nums">
-                    ${price.toLocaleString()}
+        <div className="flex flex-col gap-2 p-3">
+            <div className="min-w-0">
+                <p className="text-text truncate text-xs font-medium">
+                    {address}
                 </p>
-                <div className="text-text-secondary flex items-center gap-1.5 text-xs">
-                    <MapPin
-                        size={12}
-                        strokeWidth={1.5}
-                        className="text-text-muted shrink-0"
-                    />
-                    <span className="truncate">
-                        {address}, {locality}
-                    </span>
-                </div>
+                <p className="text-text-muted mt-0.5 truncate text-xs">
+                    {locality}
+                </p>
             </div>
 
             <PropertySpecs
                 beds={beds}
                 baths={baths}
                 sqft={sqft}
-                className="border-border border-t pt-3"
+                className="bg-background-alt rounded-md px-2.5 py-2"
             />
 
-            <div className="border-border flex items-center justify-between gap-3 border-t pt-3">
+            <div className="flex items-center justify-between gap-2">
                 {agent ? (
-                    <div className="flex min-w-0 items-center gap-2">
+                    <div className="flex min-w-0 items-center gap-1.5">
                         <Avatar
                             size="sm"
                             src={agent.avatarUrl}
@@ -88,7 +79,7 @@ export function PropertyCardBody({
 
                 {href ? (
                     <Link href={href} className={viewDetailsClass}>
-                        View details
+                        View
                         {viewDetailsArrow}
                     </Link>
                 ) : (
@@ -97,7 +88,7 @@ export function PropertyCardBody({
                         onClick={onView}
                         className={viewDetailsClass}
                     >
-                        View details
+                        View
                         {viewDetailsArrow}
                     </button>
                 )}
@@ -105,3 +96,5 @@ export function PropertyCardBody({
         </div>
     );
 }
+
+PropertyCardBody.displayName = "PropertyCardBody";

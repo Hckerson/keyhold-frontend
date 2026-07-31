@@ -59,7 +59,7 @@ export default function AgentListingsPage() {
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="My Listings"
                 description={`${counts.active} active · ${listings.length} total`}

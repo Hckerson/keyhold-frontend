@@ -53,7 +53,7 @@ export default function AdminTransactionsPage() {
     ).length;
 
     return (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-3">
             <PageHeader
                 title="Transactions"
                 description="Deal flow, escrow, and commission across the marketplace"
@@ -69,7 +69,7 @@ export default function AdminTransactionsPage() {
                 }
             />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-4">
                 <StatCard
                     label="Total Volume"
                     value={formatMillions(totalVolume, 2)}

@@ -26,7 +26,7 @@ export default function AdminLayout({
     return (
         <div className="bg-background-alt flex h-screen">
             <Sidebar
-                brand={{ full: "Admin", short: "ADM", tagline: "Console" }}
+                brand={{ full: "Admin", tagline: "Console" }}
                 sections={ADMIN_NAV}
                 user={user}
                 onLogout={handleLogout}

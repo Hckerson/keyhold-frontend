@@ -35,7 +35,7 @@ export function ListingRow({
             src={imageUrl}
             alt={address}
             variant="card"
-            className="ease-smooth size-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="size-full object-cover"
         />
     );
 
@@ -46,7 +46,7 @@ export function ListingRow({
                 className,
             )}
         >
-            <div className="relative aspect-[16/10] w-full overflow-hidden sm:aspect-auto sm:w-56 sm:shrink-0">
+            <div className="relative aspect-16/10 w-full overflow-hidden sm:aspect-auto sm:w-56 sm:shrink-0">
                 {href ? (
                     <Link href={href} className="block size-full">
                         {media}
@@ -56,24 +56,24 @@ export function ListingRow({
                 )}
             </div>
 
-            <div className="flex flex-1 flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-1 flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0 space-y-2">
-                    <div className="min-w-0 space-y-0.5">
+                    <div className="min-w-0 space-y-1">
+                        <p className="text-h5 font-display text-accent leading-none font-light">
+                            {priceLabel}
+                        </p>
                         {href ? (
                             <Link
                                 href={href}
-                                className="text-text hover:text-accent ease-smooth block truncate text-sm font-medium transition-colors"
+                                className="text-text-secondary hover:text-accent ease-smooth block truncate text-xs transition-colors duration-200"
                             >
                                 {address}
                             </Link>
                         ) : (
-                            <p className="text-text truncate text-sm font-medium">
+                            <p className="text-text-secondary truncate text-xs">
                                 {address}
                             </p>
                         )}
-                        <p className="text-h5 font-display text-accent font-light tabular-nums">
-                            {priceLabel}
-                        </p>
                     </div>
                     <PropertySpecs beds={beds} baths={baths} sqft={sqft} />
                     {meta && <p className="text-text-muted text-xs">{meta}</p>}

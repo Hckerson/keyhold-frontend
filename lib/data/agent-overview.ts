@@ -40,8 +40,6 @@ export interface RecentLead {
     received: string;
 }
 
-export const PIPELINE_STAGE_CAPACITY = 12;
-
 export const stats: StatItem[] = [
     {
         label: "Total Pipeline",

@@ -43,7 +43,7 @@ export default function AdminReportsPage() {
         .map((r) => ({ label: r.region, value: r.volume }));
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Analytics & Reports"
                 description="Platform performance and market insights"
@@ -59,7 +59,7 @@ export default function AdminReportsPage() {
                 }
             />
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                 <StatCard
                     label="GMV (YTD)"
                     value="$847M"
@@ -103,7 +103,7 @@ export default function AdminReportsPage() {
                 />
             </Panel>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 <Panel title="User Breakdown">
                     <DonutChart
                         data={userBreakdown}
