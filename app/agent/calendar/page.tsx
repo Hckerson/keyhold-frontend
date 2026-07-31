@@ -70,7 +70,7 @@ export default function AgentCalendarPage() {
         : "No appointments this week.";
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Calendar"
                 description={`${visible.length} appointment${
@@ -83,8 +83,8 @@ export default function AgentCalendarPage() {
                 }
             />
 
-            <div className="grid gap-4 lg:grid-cols-4">
-                <div className="space-y-4 lg:col-span-1">
+            <div className="grid gap-3 lg:grid-cols-4">
+                <div className="space-y-3 lg:col-span-1">
                     <Panel title={monthLabel(year, month)}>
                         <MiniCalendar
                             year={year}
@@ -100,7 +100,7 @@ export default function AgentCalendarPage() {
                     <CalendarLegend />
                 </div>
 
-                <div className="space-y-4 lg:col-span-3">
+                <div className="space-y-3 lg:col-span-3">
                     <Panel
                         title={scheduleTitle}
                         description={
@@ -116,7 +116,7 @@ export default function AgentCalendarPage() {
                         }
                     >
                         {visible.length > 0 ? (
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                                 {grouped.map((group) => (
                                     <div key={group.date} className="space-y-3">
                                         {!isMonthView && (

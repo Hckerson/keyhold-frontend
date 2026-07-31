@@ -13,15 +13,15 @@ import {
 
 export default function AgentAnalyticsPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Performance Analytics"
                 description="Track your sales performance and market insights"
             />
 
-            <StatGrid stats={analyticsMetrics} columns={4} gap="md" />
+            <StatGrid stats={analyticsMetrics} columns={4} />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 <AnalyticsMonthlyPanel data={monthlyData} />
                 <AnalyticsComparisonPanel
                     bars={comparison}

@@ -26,7 +26,7 @@ export default function DashboardLayout({
     return (
         <div className="bg-background-alt flex h-screen">
             <Sidebar
-                brand={{ full: "Luxury RE", short: "LR", tagline: "Concierge" }}
+                brand={{ full: "Luxury RE", tagline: "Concierge" }}
                 sections={DASHBOARD_NAV}
                 user={user}
                 onLogout={handleLogout}

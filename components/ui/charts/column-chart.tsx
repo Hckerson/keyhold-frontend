@@ -28,6 +28,7 @@ export interface ColumnChartProps {
     series: ColumnSeries[];
     height?: number;
     divideBy?: number;
+    fractionDigits?: number;
     valuePrefix?: string;
     valueSuffix?: string;
     className?: string;
@@ -39,6 +40,7 @@ export function ColumnChart({
     series,
     height = 260,
     divideBy = 1,
+    fractionDigits = 0,
     valuePrefix = "",
     valueSuffix = "",
     className,
@@ -46,24 +48,29 @@ export function ColumnChart({
     const mounted = useMounted();
 
     const format = (value: number) =>
-        `${valuePrefix}${Math.round(value / divideBy).toLocaleString()}${valueSuffix}`;
+        `${valuePrefix}${(value / divideBy).toLocaleString(undefined, {
+            minimumFractionDigits: fractionDigits,
+            maximumFractionDigits: fractionDigits,
+        })}${valueSuffix}`;
 
     return (
         <div className={cn("flex flex-col gap-3", className)}>
-            <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                {series.map((s) => (
-                    <li
-                        key={s.key}
-                        className="text-text-secondary flex items-center gap-1.5 text-xs"
-                    >
-                        <span
-                            className="size-2 rounded-full"
-                            style={{ background: toneVar[s.tone] }}
-                        />
-                        {s.name}
-                    </li>
-                ))}
-            </ul>
+            {series.length > 1 && (
+                <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                    {series.map((s) => (
+                        <li
+                            key={s.key}
+                            className="text-text-secondary flex items-center gap-1.5 text-xs"
+                        >
+                            <span
+                                className="size-2 rounded-full"
+                                style={{ background: toneVar[s.tone] }}
+                            />
+                            {s.name}
+                        </li>
+                    ))}
+                </ul>
+            )}
 
             <div style={{ height }}>
                 {mounted && (

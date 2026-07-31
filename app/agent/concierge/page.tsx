@@ -12,7 +12,7 @@ import {
 
 export default function VIPConciergePage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="VIP Concierge"
                 description="Manage your premium clients and white-glove services"

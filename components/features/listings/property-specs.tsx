@@ -29,7 +29,7 @@ export function PropertySpecs({
             {specs.map(({ icon: Icon, value, label }) => (
                 <div key={label} className="flex items-center gap-1.5">
                     <Icon
-                        size={14}
+                        size={12}
                         strokeWidth={1.5}
                         className="text-text-muted shrink-0"
                     />

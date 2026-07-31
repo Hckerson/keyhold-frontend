@@ -22,7 +22,7 @@ import {
 
 export default function AgentDashboardPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Welcome back, Sarah"
                 description="Your sales pipeline and performance overview"
@@ -30,8 +30,8 @@ export default function AgentDashboardPage() {
 
             <StatGrid stats={stats} columns={5} />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                <div className="space-y-4 lg:col-span-2">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+                <div className="space-y-3 lg:col-span-2">
                     <Panel
                         title="Sales Pipeline"
                         description="Current deals by stage"
@@ -66,7 +66,7 @@ export default function AgentDashboardPage() {
                     </Panel>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <Panel title="Quick Actions">
                         <QuickActions actions={quickActions} />
                     </Panel>

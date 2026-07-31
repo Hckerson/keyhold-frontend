@@ -61,6 +61,7 @@ export function PropertyCard({
             <PropertyCardMedia
                 imageUrl={property.imageUrl}
                 address={property.address}
+                price={property.price}
                 status={property.status}
                 featured={property.featured}
                 saved={isSaved}
@@ -68,7 +69,6 @@ export function PropertyCard({
             />
 
             <PropertyCardBody
-                price={property.price}
                 address={property.address}
                 locality={property.locality}
                 beds={property.beds}

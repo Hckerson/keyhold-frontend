@@ -8,8 +8,7 @@ export interface MonthlySales {
 
 export interface ComparisonBar {
     label: string;
-    value: string;
-    pct: number;
+    value: number;
     accent: boolean;
 }
 
@@ -57,8 +56,8 @@ export const monthlyData: MonthlySales[] = [
 ];
 
 export const comparison: ComparisonBar[] = [
-    { label: "You", value: "$2.85M", pct: 85, accent: true },
-    { label: "Market", value: "$2.15M", pct: 65, accent: false },
+    { label: "You", value: 2_850_000, accent: true },
+    { label: "Market", value: 2_150_000, accent: false },
 ];
 
 export const advantages: string[] = [

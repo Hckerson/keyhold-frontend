@@ -32,7 +32,7 @@ export default function AgentSettingsPage() {
     const handleReset = () => setFormData(INITIAL_AGENT_FORM);
 
     return (
-        <div className="max-w-2xl space-y-6">
+        <div className="max-w-2xl space-y-3">
             <PageHeader
                 title="Settings"
                 description="Manage your agent profile and preferences"

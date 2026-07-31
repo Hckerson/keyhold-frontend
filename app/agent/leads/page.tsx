@@ -55,7 +55,7 @@ export default function AgentLeadsPage() {
         );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Lead Pipeline"
                 description={`${score("hot")} hot · ${score("warm")} warm · ${score("cold")} cold`}

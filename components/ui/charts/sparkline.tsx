@@ -1,44 +1,80 @@
+"use client";
+
+import { useId } from "react";
+import { AreaChart, Area, YAxis, ResponsiveContainer } from "recharts";
+import { useMounted } from "@/lib/hooks/use-mounted";
+import {
+    chartToneVar as toneVar,
+    type ChartTone,
+} from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 
 export interface SparklineProps {
     data: number[];
+    tone?: ChartTone;
+    height?: number;
     className?: string;
 }
 
-export function Sparkline({ data, className }: SparklineProps) {
-    const width = 100;
-    const height = 32;
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const range = max - min || 1;
-
-    const points = data.map((value, index) => {
-        const x = (index / (data.length - 1)) * width;
-        const y = height - ((value - min) / range) * height;
-        return `${x.toFixed(2)},${y.toFixed(2)}`;
-    });
-
-    const line = points.join(" ");
-    const area = `0,${height} ${line} ${width},${height}`;
+export function Sparkline({
+    data,
+    tone = "accent",
+    height = 32,
+    className,
+}: SparklineProps) {
+    const mounted = useMounted();
+    const gradientId = `sparkline-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+    const stroke = toneVar[tone];
+    const points = data.map((value, index) => ({ index, value }));
 
     return (
-        <svg
-            viewBox={`0 0 ${width} ${height}`}
-            preserveAspectRatio="none"
+        <div
             aria-hidden="true"
-            className={cn("h-8 w-full overflow-visible", className)}
-            fill="none"
+            className={cn("w-full", className)}
+            style={{ height }}
         >
-            <polygon points={area} className="fill-accent/10" />
-            <polyline
-                points={line}
-                className="stroke-accent"
-                strokeWidth={1.5}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                vectorEffect="non-scaling-stroke"
-            />
-        </svg>
+            {mounted && (
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                        data={points}
+                        margin={{ top: 2, right: 1, bottom: 0, left: 1 }}
+                    >
+                        <defs>
+                            <linearGradient
+                                id={gradientId}
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                            >
+                                <stop
+                                    offset="0%"
+                                    stopColor={stroke}
+                                    stopOpacity={0.16}
+                                />
+                                <stop
+                                    offset="100%"
+                                    stopColor={stroke}
+                                    stopOpacity={0}
+                                />
+                            </linearGradient>
+                        </defs>
+                        <YAxis hide domain={["dataMin", "dataMax"]} />
+                        <Area
+                            type="monotone"
+                            dataKey="value"
+                            stroke={stroke}
+                            strokeWidth={2}
+                            strokeLinecap="round"
+                            fill={`url(#${gradientId})`}
+                            dot={false}
+                            activeDot={false}
+                            isAnimationActive={false}
+                        />
+                    </AreaChart>
+                </ResponsiveContainer>
+            )}
+        </div>
     );
 }
 

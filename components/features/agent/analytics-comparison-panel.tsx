@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
-import { cn } from "@/lib/utils";
+import { BarChart, type BarDatum } from "@/components/ui/charts/bar-chart";
+import { formatMillions } from "@/lib/utils";
 import type { ComparisonBar } from "@/lib/data/agent-analytics";
 
 export interface AnalyticsComparisonPanelProps {
@@ -12,40 +13,31 @@ export function AnalyticsComparisonPanel({
     bars,
     advantages,
 }: AnalyticsComparisonPanelProps) {
+    const data: BarDatum[] = bars.map((bar) => ({
+        label: bar.label,
+        value: bar.value,
+        display: formatMillions(bar.value, 2),
+        tone: bar.accent ? "accent" : "neutral",
+    }));
+
     return (
         <Panel
             title="Market Comparison"
             description="Your performance vs market average"
         >
             <div className="space-y-6">
-                <div>
-                    <p className="text-text-muted text-caption font-medium tracking-wide uppercase">
+                <figure>
+                    <figcaption className="text-text-muted text-caption font-medium tracking-wide uppercase">
                         Average Sale Price
-                    </p>
-                    <div className="mt-3 flex items-end gap-4">
-                        {bars.map((bar) => (
-                            <div key={bar.label} className="flex-1">
-                                <div className="bg-background-alt flex h-24 items-end justify-center overflow-hidden rounded-t-md">
-                                    <div
-                                        className={cn(
-                                            "w-12 rounded-t-md",
-                                            bar.accent
-                                                ? "bg-accent"
-                                                : "bg-border",
-                                        )}
-                                        style={{ height: `${bar.pct}%` }}
-                                    />
-                                </div>
-                                <p className="text-text mt-2 text-center text-xs font-medium tabular-nums">
-                                    {bar.value}
-                                </p>
-                                <p className="text-text-muted text-caption text-center tracking-wide uppercase">
-                                    {bar.label}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                    </figcaption>
+                    <BarChart
+                        data={data}
+                        labelWidth={72}
+                        rowHeight={40}
+                        valueWidth={72}
+                        className="mt-2"
+                    />
+                </figure>
 
                 <div className="border-border-light border-t pt-4">
                     <p className="text-text-muted text-caption mb-2 font-medium tracking-wide uppercase">

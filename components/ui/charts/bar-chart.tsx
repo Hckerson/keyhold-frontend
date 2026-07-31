@@ -8,7 +8,6 @@ import {
     CartesianGrid,
     LabelList,
     ResponsiveContainer,
-    type RenderableText,
 } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
 import {
@@ -19,6 +18,8 @@ import {
 export interface BarDatum {
     label: string;
     value: number;
+    display?: string;
+    tone?: ChartTone;
 }
 
 export interface BarChartProps {
@@ -27,6 +28,7 @@ export interface BarChartProps {
     highlightFirstTone?: ChartTone;
     labelWidth?: number;
     rowHeight?: number;
+    valueWidth?: number;
     valuePrefix?: string;
     valueSuffix?: string;
     className?: string;
@@ -38,21 +40,21 @@ export function BarChart({
     highlightFirstTone,
     labelWidth = 120,
     rowHeight = 40,
+    valueWidth = 56,
     valuePrefix = "",
     valueSuffix = "",
     className,
 }: BarChartProps) {
     const mounted = useMounted();
-    const formatValue = (value: RenderableText): RenderableText =>
-        typeof value === "number"
-            ? `${valuePrefix}${value}${valueSuffix}`
-            : value;
-    const bars = data.map((d, i) => ({
-        ...d,
-        fill:
-            i === 0 && highlightFirstTone
-                ? toneVar[highlightFirstTone]
-                : toneVar[tone],
+    const bars = data.map((datum, index) => ({
+        ...datum,
+        display:
+            datum.display ??
+            `${valuePrefix}${datum.value.toLocaleString()}${valueSuffix}`,
+        fill: toneVar[
+            datum.tone ??
+                (index === 0 && highlightFirstTone ? highlightFirstTone : tone)
+        ],
     }));
 
     if (!mounted) {
@@ -70,7 +72,7 @@ export function BarChart({
                 <RBarChart
                     data={bars}
                     layout="vertical"
-                    margin={{ top: 4, right: 56, bottom: 4, left: 0 }}
+                    margin={{ top: 4, right: valueWidth, bottom: 4, left: 0 }}
                     barCategoryGap="28%"
                 >
                     <CartesianGrid
@@ -85,17 +87,16 @@ export function BarChart({
                         tickLine={false}
                         axisLine={false}
                         tick={{
-                            fontSize: 13,
+                            fontSize: 12,
                             fill: "var(--color-text-secondary)",
                         }}
                     />
-                    <Bar dataKey="value" radius={[0, 5, 5, 0]} maxBarSize={11}>
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]} maxBarSize={11}>
                         <LabelList
-                            dataKey="value"
+                            dataKey="display"
                             position="right"
-                            formatter={formatValue}
                             style={{
-                                fontSize: 12.5,
+                                fontSize: 12,
                                 fontWeight: 500,
                                 fill: "var(--color-text)",
                             }}

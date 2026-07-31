@@ -26,7 +26,7 @@ export default function AgentLayout({
     return (
         <div className="bg-background-alt flex h-screen">
             <Sidebar
-                brand={{ full: "Agent Pro", short: "AP", tagline: "Premium" }}
+                brand={{ full: "Agent Pro", tagline: "Premium" }}
                 sections={AGENT_NAV}
                 user={user}
                 onLogout={handleLogout}
