@@ -45,9 +45,14 @@ export interface SystemHealth {
     state: SystemState;
 }
 
-export interface RevenueSummaryItem {
+export interface RevenueMetric {
     label: string;
     value: string;
+}
+
+export interface RevenueBreakdown {
+    headline: RevenueMetric;
+    metrics: RevenueMetric[];
 }
 
 export const volumeMetrics: StatItem[] = [
@@ -107,12 +112,14 @@ export const revenueSeries: ColumnSeries[] = [
     { key: "gmv", name: "Gross merchandise value", tone: "accent" },
 ];
 
-export const revenueSummary: RevenueSummaryItem[] = [
-    { label: "GMV (YTD)", value: "$847M" },
-    { label: "Commissions (YTD)", value: "$21.2M" },
-    { label: "Platform take rate", value: "2.50%" },
-    { label: "Avg commission per deal", value: "$61.8K" },
-];
+export const revenueBreakdown: RevenueBreakdown = {
+    headline: { label: "Commissions (YTD)", value: "$21.2M" },
+    metrics: [
+        { label: "GMV (YTD)", value: "$847M" },
+        { label: "Platform take rate", value: "2.50%" },
+        { label: "Avg commission per deal", value: "$61.8K" },
+    ],
+};
 
 export const moderationQueue: ModerationQueueItem[] = [
     {
