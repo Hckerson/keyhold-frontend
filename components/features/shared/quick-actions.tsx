@@ -11,14 +11,19 @@ export function QuickActions({
     className?: string;
 }) {
     return (
-        <ul className={cn("flex flex-col gap-1", className)}>
+        <ul
+            className={cn(
+                "bg-background-alt divide-border-light divide-y rounded-lg px-3",
+                className,
+            )}
+        >
             {actions.map((action) => {
                 const Icon = action.icon;
                 return (
                     <li key={action.href}>
                         <Link
                             href={action.href}
-                            className="group hover:bg-background ease-smooth flex items-center gap-3 rounded-lg p-2 transition-colors"
+                            className="group hover:bg-background ease-smooth -mx-1.5 flex items-center gap-3 rounded-lg px-1.5 py-2 transition-colors"
                         >
                             <span className="bg-accent-light text-accent grid size-7 shrink-0 place-items-center rounded-lg">
                                 <Icon size={14} strokeWidth={1.5} />

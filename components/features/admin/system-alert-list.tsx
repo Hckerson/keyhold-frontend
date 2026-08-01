@@ -4,11 +4,11 @@ import type { SystemAlert } from "@/lib/data/admin-overview";
 
 export function SystemAlertList({ alerts }: { alerts: SystemAlert[] }) {
     return (
-        <ul className="divide-border-light divide-y">
+        <ul className="bg-background-alt divide-border-light divide-y rounded-lg px-3">
             {alerts.map((alert) => (
                 <li
                     key={alert.id}
-                    className="flex items-start gap-3 py-3 first:pt-0 last:pb-0"
+                    className="flex items-start gap-3 py-3"
                 >
                     <StatusDot tone={alert.tone} className="mt-1.5 size-2" />
                     <div className="min-w-0 flex-1">
