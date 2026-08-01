@@ -16,6 +16,21 @@ import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import type { DotTone } from "@/components/patterns/status-dot";
 import { PENDING_VERIFICATIONS } from "@/lib/config/admin-nav";
 import type { QuickAction, StatItem } from "@/lib/types";
+import {
+    AVG_COMMISSION_PER_DEAL,
+    COMMISSIONS_30D,
+    COMMISSIONS_YTD,
+    GMV_30D,
+    GMV_YTD,
+    TAKE_RATE_LABEL,
+} from "@/lib/data/admin-platform";
+import {
+    ACTIVE_USERS,
+    TOTAL_USERS,
+    USER_GROWTH_LABEL,
+    USER_GROWTH_SERIES,
+} from "@/lib/data/admin-users";
+import { formatCount, formatMillions, formatThousands } from "@/lib/utils";
 
 export type QueueTone = "warning" | "error";
 export type AlertTone = "info" | "error" | "warning";
@@ -58,13 +73,13 @@ export interface RevenueBreakdown {
 export const volumeMetrics: StatItem[] = [
     {
         label: "Total Users",
-        value: "1,247",
+        value: formatCount(TOTAL_USERS),
         icon: Users,
         href: "/admin/users",
-        change: "+6.2%",
+        change: USER_GROWTH_LABEL,
         trend: "up",
-        caption: "1,102 active this month",
-        series: [980, 1015, 1060, 1108, 1174, 1247],
+        caption: `${formatCount(ACTIVE_USERS)} active this month`,
+        series: USER_GROWTH_SERIES,
     },
     {
         label: "Active Listings",
@@ -88,12 +103,12 @@ export const volumeMetrics: StatItem[] = [
     },
     {
         label: "GMV (30d)",
-        value: "$312M",
+        value: formatMillions(GMV_30D, 0),
         icon: Wallet,
         href: "/admin/reports",
         change: "+22%",
         trend: "up",
-        caption: "$7.8M commissions",
+        caption: `${formatMillions(COMMISSIONS_30D, 1)} commissions`,
         series: [214, 231, 248, 267, 289, 312],
         featured: true,
     },
@@ -105,7 +120,7 @@ export const revenueMonths: Record<string, string | number>[] = [
     { month: "Apr", gmv: 267_000_000 },
     { month: "May", gmv: 289_000_000 },
     { month: "Jun", gmv: 304_000_000 },
-    { month: "Jul", gmv: 312_000_000 },
+    { month: "Jul", gmv: GMV_30D },
 ];
 
 export const revenueSeries: ColumnSeries[] = [
@@ -113,11 +128,17 @@ export const revenueSeries: ColumnSeries[] = [
 ];
 
 export const revenueBreakdown: RevenueBreakdown = {
-    headline: { label: "Commissions (YTD)", value: "$21.2M" },
+    headline: {
+        label: "Commissions (YTD)",
+        value: formatMillions(COMMISSIONS_YTD, 1),
+    },
     metrics: [
-        { label: "GMV (YTD)", value: "$847M" },
-        { label: "Platform take rate", value: "2.50%" },
-        { label: "Avg commission per deal", value: "$61.8K" },
+        { label: "GMV (YTD)", value: formatMillions(GMV_YTD, 0) },
+        { label: "Platform take rate", value: TAKE_RATE_LABEL },
+        {
+            label: "Avg commission per deal",
+            value: formatThousands(AVG_COMMISSION_PER_DEAL, 1),
+        },
     ],
 };
 

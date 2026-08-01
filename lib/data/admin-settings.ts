@@ -15,6 +15,13 @@ export const INITIAL_ADMIN_CONFIG = {
 };
 export type AdminConfig = typeof INITIAL_ADMIN_CONFIG;
 
+export const isAdminConfigDirty = (current: AdminConfig) => {
+    const initial: Record<string, string> = INITIAL_ADMIN_CONFIG;
+    return Object.entries(current).some(
+        ([key, value]) => initial[key] !== value,
+    );
+};
+
 export const PLATFORM_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
     {
         name: "platformName",

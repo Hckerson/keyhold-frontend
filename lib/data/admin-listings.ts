@@ -174,20 +174,51 @@ export const INITIAL_LISTINGS: ModerationListing[] = [
 
 export const statusMeta: Record<
     ModerationStatus,
-    { tone: BadgeTone; label: string }
+    { tone: BadgeTone; label: string; rank: number; rowTone?: string }
 > = {
-    pending: { tone: "warning", label: "Pending" },
-    flagged: { tone: "error", label: "Flagged" },
-    approved: { tone: "success", label: "Approved" },
-    rejected: { tone: "neutral", label: "Rejected" },
+    flagged: {
+        tone: "error",
+        label: "Flagged",
+        rank: 0,
+        rowTone: "bg-error/[0.035]",
+    },
+    pending: { tone: "warning", label: "Pending", rank: 1 },
+    approved: { tone: "success", label: "Approved", rank: 2 },
+    rejected: { tone: "neutral", label: "Rejected", rank: 3 },
 };
 
-export const checkMeta: Record<CheckState, { icon: LucideIcon; cls: string }> =
+export const checkMeta: Record<
+    CheckState,
     {
-        pass: { icon: CheckCircle2, cls: "text-success" },
-        warn: { icon: AlertTriangle, cls: "text-warning" },
-        fail: { icon: XCircle, cls: "text-error" },
-    };
+        icon: LucideIcon;
+        cls: string;
+        tone: BadgeTone;
+        noun: string;
+        weight: number;
+    }
+> = {
+    pass: {
+        icon: CheckCircle2,
+        cls: "text-success",
+        tone: "success",
+        noun: "checks passed",
+        weight: 0,
+    },
+    warn: {
+        icon: AlertTriangle,
+        cls: "text-warning",
+        tone: "warning",
+        noun: "checks with warnings",
+        weight: 1,
+    },
+    fail: {
+        icon: XCircle,
+        cls: "text-error",
+        tone: "error",
+        noun: "checks failed",
+        weight: 10,
+    },
+};
 
 export const MODERATION_FILTERS: { id: ModerationFilterKey; label: string }[] =
     [
