@@ -9,12 +9,12 @@ export function ModerationQueueList({
     items: ModerationQueueItem[];
 }) {
     return (
-        <ul className="divide-border-light divide-y">
+        <ul className="bg-background-alt divide-border-light divide-y rounded-lg px-3">
             {items.map((item) => (
                 <li key={item.label}>
                     <Link
                         href={item.href}
-                        className="hover:bg-background-alt ease-smooth -mx-2 flex items-center gap-2 rounded-lg px-2 py-2.5 transition-colors"
+                        className="hover:bg-background ease-smooth -mx-1.5 flex items-center gap-2 rounded-lg px-1.5 py-2.5 transition-colors"
                     >
                         <item.icon
                             size={12}
