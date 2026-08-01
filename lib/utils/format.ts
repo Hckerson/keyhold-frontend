@@ -11,6 +11,15 @@ export const formatCompactUsd = (value: number) =>
 export const formatMillions = (value: number, fractionDigits = 1) =>
     `$${(value / MILLION).toFixed(fractionDigits)}M`;
 
+export const formatCount = (value: number) =>
+    value.toLocaleString("en-US", { maximumFractionDigits: 0 });
+
+export const formatThousands = (value: number, fractionDigits = 0) =>
+    `$${(value / 1_000).toLocaleString("en-US", {
+        minimumFractionDigits: fractionDigits,
+        maximumFractionDigits: fractionDigits,
+    })}K`;
+
 export const toDigits = (value: string) => value.replace(/\D/g, "");
 
 export const formatCurrencyInput = (value: string) => {

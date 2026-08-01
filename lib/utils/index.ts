@@ -6,6 +6,8 @@ export {
     formatUsd,
     formatCompactUsd,
     formatMillions,
+    formatCount,
+    formatThousands,
     toDigits,
     formatCurrencyInput,
     initialsOf,

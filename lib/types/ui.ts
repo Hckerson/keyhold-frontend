@@ -14,6 +14,11 @@ export interface StatItem {
     featured?: boolean;
 }
 
+export interface MetricItem {
+    label: string;
+    value: string;
+}
+
 export interface QuickAction {
     label: string;
     href: string;
