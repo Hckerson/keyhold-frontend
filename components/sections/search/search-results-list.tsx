@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ListingRow } from "@/components/features/listings/listing-row";
 import type { Listing } from "@/lib/types";
 
@@ -9,7 +7,7 @@ interface SearchResultsListProps {
 
 export function SearchResultsList({ listings }: SearchResultsListProps) {
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
             {listings.map((listing) => (
                 <ListingRow
                     key={listing.id}
@@ -23,13 +21,6 @@ export function SearchResultsList({ listings }: SearchResultsListProps) {
                     }}
                     href={`/listing/${listing.id}`}
                     meta={`${listing.agent.name} · listed ${listing.listedDaysAgo} days ago`}
-                    actions={
-                        <Link href={`/listing/${listing.id}`}>
-                            <Button variant="secondary" size="sm">
-                                View
-                            </Button>
-                        </Link>
-                    }
                 />
             ))}
         </div>
