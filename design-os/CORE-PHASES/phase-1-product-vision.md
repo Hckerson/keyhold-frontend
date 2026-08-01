@@ -161,7 +161,7 @@ Polished interactions, smooth animations, thoughtful copy. Real estate is emotio
 
 **16-week MVP 1.5:**
 
-- 21 pages live
+- 27 pages live
 - Lighthouse >90, WCAG AA compliant
 - 99.95% uptime
 - NPS >50

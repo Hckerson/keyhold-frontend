@@ -49,6 +49,7 @@ Complete information architecture covering:
 │   ├── /admin/transactions (Transaction History)
 │   ├── /admin/payments (Payment Status)
 │   ├── /admin/reports (Analytics)
+│   ├── /admin/verifications (Tier Verifications)
 │   └── /admin/settings (Admin Settings)
 │
 └── (AUTH)
@@ -147,7 +148,7 @@ Complete information architecture covering:
 
 ### Admin (Logged In)
 
-**Primary Navigation:** Overview → Moderation → Users → Transactions → Payments → Reports
+**Primary Navigation:** Overview → Moderation → Users → Transactions → Payments → Reports → Verifications
 
 **Header:**
 
@@ -156,21 +157,21 @@ Complete information architecture covering:
 - Alerts badge
 - Admin menu
 
-**Sidebar:**
+**Sidebar (grouped):**
 
-- Dashboard (health overview)
-- Listings (moderation queue)
-- Users (verification, suspension)
-- Transactions (deal status)
-- Payments (revenue, disputes)
-- Reports (analytics, growth)
-- Settings (system config)
+- Overview — Dashboard (health overview)
+- Marketplace — Listings (moderation queue), Users (verification, suspension)
+- Finance — Transactions (deal status), Payments (revenue, disputes)
+- Insights — Reports (analytics, growth)
+- Trust & Safety — Verifications (tier upgrades, badge count of pending)
+- System — Settings (system config)
 
 **Quick Actions:**
 
-- "Approve Listing" (bulk)
-- "Suspend User"
-- "Refund Payment"
+- "Manage Users"
+- "Review Listings" (bulk approve)
+- "Process Verifications"
+- "View Reports"
 
 ---
 
@@ -188,6 +189,8 @@ Complete information architecture covering:
 | View offers      | -         | ✓ (own) | ✓ (own) | ✓ (own) | ✓ (all) |
 | Moderate listing | -         | -       | -       | -       | ✓       |
 | Suspend user     | -         | -       | -       | -       | ✓       |
+| Approve tier     | -         | -       | -       | -       | ✓       |
+| Configure system | -         | -       | -       | -       | ✓       |
 | View analytics   | -         | -       | ✓ (own) | ✓ (own) | ✓ (all) |
 | Download data    | ✓         | ✓       | ✓       | ✓       | ✓       |
 

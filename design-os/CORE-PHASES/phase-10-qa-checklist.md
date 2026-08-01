@@ -15,6 +15,7 @@ Production-ready QA checklist ensuring:
 - Security standards
 - Code quality
 - SEO readiness
+- Admin console verification (access control, destructive actions, data integrity)
 
 **Use this checklist week 15-16 before launch.**
 
@@ -140,6 +141,9 @@ npm run lighthouse:audit
 - [ ] Listing Details
 - [ ] Dashboard
 - [ ] Agent Dashboard
+- [ ] Admin Overview (heaviest page — 4 stat cards, column chart, 4 panels)
+- [ ] Admin Moderation (table + image-heavy detail panel)
+- [ ] Admin Reports (bar chart + 2 donut charts)
 
 ### Metrics
 
@@ -214,6 +218,95 @@ npm run build
 
 ---
 
+## Admin Console QA
+
+Admin surfaces carry destructive and irreversible actions, so they get their own
+pass. Run this section signed in as an admin, then repeat the access checks signed
+in as a buyer and as an agent.
+
+### Access Control
+
+- [ ] Unauthenticated visit to any /admin route redirects to login
+- [ ] Buyer account cannot reach any /admin route (server-enforced, not hidden nav)
+- [ ] Agent account cannot reach any /admin route
+- [ ] Direct URL entry is blocked, not just the sidebar link
+- [ ] Logout clears auth state and token, then redirects to /
+- [ ] Expired token mid-session redirects rather than rendering an empty console
+
+### Console Shell
+
+- [ ] All six nav groups render with labels (Overview, Marketplace, Finance, Insights, Trust & Safety, System)
+- [ ] Active route highlighted, and marked `aria-current`
+- [ ] Verifications badge count equals the pending total on /admin/verifications
+- [ ] Breadcrumb matches the route registry on every page
+- [ ] Sidebar collapses to a drawer on mobile and traps focus while open
+- [ ] Content area never scrolls horizontally at 320px
+
+### Tables (Users, Moderation, Transactions)
+
+- [ ] Every table has a caption describing all its columns
+- [ ] Action columns use screen-reader-only headers, not empty `<th>`
+- [ ] Sort control is a button, announces direction, and is keyboard operable
+- [ ] Default sort matches the spec (users by name asc, moderation by status)
+- [ ] Numeric columns use tabular figures and right alignment
+- [ ] Footer totals recompute from the visible rows, not a hardcoded value
+- [ ] Row tinting (suspended, flagged, rejected) is never the only status signal
+- [ ] Selection state is announced; bulk bar is reachable by keyboard
+- [ ] Pagination preserves sort and filter
+- [ ] Empty message renders per table ("No users to show", "No listings match this filter right now")
+- [ ] Table scrolls inside its own container — the page body does not
+
+### Moderation Flow
+
+- [ ] Filter pills show accurate counts and reset selection on change
+- [ ] Row detail panel opens with photos, description, flag reason, compliance checklist, agent contact
+- [ ] Approve is single-click; Reject and Request Changes always open the note modal
+- [ ] Submit stays disabled until the note is non-empty (test whitespace-only)
+- [ ] Reject sets rejected + note; Request Changes returns to pending + changes-requested flag
+- [ ] Bulk actions apply the same note requirement
+- [ ] Approve is hidden on already-approved rows; Reject hidden on already-rejected
+- [ ] Modal traps focus, closes on ESC, and returns focus to the trigger
+- [ ] Counts in the page header update after every decision
+
+### Verifications
+
+- [ ] Actions match status (pending / approved / rejected sets)
+- [ ] Tier upgrade path reads current → requested, never inferred
+- [ ] Approve, Reject, Revoke and Allow Resubmit each update counts and the sidebar badge
+- [ ] Status is text plus tone, not colour alone
+- [ ] Document count is accurate and Review Docs opens the evidence
+
+### Settings
+
+- [ ] Every field has a real `<label htmlFor>`
+- [ ] Prefix and suffix (%, $, days) are not the only unit indicator
+- [ ] Editing any field clears the saved state and restores "Save Changes"
+- [ ] Save shows the success callout and the button reads "Saved"
+- [ ] Reset restores stored values and clears the saved flag
+- [ ] Navigating away with unsaved changes warns before discarding
+- [ ] Toggles expose `role="switch"` with the title as accessible name
+- [ ] Maintenance-mode and other destructive actions require confirmation
+- [ ] Maintenance mode active shows an unmistakable global indicator
+
+### Charts & Data Display
+
+- [ ] Every chart has a text summary or accessible table alternative
+- [ ] Series distinguishable without colour (label, pattern, or direct value)
+- [ ] Chart tooltips reachable by keyboard
+- [ ] Sparklines marked decorative (`aria-hidden`)
+- [ ] Stat cards are a single link with an accessible name covering label + value
+- [ ] Currency and percentage formatting consistent across every admin page
+- [ ] Charts reflow on resize without overflowing the panel
+
+### Admin Data Integrity
+
+- [ ] Header counts, sidebar badge and page contents derive from one source
+- [ ] Commission figures use the configured rate, never a hardcoded literal
+- [ ] Stat totals reconcile with the table footers on the same page
+- [ ] Optimistic updates roll back visibly if the request fails
+
+---
+
 ## Error Handling
 
 - [ ] 404 page styled and helpful
@@ -245,6 +338,7 @@ npm run build
 - [ ] Performance Lighthouse >90 (all pages)
 - [ ] All E2E tests passing
 - [ ] Security audit complete
+- [ ] Admin console section signed off, including role-escalation checks
 - [ ] Staging environment tested
 - [ ] Backup/rollback plan ready
 - [ ] Monitoring set up (Sentry, analytics)

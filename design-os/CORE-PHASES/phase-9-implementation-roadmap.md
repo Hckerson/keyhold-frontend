@@ -186,7 +186,7 @@ Pre-launch verification:
 
 ## Success Criteria (MVP 1.5)
 
-✓ All 21 pages implemented  
+✓ All 27 pages implemented  
 ✓ Search <1s, offers workflow working, real-time messages  
 ✓ Lighthouse >90, LCP <2.5s, bundle <250kb (gzipped)  
 ✓ WCAG 2.2 AA, keyboard nav, screen reader compatible  

@@ -27,7 +27,7 @@
 ### Phase 4: Page Blueprints
 
 **URL:** https://claude.ai/code/artifact/06e9a4b4-a818-4e47-aa64-b95002c9bbb9  
-**Contains:** 21 page specs with modules, data, responsive behavior, states  
+**Contains:** 27 page specs with modules, data, responsive behavior, states  
 **Read When:** Building a page ⭐ (PRIMARY REFERENCE)
 
 ### Phase 5: Section Blueprints
@@ -39,7 +39,7 @@
 ### Phase 6: Component Library
 
 **URL:** https://claude.ai/code/artifact/5c74a0c4-da0f-4258-8b89-4d76231ac53e  
-**Contains:** 80 components (primitives, patterns, composed) with specs  
+**Contains:** 78 components (primitives, patterns, composed) with specs  
 **Read When:** Implementing components
 
 ### Phase 7: Design Tokens

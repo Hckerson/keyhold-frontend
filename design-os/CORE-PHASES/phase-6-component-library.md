@@ -602,10 +602,19 @@ These are built from primitives + patterns, specific to the real estate domain:
 
 **Admin Components:**
 
-- ModerationQueue (listings to approve/reject)
-- UserTable (users with status, actions)
-- TransactionsList (payments, disputes)
-- ReportsChart (analytics visualizations)
+- ModerationQueueList (queue counts linking to their route)
+- ModerationListingColumns / ModerationTableCells (moderation table config)
+- ModerationListingDetail (photos, description, compliance, agent contact)
+- ModerationDecisionModal (reject / request-changes with required note)
+- ComplianceList (pass / warn / fail checks)
+- UserTableColumns / UserTableCells (users with role, tier, status, actions)
+- TransactionTableColumns / TransactionTableCells (deals with commission and status)
+- VerificationList / VerificationCard (tier requests with status-dependent actions)
+- SystemHealthList (uptime, error rate, operational state)
+- SystemAlertList (tone-coded platform alerts)
+- RevenueBreakdown (headline metric plus supporting figures)
+- AgentContact (submitting agent name, email, phone)
+- AdminMaintenancePanel (destructive and operational actions)
 
 **Auth Components:**
 
