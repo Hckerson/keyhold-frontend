@@ -2,8 +2,8 @@ import { forwardRef } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-export const KEYSTONE_PATH =
-    "M4 3.5H20L17.25 20.5H6.75ZM9.5 20.5V15A2.5 2.5 0 0 1 14.5 15V20.5Z";
+export const MONOGRAM_PATH =
+    "M5 3.6H13V5.4H10.6V18.2H17V16.2H19V20.6H5V18.2H7.4V5.4H5Z";
 
 const markVariants = cva("shrink-0", {
     variants: {
@@ -39,7 +39,7 @@ export const LogoMark = forwardRef<SVGSVGElement, LogoMarkProps>(
             {...props}
         >
             <path
-                d={KEYSTONE_PATH}
+                d={MONOGRAM_PATH}
                 fill="currentColor"
                 fillRule="evenodd"
                 clipRule="evenodd"
