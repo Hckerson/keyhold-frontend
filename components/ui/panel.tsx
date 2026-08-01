@@ -25,12 +25,12 @@ export function Panel({
     return (
         <section
             className={cn(
-                "bg-background-muted border-border-light rounded-xl border p-4 shadow-sm",
+                "bg-background-muted border-border-light rounded-xl border p-4 pt-3 shadow-sm",
                 className,
             )}
         >
             {hasHeader && (
-                <div className="border-border-light -mx-4 -mt-4 mb-4 flex items-center justify-between gap-3 border-b px-4 py-3">
+                <div className="border-border-light -mx-4 flex items-center justify-between gap-3 border-b px-4 pb-2.5">
                     {(title || description) && (
                         <div className="min-w-0">
                             <div className="flex items-center gap-2">
