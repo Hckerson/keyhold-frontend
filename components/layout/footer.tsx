@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-    ArrowRight,
     Facebook,
     Instagram,
     Linkedin,
@@ -61,22 +60,6 @@ export function Footer() {
             <div className={styles.grain} aria-hidden="true" />
 
             <SectionShell>
-                <div className="relative z-10">
-                    <p className={styles.eyebrow}>The Concierge</p>
-                    <h2 className={styles.statement}>
-                        A home worthy of the <em>life you&apos;ve built.</em>
-                    </h2>
-                    <div className={styles.ctaRow}>
-                        <Link href="/search" className={styles.cta}>
-                            Begin your search
-                            <ArrowRight size={18} strokeWidth={1.5} />
-                        </Link>
-                        <span className={styles.call}>
-                            or call <b>+1 310 555 0100</b>
-                        </span>
-                    </div>
-                </div>
-
                 <FooterLocalityIndex />
 
                 <div className="relative z-10 mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.6fr]">
