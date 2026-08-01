@@ -40,9 +40,9 @@ A comprehensive design system that transforms business strategy into an implemen
 | **phase-1-product-vision.html**           | Business strategy, personas, KPIs     | You need strategy alignment          |
 | **phase-2-experience-maps.html**          | User journeys, decision points, flows | You're designing new features        |
 | **phase-3-information-architecture.html** | Sitemap, navigation, permissions      | You're setting up routing/auth       |
-| **phase-4-page-blueprints.html**          | 21 page specs with modules            | You're building a page (START HERE)  |
+| **phase-4-page-blueprints.html**          | 27 page specs with modules            | You're building a page (START HERE)  |
 | **phase-5-section-blueprints.html**       | 55 reusable section specs             | You're composing pages into sections |
-| **phase-6-component-library.html**        | 80 component specs, variants, props   | You're implementing components       |
+| **phase-6-component-library.html**        | 78 component specs, variants, props   | You're implementing components       |
 | **phase-7-design-tokens.html**            | Colors, spacing, typography, motion   | You need token values for styling    |
 | **phase-8-frontend-architecture.md**      | Codebase structure, folder layout     | You're setting up the project        |
 | **phase-9-implementation-roadmap.md**     | 16-week sprint breakdown              | You're planning sprints/timeline     |
@@ -105,8 +105,8 @@ That prompt is self-contained and guides the entire build.
 
 - **10 Phases:** Product vision → Implementation → QA
 - **80+ Components:** Fully specified with variants, props, accessibility
-- **55 Sections:** Reusable patterns composing 21 pages
-- **21 Pages:** Complete MVP 1.5 specification
+- **74 Sections:** Reusable patterns composing 27 pages
+- **27 Pages:** Complete MVP 1.5 specification
 - **16 Weeks:** Implementation roadmap with sprint breakdown
 - **200+ QA Items:** Accessibility, performance, security checklist
 

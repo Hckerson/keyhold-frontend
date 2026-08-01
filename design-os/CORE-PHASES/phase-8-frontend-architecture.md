@@ -93,6 +93,8 @@ real-estate-platform/
 │   │   │   └── page.tsx          # /admin/payments
 │   │   ├── reports/
 │   │   │   └── page.tsx          # /admin/reports
+│   │   ├── verifications/
+│   │   │   └── page.tsx          # /admin/verifications
 │   │   └── settings/
 │   │       └── page.tsx          # /admin/settings
 │   │

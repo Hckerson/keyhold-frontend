@@ -6,7 +6,7 @@
 
 ## Overview
 
-Seven detailed user journey maps covering:
+Thirteen detailed user journey maps covering:
 
 - Search & discovery flow
 - Listing detail evaluation
@@ -15,6 +15,16 @@ Seven detailed user journey maps covering:
 - Real-time messaging
 - Authentication flows
 - Profile management
+- Platform health triage
+- Listing moderation
+- Tier verification review
+- User enforcement
+- Revenue & payout oversight
+- Platform configuration
+
+Journeys 1-7 are marketplace-facing (buyer, agent, seller). Journeys 8-13 are
+operator-facing (admin) — the emotional register there is vigilance and
+accountability rather than hope and excitement.
 
 Each includes decision points, emotional states, system behavior, and failure paths.
 
@@ -251,7 +261,183 @@ Confident (taking control) → Personalized (preferences saved)
 
 ---
 
+## Journey 8: Platform Health Triage
+
+**Actor:** Admin | **Duration:** 2-5 minutes | **Frequency:** Start of every shift, 2-3x daily
+
+**Entry point:** /admin
+
+### Steps
+
+| Step | User Action                | Emotional State | System Behavior                              | Success Criteria             |
+| ---- | -------------------------- | --------------- | -------------------------------------------- | ---------------------------- |
+| 1    | Opens admin console        | Vigilant        | Sidebar renders with pending-count badge     | Badge accurate on first load |
+| 2    | Scans volume metrics       | Assessing       | 4 stat cards with trend + sparkline          | Direction readable at once   |
+| 3    | Reads system health        | Alert           | Uptime, error rate, per-system state         | Degraded system stands out   |
+| 4    | Scans alert list           | Prioritising    | Alerts ordered by recency, tone-coded        | Severity obvious             |
+| 5    | Reads moderation queue     | Deciding        | Pending verifications, review queue, flagged | Counts link to their route   |
+| 6    | Clicks into the worst item | Committed       | Deep-links to the filtered queue             | Lands in context, not a list |
+
+### Failure Paths
+
+- All systems degraded → Health panel leads, alert banner above the fold
+- Alert with no owning route → Alert must still name what to do next
+- Stale counts → Badge and page counts disagree; both read from one source
+
+### Emotional Arc
+
+Vigilant → Assessing → Decisive (or overwhelmed if severity is not ranked)
+
+---
+
+## Journey 9: Listing Moderation
+
+**Actor:** Admin | **Duration:** 30 seconds - 4 minutes per listing | **Frequency:** Daily, batched
+
+**Entry point:** /admin/listings, usually via the overview queue
+
+### Steps
+
+| Step | User Action                 | Emotional State | System Behavior                                                                   | Success Criteria              |
+| ---- | --------------------------- | --------------- | --------------------------------------------------------------------------------- | ----------------------------- |
+| 1    | Filters to Pending/Flagged  | Focused         | Filter pills with counts, selection resets                                        | Queue narrows instantly       |
+| 2    | Scans compliance column     | Screening       | Pass/warn/fail signals per row                                                    | Problem rows readable at once |
+| 3    | Opens a row                 | Investigating   | Side panel: photos, description, flag reason, compliance checklist, agent contact | Everything needed, no new tab |
+| 4    | Approves clean listing      | Confident       | Status flips, row leaves pending count                                            | One click, no dialog          |
+| 5    | Rejects or requests changes | Deliberate      | Modal demands a note before submitting                                            | Cannot act without a reason   |
+| 6    | Selects a batch             | Efficient       | Bulk bar: Approve / Request Changes / Reject                                      | Same rules apply in bulk      |
+
+### Failure Paths
+
+- Ambiguous listing → Request Changes returns it to pending with the note attached
+- Empty filter result → "No listings match this filter right now"
+- Accidental bulk action → Note requirement forces a deliberate pause on destructive paths
+
+### Emotional Arc
+
+Focused → Investigating → Decisive → Accountable (the note is the audit trail)
+
+---
+
+## Journey 10: Tier Verification Review
+
+**Actor:** Admin | **Duration:** 2-6 minutes per request | **Frequency:** Daily
+
+**Entry point:** /admin/verifications, often from the sidebar badge
+
+### Steps
+
+| Step | User Action              | Emotional State | System Behavior                                            | Success Criteria          |
+| ---- | ------------------------ | --------------- | ---------------------------------------------------------- | ------------------------- |
+| 1    | Notices the badge count  | Prompted        | Sidebar badge shows pending total                          | Matches the page count    |
+| 2    | Reads the request card   | Evaluating      | Name, email, current → requested tier, doc count           | Upgrade path obvious      |
+| 3    | Reviews documents        | Diligent        | Review Docs opens the submitted evidence                   | Documents load in context |
+| 4    | Approves or rejects      | Judging         | Card moves status, counts and badge update                 | Immediate, visible change |
+| 5    | Revisits a past decision | Accountable     | Approved → Revoke; Rejected → View Reason / Allow Resubmit | Decisions are reversible  |
+
+### Failure Paths
+
+- Insufficient documents → Reject with reason, applicant can resubmit
+- Wrongly approved → Revoke path exists on approved cards
+- Platinum request from a standard tier → Upgrade path shown explicitly, not inferred
+
+### Emotional Arc
+
+Prompted → Diligent → Judging → Accountable
+
+---
+
+## Journey 11: User Enforcement
+
+**Actor:** Admin | **Duration:** 1-3 minutes | **Frequency:** Weekly, or triggered by an alert
+
+**Entry point:** /admin/users
+
+### Steps
+
+| Step | User Action           | Emotional State | System Behavior                                    | Success Criteria           |
+| ---- | --------------------- | --------------- | -------------------------------------------------- | -------------------------- |
+| 1    | Opens user management | Purposeful      | Header states active vs total                      | Standing visible at once   |
+| 2    | Sorts or filters      | Searching       | Sort by any column, default by name                | Target found fast          |
+| 3    | Reads the row         | Assessing       | Role chip, tier, join date, deal count, status     | Context without opening    |
+| 4    | Suspends the account  | Resolute        | Status flips, row tints, action becomes Reactivate | Reversible, visibly marked |
+| 5    | Suspends in bulk      | Efficient       | Bulk bar: Reactivate / Suspend                     | Header count updates       |
+
+### Failure Paths
+
+- Wrong user suspended → Reactivate restores standing immediately
+- High-value agent → Deal count is visible before acting
+- Empty result → "No users to show"
+
+### Emotional Arc
+
+Purposeful → Assessing → Resolute (with reversal always one click away)
+
+---
+
+## Journey 12: Revenue & Payout Oversight
+
+**Actor:** Admin | **Duration:** 10-20 minutes | **Frequency:** Weekly, plus month-end close
+
+**Entry point:** /admin/transactions → /admin/payments → /admin/reports
+
+### Steps
+
+| Step | User Action                 | Emotional State | System Behavior                               | Success Criteria              |
+| ---- | --------------------------- | --------------- | --------------------------------------------- | ----------------------------- |
+| 1    | Opens transactions          | Analytical      | Volume, commission and completed stats        | Totals reconcile with table   |
+| 2    | Inspects deals in escrow    | Watchful        | Status tints the initiated date               | Stuck deals stand out         |
+| 3    | Moves to payments           | Focused         | Revenue stats, monthly chart, breakdown donut | Trend legible at a glance     |
+| 4    | Reads the pending callout   | Concerned       | Warning callout with outstanding amount       | Amount and cause both stated  |
+| 5    | Releases payouts            | Decisive        | Process action, average processing time shown | Expectation set before action |
+| 6    | Opens reports for the story | Reflective      | GMV, growth, region ranking, user mix         | Explains the numbers above    |
+| 7    | Exports                     | Satisfied       | Download / Generate Custom                    | Figures match on-screen       |
+
+### Failure Paths
+
+- Totals disagree between stats and table footer → One derivation, computed from the same rows
+- Nothing outstanding → Pending callout is hidden rather than shown empty
+- No regional data → Panel shows an empty state, not an axis with no bars
+
+### Emotional Arc
+
+Analytical → Watchful → Decisive → Satisfied
+
+---
+
+## Journey 13: Platform Configuration
+
+**Actor:** Admin | **Duration:** 3-10 minutes | **Frequency:** Rare, high-consequence
+
+**Entry point:** /admin/settings
+
+### Steps
+
+| Step | User Action                | Emotional State | System Behavior                                                            | Success Criteria             |
+| ---- | -------------------------- | --------------- | -------------------------------------------------------------------------- | ---------------------------- |
+| 1    | Opens settings             | Cautious        | Config grouped: Platform, Marketplace, Moderation, Operations, Maintenance | Blast radius grouped by area |
+| 2    | Edits a marketplace value  | Careful         | Saved state clears, button returns to "Save Changes"                       | Unsaved work is obvious      |
+| 3    | Saves                      | Relieved        | Success callout, button reads "Saved"                                      | Confirmation is explicit     |
+| 4    | Reads the scope note       | Reassured       | "Applies to listings and payouts created from now on"                      | Retroactivity clarified      |
+| 5    | Toggles a policy           | Deliberate      | Each toggle states its consequence                                         | No guessing at the effect    |
+| 6    | Discards a change          | Safe            | Reset restores stored values and clears saved                              | Escape hatch always present  |
+| 7    | Enters maintenance actions | Wary            | Destructive actions separated, confirmation required                       | Hard to trigger by accident  |
+
+### Failure Paths
+
+- Navigates away dirty → Unsaved changes must warn before loss
+- Commission rate changed mid-deal → Scope note states new values are not retroactive
+- Maintenance mode enabled by accident → Confirmation step plus an obvious active-state indicator
+
+### Emotional Arc
+
+Cautious → Careful → Reassured (or anxious if scope of a change is unclear)
+
+---
+
 ## Emotional Arc Summary
+
+### Marketplace Journeys
 
 | Journey   | Hopeful | Focused | Confident | Committed | Satisfied |
 | --------- | ------- | ------- | --------- | --------- | --------- |
@@ -262,6 +448,20 @@ Confident (taking control) → Personalized (preferences saved)
 | Messaging | ✓       | ✓       | ✓         |           |           |
 | Auth      | ✓       |         |           |           | ✓         |
 | Profile   |         |         | ✓         |           | ✓         |
+
+### Admin Journeys
+
+Operators do not arrive hopeful — they arrive vigilant. The arc that matters is
+whether the console converts vigilance into a defensible decision.
+
+| Journey       | Vigilant | Investigating | Decisive | Accountable | Reassured |
+| ------------- | -------- | ------------- | -------- | ----------- | --------- |
+| Health Triage | ✓        | ✓             | ✓        |             |           |
+| Moderation    | ✓        | ✓             | ✓        | ✓           |           |
+| Verification  |          | ✓             | ✓        | ✓           |           |
+| Enforcement   | ✓        |               | ✓        | ✓           | ✓         |
+| Revenue       | ✓        | ✓             | ✓        |             | ✓         |
+| Configuration |          |               | ✓        | ✓           | ✓         |
 
 ---
 
