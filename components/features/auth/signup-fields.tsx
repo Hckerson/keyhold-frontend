@@ -3,16 +3,16 @@
 import type { ChangeEvent } from "react";
 import Link from "next/link";
 import {
+    AuthCheck,
     AuthField,
     AuthRoleChoice,
     type SignupRole,
 } from "@/components/features/auth/parts";
-import { Checkbox } from "@/components/ui/forms/checkbox";
 import { AUTH_ROUTES } from "@/lib/constants";
 import { MIN_PASSWORD_LENGTH, type FieldErrors } from "@/lib/validations/auth";
 
 const LEGAL_LINK_CLASS =
-    "text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth rounded-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
+    "text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
 export interface SignupFieldValues {
     fullName: string;
@@ -50,97 +50,94 @@ export function SignupFields({
 }: SignupFieldsProps) {
     return (
         <fieldset disabled={pending} className="flex flex-col gap-3">
-            <AuthRoleChoice
-                name="role"
-                legend="I'm here for"
-                value={role}
-                error={errors.role}
-                onChange={onRoleChange}
-            />
-
-            <AuthField
-                label="Full name"
-                name="fullName"
-                autoComplete="name"
-                placeholder="Elena Voss"
-                value={values.fullName}
-                error={errors.fullName}
-                onChange={onFieldChange("fullName")}
-                onBlur={onFieldBlur("fullName")}
-            />
-
-            <AuthField
-                label="Email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={values.email}
-                error={errors.email}
-                onChange={onFieldChange("email")}
-                onBlur={onFieldBlur("email")}
-            />
-
-            <AuthField
-                label="Password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
-                value={values.password}
-                error={errors.password}
-                onChange={onFieldChange("password")}
-                onBlur={onFieldBlur("password")}
-            />
-
-            <AuthField
-                label="Confirm password"
-                name="confirmPassword"
-                type="password"
-                autoComplete="new-password"
-                placeholder="Repeat your password"
-                value={values.confirmPassword}
-                error={errors.confirmPassword}
-                onChange={onFieldChange("confirmPassword")}
-                onBlur={onFieldBlur("confirmPassword")}
-            />
-
-            <div className="flex flex-col gap-1">
-                <Checkbox
-                    id="acceptedTerms"
-                    name="acceptedTerms"
-                    checked={acceptedTerms}
-                    aria-invalid={errors.acceptedTerms ? true : undefined}
-                    aria-describedby={
-                        errors.acceptedTerms ? "acceptedTerms-error" : undefined
-                    }
-                    onChange={(event) => onTermsChange(event.target.checked)}
-                    onBlur={onTermsBlur}
-                    label={
-                        <>
-                            I agree to the{" "}
-                            <Link
-                                href={AUTH_ROUTES.terms}
-                                className={LEGAL_LINK_CLASS}
-                            >
-                                Terms
-                            </Link>{" "}
-                            and{" "}
-                            <Link
-                                href={AUTH_ROUTES.privacy}
-                                className={LEGAL_LINK_CLASS}
-                            >
-                                Privacy Policy
-                            </Link>
-                        </>
-                    }
+            <div className="flex flex-col">
+                <AuthRoleChoice
+                    name="role"
+                    index="01"
+                    legend="I'm here for"
+                    value={role}
+                    error={errors.role}
+                    onChange={onRoleChange}
                 />
-                {errors.acceptedTerms && (
-                    <p id="acceptedTerms-error" className="text-error text-xs">
-                        {errors.acceptedTerms}
-                    </p>
-                )}
+
+                <AuthField
+                    index="02"
+                    label="Full name"
+                    name="fullName"
+                    autoComplete="name"
+                    placeholder="Elena Voss"
+                    value={values.fullName}
+                    error={errors.fullName}
+                    onChange={onFieldChange("fullName")}
+                    onBlur={onFieldBlur("fullName")}
+                />
+
+                <AuthField
+                    index="03"
+                    label="Email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                    value={values.email}
+                    error={errors.email}
+                    onChange={onFieldChange("email")}
+                    onBlur={onFieldBlur("email")}
+                />
+
+                <AuthField
+                    index="04"
+                    label="Password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+                    value={values.password}
+                    error={errors.password}
+                    onChange={onFieldChange("password")}
+                    onBlur={onFieldBlur("password")}
+                />
+
+                <AuthField
+                    index="05"
+                    label="Confirm password"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Repeat your password"
+                    value={values.confirmPassword}
+                    error={errors.confirmPassword}
+                    onChange={onFieldChange("confirmPassword")}
+                    onBlur={onFieldBlur("confirmPassword")}
+                />
             </div>
+
+            <AuthCheck
+                id="acceptedTerms"
+                name="acceptedTerms"
+                checked={acceptedTerms}
+                error={errors.acceptedTerms}
+                onChange={(event) => onTermsChange(event.target.checked)}
+                onBlur={onTermsBlur}
+                label={
+                    <>
+                        I agree to the{" "}
+                        <Link
+                            href={AUTH_ROUTES.terms}
+                            className={LEGAL_LINK_CLASS}
+                        >
+                            Terms
+                        </Link>{" "}
+                        and{" "}
+                        <Link
+                            href={AUTH_ROUTES.privacy}
+                            className={LEGAL_LINK_CLASS}
+                        >
+                            Privacy Policy
+                        </Link>
+                    </>
+                }
+            />
         </fieldset>
     );
 }

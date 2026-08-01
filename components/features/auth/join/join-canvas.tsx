@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Wordmark } from "@/components/brand/wordmark";
@@ -50,7 +52,12 @@ export function JoinCanvas({ children }: { children: ReactNode }) {
                 <div className="my-auto w-full">{children}</div>
             </main>
 
-            <footer className="text-sidebar-text-muted flex flex-wrap items-center justify-between gap-3 px-6 py-6 font-mono text-[10px] tracking-[0.14em] uppercase md:px-10">
+            <footer
+                className={cn(
+                    authLabelVariants({ tier: "label" }),
+                    "text-sidebar-text-muted flex flex-wrap items-center justify-between gap-3 px-6 py-6 md:px-10",
+                )}
+            >
                 <span>Discretion assured · By invitation and application</span>
                 <nav className="flex items-center gap-5">
                     {LEGAL.map((item) => (

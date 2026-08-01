@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import Link from "next/link";
 import {
     AuthField,
-    AuthFooterLink,
     AuthFormError,
     AuthFormHeader,
+    AuthNotice,
+    AuthPlane,
     AuthSubmit,
+    AuthTitleBlock,
 } from "@/components/features/auth/parts";
-import { Callout } from "@/components/ui/callout";
 import { apiClient } from "@/lib/api/client";
 import { AUTH_ENDPOINTS, AUTH_ROUTES } from "@/lib/constants";
 import { errorMessage } from "@/lib/utils/api-error";
@@ -25,6 +25,29 @@ const RESET_FAILED =
     "We couldn't reset your password. The link may have expired — request a new one.";
 
 const NEW_PASSWORD_VALUES = { password: "", confirmPassword: "" };
+
+const RECOVERY_STEP = { current: 2, total: 2 };
+
+const DONE_ENTRIES = [
+    {
+        label: "Ready when you are",
+        href: AUTH_ROUTES.login,
+        action: "Go to sign in",
+    },
+];
+
+const PENDING_ENTRIES = [
+    {
+        label: "Link expired",
+        href: AUTH_ROUTES.resetPassword,
+        action: "Request a new one",
+    },
+    {
+        label: "Know your password",
+        href: AUTH_ROUTES.login,
+        action: "Back to sign in",
+    },
+];
 
 export interface ResetConfirmStepProps {
     token: string;
@@ -80,30 +103,30 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
 
     if (done) {
         return (
-            <div className="flex flex-col gap-6">
+            <AuthPlane>
                 <AuthFormHeader
+                    kicker="Recovery complete"
                     title="Password updated"
                     description="Your new password is active. Sign in to pick up where you left off."
+                    step={RECOVERY_STEP}
                 />
-                <Callout
-                    variant="success"
+                <AuthNotice
+                    tone="success"
                     title="All set"
                     description="You can now sign in with your new password."
                 />
-                <AuthFooterLink
-                    prompt="Ready when you are."
-                    href={AUTH_ROUTES.login}
-                    label="Go to sign in"
-                />
-            </div>
+                <AuthTitleBlock entries={DONE_ENTRIES} />
+            </AuthPlane>
         );
     }
 
     return (
-        <div className="flex flex-col gap-6">
+        <AuthPlane>
             <AuthFormHeader
+                kicker="New credentials"
                 title="Choose a new password"
-                description="Pick something you haven't used before, at least 8 characters long."
+                description={`Pick something you haven't used before, at least ${MIN_PASSWORD_LENGTH} characters long.`}
+                step={RECOVERY_STEP}
             />
 
             <AuthFormError title="Reset failed" message={formError} />
@@ -113,8 +136,9 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
                 noValidate
                 className="flex flex-col gap-4"
             >
-                <fieldset disabled={pending} className="flex flex-col gap-3">
+                <fieldset disabled={pending} className="flex flex-col">
                     <AuthField
+                        index="01"
                         label="New password"
                         name="password"
                         type="password"
@@ -128,6 +152,7 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
                     />
 
                     <AuthField
+                        index="02"
                         label="Confirm new password"
                         name="confirmPassword"
                         type="password"
@@ -148,16 +173,8 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
                 />
             </form>
 
-            <p className="text-text-secondary text-xs">
-                Link expired?{" "}
-                <Link
-                    href={AUTH_ROUTES.resetPassword}
-                    className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth rounded-sm font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-                >
-                    Request a new one
-                </Link>
-            </p>
-        </div>
+            <AuthTitleBlock entries={PENDING_ENTRIES} />
+        </AuthPlane>
     );
 }
 

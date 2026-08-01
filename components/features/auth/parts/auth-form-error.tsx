@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Callout } from "@/components/ui/callout";
+import { AuthNotice } from "@/components/features/auth/parts/auth-notice";
 
 export interface AuthFormErrorProps {
     title: string;
@@ -21,9 +21,10 @@ export function AuthFormError({ title, message }: AuthFormErrorProps) {
             aria-live="assertive"
             tabIndex={-1}
             ref={containerRef}
+            className="focus-visible:outline-none"
         >
             {message && (
-                <Callout variant="error" title={title} description={message} />
+                <AuthNotice tone="error" title={title} description={message} />
             )}
         </div>
     );
