@@ -87,7 +87,6 @@ export function Wordmark({
             className="ease-smooth focus-visible:ring-accent inline-flex rounded-sm transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:outline-none"
         >
             {content}
-            sup
         </Link>
     );
 }
