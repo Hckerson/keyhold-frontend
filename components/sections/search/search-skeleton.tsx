@@ -5,11 +5,16 @@ const CARD_SLOTS = [0, 1, 2, 3, 4, 5];
 
 function CardSkeleton() {
     return (
-        <div className="border-border-light bg-background flex flex-col gap-2 overflow-hidden rounded-xl border p-3 shadow-sm">
-            <Skeleton className="aspect-4/3 w-full rounded-lg" />
-            <Skeleton className="h-3 w-2/3" />
-            <Skeleton className="h-3 w-1/2" />
-            <Skeleton className="h-8 w-full rounded-md" />
+        <div className="border-border-light bg-background-muted flex flex-col overflow-hidden rounded-xl border pb-2.5 shadow-sm">
+            <Skeleton className="h-48 w-full rounded-none" />
+
+            <div className="border-border-light bg-background relative z-10 mx-2.5 -mt-7 flex flex-col gap-2 rounded-lg border p-3">
+                <Skeleton className="h-2.5 w-24" />
+                <Skeleton className="h-3 w-2/3" />
+                <Skeleton className="h-6 w-32" />
+                <Skeleton className="h-9 w-full rounded-md" />
+                <Skeleton className="h-3 w-1/2" />
+            </div>
         </div>
     );
 }
