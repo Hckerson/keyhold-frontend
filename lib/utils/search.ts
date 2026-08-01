@@ -12,7 +12,7 @@ export const SORT_OPTIONS = [
     { value: "price-asc", label: "Price: low to high" },
     { value: "price-desc", label: "Price: high to low" },
     { value: "popular", label: "Most saved" },
-];
+] as const;
 
 export type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 

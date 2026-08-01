@@ -3,11 +3,13 @@
 import { useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SearchFiltersPanel } from "@/components/sections/search/search-filters";
+import { SearchHeader } from "@/components/sections/search/search-header";
+import { SearchRail } from "@/components/sections/search/search-rail";
 import {
     SearchToolbar,
     type ViewMode,
 } from "@/components/sections/search/search-toolbar";
+import { SearchResultsPanel } from "@/components/sections/search/search-results-panel";
 import { SearchResultsGrid } from "@/components/sections/search/search-results-grid";
 import { SearchResultsList } from "@/components/sections/search/search-results-list";
 import { SearchEmpty } from "@/components/sections/search/search-empty";
@@ -91,73 +93,81 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
     };
 
     return (
-        <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[260px_1fr]">
-            <aside className="lg:col-span-1">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => setPanelOpen((open) => !open)}
-                    className="w-full lg:hidden"
-                    icon={<SlidersHorizontal size={14} strokeWidth={1.5} />}
-                >
-                    {panelOpen ? "Hide filters" : "Filters"}
-                </Button>
+        <div className="flex w-full flex-col gap-4">
+            <SearchHeader location={applied.location} />
 
-                <div
-                    className={cn(
-                        "mt-3 lg:sticky lg:top-26 lg:mt-0",
-                        panelOpen ? "block" : "hidden lg:block",
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
+                <aside className="lg:col-span-1">
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setPanelOpen((open) => !open)}
+                        className="w-full lg:hidden"
+                        icon={<SlidersHorizontal size={12} strokeWidth={1.5} />}
+                    >
+                        {panelOpen ? "Hide filters" : "Filters"}
+                    </Button>
+
+                    <div
+                        className={cn(
+                            "mt-2 lg:mt-0",
+                            panelOpen ? "block" : "hidden lg:block",
+                        )}
+                    >
+                        <SearchRail
+                            draft={draft}
+                            counts={COUNTS}
+                            dirty={dirty}
+                            onChange={setDraft}
+                            onApply={apply}
+                            onReset={reset}
+                        />
+                    </div>
+                </aside>
+
+                <SearchResultsPanel
+                    toolbar={
+                        <SearchToolbar
+                            resultCount={results.length}
+                            totalCount={AVAILABLE_LISTINGS.length}
+                            view={view}
+                            onViewChange={setView}
+                            sort={sort}
+                            onSortChange={changeSort}
+                        />
+                    }
+                    filters={
+                        <SearchActiveFilters
+                            filters={activeFilters}
+                            onRemove={removeFilter}
+                            onClear={reset}
+                        />
+                    }
+                    footer={
+                        results.length > 0 && (
+                            <SearchPagination
+                                currentPage={currentPage}
+                                pageCount={pageCount}
+                                visibleCount={visible.length}
+                                resultCount={results.length}
+                                onPageChange={goToPage}
+                            />
+                        )
+                    }
+                >
+                    {visible.length === 0 ? (
+                        <SearchEmpty
+                            activeFilters={activeFilters}
+                            onRemove={removeFilter}
+                            onReset={reset}
+                        />
+                    ) : view === "grid" ? (
+                        <SearchResultsGrid listings={visible} />
+                    ) : (
+                        <SearchResultsList listings={visible} />
                     )}
-                >
-                    <SearchFiltersPanel
-                        draft={draft}
-                        counts={COUNTS}
-                        dirty={dirty}
-                        onChange={setDraft}
-                        onApply={apply}
-                        onReset={reset}
-                    />
-                </div>
-            </aside>
-
-            <div className="flex min-w-0 flex-col gap-5" id="results">
-                <SearchToolbar
-                    resultCount={results.length}
-                    totalCount={AVAILABLE_LISTINGS.length}
-                    view={view}
-                    onViewChange={setView}
-                    sort={sort}
-                    onSortChange={changeSort}
-                />
-
-                <SearchActiveFilters
-                    filters={activeFilters}
-                    onRemove={removeFilter}
-                    onClear={reset}
-                />
-
-                {visible.length === 0 ? (
-                    <SearchEmpty
-                        activeFilters={activeFilters}
-                        onRemove={removeFilter}
-                        onReset={reset}
-                    />
-                ) : view === "grid" ? (
-                    <SearchResultsGrid listings={visible} />
-                ) : (
-                    <SearchResultsList listings={visible} />
-                )}
-
-                {results.length > 0 && (
-                    <SearchPagination
-                        currentPage={currentPage}
-                        pageCount={pageCount}
-                        visibleCount={visible.length}
-                        resultCount={results.length}
-                        onPageChange={goToPage}
-                    />
-                )}
+                </SearchResultsPanel>
             </div>
         </div>
     );

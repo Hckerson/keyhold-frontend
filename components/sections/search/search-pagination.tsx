@@ -1,16 +1,20 @@
 "use client";
 
-import {
-    Pagination,
-    PaginationList,
-    PaginationItem,
-    PaginationLink,
-} from "@/components/ui/pagination";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SEARCH_PAGE_SIZE } from "@/lib/utils/search";
+import { cn } from "@/lib/utils";
 
 const EDGE_PAGES = 1;
 const SIBLING_PAGES = 1;
 const MAX_INLINE_PAGES = 7;
+
+const pagerBase =
+    "ease-smooth focus-visible:ring-accent inline-flex h-7 items-center justify-center rounded-md border text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-40";
+
+const pagerIdle =
+    "border-border bg-background text-text-secondary hover:border-border-dark hover:text-text";
+
+const pagerActive = "border-accent bg-accent text-text-inverse font-medium";
 
 type PageSlot = number | "gap-start" | "gap-end";
 
@@ -49,67 +53,63 @@ export function SearchPagination({
     onPageChange,
 }: SearchPaginationProps) {
     const firstIndex = (currentPage - 1) * SEARCH_PAGE_SIZE + 1;
+    const lastIndex = firstIndex + visibleCount - 1;
 
     return (
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <p className="text-text-muted text-xs tabular-nums">
-                Showing {firstIndex}–{firstIndex + visibleCount - 1} of{" "}
-                {resultCount}
+        <div className="border-border-dark flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
+            <p className="micro-label tabular-nums">
+                Showing {firstIndex}&ndash;{lastIndex} of {resultCount}
             </p>
 
-            <Pagination>
-                <PaginationList>
-                    <PaginationItem>
-                        <PaginationLink
-                            href="#results"
-                            aria-disabled={currentPage === 1}
-                            onClick={(event) => {
-                                event.preventDefault();
-                                onPageChange(currentPage - 1);
-                            }}
+            <nav aria-label="Pagination" className="flex items-center gap-1">
+                <button
+                    type="button"
+                    onClick={() => onPageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    aria-label="Previous page"
+                    className={cn(pagerBase, pagerIdle, "size-7")}
+                >
+                    <ChevronLeft size={12} strokeWidth={1.5} />
+                </button>
+
+                {buildPageSlots(currentPage, pageCount).map((slot) =>
+                    typeof slot === "number" ? (
+                        <button
+                            key={slot}
+                            type="button"
+                            onClick={() => onPageChange(slot)}
+                            aria-current={
+                                slot === currentPage ? "page" : undefined
+                            }
+                            className={cn(
+                                pagerBase,
+                                "min-w-7 px-1.5 tabular-nums",
+                                slot === currentPage ? pagerActive : pagerIdle,
+                            )}
                         >
-                            Previous
-                        </PaginationLink>
-                    </PaginationItem>
-                    {buildPageSlots(currentPage, pageCount).map((slot) =>
-                        typeof slot === "number" ? (
-                            <PaginationItem key={slot}>
-                                <PaginationLink
-                                    href="#results"
-                                    isActive={slot === currentPage}
-                                    onClick={(event) => {
-                                        event.preventDefault();
-                                        onPageChange(slot);
-                                    }}
-                                >
-                                    {slot}
-                                </PaginationLink>
-                            </PaginationItem>
-                        ) : (
-                            <PaginationItem key={slot}>
-                                <span
-                                    aria-hidden="true"
-                                    className="text-text-muted px-2 text-xs"
-                                >
-                                    &hellip;
-                                </span>
-                            </PaginationItem>
-                        ),
-                    )}
-                    <PaginationItem>
-                        <PaginationLink
-                            href="#results"
-                            aria-disabled={currentPage === pageCount}
-                            onClick={(event) => {
-                                event.preventDefault();
-                                onPageChange(currentPage + 1);
-                            }}
+                            {slot}
+                        </button>
+                    ) : (
+                        <span
+                            key={slot}
+                            aria-hidden="true"
+                            className="text-text-muted px-0.5 font-mono text-[10px]"
                         >
-                            Next
-                        </PaginationLink>
-                    </PaginationItem>
-                </PaginationList>
-            </Pagination>
+                            &hellip;
+                        </span>
+                    ),
+                )}
+
+                <button
+                    type="button"
+                    onClick={() => onPageChange(currentPage + 1)}
+                    disabled={currentPage === pageCount}
+                    aria-label="Next page"
+                    className={cn(pagerBase, pagerIdle, "size-7")}
+                >
+                    <ChevronRight size={12} strokeWidth={1.5} />
+                </button>
+            </nav>
         </div>
     );
 }
