@@ -35,18 +35,18 @@ function Brand({
     return (
         <div
             className={cn(
-                "border-sidebar-border relative flex h-16 items-center border-b",
-                collapsed ? "justify-center px-0" : "gap-3 px-4",
+                "border-sidebar-border relative flex h-14 items-center border-b",
+                collapsed ? "justify-center px-0" : "gap-2 px-3",
             )}
         >
-            <LogoChip tone="dark" size="md" />
+            <LogoChip tone="dark" size="sm" />
             {!collapsed && (
                 <div className="min-w-0">
-                    <p className="text-sidebar-text-active font-display truncate text-base leading-none font-light">
+                    <p className="text-sidebar-text-active font-display truncate text-sm leading-none font-light">
                         {brand.full}
                     </p>
                     {brand.tagline && (
-                        <p className="text-highlight/80 text-caption mt-1 tracking-[0.16em] uppercase">
+                        <p className="text-highlight/80 text-caption mt-0.5 tracking-[0.16em] uppercase">
                             {brand.tagline}
                         </p>
                     )}
@@ -81,7 +81,7 @@ export function Sidebar({
         <aside
             className={cn(
                 "bg-sidebar border-sidebar-border ease-smooth relative flex h-screen shrink-0 flex-col border-r transition-[width] duration-300",
-                collapsed ? "w-14" : "w-56",
+                collapsed ? "w-12" : "w-52",
                 className,
             )}
         >
@@ -99,10 +99,10 @@ export function Sidebar({
                 onClick={() => setCollapsed((value) => !value)}
                 aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
                 aria-pressed={collapsed}
-                className="border-sidebar-border bg-sidebar text-sidebar-text hover:text-highlight hover:border-highlight/40 ease-smooth absolute top-24 -right-3 z-50 grid size-6 -translate-y-1/2 place-items-center rounded-full border shadow-md transition-colors duration-200"
+                className="border-sidebar-border bg-sidebar text-sidebar-text hover:text-highlight hover:border-highlight/40 ease-smooth absolute top-20 -right-3 z-50 grid size-5 -translate-y-1/2 place-items-center rounded-full border shadow-md transition-colors duration-200"
             >
                 <ChevronLeft
-                    size={14}
+                    size={12}
                     strokeWidth={2}
                     className={cn(
                         "ease-smooth transition-transform duration-300",

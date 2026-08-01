@@ -7,7 +7,7 @@ export function FooterLocalityIndex() {
     return (
         <section
             aria-labelledby="footer-localities"
-            className="border-sidebar-border relative z-10 mt-14 border-t border-b py-6"
+            className="border-sidebar-border relative z-10 border-b pb-6"
         >
             <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <h2
