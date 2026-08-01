@@ -1,7 +1,8 @@
 "use client";
 
 import { Panel } from "@/components/ui/panel";
-import { ComparisonTable } from "@/components/features/offers/comparison-table";
+import { DataTable } from "@/components/patterns/data-table";
+import { buildComparisonConfig } from "@/components/features/offers/comparison-columns";
 import { CounterOfferPanel } from "@/components/features/offers/counter-offer-panel";
 import { OfferMessagesPanel } from "@/components/features/offers/offer-messages-panel";
 import { TimelineList } from "@/components/features/offers/timeline-list";
@@ -49,7 +50,10 @@ export function OfferDetailPanels({
                     title="Offer Comparison"
                     description="Click any term to expand the detail"
                 >
-                    <ComparisonTable rows={detail.comparison} />
+                    <DataTable
+                        {...buildComparisonConfig()}
+                        data={detail.comparison}
+                    />
                 </Panel>
 
                 <CounterOfferPanel

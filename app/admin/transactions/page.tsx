@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatCard } from "@/components/ui/stat-card";
-import { TransactionTable } from "@/components/features/admin/transaction-table";
+import { DataTable } from "@/components/patterns/data-table";
+import { buildTransactionTableConfig } from "@/components/features/admin/transaction-table-columns";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 
 import type { Transaction } from "@/lib/types";
@@ -89,7 +90,10 @@ export default function AdminTransactionsPage() {
                 />
             </div>
 
-            <TransactionTable transactions={transactions} />
+            <DataTable
+                {...buildTransactionTableConfig()}
+                data={transactions}
+            />
         </div>
     );
 }

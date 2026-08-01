@@ -4,11 +4,16 @@ import {
     StatusBadge,
     type StatusBadgeProps,
 } from "@/components/ui/status-badge";
-import type { DataTableColumn } from "@/components/patterns/data-table";
+import { Button } from "@/components/ui/button";
+import type {
+    DataTableColumn,
+    DataTableConfig,
+} from "@/components/patterns/data-table";
 import {
     UserCell,
     UserRowActions,
 } from "@/components/features/admin/user-table-cells";
+import { TABLE_PAGE_SIZE } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type {
     ManagedUser,
@@ -121,4 +126,49 @@ export function buildUserColumns(
             ),
         },
     ];
+}
+
+export function buildUserTableConfig(
+    onStatusChange?: (ids: string[], status: UserStatus) => void,
+    pageSize: number = TABLE_PAGE_SIZE,
+): DataTableConfig<ManagedUser> {
+    return {
+        columns: buildUserColumns(onStatusChange),
+        rowKey: (row) => row.id,
+        rowClassName: (row) => userStatusMeta[row.status].rowTone,
+        caption:
+            "Platform users with role, tier, join date, deal count and account status",
+        emptyMessage: "No users to show",
+        defaultSort: { id: "user", direction: "asc" },
+        selectable: true,
+        pageSize,
+        bulkActions: (rows) => (
+            <>
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                        onStatusChange?.(
+                            rows.map((row) => row.id),
+                            "active",
+                        )
+                    }
+                >
+                    Reactivate
+                </Button>
+                <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() =>
+                        onStatusChange?.(
+                            rows.map((row) => row.id),
+                            "suspended",
+                        )
+                    }
+                >
+                    Suspend
+                </Button>
+            </>
+        ),
+    };
 }

@@ -1,12 +1,16 @@
 "use client";
 
 import { StatusBadge } from "@/components/ui/status-badge";
-import type { DataTableColumn } from "@/components/patterns/data-table";
+import type {
+    DataTableColumn,
+    DataTableConfig,
+} from "@/components/patterns/data-table";
 import {
     PropertyCell,
     TransactionRowActions,
     transactionStatusMeta,
 } from "@/components/features/admin/transaction-table-cells";
+import { DEFAULT_COMMISSION_RATE, TABLE_PAGE_SIZE } from "@/lib/constants";
 import { cn, formatMillions } from "@/lib/utils";
 import type { Transaction } from "@/lib/types";
 
@@ -94,4 +98,20 @@ export function buildTransactionColumns(
             render: (row) => <TransactionRowActions transaction={row} />,
         },
     ];
+}
+
+export function buildTransactionTableConfig(
+    commissionRate: number = DEFAULT_COMMISSION_RATE,
+    pageSize: number = TABLE_PAGE_SIZE,
+): DataTableConfig<Transaction> {
+    return {
+        columns: buildTransactionColumns(commissionRate),
+        rowKey: (row) => row.id,
+        rowClassName: (row) => transactionStatusMeta[row.status].rowTone,
+        caption:
+            "Marketplace transactions with sale price, commission, initiation date and status",
+        emptyMessage: "No transactions to show",
+        defaultSort: { id: "initiated", direction: "desc" },
+        pageSize,
+    };
 }

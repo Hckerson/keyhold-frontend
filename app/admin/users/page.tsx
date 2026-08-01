@@ -3,7 +3,8 @@
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import { UserTable } from "@/components/features/admin/user-table";
+import { DataTable } from "@/components/patterns/data-table";
+import { buildUserTableConfig } from "@/components/features/admin/user-table-columns";
 import type { ManagedUser, UserStatus } from "@/lib/types";
 const INITIAL_USERS: ManagedUser[] = [
     {
@@ -81,7 +82,10 @@ export default function AdminUsersPage() {
                 }
             />
 
-            <UserTable users={users} onStatusChange={handleStatusChange} />
+            <DataTable
+                {...buildUserTableConfig(handleStatusChange)}
+                data={users}
+            />
         </div>
     );
 }
