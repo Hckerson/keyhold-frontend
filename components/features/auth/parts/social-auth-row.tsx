@@ -1,6 +1,5 @@
-import { buttonVariants } from "@/components/ui/button";
-import { Divider } from "@/components/ui/divider";
 import { PROVIDER_MARKS } from "@/components/features/auth/parts/provider-marks";
+import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { AUTH_PROVIDERS, oauthStartUrl } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -29,15 +28,20 @@ export function SocialAuthRow({
     if (providers.length === 0) return null;
 
     return (
-        <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3">
-                <Divider className="flex-1" />
-                <span className="text-text-muted font-mono text-[10px] tracking-wide uppercase select-none">
+        <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-2">
+                <span aria-hidden="true" className="bg-border h-px flex-1" />
+                <span
+                    className={cn(
+                        authLabelVariants({ tier: "label" }),
+                        "text-text-muted select-none",
+                    )}
+                >
                     {label}
                 </span>
-                <Divider className="flex-1" />
+                <span aria-hidden="true" className="bg-border h-px flex-1" />
             </div>
-            <div className="bg-background-muted border-border-light grid grid-cols-1 gap-2 rounded-lg border p-2">
+            <div className="grid grid-cols-2 gap-2">
                 {providers.map((provider) => {
                     const Mark = PROVIDER_MARKS[provider];
                     const name = PROVIDER_LABELS[provider] ?? provider;
@@ -46,19 +50,17 @@ export function SocialAuthRow({
                         <a
                             key={provider}
                             href={oauthStartUrl(provider, redirectTo)}
+                            aria-label={`${action} with ${name}`}
                             aria-disabled={disabled || undefined}
                             tabIndex={disabled ? -1 : undefined}
                             className={cn(
-                                buttonVariants({
-                                    variant: "secondary",
-                                    size: "sm",
-                                }),
-                                "w-full gap-2",
+                                authLabelVariants({ tier: "label" }),
+                                "border-border bg-background text-text-secondary hover:border-highlight hover:text-text focus-visible:ring-accent ease-smooth flex h-9 items-center justify-center gap-2 rounded-xs border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                                 disabled && "pointer-events-none opacity-50",
                             )}
                         >
-                            <Mark className="size-4 shrink-0" />
-                            {`${action} with ${name}`}
+                            <Mark className="size-3.5 shrink-0" />
+                            {name}
                         </a>
                     );
                 })}

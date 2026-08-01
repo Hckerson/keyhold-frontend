@@ -3,10 +3,11 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
-    AuthFooterLink,
     AuthFormError,
     AuthFormHeader,
+    AuthPlane,
     AuthSubmit,
+    AuthTitleBlock,
     SocialAuthRow,
     type SignupRole,
 } from "@/components/features/auth/parts";
@@ -42,6 +43,19 @@ const INITIAL_VALUES: SignupFieldValues = {
 
 const SIGN_UP_FAILED =
     "We couldn't create your account. Review your details and try again.";
+
+const FOOTER_ENTRIES = [
+    {
+        label: "Already a member",
+        href: AUTH_ROUTES.login,
+        action: "Sign in",
+    },
+    {
+        label: "How we handle data",
+        href: AUTH_ROUTES.privacy,
+        action: "Privacy policy",
+    },
+];
 
 export function SignupForm() {
     const router = useRouter();
@@ -126,8 +140,9 @@ export function SignupForm() {
     };
 
     return (
-        <div className="flex flex-col gap-6">
+        <AuthPlane>
             <AuthFormHeader
+                kicker="New application"
                 title="Begin your application"
                 description="Apply for access to the marketplace — as a buyer seeking a residence, or an agent presenting one."
             />
@@ -166,12 +181,8 @@ export function SignupForm() {
                 disabled={pending}
             />
 
-            <AuthFooterLink
-                prompt="Already have an account?"
-                href={AUTH_ROUTES.login}
-                label="Sign in"
-            />
-        </div>
+            <AuthTitleBlock entries={FOOTER_ENTRIES} />
+        </AuthPlane>
     );
 }
 

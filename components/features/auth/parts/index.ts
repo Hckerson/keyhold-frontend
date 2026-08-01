@@ -1,8 +1,17 @@
+export { AuthPlane } from "./auth-plane";
+export type { AuthPlaneProps } from "./auth-plane";
+
 export { AuthFormHeader } from "./auth-form-header";
-export type { AuthFormHeaderProps } from "./auth-form-header";
+export type { AuthFormHeaderProps, AuthStep } from "./auth-form-header";
 
 export { AuthField } from "./auth-field";
 export type { AuthFieldProps } from "./auth-field";
+
+export { AuthCheck } from "./auth-check";
+export type { AuthCheckProps } from "./auth-check";
+
+export { AuthNotice } from "./auth-notice";
+export type { AuthNoticeProps, AuthNoticeTone } from "./auth-notice";
 
 export { AuthFormError } from "./auth-form-error";
 export type { AuthFormErrorProps } from "./auth-form-error";
@@ -13,8 +22,11 @@ export type { AuthRoleChoiceProps, SignupRole } from "./auth-role-choice";
 export { SocialAuthRow } from "./social-auth-row";
 export type { SocialAuthRowProps } from "./social-auth-row";
 
-export { AuthFooterLink } from "./auth-footer-link";
-export type { AuthFooterLinkProps } from "./auth-footer-link";
+export { AuthTitleBlock } from "./auth-title-block";
+export type {
+    AuthTitleBlockEntry,
+    AuthTitleBlockProps,
+} from "./auth-title-block";
 
 export { AuthSubmit } from "./auth-submit";
 export type { AuthSubmitProps } from "./auth-submit";

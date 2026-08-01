@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import { cn } from "@/lib/utils";
 import {
     AuthField,
-    AuthFooterLink,
     AuthFormError,
     AuthFormHeader,
+    AuthNotice,
+    AuthPlane,
     AuthSubmit,
+    AuthTitleBlock,
 } from "@/components/features/auth/parts";
-import { Callout } from "@/components/ui/callout";
 import { apiClient } from "@/lib/api/client";
 import { AUTH_ENDPOINTS, AUTH_ROUTES } from "@/lib/constants";
 import { errorMessage } from "@/lib/utils/api-error";
@@ -23,6 +26,16 @@ const REQUEST_FAILED =
     "We couldn't send the reset link. Check the address and try again.";
 
 const REQUEST_VALUES = { email: "" };
+
+const RECOVERY_STEP = { current: 1, total: 2 };
+
+const FOOTER_ENTRIES = [
+    {
+        label: "Remembered it",
+        href: AUTH_ROUTES.login,
+        action: "Back to sign in",
+    },
+];
 
 export function ResetRequestStep() {
     const [values, setValues] = useState(REQUEST_VALUES);
@@ -62,39 +75,40 @@ export function ResetRequestStep() {
 
     if (sentTo) {
         return (
-            <div className="flex flex-col gap-6">
+            <AuthPlane>
                 <AuthFormHeader
+                    kicker="Link dispatched"
                     title="Check your inbox"
                     description="Follow the link in the message to choose a new password. It expires in 30 minutes."
+                    step={RECOVERY_STEP}
                 />
-                <Callout
-                    variant="success"
+                <AuthNotice
+                    tone="success"
                     title="Reset link sent"
                     description={`We sent instructions to ${sentTo}.`}
                 />
-                <div className="flex flex-col gap-2">
-                    <button
-                        type="button"
-                        onClick={() => setSentTo(null)}
-                        className="text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth self-start rounded-sm text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-                    >
-                        Use a different email address
-                    </button>
-                    <AuthFooterLink
-                        prompt="Remembered it?"
-                        href={AUTH_ROUTES.login}
-                        label="Back to sign in"
-                    />
-                </div>
-            </div>
+                <button
+                    type="button"
+                    onClick={() => setSentTo(null)}
+                    className={cn(
+                        authLabelVariants({ tier: "label" }),
+                        "text-text-muted hover:text-accent focus-visible:ring-accent ease-smooth self-start rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                    )}
+                >
+                    Use a different email
+                </button>
+                <AuthTitleBlock entries={FOOTER_ENTRIES} />
+            </AuthPlane>
         );
     }
 
     return (
-        <div className="flex flex-col gap-6">
+        <AuthPlane>
             <AuthFormHeader
+                kicker="Account recovery"
                 title="Reset your password"
                 description="Enter the email on your account and we'll send a link to set a new password."
+                step={RECOVERY_STEP}
             />
 
             <AuthFormError title="Request failed" message={formError} />
@@ -104,8 +118,9 @@ export function ResetRequestStep() {
                 noValidate
                 className="flex flex-col gap-4"
             >
-                <fieldset disabled={pending}>
+                <fieldset disabled={pending} className="flex flex-col">
                     <AuthField
+                        index="01"
                         label="Email"
                         name="email"
                         type="email"
@@ -135,12 +150,8 @@ export function ResetRequestStep() {
                 />
             </form>
 
-            <AuthFooterLink
-                prompt="Remembered it?"
-                href={AUTH_ROUTES.login}
-                label="Back to sign in"
-            />
-        </div>
+            <AuthTitleBlock entries={FOOTER_ENTRIES} />
+        </AuthPlane>
     );
 }
 
