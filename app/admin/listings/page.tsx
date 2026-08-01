@@ -3,11 +3,13 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import { ModerationToolbar } from "@/components/features/admin/moderation-toolbar";
-import { ModerationListingList } from "@/components/features/admin/moderation-listing-list";
+import { DataTable } from "@/components/patterns/data-table";
+import { FilterPills } from "@/components/patterns/filter-pills";
+import { buildModerationTableConfig } from "@/components/features/admin/moderation-listing-columns";
 import { ModerationDecisionModal } from "@/components/features/admin/moderation-decision-modal";
 import {
     INITIAL_LISTINGS,
+    MODERATION_FILTERS,
     type Decision,
     type DecisionMode,
     type ModerationFilterKey,
@@ -18,6 +20,7 @@ export default function AdminModerationPage() {
     const [items, setItems] = useState<ModerationListing[]>(INITIAL_LISTINGS);
     const [filter, setFilter] = useState<ModerationFilterKey>("all");
     const [selected, setSelected] = useState<string[]>([]);
+    const [openId, setOpenId] = useState<string | null>(null);
     const [decision, setDecision] = useState<Decision | null>(null);
     const [note, setNote] = useState("");
 
@@ -41,12 +44,10 @@ export default function AdminModerationPage() {
         [items, filter],
     );
 
-    const toggleOne = (id: string) => {
-        setSelected((current) =>
-            current.includes(id)
-                ? current.filter((item) => item !== id)
-                : [...current, id],
-        );
+    const changeFilter = (key: ModerationFilterKey) => {
+        setFilter(key);
+        setSelected([]);
+        setOpenId(null);
     };
 
     const approve = (ids: string[]) => {
@@ -103,6 +104,21 @@ export default function AdminModerationPage() {
         closeDecision();
     };
 
+    const tableConfig = useMemo(
+        () =>
+            buildModerationTableConfig({
+                onApprove: (id) => {
+                    setOpenId(null);
+                    approve([id]);
+                },
+                onDecision: (mode, id) => {
+                    setOpenId(null);
+                    openDecision(mode, [id]);
+                },
+            }),
+        [],
+    );
+
     return (
         <div className="space-y-3">
             <PageHeader
@@ -115,23 +131,48 @@ export default function AdminModerationPage() {
                 }
             />
 
-            <ModerationToolbar
-                filter={filter}
+            <FilterPills
+                filters={MODERATION_FILTERS}
+                active={filter}
+                onChange={changeFilter}
                 counts={counts}
-                onFilterChange={setFilter}
-                visibleIds={visible.map((item) => item.id)}
-                selected={selected}
-                onSelectedChange={setSelected}
-                onApprove={approve}
-                onDecision={openDecision}
             />
 
-            <ModerationListingList
-                listings={visible}
-                selected={selected}
-                onToggle={toggleOne}
-                onApprove={approve}
-                onDecision={openDecision}
+            <DataTable
+                {...tableConfig}
+                data={visible}
+                selectedKeys={selected}
+                onSelectedKeysChange={setSelected}
+                openKey={openId}
+                onOpenChange={setOpenId}
+                bulkActions={(rows) => {
+                    const ids = rows.map((row) => row.id);
+                    return (
+                        <>
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => approve(ids)}
+                            >
+                                Approve
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => openDecision("changes", ids)}
+                            >
+                                Request Changes
+                            </Button>
+                            <Button
+                                variant="outline-danger"
+                                size="sm"
+                                onClick={() => openDecision("reject", ids)}
+                            >
+                                Reject
+                            </Button>
+                        </>
+                    );
+                }}
             />
 
             <ModerationDecisionModal
