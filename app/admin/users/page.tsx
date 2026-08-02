@@ -3,12 +3,9 @@
 import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-    UserTable,
-    type ManagedUser,
-    type UserStatus,
-} from "@/components/patterns/user-table";
-
+import { DataTable } from "@/components/patterns/data-table";
+import { buildUserTableConfig } from "@/components/features/admin/user-table-columns";
+import type { ManagedUser, UserStatus } from "@/lib/types";
 const INITIAL_USERS: ManagedUser[] = [
     {
         id: "1",
@@ -69,7 +66,7 @@ export default function AdminUsersPage() {
     const active = users.filter((user) => user.status === "active").length;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="User Management"
                 description={`${active} active user${active !== 1 ? "s" : ""} · ${users.length} total`}
@@ -85,7 +82,10 @@ export default function AdminUsersPage() {
                 }
             />
 
-            <UserTable users={users} onStatusChange={handleStatusChange} />
+            <DataTable
+                {...buildUserTableConfig(handleStatusChange)}
+                data={users}
+            />
         </div>
     );
 }

@@ -4,15 +4,18 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+    AuthCheck,
     AuthField,
-    AuthFooterLink,
     AuthFormError,
     AuthFormHeader,
+    AuthPlane,
     AuthSubmit,
+    AuthTitleBlock,
     SocialAuthRow,
-} from "@/components/patterns/auth";
-import { Checkbox } from "@/components/ui/checkbox";
-import { apiClient } from "@/lib/api-client";
+} from "@/components/features/auth/parts";
+import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import { apiClient } from "@/lib/api/client";
+import { cn } from "@/lib/utils";
 import {
     ACCESS_TOKEN_COOKIE,
     AUTH_ENDPOINTS,
@@ -36,6 +39,19 @@ const INITIAL_VALUES = { email: "", password: "" };
 
 const SIGN_IN_FAILED =
     "We couldn't sign you in. Check your email and password, then try again.";
+
+const FOOTER_ENTRIES = [
+    {
+        label: "New here",
+        href: AUTH_ROUTES.signup,
+        action: "Apply for access",
+    },
+    {
+        label: "Trouble signing in",
+        href: AUTH_ROUTES.resetPassword,
+        action: "Reset password",
+    },
+];
 
 export interface LoginFormProps {
     redirectTo?: string;
@@ -105,8 +121,9 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
     };
 
     return (
-        <div className="flex flex-col gap-6">
+        <AuthPlane>
             <AuthFormHeader
+                kicker="Returning member"
                 title="Sign in to your account"
                 description="Access saved residences, private viewings and your advisor's notes."
             />
@@ -119,40 +136,47 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 className="flex flex-col gap-4"
             >
                 <fieldset disabled={pending} className="flex flex-col gap-3">
-                    <AuthField
-                        label="Email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        autoFocus
-                        placeholder="you@example.com"
-                        value={values.email}
-                        error={errors.email}
-                        onChange={handleChange("email")}
-                        onBlur={handleBlur("email")}
-                    />
+                    <div className="flex flex-col">
+                        <AuthField
+                            index="01"
+                            label="Email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            autoFocus
+                            placeholder="you@example.com"
+                            value={values.email}
+                            error={errors.email}
+                            onChange={handleChange("email")}
+                            onBlur={handleBlur("email")}
+                        />
 
-                    <AuthField
-                        label="Password"
-                        name="password"
-                        type="password"
-                        autoComplete="current-password"
-                        placeholder="Your password"
-                        value={values.password}
-                        error={errors.password}
-                        onChange={handleChange("password")}
-                        onBlur={handleBlur("password")}
-                        hint={
-                            <Link
-                                href={AUTH_ROUTES.resetPassword}
-                                className="text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth rounded-sm text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-                            >
-                                Forgot password?
-                            </Link>
-                        }
-                    />
+                        <AuthField
+                            index="02"
+                            label="Password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            placeholder="Your password"
+                            value={values.password}
+                            error={errors.password}
+                            onChange={handleChange("password")}
+                            onBlur={handleBlur("password")}
+                            hint={
+                                <Link
+                                    href={AUTH_ROUTES.resetPassword}
+                                    className={cn(
+                                        authLabelVariants({ tier: "label" }),
+                                        "text-text-muted hover:text-accent focus-visible:ring-accent ease-smooth rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                                    )}
+                                >
+                                    Forgot?
+                                </Link>
+                            }
+                        />
+                    </div>
 
-                    <Checkbox
+                    <AuthCheck
                         id="remember"
                         name="remember"
                         label="Keep me signed in on this device"
@@ -175,12 +199,8 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 disabled={pending}
             />
 
-            <AuthFooterLink
-                prompt="No account yet?"
-                href={AUTH_ROUTES.signup}
-                label="Apply for access"
-            />
-        </div>
+            <AuthTitleBlock entries={FOOTER_ENTRIES} />
+        </AuthPlane>
     );
 }
 

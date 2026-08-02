@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CalendarCheck, FileSignature, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { SectionEyebrow } from "@/components/sections/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-heading";
 
 export interface ListingEnquiryCardProps {
     responseTime: string;

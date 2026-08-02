@@ -9,11 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ListingDetail } from "@/components/sections/listing/listing-detail";
 import { ListingUnavailable } from "@/components/sections/listing/listing-unavailable";
-import {
-    LISTINGS,
-    getListing,
-    getComparables,
-} from "@/app/(public)/_data/listings";
+import { LISTINGS, getListing, getComparables } from "@/lib/data/listings";
 
 interface ListingDetailPageProps {
     params: Promise<{ id: string }>;

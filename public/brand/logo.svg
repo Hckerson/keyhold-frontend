@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 142 32" width="142" height="32" role="img" aria-label="Luxury RE">
+    <rect width="32" height="32" rx="4" fill="#1f4e3d" />
+    <path
+        transform="translate(7 7) scale(0.75)"
+        d="M5 3.6H13V5.4H10.6V18.2H17V16.2H19V20.6H5V18.2H7.4V5.4H5Z"
+        fill="#b08d57"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+    />
+    <text
+        x="42"
+        y="22"
+        font-family="Fraunces, Georgia, 'Times New Roman', serif"
+        font-size="19"
+        font-weight="300"
+        letter-spacing="0.1"
+        fill="#1c1a17"
+    >Luxury <tspan font-style="italic" fill="#93733f">RE</tspan></text>
+</svg>

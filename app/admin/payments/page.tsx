@@ -2,8 +2,14 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Panel } from "@/components/ui/panel";
 import { StatCard } from "@/components/ui/stat-card";
-import { ColumnChart, type ColumnSeries } from "@/components/ui/column-chart";
-import { DonutChart, type DonutSegment } from "@/components/ui/donut-chart";
+import {
+    ColumnChart,
+    type ColumnSeries,
+} from "@/components/ui/charts/column-chart";
+import {
+    DonutChart,
+    type DonutSegment,
+} from "@/components/ui/charts/donut-chart";
 import { SummaryRow } from "@/components/ui/summary-row";
 import { Callout } from "@/components/ui/callout";
 
@@ -29,7 +35,7 @@ const revenueSplit: DonutSegment[] = [
 
 export default function AdminPaymentsPage() {
     return (
-        <div className="space-y-6">
+        <div className="space-y-3">
             <PageHeader
                 title="Payment & Revenue"
                 description="Commissions, platform fees, and payouts"
@@ -40,7 +46,7 @@ export default function AdminPaymentsPage() {
                 }
             />
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                 <StatCard
                     label="Revenue YTD"
                     value="$1.24M"
@@ -82,7 +88,7 @@ export default function AdminPaymentsPage() {
                 />
             </Panel>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
                 <Panel title="Revenue Breakdown">
                     <DonutChart
                         data={revenueSplit}

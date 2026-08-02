@@ -3,7 +3,7 @@ import { SearchResultsSkeleton } from "@/components/sections/search/search-skele
 
 export default function SearchLoading() {
     return (
-        <Container className="py-10">
+        <Container className="py-8">
             <SearchResultsSkeleton />
         </Container>
     );
