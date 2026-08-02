@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Check, Heart, MapPin, MessageSquare, Share2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SectionEyebrow } from "@/components/sections/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-heading";
 import { cn } from "@/lib/utils";
 
 interface ListingPriceBarProps {

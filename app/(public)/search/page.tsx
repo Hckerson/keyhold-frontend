@@ -31,7 +31,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     };
 
     return (
-        <Container className="py-10">
+        <Container className="py-8">
             <Suspense fallback={<SearchResultsSkeleton />}>
                 <SearchExperience
                     key={`${q}|${type}|${min}`}

@@ -28,5 +28,5 @@ export const createListingSchema = listingSchema.omit({
     updatedAt: true,
 });
 
-export type Listing = z.infer<typeof listingSchema>;
-export type CreateListing = z.infer<typeof createListingSchema>;
+export type ListingDto = z.infer<typeof listingSchema>;
+export type CreateListingDto = z.infer<typeof createListingSchema>;

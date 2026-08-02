@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Bath, BedDouble } from "lucide-react";
-import type { Listing } from "@/app/(public)/_data/listings";
 import { DeltaChip } from "@/components/sections/listing/delta-chip";
 
+import type { Listing } from "@/lib/types";
 interface ListingComparablesProps {
     listing: Listing;
     comparables: Listing[];

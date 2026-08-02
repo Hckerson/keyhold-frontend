@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Wordmark } from "@/components/ui/wordmark";
+import { Wordmark } from "@/components/brand/wordmark";
 import { BrandPanel } from "@/components/features/auth/brand-panel";
 
 export interface AuthShellProps {

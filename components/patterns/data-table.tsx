@@ -1,20 +1,37 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import {
+    Fragment,
+    useCallback,
+    useId,
+    useMemo,
+    useRef,
+    useState,
+    type KeyboardEvent,
+    type MouseEvent,
+    type ReactNode,
+} from "react";
 import {
     ArrowDown,
     ArrowUp,
+    ChevronDown,
     ChevronLeft,
     ChevronRight,
     ChevronsUpDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/forms/checkbox";
+import {
+    Drawer,
+    DrawerBody,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+} from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 
-/* --------------------------------- Types --------------------------------- */
-
 export type SortDirection = "asc" | "desc";
+export type RevealMode = "inline" | "panel";
 
 export interface DataTableSort {
     id: string;
@@ -37,15 +54,27 @@ export interface DataTableProps<T> {
     data: T[];
     rowKey: (row: T) => string;
     caption: string;
+    variant?: "card" | "bare";
     emptyMessage?: string;
     rowClassName?: (row: T) => string | undefined;
     defaultSort?: DataTableSort;
     selectable?: boolean;
-    onSelectionChange?: (rows: T[]) => void;
+    selectedKeys?: string[];
+    onSelectedKeysChange?: (keys: string[]) => void;
     bulkActions?: (rows: T[]) => ReactNode;
     pageSize?: number;
+    reveal?: RevealMode;
+    renderDetail?: (row: T) => ReactNode;
+    rowLabel?: (row: T) => string;
+    panelTitle?: (row: T) => ReactNode;
+    panelFooter?: (row: T) => ReactNode;
+    panelSize?: "sm" | "md" | "lg";
+    openKey?: string | null;
+    onOpenChange?: (key: string | null) => void;
     className?: string;
 }
+
+export type DataTableConfig<T> = Omit<DataTableProps<T>, "data">;
 
 const alignClass = {
     left: "text-left",
@@ -60,12 +89,12 @@ const sortIcon = {
     desc: ArrowDown,
 } as const;
 
+const INTERACTIVE = "a, button, input, label, select, textarea";
+
 function compare(a: string | number, b: string | number) {
     if (typeof a === "number" && typeof b === "number") return a - b;
     return String(a).localeCompare(String(b));
 }
-
-/* ------------------------------- Head cell ------------------------------- */
 
 function HeadCell<T>({
     column,
@@ -123,28 +152,57 @@ function HeadCell<T>({
     );
 }
 
-/* -------------------------------- Table ---------------------------------- */
-
 export function DataTable<T>({
     columns,
     data,
     rowKey,
     caption,
+    variant = "card",
     emptyMessage = "Nothing to show",
     rowClassName,
     defaultSort,
     selectable = false,
-    onSelectionChange,
+    selectedKeys,
+    onSelectedKeysChange,
     bulkActions,
     pageSize,
+    reveal,
+    renderDetail,
+    rowLabel,
+    panelTitle,
+    panelFooter,
+    panelSize = "lg",
+    openKey,
+    onOpenChange,
     className,
 }: DataTableProps<T>) {
+    const baseId = useId();
+    const tableRef = useRef<HTMLTableElement | null>(null);
     const [sort, setSort] = useState<DataTableSort | null>(defaultSort ?? null);
-    const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+    const [internalKeys, setInternalKeys] = useState<string[]>([]);
+    const [internalOpen, setInternalOpen] = useState<string | null>(null);
     const [page, setPage] = useState(1);
 
+    const controlledSelection = selectedKeys !== undefined;
+    const currentKeys = controlledSelection ? selectedKeys : internalKeys;
+
+    const controlledOpen = openKey !== undefined;
+    const currentOpen = controlledOpen ? openKey : internalOpen;
+
+    const revealing = reveal !== undefined && renderDetail !== undefined;
+    const bare = variant === "bare";
+    const fixed = columns.some((column) => column.width);
     const hasFooter = columns.some((column) => column.footer);
-    const columnCount = columns.length + (selectable ? 1 : 0);
+    const columnCount =
+        columns.length + (selectable ? 1 : 0) + (revealing ? 1 : 0);
+
+    const setOpen = useCallback(
+        (next: string | null) => {
+            if (!controlledOpen) setInternalOpen(next);
+            onOpenChange?.(next);
+        },
+        [controlledOpen, onOpenChange],
+    );
 
     const sortedData = useMemo(() => {
         const column = columns.find((item) => item.id === sort?.id);
@@ -166,17 +224,18 @@ export function DataTable<T>({
         : sortedData;
 
     const selectedRows = sortedData.filter((row) =>
-        selectedKeys.includes(rowKey(row)),
+        currentKeys.includes(rowKey(row)),
     );
     const allOnPageSelected =
         pageRows.length > 0 &&
-        pageRows.every((row) => selectedKeys.includes(rowKey(row)));
+        pageRows.every((row) => currentKeys.includes(rowKey(row)));
+
+    const openRow =
+        sortedData.find((row) => rowKey(row) === currentOpen) ?? null;
 
     const applySelection = (keys: string[]) => {
-        setSelectedKeys(keys);
-        onSelectionChange?.(
-            sortedData.filter((row) => keys.includes(rowKey(row))),
-        );
+        if (!controlledSelection) setInternalKeys(keys);
+        onSelectedKeysChange?.(keys);
     };
 
     const toggleSort = (id: string) => {
@@ -193,9 +252,9 @@ export function DataTable<T>({
 
     const toggleRow = (key: string) => {
         applySelection(
-            selectedKeys.includes(key)
-                ? selectedKeys.filter((item) => item !== key)
-                : [...selectedKeys, key],
+            currentKeys.includes(key)
+                ? currentKeys.filter((item) => item !== key)
+                : [...currentKeys, key],
         );
     };
 
@@ -203,90 +262,277 @@ export function DataTable<T>({
         const pageKeys = pageRows.map(rowKey);
         applySelection(
             allOnPageSelected
-                ? selectedKeys.filter((key) => !pageKeys.includes(key))
-                : [...new Set([...selectedKeys, ...pageKeys])],
+                ? currentKeys.filter((key) => !pageKeys.includes(key))
+                : [...new Set([...currentKeys, ...pageKeys])],
         );
     };
 
+    const toggleOpen = (key: string) =>
+        setOpen(currentOpen === key ? null : key);
+
+    const onRowClick = (
+        event: MouseEvent<HTMLTableRowElement>,
+        key: string,
+    ) => {
+        if (!revealing) return;
+        const target = event.target;
+        if (target instanceof Element && target.closest(INTERACTIVE)) return;
+        toggleOpen(key);
+    };
+
+    const onTableKeyDown = (event: KeyboardEvent<HTMLTableElement>) => {
+        if (!revealing) return;
+
+        if (event.key === "Escape" && currentOpen !== null) {
+            setOpen(null);
+            return;
+        }
+        if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+
+        const table = tableRef.current;
+        const active = document.activeElement;
+        if (!table || !(active instanceof HTMLButtonElement)) return;
+
+        const triggers = Array.from(
+            table.querySelectorAll<HTMLButtonElement>("[data-reveal-row]"),
+        );
+        const index = triggers.indexOf(active);
+        if (index === -1) return;
+
+        event.preventDefault();
+        const next =
+            event.key === "ArrowDown"
+                ? Math.min(index + 1, triggers.length - 1)
+                : Math.max(index - 1, 0);
+        triggers[next]?.focus();
+    };
+
     return (
-        <div
-            className={cn(
-                "bg-background-muted border-border-dark overflow-hidden rounded-xl border shadow-sm",
-                className,
-            )}
-        >
-            {selectable && selectedRows.length > 0 && (
-                <div className="border-border-dark bg-background-alt flex flex-wrap items-center justify-between gap-2 border-b px-3 py-2">
-                    <p
-                        aria-live="polite"
-                        className="text-text text-xs font-medium tabular-nums"
-                    >
-                        {selectedRows.length} selected
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2">
-                        {bulkActions?.(selectedRows)}
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => applySelection([])}
+        <>
+            <div
+                className={cn(
+                    bare
+                        ? "overflow-hidden"
+                        : "bg-background-muted border-border-dark overflow-hidden rounded-xl border shadow-sm",
+                    className,
+                )}
+            >
+                {selectable && selectedRows.length > 0 && (
+                    <div className="border-border-dark bg-background-alt flex flex-wrap items-center justify-between gap-2 border-b px-3 py-2">
+                        <p
+                            aria-live="polite"
+                            className="text-text text-xs font-medium tabular-nums"
                         >
-                            Clear
-                        </Button>
+                            {selectedRows.length} selected
+                        </p>
+                        <div className="flex flex-wrap items-center gap-2">
+                            {bulkActions?.(selectedRows)}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => applySelection([])}
+                            >
+                                Clear
+                            </Button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                    <caption className="sr-only">{caption}</caption>
+                <div className="overflow-x-auto">
+                    <table
+                        ref={tableRef}
+                        onKeyDown={onTableKeyDown}
+                        className={cn("w-full text-sm", fixed && "table-fixed")}
+                    >
+                        <caption className="sr-only">{caption}</caption>
 
-                    <thead className="bg-background/80 border-border-dark sticky top-0 z-10 border-b backdrop-blur-md">
-                        <tr>
-                            {selectable && (
-                                <th
-                                    scope="col"
-                                    className={cn(headCell, "w-10")}
-                                >
-                                    <Checkbox
-                                        aria-label="Select all rows on this page"
-                                        checked={allOnPageSelected}
-                                        onChange={togglePage}
-                                    />
-                                </th>
+                        <thead
+                            className={cn(
+                                "border-border-dark border-b",
+                                bare
+                                    ? "bg-transparent"
+                                    : "bg-background/80 sticky top-0 z-10 backdrop-blur-md",
                             )}
-                            {columns.map((column) => (
-                                <HeadCell
-                                    key={column.id}
-                                    column={column}
-                                    sort={sort}
-                                    onSort={toggleSort}
-                                />
-                            ))}
-                        </tr>
-                    </thead>
+                        >
+                            <tr>
+                                {selectable && (
+                                    <th
+                                        scope="col"
+                                        className={cn(headCell, "w-10")}
+                                    >
+                                        <Checkbox
+                                            aria-label="Select all rows on this page"
+                                            checked={allOnPageSelected}
+                                            onChange={togglePage}
+                                        />
+                                    </th>
+                                )}
+                                {columns.map((column) => (
+                                    <HeadCell
+                                        key={column.id}
+                                        column={column}
+                                        sort={sort}
+                                        onSort={toggleSort}
+                                    />
+                                ))}
+                                {revealing && (
+                                    <th
+                                        scope="col"
+                                        className={cn(headCell, "w-9")}
+                                    >
+                                        <span className="sr-only">Details</span>
+                                    </th>
+                                )}
+                            </tr>
+                        </thead>
 
-                    <tbody className="divide-border divide-y">
-                        {pageRows.map((row) => {
-                            const key = rowKey(row);
-                            return (
-                                <tr
-                                    key={key}
-                                    className={cn(
-                                        "hover:bg-background-alt/60 ease-smooth transition-colors duration-200",
-                                        rowClassName?.(row),
-                                    )}
-                                >
-                                    {selectable && (
-                                        <td className="px-3 py-2">
-                                            <Checkbox
-                                                aria-label={`Select row ${key}`}
-                                                checked={selectedKeys.includes(
-                                                    key,
-                                                )}
-                                                onChange={() => toggleRow(key)}
-                                            />
-                                        </td>
-                                    )}
+                        <tbody className="divide-border divide-y">
+                            {pageRows.map((row) => {
+                                const key = rowKey(row);
+                                const open = revealing && key === currentOpen;
+                                const detailId = `${baseId}-${key}`;
+
+                                return (
+                                    <Fragment key={key}>
+                                        <tr
+                                            onClick={(event) =>
+                                                onRowClick(event, key)
+                                            }
+                                            className={cn(
+                                                "ease-smooth transition-colors duration-200",
+                                                revealing && "cursor-pointer",
+                                                open
+                                                    ? "bg-background-alt"
+                                                    : "hover:bg-background-alt/60",
+                                                rowClassName?.(row),
+                                            )}
+                                        >
+                                            {selectable && (
+                                                <td className="px-3 py-2">
+                                                    <Checkbox
+                                                        aria-label={`Select row ${key}`}
+                                                        checked={currentKeys.includes(
+                                                            key,
+                                                        )}
+                                                        onChange={() =>
+                                                            toggleRow(key)
+                                                        }
+                                                    />
+                                                </td>
+                                            )}
+
+                                            {columns.map((column) => (
+                                                <td
+                                                    key={column.id}
+                                                    className={cn(
+                                                        "px-3 py-2",
+                                                        alignClass[
+                                                            column.align ??
+                                                                "left"
+                                                        ],
+                                                    )}
+                                                >
+                                                    {column.render(row)}
+                                                </td>
+                                            ))}
+
+                                            {revealing && (
+                                                <td className="px-3 py-2 text-right">
+                                                    <button
+                                                        type="button"
+                                                        data-reveal-row=""
+                                                        onClick={() =>
+                                                            toggleOpen(key)
+                                                        }
+                                                        aria-expanded={
+                                                            reveal === "inline"
+                                                                ? open
+                                                                : undefined
+                                                        }
+                                                        aria-controls={
+                                                            reveal === "inline"
+                                                                ? detailId
+                                                                : undefined
+                                                        }
+                                                        aria-haspopup={
+                                                            reveal === "panel"
+                                                                ? "dialog"
+                                                                : undefined
+                                                        }
+                                                        aria-label={
+                                                            rowLabel
+                                                                ? `Details for ${rowLabel(row)}`
+                                                                : "Show details"
+                                                        }
+                                                        className="text-text-muted hover:text-text focus-visible:ring-accent ease-smooth grid size-5 place-items-center rounded-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                                                    >
+                                                        {reveal === "inline" ? (
+                                                            <ChevronDown
+                                                                size={12}
+                                                                strokeWidth={
+                                                                    1.5
+                                                                }
+                                                                aria-hidden="true"
+                                                                className={cn(
+                                                                    "ease-smooth transition-transform duration-200",
+                                                                    open &&
+                                                                        "rotate-180",
+                                                                )}
+                                                            />
+                                                        ) : (
+                                                            <ChevronRight
+                                                                size={12}
+                                                                strokeWidth={
+                                                                    1.5
+                                                                }
+                                                                aria-hidden="true"
+                                                            />
+                                                        )}
+                                                    </button>
+                                                </td>
+                                            )}
+                                        </tr>
+
+                                        {open && reveal === "inline" && (
+                                            <tr
+                                                id={detailId}
+                                                className="bg-background-alt"
+                                            >
+                                                <td
+                                                    colSpan={columnCount}
+                                                    className="px-3 py-3"
+                                                >
+                                                    {renderDetail?.(row)}
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </Fragment>
+                                );
+                            })}
+
+                            {sortedData.length === 0 && (
+                                <tr>
+                                    <td
+                                        colSpan={columnCount}
+                                        className="text-text-muted px-3 py-10 text-center text-sm"
+                                    >
+                                        {emptyMessage}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+
+                        {hasFooter && sortedData.length > 0 && (
+                            <tfoot
+                                className={cn(
+                                    "border-border-dark border-t",
+                                    bare
+                                        ? "bg-transparent"
+                                        : "bg-background/60 backdrop-blur-md",
+                                )}
+                            >
+                                <tr>
+                                    {selectable && <td className="px-3 py-2" />}
                                     {columns.map((column) => (
                                         <td
                                             key={column.id}
@@ -297,87 +543,93 @@ export function DataTable<T>({
                                                 ],
                                             )}
                                         >
-                                            {column.render(row)}
+                                            {column.footer?.(sortedData)}
                                         </td>
                                     ))}
+                                    {revealing && <td className="px-3 py-2" />}
                                 </tr>
-                            );
-                        })}
-
-                        {sortedData.length === 0 && (
-                            <tr>
-                                <td
-                                    colSpan={columnCount}
-                                    className="text-text-muted px-3 py-10 text-center text-sm"
-                                >
-                                    {emptyMessage}
-                                </td>
-                            </tr>
+                            </tfoot>
                         )}
-                    </tbody>
+                    </table>
+                </div>
 
-                    {hasFooter && sortedData.length > 0 && (
-                        <tfoot className="bg-background/60 border-border-dark border-t backdrop-blur-md">
-                            <tr>
-                                {selectable && <td className="px-3 py-2" />}
-                                {columns.map((column) => (
-                                    <td
-                                        key={column.id}
-                                        className={cn(
-                                            "px-3 py-2",
-                                            alignClass[column.align ?? "left"],
-                                        )}
-                                    >
-                                        {column.footer?.(sortedData)}
-                                    </td>
-                                ))}
-                            </tr>
-                        </tfoot>
-                    )}
-                </table>
+                {pageSize && sortedData.length > pageSize && (
+                    <nav
+                        aria-label="Table pagination"
+                        className="border-border-dark flex items-center justify-between gap-3 border-t px-3 py-2"
+                    >
+                        <p className="text-text-muted text-xs tabular-nums">
+                            {firstIndex + 1}–{firstIndex + pageRows.length} of{" "}
+                            {sortedData.length}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                aria-label="Previous page"
+                                disabled={currentPage === 1}
+                                onClick={() =>
+                                    setPage((current) =>
+                                        Math.max(1, current - 1),
+                                    )
+                                }
+                            >
+                                <ChevronLeft size={12} strokeWidth={1.5} />
+                            </Button>
+                            <span className="text-text-secondary text-xs tabular-nums">
+                                {currentPage} / {totalPages}
+                            </span>
+                            <Button
+                                variant="secondary"
+                                size="sm"
+                                aria-label="Next page"
+                                disabled={currentPage === totalPages}
+                                onClick={() =>
+                                    setPage((current) =>
+                                        Math.min(totalPages, current + 1),
+                                    )
+                                }
+                            >
+                                <ChevronRight size={12} strokeWidth={1.5} />
+                            </Button>
+                        </div>
+                    </nav>
+                )}
             </div>
 
-            {pageSize && sortedData.length > pageSize && (
-                <nav
-                    aria-label="Table pagination"
-                    className="border-border-dark flex items-center justify-between gap-3 border-t px-3 py-2"
+            {revealing && reveal === "panel" && (
+                <Drawer
+                    open={openRow !== null}
+                    onOpenChange={(next) => {
+                        if (!next) setOpen(null);
+                    }}
+                    size={panelSize}
+                    label={
+                        openRow && rowLabel ? rowLabel(openRow) : "Row details"
+                    }
                 >
-                    <p className="text-text-muted text-xs tabular-nums">
-                        {firstIndex + 1}–{firstIndex + pageRows.length} of{" "}
-                        {sortedData.length}
-                    </p>
-                    <div className="flex items-center gap-2">
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            aria-label="Previous page"
-                            disabled={currentPage === 1}
-                            onClick={() =>
-                                setPage((current) => Math.max(1, current - 1))
-                            }
-                        >
-                            <ChevronLeft size={12} strokeWidth={1.5} />
-                        </Button>
-                        <span className="text-text-secondary text-xs tabular-nums">
-                            {currentPage} / {totalPages}
-                        </span>
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            aria-label="Next page"
-                            disabled={currentPage === totalPages}
-                            onClick={() =>
-                                setPage((current) =>
-                                    Math.min(totalPages, current + 1),
-                                )
-                            }
-                        >
-                            <ChevronRight size={12} strokeWidth={1.5} />
-                        </Button>
-                    </div>
-                </nav>
+                    {openRow && (
+                        <>
+                            <DrawerHeader>
+                                <DrawerTitle>
+                                    {panelTitle
+                                        ? panelTitle(openRow)
+                                        : rowLabel?.(openRow)}
+                                </DrawerTitle>
+                            </DrawerHeader>
+
+                            <DrawerBody>{renderDetail?.(openRow)}</DrawerBody>
+
+                            {panelFooter && (
+                                <DrawerFooter>
+                                    {panelFooter(openRow)}
+                                </DrawerFooter>
+                            )}
+                        </>
+                    )}
+                </Drawer>
             )}
-        </div>
+        </>
     );
 }
 

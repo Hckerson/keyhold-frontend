@@ -1,20 +1,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { TrendingUp, TrendingDown, type LucideIcon } from "lucide-react";
-import { Sparkline } from "@/components/ui/sparkline";
+import { TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { StatItem } from "@/lib/types";
 
-export interface StatCardProps {
-    label: string;
-    value: string | number;
-    icon?: LucideIcon;
-    change?: string;
-    trend?: "up" | "down";
-    caption?: string;
+export interface StatCardProps extends StatItem {
     badge?: ReactNode;
-    series?: number[];
-    href?: string;
-    featured?: boolean;
     className?: string;
 }
 
@@ -26,7 +17,6 @@ function StatBody({
     trend,
     caption,
     badge,
-    series,
     featured,
 }: StatCardProps) {
     return (
@@ -81,10 +71,6 @@ function StatBody({
 
             {caption && (
                 <p className="text-text-muted mt-1 text-xs">{caption}</p>
-            )}
-
-            {series && series.length > 1 && (
-                <Sparkline data={series} className="mt-3" />
             )}
         </div>
     );

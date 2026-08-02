@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <rect width="32" height="32" rx="4" fill="#1f4e3d" />
+    <path
+        transform="translate(7 7) scale(0.75)"
+        d="M5 3.6H13V5.4H10.6V18.2H17V16.2H19V20.6H5V18.2H7.4V5.4H5Z"
+        fill="#b08d57"
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+    />
+</svg>

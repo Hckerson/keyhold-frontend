@@ -1,58 +1,59 @@
 # Project Instructions
 
-This is a reusable **Next.js App Router starter**. It ships architecture, conventions, and one example per layer as a foundation for new projects.
+This is a **luxury real-estate marketplace** on the Next.js App Router. It serves a public marketing site plus three authenticated portals — buyer (`/dashboard`), agent (`/agent`) and admin (`/admin`) — against the NestJS backend in `../backend`.
 
 ## Non-negotiable rules
 
-1. **No comments in code.** Ever. Code must read clearly on its own — if it doesn't, the abstraction is wrong.
-2. **No hardcoding.** API routes, durations, enums, copy that appears twice — all live in `lib/constants.ts` or feature-scoped `lib/<feature>/constants.ts`. Use `config.api.*` for endpoints, `lib/motion.ts` for timing, Zod schemas for shapes.
-3. **No `any` in TypeScript.** Use `unknown` + narrowing or precise types. Derive types from Zod with `z.infer`.
-4. **Match the existing architecture.** Do not invent new patterns. Preserve abstractions. Before deviating from STYLE.md, explain why.
-5. **Use the framework natively.** Reach for Next.js features and libs already in use (Query / Zustand / Zod / motion / CSS `clamp()`) before adding dependencies. Build what the tool already does.
-6. **Single source of truth.** Name recurring decisions once as a semantic token and reference it everywhere. Define once, change in one place.
-7. **Minimize LOC.** Prefer the shorter solution when equally maintainable.
-8. **Run `pnpm lint` before committing.** ESLint must pass with zero warnings. Fix all violations, never suppress.
-9. **Run `pnpm type-check` before committing.** TypeScript must be strict with zero errors. No type assertions (`as`), no `// @ts-ignore`.
-10. **Run `pnpm format` before committing.** Prettier formats all code consistently. Never override formatting manually.
-11. **No `console.log`, `console.error`, or debug statements** in committed code. Use proper logging only in services.
+1. **No comments in code.** Ever. Code reads clearly on its own — when it doesn't, the abstraction is wrong. Fix the abstraction.
+2. **No hardcoding.** API routes, durations, enums, and copy that appears twice live in `lib/constants.ts` or `lib/config/`. Endpoints come from `config.api.*`, shapes from Zod schemas. Seed and sample data lives in `lib/data/`, never inline in a page.
+3. **No `any` in TypeScript.** Use `unknown` + narrowing or a precise type. Derive types from Zod with `z.infer`.
+4. **Match the existing architecture.** Do not invent patterns, and do not invent locations — when you are unsure where something goes, re-read this file. State the reason before deviating.
+5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion / CSS `clamp()`) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
+6. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
+7. **Minimize LOC.** Ship the shortest solution that stays maintainable.
+8. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
 
 ## Required patterns
 
-| Need               | Use                                                                                                                                                                                                        |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Styling            | Token-first: named scale classes in `styles/globals.css` (`.base-text`, `.pad`, `.gap`, `.smooth`). Never inline responsive utility chains. Add colors/animations as theme tokens. See STYLE.md › Styling. |
-| Component patterns | Reuse `components/ui/` (primitives) and `components/<feature>/` (feature parts) before writing JSX from scratch. New patterns must promote to a primitive once used twice.                                 |
-| State management   | TanStack Query for server state. `useState` / `useReducer` / URL params for local state. `useSyncExternalStore` + `localStorage` for persistence. Avoid global stores unless complexity demands it.        |
-| Validation         | Zod schemas. Derive types with `z.infer`. Never use loose types for API responses.                                                                                                                         |
-| IDs                | `nanoid`. Never `uuid` or `Date.now()`.                                                                                                                                                                    |
-| Async flows        | Keep API functions in `lib/api/<resource>.ts`, wrap in hooks in `hooks/api/use-<resource>.ts`. Components consume hooks — never call API functions directly.                                               |
+| Need               | Use                                                                                                                                                                                          |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Styling            | Token-first: named scale classes in `styles/globals.css` (`.base-text`, `.pad`, `.gap`, `.smooth`, `.micro-label`). Inline responsive utility chains are forbidden. Colors and animations are theme tokens. |
+| Component patterns | Reuse `components/ui/` (primitives) and `components/patterns/` (generic compositions) before writing JSX. A pattern used twice is promoted out of the page that birthed it.                   |
+| Domain types       | Every shared domain type lives in `lib/types/<domain>.ts` and is re-exported by `lib/types/index.ts`. Components import types; they never declare shared ones.                                |
+| Page composition   | A route `page.tsx` composes sections and holds page-level state — nothing else. Mock/seed data goes to `lib/data/`, JSX blocks to `components/`. No inline data array, no inline sub-component. |
+| State management   | TanStack Query for server state. `useState` / `useReducer` / URL params for local state. `useSyncExternalStore` + `localStorage` for persistence. A global store requires a stated reason.    |
+| Validation         | Zod schemas. Types derive with `z.infer`. API responses are never loosely typed.                                                                                                             |
+| IDs                | `nanoid`. Never `uuid` or `Date.now()`.                                                                                                                                                      |
+| Async flows        | API functions live in `lib/api/<resource>.ts`, wrapped in hooks in `lib/hooks/use-<resource>.ts`. Components consume hooks — never call an API function directly.                            |
 
 ## Folder Structure
 
-| Route            | Immediate Subfolders                                                         | Purpose                                                                                         |
-| ---------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `/app`           | _(flat)_                                                                     | Next.js App Router pages and layout.                                                            |
-| `/components`    | `common` • `general` • `icons` • `providers` • `routes` • `ui` • `wrappers`  | Component hierarchy: primitives in `ui/`, feature components co-located, wrappers for patterns. |
-| `/components/ui` | `auth` • `cards` • `charts` • `forms` • `skeletons`                          | Reusable UI primitives and patterns.                                                            |
-| `/hooks`         | _(empty — use `/lib/hooks`)_                                                 | Root-level hooks reserved for global patterns only. Feature hooks live in `/lib/hooks/`.        |
-| `/lib`           | `data` • `enums` • `hooks` • `interface` • `types` • `utils` • `validations` | Core logic layer: types, utilities, API setup, validation schemas.                              |
-| `/public`        | `fonts`                                                                      | Static assets.                                                                                  |
-| `/styles`        | _(flat)_                                                                     | Global styles and token exports.                                                                |
+| Route                   | Immediate Subfolders                                                                         | Purpose                                                                                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/app`                  | `(auth)` • `(public)` • `admin` • `agent` • `dashboard`                                      | App Router routes. Pages compose — they do not define data or components.                                                                            |
+| `/components/ui`        | `charts` • `forms` • _(flat primitives)_                                                     | Generic, domain-free primitives. Reusable in any app.                                                                                                |
+| `/components/patterns`  | _(flat)_                                                                                     | Generic compositions over primitives: data-table, filter-pills, bulk-toolbar, stat-grid, section-\*.                                                 |
+| `/components/features`  | `admin` • `agent` • `auth` • `dashboard` • `listings` • `messaging` • `settings` • `shared`  | Domain components. Name the folder after the portal that _consumes_ the component, never the folder it came from. `shared/` = used by two or more.    |
+| `/components/sections`  | `home` • `listing` • `search`                                                                | Page sections for the public marketing routes.                                                                                                       |
+| `/components/layout`    | _(flat)_                                                                                     | App chrome: header, footer, sidebar, topbar, wordmark, newsletter form.                                                                              |
+| `/components/providers` | _(flat)_                                                                                     | React context providers.                                                                                                                             |
+| `/lib`                  | `api` • `config` • `data` • `enums` • `hooks` • `stores` • `types` • `utils` • `validations` | Core logic layer. No JSX.                                                                                                                            |
+| `/public`               | `fonts`                                                                                      | Static assets.                                                                                                                                       |
+| `/styles`               | _(flat)_                                                                                     | Global styles and token exports.                                                                                                                     |
 
 ## File rules
 
-- **One component per file.** Kebab-case filenames matching the export (`motion-wrapper.tsx` → `MotionWrapper`).
+- **One component per file.** Kebab-case filename matching the export (`stat-grid.tsx` → `StatGrid`).
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
-- **Files over ~150 lines → split.** Co-locate feature components under `components/<feature>/`.
+- **Any file over ~150 lines gets split**, `page.tsx` included. Data moves to `lib/data/`, JSX to `components/`.
 - **Add packages with `pnpm add`.** Never hand-edit `package.json`.
 
-## Pre-merge checklist
+## Before you commit or push
 
-1. `pnpm type-check` clean (`tsc --noEmit`).
-2. `pnpm lint` clean.
-3. No `any`, no `console.log`, no dead code, no comments.
-4. No hardcoded values (URLs, copy, magic numbers, query keys). All constants in `lib/constants.ts` or feature scope.
-5. Reused existing primitives, utilities, and patterns. Nothing reinvented.
-6. Architecture and file structure match this layout exactly.
+These three commands run at the commit or push boundary only — not after every edit.
 
-**This is the only architecture.** Follow it precisely. If you're unsure where something goes, the design is broken—re-read this instead of inventing new locations.
+1. `pnpm format` — Prettier owns formatting. Never override it by hand.
+2. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
+3. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
+
+The rules above are not restated here. They bind every edit, not the gate.

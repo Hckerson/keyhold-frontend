@@ -3,8 +3,7 @@ import { ArrowUpRight, MessageSquare, Phone, Star } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
-import type { ListingAgent } from "@/app/(public)/_data/listings";
-
+import type { ListingAgent } from "@/lib/types";
 function formatPhone(phone: string): string {
     const digits = phone.replace(/\D/g, "").slice(-10);
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;

@@ -31,8 +31,6 @@ function initialsOf(name: string) {
         .slice(0, 2);
 }
 
-/* ------------------------------- Breadcrumb ------------------------------ */
-
 function Breadcrumb({
     rootLabel,
     rootHref,
@@ -75,8 +73,6 @@ function Breadcrumb({
     );
 }
 
-/* --------------------------------- Search -------------------------------- */
-
 function SearchField() {
     const router = useRouter();
     const [query, setQuery] = useState("");
@@ -108,8 +104,6 @@ function SearchField() {
     );
 }
 
-/* ----------------------------- Notification ------------------------------ */
-
 function NotificationLink({ route }: { route: TopbarRoute }) {
     const Icon = route.icon;
     const count = route.badge ?? 0;
@@ -130,8 +124,6 @@ function NotificationLink({ route }: { route: TopbarRoute }) {
         </Link>
     );
 }
-
-/* --------------------------------- Topbar -------------------------------- */
 
 export function Topbar({ routes, rootLabel, rootHref, user }: TopbarProps) {
     const pathname = usePathname();

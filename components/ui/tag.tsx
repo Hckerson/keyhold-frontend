@@ -7,9 +7,11 @@ const tagVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-background-muted text-text-secondary border border-border-light",
+                default:
+                    "bg-background-muted text-text-secondary border border-border-light",
                 primary: "bg-accent text-white border border-accent shadow-sm",
-                secondary: "bg-accent-light text-accent-dark border border-transparent",
+                secondary:
+                    "bg-accent-light text-accent-dark border border-transparent",
                 outline:
                     "border border-border text-text-secondary hover:border-accent hover:text-accent",
             },

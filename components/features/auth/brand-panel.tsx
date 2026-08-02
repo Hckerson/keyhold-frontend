@@ -1,4 +1,4 @@
-import { Wordmark } from "@/components/ui/wordmark";
+import { Wordmark } from "@/components/brand/wordmark";
 import styles from "@/components/features/auth/brand-panel.module.css";
 
 const IMAGES = [
@@ -57,7 +57,7 @@ export function BrandPanel() {
             <div className={styles.grain} aria-hidden="true" />
 
             <div className={`${styles.reveal} relative z-10`}>
-                <Wordmark tone="dark" />
+                <Wordmark tone="dark" size="md" />
             </div>
 
             <div className="relative z-10">
