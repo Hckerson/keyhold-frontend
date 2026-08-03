@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import {
     Modal,
     ModalHeader,
@@ -67,22 +67,25 @@ export function PasswordModal({
                 <ModalTitle>Change Password</ModalTitle>
             </ModalHeader>
             <ModalBody className="space-y-3">
-                <Input
+                <FormField
                     id="current-password"
+                    name="currentPassword"
                     label="Current password"
                     type="password"
                     value={password.current}
                     onChange={update("current")}
                 />
-                <Input
+                <FormField
                     id="new-password"
+                    name="newPassword"
                     label="New password"
                     type="password"
                     value={password.next}
                     onChange={update("next")}
                 />
-                <Input
+                <FormField
                     id="confirm-password"
+                    name="confirmPassword"
                     label="Confirm new password"
                     type="password"
                     value={password.confirm}

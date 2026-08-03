@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Wordmark } from "@/components/brand/wordmark";
 import styles from "@/components/features/auth/brand-panel.module.css";
 
@@ -38,7 +39,7 @@ export function BrandPanel() {
         <aside className="bg-sidebar relative hidden overflow-hidden p-12 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-between">
             <div className={styles.stage} aria-hidden="true">
                 {IMAGES.map((src) => (
-                    <img key={src} src={src} alt="" />
+                    <Image key={src} src={src} alt="" fill sizes="50vw" />
                 ))}
             </div>
             <div className={styles.scrim} aria-hidden="true" />
@@ -74,21 +75,25 @@ export function BrandPanel() {
                 </h2>
 
                 <div className={styles.rot}>
-                    {TESTIMONIALS.map((t) => (
-                        <figure key={t.name}>
-                            <blockquote>&ldquo;{t.quote}&rdquo;</blockquote>
+                    {TESTIMONIALS.map((testimonial, position) => (
+                        <figure
+                            key={testimonial.name}
+                            aria-hidden={position > 0 || undefined}
+                        >
+                            <blockquote>
+                                &ldquo;{testimonial.quote}&rdquo;
+                            </blockquote>
                             <figcaption>
-                                <b>{t.name}</b> · {t.firm}
+                                <b>{testimonial.name}</b> · {testimonial.firm}
                             </figcaption>
                         </figure>
                     ))}
                 </div>
 
-                <div className={styles.dots}>
-                    <i />
-                    <i />
-                    <i />
-                    <i />
+                <div className={styles.dots} aria-hidden="true">
+                    {TESTIMONIALS.map((testimonial) => (
+                        <i key={testimonial.name} />
+                    ))}
                 </div>
             </div>
         </aside>

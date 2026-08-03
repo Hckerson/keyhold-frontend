@@ -48,6 +48,7 @@ export const PROFILE_FIELDS: readonly ConfigField<keyof ProfileForm>[] = [
         label: "Phone",
         type: "tel",
         placeholder: "(310) 555-0123",
+        variant: "numeric",
     },
     {
         name: "preferredLocation",
@@ -62,12 +63,14 @@ export const BUDGET_FIELDS: readonly ConfigField<keyof ProfileForm>[] = [
         label: "Minimum Budget",
         placeholder: "2,500,000",
         prefix: "$",
+        variant: "numeric",
     },
     {
         name: "budgetMax",
         label: "Maximum Budget",
         placeholder: "5,000,000",
         prefix: "$",
+        variant: "numeric",
     },
 ];
 

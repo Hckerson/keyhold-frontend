@@ -46,11 +46,6 @@ const FOOTER_ENTRIES = [
         href: AUTH_ROUTES.signup,
         action: "Apply for access",
     },
-    {
-        label: "Trouble signing in",
-        href: AUTH_ROUTES.resetPassword,
-        action: "Reset password",
-    },
 ];
 
 export interface LoginFormProps {

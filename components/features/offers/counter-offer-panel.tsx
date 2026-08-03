@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { Panel } from "@/components/ui/panel";
-import { Input } from "@/components/ui/forms/input";
-import { Textarea } from "@/components/ui/forms/textarea";
+import { FormField } from "@/components/ui/forms/form-field";
+import { TextareaField } from "@/components/ui/forms/textarea-field";
 import { formatCurrencyInput, formatUsd } from "@/lib/utils";
 
 export interface CounterOfferPanelProps {
@@ -52,9 +52,11 @@ export function CounterOfferPanel({
                     </div>
                 </div>
 
-                <Input
+                <FormField
                     id="counter-amount"
+                    name="counterAmount"
                     label="Your new counter"
+                    variant="numeric"
                     inputMode="numeric"
                     placeholder="$0"
                     value={counterAmount}
@@ -66,24 +68,16 @@ export function CounterOfferPanel({
                     }
                 />
 
-                <div className="flex flex-col gap-1.5">
-                    <label
-                        htmlFor="counter-note"
-                        className="text-text text-xs font-medium"
-                    >
-                        Message to seller
-                    </label>
-                    <Textarea
-                        id="counter-note"
-                        rows={3}
-                        placeholder="Explain the terms behind your counter…"
-                        value={counterNote}
-                        disabled={closed}
-                        onChange={(event) =>
-                            onCounterNoteChange(event.target.value)
-                        }
-                    />
-                </div>
+                <TextareaField
+                    id="counter-note"
+                    name="counterNote"
+                    label="Message to seller"
+                    rows={3}
+                    placeholder="Explain the terms behind your counter…"
+                    value={counterNote}
+                    disabled={closed}
+                    onChange={(event) => onCounterNoteChange(event.target.value)}
+                />
 
                 {closed && (
                     <Callout

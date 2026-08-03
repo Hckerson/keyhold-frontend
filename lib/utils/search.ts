@@ -16,10 +16,6 @@ export const SORT_OPTIONS = [
 
 export type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
-export function isSortValue(value: string): value is SortValue {
-    return SORT_OPTIONS.some((option) => option.value === value);
-}
-
 export interface ActiveFilter {
     key: FilterGroupKey | "location";
     id: string;
