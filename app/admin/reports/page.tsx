@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
-import { StatGrid } from "@/components/patterns/stat-grid";
-import { AdminMarketPanels } from "@/components/sections/admin/admin-market-panels";
-import { REPORT_STATS } from "@/lib/data/admin-reports";
+import { AdminReportMarket } from "@/components/sections/admin/admin-report-market";
+import { AdminReportOverview } from "@/components/sections/admin/admin-report-overview";
+import { AdminReportTrend } from "@/components/sections/admin/admin-report-trend";
 
 export default function AdminReportsPage() {
     return (
@@ -22,9 +22,11 @@ export default function AdminReportsPage() {
                 }
             />
 
-            <StatGrid stats={REPORT_STATS} columns={4} />
+            <AdminReportOverview />
 
-            <AdminMarketPanels />
+            <AdminReportTrend />
+
+            <AdminReportMarket />
         </div>
     );
 }
