@@ -29,7 +29,7 @@ export function ActionRow({
             <div className="min-w-0">
                 <p
                     className={cn(
-                        "text-sm font-medium",
+                        "text-xs font-semibold",
                         danger ? "text-error" : "text-text",
                     )}
                 >
