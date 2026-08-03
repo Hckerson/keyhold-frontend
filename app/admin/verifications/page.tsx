@@ -1,5 +1,5 @@
-import { AdminVerificationQueue } from "@/components/sections/admin/admin-verification-queue";
+import { AdminVerificationConsole } from "@/components/sections/admin/admin-verification-console";
 
 export default function AdminVerificationsPage() {
-    return <AdminVerificationQueue />;
+    return <AdminVerificationConsole />;
 }
