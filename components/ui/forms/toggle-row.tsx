@@ -38,7 +38,7 @@ export function ToggleRow({
             )}
         >
             <div className="min-w-0">
-                <p className="text-text text-sm font-medium">{title}</p>
+                <p className="text-text text-xs font-semibold">{title}</p>
                 {description && (
                     <p className="text-text-secondary mt-0.5 text-xs">
                         {description}

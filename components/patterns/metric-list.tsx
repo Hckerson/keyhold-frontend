@@ -8,12 +8,7 @@ export interface MetricListProps {
 
 export function MetricList({ metrics, className }: MetricListProps) {
     return (
-        <dl
-            className={cn(
-                "bg-background-alt divide-border-light divide-y rounded-lg px-3",
-                className,
-            )}
-        >
+        <dl className={cn("divide-border divide-y", className)}>
             {metrics.map((metric) => (
                 <div
                     key={metric.label}

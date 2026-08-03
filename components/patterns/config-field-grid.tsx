@@ -2,6 +2,7 @@
 
 import type { ChangeEvent } from "react";
 import { FormField } from "@/components/ui/forms/form-field";
+import type { InputProps } from "@/components/ui/forms/input";
 
 export interface ConfigField<K extends string> {
     name: K;
@@ -10,6 +11,7 @@ export interface ConfigField<K extends string> {
     type?: string;
     prefix?: string;
     suffix?: string;
+    variant?: InputProps["variant"];
 }
 
 export interface ConfigFieldGridProps<K extends string> {
@@ -31,13 +33,14 @@ export function ConfigFieldGrid<K extends string>({
                     label={field.label}
                     name={field.name}
                     type={field.type ?? "text"}
+                    variant={field.variant}
                     value={values[field.name]}
                     onChange={onChange}
                     placeholder={field.placeholder}
                     prefix={field.prefix}
                     endSlot={
                         field.suffix ? (
-                            <span className="text-text-muted text-xs">
+                            <span className="micro-label">
                                 {field.suffix}
                             </span>
                         ) : undefined
