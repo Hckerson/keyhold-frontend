@@ -1,128 +1,116 @@
 "use client";
 
-import {
-    StatusBadge,
-    type StatusBadgeProps,
-} from "@/components/ui/status-badge";
+import { format } from "date-fns";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import type {
     DataTableColumn,
     DataTableConfig,
 } from "@/components/patterns/data-table";
 import {
+    UserDetail,
+    UserPanelActions,
+} from "@/components/features/admin/user-detail";
+import {
+    RoleChip,
+    TierLabel,
     UserCell,
-    UserRowActions,
+    roleMeta,
+    tierMeta,
+    userStatusMeta,
 } from "@/components/features/admin/user-table-cells";
 import { TABLE_PAGE_SIZE } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import type {
-    ManagedUser,
-    ManagedUserRole,
-    UserStatus,
-    UserTier,
-} from "@/lib/types";
+import { formatCompactUsd, formatCount, parseLocalDate } from "@/lib/utils";
+import type { ManagedUser, UserStatus } from "@/lib/types";
 
-type Tone = NonNullable<StatusBadgeProps["tone"]>;
+const ACTIVE_FORMAT = "MMM d, yyyy";
 
-const roleMeta: Record<ManagedUserRole, { label: string; cls: string }> = {
-    admin: { label: "Admin", cls: "bg-error/10 text-error" },
-    agent: { label: "Agent", cls: "bg-accent-light text-accent" },
-    buyer: { label: "Buyer", cls: "bg-info/10 text-info" },
-};
+const sumVolume = (rows: ManagedUser[]) =>
+    rows.reduce((total, row) => total + row.volume, 0);
 
-const tierMeta: Record<UserTier, { label: string; cls: string; rank: number }> =
-    {
-        platinum: { label: "Platinum", cls: "text-highlight-dark", rank: 3 },
-        premium: { label: "Premium", cls: "text-info", rank: 2 },
-        standard: { label: "Standard", cls: "text-text-muted", rank: 1 },
-    };
+const sumDeals = (rows: ManagedUser[]) =>
+    rows.reduce((total, row) => total + row.transactions, 0);
 
-export const userStatusMeta: Record<
-    UserStatus,
-    { tone: Tone; label: string; rowTone?: string }
-> = {
-    active: { tone: "success", label: "Active" },
-    suspended: {
-        tone: "error",
-        label: "Suspended",
-        rowTone: "bg-error/[0.035]",
-    },
-    inactive: { tone: "neutral", label: "Inactive" },
-};
-
-export function buildUserColumns(
-    onStatusChange?: (ids: string[], status: UserStatus) => void,
-): DataTableColumn<ManagedUser>[] {
+export function buildUserColumns(): DataTableColumn<ManagedUser>[] {
     return [
         {
             id: "user",
             label: "User",
             sortValue: (row) => row.name,
             render: (row) => <UserCell user={row} />,
+            footer: () => <span className="micro-label">Total</span>,
         },
         {
             id: "role",
             label: "Role",
-            sortValue: (row) => roleMeta[row.role].label,
-            render: (row) => (
-                <span
-                    className={cn(
-                        "inline-flex rounded-full px-2 py-0.5 text-xs font-medium",
-                        roleMeta[row.role].cls,
-                    )}
-                >
-                    {roleMeta[row.role].label}
-                </span>
-            ),
+            width: "5.5rem",
+            sortValue: (row) => roleMeta[row.role].rank,
+            render: (row) => <RoleChip role={row.role} />,
         },
         {
             id: "tier",
             label: "Tier",
+            width: "6rem",
             sortValue: (row) => tierMeta[row.tier].rank,
-            render: (row) => (
-                <span className={cn("font-medium", tierMeta[row.tier].cls)}>
-                    {tierMeta[row.tier].label}
-                </span>
-            ),
+            render: (row) => <TierLabel tier={row.tier} />,
         },
         {
-            id: "joined",
-            label: "Joined",
-            sortValue: (row) => row.joinDate,
-            render: (row) => (
-                <span className="text-text-secondary whitespace-nowrap tabular-nums">
-                    {row.joinDate}
-                </span>
-            ),
-        },
-        {
-            id: "transactions",
+            id: "deals",
             label: "Deals",
             align: "right",
+            width: "4.5rem",
+            emphasis: "figure",
             sortValue: (row) => row.transactions,
+            render: (row) =>
+                row.transactions > 0 ? (
+                    <span className="text-text-secondary">
+                        {row.transactions}
+                    </span>
+                ) : (
+                    <span className="text-text-muted">—</span>
+                ),
+            footer: (rows) => formatCount(sumDeals(rows)),
+        },
+        {
+            id: "volume",
+            label: "Volume",
+            align: "right",
+            width: "7.5rem",
+            emphasis: "focal",
+            sortValue: (row) => row.volume,
+            render: (row) =>
+                row.volume > 0 ? (
+                    formatCompactUsd(row.volume)
+                ) : (
+                    <span className="text-text-muted text-xs">—</span>
+                ),
+            footer: (rows) => (
+                <span className="text-accent">
+                    {formatCompactUsd(sumVolume(rows))}
+                </span>
+            ),
+        },
+        {
+            id: "lastActive",
+            label: "Last active",
+            width: "7.5rem",
+            emphasis: "meta",
+            sortValue: (row) => row.lastActive,
             render: (row) => (
-                <span className="text-text font-medium tabular-nums">
-                    {row.transactions}
+                <span className="whitespace-nowrap">
+                    {format(parseLocalDate(row.lastActive), ACTIVE_FORMAT)}
                 </span>
             ),
         },
         {
             id: "status",
             label: "Status",
-            sortValue: (row) => userStatusMeta[row.status].label,
+            width: "6.5rem",
+            sortValue: (row) => userStatusMeta[row.status].rank,
             render: (row) => (
                 <StatusBadge tone={userStatusMeta[row.status].tone}>
                     {userStatusMeta[row.status].label}
                 </StatusBadge>
-            ),
-        },
-        {
-            id: "actions",
-            label: "Actions",
-            align: "right",
-            srOnlyLabel: true,
-            render: (row) => (
-                <UserRowActions user={row} onStatusChange={onStatusChange} />
             ),
         },
     ];
@@ -133,15 +121,23 @@ export function buildUserTableConfig(
     pageSize: number = TABLE_PAGE_SIZE,
 ): DataTableConfig<ManagedUser> {
     return {
-        columns: buildUserColumns(onStatusChange),
+        columns: buildUserColumns(),
         rowKey: (row) => row.id,
+        rowLabel: (row) => row.name,
         rowClassName: (row) => userStatusMeta[row.status].rowTone,
         caption:
-            "Platform users with role, tier, join date, deal count and account status",
-        emptyMessage: "No users to show",
-        defaultSort: { id: "user", direction: "asc" },
+            "Platform users with role, tier, closed deal count, lifetime volume, last activity and account status",
+        emptyMessage: "No users match these filters",
+        defaultSort: { id: "volume", direction: "desc" },
         selectable: true,
         pageSize,
+        reveal: "panel",
+        panelSize: "md",
+        panelTitle: (row) => row.name,
+        renderDetail: (row) => <UserDetail user={row} />,
+        panelFooter: (row) => (
+            <UserPanelActions user={row} onStatusChange={onStatusChange} />
+        ),
         bulkActions: (rows) => (
             <>
                 <Button
