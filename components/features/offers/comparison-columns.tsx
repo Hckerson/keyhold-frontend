@@ -10,30 +10,23 @@ export function buildComparisonConfig(): DataTableConfig<ComparisonRow> {
             {
                 id: "term",
                 label: "Term",
-                render: (row) => (
-                    <span className="text-text-secondary text-xs">
-                        {row.label}
-                    </span>
-                ),
+                emphasis: "muted",
+                render: (row) => row.label,
             },
             {
                 id: "yours",
                 label: "Your Offer",
                 align: "right",
-                render: (row) => (
-                    <span className="text-text text-xs font-medium tabular-nums">
-                        {row.yours}
-                    </span>
-                ),
+                emphasis: "figure",
+                render: (row) => row.yours,
             },
             {
                 id: "counter",
                 label: "Current Counter",
                 align: "right",
+                emphasis: "figure",
                 render: (row) => (
-                    <span className="text-accent text-xs font-medium tabular-nums">
-                        {row.counter}
-                    </span>
+                    <span className="text-accent">{row.counter}</span>
                 ),
             },
         ],

@@ -62,17 +62,17 @@
     --text-h6: var(--font-sizes-h6);
     --text-h6--line-height: var(--line-heights-h6);
     --text-lg: var(--font-sizes-lg);
-    --text-lg-line: var(--line-heights-lg);
+    --text-lg--line-height: var(--line-heights-lg);
     --text-base: var(--font-sizes-base);
-    --text-base-line: var(--line-heights-base);
+    --text-base--line-height: var(--line-heights-base);
     --text-sm: var(--font-sizes-sm);
-    --text-sm-line: var(--line-heights-sm);
+    --text-sm--line-height: var(--line-heights-sm);
     --text-xs: var(--font-sizes-xs);
-    --text-xs-line: var(--line-heights-xs);
+    --text-xs--line-height: var(--line-heights-xs);
     --text-label: var(--font-sizes-label);
-    --text-label-line: var(--line-heights-label);
+    --text-label--line-height: var(--line-heights-label);
     --text-caption: var(--font-sizes-caption);
-    --text-caption-line: var(--line-heights-caption);
+    --text-caption--line-height: var(--line-heights-caption);
 
     --space-0: var(--spacing-0);
     --space-1: var(--spacing-1);
@@ -144,18 +144,6 @@
     --z-modal: var(--z-indices-modal);
     --z-popover: var(--z-indices-popover);
     --z-tooltip: var(--z-indices-tooltip);
-
-    --opacity-0: var(--opacities-0);
-    --opacity-10: var(--opacities-10);
-    --opacity-20: var(--opacities-20);
-    --opacity-30: var(--opacities-30);
-    --opacity-40: var(--opacities-40);
-    --opacity-50: var(--opacities-50);
-    --opacity-60: var(--opacities-60);
-    --opacity-70: var(--opacities-70);
-    --opacity-80: var(--opacities-80);
-    --opacity-90: var(--opacities-90);
-    --opacity-100: var(--opacities-100);
 }
 
 *,

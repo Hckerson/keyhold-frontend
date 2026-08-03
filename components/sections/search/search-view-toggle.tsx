@@ -20,7 +20,7 @@ export function SearchViewToggle({ view, onChange }: SearchViewToggleProps) {
         <div
             role="group"
             aria-label="Result layout"
-            className="border-border bg-background-alt inline-flex h-8 shrink-0 items-center gap-0.5 rounded-lg border p-0.5"
+            className="border-border bg-background-muted inline-flex h-8 shrink-0 items-center gap-0.5 rounded-lg border p-0.5"
         >
             {VIEW_OPTIONS.map((option) => (
                 <button
@@ -32,7 +32,7 @@ export function SearchViewToggle({ view, onChange }: SearchViewToggleProps) {
                     className={cn(
                         "ease-smooth focus-visible:ring-accent grid size-7 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                         view === option.id
-                            ? "bg-accent text-text-inverse shadow-sm"
+                            ? "bg-background-alt text-accent border-border-light border shadow-sm"
                             : "text-text-muted hover:text-text",
                     )}
                 >

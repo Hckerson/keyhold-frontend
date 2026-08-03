@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
     Modal,
@@ -112,10 +112,12 @@ export function UpcomingViewings({
                     <p className="text-text-secondary text-xs">
                         {rescheduling?.address}
                     </p>
-                    <Input
+                    <FormField
                         id="overview-reschedule-date"
+                        name="date"
                         label="New date"
                         type="date"
+                        variant="numeric"
                         value={draft.date}
                         onChange={(event) =>
                             setDraft((prev) => ({
@@ -124,9 +126,11 @@ export function UpcomingViewings({
                             }))
                         }
                     />
-                    <Input
+                    <FormField
                         id="overview-reschedule-time"
+                        name="time"
                         label="New time"
+                        variant="numeric"
                         value={draft.time}
                         placeholder="3:00 PM"
                         onChange={(event) =>

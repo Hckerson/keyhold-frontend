@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import {
     Modal,
     ModalHeader,
@@ -74,9 +74,11 @@ export function TwoFactorModal({
                             Enter the {TWO_FACTOR_CODE_LENGTH}-digit code from
                             your authenticator app to finish setup.
                         </p>
-                        <Input
+                        <FormField
                             id="two-factor-code"
+                            name="twoFactorCode"
                             label="Verification code"
+                            variant="code"
                             inputMode="numeric"
                             maxLength={TWO_FACTOR_CODE_LENGTH}
                             value={code}

@@ -43,7 +43,7 @@ const PENDING_ENTRIES = [
         action: "Request a new one",
     },
     {
-        label: "Know your password",
+        label: "Remembered it",
         href: AUTH_ROUTES.login,
         action: "Back to sign in",
     },

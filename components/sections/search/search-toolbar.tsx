@@ -31,7 +31,7 @@ export function SearchToolbar({
     const narrowed = resultCount < totalCount;
 
     return (
-        <div className="border-border-dark flex flex-wrap items-center justify-between gap-3 border-b px-3 py-2">
+        <div className="border-border-dark bg-background-alt flex min-h-11 flex-wrap items-center justify-between gap-2 border-b px-3 py-1.5">
             <h2
                 id={SEARCH_TOOLBAR_HEADING_ID}
                 className="flex items-baseline gap-1.5"
@@ -49,9 +49,11 @@ export function SearchToolbar({
 
             <div className="flex flex-wrap items-center gap-2">
                 <SearchViewToggle view={view} onChange={onViewChange} />
-                <div className="w-44">
-                    <SearchSortSelect value={sort} onChange={onSortChange} />
-                </div>
+                <span
+                    aria-hidden
+                    className="bg-border max-sm:hidden h-5 w-px shrink-0"
+                />
+                <SearchSortSelect value={sort} onChange={onSortChange} />
             </div>
         </div>
     );

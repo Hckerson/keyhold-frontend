@@ -57,6 +57,7 @@ export function AlertPreferenceRow({
                                 onThresholdChange(event.target.value)
                             }
                             prefix="$"
+                            variant="numeric"
                             inputMode="numeric"
                             placeholder="50,000"
                             className="max-w-56"

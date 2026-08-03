@@ -48,35 +48,41 @@ export const MARKETPLACE_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
         label: "Commission Rate",
         placeholder: "2.5",
         suffix: "%",
+        variant: "numeric",
     },
     {
         name: "platformFee",
         label: "Listing Fee",
         placeholder: "495",
         prefix: "$",
+        variant: "numeric",
     },
     {
         name: "listingExpiryDays",
         label: "Listing Expiry",
         placeholder: "90",
         suffix: "days",
+        variant: "numeric",
     },
     {
         name: "maxPhotosPerListing",
         label: "Max Photos Per Listing",
         placeholder: "24",
+        variant: "numeric",
     },
     {
         name: "autoApproveThreshold",
         label: "Auto-Approve Below",
         placeholder: "1000000",
         prefix: "$",
+        variant: "numeric",
     },
     {
         name: "escrowHoldDays",
         label: "Escrow Hold",
         placeholder: "3",
         suffix: "days",
+        variant: "numeric",
     },
 ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import {
     Modal,
     ModalHeader,
@@ -45,18 +45,22 @@ export function RescheduleViewingModal({
                 <p className="text-text-secondary text-xs">
                     {viewing?.address}
                 </p>
-                <Input
+                <FormField
                     id="reschedule-date"
+                    name="date"
                     label="New date"
                     type="date"
+                    variant="numeric"
                     value={draft.date}
                     onChange={(event) =>
                         onDraftChange({ ...draft, date: event.target.value })
                     }
                 />
-                <Input
+                <FormField
                     id="reschedule-time"
+                    name="time"
                     label="New time"
+                    variant="numeric"
                     value={draft.time}
                     placeholder="3:00 PM"
                     onChange={(event) =>

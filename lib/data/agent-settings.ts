@@ -28,9 +28,15 @@ export const AGENT_PROFILE_FIELDS: readonly ConfigField<
         label: "Phone",
         type: "tel",
         placeholder: "(310) 555-0180",
+        variant: "numeric",
     },
     { name: "brokerage", label: "Brokerage", placeholder: "Agent Pro Realty" },
-    { name: "license", label: "License Number", placeholder: "DRE #01987654" },
+    {
+        name: "license",
+        label: "License Number",
+        placeholder: "DRE #01987654",
+        variant: "code",
+    },
     {
         name: "serviceArea",
         label: "Service Area",
@@ -46,12 +52,14 @@ export const AGENT_BUSINESS_FIELDS: readonly ConfigField<
         label: "Commission Rate",
         placeholder: "2.5",
         suffix: "%",
+        variant: "numeric",
     },
     {
         name: "responseTime",
         label: "Lead Response Target",
         placeholder: "2",
         suffix: "hours",
+        variant: "numeric",
     },
 ];
 
