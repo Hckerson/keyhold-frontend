@@ -3,7 +3,7 @@ import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { MetricItem, StatItem } from "@/lib/types";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
-import { formatMillions, formatThousands } from "@/lib/utils";
+import { formatCompactUsd, formatMillions, formatThousands } from "@/lib/utils";
 
 type RevenueStreamKey = "commission" | "fees";
 
@@ -27,6 +27,7 @@ export interface PayoutStage {
     tone: ChartTone;
     count: number;
     amount: number;
+    oldestDays: number;
 }
 
 export const REVENUE_MONTHS: RevenueMonth[] = [
@@ -70,7 +71,7 @@ export const COMMISSION_SHARE = Math.round(
 export const REVENUE_STREAMS: RevenueStream[] = [
     {
         key: "commission",
-        name: `Commission (${DEFAULT_COMMISSION_RATE * 100}%)`,
+        name: "Commission",
         tone: "accent",
         ytd: COMMISSION_YTD,
         momChange: momChange("commission"),
@@ -92,6 +93,8 @@ export const REVENUE_SPLIT: DonutSegment[] = REVENUE_STREAMS.map((stream) => ({
 
 export const REVENUE_TOTAL_LABEL = formatMillions(REVENUE_YTD, 2);
 
+export const REVENUE_PERIOD_LABEL = `${REVENUE_MONTHS[0].month}–${latestMonth.month} · ${REVENUE_MONTHS.length} months tracked`;
+
 const monthsByRevenue = [...REVENUE_MONTHS].sort(
     (a, b) => monthRevenue(b) - monthRevenue(a),
 );
@@ -101,11 +104,11 @@ const softestMonth = monthsByRevenue[monthsByRevenue.length - 1];
 export const REVENUE_SPLIT_METRICS: MetricItem[] = [
     {
         label: "Peak month",
-        value: `${peakMonth.month} · ${formatThousands(monthRevenue(peakMonth))}`,
+        value: `${peakMonth.month} · ${formatCompactUsd(monthRevenue(peakMonth))}`,
     },
     {
         label: "Softest month",
-        value: `${softestMonth.month} · ${formatThousands(monthRevenue(softestMonth))}`,
+        value: `${softestMonth.month} · ${formatCompactUsd(monthRevenue(softestMonth))}`,
     },
     {
         label: "Commission rate",
@@ -120,6 +123,7 @@ export const PAYOUT_STAGES: PayoutStage[] = [
         tone: "warning",
         count: 1,
         amount: 12_000,
+        oldestDays: 6,
     },
     {
         id: "approved",
@@ -127,6 +131,7 @@ export const PAYOUT_STAGES: PayoutStage[] = [
         tone: "info",
         count: 1,
         amount: 18_000,
+        oldestDays: 3,
     },
     {
         id: "scheduled",
@@ -134,6 +139,7 @@ export const PAYOUT_STAGES: PayoutStage[] = [
         tone: "accent",
         count: 1,
         amount: 12_000,
+        oldestDays: 1,
     },
 ];
 
@@ -155,7 +161,7 @@ export const PROCESSING_METRICS: MetricItem[] = [
     { label: "Next payout run", value: NEXT_PAYOUT_RUN },
     {
         label: `Released in ${latestMonth.month}`,
-        value: formatThousands(RELEASED_THIS_MONTH),
+        value: formatCompactUsd(RELEASED_THIS_MONTH),
     },
 ];
 

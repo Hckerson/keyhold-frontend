@@ -4,7 +4,7 @@ import { AdminTransactionLedger } from "@/components/sections/admin/admin-transa
 
 export default function AdminTransactionsPage() {
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-x-3 gap-y-6">
             <PageHeader
                 title="Transactions"
                 description="Deal flow, escrow, and commission across the marketplace"

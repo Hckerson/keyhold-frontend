@@ -64,17 +64,10 @@ export function buildModerationTableConfig({
                 label: "Price",
                 align: "right",
                 width: "7rem",
+                emphasis: "focal",
                 sortValue: (row) => row.price,
-                render: (row) => (
-                    <span className="font-display text-text text-lg leading-none font-light tabular-nums">
-                        {formatMillions(row.price)}
-                    </span>
-                ),
-                footer: (rows) => (
-                    <span className="text-text text-xs font-semibold tabular-nums">
-                        {formatMillions(totalValue(rows))}
-                    </span>
-                ),
+                render: (row) => formatMillions(row.price),
+                footer: (rows) => formatMillions(totalValue(rows)),
             },
             {
                 id: "agent",
@@ -87,9 +80,10 @@ export function buildModerationTableConfig({
                 id: "submitted",
                 label: "Submitted",
                 width: "6.5rem",
+                emphasis: "meta",
                 sortValue: (row) => row.submittedDate,
                 render: (row) => (
-                    <span className="text-text-muted font-mono text-[10px] tracking-wide whitespace-nowrap tabular-nums">
+                    <span className="whitespace-nowrap">
                         {format(
                             parseLocalDate(row.submittedDate),
                             SUBMITTED_FORMAT,
@@ -104,7 +98,7 @@ export function buildModerationTableConfig({
                 sortValue: complianceWeight,
                 render: (row) => <ComplianceCell checks={row.compliance} />,
                 footer: (rows) => (
-                    <span className="text-text-secondary text-xs font-semibold tabular-nums">
+                    <span className="text-text-secondary">
                         {openChecks(rows)} open
                     </span>
                 ),

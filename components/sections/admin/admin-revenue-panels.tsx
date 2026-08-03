@@ -9,6 +9,7 @@ import {
     PENDING_PAYOUT_COUNT,
     PROCESSING_METRICS,
     REVENUE_MONTHS,
+    REVENUE_PERIOD_LABEL,
     REVENUE_SERIES,
     REVENUE_SPLIT,
     REVENUE_SPLIT_METRICS,
@@ -43,6 +44,7 @@ export function AdminRevenuePanels() {
                         streams={REVENUE_STREAMS}
                         segments={REVENUE_SPLIT}
                         total={REVENUE_TOTAL_LABEL}
+                        caption={REVENUE_PERIOD_LABEL}
                         metrics={REVENUE_SPLIT_METRICS}
                     />
                 </Panel>
