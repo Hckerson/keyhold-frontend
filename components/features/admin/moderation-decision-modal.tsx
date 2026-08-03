@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/forms/textarea";
+import { TextareaField } from "@/components/ui/forms/textarea-field";
 import {
     Modal,
     ModalContent,
@@ -51,21 +51,16 @@ export function ModerationDecisionModal({
                         </p>
                     </ModalHeader>
                     <ModalBody>
-                        <label
-                            htmlFor="moderation-note"
-                            className="micro-label"
-                        >
-                            {copy.label}
-                        </label>
-                        <Textarea
+                        <TextareaField
                             id="moderation-note"
+                            name="moderationNote"
+                            label={copy.label}
                             rows={4}
                             value={note}
                             onChange={(event) =>
                                 onNoteChange(event.target.value)
                             }
                             placeholder={copy.placeholder}
-                            className="mt-1.5"
                         />
                         <p className="text-text-muted mt-1.5 text-xs">
                             Required. The agent receives this message with the
