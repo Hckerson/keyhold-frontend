@@ -1,35 +1,18 @@
-import { PageHeader } from "@/components/ui/page-header";
-import { StatGrid } from "@/components/patterns/stat-grid";
-import { AnalyticsMonthlyPanel } from "@/components/features/agent/analytics-monthly-panel";
-import { AnalyticsComparisonPanel } from "@/components/features/agent/analytics-comparison-panel";
-import { AnalyticsQuarterlyPanel } from "@/components/features/agent/analytics-quarterly-panel";
-import {
-    advantages,
-    analyticsMetrics,
-    comparison,
-    monthlyData,
-    quarters,
-} from "@/lib/data/agent-analytics";
+import { AnalyticsHeader } from "@/components/sections/agent/analytics-header";
+import { AnalyticsStatBand } from "@/components/sections/agent/analytics-stat-band";
+import { AnalyticsMain } from "@/components/sections/agent/analytics-main";
+import { AnalyticsRail } from "@/components/sections/agent/analytics-rail";
 
 export default function AgentAnalyticsPage() {
     return (
-        <div className="space-y-3">
-            <PageHeader
-                title="Performance Analytics"
-                description="Track your sales performance and market insights"
-            />
+        <div className="flex flex-col gap-4">
+            <AnalyticsHeader />
+            <AnalyticsStatBand />
 
-            <StatGrid stats={analyticsMetrics} columns={4} />
-
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-                <AnalyticsMonthlyPanel data={monthlyData} />
-                <AnalyticsComparisonPanel
-                    bars={comparison}
-                    advantages={advantages}
-                />
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+                <AnalyticsMain />
+                <AnalyticsRail />
             </div>
-
-            <AnalyticsQuarterlyPanel quarters={quarters} />
         </div>
     );
 }
