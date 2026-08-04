@@ -40,9 +40,7 @@ export function ConfigFieldGrid<K extends string>({
                     prefix={field.prefix}
                     endSlot={
                         field.suffix ? (
-                            <span className="micro-label">
-                                {field.suffix}
-                            </span>
+                            <span className="micro-label">{field.suffix}</span>
                         ) : undefined
                     }
                 />

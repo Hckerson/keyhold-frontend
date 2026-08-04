@@ -68,7 +68,7 @@ const DropdownMenuItem = forwardRef<HTMLDivElement, DropdownMenuItemProps>(
         <div
             ref={ref}
             className={cn(
-                "text-text hover:bg-background cursor-pointer px-4 py-2 text-sm transition-colors",
+                "text-text hover:bg-background flex h-8 cursor-pointer items-center px-3 text-xs transition-colors",
                 className,
             )}
             {...props}

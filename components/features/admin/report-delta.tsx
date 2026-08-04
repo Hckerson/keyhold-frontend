@@ -16,7 +16,9 @@ export function ReportDelta({ change, trend, className }: ReportDeltaProps) {
         <span
             className={cn(
                 "inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-medium tabular-nums",
-                rising ? "bg-success/10 text-success" : "bg-error/10 text-error",
+                rising
+                    ? "bg-success/10 text-success"
+                    : "bg-error/10 text-error",
                 className,
             )}
         >

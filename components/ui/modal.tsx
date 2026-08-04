@@ -78,7 +78,10 @@ const ModalTitle = forwardRef<HTMLHeadingElement, ModalTitleProps>(
     ({ className, ...props }, ref) => (
         <h2
             ref={ref}
-            className={cn("text-h4 font-body font-normal", className)}
+            className={cn(
+                "text-h6 font-display text-text font-light",
+                className,
+            )}
             {...props}
         />
     ),

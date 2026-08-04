@@ -51,7 +51,7 @@ export function SearchToolbar({
                 <SearchViewToggle view={view} onChange={onViewChange} />
                 <span
                     aria-hidden
-                    className="bg-border max-sm:hidden h-5 w-px shrink-0"
+                    className="bg-border h-5 w-px shrink-0 max-sm:hidden"
                 />
                 <SearchSortSelect value={sort} onChange={onSortChange} />
             </div>

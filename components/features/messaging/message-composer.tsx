@@ -68,6 +68,7 @@ export function MessageComposer({
         <Button
             variant="secondary"
             size="sm"
+            iconOnly
             type="button"
             aria-label={attachLabel}
             className={cn(!isThread && "shrink-0")}
@@ -81,6 +82,7 @@ export function MessageComposer({
         <Button
             variant="primary"
             size="sm"
+            iconOnly
             type="submit"
             aria-label="Send message"
             className={cn(!isThread && "shrink-0")}

@@ -33,7 +33,7 @@ Pagination.displayName = "Pagination";
 
 const PaginationList = forwardRef<HTMLUListElement, PaginationListProps>(
     ({ className, ...props }, ref) => (
-        <ul ref={ref} className={cn("flex gap-2", className)} {...props} />
+        <ul ref={ref} className={cn("flex gap-1.5", className)} {...props} />
     ),
 );
 
@@ -53,10 +53,10 @@ const PaginationLink = forwardRef<HTMLAnchorElement, PaginationLinkProps>(
             ref={ref}
             href={href}
             className={cn(
-                "border-border rounded-lg border px-3 py-2 text-sm font-medium transition-all duration-200",
+                "border-border ease-smooth grid h-8 min-w-8 place-items-center rounded-md border px-2 text-xs font-medium tabular-nums transition-colors duration-200",
                 isActive
-                    ? "bg-accent text-primary border-accent shadow-sm"
-                    : "text-text-secondary hover:border-accent hover:text-accent hover:shadow-sm",
+                    ? "bg-accent text-text-inverse border-accent"
+                    : "text-text-secondary hover:border-border-dark hover:bg-background-muted hover:text-text",
                 className,
             )}
             {...props}

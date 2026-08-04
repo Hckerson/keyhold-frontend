@@ -6,10 +6,7 @@ export function SystemAlertList({ alerts }: { alerts: SystemAlert[] }) {
     return (
         <ul className="bg-background-alt divide-border-light divide-y rounded-lg px-3">
             {alerts.map((alert) => (
-                <li
-                    key={alert.id}
-                    className="flex items-start gap-3 py-3"
-                >
+                <li key={alert.id} className="flex items-start gap-3 py-3">
                     <StatusDot tone={alert.tone} className="mt-1.5 size-2" />
                     <div className="min-w-0 flex-1">
                         <h4 className="text-text text-xs font-medium">

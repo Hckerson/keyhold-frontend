@@ -1,12 +1,6 @@
 "use client";
 
-import {
-    useEffect,
-    useId,
-    useRef,
-    useState,
-    type KeyboardEvent,
-} from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Check, ChevronDown, type LucideIcon } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -44,8 +38,9 @@ export interface SelectOption<T extends string> {
     label: string;
 }
 
-export interface SelectProps<T extends string>
-    extends VariantProps<typeof triggerVariants> {
+export interface SelectProps<T extends string> extends VariantProps<
+    typeof triggerVariants
+> {
     options: readonly SelectOption<T>[];
     value: T;
     onChange: (next: T) => void;

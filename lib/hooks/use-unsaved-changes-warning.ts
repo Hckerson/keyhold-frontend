@@ -16,7 +16,12 @@ export function useUnsavedChangesWarning(enabled: boolean) {
 
         const warnOnNavigate = (event: MouseEvent) => {
             if (event.defaultPrevented || event.button !== 0) return;
-            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+            if (
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey
+            )
                 return;
 
             const target = event.target;

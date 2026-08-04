@@ -4,7 +4,7 @@ import {
     XCircle,
     type LucideIcon,
 } from "lucide-react";
-import type { BadgeTone } from "@/components/features/shared/contact-row";
+import type { BadgeTone } from "@/lib/types";
 
 export type ModerationStatus = "pending" | "flagged" | "approved" | "rejected";
 export type CheckState = "pass" | "warn" | "fail";

@@ -108,7 +108,12 @@ export const REGION_METRICS: RegionMetric[] = [
         volume: 156_000_000,
         avgPrice: 2_100_000,
     },
-    { region: "Malibu", listings: 45, volume: 142_000_000, avgPrice: 3_100_000 },
+    {
+        region: "Malibu",
+        listings: 45,
+        volume: 142_000_000,
+        avgPrice: 3_100_000,
+    },
 ];
 
 const rankedRegions = [...REGION_METRICS].sort((a, b) => b.volume - a.volume);
