@@ -1,140 +1,64 @@
+import { Pencil } from "lucide-react";
+import { StatusDot } from "@/components/patterns/status-dot";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
+import { APPOINTMENT_STATUSES } from "@/lib/config/appointment-tones";
 import {
-    Eye,
-    Briefcase,
-    Search,
-    CheckCircle2,
-    PhoneCall,
-    type LucideIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { cn } from "@/lib/utils";
-
-export type AppointmentType =
-    | "showing"
-    | "meeting"
-    | "inspection"
-    | "closing"
-    | "follow-up";
-
-type Tone = "info" | "neutral" | "warning" | "success";
-
-export interface Appointment {
-    id: string;
-    type: AppointmentType;
-    title: string;
-    property: string;
-    client: string;
-    date: string;
-    time: string;
-    duration: string;
-    notes: string;
-}
+    durationShare,
+    formatDuration,
+    formatTime,
+    type Appointment,
+} from "@/lib/data/agent-calendar";
 
 export interface AppointmentRowProps {
     appointment: Appointment;
-    className?: string;
 }
 
-export const APPOINTMENT_TYPES: Record<
-    AppointmentType,
-    {
-        icon: LucideIcon;
-        tint: string;
-        accent: string;
-        tone: Tone;
-        label: string;
-    }
-> = {
-    showing: {
-        icon: Eye,
-        tint: "bg-info/10 text-info",
-        accent: "text-info",
-        tone: "info",
-        label: "Showing",
-    },
-    meeting: {
-        icon: Briefcase,
-        tint: "bg-background-alt text-text-secondary",
-        accent: "text-text-secondary",
-        tone: "neutral",
-        label: "Meeting",
-    },
-    inspection: {
-        icon: Search,
-        tint: "bg-warning/10 text-warning",
-        accent: "text-warning",
-        tone: "warning",
-        label: "Inspection",
-    },
-    closing: {
-        icon: CheckCircle2,
-        tint: "bg-success/10 text-success",
-        accent: "text-success",
-        tone: "success",
-        label: "Closing",
-    },
-    "follow-up": {
-        icon: PhoneCall,
-        tint: "bg-accent-light text-accent",
-        accent: "text-accent",
-        tone: "neutral",
-        label: "Follow-up",
-    },
-};
-
-export function AppointmentRow({
-    appointment,
-    className,
-}: AppointmentRowProps) {
-    const { type, title, property, client, time, duration, notes } =
-        appointment;
-    const { icon: Icon, tint, tone, label } = APPOINTMENT_TYPES[type];
+export function AppointmentRow({ appointment }: AppointmentRowProps) {
+    const status = APPOINTMENT_STATUSES[appointment.status];
 
     return (
-        <div
-            className={cn(
-                "border-border flex gap-3 border-b pb-3 last:border-b-0 last:pb-0",
-                className,
-            )}
-        >
-            <span
-                className={cn(
-                    "grid size-8 shrink-0 place-items-center rounded-lg",
-                    tint,
-                )}
-            >
-                <Icon size={16} strokeWidth={1.5} />
+        <li className="hover:bg-background-muted ease-smooth flex h-9 items-center gap-2 px-3 transition-colors">
+            <span className="text-text w-14 shrink-0 text-xs font-semibold tabular-nums">
+                {formatTime(appointment.start)}
             </span>
 
-            <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                        <h4 className="text-text truncate text-xs font-medium">
-                            {title}
-                        </h4>
-                        <p className="text-text-secondary mt-0.5 truncate text-xs">
-                            {property}
-                        </p>
-                    </div>
-                    <StatusBadge tone={tone}>{label}</StatusBadge>
-                </div>
+            <AppointmentTypeGlyph type={appointment.type} />
 
-                <div className="text-text-secondary mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
-                    <span className="text-text font-medium tabular-nums">
-                        {time}
-                    </span>
-                    <span>{client}</span>
-                    <span className="tabular-nums">{duration}</span>
-                </div>
+            <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
+                {appointment.title}
+            </span>
 
-                <p className="text-text-muted mt-1 text-xs">{notes}</p>
-            </div>
+            <span className="text-text-secondary hidden w-28 shrink-0 truncate text-xs md:block">
+                {appointment.property}
+            </span>
 
-            <Button variant="ghost" size="sm" className="shrink-0">
-                Edit
-            </Button>
-        </div>
+            <span className="text-text-secondary hidden w-24 shrink-0 truncate text-xs lg:block">
+                {appointment.client}
+            </span>
+
+            <ProgressBar
+                value={durationShare(appointment.durationMinutes)}
+                className="hidden w-10 shrink-0 sm:block"
+            />
+
+            <span className="micro-label w-12 shrink-0 text-right">
+                {formatDuration(appointment.durationMinutes)}
+            </span>
+
+            <span className="flex w-20 shrink-0 items-center justify-end gap-1.5">
+                <StatusDot tone={status.tone} />
+                <span className="micro-label">{status.label}</span>
+            </span>
+
+            <button
+                type="button"
+                aria-label={`Edit ${appointment.title}`}
+                className="text-text-muted hover:text-accent hover:bg-background-alt focus-visible:ring-accent ease-smooth grid size-5 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+            >
+                <Pencil className="size-3" strokeWidth={1.5} />
+            </button>
+        </li>
     );
 }
 
