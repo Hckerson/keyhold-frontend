@@ -6,7 +6,7 @@ Paths are relative to `components/`; this project has no `src/`. `cn` is `@/lib/
 
 ## The failure this prevents
 
-A route built as *"section → section → section, each full width, each `gap-8` apart"* is a scroll, not a dashboard. Every archetype below exists to put more decided information inside one viewport.
+A route built as _"section → section → section, each full width, each `gap-8` apart"_ is a scroll, not a dashboard. Every archetype below exists to put more decided information inside one viewport.
 
 ---
 
@@ -21,10 +21,22 @@ A bordered band is a card for the depth floor's purposes, and it is not chrome �
 ```tsx
 <div className="border-border-light bg-background-alt divide-border-light flex h-14 items-center divide-x rounded-lg border">
     {stats.map((stat) => (
-        <div key={stat.id} className="flex min-w-0 flex-1 items-center gap-2 px-3">
-            <stat.icon className="text-text-muted size-3 shrink-0" strokeWidth={1.5} aria-hidden />
+        <div
+            key={stat.id}
+            className="flex min-w-0 flex-1 items-center gap-2 px-3"
+        >
+            <stat.icon
+                className="text-text-muted size-3 shrink-0"
+                strokeWidth={1.5}
+                aria-hidden
+            />
             <span className="micro-label min-w-0 truncate">{stat.label}</span>
-            <span className={cn("bg-background ml-auto rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums", stat.tone)}>
+            <span
+                className={cn(
+                    "bg-background ml-auto rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums",
+                    stat.tone,
+                )}
+            >
                 {stat.value}
             </span>
         </div>
@@ -61,7 +73,7 @@ Give the sparkline a fixed-width flex sibling so `ResponsiveContainer` has somet
 
 A chart card carries its own focal readout and its range control in the header, then the plot, then the accessible table. `ui/panel.tsx` supplies the header band: title (`text-h6 font-display font-light`, :38), an optional count chip (`rounded-full px-2 py-0.5 text-xs tabular-nums`, :43), a description slot (:49) and a right-aligned `action` (:55).
 
-**`Panel`'s `text-h6` title is a SECTION title, not a card title** — it sits in the register's title tier deliberately. A card nested *inside* a panel still titles at `text-xs font-semibold`.
+**`Panel`'s `text-h6` title is a SECTION title, not a card title** — it sits in the register's title tier deliberately. A card nested _inside_ a panel still titles at `text-xs font-semibold`.
 
 Do not put a chart in a bare card with a title and nothing else — the plot has no readout to anchor it. Every chart here is recharts inside a `ResponsiveContainer` (`charts/bar-chart.tsx`, `column-chart.tsx`, `donut-chart.tsx`, `sparkline.tsx`); `BarChart` sizes itself from `data.length * rowHeight`, `ColumnChart` and `DonutChart` take explicit `height` / `size`.
 
@@ -130,12 +142,12 @@ Nav grouping, above ~7 items: section labels (`.micro-label`), children indented
 
 ## Choosing
 
-| The data is | Build |
-| --- | --- |
-| peer stats of one subject | stat band (1) |
-| metrics with independent series | KPI cards with trailing sparklines (2) — check the type has one |
-| one series over time | chart card with embedded readout (3) |
-| an equal-rank set, type declares ≥4 fields | table card (4) — extend `DataTable` |
-| an equal-rank set, type declares <4 fields | list card (5) |
-| a set whose type declares rank | hero tile + condensed rail (6) |
-| a route with ambient/streaming context | three-zone shell (7) |
+| The data is                                | Build                                                           |
+| ------------------------------------------ | --------------------------------------------------------------- |
+| peer stats of one subject                  | stat band (1)                                                   |
+| metrics with independent series            | KPI cards with trailing sparklines (2) — check the type has one |
+| one series over time                       | chart card with embedded readout (3)                            |
+| an equal-rank set, type declares ≥4 fields | table card (4) — extend `DataTable`                             |
+| an equal-rank set, type declares <4 fields | list card (5)                                                   |
+| a set whose type declares rank             | hero tile + condensed rail (6)                                  |
+| a route with ambient/streaming context     | three-zone shell (7)                                            |

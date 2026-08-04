@@ -7,16 +7,16 @@ Rows marked **(prescriptive)** describe what to build — nothing in the tree im
 
 ## 1. Row geometry (hard)
 
-| Surface | Height | Lines | Notes |
-| --- | --- | --- | --- |
-| Table / list row, text-only | `h-9` (36px) | **1** | The default. **(prescriptive)** — `patterns/data-table.tsx` cells ship `px-3 py-2` (:442, :459, :476) with no stated row height, so the row is computed, not budgeted. |
-| Table / list row with an identity artifact | `h-11` (44px) | **1** | `Avatar size="sm"` is 32px — see the content-box rule below. |
-| Table header row | `h-9` | 1 | `patterns/data-table.tsx:101` `headCell = "px-3 py-2.5 micro-label leading-none"` — the quiet mono treatment is correct; add the height. Never bold all-caps on a fill. |
-| Toolbar above a table | `h-11 px-3 gap-2` | 1 | From `page-chrome.md`. **(prescriptive)** — `data-table.tsx:349` ships `flex flex-wrap … gap-2 border-b px-3 py-2`; `flex-wrap` is what lets it exceed the band. |
-| Stat band (N stats in one strip) | `h-14` | **1** | One bordered band with `divide-x divide-border`. The only `divide-x` in the tree is `sections/search/search-result-ledger.tsx:27` (`grid grid-cols-4 divide-x … rounded-md border`) — the closest shipped model; give it the height. |
-| Metric / KPI card | `h-20` | ≤3 | One band: value left, trend artifact right, delta + caption beneath. **(prescriptive)** — `ui/stat-card.tsx` stacks icon chip → value → delta → caption and has no height cap. |
-| Card footer (pagination / count / action) | `h-9` | 1 | **(prescriptive)** — `patterns/data-table.tsx:103` `footCell = "px-3 py-2.5 text-xs font-medium tabular-nums"`. |
-| Dense card body | `p-3` | — | `p-4` for the ONE hero tile. Never `p-5+`. Note `ui/card.tsx` bakes in `p-6` — build a standalone shell at row scale. |
+| Surface                                    | Height            | Lines | Notes                                                                                                                                                                                                                                |
+| ------------------------------------------ | ----------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Table / list row, text-only                | `h-9` (36px)      | **1** | The default. **(prescriptive)** — `patterns/data-table.tsx` cells ship `px-3 py-2` (:442, :459, :476) with no stated row height, so the row is computed, not budgeted.                                                               |
+| Table / list row with an identity artifact | `h-11` (44px)     | **1** | `Avatar size="sm"` is 32px — see the content-box rule below.                                                                                                                                                                         |
+| Table header row                           | `h-9`             | 1     | `patterns/data-table.tsx:101` `headCell = "px-3 py-2.5 micro-label leading-none"` — the quiet mono treatment is correct; add the height. Never bold all-caps on a fill.                                                              |
+| Toolbar above a table                      | `h-11 px-3 gap-2` | 1     | From `page-chrome.md`. **(prescriptive)** — `data-table.tsx:349` ships `flex flex-wrap … gap-2 border-b px-3 py-2`; `flex-wrap` is what lets it exceed the band.                                                                     |
+| Stat band (N stats in one strip)           | `h-14`            | **1** | One bordered band with `divide-x divide-border`. The only `divide-x` in the tree is `sections/search/search-result-ledger.tsx:27` (`grid grid-cols-4 divide-x … rounded-md border`) — the closest shipped model; give it the height. |
+| Metric / KPI card                          | `h-20`            | ≤3    | One band: value left, trend artifact right, delta + caption beneath. **(prescriptive)** — `ui/stat-card.tsx` stacks icon chip → value → delta → caption and has no height cap.                                                       |
+| Card footer (pagination / count / action)  | `h-9`             | 1     | **(prescriptive)** — `patterns/data-table.tsx:103` `footCell = "px-3 py-2.5 text-xs font-medium tabular-nums"`.                                                                                                                      |
+| Dense card body                            | `p-3`             | —     | `p-4` for the ONE hero tile. Never `p-5+`. Note `ui/card.tsx` bakes in `p-6` — build a standalone shell at row scale.                                                                                                                |
 
 **Rows never grow to fit content. Content is chosen to fit the row.**
 
@@ -59,12 +59,12 @@ Converting prose to columns is the move: `title` + a wrapped `detail` line becom
 
 `gap-4` is the **largest** gap in an application view, not its default.
 
-| Between | Gap |
-| --- | --- |
-| Rows in a stack, elements in a row | `gap-2` |
-| Card to card inside a section | `gap-3` |
-| Section to section | `gap-4` |
-| Section padding | `py-4` (`py-6` for the route's first section) |
+| Between                            | Gap                                           |
+| ---------------------------------- | --------------------------------------------- |
+| Rows in a stack, elements in a row | `gap-2`                                       |
+| Card to card inside a section      | `gap-3`                                       |
+| Section to section                 | `gap-4`                                       |
+| Section padding                    | `py-4` (`py-6` for the route's first section) |
 
 `py-10` and `gap-8` are editorial values. They are how a dashboard becomes a scroll.
 
@@ -82,17 +82,17 @@ Every row carries **≥1**; a view fields **≥3 distinct kinds bound to ≥3 DI
 
 **Row controls are not artifacts.** The selection `Checkbox`, the row action button (`data-table.tsx:503`), the disclosure chevron encode interaction, not data — they count toward neither the ≥1 floor nor the ≤3 cap.
 
-| Kind | Encodes | Use | Row size |
-| --- | --- | --- | --- |
-| **Avatar** | identity | `Avatar size="sm"` from `@/components/ui/avatar` | 32px (`xs` 28px) |
-| **Thumbnail** | the item itself | `size-8 rounded-md object-cover` — `ui/image.tsx` wraps `next/image`; no row-scale thumbnail component yet | 32px |
-| **Status dot** | live state | **`StatusDot`** — `patterns/status-dot.tsx`, `size-1.5 shrink-0 rounded-full` with a `toneClass` map over `success / warning / error / info / neutral`. Shipped; use it rather than hand-rolling a span. | 6px |
-| **Status pill** | enumerated state | **`StatusBadge`** — `ui/status-badge.tsx`, `text-[10px] leading-none` with its own `size-2.5` dot (:131). `Badge` is the heavier general pill (`px-3 py-1 text-xs`, `sm` `px-2 py-0.5`). | `size="sm"` |
-| **Meter / progress** | ratio to a cap | **`ProgressBar`** — `ui/progress-bar.tsx`, `h-1.5 w-full` track + `toneFill` lookup over `ChartTone`, `value` clamped 0–100. Root is `w-full`, so give it a width: `<ProgressBar value={n} className="w-16" />` (twMerge resolves the conflict). | `h-1.5 w-16` |
-| **Ranked bar** | share of max | `ProgressBar` at a fixed width, or `ui/charts/bar-chart.tsx` at card scale | inline |
-| **Delta chip** | change vs prior | `inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-medium tabular-nums` — **module-private inside `ui/stat-card.tsx:54`.** Lift it to `components/ui` before using it in a row. **Renders nothing when null.** | `text-xs` |
-| **Icon chip** | category | `ui/stat-card.tsx:31` `grid size-7 shrink-0 place-items-center rounded-full border` — counts only when its glyph or tone varies per row | 28px |
-| **Sparkline** | trend shape | `ui/charts/sparkline.tsx` — **card scale only** | see below |
+| Kind                 | Encodes          | Use                                                                                                                                                                                                                                              | Row size         |
+| -------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------- |
+| **Avatar**           | identity         | `Avatar size="sm"` from `@/components/ui/avatar`                                                                                                                                                                                                 | 32px (`xs` 28px) |
+| **Thumbnail**        | the item itself  | `size-8 rounded-md object-cover` — `ui/image.tsx` wraps `next/image`; no row-scale thumbnail component yet                                                                                                                                       | 32px             |
+| **Status dot**       | live state       | **`StatusDot`** — `patterns/status-dot.tsx`, `size-1.5 shrink-0 rounded-full` with a `toneClass` map over `success / warning / error / info / neutral`. Shipped; use it rather than hand-rolling a span.                                         | 6px              |
+| **Status pill**      | enumerated state | **`StatusBadge`** — `ui/status-badge.tsx`, `text-[10px] leading-none` with its own `size-2.5` dot (:131). `Badge` is the heavier general pill (`px-3 py-1 text-xs`, `sm` `px-2 py-0.5`).                                                         | `size="sm"`      |
+| **Meter / progress** | ratio to a cap   | **`ProgressBar`** — `ui/progress-bar.tsx`, `h-1.5 w-full` track + `toneFill` lookup over `ChartTone`, `value` clamped 0–100. Root is `w-full`, so give it a width: `<ProgressBar value={n} className="w-16" />` (twMerge resolves the conflict). | `h-1.5 w-16`     |
+| **Ranked bar**       | share of max     | `ProgressBar` at a fixed width, or `ui/charts/bar-chart.tsx` at card scale                                                                                                                                                                       | inline           |
+| **Delta chip**       | change vs prior  | `inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-medium tabular-nums` — **module-private inside `ui/stat-card.tsx:54`.** Lift it to `components/ui` before using it in a row. **Renders nothing when null.**              | `text-xs`        |
+| **Icon chip**        | category         | `ui/stat-card.tsx:31` `grid size-7 shrink-0 place-items-center rounded-full border` — counts only when its glyph or tone varies per row                                                                                                          | 28px             |
+| **Sparkline**        | trend shape      | `ui/charts/sparkline.tsx` — **card scale only**                                                                                                                                                                                                  | see below        |
 
 **Sparkline constraint (hard).** `ui/charts/sparkline.tsx` is recharts (`AreaChart` + `Area` + `YAxis`) inside a `ResponsiveContainer`, which installs its own resize observer per instance, and the component gates on `useMounted` so it renders nothing on the server pass. Correct for a 4-tile KPI strip; **wrong for a 50-row table**. Its props are `data: number[]`, `tone?: ChartTone`, `height?: number` (default 32), `className` — note `data`, not `values`. For row-scale trend use `ProgressBar` or a hand-rolled inline `<svg>` polyline.
 
@@ -104,14 +104,14 @@ Every row carries **≥1**; a view fields **≥3 distinct kinds bound to ≥3 DI
 
 Build cost is honest — do not cite these as if they were primitives.
 
-| Missing | Cost | Nearest |
-| --- | --- | --- |
-| Row-scale thumbnail component | trivial-inline | `ui/image.tsx` |
-| Extracted delta chip | trivial | module-private in `ui/stat-card.tsx:54` |
-| Stat band at a stated height | small | `sections/search/search-result-ledger.tsx:27` — the only `divide-x` in the tree |
-| Avatar stack / overlap group | small | `Avatar` single only |
-| Severity rail (`h-6 w-0.5`) | trivial-inline | none — `StatusDot` is the nearest state artifact |
-| 3-bar priority glyph | trivial-inline | none — `Sparkline` is time-series and mounts a container; wrong tool per row |
-| Row height as a stated `h-*` | small | every table row currently computes from `py-2` |
+| Missing                       | Cost           | Nearest                                                                         |
+| ----------------------------- | -------------- | ------------------------------------------------------------------------------- |
+| Row-scale thumbnail component | trivial-inline | `ui/image.tsx`                                                                  |
+| Extracted delta chip          | trivial        | module-private in `ui/stat-card.tsx:54`                                         |
+| Stat band at a stated height  | small          | `sections/search/search-result-ledger.tsx:27` — the only `divide-x` in the tree |
+| Avatar stack / overlap group  | small          | `Avatar` single only                                                            |
+| Severity rail (`h-6 w-0.5`)   | trivial-inline | none — `StatusDot` is the nearest state artifact                                |
+| 3-bar priority glyph          | trivial-inline | none — `Sparkline` is time-series and mounts a container; wrong tool per row    |
+| Row height as a stated `h-*`  | small          | every table row currently computes from `py-2`                                  |
 
 Already shipped and often missed: **`patterns/data-table.tsx` wires `aria-sort` and a sort caret** (:138) — it is the only `aria-sort` in the tree, and it means a sortable header here is real, not implied. **`ui/charts/donut-chart.tsx` exists**, so a donut needs no new registration.
