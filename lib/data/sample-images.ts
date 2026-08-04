@@ -16,12 +16,23 @@ export const agentPortraits = [
     "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80",
 ];
 
+export const clientPortraits = [
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80",
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80",
+    "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80",
+    "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80",
+];
+
 const pick = <T>(pool: readonly T[], seed: number) =>
     pool[((seed % pool.length) + pool.length) % pool.length];
 
 export const propertyImage = (seed: number) => pick(propertyImages, seed);
 
 export const agentPortrait = (seed: number) => pick(agentPortraits, seed);
+
+export const clientPortrait = (seed: number) => pick(clientPortraits, seed);
 
 export const propertyGallery = (seed: number, count: number) =>
     Array.from({ length: Math.min(count, propertyImages.length) }, (_, index) =>
