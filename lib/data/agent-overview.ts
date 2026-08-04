@@ -1,120 +1,173 @@
 import {
-    BarChart3,
     Home,
     Users,
     TrendingUp,
     FileSignature,
     UserPlus,
     CalendarPlus,
+    type LucideIcon,
 } from "lucide-react";
-import type { ActivityEntry, QuickAction, StatItem } from "@/lib/types";
+import type { ChartTone } from "@/lib/config/chart-tones";
+import type { ActivityEntry } from "@/lib/types";
+
+export const DAYS_ON_MARKET_BENCHMARK = 60;
+export const FAST_SALE_DAYS = 21;
+export const SLOW_SALE_DAYS = 40;
+export const GOAL_ON_TRACK_RATIO = 0.75;
+export const GOAL_AT_RISK_RATIO = 0.4;
+
+export interface PipelineSummary {
+    label: string;
+    value: number;
+    dealCount: number;
+    href: string;
+}
 
 export interface PipelineStage {
+    id: string;
     name: string;
     count: number;
     value: number;
+    tone: ChartTone;
 }
 
-export interface TopPerformer {
+export interface AgentStat {
+    id: string;
+    label: string;
+    value: string;
+    icon: LucideIcon;
+    href: string;
+    tone: ChartTone;
+}
+
+export interface ClosedSale {
     id: string;
     address: string;
     price: number;
     closedOn: string;
-    overAsk: string;
+    overAskPct: number;
     days: number;
 }
+
+export type ShowingTiming = "today" | "tomorrow" | "later";
 
 export interface UpcomingShowing {
     id: string;
     address: string;
     client: string;
     when: string;
+    timing: ShowingTiming;
 }
+
+export type LeadScore = "Hot" | "Warm" | "Cold";
 
 export interface RecentLead {
     id: string;
     name: string;
-    budget: string;
-    score: "Hot" | "Warm" | "Cold";
-    variant: "accent" | "warning" | "default";
+    budget: number;
+    score: LeadScore;
     received: string;
 }
 
-export const stats: StatItem[] = [
+export interface MonthlyGoal {
+    id: string;
+    label: string;
+    value: number;
+    target: number;
+}
+
+export interface AgentQuickAction {
+    id: string;
+    label: string;
+    href: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+}
+
+export const pipelineSummary: PipelineSummary = {
+    label: "Total pipeline",
+    value: 34_450_000,
+    dealCount: 25,
+    href: "/agent/pipeline",
+};
+
+export const pipelineStages: PipelineStage[] = [
+    { id: "leads", name: "Leads", count: 12, value: 0, tone: "neutral" },
+    { id: "offers", name: "Offers", count: 8, value: 18_400_000, tone: "info" },
     {
-        label: "Total Pipeline",
-        value: "$34.45M",
-        icon: BarChart3,
-        href: "/agent/pipeline",
-        caption: "25 active deals",
-        featured: true,
+        id: "pending",
+        name: "Pending",
+        count: 3,
+        value: 9_850_000,
+        tone: "warning",
     },
     {
-        label: "Active Listings",
-        value: 14,
+        id: "closed",
+        name: "Closed",
+        count: 2,
+        value: 6_200_000,
+        tone: "success",
+    },
+];
+
+export const stats: AgentStat[] = [
+    {
+        id: "listings",
+        label: "Active listings",
+        value: "14",
         icon: Home,
         href: "/agent/listings",
-        change: "+8",
-        trend: "up",
-        caption: "new this month",
+        tone: "accent",
     },
     {
-        label: "Active Leads",
-        value: 12,
+        id: "leads",
+        label: "Active leads",
+        value: "12",
         icon: Users,
         href: "/agent/leads",
-        caption: "3 hot prospects",
+        tone: "info",
     },
     {
-        label: "Open Offers",
-        value: 8,
+        id: "offers",
+        label: "Open offers",
+        value: "8",
         icon: FileSignature,
         href: "/agent/pipeline",
-        change: "+3",
-        trend: "up",
-        caption: "awaiting response",
+        tone: "warning",
     },
     {
-        label: "Closed This Year",
+        id: "closed",
+        label: "Closed YTD",
         value: "$42.3M",
         icon: TrendingUp,
         href: "/agent/analytics",
-        change: "+12%",
-        trend: "up",
-        caption: "vs last year",
+        tone: "success",
     },
 ];
 
-export const pipelineStages: PipelineStage[] = [
-    { name: "Leads", count: 12, value: 0 },
-    { name: "Offers", count: 8, value: 18400000 },
-    { name: "Pending", count: 3, value: 9850000 },
-    { name: "Closed", count: 2, value: 6200000 },
-];
-
-export const topPerformers: TopPerformer[] = [
+export const closedSales: ClosedSale[] = [
     {
         id: "1",
         address: "890 Beverly Grove",
-        price: 3450000,
+        price: 3_450_000,
         closedOn: "Jul 09",
-        overAsk: "+4.2% over ask",
+        overAskPct: 4.2,
         days: 18,
     },
     {
         id: "2",
         address: "1420 Mulholland Drive",
-        price: 5900000,
+        price: 5_900_000,
         closedOn: "Jun 28",
-        overAsk: "+2.8% over ask",
+        overAskPct: 2.8,
         days: 24,
     },
     {
         id: "3",
         address: "58 Coldwater Canyon",
-        price: 2780000,
+        price: 2_780_000,
         closedOn: "Jun 14",
-        overAsk: "At ask",
+        overAskPct: 0,
         days: 31,
     },
 ];
@@ -124,19 +177,22 @@ export const upcomingShowings: UpcomingShowing[] = [
         id: "1",
         address: "456 Oak Avenue",
         client: "John Doe",
-        when: "Today · 2:00 PM",
+        when: "2:00 PM",
+        timing: "today",
     },
     {
         id: "2",
         address: "12 Canyon Ridge",
         client: "Priya Raman",
-        when: "Tomorrow · 11:00 AM",
+        when: "11:00 AM",
+        timing: "tomorrow",
     },
     {
         id: "3",
         address: "234 Oak Street",
         client: "Michael Chen",
-        when: "Fri · 9:30 AM",
+        when: "Fri 9:30",
+        timing: "later",
     },
 ];
 
@@ -144,26 +200,23 @@ export const recentLeads: RecentLead[] = [
     {
         id: "1",
         name: "Robert Lang",
-        budget: "$6.20M",
+        budget: 6_200_000,
         score: "Hot",
-        variant: "accent",
-        received: "20 min ago",
+        received: "20m",
     },
     {
         id: "2",
         name: "Michael Johnson",
-        budget: "$5.00M",
+        budget: 5_000_000,
         score: "Hot",
-        variant: "accent",
-        received: "2 hours ago",
+        received: "2h",
     },
     {
         id: "3",
         name: "Patricia Brown",
-        budget: "$3.50M",
+        budget: 3_500_000,
         score: "Warm",
-        variant: "warning",
-        received: "1 day ago",
+        received: "1d",
     },
 ];
 
@@ -171,49 +224,52 @@ export const recentActivity: ActivityEntry[] = [
     {
         id: 1,
         type: "offer",
-        title: "Offer Received",
-        description: "$3.1M offer on 456 Oak Avenue",
-        time: "2 hours ago",
+        title: "Offer received",
+        description: "$3.1M on 456 Oak Avenue",
+        time: "2h",
     },
     {
         id: 2,
         type: "showing",
-        title: "Property Showed",
+        title: "Property showed",
         description: "789 Sunset Blvd shown to client",
-        time: "5 hours ago",
+        time: "5h",
     },
     {
         id: 3,
         type: "listing",
-        title: "New Listing Posted",
+        title: "New listing posted",
         description: "234 Oak Street listed at $4.5M",
-        time: "1 day ago",
+        time: "1d",
     },
 ];
 
-export const quickActions: QuickAction[] = [
+export const quickActions: AgentQuickAction[] = [
     {
-        label: "List Property",
+        id: "list-property",
+        label: "List a property",
         href: "/agent/listings",
         icon: Home,
-        description: "Post a new listing",
+        tone: "accent",
     },
     {
-        label: "Add Lead",
+        id: "add-lead",
+        label: "Add a lead",
         href: "/agent/leads",
         icon: UserPlus,
-        description: "Capture a prospect",
+        tone: "info",
     },
     {
-        label: "Schedule Showing",
+        id: "schedule-showing",
+        label: "Schedule a showing",
         href: "/agent/calendar",
         icon: CalendarPlus,
-        description: "Book an appointment",
+        tone: "highlight",
     },
 ];
 
-export const monthlySummary = [
-    { label: "Showings", value: "24" },
-    { label: "New Listings", value: "8" },
-    { label: "Closed Deals", value: "2" },
+export const monthlyGoals: MonthlyGoal[] = [
+    { id: "showings", label: "Showings", value: 24, target: 30 },
+    { id: "listings", label: "New listings", value: 8, target: 10 },
+    { id: "deals", label: "Closed deals", value: 2, target: 4 },
 ];
