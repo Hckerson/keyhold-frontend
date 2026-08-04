@@ -1,14 +1,11 @@
 import type { ReactNode } from "react";
 
-export interface ConciergeMetricCellProps {
+export interface MetricCellProps {
     label: string;
     children: ReactNode;
 }
 
-export function ConciergeMetricCell({
-    label,
-    children,
-}: ConciergeMetricCellProps) {
+export function MetricCell({ label, children }: MetricCellProps) {
     return (
         <div className="min-w-0">
             <p className="micro-label truncate">{label}</p>
@@ -19,4 +16,4 @@ export function ConciergeMetricCell({
     );
 }
 
-ConciergeMetricCell.displayName = "ConciergeMetricCell";
+MetricCell.displayName = "MetricCell";

@@ -1,7 +1,7 @@
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { chartToneText } from "@/lib/config/chart-tones";
-import { percentOf, type ConciergeService } from "@/lib/data/agent-concierge";
-import { cn } from "@/lib/utils";
+import type { ConciergeService } from "@/lib/data/agent-concierge";
+import { cn, percentOf } from "@/lib/utils";
 
 export interface ConciergeServiceRowProps {
     service: ConciergeService;

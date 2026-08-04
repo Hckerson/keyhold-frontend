@@ -1,5 +1,5 @@
-import { Award, Clock, Gauge, TrendingUp, type LucideIcon } from "lucide-react";
-import type { ChartTone } from "@/lib/config/chart-tones";
+import { Award, Clock, Gauge, TrendingUp } from "lucide-react";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 import type { Trend } from "@/lib/types";
 
 export const ANALYTICS_PERIOD = "Jan – Jul 2024";
@@ -12,14 +12,6 @@ export interface ProductionSummary {
     closings: number;
     change: string;
     trend: Trend;
-}
-
-export interface AnalyticsStat {
-    id: string;
-    label: string;
-    value: string;
-    icon: LucideIcon;
-    tone: ChartTone;
 }
 
 export interface MonthlyProduction {
@@ -59,7 +51,7 @@ export const production: ProductionSummary = {
     trend: "up",
 };
 
-export const analyticsStats: AnalyticsStat[] = [
+export const analyticsStats: StatDatum[] = [
     {
         id: "avg-price",
         label: "Avg sale price",
