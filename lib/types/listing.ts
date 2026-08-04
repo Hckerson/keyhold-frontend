@@ -69,12 +69,14 @@ export type ManagedListingStatus =
 export interface ManagedListing {
     id: string;
     address: string;
+    locality: string;
+    photo: string;
     price: number;
     beds: number;
     baths: number;
     sqft: number;
     status: ManagedListingStatus;
-    listDate: string;
+    listedDaysAgo: number;
     views: number;
     saves: number;
     showings: number;

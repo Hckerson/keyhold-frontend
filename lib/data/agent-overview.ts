@@ -8,6 +8,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 import type { ActivityEntry } from "@/lib/types";
 
 export const DAYS_ON_MARKET_BENCHMARK = 60;
@@ -28,15 +29,6 @@ export interface PipelineStage {
     name: string;
     count: number;
     value: number;
-    tone: ChartTone;
-}
-
-export interface AgentStat {
-    id: string;
-    label: string;
-    value: string;
-    icon: LucideIcon;
-    href: string;
     tone: ChartTone;
 }
 
@@ -110,7 +102,7 @@ export const pipelineStages: PipelineStage[] = [
     },
 ];
 
-export const stats: AgentStat[] = [
+export const stats: StatDatum[] = [
     {
         id: "listings",
         label: "Active listings",

@@ -2,7 +2,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ConciergeAllocation } from "@/components/features/agent/concierge-allocation";
-import { ConciergeMetricCell } from "@/components/features/agent/concierge-metric-cell";
+import { MetricCell } from "@/components/patterns/metric-cell";
 import {
     CONCIERGE_STATUSES,
     CONCIERGE_TIERS,
@@ -75,20 +75,20 @@ export function ConciergeTopClientHero({
             </div>
 
             <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
-                <ConciergeMetricCell label={ALLOCATED_LABEL}>
+                <MetricCell label={ALLOCATED_LABEL}>
                     <ConciergeAllocation percent={allocationPct(client)} />
-                </ConciergeMetricCell>
-                <ConciergeMetricCell label={CLOSED_LABEL}>
+                </MetricCell>
+                <MetricCell label={CLOSED_LABEL}>
                     <span className="tabular-nums">
                         {client.deals} {CLOSINGS_SUFFIX}
                     </span>
-                </ConciergeMetricCell>
-                <ConciergeMetricCell label={TOUCH_LABEL}>
+                </MetricCell>
+                <MetricCell label={TOUCH_LABEL}>
                     <span className="truncate">{client.lastContact}</span>
-                </ConciergeMetricCell>
-                <ConciergeMetricCell label={NEXT_LABEL}>
+                </MetricCell>
+                <MetricCell label={NEXT_LABEL}>
                     <span className="truncate">{client.nextAction}</span>
-                </ConciergeMetricCell>
+                </MetricCell>
             </div>
         </section>
     );

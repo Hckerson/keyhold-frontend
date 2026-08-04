@@ -1,6 +1,7 @@
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { coverageTone } from "@/lib/config/concierge-tones";
-import { percentOf, type ConciergePractice } from "@/lib/data/agent-concierge";
+import type { ConciergePractice } from "@/lib/data/agent-concierge";
+import { percentOf } from "@/lib/utils";
 
 export interface ConciergePracticeRowProps {
     practice: ConciergePractice;

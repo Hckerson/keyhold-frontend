@@ -11,13 +11,14 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     CONCIERGE_TIERS,
     type ConciergeStatus,
     type ConciergeTier,
 } from "@/lib/config/concierge-tones";
 import { clientPortrait } from "@/lib/data/sample-images";
-import { formatMillions } from "@/lib/utils";
+import { formatMillions, percentOf, sum } from "@/lib/utils";
 
 export interface VIPClient {
     id: string;
@@ -47,14 +48,6 @@ export interface ConciergePractice {
     label: string;
     cadence: string;
     covered: number;
-}
-
-export interface ConciergeStat {
-    id: string;
-    icon: LucideIcon;
-    label: string;
-    value: string;
-    tone: ChartTone;
 }
 
 export const vipClients: VIPClient[] = [
@@ -200,11 +193,6 @@ export const conciergePractices: ConciergePractice[] = [
     },
 ];
 
-const sum = (values: number[]) => values.reduce((total, n) => total + n, 0);
-
-export const percentOf = (part: number, whole: number) =>
-    whole === 0 ? 0 : Math.round((part / whole) * 100);
-
 export const allocationPct = (client: VIPClient) =>
     percentOf(client.allocated, client.budget);
 
@@ -224,7 +212,7 @@ export const openRequests = sum(
     conciergeServices.map((service) => service.openRequests),
 );
 
-export const conciergeStats: ConciergeStat[] = [
+export const conciergeStats: StatDatum[] = [
     {
         id: "clients",
         icon: Users,
