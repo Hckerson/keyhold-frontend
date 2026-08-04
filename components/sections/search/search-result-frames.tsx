@@ -34,9 +34,7 @@ export function SearchResultFrames({
                     onMouseEnter={() => onFrameChange(index)}
                     className={cn(
                         "ease-smooth relative block h-full overflow-hidden transition-all duration-300",
-                        index === activeFrame
-                            ? "flex-7"
-                            : "flex-1 opacity-60",
+                        index === activeFrame ? "flex-7" : "flex-1 opacity-60",
                     )}
                 >
                     <img

@@ -69,7 +69,8 @@ const drawerVariants = cva(
 );
 
 export interface DrawerProps
-    extends HTMLAttributes<HTMLDivElement>,
+    extends
+        HTMLAttributes<HTMLDivElement>,
         VariantProps<typeof drawerVariants> {
     open: boolean;
     onOpenChange: (open: boolean) => void;

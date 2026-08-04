@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock3, XCircle, type LucideIcon } from "lucide-react";
-import type { BadgeTone } from "@/components/features/shared/contact-row";
+import type { BadgeTone } from "@/lib/types";
 
 export type VerificationTier = "standard" | "premium" | "platinum";
 export type VerificationStatus = "pending" | "approved" | "rejected";

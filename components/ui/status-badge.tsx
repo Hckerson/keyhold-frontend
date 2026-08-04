@@ -117,7 +117,10 @@ interface StatusBadgeProps
 }
 
 const StatusBadge = React.forwardRef<HTMLSpanElement, StatusBadgeProps>(
-    ({ className, tone, variant, size, icon: Icon, children, ...props }, ref) => (
+    (
+        { className, tone, variant, size, icon: Icon, children, ...props },
+        ref,
+    ) => (
         <span
             ref={ref}
             className={cn(

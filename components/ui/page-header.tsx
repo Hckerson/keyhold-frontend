@@ -26,7 +26,7 @@ export function PageHeader({
                     {title}
                 </h1>
                 {description && (
-                    <p className="text-text-secondary text-sm">{description}</p>
+                    <p className="text-text-secondary text-xs">{description}</p>
                 )}
             </div>
             {action && <div className="shrink-0">{action}</div>}

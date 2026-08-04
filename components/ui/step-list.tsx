@@ -13,17 +13,17 @@ export function StepList({
     className?: string;
 }) {
     return (
-        <ol className={cn("space-y-4", className)}>
+        <ol className={cn("space-y-3", className)}>
             {steps.map((step, index) => (
-                <li key={step.title} className="flex gap-3">
-                    <span className="bg-accent-light text-accent grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold">
+                <li key={step.title} className="flex gap-2.5">
+                    <span className="bg-accent-light text-accent grid size-6 shrink-0 place-items-center rounded-full text-[10px] font-semibold tabular-nums">
                         {index + 1}
                     </span>
                     <div className="min-w-0">
-                        <p className="text-text text-sm font-medium">
+                        <p className="text-text text-xs font-semibold">
                             {step.title}
                         </p>
-                        <p className="text-text-secondary mt-0.5 text-sm">
+                        <p className="text-text-secondary mt-0.5 text-xs">
                             {step.description}
                         </p>
                     </div>

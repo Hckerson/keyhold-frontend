@@ -8,6 +8,7 @@
     --color-success: var(--colors-success);
     --color-success-light: var(--colors-success-light);
     --color-error: var(--colors-error);
+    --color-error-dark: var(--colors-error-dark);
     --color-error-light: var(--colors-error-light);
     --color-warning: var(--colors-warning);
     --color-warning-light: var(--colors-warning-light);

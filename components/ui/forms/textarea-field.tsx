@@ -2,8 +2,7 @@ import React from "react";
 import { Textarea, type TextareaProps } from "@/components/ui/forms/textarea";
 import { FieldShell, errorIdFor } from "@/components/ui/forms/field-shell";
 
-export interface TextareaFieldProps
-    extends Omit<TextareaProps, "id" | "name"> {
+export interface TextareaFieldProps extends Omit<TextareaProps, "id" | "name"> {
     label: string;
     name: string;
     id?: string;

@@ -11,7 +11,7 @@ export function SummaryRow({ label, value, className }: SummaryRowProps) {
     return (
         <div
             className={cn(
-                "flex items-center justify-between gap-4 text-sm",
+                "flex items-center justify-between gap-3 text-xs",
                 className,
             )}
         >

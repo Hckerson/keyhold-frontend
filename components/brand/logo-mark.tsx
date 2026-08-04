@@ -20,7 +20,8 @@ const markVariants = cva("shrink-0", {
 });
 
 export interface LogoMarkProps
-    extends Omit<React.SVGAttributes<SVGSVGElement>, "color">,
+    extends
+        Omit<React.SVGAttributes<SVGSVGElement>, "color">,
         VariantProps<typeof markVariants> {
     label?: string;
 }

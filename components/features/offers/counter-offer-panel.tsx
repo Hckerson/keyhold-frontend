@@ -76,7 +76,9 @@ export function CounterOfferPanel({
                     placeholder="Explain the terms behind your counter…"
                     value={counterNote}
                     disabled={closed}
-                    onChange={(event) => onCounterNoteChange(event.target.value)}
+                    onChange={(event) =>
+                        onCounterNoteChange(event.target.value)
+                    }
                 />
 
                 {closed && (

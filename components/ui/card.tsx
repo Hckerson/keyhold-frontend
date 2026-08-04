@@ -10,7 +10,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div
             ref={ref}
             className={cn(
-                "bg-background-muted border-border-light ease-smooth hover:border-border rounded-xl border p-6 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg",
+                "bg-background border-border-light ease-smooth hover:border-border rounded-lg border p-4 shadow-sm transition-colors duration-200",
                 className,
             )}
             {...props}
@@ -22,7 +22,7 @@ Card.displayName = "Card";
 
 const CardHeader = forwardRef<HTMLDivElement, CardProps>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn("mb-4", className)} {...props} />
+        <div ref={ref} className={cn("mb-3", className)} {...props} />
     ),
 );
 
@@ -32,7 +32,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, CardProps>(
     ({ className, ...props }, ref) => (
         <h3
             ref={ref}
-            className={cn("text-h4 font-body text-text font-medium", className)}
+            className={cn("text-text text-xs font-semibold", className)}
             {...props}
         />
     ),
@@ -44,7 +44,7 @@ const CardDescription = forwardRef<HTMLParagraphElement, CardProps>(
     ({ className, ...props }, ref) => (
         <p
             ref={ref}
-            className={cn("text-text-secondary text-base", className)}
+            className={cn("text-text-secondary text-xs", className)}
             {...props}
         />
     ),
@@ -64,7 +64,7 @@ const CardFooter = forwardRef<HTMLDivElement, CardProps>(
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn("mt-6 flex gap-4", className)}
+            className={cn("mt-4 flex gap-2", className)}
             {...props}
         />
     ),

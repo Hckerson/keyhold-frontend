@@ -90,7 +90,7 @@ const alignClass = {
 } as const;
 
 const emphasisClass: Record<ColumnEmphasis, string> = {
-    focal: "font-display text-lg leading-none font-light tabular-nums",
+    focal: "text-text text-xs font-semibold tabular-nums",
     identity: "text-xs font-medium",
     figure: "text-xs font-medium tabular-nums",
     field: "text-xs",
@@ -220,7 +220,8 @@ export function DataTable<T>({
 
     const columnEmphasis = (column: DataTableColumn<T>): ColumnEmphasis => {
         const declared = column.emphasis ?? "field";
-        if (declared === "focal" && column.id !== focalColumnId) return "figure";
+        if (declared === "focal" && column.id !== focalColumnId)
+            return "figure";
         return declared;
     };
 
@@ -602,6 +603,7 @@ export function DataTable<T>({
                             <Button
                                 variant="secondary"
                                 size="sm"
+                                iconOnly
                                 aria-label="Previous page"
                                 disabled={currentPage === 1}
                                 onClick={() =>
@@ -618,6 +620,7 @@ export function DataTable<T>({
                             <Button
                                 variant="secondary"
                                 size="sm"
+                                iconOnly
                                 aria-label="Next page"
                                 disabled={currentPage === totalPages}
                                 onClick={() =>
