@@ -16,3 +16,23 @@ export const chartToneVar: Record<ChartTone, string> = {
     warning: "var(--color-warning)",
     error: "var(--color-error)",
 };
+
+export const chartToneText: Record<ChartTone, string> = {
+    accent: "text-accent",
+    info: "text-info",
+    highlight: "text-highlight-dark",
+    neutral: "text-text-muted",
+    success: "text-success",
+    warning: "text-warning",
+    error: "text-error",
+};
+
+export const chartToneSoft: Record<ChartTone, string> = {
+    accent: "bg-accent-light text-accent",
+    info: "bg-info-light text-info",
+    highlight: "bg-highlight-light text-highlight-dark",
+    neutral: "bg-background-alt text-text-secondary",
+    success: "bg-success-light text-success",
+    warning: "bg-warning-light text-warning",
+    error: "bg-error-light text-error",
+};
