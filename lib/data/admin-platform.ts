@@ -3,6 +3,7 @@ import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 export const GMV_YTD = 847_000_000;
 export const GMV_30D = 312_000_000;
 export const CLOSED_DEALS_YTD = 343;
+export const CLOSED_DEALS_30D = 128;
 
 export const COMMISSIONS_YTD = GMV_YTD * DEFAULT_COMMISSION_RATE;
 export const COMMISSIONS_30D = GMV_30D * DEFAULT_COMMISSION_RATE;
