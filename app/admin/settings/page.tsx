@@ -1,5 +1,5 @@
-import { AdminSettingsForm } from "@/components/sections/admin/admin-settings-form";
+import { AdminSettingsConsole } from "@/components/sections/admin/admin-settings-console";
 
 export default function AdminSettingsPage() {
-    return <AdminSettingsForm />;
+    return <AdminSettingsConsole />;
 }
