@@ -83,7 +83,7 @@ export function LatestSales({ sales }: LatestSalesProps) {
                     </Link>
                 </div>
 
-                <div className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-6">
+                <div className="scroll-hidden -mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-6">
                     {sales.map((sale) => (
                         <SaleCard key={sale.id} sale={sale} />
                     ))}

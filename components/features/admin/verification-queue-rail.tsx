@@ -28,7 +28,7 @@ export function VerificationQueueRail({
                     No requests in this view.
                 </p>
             ) : (
-                <ul className="divide-border max-h-[32rem] divide-y overflow-y-auto">
+                <ul className="divide-border scroll-y max-h-[32rem] divide-y">
                     {requests.map((request) => (
                         <li key={request.id}>
                             <VerificationQueueRow

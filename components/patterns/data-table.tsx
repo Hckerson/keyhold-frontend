@@ -367,7 +367,7 @@ export function DataTable<T>({
                     </div>
                 )}
 
-                <div className="overflow-x-auto">
+                <div className="scroll-x">
                     <table
                         ref={tableRef}
                         onKeyDown={onTableKeyDown}

@@ -32,7 +32,7 @@ export default function AdminLayout({
                 onLogout={handleLogout}
             />
 
-            <main className="flex-1 overflow-auto">
+            <main className="scroll-page flex-1">
                 <Topbar
                     routes={ADMIN_ROUTES}
                     rootLabel="Admin"

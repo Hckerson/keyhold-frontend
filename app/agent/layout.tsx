@@ -32,7 +32,7 @@ export default function AgentLayout({
                 onLogout={handleLogout}
             />
 
-            <main className="flex-1 overflow-auto">
+            <main className="scroll-page flex-1">
                 <Topbar
                     routes={AGENT_ROUTES}
                     rootLabel="Agent"

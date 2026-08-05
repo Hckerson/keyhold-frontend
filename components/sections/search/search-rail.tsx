@@ -109,7 +109,7 @@ export function SearchRail({
                 </button>
             </header>
 
-            <div className="divide-border flex-1 divide-y overflow-y-auto">
+            <div className="divide-border scroll-y flex-1 divide-y">
                 <div className="px-3 py-3">
                     <FormField
                         id="filter-location"
