@@ -1,26 +1,17 @@
 import { Avatar } from "@/components/ui/avatar";
-import {
-    StatusBadge,
-    type StatusBadgeProps,
-} from "@/components/ui/status-badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { StatusDot, type DotTone } from "@/components/patterns/status-dot";
+import { VIEWING_STATUSES } from "@/lib/config/viewing-tones";
 import { initialsOf } from "@/lib/utils";
 import type {
     OverviewViewing,
     ViewingTiming,
 } from "@/lib/data/dashboard-overview";
-import type { ViewingStatus } from "@/lib/types";
 
 const timingTone: Record<ViewingTiming, DotTone> = {
     today: "warning",
     tomorrow: "info",
     later: "neutral",
-};
-
-const statusTone: Record<ViewingStatus, StatusBadgeProps["tone"]> = {
-    confirmed: "success",
-    pending: "warning",
-    cancelled: "neutral",
 };
 
 export interface OverviewViewingRowProps {
@@ -44,11 +35,8 @@ export function OverviewViewingRow({ viewing }: OverviewViewingRowProps) {
             <span className="text-text-secondary w-24 shrink-0 truncate text-xs">
                 {viewing.agent}
             </span>
-            <StatusBadge
-                tone={statusTone[viewing.status]}
-                className="capitalize"
-            >
-                {viewing.status}
+            <StatusBadge tone={VIEWING_STATUSES[viewing.status].tone}>
+                {VIEWING_STATUSES[viewing.status].label}
             </StatusBadge>
             <span className="micro-label w-14 shrink-0 text-right">
                 {viewing.when}

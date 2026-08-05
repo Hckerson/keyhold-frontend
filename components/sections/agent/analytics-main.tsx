@@ -17,7 +17,7 @@ export function AnalyticsMain() {
                 description={LEDGER_LEDE}
                 count={monthlyProduction.length}
             >
-                <PanelInset>
+                <PanelInset flush>
                     <AnalyticsMonthTable months={monthlyProduction} />
                 </PanelInset>
             </Panel>

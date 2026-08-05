@@ -1,8 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SummaryRow } from "@/components/ui/summary-row";
-import { StatusBadge } from "@/components/ui/status-badge";
 import {
     Modal,
     ModalHeader,
@@ -10,14 +8,20 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
+import { MetricCell } from "@/components/patterns/metric-cell";
+import { ViewingAgentMark } from "@/components/features/dashboard/viewing-agent-mark";
+import { ViewingModeMark } from "@/components/features/dashboard/viewing-mode-mark";
+import { ViewingPropertyLink } from "@/components/features/dashboard/viewing-property-link";
+import { ViewingStatusMark } from "@/components/features/dashboard/viewing-status-mark";
 import { monthLabel } from "@/components/features/shared/mini-calendar";
 import type { Viewing } from "@/lib/types";
 
-const statusTone = {
-    confirmed: "success",
-    pending: "warning",
-    cancelled: "error",
-} as const;
+const SLOT_LABEL = "Slot";
+const FORMAT_LABEL = "Format";
+const AGENT_LABEL = "Agent";
+const PHONE_LABEL = "Direct line";
+const CLOSE_ACTION = "Close";
+const MINUTES_SUFFIX = "min";
 
 export interface ViewingDayModalProps {
     open: boolean;
@@ -38,40 +42,59 @@ export function ViewingDayModal({
 }: ViewingDayModalProps) {
     return (
         <Modal open={open} onOpenChange={onOpenChange}>
-            <ModalHeader>
+            <ModalHeader className="p-4">
                 <ModalTitle>
                     {selectedDay === null
                         ? ""
                         : `${monthLabel(year, month)} ${selectedDay}`}
                 </ModalTitle>
             </ModalHeader>
-            <ModalBody className="space-y-3">
+            <ModalBody className="scroll-y max-h-[60vh] space-y-2 p-4">
                 {viewings.map((viewing) => (
-                    <div
+                    <article
                         key={viewing.id}
-                        className="border-border-light bg-background space-y-2 rounded-lg border p-3"
+                        className="border-border-light bg-background rounded-lg border p-3"
                     >
-                        <div className="flex items-start justify-between gap-2">
-                            <p className="text-text min-w-0 truncate text-xs font-medium">
-                                {viewing.address}
-                            </p>
-                            <StatusBadge tone={statusTone[viewing.status]}>
-                                {viewing.status}
-                            </StatusBadge>
+                        <div className="flex items-center justify-between gap-3">
+                            <ViewingPropertyLink viewing={viewing} />
+                            <ViewingStatusMark
+                                status={viewing.status}
+                                className="shrink-0"
+                            />
                         </div>
-                        <SummaryRow label="Time" value={viewing.time} />
-                        <SummaryRow label="Agent" value={viewing.agent} />
-                        <SummaryRow label="Phone" value={viewing.agentPhone} />
-                    </div>
+                        <div className="border-border-light mt-3 grid grid-cols-2 gap-3 border-t pt-3 sm:grid-cols-4">
+                            <MetricCell label={SLOT_LABEL}>
+                                <span className="truncate tabular-nums">
+                                    {viewing.time} · {viewing.durationMinutes}
+                                    {MINUTES_SUFFIX}
+                                </span>
+                            </MetricCell>
+                            <MetricCell label={FORMAT_LABEL}>
+                                <ViewingModeMark mode={viewing.mode} />
+                            </MetricCell>
+                            <MetricCell label={AGENT_LABEL}>
+                                <ViewingAgentMark agent={viewing.agent} />
+                            </MetricCell>
+                            <MetricCell label={PHONE_LABEL}>
+                                <a
+                                    href={`tel:${viewing.agentPhone}`}
+                                    className="text-accent hover:text-accent-dark ease-smooth truncate tabular-nums transition-colors"
+                                >
+                                    {viewing.agentPhone}
+                                </a>
+                            </MetricCell>
+                        </div>
+                    </article>
                 ))}
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="p-4">
                 <Button
+                    type="button"
                     variant="secondary"
                     size="sm"
                     onClick={() => onOpenChange(false)}
                 >
-                    Close
+                    {CLOSE_ACTION}
                 </Button>
             </ModalFooter>
         </Modal>

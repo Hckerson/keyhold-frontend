@@ -57,7 +57,7 @@ export function LeadsMain({
                 </div>
 
                 {leads.length > 0 ? (
-                    <PanelInset className="mt-0">
+                    <PanelInset flush className="mt-0">
                         <LeadTable leads={leads} onAdvance={onAdvance} />
                     </PanelInset>
                 ) : (

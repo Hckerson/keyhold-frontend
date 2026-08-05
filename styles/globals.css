@@ -220,6 +220,18 @@
     text-transform: uppercase;
 }
 
+.table-flush {
+    --table-edge: 0.75rem;
+}
+
+.table-flush :is(th, td):first-child {
+    padding-left: var(--table-edge);
+}
+
+.table-flush :is(th, td):last-child {
+    padding-right: var(--table-edge);
+}
+
 .image-hero {
     width: 100%;
     height: 600px;

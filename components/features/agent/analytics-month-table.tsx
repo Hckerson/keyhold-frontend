@@ -9,7 +9,7 @@ export interface AnalyticsMonthTableProps {
 
 export function AnalyticsMonthTable({ months }: AnalyticsMonthTableProps) {
     return (
-        <table className="w-full">
+        <table className="table-flush w-full">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">

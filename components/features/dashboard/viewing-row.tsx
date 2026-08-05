@@ -1,118 +1,100 @@
-import Link from "next/link";
-import { Phone, CalendarClock, MessageSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { cn } from "@/lib/utils";
+"use client";
+
+import { CalendarClock, X } from "lucide-react";
+import { ViewingAgentMark } from "@/components/features/dashboard/viewing-agent-mark";
+import { ViewingCountdown } from "@/components/features/dashboard/viewing-countdown";
+import { ViewingModeMark } from "@/components/features/dashboard/viewing-mode-mark";
+import { ViewingPropertyLink } from "@/components/features/dashboard/viewing-property-link";
+import { ViewingStatusMark } from "@/components/features/dashboard/viewing-status-mark";
+import { daysUntil, formatViewingDate, isActive } from "@/lib/data/viewings";
 import type { Viewing } from "@/lib/types";
+import { cn, formatMillions } from "@/lib/utils";
+
+const RESCHEDULE_LABEL = "Reschedule";
+const CANCEL_LABEL = "Cancel";
+
+const ICON_BUTTON =
+    "ease-smooth focus-visible:ring-accent grid size-5 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
 export interface ViewingRowProps {
     viewing: Viewing;
-    messageHref?: string;
-    onReschedule?: (id: string) => void;
-    onCancel?: (id: string) => void;
-    className?: string;
-}
-
-const statusTone = {
-    confirmed: "success",
-    pending: "warning",
-    cancelled: "error",
-} as const;
-
-export function formatViewingDate(date: string) {
-    const [year, month, day] = date.split("-").map(Number);
-    return new Date(year, month - 1, day).toLocaleDateString("en-US", {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-    });
+    onReschedule: (id: string) => void;
+    onCancel: (id: string) => void;
 }
 
 export function ViewingRow({
     viewing,
-    messageHref = "/dashboard/messages",
     onReschedule,
     onCancel,
-    className,
 }: ViewingRowProps) {
-    const { id, address, date, time, agent, agentPhone, status } = viewing;
-    const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
-    const isActive = status !== "cancelled";
+    const days = daysUntil(viewing);
+    const active = isActive(viewing);
 
     return (
-        <article
+        <tr
             className={cn(
-                "bg-background-muted border-border-light hover:border-border ease-smooth rounded-xl border p-3 shadow-sm transition-all duration-300 hover:shadow-md",
-                className,
+                "ease-smooth hover:bg-background-muted h-11 transition-colors",
+                !active && "opacity-60",
             )}
         >
-            <div className="flex items-start justify-between gap-2">
-                <h3 className="text-text min-w-0 flex-1 truncate text-xs font-medium">
-                    {address}
-                </h3>
-                <StatusBadge tone={statusTone[status]}>
-                    {statusLabel}
-                </StatusBadge>
-            </div>
-
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                <div>
-                    <p className="micro-label">Date &amp; Time</p>
-                    <p className="text-text mt-0.5 text-xs font-medium tabular-nums">
-                        {formatViewingDate(date)} at {time}
-                    </p>
-                </div>
-                <div>
-                    <p className="micro-label">Agent</p>
-                    <p className="text-text mt-0.5 text-xs font-medium">
-                        {agent}
-                    </p>
-                    <p className="text-text-muted text-xs tabular-nums">
-                        {agentPhone}
-                    </p>
-                </div>
-            </div>
-
-            <div className="border-border-light mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
-                <a href={`tel:${agentPhone}`}>
-                    <Button variant="secondary" size="sm">
-                        <Phone size={12} strokeWidth={1.5} className="mr-1.5" />
-                        Call Agent
-                    </Button>
-                </a>
-                {isActive && onReschedule && (
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => onReschedule(id)}
-                    >
-                        <CalendarClock
-                            size={12}
-                            strokeWidth={1.5}
-                            className="mr-1.5"
-                        />
-                        Reschedule
-                    </Button>
+            <td className="py-0">
+                <ViewingStatusMark status={viewing.status} />
+            </td>
+            <td className="py-0 pl-3">
+                <ViewingPropertyLink viewing={viewing} />
+            </td>
+            <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
+                {formatMillions(viewing.price, 2)}
+            </td>
+            <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
+                {formatViewingDate(viewing.date)} · {viewing.time}
+            </td>
+            <td className="py-0 pl-3">
+                <ViewingModeMark mode={viewing.mode} />
+            </td>
+            <td className="py-0 pl-3">
+                <ViewingAgentMark agent={viewing.agent} />
+            </td>
+            <td className="py-0 pl-3 text-right">
+                <ViewingCountdown days={days} />
+            </td>
+            <td className="py-0 pl-3">
+                {active && (
+                    <span className="flex items-center justify-end gap-1">
+                        <button
+                            type="button"
+                            aria-label={`${RESCHEDULE_LABEL} ${viewing.address}`}
+                            onClick={() => onReschedule(viewing.id)}
+                            className={cn(
+                                ICON_BUTTON,
+                                "text-text-muted hover:bg-accent-light hover:text-accent",
+                            )}
+                        >
+                            <CalendarClock
+                                className="size-3"
+                                strokeWidth={1.5}
+                                aria-hidden="true"
+                            />
+                        </button>
+                        <button
+                            type="button"
+                            aria-label={`${CANCEL_LABEL} ${viewing.address}`}
+                            onClick={() => onCancel(viewing.id)}
+                            className={cn(
+                                ICON_BUTTON,
+                                "text-text-muted hover:bg-error-light hover:text-error",
+                            )}
+                        >
+                            <X
+                                className="size-3"
+                                strokeWidth={1.5}
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </span>
                 )}
-                {isActive && onCancel && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-error hover:text-error"
-                        onClick={() => onCancel(id)}
-                    >
-                        Cancel
-                    </Button>
-                )}
-                <Link
-                    href={messageHref}
-                    className="text-accent hover:text-accent-dark ease-smooth ml-auto inline-flex items-center gap-1.5 text-xs font-medium transition-colors"
-                >
-                    <MessageSquare size={12} strokeWidth={1.5} />
-                    Send message to agent
-                </Link>
-            </div>
-        </article>
+            </td>
+        </tr>
     );
 }
 
