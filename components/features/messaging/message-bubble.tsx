@@ -67,9 +67,9 @@ export function MessageBubble({
                                     )}
                                 >
                                     <Paperclip
-                                        size={12}
+                                        className="size-3 shrink-0"
                                         strokeWidth={1.5}
-                                        className="shrink-0"
+                                        aria-hidden="true"
                                     />
                                     <span className="truncate">{file}</span>
                                 </li>
@@ -77,7 +77,7 @@ export function MessageBubble({
                         </ul>
                     )}
                 </div>
-                <span className="text-text-muted text-xs">{caption}</span>
+                <span className="micro-label">{caption}</span>
             </div>
         </Wrapper>
     );
