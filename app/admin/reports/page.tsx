@@ -1,32 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { PageHeader } from "@/components/ui/page-header";
-import { AdminReportMarket } from "@/components/sections/admin/admin-report-market";
-import { AdminReportOverview } from "@/components/sections/admin/admin-report-overview";
-import { AdminReportTrend } from "@/components/sections/admin/admin-report-trend";
+import { AdminReportsHeader } from "@/components/sections/admin/admin-reports-header";
+import { AdminReportsMain } from "@/components/sections/admin/admin-reports-main";
+import { AdminReportsRail } from "@/components/sections/admin/admin-reports-rail";
+import { AdminReportsStatBand } from "@/components/sections/admin/admin-reports-stat-band";
+import { REPORT_PERIOD_LABEL } from "@/lib/data/admin-report-trend";
+import { REPORT_STATS } from "@/lib/data/admin-reports";
 
 export default function AdminReportsPage() {
     return (
-        <div className="space-y-3">
-            <PageHeader
-                title="Analytics & Reports"
-                description="Platform performance and market insights"
-                action={
-                    <div className="flex gap-2">
-                        <Button variant="secondary" size="sm">
-                            Download
-                        </Button>
-                        <Button variant="primary" size="sm">
-                            Generate Custom
-                        </Button>
-                    </div>
-                }
-            />
+        <div className="flex flex-col gap-4">
+            <AdminReportsHeader period={REPORT_PERIOD_LABEL} />
 
-            <AdminReportOverview />
+            <AdminReportsStatBand stats={REPORT_STATS} />
 
-            <AdminReportTrend />
-
-            <AdminReportMarket />
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+                <AdminReportsMain />
+                <AdminReportsRail />
+            </div>
         </div>
     );
 }
