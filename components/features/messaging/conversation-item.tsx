@@ -1,59 +1,61 @@
 "use client";
 
 import { Avatar } from "@/components/ui/avatar";
-import type { Conversation } from "@/lib/data/messages";
-import { cn } from "@/lib/utils";
+import { StatusDot } from "@/components/patterns/status-dot";
+import { ConversationUnreadPill } from "@/components/features/messaging/conversation-unread-pill";
+import { CONVERSATION_STATUSES } from "@/lib/config/conversation-tones";
+import type { Conversation } from "@/lib/types";
+import { cn, formatAge } from "@/lib/utils";
 
 export interface ConversationItemProps {
     conversation: Conversation;
     active: boolean;
-    onClick: () => void;
+    onSelect: (id: string) => void;
 }
 
 export function ConversationItem({
     conversation,
     active,
-    onClick,
+    onSelect,
 }: ConversationItemProps) {
+    const status = CONVERSATION_STATUSES[conversation.status];
+
     return (
-        <button
-            type="button"
-            onClick={onClick}
-            aria-current={active ? "true" : undefined}
-            className={cn(
-                "border-border-light ease-smooth w-full border-b px-3 py-2.5 text-left transition-colors",
-                active ? "bg-accent-light/50" : "hover:bg-background-alt",
-            )}
-        >
-            <div className="flex items-start gap-3">
+        <li>
+            <button
+                type="button"
+                aria-current={active ? "true" : undefined}
+                onClick={() => onSelect(conversation.id)}
+                className={cn(
+                    "ease-smooth focus-visible:ring-accent flex h-11 w-full items-center gap-2 px-3 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:-outline-offset-2 focus-visible:outline-none",
+                    active ? "bg-accent-light/50" : "hover:bg-background-alt",
+                )}
+            >
+                <StatusDot tone={status.tone} />
                 <Avatar
                     size="sm"
                     tone="accent"
                     elevated={false}
-                    initials={conversation.avatar}
+                    src={conversation.portrait}
+                    alt={conversation.agent}
+                    initials={conversation.initials}
                 />
-                <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                        <p className="text-text truncate text-xs font-medium">
-                            {conversation.agent}
-                        </p>
-                        {conversation.unread > 0 && (
-                            <span className="bg-highlight text-text-inverse grid h-4 min-w-4 shrink-0 place-items-center rounded-full px-1 font-mono text-[10px] font-semibold tabular-nums">
-                                {conversation.unread}
-                            </span>
-                        )}
-                    </div>
-                    <p className="text-text-muted truncate text-xs">
-                        {conversation.agentTitle}
-                    </p>
-                    <p className="text-text-secondary mt-1 line-clamp-1 text-xs">
+                <span className="min-w-0 flex-1 truncate text-xs">
+                    <span className="text-text font-medium">
+                        {conversation.agent}
+                    </span>
+                    <span className="text-text-muted">
+                        {" · "}
                         {conversation.lastMessage}
-                    </p>
-                    <p className="text-text-muted mt-1 text-xs">
-                        {conversation.lastMessageTime}
-                    </p>
-                </div>
-            </div>
-        </button>
+                    </span>
+                </span>
+                <ConversationUnreadPill count={conversation.unread} />
+                <span className="text-text-muted shrink-0 text-xs tabular-nums">
+                    {formatAge(conversation.minutesAgo)}
+                </span>
+            </button>
+        </li>
     );
 }
+
+ConversationItem.displayName = "ConversationItem";
