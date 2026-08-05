@@ -1,60 +1,167 @@
 import {
-    Search,
-    Heart,
-    FileText,
+    Bell,
     CalendarDays,
+    FileText,
+    Heart,
     MessageSquare,
 } from "lucide-react";
-import type {
-    ActivityEntry,
-    QuickAction,
-    StatItem,
-    Viewing,
-} from "@/lib/types";
+import type { StatDatum } from "@/components/patterns/stat-cell";
+import { propertyImage } from "@/lib/data/sample-images";
+import type { ActivityEntry, OfferStatus, ViewingStatus } from "@/lib/types";
 
-export interface PriceAlert {
-    id: number;
-    address: string;
-    note: string;
-    tone: "success" | "muted";
+export const BUYER_FIRST_NAME = "John";
+export const OFFER_STRONG_RATIO = 0.97;
+export const OFFER_FAIR_RATIO = 0.93;
+
+export interface OfferBook {
+    label: string;
+    value: number;
+    liveCount: number;
+    awaitingCount: number;
+    href: string;
 }
 
-export const stats: StatItem[] = [
+export interface OfferPosition {
+    id: string;
+    address: string;
+    image: string;
+    offered: number;
+    list: number;
+    status: OfferStatus;
+}
+
+export type ViewingTiming = "today" | "tomorrow" | "later";
+
+export interface OverviewViewing {
+    id: string;
+    address: string;
+    agent: string;
+    when: string;
+    timing: ViewingTiming;
+    status: ViewingStatus;
+}
+
+export type AlertKind = "price-drop" | "new-match" | "under-offer";
+
+export interface MatchAlert {
+    id: string;
+    address: string;
+    kind: AlertKind;
+    price: number;
+    change?: number;
+    when: string;
+}
+
+export type TaskState = "done" | "active" | "todo";
+
+export interface JourneyTask {
+    id: string;
+    label: string;
+    href: string;
+    state: TaskState;
+    due: string;
+}
+
+export const alertKindLabel: Record<AlertKind, string> = {
+    "price-drop": "Price drop",
+    "new-match": "New match",
+    "under-offer": "Under offer",
+};
+
+export const offerBook: OfferBook = {
+    label: "Offers in play",
+    value: 7_350_000,
+    liveCount: 2,
+    awaitingCount: 1,
+    href: "/dashboard/offers",
+};
+
+export const offerPositions: OfferPosition[] = [
     {
-        label: "Saved Listings",
-        value: 8,
+        id: "1",
+        address: "456 Oak Avenue, Beverly Hills",
+        image: propertyImage(0),
+        offered: 3_100_000,
+        list: 3_200_000,
+        status: "submitted",
+    },
+    {
+        id: "3",
+        address: "234 Oak Street, Bel Air",
+        image: propertyImage(2),
+        offered: 4_250_000,
+        list: 4_500_000,
+        status: "countered",
+    },
+];
+
+export const stats: StatDatum[] = [
+    {
+        id: "saved",
+        label: "Saved",
+        value: "8",
         icon: Heart,
         href: "/dashboard/saved",
-        change: "+2",
-        trend: "up",
-        series: [3, 4, 4, 5, 6, 6, 8],
+        tone: "neutral",
     },
     {
-        label: "Active Offers",
-        value: 2,
+        id: "offers",
+        label: "Live offers",
+        value: "2",
         icon: FileText,
         href: "/dashboard/offers",
-        change: "+1",
-        trend: "up",
-        series: [0, 1, 1, 1, 1, 2, 2],
+        tone: "highlight",
     },
     {
-        label: "Scheduled Viewings",
-        value: 3,
+        id: "viewings",
+        label: "Viewings",
+        value: "3",
         icon: CalendarDays,
         href: "/dashboard/viewings",
-        change: "+1",
-        trend: "up",
-        series: [1, 2, 2, 3, 2, 3, 3],
+        tone: "info",
     },
     {
-        label: "New Messages",
-        value: 1,
+        id: "alerts",
+        label: "Alerts",
+        value: "3",
+        icon: Bell,
+        href: "/dashboard/alerts",
+        tone: "warning",
+    },
+    {
+        id: "messages",
+        label: "Unread",
+        value: "1",
         icon: MessageSquare,
         href: "/dashboard/messages",
-        change: "+1",
-        trend: "up",
-        series: [0, 1, 0, 1, 0, 0, 1],
+        tone: "accent",
+    },
+];
+
+export const upcomingViewings: OverviewViewing[] = [
+    {
+        id: "1",
+        address: "456 Oak Avenue",
+        agent: "Sarah Chen",
+        when: "3:00 PM",
+        timing: "today",
+        status: "confirmed",
+    },
+    {
+        id: "2",
+        address: "234 Oak Street",
+        agent: "Michael Rodriguez",
+        when: "10:00 AM",
+        timing: "tomorrow",
+        status: "confirmed",
+    },
+    {
+        id: "3",
+        address: "567 Palm Drive",
+        agent: "Jennifer Martinez",
+        when: "Fri 2:00",
+        timing: "later",
+        status: "pending",
     },
 ];
 
@@ -62,110 +169,99 @@ export const recentActivity: ActivityEntry[] = [
     {
         id: 1,
         type: "viewing",
-        title: "Viewing Scheduled",
-        description:
-            "Your viewing for 456 Oak Avenue has been confirmed for today at 3:00 PM",
-        time: "2 hours ago",
+        title: "Viewing confirmed",
+        description: "456 Oak Avenue at 3:00 PM with Sarah Chen",
+        time: "2h",
     },
     {
         id: 2,
         type: "offer",
-        title: "Offer Accepted",
-        description:
-            "Your offer of $2.95M for 789 Sunset Blvd has been accepted",
-        time: "5 hours ago",
+        title: "Seller countered",
+        description: "234 Oak Street came back at $4.4M",
+        time: "5h",
     },
     {
         id: 3,
         type: "message",
-        title: "New Message",
-        description:
-            "Your concierge agent has sent you a message about 234 Oak Street",
-        time: "1 day ago",
+        title: "Concierge replied",
+        description: "Michael Rodriguez on the Bel Air counter",
+        time: "1d",
     },
     {
         id: 4,
         type: "listing",
-        title: "Price Drop",
-        description:
-            "456 Oak Avenue dropped $150,000 since you saved it last week",
-        time: "2 days ago",
+        title: "Price drop",
+        description: "456 Oak Avenue down $150K since you saved it",
+        time: "2d",
     },
     {
         id: 5,
         type: "showing",
-        title: "Listing Viewed",
-        description:
-            "You viewed 567 Palm Drive, Malibu for the third time this month",
-        time: "3 days ago",
+        title: "Listing viewed",
+        description: "567 Palm Drive, your third visit this month",
+        time: "3d",
     },
 ];
 
-export const upcomingViewings: Viewing[] = [
+export const matchAlerts: MatchAlert[] = [
     {
         id: "1",
-        address: "456 Oak Avenue, Beverly Hills, CA",
-        date: "2026-07-28",
-        time: "3:00 PM",
-        agent: "Sarah Chen",
-        agentPhone: "(310) 555-0123",
-        status: "confirmed",
+        address: "456 Oak Avenue",
+        kind: "price-drop",
+        price: 3_200_000,
+        change: 150_000,
+        when: "2d",
     },
     {
         id: "2",
-        address: "234 Oak Street, Bel Air, CA",
-        date: "2026-07-30",
-        time: "10:00 AM",
-        agent: "Michael Rodriguez",
-        agentPhone: "(310) 555-0456",
-        status: "confirmed",
+        address: "678 Elm Street",
+        kind: "new-match",
+        price: 2_850_000,
+        when: "3d",
     },
     {
         id: "3",
-        address: "567 Palm Drive, Malibu, CA",
-        date: "2026-08-03",
-        time: "2:00 PM",
-        agent: "Jennifer Martinez",
-        agentPhone: "(310) 555-0789",
-        status: "pending",
+        address: "234 Oak Street",
+        kind: "under-offer",
+        price: 4_500_000,
+        when: "5d",
     },
 ];
 
-export const quickActions: QuickAction[] = [
+export const journeyTasks: JourneyTask[] = [
     {
-        label: "Browse Properties",
-        href: "/search",
-        icon: Search,
-        description: "Explore the latest listings",
+        id: "pre-approval",
+        label: "Mortgage pre-approval",
+        href: "/dashboard/settings",
+        state: "done",
+        due: "Jul 12",
     },
     {
-        label: "View Saved",
+        id: "shortlist",
+        label: "Shortlist and tour",
         href: "/dashboard/saved",
-        icon: Heart,
-        description: "8 bookmarked",
+        state: "done",
+        due: "Jul 28",
     },
     {
-        label: "Your Offers",
-        href: "/dashboard/offers",
-        icon: FileText,
-        description: "2 active",
+        id: "counter",
+        label: "Answer the Bel Air counter",
+        href: "/dashboard/offers/3",
+        state: "active",
+        due: "Aug 06",
     },
     {
-        label: "Schedule a Viewing",
+        id: "inspection",
+        label: "Book the inspection",
         href: "/dashboard/viewings",
-        icon: CalendarDays,
-        description: "3 upcoming",
+        state: "todo",
+        due: "Aug 14",
     },
     {
-        label: "Messages",
-        href: "/dashboard/messages",
-        icon: MessageSquare,
-        description: "1 unread",
+        id: "escrow",
+        label: "Open escrow",
+        href: "/dashboard/offers",
+        state: "todo",
+        due: "Sep 01",
     },
-];
-
-export const priceAlerts: PriceAlert[] = [
-    { id: 1, address: "456 Oak Avenue", note: "↓ $150K", tone: "success" },
-    { id: 2, address: "678 Elm Street", note: "New match", tone: "muted" },
-    { id: 3, address: "234 Oak Street", note: "Under offer", tone: "muted" },
 ];
