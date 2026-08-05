@@ -1,92 +1,57 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/forms/checkbox";
 import { Switch } from "@/components/ui/forms/switch";
-import { FormField } from "@/components/ui/forms/form-field";
+import { AlertChannelToggle } from "@/components/features/dashboard/alert-channel-toggle";
+import { AlertTypeGlyph } from "@/components/features/dashboard/alert-type-glyph";
 import {
-    channels,
-    type AlertPreference,
-    type AlertPreferenceCopy,
-    type ChannelKey,
-} from "@/lib/data/alerts";
+    ALERT_CHANNELS,
+    ALERT_CHANNEL_KEYS,
+    ALERT_TYPES,
+} from "@/lib/config/alert-tones";
+import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
 
 export interface AlertPreferenceRowProps {
-    item: AlertPreferenceCopy;
+    type: AlertType;
     preference: AlertPreference;
-    threshold: string;
-    onThresholdChange: (value: string) => void;
     onToggleEnabled: () => void;
-    onToggleChannel: (channel: ChannelKey) => void;
+    onToggleChannel: (channel: AlertChannel) => void;
 }
 
 export function AlertPreferenceRow({
-    item,
+    type,
     preference,
-    threshold,
-    onThresholdChange,
     onToggleEnabled,
     onToggleChannel,
 }: AlertPreferenceRowProps) {
-    return (
-        <div className="bg-background border-border-light rounded-lg border p-3">
-            <label className="flex cursor-pointer items-start justify-between gap-4">
-                <span className="min-w-0">
-                    <span className="text-text block text-xs font-medium">
-                        {item.title}
-                    </span>
-                    <span className="text-text-secondary mt-0.5 block text-xs">
-                        {item.description}
-                    </span>
-                </span>
-                <Switch
-                    checked={preference.enabled}
-                    onChange={onToggleEnabled}
-                    aria-label={`Enable ${item.title} alerts`}
-                    className="shrink-0"
-                />
-            </label>
+    const { label } = ALERT_TYPES[type];
 
-            {preference.enabled && (
-                <div className="border-border-light mt-3 space-y-3 border-t pt-3">
-                    {item.key === "price-drops" && (
-                        <FormField
-                            label="Drop threshold"
-                            name="priceDropThreshold"
-                            value={threshold}
-                            onChange={(event) =>
-                                onThresholdChange(event.target.value)
-                            }
-                            prefix="$"
-                            variant="numeric"
-                            inputMode="numeric"
-                            placeholder="50,000"
-                            className="max-w-56"
-                            hint={
-                                <span className="text-text-muted text-xs">
-                                    Minimum reduction
-                                </span>
-                            }
-                        />
-                    )}
-                    <div>
-                        <p className="micro-label">Channels</p>
-                        <div className="mt-1.5 flex flex-wrap gap-4">
-                            {channels.map((channel) => (
-                                <Checkbox
-                                    key={channel.key}
-                                    id={`${item.key}-${channel.key}`}
-                                    label={channel.label}
-                                    checked={preference.channels[channel.key]}
-                                    onChange={() =>
-                                        onToggleChannel(channel.key)
-                                    }
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            )}
-        </div>
+    return (
+        <li className="flex h-11 items-center gap-2">
+            <AlertTypeGlyph type={type} />
+            <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
+                {label}
+            </span>
+            <span className="flex shrink-0 items-center gap-1">
+                {ALERT_CHANNEL_KEYS.map((channel) => (
+                    <AlertChannelToggle
+                        key={channel}
+                        channel={channel}
+                        active={
+                            preference.enabled && preference.channels[channel]
+                        }
+                        disabled={!preference.enabled}
+                        label={`Deliver ${label} alerts by ${ALERT_CHANNELS[channel].label}`}
+                        onToggle={() => onToggleChannel(channel)}
+                    />
+                ))}
+            </span>
+            <Switch
+                checked={preference.enabled}
+                onChange={onToggleEnabled}
+                aria-label={`Enable ${label} alerts`}
+                className="ml-1 shrink-0"
+            />
+        </li>
     );
 }
 

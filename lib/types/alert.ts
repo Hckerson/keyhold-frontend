@@ -6,15 +6,24 @@ export type AlertType =
     | "offer-response"
     | "viewing-confirmation";
 
+export type AlertChannel = "email" | "sms" | "inApp";
+
 export interface Alert {
     id: string;
     listingId: string;
     type: AlertType;
-    title: string;
     description: string;
     address: string;
-    price?: number;
+    locality: string;
+    photo: string;
+    price: number;
     previousPrice?: number;
-    timestamp: string;
+    minutesAgo: number;
+    channel: AlertChannel;
     read: boolean;
+}
+
+export interface AlertPreference {
+    enabled: boolean;
+    channels: Record<AlertChannel, boolean>;
 }
