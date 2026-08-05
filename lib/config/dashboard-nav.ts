@@ -1,30 +1,31 @@
 import {
-    LayoutDashboard,
-    Heart,
-    FileText,
-    CalendarDays,
-    MessageSquare,
     Bell,
+    LayoutDashboard,
+    MessageSquare,
     Settings,
     type LucideIcon,
 } from "lucide-react";
+import { buyerJourney } from "@/lib/data/dashboard-journey";
+import type { JourneyStationState } from "@/lib/types";
 
 export interface DashboardNavItem {
     label: string;
-    href: string;
     icon: LucideIcon;
     description: string;
+    href?: string;
     badge?: number;
+    count?: number;
+    state?: JourneyStationState;
 }
 
 export interface DashboardNavSection {
-    label: string;
+    label?: string;
+    spine?: boolean;
     items: DashboardNavItem[];
 }
 
 export const DASHBOARD_NAV: DashboardNavSection[] = [
     {
-        label: "Browsing",
         items: [
             {
                 label: "Overview",
@@ -32,29 +33,16 @@ export const DASHBOARD_NAV: DashboardNavSection[] = [
                 icon: LayoutDashboard,
                 description: "Your property journey at a glance",
             },
-            {
-                label: "Saved Listings",
-                href: "/dashboard/saved",
-                icon: Heart,
-                description: "Properties you've bookmarked",
-            },
         ],
     },
     {
-        label: "Activity",
+        label: buyerJourney.label,
+        spine: true,
+        items: buyerJourney.stations,
+    },
+    {
+        label: "Inbox",
         items: [
-            {
-                label: "Offers",
-                href: "/dashboard/offers",
-                icon: FileText,
-                description: "Track your submitted offers",
-            },
-            {
-                label: "Viewings",
-                href: "/dashboard/viewings",
-                icon: CalendarDays,
-                description: "Upcoming property tours",
-            },
             {
                 label: "Messages",
                 href: "/dashboard/messages",
@@ -84,6 +72,11 @@ export const DASHBOARD_NAV: DashboardNavSection[] = [
     },
 ];
 
-export const DASHBOARD_ROUTES: DashboardNavItem[] = DASHBOARD_NAV.flatMap(
+export const DASHBOARD_STATUS = buyerJourney.status;
+
+export const DASHBOARD_ROUTES = DASHBOARD_NAV.flatMap(
     (section) => section.items,
+).filter(
+    (item): item is DashboardNavItem & { href: string } =>
+        item.href !== undefined,
 );

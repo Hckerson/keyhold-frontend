@@ -4,7 +4,11 @@ import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
-import { DASHBOARD_NAV, DASHBOARD_ROUTES } from "@/lib/config/dashboard-nav";
+import {
+    DASHBOARD_NAV,
+    DASHBOARD_ROUTES,
+    DASHBOARD_STATUS,
+} from "@/lib/config/dashboard-nav";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
 
@@ -28,11 +32,12 @@ export default function DashboardLayout({
             <Sidebar
                 brand={{ full: "Luxury RE", tagline: "Concierge" }}
                 sections={DASHBOARD_NAV}
+                status={DASHBOARD_STATUS}
                 user={user}
                 onLogout={handleLogout}
             />
 
-            <main className="flex-1 overflow-auto">
+            <main className="scroll-page flex-1">
                 <Topbar
                     routes={DASHBOARD_ROUTES}
                     rootLabel="Dashboard"
