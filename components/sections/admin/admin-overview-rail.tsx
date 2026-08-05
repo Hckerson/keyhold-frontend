@@ -1,37 +1,52 @@
 import { Panel } from "@/components/ui/panel";
-import { QuickActions } from "@/components/features/shared/quick-actions";
-import { ModerationQueueList } from "@/components/features/admin/moderation-queue-list";
-import { SystemHealthList } from "@/components/features/admin/system-health-list";
-import { RevenueBreakdown } from "@/components/features/admin/revenue-breakdown";
+import { PanelInset } from "@/components/ui/panel-inset";
+import { PanelLink } from "@/components/features/shared/panel-link";
+import { AudienceMix } from "@/components/features/admin/audience-mix";
+import { ModerationQueueTable } from "@/components/features/admin/moderation-queue-table";
+import { MODERATION_LOAD, OPEN_BACKLOG } from "@/lib/data/admin-overview";
 import {
-    moderationQueue,
-    quickActions,
-    revenueBreakdown,
-    systems,
-    OVERALL_ERROR_RATE,
-    OVERALL_UPTIME,
-} from "@/lib/data/admin-overview";
+    TOTAL_USERS,
+    USER_ROLE_SEGMENTS,
+    USER_TIER_SEGMENTS,
+} from "@/lib/data/admin-users";
+import { formatCount } from "@/lib/utils";
+
+const QUEUE_TITLE = "Moderation Load";
+const QUEUE_LEDE = "Backlog against reviewer capacity";
+const QUEUE_ACTION = "Listings";
+const AUDIENCE_TITLE = "Audience";
+const AUDIENCE_ACTION = "Users";
+const TIER_LABEL = "By tier";
 
 export function AdminOverviewRail() {
     return (
-        <div className="space-y-3">
-            <Panel title="Revenue Breakdown">
-                <RevenueBreakdown data={revenueBreakdown} />
-            </Panel>
-
-            <Panel title="Moderation Queue">
-                <ModerationQueueList items={moderationQueue} />
-            </Panel>
-
-            <Panel title="Quick Actions">
-                <QuickActions actions={quickActions} />
+        <div className="flex flex-col gap-3">
+            <Panel
+                title={QUEUE_TITLE}
+                description={QUEUE_LEDE}
+                count={OPEN_BACKLOG}
+                action={
+                    <PanelLink href="/admin/listings" label={QUEUE_ACTION} />
+                }
+            >
+                <PanelInset flush>
+                    <ModerationQueueTable queues={MODERATION_LOAD} />
+                </PanelInset>
             </Panel>
 
             <Panel
-                title="System Health"
-                description={`Uptime ${OVERALL_UPTIME} · Error rate ${OVERALL_ERROR_RATE} (24h)`}
+                title={AUDIENCE_TITLE}
+                action={
+                    <PanelLink href="/admin/users" label={AUDIENCE_ACTION} />
+                }
+                bodyClassName="pt-3"
             >
-                <SystemHealthList systems={systems} />
+                <AudienceMix
+                    roles={USER_ROLE_SEGMENTS}
+                    tiers={USER_TIER_SEGMENTS}
+                    total={formatCount(TOTAL_USERS)}
+                    tierLabel={TIER_LABEL}
+                />
             </Panel>
         </div>
     );

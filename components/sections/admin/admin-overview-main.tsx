@@ -1,47 +1,53 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
-import { ColumnChart } from "@/components/ui/charts/column-chart";
-import { SystemAlertList } from "@/components/features/admin/system-alert-list";
+import { PanelInset } from "@/components/ui/panel-inset";
+import { PanelLink } from "@/components/features/shared/panel-link";
+import { PlatformSignalTable } from "@/components/features/admin/platform-signal-table";
+import { ServiceHealthTable } from "@/components/features/admin/service-health-table";
+import { AdminRevenueHero } from "@/components/sections/admin/admin-revenue-hero";
 import {
-    alerts,
-    revenueMonths,
-    revenueSeries,
+    PLATFORM_SIGNALS,
+    SERVICES,
+    SERVICE_SUMMARY,
+    SIGNAL_EXPOSURE_LABEL,
 } from "@/lib/data/admin-overview";
 
-const REVENUE_CHART_HEIGHT = 220;
+const SIGNALS_TITLE = "Signals";
+const SIGNALS_ACTION = "Verifications";
+const HEALTH_TITLE = "Service Health";
+const HEALTH_LEDE = "Uptime budget against a 99.9% target";
+const HEALTH_ACTION = "Settings";
 
 export function AdminOverviewMain() {
     return (
-        <div className="space-y-3 lg:col-span-2">
+        <div className="flex flex-col gap-3 lg:col-span-2">
+            <AdminRevenueHero />
+
             <Panel
-                title="Revenue"
-                description="Gross merchandise value and platform commissions"
+                title={SIGNALS_TITLE}
+                description={`${SIGNAL_EXPOSURE_LABEL} of value waiting on a decision`}
+                count={PLATFORM_SIGNALS.length}
                 action={
-                    <Link href="/admin/payments">
-                        <Button variant="secondary" size="sm">
-                            Payments
-                        </Button>
-                    </Link>
+                    <PanelLink
+                        href="/admin/verifications"
+                        label={SIGNALS_ACTION}
+                    />
                 }
             >
-                <ColumnChart
-                    data={revenueMonths}
-                    xKey="month"
-                    series={revenueSeries}
-                    divideBy={1_000_000}
-                    valuePrefix="$"
-                    valueSuffix="M"
-                    height={REVENUE_CHART_HEIGHT}
-                />
+                <PanelInset flush>
+                    <PlatformSignalTable signals={PLATFORM_SIGNALS} />
+                </PanelInset>
             </Panel>
 
             <Panel
-                title="System Alerts"
-                description="Recent notifications requiring attention"
-                count={alerts.length}
+                title={HEALTH_TITLE}
+                description={`${HEALTH_LEDE} · ${SERVICE_SUMMARY}`}
+                action={
+                    <PanelLink href="/admin/settings" label={HEALTH_ACTION} />
+                }
             >
-                <SystemAlertList alerts={alerts} />
+                <PanelInset flush>
+                    <ServiceHealthTable services={SERVICES} />
+                </PanelInset>
             </Panel>
         </div>
     );
