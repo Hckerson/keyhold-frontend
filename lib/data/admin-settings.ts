@@ -1,5 +1,19 @@
+import { KeyRound, Power, Server, ShieldCheck, UserPlus } from "lucide-react";
 import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { SettingsToggle } from "@/lib/data/dashboard-settings";
+import type { StatDatum } from "@/components/patterns/stat-cell";
+import { keyAgeTone } from "@/lib/config/settings-tones";
+import {
+    enabledPolicyCount,
+    isPolicyOn,
+    KEY_AGE_MINUTES,
+    POLICY_COUNT,
+} from "@/lib/data/admin-policies";
+import { formatAge } from "@/lib/utils";
+import type { PolicyState } from "@/lib/types";
+
+export const SETTINGS_FORM_ID = "admin-settings-form";
+export const ENVIRONMENT_LABEL = "Production";
+export const CONFIG_REVISION = 148;
 
 export const INITIAL_ADMIN_CONFIG = {
     platformName: "Luxury Estates",
@@ -15,12 +29,15 @@ export const INITIAL_ADMIN_CONFIG = {
 };
 export type AdminConfig = typeof INITIAL_ADMIN_CONFIG;
 
-export const isAdminConfigDirty = (current: AdminConfig) => {
+export const changedFieldCount = (current: AdminConfig) => {
     const initial: Record<string, string> = INITIAL_ADMIN_CONFIG;
-    return Object.entries(current).some(
+    return Object.entries(current).filter(
         ([key, value]) => initial[key] !== value,
-    );
+    ).length;
 };
+
+export const isAdminConfigDirty = (current: AdminConfig) =>
+    changedFieldCount(current) > 0;
 
 export const PLATFORM_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
     {
@@ -86,48 +103,51 @@ export const MARKETPLACE_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
     },
 ];
 
-export const MODERATION_TOGGLES: readonly SettingsToggle[] = [
-    {
-        title: "Automatic Photo Scanning",
-        description: "Flag listings whose images fail the content scan",
-        defaultChecked: true,
-    },
-    {
-        title: "Require Agent License Verification",
-        description: "Block publishing until a license is on file",
-        defaultChecked: true,
-    },
-    {
-        title: "Manual Review Above Threshold",
-        description: "Route high-value listings to a human moderator",
-        defaultChecked: true,
-    },
-    {
-        title: "Auto-Suspend On Repeat Rejections",
-        description: "Suspend an agent after three rejected listings",
-        defaultChecked: false,
-    },
-];
+const MARKETPLACE_LIVE = "Live";
+const MARKETPLACE_OFFLINE = "Offline";
+const SIGNUPS_OPEN = "Open";
+const SIGNUPS_CLOSED = "Closed";
 
-export const OPERATIONS_TOGGLES: readonly SettingsToggle[] = [
-    {
-        title: "Maintenance Mode",
-        description: "Take the marketplace offline for everyone but admins",
-        defaultChecked: false,
-    },
-    {
-        title: "New Signups",
-        description: "Allow buyers and agents to create accounts",
-        defaultChecked: true,
-    },
-    {
-        title: "Daily Health Digest",
-        description: "Email uptime and error-rate summaries to admins",
-        defaultChecked: true,
-    },
-    {
-        title: "Payout Automation",
-        description: "Release agent commissions once escrow clears",
-        defaultChecked: true,
-    },
-];
+export const buildSettingsStats = (state: PolicyState): StatDatum[] => {
+    const offline = isPolicyOn(state, "maintenance-mode");
+    const signupsOpen = isPolicyOn(state, "open-signups");
+
+    return [
+        {
+            id: "environment",
+            icon: Server,
+            label: "Environment",
+            value: ENVIRONMENT_LABEL,
+            tone: "neutral",
+        },
+        {
+            id: "policies",
+            icon: ShieldCheck,
+            label: "Policies on",
+            value: `${enabledPolicyCount(state)}/${POLICY_COUNT}`,
+            tone: "accent",
+        },
+        {
+            id: "marketplace",
+            icon: Power,
+            label: "Marketplace",
+            value: offline ? MARKETPLACE_OFFLINE : MARKETPLACE_LIVE,
+            tone: offline ? "error" : "success",
+        },
+        {
+            id: "signups",
+            icon: UserPlus,
+            label: "Signups",
+            value: signupsOpen ? SIGNUPS_OPEN : SIGNUPS_CLOSED,
+            tone: signupsOpen ? "info" : "warning",
+            href: "/admin/users",
+        },
+        {
+            id: "keys",
+            icon: KeyRound,
+            label: "Key age",
+            value: formatAge(KEY_AGE_MINUTES),
+            tone: keyAgeTone(KEY_AGE_MINUTES),
+        },
+    ];
+};
