@@ -42,14 +42,6 @@ export interface OfferDetail {
     messages: ThreadMessage[];
 }
 
-export const statusTone: Record<OfferStatus, TimelineTone> = {
-    submitted: "warning",
-    countered: "info",
-    accepted: "success",
-    rejected: "error",
-    withdrawn: "neutral",
-};
-
 export const offerDetails: Record<string, OfferDetail> = {
     "1": {
         id: "1",

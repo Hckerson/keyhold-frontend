@@ -1,150 +1,101 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { cn, formatUsd } from "@/lib/utils";
-import type { Offer, OfferStatus } from "@/lib/types";
+import { ListingThumb } from "@/components/features/shared/listing-thumb";
+import { OfferGapChip } from "@/components/features/dashboard/offer-gap-chip";
+import { OfferStatusGlyph } from "@/components/features/dashboard/offer-status-glyph";
+import { OFFER_STATUSES } from "@/lib/config/offer-tones";
+import { gapPercent, isOpen } from "@/lib/data/offers";
+import type { Offer } from "@/lib/types";
+import { cn, formatAge, formatMillions } from "@/lib/utils";
+
+const NO_COUNTER = "—";
+const WITHDRAW_LABEL = "Withdraw";
 
 export interface OfferRowProps {
     offer: Offer;
-    onWithdraw?: (id: string) => void;
-    className?: string;
+    onWithdraw: (id: string) => void;
 }
 
-const statusTone = {
-    submitted: "warning",
-    countered: "info",
-    accepted: "success",
-    rejected: "error",
-    withdrawn: "neutral",
-} as const;
-
-export const OFFER_STATUS_LABEL: Record<OfferStatus, string> = {
-    submitted: "Submitted",
-    countered: "Countered",
-    accepted: "Accepted",
-    rejected: "Rejected",
-    withdrawn: "Withdrawn",
-};
-
-function Metric({
-    label,
-    value,
-    valueClassName,
-}: {
-    label: string;
-    value: string;
-    valueClassName?: string;
-}) {
-    return (
-        <div className="min-w-0">
-            <p className="micro-label">{label}</p>
-            <p
-                className={cn(
-                    "mt-0.5 text-xs font-medium tabular-nums",
-                    valueClassName,
-                )}
-            >
-                {value}
-            </p>
-        </div>
-    );
-}
-
-export function OfferRow({ offer, onWithdraw, className }: OfferRowProps) {
-    const { id, address, offerPrice, listPrice, counterPrice, status } = offer;
-    const below = offerPrice < listPrice;
-    const difference = Math.abs(listPrice - offerPrice);
-    const isOpen = status === "submitted" || status === "countered";
+export function OfferRow({ offer, onWithdraw }: OfferRowProps) {
+    const open = isOpen(offer);
 
     return (
-        <article
+        <tr
             className={cn(
-                "group bg-background-muted border-border-light hover:border-border ease-smooth flex flex-col gap-3 rounded-xl border p-3 shadow-sm transition-all duration-300 hover:shadow-md sm:flex-row sm:items-start sm:justify-between",
-                className,
+                "ease-smooth h-11 transition-colors",
+                offer.status === "countered"
+                    ? "bg-accent-light/40"
+                    : "hover:bg-background-muted",
             )}
         >
-            <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                    <Link
-                        href={`/dashboard/offers/${id}`}
-                        className="text-text hover:text-accent ease-smooth min-w-0 truncate text-xs font-medium transition-colors"
-                    >
-                        {address}
-                    </Link>
-                    <StatusBadge tone={statusTone[status]}>
-                        {status === "countered" && counterPrice !== undefined
-                            ? `Countered at ${formatUsd(counterPrice)}`
-                            : OFFER_STATUS_LABEL[status]}
-                    </StatusBadge>
-                </div>
-
-                <div className="mt-3">
-                    <p className="micro-label">Your Offer</p>
-                    <p className="font-display text-accent mt-0.5 text-lg font-light tabular-nums">
-                        {formatUsd(offerPrice)}
-                    </p>
-                </div>
-
-                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    <Metric
-                        label="List Price"
-                        value={formatUsd(listPrice)}
-                        valueClassName="text-text"
-                    />
-                    <Metric
-                        label="Difference"
-                        value={`${below ? "-" : "+"}${formatUsd(difference)}`}
-                        valueClassName={below ? "text-warning" : "text-success"}
-                    />
-                    <Metric
-                        label="Counter"
-                        value={
-                            counterPrice === undefined
-                                ? "—"
-                                : formatUsd(counterPrice)
-                        }
-                        valueClassName="text-text"
-                    />
-                </div>
-
-                <p className="text-text-muted mt-3 text-xs">
-                    Last activity {offer.lastActivity}
-                </p>
-            </div>
-
-            <div className="flex shrink-0 flex-wrap gap-2 sm:flex-col">
-                <Link href={`/dashboard/offers/${id}`} className="block">
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        className="w-full sm:w-32"
-                    >
-                        View Details
-                    </Button>
+            <td className="py-0">
+                <span className="flex min-w-0 items-center gap-2">
+                    <OfferStatusGlyph status={offer.status} />
+                    <span className="text-text-secondary min-w-0 truncate text-xs">
+                        {OFFER_STATUSES[offer.status].label}
+                    </span>
+                </span>
+            </td>
+            <td className="py-0 pl-3">
+                <Link
+                    href={`/dashboard/offers/${offer.id}`}
+                    className="group flex min-w-0 items-center gap-2"
+                >
+                    <ListingThumb src={offer.photo} alt={offer.address} />
+                    <span className="min-w-0 truncate text-xs">
+                        <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
+                            {offer.address}
+                        </span>
+                        <span className="text-text-muted">
+                            {" · "}
+                            {offer.locality}
+                        </span>
+                    </span>
                 </Link>
-                {status === "countered" && (
-                    <Link href={`/dashboard/offers/${id}`} className="block">
-                        <Button
-                            variant="secondary"
-                            size="sm"
-                            className="w-full sm:w-32"
-                        >
-                            Counter
-                        </Button>
-                    </Link>
+            </td>
+            <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
+                {formatMillions(offer.offerPrice, 2)}
+            </td>
+            <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
+                {formatMillions(offer.listPrice, 2)}
+            </td>
+            <td className="py-0 pl-3 text-right">
+                {offer.counterPrice === undefined ? (
+                    <span className="text-text-muted text-xs">
+                        {NO_COUNTER}
+                    </span>
+                ) : (
+                    <span className="text-info text-xs font-medium tabular-nums">
+                        {formatMillions(offer.counterPrice, 2)}
+                    </span>
                 )}
-                {isOpen && onWithdraw && (
+            </td>
+            <td className="py-0 pl-3 text-right">
+                <OfferGapChip percent={gapPercent(offer)} />
+            </td>
+            <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
+                {formatAge(offer.minutesAgo)}
+            </td>
+            <td className="py-0 pl-3 text-right">
+                {open ? (
                     <Button
+                        type="button"
                         variant="ghost"
                         size="sm"
-                        className="text-error hover:text-error w-full sm:w-32"
-                        onClick={() => onWithdraw(id)}
+                        className="text-error hover:text-error"
+                        onClick={() => onWithdraw(offer.id)}
                     >
-                        Withdraw
+                        {WITHDRAW_LABEL}
                     </Button>
+                ) : (
+                    <span className="micro-label">
+                        {OFFER_STATUSES[offer.status].label}
+                    </span>
                 )}
-            </div>
-        </article>
+            </td>
+        </tr>
     );
 }
 
