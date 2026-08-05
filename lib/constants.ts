@@ -59,6 +59,7 @@ export const LISTINGS_PER_PAGE = 20;
 export const DEBOUNCE_DELAY = 300;
 export const PAGINATION_LIMIT = 20;
 export const DEFAULT_COMMISSION_RATE = 0.025;
+export const PLATFORM_PAYOUT_FEE_RATE = 0.05;
 export const TABLE_PAGE_SIZE = 10;
 
 export const USER_TIERS = {
