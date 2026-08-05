@@ -22,6 +22,10 @@ const titleColor: Record<string, string> = {
     error: "text-error",
 };
 
+export type CalloutVariant = NonNullable<
+    VariantProps<typeof calloutVariants>["variant"]
+>;
+
 export interface CalloutProps extends VariantProps<typeof calloutVariants> {
     title: string;
     description?: string;
