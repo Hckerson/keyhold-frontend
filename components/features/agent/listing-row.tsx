@@ -2,7 +2,7 @@
 
 import { Checkbox } from "@/components/ui/forms/checkbox";
 import { StatusDot } from "@/components/patterns/status-dot";
-import { ListingThumb } from "@/components/features/agent/listing-thumb";
+import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ListingExposureMeter } from "@/components/features/agent/listing-exposure-meter";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { AGE_BANDS, LISTING_STATUSES } from "@/lib/config/listing-tones";

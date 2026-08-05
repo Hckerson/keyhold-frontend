@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
-import { ListingThumb } from "@/components/features/agent/listing-thumb";
+import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ListingExposureMeter } from "@/components/features/agent/listing-exposure-meter";
 import { LISTING_STATUSES } from "@/lib/config/listing-tones";
 import { exposureOf, pricePerSqft } from "@/lib/data/agent-listings";

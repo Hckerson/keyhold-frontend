@@ -27,6 +27,11 @@ export const chartToneText: Record<ChartTone, string> = {
     error: "text-error",
 };
 
+export const moveTone = (percent: number): ChartTone => {
+    if (percent === 0) return "neutral";
+    return percent < 0 ? "success" : "error";
+};
+
 export const chartToneSoft: Record<ChartTone, string> = {
     accent: "bg-accent-light text-accent",
     info: "bg-info-light text-info",
