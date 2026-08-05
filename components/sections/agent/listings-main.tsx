@@ -66,7 +66,7 @@ export function ListingsMain({
                 />
 
                 {listings.length > 0 ? (
-                    <PanelInset className="mt-0">
+                    <PanelInset flush className="mt-0">
                         <ListingTable
                             listings={listings}
                             peak={peak}

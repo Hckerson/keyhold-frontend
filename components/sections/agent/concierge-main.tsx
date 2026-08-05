@@ -22,7 +22,7 @@ export function ConciergeMain() {
                     <PanelLink href="/agent/pipeline" label={CLIENTS_ACTION} />
                 }
             >
-                <PanelInset>
+                <PanelInset flush>
                     <ConciergeClientTable clients={peerClients} />
                 </PanelInset>
             </Panel>

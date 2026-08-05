@@ -13,7 +13,7 @@ export function AnalyticsRail() {
     return (
         <div className="flex flex-col gap-3">
             <Panel title={BENCHMARK_TITLE} description={BENCHMARK_LEDE}>
-                <PanelInset>
+                <PanelInset flush>
                     <AnalyticsBenchmarkTable benchmarks={benchmarks} />
                 </PanelInset>
             </Panel>
