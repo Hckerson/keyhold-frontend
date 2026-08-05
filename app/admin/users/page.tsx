@@ -1,5 +1,5 @@
-import { AdminUserDirectory } from "@/components/sections/admin/admin-user-directory";
+import { AdminUsersConsole } from "@/components/sections/admin/admin-users-console";
 
 export default function AdminUsersPage() {
-    return <AdminUserDirectory />;
+    return <AdminUsersConsole />;
 }
