@@ -1,5 +1,5 @@
-import { AdminModerationQueue } from "@/components/sections/admin/admin-moderation-queue";
+import { ModerationConsole } from "@/components/sections/admin/moderation-console";
 
-export default function AdminModerationPage() {
-    return <AdminModerationQueue />;
+export default function AdminListingModerationPage() {
+    return <ModerationConsole />;
 }
