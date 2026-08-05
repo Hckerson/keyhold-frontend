@@ -26,11 +26,11 @@ const typeTone: Record<ActivityType, ChartTone> = {
     listing: "accent",
 };
 
-export interface OverviewActivityRowProps {
+export interface ActivityRowProps {
     entry: ActivityEntry;
 }
 
-export function OverviewActivityRow({ entry }: OverviewActivityRowProps) {
+export function ActivityRow({ entry }: ActivityRowProps) {
     const Icon = typeIcon[entry.type];
 
     return (
@@ -54,4 +54,4 @@ export function OverviewActivityRow({ entry }: OverviewActivityRowProps) {
     );
 }
 
-OverviewActivityRow.displayName = "OverviewActivityRow";
+ActivityRow.displayName = "ActivityRow";

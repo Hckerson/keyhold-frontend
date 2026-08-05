@@ -10,6 +10,7 @@ export {
     formatMillions,
     formatCount,
     formatThousands,
+    formatAge,
     toDigits,
     formatCurrencyInput,
     initialsOf,

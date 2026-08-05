@@ -3,7 +3,7 @@ import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { AgentPipelineHero } from "@/components/sections/agent/agent-pipeline-hero";
 import { OverviewSaleList } from "@/components/features/agent/overview-sale-list";
-import { OverviewActivityList } from "@/components/features/agent/overview-activity-list";
+import { ActivityList } from "@/components/features/shared/activity-list";
 import { closedSales, recentActivity } from "@/lib/data/agent-overview";
 
 export function AgentOverviewMain() {
@@ -25,7 +25,7 @@ export function AgentOverviewMain() {
 
             <Panel title="Recent Activity" count={recentActivity.length}>
                 <PanelInset>
-                    <OverviewActivityList entries={recentActivity} />
+                    <ActivityList entries={recentActivity} />
                 </PanelInset>
             </Panel>
         </div>
