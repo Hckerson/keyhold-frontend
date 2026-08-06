@@ -18,20 +18,20 @@ export function FactCell({
     return (
         <div
             className={cn(
-                "bg-background-muted border-border-light flex flex-col gap-1.5 rounded-md border p-3",
+                "bg-background-muted border-border-light flex flex-col gap-1.5 rounded-md border p-2.5 sm:p-3",
                 className,
             )}
         >
             <dt
                 className={cn(
                     sectionEyebrowClass,
-                    "text-text-muted flex items-center gap-1.5",
+                    "text-text-muted flex min-w-0 items-center gap-1.5 leading-[1.4]",
                 )}
             >
                 {Icon && <Icon className="size-3 shrink-0" strokeWidth={1.5} />}
                 {label}
             </dt>
-            <dd className="text-text text-xs leading-tight font-semibold tabular-nums">
+            <dd className="text-text mt-auto text-xs leading-tight font-semibold tabular-nums">
                 {value}
             </dd>
         </div>
