@@ -39,7 +39,7 @@ export function ConciergeTopClientHero({
                         initials={initialsOf(client.name)}
                     />
                     <div className="min-w-0">
-                        <p className="micro-label truncate">
+                        <p className="micro-label">
                             {HERO_EYEBROW} · {tier.label} · Since{" "}
                             {client.clientSince}
                         </p>

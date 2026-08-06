@@ -28,7 +28,7 @@ export function ModerationToolbar({
     onCheckFilterChange,
 }: ModerationToolbarProps) {
     return (
-        <div className="flex h-11 items-center justify-between gap-2">
+        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 py-1.5">
             <FilterPills<ModerationStatusFilter>
                 filters={MODERATION_FILTERS}
                 active={statusFilter}
@@ -43,7 +43,7 @@ export function ModerationToolbar({
                 icon={Filter}
                 align="end"
                 size="sm"
-                className="w-48"
+                className="w-full sm:w-48"
             />
         </div>
     );

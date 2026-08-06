@@ -46,7 +46,7 @@ export function OffersTopHero({ offer, onWithdraw }: OffersTopHeroProps) {
                         className="h-20 w-28 rounded-lg"
                     />
                     <div className="min-w-0">
-                        <p className="micro-label truncate">
+                        <p className="micro-label">
                             {HERO_EYEBROW} · {status.label} ·{" "}
                             {formatAge(offer.minutesAgo)}
                         </p>

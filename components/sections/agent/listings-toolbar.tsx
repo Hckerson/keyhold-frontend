@@ -32,7 +32,7 @@ export function ListingsToolbar({
 }: ListingsToolbarProps) {
     if (selectedCount === 0) {
         return (
-            <div className="flex h-11 items-center">
+            <div className="flex min-h-11 flex-wrap items-center py-1.5">
                 <FilterPills<StatusFilter>
                     filters={FILTERS}
                     active={filter}
@@ -44,7 +44,7 @@ export function ListingsToolbar({
     }
 
     return (
-        <div className="flex h-11 flex-wrap items-center justify-between gap-2">
+        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 py-1.5">
             <p className="micro-label">
                 {selectedCount} {SELECTED_SUFFIX}
             </p>
