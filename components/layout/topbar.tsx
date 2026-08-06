@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronRight, Search, type LucideIcon } from "lucide-react";
+import { ChevronRight, Menu, Search, type LucideIcon } from "lucide-react";
 import type { AuthUser } from "@/lib/types/auth";
 import { Avatar } from "@/components/ui/avatar";
 import { Container } from "@/components/ui/container";
@@ -21,6 +21,7 @@ export interface TopbarProps {
     rootLabel: string;
     rootHref: string;
     user?: AuthUser | null;
+    onNavOpen?: () => void;
 }
 
 const SEARCH_ROUTE = "/search";
@@ -193,7 +194,13 @@ function AccountLink({ user, href }: { user: AuthUser; href: string }) {
 
 /* ── shell ── */
 
-export function Topbar({ routes, rootLabel, rootHref, user }: TopbarProps) {
+export function Topbar({
+    routes,
+    rootLabel,
+    rootHref,
+    user,
+    onNavOpen,
+}: TopbarProps) {
     const pathname = usePathname();
 
     const active = useMemo(() => {
@@ -213,14 +220,27 @@ export function Topbar({ routes, rootLabel, rootHref, user }: TopbarProps) {
 
     return (
         <header className="border-border-dark bg-background sticky top-0 z-40 border-b">
-            <Container className="flex h-14 items-center justify-between gap-4">
-                <RouteIdentity
-                    rootLabel={rootLabel}
-                    rootHref={rootHref}
-                    active={active}
-                />
+            <Container className="flex h-14 items-center justify-between gap-3 px-4 md:px-12">
+                <div className="flex min-w-0 items-center gap-2">
+                    {onNavOpen && (
+                        <button
+                            type="button"
+                            onClick={onNavOpen}
+                            aria-label="Open navigation"
+                            className={cn(tileClass, "-ml-1.5 lg:hidden")}
+                        >
+                            <Menu size={16} strokeWidth={1.5} />
+                        </button>
+                    )}
 
-                <div className="flex items-center gap-1">
+                    <RouteIdentity
+                        rootLabel={rootLabel}
+                        rootHref={rootHref}
+                        active={active}
+                    />
+                </div>
+
+                <div className="flex shrink-0 items-center gap-1">
                     <SearchField />
 
                     <Link
