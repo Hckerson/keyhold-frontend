@@ -80,7 +80,7 @@ export function AdminSettingsMain({
                 description={POLICY_LEDE}
                 count={`${enabledPolicyCount(policies)}/${POLICY_COUNT}`}
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <PolicySwitchTable
                         policies={POLICY_SWITCHES}
                         state={policies}

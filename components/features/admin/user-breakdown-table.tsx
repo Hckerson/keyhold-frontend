@@ -16,7 +16,7 @@ export function UserBreakdownTable({
     const peak = peakBreakdownVolume(breakdowns);
 
     return (
-        <table className="table-flush w-full table-fixed">
+        <table className="table-flush w-full min-w-sm table-fixed">
             <caption className="sr-only">{caption}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">

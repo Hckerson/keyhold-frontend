@@ -64,7 +64,7 @@ export function SavedMain({
                 />
 
                 {listings.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <SavedTable listings={listings} onRemove={onRemove} />
                     </PanelInset>
                 ) : (

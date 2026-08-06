@@ -47,7 +47,7 @@ export function LeadsMain({
                     <PanelLink href="/agent/pipeline" label={PIPELINE_ACTION} />
                 }
             >
-                <div className="flex h-11 items-center">
+                <div className="flex min-h-11 flex-wrap items-center py-1.5">
                     <FilterPills
                         filters={LEAD_STAGE_FILTERS}
                         active={stageFilter}
@@ -57,7 +57,7 @@ export function LeadsMain({
                 </div>
 
                 {leads.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <LeadTable leads={leads} onAdvance={onAdvance} />
                     </PanelInset>
                 ) : (

@@ -24,7 +24,7 @@ export function AdminReportsRail() {
                 description={SIGNALS_LEDE}
                 count={REPORT_SIGNALS.length}
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <ReportSignalTable signals={REPORT_SIGNALS} />
                 </PanelInset>
             </Panel>

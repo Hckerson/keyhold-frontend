@@ -53,7 +53,7 @@ export function ModerationRail({ listings }: ModerationRailProps) {
                 count={loads.length}
                 action={<PanelLink href="/admin/users" label={AGENTS_ACTION} />}
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <ModerationAgentTable loads={loads} />
                 </PanelInset>
             </Panel>

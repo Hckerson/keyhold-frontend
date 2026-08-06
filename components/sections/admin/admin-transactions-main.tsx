@@ -58,7 +58,7 @@ export function AdminTransactionsMain({
                 />
 
                 {transactions.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <TransactionLedgerTable
                             transactions={transactions}
                             onOpen={onOpen}

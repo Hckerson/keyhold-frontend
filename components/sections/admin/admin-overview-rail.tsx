@@ -29,7 +29,7 @@ export function AdminOverviewRail() {
                     <PanelLink href="/admin/listings" label={QUEUE_ACTION} />
                 }
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <ModerationQueueTable queues={MODERATION_LOAD} />
                 </PanelInset>
             </Panel>

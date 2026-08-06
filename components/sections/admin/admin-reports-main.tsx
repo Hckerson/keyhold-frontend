@@ -36,7 +36,7 @@ export function AdminReportsMain() {
                 {REGION_PERFORMANCE.length > 0 ? (
                     <>
                         <RegionLeaderTile region={REGION_LEADER} />
-                        <PanelInset flush>
+                        <PanelInset scroll>
                             <RegionPerformanceTable regions={REGION_PEERS} />
                         </PanelInset>
                     </>

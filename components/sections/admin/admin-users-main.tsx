@@ -96,7 +96,7 @@ export function AdminUsersMain({
                 />
 
                 {users.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <UserTable
                             users={users}
                             peak={peak}
