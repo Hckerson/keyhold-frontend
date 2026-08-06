@@ -82,6 +82,8 @@ export const OFFER_STATUS = {
     CLOSED: "closed",
 } as const;
 
+export const RAIL_QUERY = "(min-width: 64rem)";
+
 export const REQUEST_TIMEOUT = 30000;
 export const STALE_TIME = 5 * 60 * 1000;
 export const CACHE_TIME = 10 * 60 * 1000;
