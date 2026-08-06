@@ -52,7 +52,7 @@ export function ModerationFocusHero({
                         className="h-20 w-28 rounded-lg"
                     />
                     <div className="min-w-0">
-                        <p className="micro-label truncate">
+                        <p className="micro-label">
                             {HERO_EYEBROW} · {status.label} · {open}{" "}
                             {OPEN_CHECKS_SUFFIX}
                         </p>
@@ -79,7 +79,7 @@ export function ModerationFocusHero({
                     </div>
                 </div>
 
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
                     <Button
                         type="button"
                         variant="secondary"

@@ -28,7 +28,7 @@ export function OffersToolbar({
     onStatusFilterChange,
 }: OffersToolbarProps) {
     return (
-        <div className="flex h-11 items-center justify-between gap-2">
+        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 py-1.5">
             <FilterPills<StageFilter>
                 filters={STAGE_FILTERS}
                 active={stageFilter}
@@ -43,7 +43,7 @@ export function OffersToolbar({
                 icon={Filter}
                 align="end"
                 size="sm"
-                className="w-40"
+                className="w-full sm:w-40"
             />
         </div>
     );

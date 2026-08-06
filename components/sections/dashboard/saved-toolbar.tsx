@@ -28,7 +28,7 @@ export function SavedToolbar({
     onSortChange,
 }: SavedToolbarProps) {
     return (
-        <div className="flex h-11 items-center justify-between gap-2">
+        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 py-1.5">
             <FilterPills<SavedStatusFilter>
                 filters={SAVED_FILTERS}
                 active={filter}
@@ -43,7 +43,7 @@ export function SavedToolbar({
                 icon={ArrowUpDown}
                 align="end"
                 size="sm"
-                className="w-40"
+                className="w-full sm:w-40"
             />
         </div>
     );

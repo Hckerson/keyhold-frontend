@@ -45,7 +45,7 @@ export function LeadsTopProspectHero({
                         initials={initialsOf(lead.name)}
                     />
                     <div className="min-w-0">
-                        <p className="micro-label truncate">
+                        <p className="micro-label">
                             {HERO_EYEBROW} · {score.label} · {SOURCE_PREFIX}{" "}
                             {source.label}
                         </p>

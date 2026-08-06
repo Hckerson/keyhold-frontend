@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const OVERVIEW_TITLE = "Admin Console";
 const OVERVIEW_LEDE =
@@ -21,14 +22,14 @@ export function AdminOverviewHeader({ summary }: AdminOverviewHeaderProps) {
                     {OVERVIEW_LEDE}
                 </p>
             </div>
-            <div className="flex items-center gap-3">
-                <p className="micro-label">{summary}</p>
+            <div className="flex min-w-0 flex-1 items-center justify-between gap-3 sm:flex-none sm:justify-end">
+                <p className="micro-label min-w-0 truncate">{summary}</p>
                 <Link
                     href="/admin/reports"
-                    className={buttonVariants({
-                        variant: "primary",
-                        size: "sm",
-                    })}
+                    className={cn(
+                        buttonVariants({ variant: "primary", size: "sm" }),
+                        "shrink-0",
+                    )}
                 >
                     {REPORTS_ACTION}
                 </Link>

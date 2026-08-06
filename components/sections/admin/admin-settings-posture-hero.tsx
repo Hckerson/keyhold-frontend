@@ -38,7 +38,7 @@ export function AdminSettingsPostureHero({
 
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
-            <p className="micro-label truncate">
+            <p className="micro-label">
                 {HERO_EYEBROW} · {ENVIRONMENT_LABEL} · rev {CONFIG_REVISION}
             </p>
             <div className="mt-1 flex flex-wrap items-baseline gap-2">

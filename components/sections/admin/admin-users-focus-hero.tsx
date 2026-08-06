@@ -63,7 +63,7 @@ export function AdminUsersFocusHero({
                         initials={initialsOf(user.name)}
                     />
                     <div className="min-w-0">
-                        <p className="micro-label truncate">
+                        <p className="micro-label">
                             {isAtRisk(user)
                                 ? ATTENTION_EYEBROW
                                 : LEADING_EYEBROW}{" "}
