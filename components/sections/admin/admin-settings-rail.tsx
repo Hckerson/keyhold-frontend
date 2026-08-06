@@ -25,7 +25,7 @@ export function AdminSettingsRail() {
                     <PanelLink href="/admin/reports" label={CHANGES_ACTION} />
                 }
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <ConfigChangeTable changes={CONFIG_CHANGES} />
                 </PanelInset>
             </Panel>

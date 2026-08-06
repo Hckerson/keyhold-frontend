@@ -33,7 +33,7 @@ export function AdminOverviewMain() {
                     />
                 }
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <PlatformSignalTable signals={PLATFORM_SIGNALS} />
                 </PanelInset>
             </Panel>
@@ -45,7 +45,7 @@ export function AdminOverviewMain() {
                     <PanelLink href="/admin/settings" label={HEALTH_ACTION} />
                 }
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <ServiceHealthTable services={SERVICES} />
                 </PanelInset>
             </Panel>

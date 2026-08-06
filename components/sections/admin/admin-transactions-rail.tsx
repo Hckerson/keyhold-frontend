@@ -27,7 +27,7 @@ export function AdminTransactionsRail() {
                 description={PIPELINE_LEDE}
                 count={OPEN_COUNT}
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <TransactionStageTable stages={TRANSACTION_STAGES} />
                 </PanelInset>
             </Panel>

@@ -10,7 +10,7 @@ export interface ModerationQueueTableProps {
 
 export function ModerationQueueTable({ queues }: ModerationQueueTableProps) {
     return (
-        <table className="table-flush w-full table-fixed">
+        <table className="table-flush w-full min-w-2xs table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">
@@ -19,21 +19,21 @@ export function ModerationQueueTable({ queues }: ModerationQueueTableProps) {
                     </th>
                     <th
                         scope="col"
-                        className="micro-label w-12 pl-3 text-right"
+                        className="micro-label w-10 pl-3 text-right"
                     >
                         Open
                     </th>
                     <th
                         scope="col"
-                        className="micro-label w-24 pl-3 text-right"
+                        className="micro-label w-20 pl-3 text-right"
                     >
                         Load
                     </th>
                     <th
                         scope="col"
-                        className="micro-label w-12 pl-3 text-right"
+                        className="micro-label w-10 pl-3 text-right"
                     >
-                        Oldest
+                        Age
                     </th>
                 </tr>
             </thead>

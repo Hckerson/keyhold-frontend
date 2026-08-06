@@ -83,7 +83,7 @@ export function ViewingsMain({
                 />
 
                 {viewings.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <ViewingTable
                             viewings={viewings}
                             onReschedule={onReschedule}
@@ -105,7 +105,7 @@ export function ViewingsMain({
                     description={WALKED_LEDE}
                     count={walked.length}
                 >
-                    <PanelInset flush>
+                    <PanelInset scroll>
                         <WalkedViewingTable viewings={walked} />
                     </PanelInset>
                 </Panel>

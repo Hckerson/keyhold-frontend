@@ -48,7 +48,7 @@ export function AdminUsersRail({ users }: AdminUsersRailProps) {
                 title={TIER_TITLE}
                 description={`${formatCount(directoryDeals(users))} ${DEALS_SUFFIX}`}
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <UserBreakdownTable
                         groupLabel={TIER_GROUP}
                         breakdowns={tierBreakdowns(users)}
@@ -64,7 +64,7 @@ export function AdminUsersRail({ users }: AdminUsersRailProps) {
                     <PanelLink href="/admin/reports" label={COHORT_ACTION} />
                 }
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <UserBreakdownTable
                         groupLabel={COHORT_GROUP}
                         breakdowns={cohorts}

@@ -27,7 +27,7 @@ export function TransactionLedgerTable({
     const commission = sum(transactions.map(commissionOf));
 
     return (
-        <table className="table-flush w-full table-fixed">
+        <table className="table-flush w-full min-w-4xl table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">

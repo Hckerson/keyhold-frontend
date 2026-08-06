@@ -74,7 +74,7 @@ export function ModerationMain({
                 />
 
                 {listings.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <ModerationListingTable
                             listings={listings}
                             onOpen={onOpen}

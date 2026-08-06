@@ -10,7 +10,7 @@ export interface RevenueStreamTableProps {
 
 export function RevenueStreamTable({ streams }: RevenueStreamTableProps) {
     return (
-        <table className="table-flush w-full table-fixed">
+        <table className="table-flush w-full min-w-md table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">

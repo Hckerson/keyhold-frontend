@@ -57,7 +57,7 @@ export function AlertsMain({
                 />
 
                 {alerts.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <AlertTable alerts={alerts} onMarkRead={onMarkRead} />
                     </PanelInset>
                 ) : (

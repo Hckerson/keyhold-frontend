@@ -25,7 +25,7 @@ export function AdminPaymentsRail() {
                 description={PIPELINE_LEDE}
                 count={HELD_PAYOUT_COUNT}
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <PayoutStageTable stages={PAYOUT_STAGES} />
                 </PanelInset>
             </Panel>

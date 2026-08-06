@@ -55,7 +55,7 @@ export function AdminPaymentsMain({
                 />
 
                 {payouts.length > 0 ? (
-                    <PanelInset flush className="mt-0">
+                    <PanelInset scroll className="mt-0">
                         <PayoutTable payouts={payouts} />
                     </PanelInset>
                 ) : (
@@ -74,7 +74,7 @@ export function AdminPaymentsMain({
                     <PanelLink href="/admin/reports" label={STREAMS_ACTION} />
                 }
             >
-                <PanelInset flush>
+                <PanelInset scroll>
                     <RevenueStreamTable streams={REVENUE_BREAKDOWN} />
                 </PanelInset>
             </Panel>
