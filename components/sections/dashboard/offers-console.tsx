@@ -46,7 +46,7 @@ export function OffersConsole() {
 
             <OffersStatBand stats={stats} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <OffersMain
                     top={ranked[0]}
                     offers={visible}

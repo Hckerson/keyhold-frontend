@@ -48,7 +48,7 @@ export function SavedConsole() {
 
             <SavedStatBand stats={savedStats(listings)} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <SavedMain
                     top={ranked[0]}
                     listings={visible}

@@ -48,7 +48,7 @@ export function AdminTransactionsConsole() {
 
             <AdminTransactionsStatBand stats={TRANSACTION_STATS} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <AdminTransactionsMain
                     transactions={visible}
                     statusFilter={statusFilter}

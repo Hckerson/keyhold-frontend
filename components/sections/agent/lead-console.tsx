@@ -42,7 +42,7 @@ export function LeadConsole() {
 
             <LeadsStatBand stats={leadStats(leads)} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <LeadsMain
                     top={ranked[0]}
                     leads={visible}
