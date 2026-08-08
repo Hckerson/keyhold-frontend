@@ -67,7 +67,7 @@ export function ListingConsole() {
 
             <ListingsStatBand stats={listingStats(listings)} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <ListingsMain
                     top={ranked[0]}
                     listings={visible}

@@ -11,7 +11,7 @@ export default function AdminDashboardPage() {
 
             <AdminOverviewStatBand stats={PLATFORM_STATS} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <AdminOverviewMain />
                 <AdminOverviewRail />
             </div>

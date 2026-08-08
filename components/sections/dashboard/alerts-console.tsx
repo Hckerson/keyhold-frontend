@@ -74,7 +74,7 @@ export function AlertsConsole() {
 
             <AlertsStatBand stats={stats} />
 
-            <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div className="console-split gap-3">
                 <AlertsMain
                     top={ranked[0]}
                     alerts={visible}
