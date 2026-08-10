@@ -9,7 +9,7 @@ export function StatBand({ label, stats }: StatBandProps) {
     return (
         <section
             aria-label={label}
-            className="border-border-light bg-background-muted divide-border grid grid-cols-2 divide-x divide-y overflow-hidden rounded-lg border shadow-sm sm:flex sm:h-14 sm:divide-y-0"
+            className="stat-band border-border-light bg-background-muted divide-border divide-x divide-y overflow-hidden rounded-lg border shadow-sm sm:divide-y-0"
         >
             {stats.map((stat) => (
                 <StatCell key={stat.id} stat={stat} />

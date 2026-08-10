@@ -252,6 +252,22 @@
     }
 }
 
+.stat-band {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.stat-band > *:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+}
+
+@media (min-width: 40rem) {
+    .stat-band {
+        display: flex;
+        height: 3.5rem;
+    }
+}
+
 .image-hero {
     width: 100%;
     height: 600px;
