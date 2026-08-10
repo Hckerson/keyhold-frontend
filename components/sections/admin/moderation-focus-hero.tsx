@@ -49,7 +49,7 @@ export function ModerationFocusHero({
                     <ListingThumb
                         src={cover}
                         alt={listing.address}
-                        className="h-20 w-28 rounded-lg"
+                        className="h-16 w-20 rounded-lg sm:h-20 sm:w-28"
                     />
                     <div className="min-w-0">
                         <p className="micro-label">
@@ -62,8 +62,8 @@ export function ModerationFocusHero({
                             </p>
                             <span className="micro-label">{ASKING_LABEL}</span>
                         </div>
-                        <p className="mt-0.5 flex min-w-0 items-center gap-1.5">
-                            <span className="text-text truncate text-xs font-semibold">
+                        <p className="mt-0.5 flex min-w-0 flex-wrap items-center gap-x-1.5">
+                            <span className="text-text min-w-0 text-xs font-semibold sm:truncate">
                                 {listing.address}, {listing.locality}
                             </span>
                             <StatusDot tone={status.tone} />
@@ -79,7 +79,7 @@ export function ModerationFocusHero({
                     </div>
                 </div>
 
-                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+                <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
                     <Button
                         type="button"
                         variant="secondary"
