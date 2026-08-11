@@ -28,7 +28,7 @@ export function ReportSignalTable({ signals }: ReportSignalTableProps) {
                     </th>
                     <th
                         scope="col"
-                        className="micro-label w-16 pl-3 text-right"
+                        className="micro-label w-20 pl-3 text-right"
                     >
                         Change
                     </th>

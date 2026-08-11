@@ -78,7 +78,7 @@ export function ModerationReviewModal({
                     </ModalHeader>
 
                     <ModalBody className="scroll-y max-h-[60vh] space-y-4 p-4">
-                        <div className="bg-background border-border-light grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-5">
+                        <div className="grid-orphan-fill bg-background border-border-light grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-5">
                             <MetricCell label={ASK_LABEL}>
                                 <span className="tabular-nums">
                                     {formatMillions(listing.price, 2)}

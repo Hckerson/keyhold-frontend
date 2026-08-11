@@ -24,9 +24,11 @@ export function AdminTransactionsHeader({
                     {TRANSACTIONS_LEDE}
                 </p>
             </div>
-            <div className="flex items-center gap-3">
-                <p className="micro-label">{summary}</p>
-                <div className="flex items-center gap-2">
+            <div className="flex min-w-0 flex-1 items-center justify-between gap-x-6 gap-y-2 sm:flex-none sm:justify-end">
+                <p className="micro-label max-w-52 min-w-0 leading-relaxed text-balance">
+                    {summary}
+                </p>
+                <div className="flex shrink-0 items-center gap-2">
                     <Button type="button" variant="secondary" size="sm">
                         {EXPORT_ACTION}
                     </Button>

@@ -27,7 +27,7 @@ export function RegionLeaderTile({ region }: RegionLeaderTileProps) {
                 </p>
             </div>
 
-            <div className="bg-background-muted border-border-light mt-2.5 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-3">
+            <div className="grid-orphan-fill bg-background-muted border-border-light mt-2.5 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-3">
                 <MetricCell label="Listings">
                     <span className="tabular-nums">
                         {formatCount(region.listings)}
@@ -38,10 +38,7 @@ export function RegionLeaderTile({ region }: RegionLeaderTileProps) {
                         {formatMillions(region.avgPrice, 1)}
                     </span>
                 </MetricCell>
-                <MetricCell
-                    label="Share of volume"
-                    className="col-span-2 sm:col-span-1"
-                >
+                <MetricCell label="Share of volume">
                     <RegionShareMeter
                         share={region.share}
                         rank={region.rank}
