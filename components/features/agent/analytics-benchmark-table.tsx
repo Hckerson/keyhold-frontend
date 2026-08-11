@@ -32,7 +32,7 @@ export function AnalyticsBenchmarkTable({
                     </th>
                     <th
                         scope="col"
-                        className="micro-label w-14 pl-3 text-right"
+                        className="micro-label w-20 pl-3 text-right"
                     >
                         Delta
                     </th>

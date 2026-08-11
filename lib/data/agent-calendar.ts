@@ -1,14 +1,7 @@
-import {
-    CalendarDays,
-    CheckCircle2,
-    Clock,
-    Flame,
-    Users,
-    type LucideIcon,
-} from "lucide-react";
+import { CalendarDays, CheckCircle2, Clock, Flame, Users } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { parseLocalDate } from "@/lib/utils";
-import type { ChartTone } from "@/lib/config/chart-tones";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     APPOINTMENT_TYPES,
     APPOINTMENT_TYPE_KEYS,
@@ -41,14 +34,6 @@ export interface AppointmentTypeShare {
     label: string;
     count: number;
     share: number;
-}
-
-export interface CalendarLoadStat {
-    id: string;
-    label: string;
-    value: string;
-    tone: ChartTone;
-    icon: LucideIcon;
 }
 
 const MINUTES_PER_HOUR = 60;
@@ -310,7 +295,7 @@ export const appointmentTypeMix = (
     }));
 };
 
-export const calendarLoadStats = (items: Appointment[]): CalendarLoadStat[] => {
+export const calendarLoadStats = (items: Appointment[]): StatDatum[] => {
     const bookedMinutes = items.reduce(
         (total, item) => total + item.durationMinutes,
         0,
