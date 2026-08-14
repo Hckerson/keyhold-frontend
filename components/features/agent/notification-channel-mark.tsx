@@ -2,7 +2,7 @@ import { chartToneSoft } from "@/lib/config/chart-tones";
 import {
     NOTIFICATION_CHANNELS,
     type NotificationChannel,
-} from "@/lib/config/agent-settings-tones";
+} from "@/lib/config/account-tones";
 import { cn } from "@/lib/utils";
 
 export interface NotificationChannelMarkProps {

@@ -1,3 +1,4 @@
+export * from "./account";
 export * from "./admin";
 export * from "./alert";
 export * from "./auth";

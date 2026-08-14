@@ -3,7 +3,7 @@ import {
     NOTIFICATION_CADENCES,
     NOTIFICATION_MUTED_LABEL,
     type NotificationCadence,
-} from "@/lib/config/agent-settings-tones";
+} from "@/lib/config/account-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 

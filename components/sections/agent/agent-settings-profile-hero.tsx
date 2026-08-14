@@ -2,7 +2,7 @@ import { ProgressBar } from "@/components/ui/progress-bar";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import { strengthTone } from "@/lib/config/agent-settings-tones";
+import { strengthTone } from "@/lib/config/account-tones";
 import {
     CREDENTIAL_COUNT,
     NOTIFICATION_RULE_COUNT,
