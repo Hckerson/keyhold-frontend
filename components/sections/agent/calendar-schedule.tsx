@@ -11,6 +11,7 @@ import { AppointmentList } from "@/components/features/agent/appointment-list";
 import { AppointmentDayGroup } from "@/components/features/agent/appointment-day-group";
 import { cn } from "@/lib/utils";
 import {
+    SCHEDULE_ACTION,
     VIEW_MODES,
     formatDay,
     groupAppointmentsByDate,
@@ -22,7 +23,6 @@ const DAY_TITLE = "Schedule";
 const WEEK_TITLE = "Week Schedule";
 const EMPTY_TITLE = "Nothing scheduled";
 const REMAINDER_TITLE = "Nothing else scheduled";
-const SCHEDULE_ACTION = "Schedule Appointment";
 
 export interface CalendarScheduleProps {
     view: CalendarViewMode;

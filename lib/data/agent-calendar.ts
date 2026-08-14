@@ -44,6 +44,8 @@ const EMPTY_VALUE = "—";
 
 export const DURATION_SCALE_MINUTES = 180;
 
+export const SCHEDULE_ACTION = "Schedule Appointment";
+
 export const ANCHOR = { year: 2024, month: 6, day: 13 };
 
 export const VIEW_MODES: { id: CalendarViewMode; label: string }[] = [
