@@ -1,4 +1,4 @@
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { ModerationQueueMark } from "@/components/features/admin/moderation-queue-mark";
 import { QueueLoadMeter } from "@/components/features/admin/queue-load-meter";
 import { MODERATION_QUEUES } from "@/lib/config/admin-tones";

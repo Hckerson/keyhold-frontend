@@ -11,7 +11,7 @@ import {
     ModalFooter,
 } from "@/components/ui/modal";
 import { MetricCell } from "@/components/patterns/metric-cell";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { ComplianceCheckList } from "@/components/features/admin/compliance-check-list";
 import { ComplianceMeter } from "@/components/features/admin/compliance-meter";
 import { ModerationAgentContact } from "@/components/features/admin/moderation-agent-contact";

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { ComplianceMeter } from "@/components/features/admin/compliance-meter";
 import { ModerationAgentMark } from "@/components/features/admin/moderation-agent-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";

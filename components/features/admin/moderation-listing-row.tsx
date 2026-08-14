@@ -1,6 +1,6 @@
 "use client";
 
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { ComplianceMeter } from "@/components/features/admin/compliance-meter";
 import { ModerationAgentMark } from "@/components/features/admin/moderation-agent-mark";
 import { ModerationListingMark } from "@/components/features/admin/moderation-listing-mark";

@@ -1,4 +1,4 @@
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";
 import { ShareMeter } from "@/components/patterns/share-meter";
 import { payoutAgeTone, PAYOUT_STATES } from "@/lib/config/admin-tones";
