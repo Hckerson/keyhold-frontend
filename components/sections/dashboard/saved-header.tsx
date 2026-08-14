@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { PortalHeader } from "@/components/patterns/portal-header";
 
 const SAVED_TITLE = "Saved Properties";
 const SAVED_LEDE =
@@ -12,17 +13,11 @@ export interface SavedHeaderProps {
 
 export function SavedHeader({ summary }: SavedHeaderProps) {
     return (
-        <header className="flex flex-wrap items-end justify-between gap-3">
-            <div className="min-w-0">
-                <h1 className="text-h4 font-display text-text font-light">
-                    {SAVED_TITLE}
-                </h1>
-                <p className="text-text-secondary mt-0.5 text-xs">
-                    {SAVED_LEDE}
-                </p>
-            </div>
-            <div className="flex items-center gap-3">
-                <p className="micro-label">{summary}</p>
+        <PortalHeader
+            title={SAVED_TITLE}
+            lede={SAVED_LEDE}
+            summary={summary}
+            action={
                 <Link
                     href="/search"
                     className={buttonVariants({
@@ -32,8 +27,8 @@ export function SavedHeader({ summary }: SavedHeaderProps) {
                 >
                     {BROWSE_ACTION}
                 </Link>
-            </div>
-        </header>
+            }
+        />
     );
 }
 

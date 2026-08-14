@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
+import { PortalHeader } from "@/components/patterns/portal-header";
 
 const VIEWINGS_TITLE = "Viewings";
 const VIEWINGS_LEDE =
@@ -12,17 +13,11 @@ export interface ViewingsHeaderProps {
 
 export function ViewingsHeader({ summary }: ViewingsHeaderProps) {
     return (
-        <header className="flex flex-wrap items-end justify-between gap-3">
-            <div className="min-w-0">
-                <h1 className="text-h4 font-display text-text font-light">
-                    {VIEWINGS_TITLE}
-                </h1>
-                <p className="text-text-secondary mt-0.5 text-xs">
-                    {VIEWINGS_LEDE}
-                </p>
-            </div>
-            <div className="flex items-center gap-3">
-                <p className="micro-label">{summary}</p>
+        <PortalHeader
+            title={VIEWINGS_TITLE}
+            lede={VIEWINGS_LEDE}
+            summary={summary}
+            action={
                 <Link
                     href="/search"
                     className={buttonVariants({
@@ -32,8 +27,8 @@ export function ViewingsHeader({ summary }: ViewingsHeaderProps) {
                 >
                     {BOOK_ACTION}
                 </Link>
-            </div>
-        </header>
+            }
+        />
     );
 }
 
