@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { PortalHeader } from "@/components/patterns/portal-header";
 
 const TRANSACTIONS_TITLE = "Transactions";
 const TRANSACTIONS_LEDE =
@@ -15,20 +16,12 @@ export function AdminTransactionsHeader({
     summary,
 }: AdminTransactionsHeaderProps) {
     return (
-        <header className="flex flex-wrap items-end justify-between gap-3">
-            <div className="min-w-0">
-                <h1 className="text-h4 font-display text-text font-light">
-                    {TRANSACTIONS_TITLE}
-                </h1>
-                <p className="text-text-secondary mt-0.5 text-xs">
-                    {TRANSACTIONS_LEDE}
-                </p>
-            </div>
-            <div className="flex min-w-0 flex-1 items-center justify-between gap-x-6 gap-y-2 sm:flex-none sm:justify-end">
-                <p className="micro-label max-w-52 min-w-0 leading-relaxed text-balance">
-                    {summary}
-                </p>
-                <div className="flex shrink-0 items-center gap-2">
+        <PortalHeader
+            title={TRANSACTIONS_TITLE}
+            lede={TRANSACTIONS_LEDE}
+            summary={summary}
+            action={
+                <>
                     <Button type="button" variant="secondary" size="sm">
                         {EXPORT_ACTION}
                     </Button>
@@ -41,9 +34,9 @@ export function AdminTransactionsHeader({
                     >
                         {PAYOUTS_ACTION}
                     </Link>
-                </div>
-            </div>
-        </header>
+                </>
+            }
+        />
     );
 }
 
