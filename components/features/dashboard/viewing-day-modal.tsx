@@ -13,7 +13,7 @@ import { ViewingAgentMark } from "@/components/features/dashboard/viewing-agent-
 import { ViewingModeMark } from "@/components/features/dashboard/viewing-mode-mark";
 import { ViewingPropertyLink } from "@/components/features/dashboard/viewing-property-link";
 import { ViewingStatusMark } from "@/components/features/dashboard/viewing-status-mark";
-import { monthLabel } from "@/components/features/shared/mini-calendar";
+import { dayLabel } from "@/components/features/shared/mini-calendar";
 import type { Viewing } from "@/lib/types";
 
 const SLOT_LABEL = "Slot";
@@ -22,6 +22,8 @@ const AGENT_LABEL = "Agent";
 const PHONE_LABEL = "Direct line";
 const CLOSE_ACTION = "Close";
 const MINUTES_SUFFIX = "min";
+const SINGULAR_NOUN = "viewing";
+const PLURAL_NOUN = "viewings";
 
 export interface ViewingDayModalProps {
     open: boolean;
@@ -41,15 +43,19 @@ export function ViewingDayModal({
     viewings,
 }: ViewingDayModalProps) {
     return (
-        <Modal open={open} onOpenChange={onOpenChange}>
+        <Modal open={open} onOpenChange={onOpenChange} className="max-w-lg">
             <ModalHeader className="p-4">
-                <ModalTitle>
+                <p className="micro-label">
+                    {viewings.length}{" "}
+                    {viewings.length === 1 ? SINGULAR_NOUN : PLURAL_NOUN}
+                </p>
+                <ModalTitle className="mt-0.5">
                     {selectedDay === null
                         ? ""
-                        : `${monthLabel(year, month)} ${selectedDay}`}
+                        : dayLabel(year, month, selectedDay)}
                 </ModalTitle>
             </ModalHeader>
-            <ModalBody className="scroll-y max-h-[60vh] space-y-2 p-4">
+            <ModalBody className="scroll-y space-y-2 p-4">
                 {viewings.map((viewing) => (
                     <article
                         key={viewing.id}
@@ -62,7 +68,7 @@ export function ViewingDayModal({
                                 className="shrink-0"
                             />
                         </div>
-                        <div className="border-border-light mt-3 grid grid-cols-2 gap-3 border-t pt-3 sm:grid-cols-4">
+                        <div className="border-border-light mt-3 grid grid-cols-2 gap-3 border-t pt-3">
                             <MetricCell label={SLOT_LABEL}>
                                 <span className="truncate tabular-nums">
                                     {viewing.time} · {viewing.durationMinutes}
