@@ -1,5 +1,25 @@
+import { BadgeCheck, BellRing, Radio, Timer, UserCheck } from "lucide-react";
 import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { SettingsToggle } from "@/lib/data/dashboard-settings";
+import type { StatDatum } from "@/components/patterns/stat-cell";
+import { responseTone, strengthTone } from "@/lib/config/agent-settings-tones";
+import {
+    CREDENTIAL_COUNT,
+    enabledNotificationCount,
+    NOTIFICATION_RULE_COUNT,
+    PROFILE_STRENGTH,
+    verifiedCredentialCount,
+    weeklyAlertVolume,
+    type NotificationState,
+} from "@/lib/data/agent-account";
+import { formatCount } from "@/lib/utils";
+
+export const AGENT_SETTINGS_FORM_ID = "agent-settings-form";
+
+export const PROFILE_PUBLISHED = {
+    actor: "Sarah Mitchell",
+    role: "Listing agent",
+    ageMinutes: 420,
+};
 
 export const INITIAL_AGENT_FORM = {
     fullName: "Sarah Mitchell",
@@ -12,6 +32,13 @@ export const INITIAL_AGENT_FORM = {
     responseTime: "2",
 };
 export type AgentSettingsForm = typeof INITIAL_AGENT_FORM;
+
+export const changedFieldCount = (current: AgentSettingsForm) => {
+    const initial: Record<string, string> = INITIAL_AGENT_FORM;
+    return Object.entries(current).filter(
+        ([key, value]) => initial[key] !== value,
+    ).length;
+};
 
 export const AGENT_PROFILE_FIELDS: readonly ConfigField<
     keyof AgentSettingsForm
@@ -63,25 +90,46 @@ export const AGENT_BUSINESS_FIELDS: readonly ConfigField<
     },
 ];
 
-export const AGENT_NOTIFICATION_TOGGLES: readonly SettingsToggle[] = [
+export const buildAgentSettingsStats = (
+    form: AgentSettingsForm,
+    state: NotificationState,
+): StatDatum[] => [
     {
-        title: "New Lead Alerts",
-        description: "Notify me the moment an inquiry arrives",
-        defaultChecked: true,
+        id: "strength",
+        icon: UserCheck,
+        label: "Profile strength",
+        value: `${PROFILE_STRENGTH}%`,
+        tone: strengthTone(PROFILE_STRENGTH),
     },
     {
-        title: "Offer Activity",
-        description: "Offers, counters, and acceptances on my listings",
-        defaultChecked: true,
+        id: "alerts",
+        icon: BellRing,
+        label: "Alerts on",
+        value: `${enabledNotificationCount(state)}/${NOTIFICATION_RULE_COUNT}`,
+        tone: "accent",
     },
     {
-        title: "Showing Reminders",
-        description: "Reminders one hour before each appointment",
-        defaultChecked: true,
+        id: "volume",
+        icon: Radio,
+        label: "Weekly sends",
+        value: formatCount(weeklyAlertVolume(state)),
+        tone: "info",
     },
     {
-        title: "Weekly Performance Digest",
-        description: "Views, saves, and pipeline movement every Monday",
-        defaultChecked: false,
+        id: "response",
+        icon: Timer,
+        label: "Response target",
+        value: `${form.responseTime || 0}h`,
+        tone: responseTone(Number(form.responseTime)),
+    },
+    {
+        id: "credentials",
+        icon: BadgeCheck,
+        label: "Credentials",
+        value: `${verifiedCredentialCount}/${CREDENTIAL_COUNT}`,
+        tone:
+            verifiedCredentialCount === CREDENTIAL_COUNT
+                ? "success"
+                : "warning",
     },
 ];
