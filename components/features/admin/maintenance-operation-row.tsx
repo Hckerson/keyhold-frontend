@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { MaintenanceRiskMark } from "@/components/features/admin/maintenance-risk-mark";
 import { MAINTENANCE_RISKS } from "@/lib/config/settings-tones";
 import { cn } from "@/lib/utils";

@@ -12,7 +12,7 @@ import {
     ModalFooter,
 } from "@/components/ui/modal";
 import { MetricCell } from "@/components/patterns/metric-cell";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { EscrowMeter } from "@/components/features/admin/escrow-meter";
 import { TransactionFinancingMark } from "@/components/features/admin/transaction-financing-mark";
 import { TransactionMilestoneList } from "@/components/features/admin/transaction-milestone-list";

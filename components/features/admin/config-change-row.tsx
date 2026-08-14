@@ -1,4 +1,4 @@
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { ConfigActorMark } from "@/components/features/admin/config-actor-mark";
 import { ConfigValueMark } from "@/components/features/admin/config-value-mark";
 import type { ConfigChange } from "@/lib/types";

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { SignalDomainMark } from "@/components/features/admin/signal-domain-mark";
 import { SignalExposure } from "@/components/features/admin/signal-exposure";
 import { SignalSeverityMark } from "@/components/features/admin/signal-severity-mark";

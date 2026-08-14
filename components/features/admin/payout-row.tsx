@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { PayoutAmount } from "@/components/features/admin/payout-amount";
 import { PayoutMethodMark } from "@/components/features/admin/payout-method-mark";
 import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";

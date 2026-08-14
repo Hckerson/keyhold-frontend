@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { EscrowMeter } from "@/components/features/admin/escrow-meter";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
 import {

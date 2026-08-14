@@ -1,6 +1,6 @@
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
-import { AgeMark } from "@/components/features/admin/age-mark";
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { ConfigActorMark } from "@/components/features/admin/config-actor-mark";
 import { keyAgeTone } from "@/lib/config/settings-tones";
 import {
