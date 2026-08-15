@@ -1,5 +1,9 @@
+"use client";
+
 import { Check } from "lucide-react";
+import { AnimatePresence, m } from "motion/react";
 import type { InputHTMLAttributes, ReactNode } from "react";
+import { AUTH_COLLAPSE_MOTION } from "@/lib/config/auth-motion";
 import { cn } from "@/lib/utils";
 
 export interface AuthCheckProps extends Omit<
@@ -54,11 +58,19 @@ export function AuthCheck({
                     {label}
                 </label>
             </div>
-            {error && (
-                <p id={errorId} className="text-error pl-6 text-xs">
-                    {error}
-                </p>
-            )}
+            <AnimatePresence initial={false}>
+                {error && (
+                    <m.div
+                        key="error"
+                        {...AUTH_COLLAPSE_MOTION}
+                        className="overflow-hidden"
+                    >
+                        <p id={errorId} className="text-error pl-6 text-xs">
+                            {error}
+                        </p>
+                    </m.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
