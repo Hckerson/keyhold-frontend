@@ -31,12 +31,19 @@
 .scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        120deg,
-        color-mix(in srgb, var(--color-sidebar) 92%, transparent) 0%,
-        color-mix(in srgb, var(--color-sidebar) 60%, transparent) 55%,
-        color-mix(in srgb, var(--color-sidebar) 35%, transparent) 100%
-    );
+    background:
+        linear-gradient(
+            to top,
+            color-mix(in srgb, var(--color-sidebar) 90%, transparent) 0%,
+            color-mix(in srgb, var(--color-sidebar) 45%, transparent) 38%,
+            transparent 68%
+        ),
+        linear-gradient(
+            120deg,
+            color-mix(in srgb, var(--color-sidebar) 92%, transparent) 0%,
+            color-mix(in srgb, var(--color-sidebar) 60%, transparent) 55%,
+            color-mix(in srgb, var(--color-sidebar) 35%, transparent) 100%
+        );
 }
 
 .aurora {
@@ -85,7 +92,7 @@
 
 .eyebrow {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-highlight-light);
@@ -96,7 +103,7 @@
 .headline {
     font-family: var(--font-display);
     font-weight: 300;
-    font-size: 52px;
+    font-size: var(--font-sizes-h2);
     line-height: 1.06;
     letter-spacing: -0.02em;
     margin-top: 18px;
@@ -128,15 +135,14 @@
 }
 
 .rot {
-    position: relative;
-    height: 50px;
+    display: grid;
+    max-width: 42ch;
     margin-top: 6px;
     opacity: 0;
     animation: brand-up 0.8s 1s forwards;
 }
 .rot figure {
-    position: absolute;
-    inset: 0;
+    grid-area: 1 / 1;
     padding-left: 16px;
     border-left: 2px solid
         color-mix(in srgb, var(--color-highlight) 50%, transparent);
@@ -155,14 +161,18 @@
 .rot blockquote {
     font-family: var(--font-display);
     font-weight: 300;
-    font-size: 17px;
+    font-size: var(--font-sizes-lg);
     line-height: 1.5;
     color: var(--color-sidebar-text-active);
 }
 .rot figcaption {
     margin-top: 8px;
-    font-size: 12px;
-    color: var(--color-sidebar-text);
+    font-size: var(--font-sizes-xs);
+    color: color-mix(
+        in srgb,
+        var(--color-sidebar-text-active) 76%,
+        transparent
+    );
 }
 .rot figcaption b {
     font-weight: 500;
@@ -197,17 +207,14 @@
     transform-origin: left;
     background: var(--color-highlight);
 }
-.dots i:nth-child(1)::after {
-    animation: brand-fill 7s linear infinite 0s;
+.dots i::after {
+    animation: brand-fill 18s linear infinite;
 }
 .dots i:nth-child(2)::after {
-    animation: brand-fill 7s linear infinite 7s;
+    animation-delay: 6s;
 }
 .dots i:nth-child(3)::after {
-    animation: brand-fill 7s linear infinite 14s;
-}
-.dots i:nth-child(4)::after {
-    animation: brand-fill 7s linear infinite 21s;
+    animation-delay: 12s;
 }
 
 .reveal {
@@ -293,16 +300,39 @@
     0% {
         transform: scaleX(0);
     }
-    90% {
+    33.33% {
         transform: scaleX(1);
     }
+    33.34% {
+        transform: scaleX(0);
+    }
     100% {
-        transform: scaleX(1);
+        transform: scaleX(0);
     }
 }
 @keyframes brand-up {
     to {
         opacity: 1;
         transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stage img,
+    .aurora,
+    .rot figure,
+    .dots i::after {
+        animation: none;
+    }
+    .stage img:nth-child(1) {
+        opacity: 0.9;
+        transform: none;
+    }
+    .rot figure:nth-child(1) {
+        opacity: 1;
+        transform: none;
+    }
+    .dots i:nth-child(1)::after {
+        transform: scaleX(1);
     }
 }

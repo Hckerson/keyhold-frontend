@@ -29,24 +29,24 @@ export function ListingComparables({
                     <Link
                         key={comparable.id}
                         href={`/listing/${comparable.id}`}
-                        className="group border-border hover:bg-background/70 focus-visible:ring-accent ease-smooth flex items-center gap-3 border-b px-3 py-2.5 transition-colors duration-200 last:border-b-0 focus-visible:ring-2 focus-visible:outline-none"
+                        className="group border-border hover:bg-background/70 focus-visible:ring-accent ease-smooth flex items-center gap-2.5 border-b px-2.5 py-2 transition-colors duration-200 last:border-b-0 focus-visible:ring-2 focus-visible:outline-none sm:gap-3 sm:px-3 sm:py-2.5"
                     >
                         <img
                             src={comparable.images[0]}
                             alt=""
                             aria-hidden="true"
-                            className="ring-border h-12 w-16 shrink-0 rounded-lg object-cover ring-1"
+                            className="ring-border h-11 w-14 shrink-0 rounded-lg object-cover ring-1 sm:h-12 sm:w-16"
                         />
 
                         <div className="min-w-0 flex-1">
                             <p className="text-text group-hover:text-accent ease-smooth truncate text-xs font-medium transition-colors">
                                 {comparable.address}
                             </p>
-                            <p className="text-text-muted truncate text-xs">
+                            <p className="text-text-muted text-xs leading-snug">
                                 {comparable.locality} ·{" "}
                                 {timingLabel(comparable)}
                             </p>
-                            <div className="text-text-secondary mt-0.5 flex items-center gap-3">
+                            <div className="text-text-secondary mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5">
                                 <span className="inline-flex items-center gap-1 text-xs tabular-nums">
                                     <BedDouble
                                         size={12}
@@ -63,7 +63,7 @@ export function ListingComparables({
                                     />
                                     {comparable.baths}
                                 </span>
-                                <span className="text-text-muted text-xs tabular-nums">
+                                <span className="text-text-muted text-xs whitespace-nowrap tabular-nums">
                                     {comparable.sqft.toLocaleString()} sq ft
                                 </span>
                             </div>

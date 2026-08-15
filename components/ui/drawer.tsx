@@ -69,7 +69,8 @@ const drawerVariants = cva(
 );
 
 export interface DrawerProps
-    extends HTMLAttributes<HTMLDivElement>,
+    extends
+        HTMLAttributes<HTMLDivElement>,
         VariantProps<typeof drawerVariants> {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -233,7 +234,7 @@ const DrawerBody = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn("flex-1 overflow-y-auto px-4 py-3", className)}
+            className={cn("scroll-y flex-1 px-4 py-3", className)}
             {...props}
         />
     ),

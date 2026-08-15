@@ -7,10 +7,16 @@ export type OfferStatus =
 
 export interface Offer {
     id: string;
+    listingId: string;
     address: string;
-    offerPrice: number;
+    locality: string;
+    photo: string;
+    agent: string;
+    agentPortrait: string;
     listPrice: number;
+    offerPrice: number;
     counterPrice?: number;
     status: OfferStatus;
-    lastActivity: string;
+    minutesAgo: number;
+    note: string;
 }

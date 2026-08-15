@@ -68,12 +68,17 @@ export function MessageComposer({
         <Button
             variant="secondary"
             size="sm"
+            iconOnly
             type="button"
             aria-label={attachLabel}
             className={cn(!isThread && "shrink-0")}
             onClick={isThread ? () => fileInputRef.current?.click() : undefined}
         >
-            <Paperclip size={12} strokeWidth={1.5} />
+            <Paperclip
+                className="size-3"
+                strokeWidth={1.5}
+                aria-hidden="true"
+            />
         </Button>
     );
 
@@ -81,11 +86,12 @@ export function MessageComposer({
         <Button
             variant="primary"
             size="sm"
+            iconOnly
             type="submit"
             aria-label="Send message"
             className={cn(!isThread && "shrink-0")}
         >
-            <Send size={12} strokeWidth={1.5} />
+            <Send className="size-3" strokeWidth={1.5} aria-hidden="true" />
         </Button>
     );
 
@@ -114,7 +120,11 @@ export function MessageComposer({
                             key={file}
                             className="bg-background border-border-light text-text-secondary flex items-center gap-1.5 rounded-lg border px-2 py-1 text-xs"
                         >
-                            <Paperclip size={12} strokeWidth={1.5} />
+                            <Paperclip
+                                className="size-3"
+                                strokeWidth={1.5}
+                                aria-hidden="true"
+                            />
                             <span className="max-w-40 truncate">{file}</span>
                             <button
                                 type="button"
@@ -122,7 +132,11 @@ export function MessageComposer({
                                 aria-label={`Remove ${file}`}
                                 className="text-text-muted hover:text-error ease-smooth transition-colors"
                             >
-                                <X size={12} strokeWidth={1.5} />
+                                <X
+                                    className="size-3"
+                                    strokeWidth={1.5}
+                                    aria-hidden="true"
+                                />
                             </button>
                         </li>
                     ))}

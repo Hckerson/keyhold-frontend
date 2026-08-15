@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useState } from "react";
-import { OFFER_STATUS_LABEL } from "@/components/features/dashboard/offer-row";
+import { OFFER_STATUSES } from "@/lib/config/offer-tones";
 import { OfferDetailHeader } from "@/components/features/offers/offer-detail-header";
 import { OfferDetailPanels } from "@/components/features/offers/offer-detail-panels";
 import {
@@ -123,7 +123,7 @@ export default function OfferDetailPage({
                 counterAmount={counterAmount}
                 counterNote={counterNote}
                 closed={closed}
-                statusLabel={OFFER_STATUS_LABEL[status]}
+                statusLabel={OFFER_STATUSES[status].label}
                 canSubmitCounter={canCounter}
                 onCounterAmountChange={setCounterAmount}
                 onCounterNoteChange={setCounterNote}

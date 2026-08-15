@@ -7,25 +7,23 @@ const GLYPH = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width
 
 export default function AppleIcon() {
     return new ImageResponse(
-        (
-            <div
-                style={{
-                    display: "flex",
-                    height: "100%",
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "#1f4e3d",
-                }}
-            >
-                <img
-                    alt=""
-                    width={104}
-                    height={104}
-                    src={`data:image/svg+xml;utf8,${encodeURIComponent(GLYPH)}`}
-                />
-            </div>
-        ),
+        <div
+            style={{
+                display: "flex",
+                height: "100%",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "#1f4e3d",
+            }}
+        >
+            <img
+                alt=""
+                width={104}
+                height={104}
+                src={`data:image/svg+xml;utf8,${encodeURIComponent(GLYPH)}`}
+            />
+        </div>,
         size,
     );
 }

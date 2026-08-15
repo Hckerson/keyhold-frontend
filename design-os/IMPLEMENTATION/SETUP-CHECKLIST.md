@@ -100,7 +100,7 @@ When building each page, reference:
 | Search Results | phase-4-page-blueprints.md (Page 2) + phase-5 (Sections 6-9)                       |
 | Listing Detail | phase-4-page-blueprints.md (Page 3) + phase-5 (Sections 10-15)                     |
 | Dashboards     | phase-4-page-blueprints.md (Pages 8-21)                                            |
-| Components     | phase-6-component-library.md (all 80 components)                                   |
+| Components     | phase-6-component-library.md (all 78 components)                                   |
 | Tokens         | phase-7-design-tokens.md + LUXURY-VISUAL-DIRECTION.md                              |
 
 ---

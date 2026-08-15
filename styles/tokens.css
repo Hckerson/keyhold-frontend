@@ -27,6 +27,7 @@
     --colors-warning: #b7791f;
     --colors-warning-light: #f8eed9;
     --colors-error: #b4443a;
+    --colors-error-dark: #97362e;
     --colors-error-light: #f6e3e0;
     --colors-info: #3e5c76;
     --colors-info-light: #e7ecf1;
@@ -277,6 +278,13 @@
 
     /* Metric Icon Background Opacity */
     --icon-bg-opacity: 0.12;
+
+    --scrollbar-size: 10px;
+    --scrollbar-inset: 2px;
+    --scrollbar-track: transparent;
+    --scrollbar-thumb: #d4ccc0;
+    --scrollbar-thumb-hover: #b9ae9e;
+    --scrollbar-thumb-idle: transparent;
 }
 
 /* ============================================

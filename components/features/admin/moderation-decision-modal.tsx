@@ -1,19 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/forms/textarea";
+import { TextareaField } from "@/components/ui/forms/textarea-field";
 import {
     Modal,
-    ModalContent,
     ModalHeader,
     ModalTitle,
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import { DECISION_COPY, type Decision } from "@/lib/data/admin-listings";
+import { MODERATION_DECISIONS } from "@/lib/config/moderation-tones";
+import type { ModerationDecision } from "@/lib/types";
+
+const NOTE_ID = "moderation-note";
+const NOTE_NAME = "moderationNote";
+const NOTE_ROWS = 4;
+const NOTE_HINT =
+    "Required. The agent receives this message with the decision.";
+const CANCEL_ACTION = "Cancel";
+const SELECTED_NOUN = "listing";
 
 export interface ModerationDecisionModalProps {
-    decision: Decision | null;
+    decision: ModerationDecision | null;
     note: string;
     onNoteChange: (value: string) => void;
     onClose: () => void;
@@ -27,7 +35,7 @@ export function ModerationDecisionModal({
     onClose,
     onSubmit,
 }: ModerationDecisionModalProps) {
-    const copy = decision ? DECISION_COPY[decision.mode] : null;
+    const meta = decision ? MODERATION_DECISIONS[decision.mode] : null;
 
     return (
         <Modal
@@ -35,62 +43,55 @@ export function ModerationDecisionModal({
             onOpenChange={(open) => {
                 if (!open) onClose();
             }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="moderation-decision-title"
         >
-            {copy && decision && (
-                <ModalContent>
-                    <ModalHeader>
-                        <ModalTitle id="moderation-decision-title">
-                            {copy.title}
-                        </ModalTitle>
+            {meta && decision && (
+                <>
+                    <ModalHeader className="p-4">
+                        <ModalTitle>{meta.title}</ModalTitle>
                         <p className="text-text-secondary mt-1 text-xs tabular-nums">
-                            {decision.ids.length} listing
+                            {decision.ids.length} {SELECTED_NOUN}
                             {decision.ids.length === 1 ? "" : "s"} selected
                         </p>
                     </ModalHeader>
-                    <ModalBody>
-                        <label
-                            htmlFor="moderation-note"
-                            className="micro-label"
-                        >
-                            {copy.label}
-                        </label>
-                        <Textarea
-                            id="moderation-note"
-                            rows={4}
+                    <ModalBody className="p-4">
+                        <TextareaField
+                            id={NOTE_ID}
+                            name={NOTE_NAME}
+                            label={meta.field}
+                            rows={NOTE_ROWS}
                             value={note}
                             onChange={(event) =>
                                 onNoteChange(event.target.value)
                             }
-                            placeholder={copy.placeholder}
-                            className="mt-1.5"
+                            placeholder={meta.placeholder}
                         />
                         <p className="text-text-muted mt-1.5 text-xs">
-                            Required. The agent receives this message with the
-                            decision.
+                            {NOTE_HINT}
                         </p>
                     </ModalBody>
-                    <ModalFooter>
-                        <Button variant="secondary" size="sm" onClick={onClose}>
-                            Cancel
+                    <ModalFooter className="gap-2 p-4">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            onClick={onClose}
+                        >
+                            {CANCEL_ACTION}
                         </Button>
                         <Button
-                            variant={
-                                decision.mode === "reject"
-                                    ? "danger"
-                                    : "primary"
-                            }
+                            type="button"
+                            variant={meta.destructive ? "danger" : "primary"}
                             size="sm"
                             disabled={note.trim().length === 0}
                             onClick={onSubmit}
                         >
-                            {copy.submit}
+                            {meta.submit}
                         </Button>
                     </ModalFooter>
-                </ModalContent>
+                </>
             )}
         </Modal>
     );
 }
+
+ModerationDecisionModal.displayName = "ModerationDecisionModal";

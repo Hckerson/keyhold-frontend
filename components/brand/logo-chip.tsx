@@ -29,7 +29,8 @@ const GLYPH_SIZE = {
 } as const;
 
 export interface LogoChipProps
-    extends React.HTMLAttributes<HTMLSpanElement>,
+    extends
+        React.HTMLAttributes<HTMLSpanElement>,
         VariantProps<typeof chipVariants> {
     label?: string;
 }

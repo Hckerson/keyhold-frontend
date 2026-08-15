@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import {
     Modal,
     ModalHeader,
@@ -54,9 +54,11 @@ export function DeleteAccountModal({
                     title="This removes everything"
                     description="Saved listings, offers, viewings and messages are deleted after a 30-day grace period."
                 />
-                <Input
+                <FormField
                     id="delete-confirmation"
+                    name="deleteConfirmation"
                     label={`Type ${DELETE_CONFIRMATION} to confirm`}
+                    variant="code"
                     value={confirmation}
                     onChange={(event) => setConfirmation(event.target.value)}
                     placeholder={DELETE_CONFIRMATION}

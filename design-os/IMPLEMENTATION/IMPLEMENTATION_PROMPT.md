@@ -364,7 +364,7 @@ Before deploying:
 
 **MVP 1.5 Launch:**
 
-- [ ] 21 pages live
+- [ ] 27 pages live
 - [ ] Lighthouse >90 (all pages)
 - [ ] WCAG 2.2 AA compliant
 - [ ] 99.95% uptime

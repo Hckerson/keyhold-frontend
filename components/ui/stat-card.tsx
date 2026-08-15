@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { DeltaChip } from "@/components/ui/delta-chip";
 import { cn } from "@/lib/utils";
 import type { StatItem } from "@/lib/types";
 
@@ -48,23 +48,7 @@ function StatBody({
                 >
                     {value}
                 </p>
-                {change && (
-                    <span
-                        className={cn(
-                            "inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-medium tabular-nums",
-                            trend === "down"
-                                ? "bg-error/10 text-error"
-                                : "bg-success/10 text-success",
-                        )}
-                    >
-                        {trend === "down" ? (
-                            <TrendingDown size={12} strokeWidth={1.5} />
-                        ) : (
-                            <TrendingUp size={12} strokeWidth={1.5} />
-                        )}
-                        {change}
-                    </span>
-                )}
+                {change && <DeltaChip value={change} direction={trend} />}
             </div>
 
             {badge && <div className="mt-2">{badge}</div>}

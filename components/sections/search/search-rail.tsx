@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MapPin, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import { SearchFilterGroup } from "@/components/sections/search/search-filter-group";
 import {
     FILTER_GROUPS,
@@ -109,13 +109,12 @@ export function SearchRail({
                 </button>
             </header>
 
-            <div className="divide-border flex-1 divide-y overflow-y-auto">
-                <div className="flex flex-col gap-1.5 px-3 py-3">
-                    <label htmlFor="filter-location" className="micro-label">
-                        Location
-                    </label>
-                    <Input
+            <div className="divide-border scroll-y flex-1 divide-y">
+                <div className="px-3 py-3">
+                    <FormField
                         id="filter-location"
+                        name="location"
+                        label="Location"
                         value={draft.location}
                         onChange={(event) =>
                             onChange({ ...draft, location: event.target.value })

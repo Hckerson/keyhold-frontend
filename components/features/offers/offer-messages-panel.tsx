@@ -17,7 +17,7 @@ export function OfferMessagesPanel({
     return (
         <Panel title="Messages" count={messages.length}>
             <div className="space-y-3">
-                <ul className="max-h-80 space-y-3 overflow-y-auto">
+                <ul className="scroll-y max-h-80 space-y-3">
                     {messages.map((message) => (
                         <MessageBubble
                             key={message.id}

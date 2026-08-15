@@ -2,6 +2,8 @@ import type { LucideIcon } from "lucide-react";
 
 export type Trend = "up" | "down";
 
+export type BadgeTone = "neutral" | "success" | "warning" | "error" | "info";
+
 export interface StatItem {
     label: string;
     value: string | number;
@@ -12,6 +14,11 @@ export interface StatItem {
     series?: number[];
     href?: string;
     featured?: boolean;
+}
+
+export interface MetricItem {
+    label: string;
+    value: string;
 }
 
 export interface QuickAction {

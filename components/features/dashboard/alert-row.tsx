@@ -1,120 +1,84 @@
+"use client";
+
 import Link from "next/link";
-import {
-    TrendingDown,
-    Sparkles,
-    Home,
-    BarChart3,
-    FileText,
-    CalendarCheck,
-    Bell,
-    type LucideIcon,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn, formatMillions } from "@/lib/utils";
-import type { Alert, AlertType } from "@/lib/types";
+import { ListingThumb } from "@/components/features/shared/listing-thumb";
+import { MoveChip } from "@/components/patterns/move-chip";
+import { AlertChannelMark } from "@/components/features/dashboard/alert-channel-mark";
+import { AlertTypeGlyph } from "@/components/features/dashboard/alert-type-glyph";
+import { ALERT_TYPES } from "@/lib/config/alert-tones";
+import { movePercent } from "@/lib/data/alerts";
+import type { Alert } from "@/lib/types";
+import { cn, formatAge, formatMillions } from "@/lib/utils";
+
+const READ_LABEL = "Read";
+const MARK_LABEL = "Mark read";
 
 export interface AlertRowProps {
     alert: Alert;
-    onMarkRead?: (id: string) => void;
-    className?: string;
+    onMarkRead: (id: string) => void;
 }
 
-const typeConfig: Record<AlertType, { icon: LucideIcon; tint: string }> = {
-    "price-drop": { icon: TrendingDown, tint: "bg-success/10 text-success" },
-    "new-listing": { icon: Sparkles, tint: "bg-accent-light text-accent" },
-    "under-offer": { icon: Home, tint: "bg-warning/10 text-warning" },
-    "status-change": { icon: BarChart3, tint: "bg-info/10 text-info" },
-    "offer-response": { icon: FileText, tint: "bg-info/10 text-info" },
-    "viewing-confirmation": {
-        icon: CalendarCheck,
-        tint: "bg-success/10 text-success",
-    },
-};
-
-export function AlertRow({ alert, onMarkRead, className }: AlertRowProps) {
-    const {
-        id,
-        listingId,
-        type,
-        title,
-        description,
-        address,
-        price,
-        previousPrice,
-        timestamp,
-        read,
-    } = alert;
-    const { icon: Icon, tint } = typeConfig[type] ?? {
-        icon: Bell,
-        tint: "bg-background-muted text-text-muted",
-    };
-
+export function AlertRow({ alert, onMarkRead }: AlertRowProps) {
     return (
-        <article
+        <tr
             className={cn(
-                "group bg-background-muted border-border-light hover:border-border ease-smooth rounded-xl border p-3 shadow-sm transition-all duration-300 hover:shadow-md",
-                !read && "border-l-accent border-l-2",
-                className,
+                "ease-smooth h-11 transition-colors",
+                alert.read ? "hover:bg-background-muted" : "bg-accent-light/40",
             )}
         >
-            <div className="flex gap-3">
-                <span
-                    className={cn(
-                        "grid size-8 shrink-0 place-items-center rounded-lg",
-                        tint,
-                    )}
-                >
-                    <Icon size={16} strokeWidth={1.5} />
+            <td className="py-0">
+                <span className="flex min-w-0 items-center gap-2">
+                    <AlertTypeGlyph type={alert.type} />
+                    <span className="text-text-secondary min-w-0 truncate text-xs">
+                        {ALERT_TYPES[alert.type].label}
+                    </span>
                 </span>
-
-                <div className="flex min-w-0 flex-1 items-start justify-between gap-3">
-                    <div className="min-w-0">
-                        <Link
-                            href={`/listing/${listingId}`}
-                            className="text-text hover:text-accent ease-smooth text-xs font-medium transition-colors"
-                        >
-                            {title}
-                        </Link>
-                        <p className="text-text-secondary mt-0.5 text-xs">
-                            {description}
-                        </p>
-                        <p className="text-text-muted mt-1 truncate text-xs">
-                            {address}
-                        </p>
-                        {price !== undefined && (
-                            <div className="mt-2 flex items-center gap-2">
-                                <span className="font-display text-accent text-lg font-light tabular-nums">
-                                    {formatMillions(price, 2)}
-                                </span>
-                                {previousPrice !== undefined && (
-                                    <span className="text-text-muted text-xs tabular-nums line-through">
-                                        {formatMillions(previousPrice, 2)}
-                                    </span>
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex shrink-0 flex-col items-end gap-1.5">
-                        <span className="text-text-muted text-xs">
-                            {timestamp}
+            </td>
+            <td className="py-0 pl-3">
+                <Link
+                    href={`/listing/${alert.listingId}`}
+                    className="group flex min-w-0 items-center gap-2"
+                >
+                    <ListingThumb src={alert.photo} alt={alert.address} />
+                    <span className="min-w-0 truncate text-xs">
+                        <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
+                            {alert.address}
                         </span>
-                        {!read && onMarkRead && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => onMarkRead(id)}
-                            >
-                                Mark read
-                            </Button>
-                        )}
-                        {!read && !onMarkRead && (
-                            <span className="bg-accent size-2 rounded-full" />
-                        )}
-                    </div>
-                </div>
-            </div>
-        </article>
+                        <span className="text-text-muted">
+                            {" · "}
+                            {alert.locality}
+                        </span>
+                    </span>
+                </Link>
+            </td>
+            <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
+                {formatMillions(alert.price, 2)}
+            </td>
+            <td className="py-0 pl-3 text-right">
+                <MoveChip percent={movePercent(alert)} />
+            </td>
+            <td className="py-0 pl-3">
+                <AlertChannelMark channel={alert.channel} />
+            </td>
+            <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
+                {formatAge(alert.minutesAgo)}
+            </td>
+            <td className="py-0 pl-3 text-right">
+                {alert.read ? (
+                    <span className="micro-label">{READ_LABEL}</span>
+                ) : (
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onMarkRead(alert.id)}
+                    >
+                        {MARK_LABEL}
+                    </Button>
+                )}
+            </td>
+        </tr>
     );
 }
 

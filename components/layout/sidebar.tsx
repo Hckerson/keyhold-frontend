@@ -1,16 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, X } from "lucide-react";
 import { LogoChip } from "@/components/brand/logo-chip";
 import {
     SidebarNav,
     type SidebarSection,
 } from "@/components/layout/sidebar-nav";
+import { SidebarStatus } from "@/components/layout/sidebar-status";
 import { SidebarFooter } from "@/components/layout/sidebar-footer";
-import type { AuthUser } from "@/lib/types/auth";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
+import type { AuthUser, JourneyStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { RAIL_QUERY } from "@/lib/constants";
 
 export type {
     SidebarNavItem,
@@ -20,38 +23,51 @@ export type {
 export interface SidebarProps {
     brand: { full: string; tagline?: string };
     sections: SidebarSection[];
+    status?: JourneyStatus;
     user?: AuthUser | null;
     onLogout?: () => void;
+    open?: boolean;
+    onClose?: () => void;
     className?: string;
 }
 
 function Brand({
     brand,
     collapsed,
+    onClose,
 }: {
     brand: SidebarProps["brand"];
     collapsed: boolean;
+    onClose?: () => void;
 }) {
     return (
         <div
             className={cn(
-                "border-sidebar-border relative flex h-14 items-center border-b",
+                "border-sidebar-border flex h-14 shrink-0 items-center border-b",
                 collapsed ? "justify-center px-0" : "gap-2 px-3",
             )}
         >
             <LogoChip tone="dark" size="sm" />
             {!collapsed && (
                 <div className="min-w-0">
-                    <p className="text-sidebar-text-active font-display truncate text-sm leading-none font-light">
+                    <p className="text-sidebar-text-active font-display truncate text-xs leading-none font-light">
                         {brand.full}
                     </p>
                     {brand.tagline && (
-                        <p className="text-highlight/80 text-caption mt-0.5 tracking-[0.16em] uppercase">
+                        <p className="rail-label mt-1 truncate">
                             {brand.tagline}
                         </p>
                     )}
                 </div>
             )}
+            <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close navigation"
+                className="text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active focus-visible:ring-highlight ease-smooth ml-auto grid size-8 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none lg:hidden"
+            >
+                <X size={16} strokeWidth={1.5} />
+            </button>
         </div>
     );
 }
@@ -59,72 +75,99 @@ function Brand({
 export function Sidebar({
     brand,
     sections,
+    status,
     user,
     onLogout,
+    open = false,
+    onClose,
     className,
 }: SidebarProps) {
     const pathname = usePathname();
-    const [collapsed, setCollapsed] = useState(false);
+    const isRail = useMediaQuery(RAIL_QUERY);
+    const [railCollapsed, setRailCollapsed] = useState(false);
+    const collapsed = isRail && railCollapsed;
+
+    useEffect(() => {
+        if (!open) return;
+
+        const onKeyDown = (event: KeyboardEvent) =>
+            event.key === "Escape" && onClose?.();
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
+    }, [open, onClose]);
 
     const activeHref = useMemo(() => {
         return sections
             .flatMap((section) => section.items)
             .filter(
                 (item) =>
-                    pathname === item.href ||
-                    pathname.startsWith(`${item.href}/`),
+                    item.href !== undefined &&
+                    (pathname === item.href ||
+                        pathname.startsWith(`${item.href}/`)),
             )
-            .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+            .sort((a, b) => (b.href?.length ?? 0) - (a.href?.length ?? 0))[0]
+            ?.href;
     }, [sections, pathname]);
 
     return (
-        <aside
-            className={cn(
-                "bg-sidebar border-sidebar-border ease-smooth relative flex h-screen shrink-0 flex-col border-r transition-[width] duration-300",
-                collapsed ? "w-12" : "w-52",
-                className,
-            )}
-        >
+        <>
             <div
                 aria-hidden="true"
-                className="from-sidebar-text-active/5 pointer-events-none absolute inset-x-0 top-0 h-32 bg-linear-to-b to-transparent"
-            />
-            <div
-                aria-hidden="true"
-                className="via-highlight/50 pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
+                onClick={onClose}
+                className={cn(
+                    "bg-text/50 ease-smooth fixed inset-0 z-40 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden",
+                    open ? "opacity-100" : "pointer-events-none opacity-0",
+                )}
             />
 
-            <button
-                type="button"
-                onClick={() => setCollapsed((value) => !value)}
-                aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                aria-pressed={collapsed}
-                className="border-sidebar-border bg-sidebar text-sidebar-text hover:text-highlight hover:border-highlight/40 ease-smooth absolute top-20 -right-3 z-50 grid size-5 -translate-y-1/2 place-items-center rounded-full border shadow-md transition-colors duration-200"
+            <aside
+                className={cn(
+                    "bg-sidebar border-sidebar-border ease-smooth fixed inset-y-0 left-0 z-50 flex h-screen w-60 flex-col border-r transition-[transform,visibility] duration-300",
+                    "lg:visible lg:relative lg:z-auto lg:w-52 lg:shrink-0 lg:translate-x-0 lg:transition-[width]",
+                    open
+                        ? "visible translate-x-0"
+                        : "invisible -translate-x-full",
+                    collapsed && "lg:w-12",
+                    className,
+                )}
             >
-                <ChevronLeft
-                    size={12}
-                    strokeWidth={2}
-                    className={cn(
-                        "ease-smooth transition-transform duration-300",
-                        collapsed && "rotate-180",
-                    )}
+                <button
+                    type="button"
+                    onClick={() => setRailCollapsed((value) => !value)}
+                    aria-label={
+                        collapsed ? "Expand sidebar" : "Collapse sidebar"
+                    }
+                    aria-pressed={collapsed}
+                    className="border-sidebar-border bg-sidebar text-sidebar-text hover:text-highlight hover:border-highlight/40 focus-visible:ring-highlight ease-smooth absolute top-7 -right-3 z-50 hidden size-5 -translate-y-1/2 place-items-center rounded-full border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none lg:grid"
+                >
+                    <ChevronLeft
+                        size={12}
+                        strokeWidth={1.5}
+                        className={cn(
+                            "ease-smooth transition-transform duration-300",
+                            collapsed && "rotate-180",
+                        )}
+                    />
+                </button>
+
+                <Brand brand={brand} collapsed={collapsed} onClose={onClose} />
+
+                <SidebarNav
+                    sections={sections}
+                    activeHref={activeHref}
+                    collapsed={collapsed}
                 />
-            </button>
 
-            <Brand brand={brand} collapsed={collapsed} />
+                {status && !collapsed && <SidebarStatus status={status} />}
 
-            <SidebarNav
-                sections={sections}
-                activeHref={activeHref}
-                collapsed={collapsed}
-            />
-
-            <SidebarFooter
-                user={user}
-                onLogout={onLogout}
-                collapsed={collapsed}
-            />
-        </aside>
+                <SidebarFooter
+                    user={user}
+                    onLogout={onLogout}
+                    collapsed={collapsed}
+                />
+            </aside>
+        </>
     );
 }
 
