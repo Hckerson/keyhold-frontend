@@ -7,15 +7,15 @@
 }
 .glow {
     position: absolute;
-    left: -6%;
-    bottom: 2%;
-    width: 62%;
-    height: 72%;
+    left: -18%;
+    bottom: -12%;
+    width: clamp(320px, 58%, 760px);
+    aspect-ratio: 1;
     pointer-events: none;
     background: radial-gradient(
-        circle at 30% 70%,
+        circle closest-side,
         color-mix(in srgb, var(--color-highlight) 26%, transparent),
-        transparent 62%
+        transparent
     );
 }
 .grain {

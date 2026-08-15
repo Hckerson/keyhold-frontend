@@ -19,6 +19,7 @@ export interface DonutChartProps {
     total?: string | number;
     unit?: string;
     size?: number;
+    legend?: boolean;
     valuePrefix?: string;
     valueSuffix?: string;
     className?: string;
@@ -29,6 +30,7 @@ export function DonutChart({
     total,
     unit,
     size = 132,
+    legend = true,
     valuePrefix = "",
     valueSuffix = "",
     className,
@@ -77,33 +79,36 @@ export function DonutChart({
                 )}
             </div>
 
-            <ul className="min-w-0 flex-1 space-y-2.5">
-                {data.map((d) => {
-                    const pct = sum > 0 ? Math.round((d.value / sum) * 100) : 0;
-                    return (
-                        <li
-                            key={d.name}
-                            className="flex items-center gap-2.5 text-sm"
-                        >
-                            <span
-                                className="size-2.5 shrink-0 rounded-sm"
-                                style={{ background: toneVar[d.tone] }}
-                            />
-                            <span className="text-text-secondary truncate">
-                                {d.name}
-                            </span>
-                            <span className="text-text ml-auto font-medium tabular-nums">
-                                {valuePrefix}
-                                {d.value.toLocaleString()}
-                                {valueSuffix}
-                                <span className="text-text-muted ml-1.5 font-normal">
-                                    {pct}%
+            {legend && (
+                <ul className="min-w-0 flex-1 space-y-2.5">
+                    {data.map((d) => {
+                        const pct =
+                            sum > 0 ? Math.round((d.value / sum) * 100) : 0;
+                        return (
+                            <li
+                                key={d.name}
+                                className="flex items-center gap-2.5 text-xs"
+                            >
+                                <span
+                                    className="size-2.5 shrink-0 rounded-sm"
+                                    style={{ background: toneVar[d.tone] }}
+                                />
+                                <span className="text-text-secondary truncate">
+                                    {d.name}
                                 </span>
-                            </span>
-                        </li>
-                    );
-                })}
-            </ul>
+                                <span className="text-text ml-auto font-medium tabular-nums">
+                                    {valuePrefix}
+                                    {d.value.toLocaleString()}
+                                    {valueSuffix}
+                                    <span className="text-text-muted ml-1.5 font-normal">
+                                        {pct}%
+                                    </span>
+                                </span>
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
         </div>
     );
 }

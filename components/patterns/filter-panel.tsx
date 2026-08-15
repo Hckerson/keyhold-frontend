@@ -39,18 +39,19 @@ export function FilterPanel({
     className,
 }: FilterPanelProps) {
     return (
-        <Card className={cn("", className)}>
-            <div className="border-border-light flex items-center justify-between border-b p-6">
-                <h3 className="text-h6 font-body font-semibold">{title}</h3>
+        <Card className={cn("p-0", className)}>
+            <div className="border-border-light flex h-11 items-center justify-between border-b px-3">
+                <h3 className="text-text text-xs font-semibold">{title}</h3>
                 <button
+                    type="button"
                     onClick={onReset}
-                    className="text-text-secondary hover:text-accent text-sm transition-colors"
+                    className="text-text-secondary hover:text-accent text-xs transition-colors"
                 >
                     Reset
                 </button>
             </div>
 
-            <div className="space-y-4 p-6">
+            <div className="space-y-3 p-3">
                 <Accordion>
                     {groups.map((group) => (
                         <AccordionItem key={group.id} value={group.id}>
@@ -60,7 +61,7 @@ export function FilterPanel({
                                     {group.options.map((option) => (
                                         <label
                                             key={option.id}
-                                            className="flex cursor-pointer items-center gap-3"
+                                            className="flex h-8 cursor-pointer items-center gap-2"
                                         >
                                             <Checkbox
                                                 onChange={(e) => {
@@ -72,7 +73,7 @@ export function FilterPanel({
                                                     );
                                                 }}
                                             />
-                                            <span className="text-text text-sm">
+                                            <span className="text-text truncate text-xs">
                                                 {option.label}
                                             </span>
                                             {option.count !== undefined && (

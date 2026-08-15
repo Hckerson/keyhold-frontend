@@ -44,7 +44,7 @@ export function OfferDetailPanels({
     onSendMessage,
 }: OfferDetailPanelsProps) {
     return (
-        <div className="grid gap-3 lg:grid-cols-3">
+        <div className="console-split gap-3">
             <div className="space-y-3 lg:col-span-2">
                 <Panel
                     title="Offer Comparison"

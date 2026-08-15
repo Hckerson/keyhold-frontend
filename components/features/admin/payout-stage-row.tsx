@@ -1,0 +1,46 @@
+import { AgeMark } from "@/components/features/shared/age-mark";
+import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";
+import { ShareMeter } from "@/components/patterns/share-meter";
+import { payoutAgeTone, PAYOUT_STATES } from "@/lib/config/admin-tones";
+import { stageShare } from "@/lib/data/admin-payments";
+import { formatCompactUsd } from "@/lib/utils";
+import type { PayoutStage } from "@/lib/types";
+
+export interface PayoutStageRowProps {
+    stage: PayoutStage;
+}
+
+export function PayoutStageRow({ stage }: PayoutStageRowProps) {
+    const meta = PAYOUT_STATES[stage.id];
+    const share = stageShare(stage);
+
+    return (
+        <tr className="ease-smooth hover:bg-background-muted h-11 transition-colors">
+            <td className="py-0">
+                <PayoutStateMark state={stage.id} />
+            </td>
+            <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
+                {formatCompactUsd(stage.amount)}
+            </td>
+            <td className="py-0 pl-3">
+                <ShareMeter
+                    percent={share}
+                    tone={meta.chartTone}
+                    label={`${meta.label} holds ${share}% of payout value`}
+                />
+            </td>
+            <td className="py-0 pl-3 text-right">
+                <AgeMark
+                    minutes={stage.oldestMinutes}
+                    tone={
+                        meta.held
+                            ? payoutAgeTone(stage.oldestMinutes)
+                            : "neutral"
+                    }
+                />
+            </td>
+        </tr>
+    );
+}
+
+PayoutStageRow.displayName = "PayoutStageRow";

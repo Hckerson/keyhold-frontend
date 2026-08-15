@@ -32,6 +32,13 @@ import { cn } from "@/lib/utils";
 
 export type SortDirection = "asc" | "desc";
 export type RevealMode = "inline" | "panel";
+export type ColumnEmphasis =
+    | "focal"
+    | "identity"
+    | "figure"
+    | "field"
+    | "muted"
+    | "meta";
 
 export interface DataTableSort {
     id: string;
@@ -44,6 +51,7 @@ export interface DataTableColumn<T> {
     align?: "left" | "right";
     width?: string;
     srOnlyLabel?: boolean;
+    emphasis?: ColumnEmphasis;
     sortValue?: (row: T) => string | number;
     render: (row: T) => ReactNode;
     footer?: (rows: T[]) => ReactNode;
@@ -81,8 +89,18 @@ const alignClass = {
     right: "text-right",
 } as const;
 
-const headCell =
-    "px-3 py-2 font-mono text-caption font-medium uppercase tracking-wide text-text-muted";
+const emphasisClass: Record<ColumnEmphasis, string> = {
+    focal: "text-text text-xs font-semibold tabular-nums",
+    identity: "text-xs font-medium",
+    figure: "text-xs font-medium tabular-nums",
+    field: "text-xs",
+    muted: "text-xs text-text-secondary",
+    meta: "micro-label tabular-nums",
+};
+
+const headCell = "px-3 py-2.5 micro-label leading-none";
+
+const footCell = "px-3 py-2.5 text-xs font-medium tabular-nums";
 
 const sortIcon = {
     asc: ArrowUp,
@@ -195,6 +213,17 @@ export function DataTable<T>({
     const hasFooter = columns.some((column) => column.footer);
     const columnCount =
         columns.length + (selectable ? 1 : 0) + (revealing ? 1 : 0);
+
+    const focalColumnId = columns.find(
+        (column) => column.emphasis === "focal",
+    )?.id;
+
+    const columnEmphasis = (column: DataTableColumn<T>): ColumnEmphasis => {
+        const declared = column.emphasis ?? "field";
+        if (declared === "focal" && column.id !== focalColumnId)
+            return "figure";
+        return declared;
+    };
 
     const setOpen = useCallback(
         (next: string | null) => {
@@ -338,11 +367,14 @@ export function DataTable<T>({
                     </div>
                 )}
 
-                <div className="overflow-x-auto">
+                <div className="scroll-x">
                     <table
                         ref={tableRef}
                         onKeyDown={onTableKeyDown}
-                        className={cn("w-full text-sm", fixed && "table-fixed")}
+                        className={cn(
+                            "w-full text-xs leading-tight",
+                            fixed && "table-fixed",
+                        )}
                     >
                         <caption className="sr-only">{caption}</caption>
 
@@ -426,6 +458,11 @@ export function DataTable<T>({
                                                     key={column.id}
                                                     className={cn(
                                                         "px-3 py-2",
+                                                        emphasisClass[
+                                                            columnEmphasis(
+                                                                column,
+                                                            )
+                                                        ],
                                                         alignClass[
                                                             column.align ??
                                                                 "left"
@@ -500,7 +537,7 @@ export function DataTable<T>({
                                             >
                                                 <td
                                                     colSpan={columnCount}
-                                                    className="px-3 py-3"
+                                                    className="px-3 py-3 leading-normal"
                                                 >
                                                     {renderDetail?.(row)}
                                                 </td>
@@ -514,7 +551,7 @@ export function DataTable<T>({
                                 <tr>
                                     <td
                                         colSpan={columnCount}
-                                        className="text-text-muted px-3 py-10 text-center text-sm"
+                                        className="text-text-muted px-3 py-10 text-center text-xs leading-normal"
                                     >
                                         {emptyMessage}
                                     </td>
@@ -532,12 +569,12 @@ export function DataTable<T>({
                                 )}
                             >
                                 <tr>
-                                    {selectable && <td className="px-3 py-2" />}
+                                    {selectable && <td className={footCell} />}
                                     {columns.map((column) => (
                                         <td
                                             key={column.id}
                                             className={cn(
-                                                "px-3 py-2",
+                                                footCell,
                                                 alignClass[
                                                     column.align ?? "left"
                                                 ],
@@ -546,7 +583,7 @@ export function DataTable<T>({
                                             {column.footer?.(sortedData)}
                                         </td>
                                     ))}
-                                    {revealing && <td className="px-3 py-2" />}
+                                    {revealing && <td className={footCell} />}
                                 </tr>
                             </tfoot>
                         )}
@@ -558,7 +595,7 @@ export function DataTable<T>({
                         aria-label="Table pagination"
                         className="border-border-dark flex items-center justify-between gap-3 border-t px-3 py-2"
                     >
-                        <p className="text-text-muted text-xs tabular-nums">
+                        <p className="micro-label tabular-nums">
                             {firstIndex + 1}–{firstIndex + pageRows.length} of{" "}
                             {sortedData.length}
                         </p>
@@ -566,6 +603,7 @@ export function DataTable<T>({
                             <Button
                                 variant="secondary"
                                 size="sm"
+                                iconOnly
                                 aria-label="Previous page"
                                 disabled={currentPage === 1}
                                 onClick={() =>
@@ -582,6 +620,7 @@ export function DataTable<T>({
                             <Button
                                 variant="secondary"
                                 size="sm"
+                                iconOnly
                                 aria-label="Next page"
                                 disabled={currentPage === totalPages}
                                 onClick={() =>

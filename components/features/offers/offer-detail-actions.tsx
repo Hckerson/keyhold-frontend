@@ -2,8 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { statusTone } from "@/lib/data/offer-details";
-import { OFFER_STATUS_LABEL } from "@/components/features/dashboard/offer-row";
+import { OFFER_STATUSES } from "@/lib/config/offer-tones";
 import type { OfferStatus } from "@/lib/types";
 
 export interface OfferDetailActionsProps {
@@ -27,8 +26,8 @@ export function OfferDetailActions({
 }: OfferDetailActionsProps) {
     return (
         <div className="flex flex-wrap items-center gap-2">
-            <StatusBadge tone={statusTone[status]}>
-                {OFFER_STATUS_LABEL[status]}
+            <StatusBadge tone={OFFER_STATUSES[status].tone}>
+                {OFFER_STATUSES[status].label}
             </StatusBadge>
             <Button
                 variant="primary"

@@ -90,7 +90,7 @@ export function ListingGallery({ images, title, badge }: ListingGalleryProps) {
                 </div>
             </div>
 
-            <ul className="flex gap-2 overflow-x-auto pb-1">
+            <ul className="scroll-x flex gap-2 pb-1">
                 {images.map((image, position) => (
                     <li key={image + position}>
                         <button

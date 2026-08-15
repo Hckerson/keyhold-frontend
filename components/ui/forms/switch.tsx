@@ -9,14 +9,15 @@ const Switch = forwardRef<HTMLInputElement, SwitchProps>(
             <input
                 ref={ref}
                 type="checkbox"
-                className="hidden"
+                role="switch"
+                className="peer sr-only"
                 checked={checked ?? false}
                 onChange={onChange ?? (() => {})}
                 {...props}
             />
             <div
                 className={cn(
-                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200",
+                    "peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-background relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2",
                     checked ? "bg-accent" : "bg-border",
                 )}
             >

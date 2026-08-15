@@ -1,15 +1,17 @@
 import { cn } from "@/lib/utils";
+import type { ChartTone } from "@/lib/config/chart-tones";
 
 export interface ProgressBarProps {
     value: number;
-    tone?: "accent" | "success" | "warning" | "info" | "highlight" | "neutral";
+    tone?: ChartTone;
     className?: string;
 }
 
-const toneFill = {
+const toneFill: Record<ChartTone, string> = {
     accent: "bg-accent",
     success: "bg-success",
     warning: "bg-warning",
+    error: "bg-error",
     info: "bg-info",
     highlight: "bg-highlight",
     neutral: "bg-text-muted/50",

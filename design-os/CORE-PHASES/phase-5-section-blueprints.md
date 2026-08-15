@@ -1,6 +1,6 @@
 # Phase 5: Section Blueprints
 
-**Real Estate Platform Design Operating System** - 55 reusable section patterns
+**Real Estate Platform Design Operating System** - 70 reusable section patterns
 
 ---
 
@@ -1071,4 +1071,339 @@ Reusable sections that compose pages. Each includes:
 
 ---
 
-**Phase 5 Complete. All 55 sections specified with content, layout, interactions, and responsive behavior. These compose all 21 pages.**
+## ADMIN SECTIONS (15)
+
+### Section 56: Admin Console Shell
+
+**Used on:** Every /admin route
+
+**Content Model:**
+
+- Brand block: "Admin" / "Console"
+- Six nav groups, each with a label and items — Overview (Dashboard), Marketplace (Listings, Users), Finance (Transactions, Payments), Insights (Reports), Trust & Safety (Verifications), System (Settings)
+- Nav item: icon, label, description, optional count badge
+- Topbar: breadcrumb from route registry, user menu
+- Signed-in user, logout action
+
+**Layout:** Full-height flex — fixed sidebar, scrollable main column with topbar pinned above a contained content area
+
+**Interactions:**
+
+- Active route highlighted in the sidebar
+- Badge count on Verifications reflects pending requests
+- Logout clears auth state and token, redirects to /
+
+**Responsive:**
+
+- Mobile: Sidebar collapses to a drawer
+- Desktop: Sidebar persistent, content in a max-width container
+
+**Accessibility:** Nav landmark with grouped lists, current page marked, logout is a real button
+
+---
+
+### Section 57: Volume Metrics Grid
+
+**Used on:** Admin overview
+
+**Content Model:**
+
+- 4 stat items: label, value, icon, change, trend direction, caption, sparkline series, target href
+- One item marked featured
+
+**Layout:** Responsive grid, 4 columns at desktop
+
+**Interactions:**
+
+- Whole card is a link to its detail route
+- Trend chip colours by direction
+
+**Responsive:** 1 / 2 / 4 columns
+
+**Accessibility:** Each card is a single link with an accessible name combining label and value; sparkline is decorative
+
+---
+
+### Section 58: Revenue Trend Panel
+
+**Used on:** Admin overview, admin payments
+
+**Content Model:**
+
+- Panel title, description, optional action button
+- Column chart: x-axis month, one or more value series with tones
+- Value formatting: divisor, prefix, suffix
+
+**Layout:** Panel wrapper with fixed-height chart
+
+**Interactions:**
+
+- Hover a column → value tooltip
+- Action button navigates to the related finance route
+
+**Responsive:** Chart scales to container; labels thin out on narrow widths
+
+**Accessibility:** Chart has a text summary; series names exposed in the legend
+
+---
+
+### Section 59: Revenue Breakdown Panel
+
+**Used on:** Admin overview
+
+**Content Model:**
+
+- Headline metric: label + value (commissions YTD)
+- Supporting metrics: GMV, take rate, average commission per deal
+
+**Layout:** Headline above a stacked list of label/value rows
+
+**Interactions:** Static display
+
+**Responsive:** Full width in the panel rail
+
+**Accessibility:** Rendered as a description list
+
+---
+
+### Section 60: System Health List
+
+**Used on:** Admin overview
+
+**Content Model:**
+
+- Per system: label, icon, uptime, error rate, state (operational / degraded)
+- Panel description carries overall uptime and error rate over 24h
+
+**Layout:** One row per system, metrics right-aligned
+
+**Interactions:** State drives dot tone and text colour
+
+**Responsive:** Metrics wrap under the label on narrow widths
+
+**Accessibility:** State conveyed by text, not colour alone
+
+---
+
+### Section 61: System Alert List
+
+**Used on:** Admin overview
+
+**Content Model:**
+
+- Per alert: title, description, relative time, tone (info / warning / error)
+- Panel header shows the alert count
+
+**Layout:** Stacked rows separated by the quiet divider token
+
+**Interactions:** Tone sets the leading indicator
+
+**Responsive:** Time stamp moves below the title on mobile
+
+**Accessibility:** Alerts are a list; tone is paired with a text label
+
+---
+
+### Section 62: Moderation Queue Summary
+
+**Used on:** Admin overview
+
+**Content Model:**
+
+- Per row: label, count, icon, tone (warning / error), target href
+- Rows: pending verifications, listings awaiting review, flagged content
+
+**Layout:** Compact row list inside a panel
+
+**Interactions:** Click a row → the matching moderation route
+
+**Responsive:** Full width in the panel rail
+
+**Accessibility:** Each row is a link naming both the count and the queue
+
+---
+
+### Section 63: Moderation Listings Table
+
+**Used on:** Admin listings
+
+**Extends:** Section 15 (Listing Moderation Queue)
+
+**Content Model:**
+
+- Per listing: id, address, cover photo, price, agent (name, email, phone), submitted date, description, image set, compliance checks, status, flag reason, moderator note, changes-requested flag
+- Compliance check: label + state (pass / warn / fail)
+- Status: pending / flagged / approved / rejected
+
+**Layout:** Sortable, selectable, paginated table with a totals footer and a large side panel for row detail
+
+**Interactions:**
+
+- Filter pills switch the visible set and reset selection
+- Sort by any column; default sort by status
+- Open a row → detail panel with photos, description, flag reason, compliance checklist, agent contact
+- Row and panel actions: Approve, Request Changes, Reject
+- Select rows → bulk action bar with the same three actions
+- Flagged and rejected rows carry a tinted background
+
+**Responsive:** Horizontal scroll inside the table container; detail panel goes full-screen on mobile
+
+**Accessibility:** Table caption describes every column; action columns have screen-reader-only headers
+
+---
+
+### Section 64: Moderation Decision Modal
+
+**Used on:** Admin listings
+
+**Content Model:**
+
+- Mode: reject or request-changes
+- Target ids (single row or bulk selection)
+- Required note field
+
+**Layout:** Centred dialog, note field above the action row
+
+**Interactions:**
+
+- Submit stays disabled until the note is non-empty
+- Reject → status rejected, note attached
+- Request Changes → status returns to pending, flagged as changes requested
+- Close or submit clears the note and the selection for affected rows
+
+**Responsive:** Full width with margin on mobile
+
+**Accessibility:** Focus trapped, labelled dialog, Escape closes, note field has a visible label
+
+---
+
+### Section 65: User Management Table
+
+**Used on:** Admin users
+
+**Content Model:**
+
+- Per user: id, name, email, role (buyer / agent / admin), tier (standard / premium / platinum), join date, status (active / suspended / inactive), transaction count
+
+**Layout:** Sortable, selectable, paginated table
+
+**Interactions:**
+
+- Sort by any column; default sort by name ascending
+- Role rendered as a colour-coded chip, tier as coloured text ranked for sorting
+- Row action suspends or reactivates
+- Bulk action bar: Reactivate, Suspend
+- Suspended rows carry an error-tinted background
+
+**Responsive:** Horizontal scroll inside the table container
+
+**Accessibility:** Caption names every column; status is a badge with text
+
+---
+
+### Section 66: Transaction Ledger Table
+
+**Used on:** Admin transactions
+
+**Content Model:**
+
+- Per transaction: id, property address, buyer, agent, sale price, commission (price × platform rate), initiated date, status (pending / escrow / completed)
+
+**Layout:** Sortable table with a totals footer for price and commission
+
+**Interactions:**
+
+- Sort by any column
+- Commission rendered as an accent chip
+- Status tints the initiated date
+- Row actions open the deal
+
+**Responsive:** Horizontal scroll inside the table container
+
+**Accessibility:** Footer totals are announced as part of the table; numeric columns use tabular figures
+
+---
+
+### Section 67: Verification Request List
+
+**Used on:** Admin verifications
+
+**Content Model:**
+
+- Per request: id, name, email, current tier, requested tier, status (pending / approved / rejected), submitted date, document count
+
+**Layout:** Card per request — identity block left, status badge and actions right
+
+**Interactions:**
+
+- Actions vary by status: pending → Approve / Review Docs / Reject; approved → View Details / Revoke; rejected → View Reason / Allow Resubmit
+- Decision moves the card to its new status and updates the header counts and the sidebar badge
+
+**Responsive:** Actions wrap below the identity block on mobile
+
+**Accessibility:** Status is text plus tone; each action names the subject
+
+---
+
+### Section 68: Platform Config Panel
+
+**Used on:** Admin settings
+
+**Content Model:**
+
+- Panel title and description
+- Fields: name, label, placeholder, optional type, optional prefix or suffix
+- Current values keyed by field name
+
+**Layout:** Panel wrapping a two-column field grid
+
+**Interactions:**
+
+- Editing any field clears the saved state
+- Submit is owned by the page header button via form id
+- Reset restores stored values
+
+**Responsive:** Single column on mobile
+
+**Accessibility:** Every field has a real label; prefix and suffix are not the only unit indicator
+
+---
+
+### Section 69: Policy Toggle Panel
+
+**Used on:** Admin settings
+
+**Content Model:**
+
+- Panel title and description
+- Toggles: title, description, default state
+
+**Layout:** Stacked rows, switch right-aligned
+
+**Interactions:** Toggle flips immediately; description explains the consequence
+
+**Responsive:** Description wraps under the title on mobile
+
+**Accessibility:** Switch role with the title as its accessible name and the description as help text
+
+---
+
+### Section 70: Maintenance Panel
+
+**Used on:** Admin settings
+
+**Content Model:**
+
+- Operational and destructive maintenance actions
+
+**Layout:** Panel placed last, visually separated from ordinary configuration
+
+**Interactions:** Destructive actions require confirmation before running
+
+**Responsive:** Actions stack on mobile
+
+**Accessibility:** Destructive actions use the danger variant and state their effect in the label
+
+---
+
+**Phase 5 Complete. All 70 sections specified with content, layout, interactions, and responsive behavior. These compose all 27 pages.**

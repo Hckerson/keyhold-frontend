@@ -51,7 +51,7 @@ const FOOTER_ENTRIES = [
         action: "Sign in",
     },
     {
-        label: "How we handle data",
+        label: "Your data",
         href: AUTH_ROUTES.privacy,
         action: "Privacy policy",
     },

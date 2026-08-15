@@ -1,237 +1,264 @@
 import {
-    Users,
-    Home,
     ArrowLeftRight,
-    Wallet,
-    ShieldCheck,
-    Flag,
     ClipboardCheck,
-    Database,
-    Server,
-    HardDrive,
-    BarChart3,
-    type LucideIcon,
+    Home,
+    Users,
+    Wallet,
 } from "lucide-react";
 import type { ColumnSeries } from "@/components/ui/charts/column-chart";
-import type { DotTone } from "@/components/patterns/status-dot";
-import { PENDING_VERIFICATIONS } from "@/lib/config/admin-nav";
-import type { QuickAction, StatItem } from "@/lib/types";
+import type { StatDatum } from "@/components/patterns/stat-cell";
+import {
+    QUEUE_SEED_BACKLOG,
+    SIGNAL_SEVERITIES,
+} from "@/lib/config/admin-tones";
+import type {
+    MetricItem,
+    ModerationQueueLoad,
+    PlatformSignal,
+    ServiceHealth,
+} from "@/lib/types";
+import {
+    AVG_COMMISSION_PER_DEAL,
+    CLOSED_DEALS_30D,
+    COMMISSIONS_30D,
+    COMMISSIONS_YTD,
+    GMV_30D,
+    GMV_YTD,
+    TAKE_RATE_LABEL,
+} from "@/lib/data/admin-platform";
+import { ACTIVE_LISTINGS } from "@/lib/data/admin-reports";
+import { TOTAL_USERS } from "@/lib/data/admin-users";
+import {
+    formatCount,
+    formatMillions,
+    formatThousands,
+    formatUsd,
+} from "@/lib/utils";
 
-export type QueueTone = "warning" | "error";
-export type AlertTone = "info" | "error" | "warning";
-export type SystemState = "operational" | "degraded";
-
-export interface ModerationQueueItem {
-    label: string;
-    value: number;
-    href: string;
-    tone: QueueTone;
-    icon: LucideIcon;
-}
-
-export interface SystemAlert {
-    id: number;
-    title: string;
-    description: string;
-    time: string;
-    tone: AlertTone;
-}
-
-export interface SystemHealth {
-    label: string;
-    icon: LucideIcon;
-    uptime: string;
-    errorRate: string;
-    state: SystemState;
-}
-
-export interface RevenueMetric {
-    label: string;
-    value: string;
-}
-
-export interface RevenueBreakdown {
-    headline: RevenueMetric;
-    metrics: RevenueMetric[];
-}
-
-export const volumeMetrics: StatItem[] = [
+export const MODERATION_LOAD: ModerationQueueLoad[] = [
     {
-        label: "Total Users",
-        value: "1,247",
-        icon: Users,
-        href: "/admin/users",
-        change: "+6.2%",
-        trend: "up",
-        caption: "1,102 active this month",
-        series: [980, 1015, 1060, 1108, 1174, 1247],
+        id: "verifications",
+        backlog: QUEUE_SEED_BACKLOG.verifications,
+        capacity: 12,
+        oldestMinutes: 190,
     },
     {
-        label: "Active Listings",
-        value: 342,
-        icon: Home,
-        href: "/admin/listings",
-        change: "+18%",
-        trend: "up",
-        caption: "12 awaiting review",
-        series: [242, 258, 279, 298, 320, 342],
+        id: "listings",
+        backlog: QUEUE_SEED_BACKLOG.listings,
+        capacity: 16,
+        oldestMinutes: 640,
     },
     {
-        label: "Transactions (30d)",
-        value: 128,
-        icon: ArrowLeftRight,
-        href: "/admin/transactions",
-        change: "+9.4%",
-        trend: "up",
-        caption: "41 in escrow",
-        series: [92, 101, 96, 112, 117, 128],
+        id: "flags",
+        backlog: QUEUE_SEED_BACKLOG.flags,
+        capacity: 6,
+        oldestMinutes: 95,
     },
     {
-        label: "GMV (30d)",
-        value: "$312M",
-        icon: Wallet,
-        href: "/admin/reports",
-        change: "+22%",
-        trend: "up",
-        caption: "$7.8M commissions",
-        series: [214, 231, 248, 267, 289, 312],
-        featured: true,
+        id: "disputes",
+        backlog: QUEUE_SEED_BACKLOG.disputes,
+        capacity: 4,
+        oldestMinutes: 2_760,
     },
 ];
 
-export const revenueMonths: Record<string, string | number>[] = [
+export const OPEN_BACKLOG = MODERATION_LOAD.reduce(
+    (total, queue) => total + queue.backlog,
+    0,
+);
+
+export const queueShare = (queue: ModerationQueueLoad) =>
+    Math.round((queue.backlog / queue.capacity) * 100);
+
+export const PLATFORM_STATS: StatDatum[] = [
+    {
+        id: "members",
+        icon: Users,
+        label: "Members",
+        value: formatCount(TOTAL_USERS),
+        tone: "accent",
+        href: "/admin/users",
+    },
+    {
+        id: "listings",
+        icon: Home,
+        label: "Live listings",
+        value: formatCount(ACTIVE_LISTINGS),
+        tone: "info",
+        href: "/admin/listings",
+    },
+    {
+        id: "deals",
+        icon: ArrowLeftRight,
+        label: "Deals 30d",
+        value: formatCount(CLOSED_DEALS_30D),
+        tone: "highlight",
+        href: "/admin/transactions",
+    },
+    {
+        id: "gmv",
+        icon: Wallet,
+        label: "GMV 30d",
+        value: formatMillions(GMV_30D, 0),
+        tone: "success",
+        href: "/admin/reports",
+    },
+    {
+        id: "backlog",
+        icon: ClipboardCheck,
+        label: "Open queue",
+        value: formatCount(OPEN_BACKLOG),
+        tone: "warning",
+        href: "/admin/verifications",
+    },
+];
+
+export const GMV_MONTHS: Record<string, string | number>[] = [
     { month: "Feb", gmv: 231_000_000 },
     { month: "Mar", gmv: 248_000_000 },
     { month: "Apr", gmv: 267_000_000 },
     { month: "May", gmv: 289_000_000 },
     { month: "Jun", gmv: 304_000_000 },
-    { month: "Jul", gmv: 312_000_000 },
+    { month: "Jul", gmv: GMV_30D },
 ];
 
-export const revenueSeries: ColumnSeries[] = [
+export const GMV_SERIES: ColumnSeries[] = [
     { key: "gmv", name: "Gross merchandise value", tone: "accent" },
 ];
 
-export const revenueBreakdown: RevenueBreakdown = {
-    headline: { label: "Commissions (YTD)", value: "$21.2M" },
-    metrics: [
-        { label: "GMV (YTD)", value: "$847M" },
-        { label: "Platform take rate", value: "2.50%" },
-        { label: "Avg commission per deal", value: "$61.8K" },
-    ],
-};
+export const GMV_GROWTH_LABEL = "+22% vs prior month";
 
-export const moderationQueue: ModerationQueueItem[] = [
+export const REVENUE_METRICS: MetricItem[] = [
+    { label: "Commissions 30d", value: formatMillions(COMMISSIONS_30D, 1) },
+    { label: "GMV year to date", value: formatMillions(GMV_YTD, 0) },
+    { label: "Take rate", value: TAKE_RATE_LABEL },
     {
-        label: "Pending verifications",
-        value: PENDING_VERIFICATIONS,
+        label: "Avg per deal",
+        value: formatThousands(AVG_COMMISSION_PER_DEAL, 1),
+    },
+];
+
+export const COMMISSIONS_YTD_LABEL = formatMillions(COMMISSIONS_YTD, 1);
+
+export const PLATFORM_SIGNALS: PlatformSignal[] = [
+    {
+        id: "sig-escrow-8m",
+        severity: "critical",
+        domain: "transaction",
+        title: "Escrow confirmation overdue",
+        subject: "Ravenswood Estate",
+        exposure: 8_500_000,
+        ageMinutes: 245,
+        href: "/admin/transactions",
+    },
+    {
+        id: "sig-explicit-image",
+        severity: "critical",
+        domain: "moderation",
+        title: "Explicit image reported",
+        subject: "Listing #4521",
+        ageMinutes: 118,
+        href: "/admin/listings",
+    },
+    {
+        id: "sig-payout-retry",
+        severity: "elevated",
+        domain: "payout",
+        title: "Payout retried twice",
+        subject: "Marcus Webb",
+        exposure: 184_000,
+        ageMinutes: 52,
+        href: "/admin/payments",
+    },
+    {
+        id: "sig-platinum-tier",
+        severity: "elevated",
+        domain: "verification",
+        title: "Platinum tier requested",
+        subject: "Robert Chen",
+        ageMinutes: 64,
         href: "/admin/verifications",
-        tone: "warning",
-        icon: ShieldCheck,
     },
     {
-        label: "Listings awaiting review",
-        value: 12,
-        href: "/admin/listings",
-        tone: "warning",
-        icon: ClipboardCheck,
+        id: "sig-storage-latency",
+        severity: "elevated",
+        domain: "infrastructure",
+        title: "File storage latency spike",
+        subject: "eu-west-1",
+        ageMinutes: 26,
+        href: "/admin/settings",
     },
     {
-        label: "Flagged content",
-        value: 3,
-        href: "/admin/listings",
-        tone: "error",
-        icon: Flag,
-    },
-];
-
-export const alerts: SystemAlert[] = [
-    {
-        id: 1,
-        title: "High-Value Agent Verification",
-        description:
-            "Robert Chen (Agent) requesting Platinum tier verification",
-        time: "1 hour ago",
-        tone: "info",
-    },
-    {
-        id: 2,
-        title: "Inappropriate Listing Image",
-        description: "Listing #4521 flagged for explicit content",
-        time: "2 hours ago",
-        tone: "error",
-    },
-    {
-        id: 3,
-        title: "Large Transaction Alert",
-        description: "$8.5M transaction pending escrow confirmation",
-        time: "4 hours ago",
-        tone: "warning",
-    },
-];
-
-export const quickActions: QuickAction[] = [
-    {
-        label: "Manage Users",
-        href: "/admin/users",
-        icon: Users,
-        description: "Members & roles",
-    },
-    {
-        label: "Review Listings",
-        href: "/admin/listings",
-        icon: Home,
-        description: "Moderate listings",
-    },
-    {
-        label: "Process Verifications",
+        id: "sig-licence-expiry",
+        severity: "routine",
+        domain: "verification",
+        title: "Licence expires in 14 days",
+        subject: "Elena Vasquez",
+        ageMinutes: 1_560,
         href: "/admin/verifications",
-        icon: ShieldCheck,
-        description: `${PENDING_VERIFICATIONS} pending`,
-    },
-    {
-        label: "View Reports",
-        href: "/admin/reports",
-        icon: BarChart3,
-        description: "Platform analytics",
     },
 ];
 
-export const OVERALL_UPTIME = "99.92%";
-export const OVERALL_ERROR_RATE = "0.09%";
+const CRITICAL_SIGNALS = PLATFORM_SIGNALS.filter(
+    (signal) => SIGNAL_SEVERITIES[signal.severity].rank > 1,
+).length;
 
-export const systems: SystemHealth[] = [
+const SIGNAL_EXPOSURE = PLATFORM_SIGNALS.reduce(
+    (total, signal) => total + (signal.exposure ?? 0),
+    0,
+);
+
+export const SIGNAL_EXPOSURE_LABEL = formatUsd(SIGNAL_EXPOSURE);
+
+export const SERVICES: ServiceHealth[] = [
     {
+        id: "database",
         label: "Database",
-        icon: Database,
-        uptime: "99.99%",
-        errorRate: "0.01%",
         state: "operational",
+        uptime: 99.99,
+        errorRate: 0.01,
+        latencyMs: 38,
     },
     {
-        label: "API Gateway",
-        icon: Server,
-        uptime: "99.96%",
-        errorRate: "0.04%",
+        id: "api",
+        label: "API gateway",
         state: "operational",
+        uptime: 99.96,
+        errorRate: 0.04,
+        latencyMs: 112,
     },
     {
-        label: "File Storage",
-        icon: HardDrive,
-        uptime: "99.82%",
-        errorRate: "0.21%",
+        id: "search",
+        label: "Search index",
+        state: "operational",
+        uptime: 99.94,
+        errorRate: 0.06,
+        latencyMs: 187,
+    },
+    {
+        id: "storage",
+        label: "File storage",
         state: "degraded",
+        uptime: 99.82,
+        errorRate: 0.21,
+        latencyMs: 640,
+    },
+    {
+        id: "payments",
+        label: "Payments webhook",
+        state: "operational",
+        uptime: 99.91,
+        errorRate: 0.09,
+        latencyMs: 296,
     },
 ];
 
-export const systemState: Record<
-    SystemState,
-    { label: string; tone: DotTone; text: string }
-> = {
-    operational: {
-        label: "Operational",
-        tone: "success",
-        text: "text-success",
-    },
-    degraded: { label: "Degraded", tone: "warning", text: "text-warning" },
-};
+const averageUptime =
+    SERVICES.reduce((total, service) => total + service.uptime, 0) /
+    SERVICES.length;
+
+export const SERVICE_SUMMARY = `Uptime ${averageUptime.toFixed(2)}% · ${
+    SERVICES.filter((service) => service.state !== "operational").length
+} degraded (24h)`;
+
+export const OVERVIEW_SUMMARY = `${CRITICAL_SIGNALS} critical · ${OPEN_BACKLOG} queued · ${SIGNAL_EXPOSURE_LABEL} exposed`;

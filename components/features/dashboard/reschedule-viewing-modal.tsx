@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/forms/input";
+import { FormField } from "@/components/ui/forms/form-field";
 import {
     Modal,
     ModalHeader,
@@ -9,12 +9,15 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import type { Viewing } from "@/lib/types";
+import type { RescheduleDraft, Viewing } from "@/lib/types";
 
-export interface RescheduleDraft {
-    date: string;
-    time: string;
-}
+const MODAL_TITLE = "Reschedule Viewing";
+const MODAL_HINT = "The agent reconfirms once you propose a new slot.";
+const DATE_LABEL = "New date";
+const TIME_LABEL = "New time";
+const TIME_PLACEHOLDER = "3:00 PM";
+const CANCEL_ACTION = "Keep current slot";
+const CONFIRM_ACTION = "Propose Change";
 
 export interface RescheduleViewingModalProps {
     viewing?: Viewing;
@@ -38,38 +41,57 @@ export function RescheduleViewingModal({
                 if (!open) onClose();
             }}
         >
-            <ModalHeader>
-                <ModalTitle>Reschedule Viewing</ModalTitle>
+            <ModalHeader className="p-4">
+                <ModalTitle>{MODAL_TITLE}</ModalTitle>
             </ModalHeader>
-            <ModalBody className="space-y-3">
-                <p className="text-text-secondary text-xs">
-                    {viewing?.address}
-                </p>
-                <Input
+            <ModalBody className="space-y-3 p-4">
+                <div>
+                    <p className="text-text text-xs font-semibold">
+                        {viewing?.address}
+                    </p>
+                    <p className="text-text-secondary mt-0.5 text-xs">
+                        {MODAL_HINT}
+                    </p>
+                </div>
+                <FormField
                     id="reschedule-date"
-                    label="New date"
+                    name="date"
+                    label={DATE_LABEL}
                     type="date"
+                    variant="numeric"
                     value={draft.date}
                     onChange={(event) =>
                         onDraftChange({ ...draft, date: event.target.value })
                     }
                 />
-                <Input
+                <FormField
                     id="reschedule-time"
-                    label="New time"
+                    name="time"
+                    label={TIME_LABEL}
+                    variant="numeric"
                     value={draft.time}
-                    placeholder="3:00 PM"
+                    placeholder={TIME_PLACEHOLDER}
                     onChange={(event) =>
                         onDraftChange({ ...draft, time: event.target.value })
                     }
                 />
             </ModalBody>
-            <ModalFooter>
-                <Button variant="secondary" size="sm" onClick={onClose}>
-                    Cancel
+            <ModalFooter className="p-4">
+                <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={onClose}
+                >
+                    {CANCEL_ACTION}
                 </Button>
-                <Button variant="primary" size="sm" onClick={onConfirm}>
-                    Confirm Change
+                <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={onConfirm}
+                >
+                    {CONFIRM_ACTION}
                 </Button>
             </ModalFooter>
         </Modal>
