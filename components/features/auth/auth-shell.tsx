@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Wordmark } from "@/components/brand/wordmark";
 import { BrandPanel } from "@/components/features/auth/brand-panel";
+import { AuthMotionFrame } from "@/components/features/auth/parts/auth-motion-frame";
 
 export interface AuthShellProps {
     children: ReactNode;
@@ -15,7 +16,7 @@ export function AuthShell({ children }: AuthShellProps) {
                     <div className="mb-10 lg:hidden">
                         <Wordmark />
                     </div>
-                    {children}
+                    <AuthMotionFrame>{children}</AuthMotionFrame>
                 </div>
             </main>
         </div>

@@ -1,3 +1,6 @@
+export { AuthMotionFrame } from "./auth-motion-frame";
+export type { AuthMotionFrameProps } from "./auth-motion-frame";
+
 export { AuthPlane } from "./auth-plane";
 export type { AuthPlaneProps } from "./auth-plane";
 
