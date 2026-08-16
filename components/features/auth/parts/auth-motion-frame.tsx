@@ -1,17 +1,32 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { LazyMotion, MotionConfig, domAnimation } from "motion/react";
+import { useContext, useRef, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { AnimatePresence } from "motion/react";
+
+function FrozenRoute({ children }: { children: ReactNode }) {
+    const context = useContext(LayoutRouterContext);
+    const frozen = useRef(context).current;
+
+    return (
+        <LayoutRouterContext.Provider value={frozen}>
+            {children}
+        </LayoutRouterContext.Provider>
+    );
+}
 
 export interface AuthMotionFrameProps {
     children: ReactNode;
 }
 
 export function AuthMotionFrame({ children }: AuthMotionFrameProps) {
+    const pathname = usePathname();
+
     return (
-        <LazyMotion features={domAnimation} strict>
-            <MotionConfig reducedMotion="user">{children}</MotionConfig>
-        </LazyMotion>
+        <AnimatePresence mode="wait">
+            <FrozenRoute key={pathname}>{children}</FrozenRoute>
+        </AnimatePresence>
     );
 }
 
