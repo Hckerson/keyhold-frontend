@@ -11,12 +11,11 @@ import {
     AuthTitleBlock,
 } from "@/components/features/auth/parts";
 import { ResetDonePanel } from "@/components/features/auth/reset-done-panel";
-import { apiClient } from "@/lib/api/client";
+import { authAPI } from "@/lib/api/auth";
 import {
     RECOVERY_PENDING_ENTRIES,
     RECOVERY_STEP,
 } from "@/lib/config/auth-recovery";
-import { AUTH_ENDPOINTS } from "@/lib/constants";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
     MIN_PASSWORD_LENGTH,
@@ -71,10 +70,7 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
         setFormError(null);
 
         try {
-            await apiClient.post(AUTH_ENDPOINTS.resetPassword, {
-                token,
-                password: parsed.data.password,
-            });
+            await authAPI.resetPassword({ ...parsed.data, token });
             setDone(true);
         } catch (error) {
             setFormError(errorMessage(error, RESET_FAILED));
@@ -84,7 +80,7 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
     };
 
     return (
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" propagate>
             {done ? (
                 <ResetDonePanel key="done" />
             ) : (
