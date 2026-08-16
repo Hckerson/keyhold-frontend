@@ -4,17 +4,21 @@ import { AgeMark } from "@/components/features/shared/age-mark";
 import {
     NEVER_CHANGED_LABEL,
     SECURITY_STATES,
-} from "@/lib/config/agent-settings-tones";
-import type { SecurityControl } from "@/lib/data/agent-account";
+} from "@/lib/config/account-tones";
+import type { SecurityControl } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const LAST_CHANGED_LABEL = "Last changed";
 
-export interface SecurityControlRowProps {
-    control: SecurityControl;
+export interface SecurityControlRowProps<K extends string> {
+    control: SecurityControl<K>;
+    onAction?: (id: K) => void;
 }
 
-export function SecurityControlRow({ control }: SecurityControlRowProps) {
+export function SecurityControlRow<K extends string>({
+    control,
+    onAction,
+}: SecurityControlRowProps<K>) {
     const { label, tone, danger } = SECURITY_STATES[control.state];
 
     return (
@@ -59,6 +63,7 @@ export function SecurityControlRow({ control }: SecurityControlRowProps) {
                 type="button"
                 size="sm"
                 variant={danger ? "outline-danger" : "secondary"}
+                onClick={onAction ? () => onAction(control.id) : undefined}
             >
                 {control.action}
             </Button>

@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type InputHTMLAttributes, type ReactNode } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { cn } from "@/lib/utils";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import { AUTH_COLLAPSE_MOTION } from "@/lib/config/auth-motion";
 
 export interface AuthFieldProps extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
@@ -98,11 +100,19 @@ export function AuthField({
                 )}
             </div>
 
-            {error && (
-                <p id={errorId} className="text-error mt-1.5 text-xs">
-                    {error}
-                </p>
-            )}
+            <AnimatePresence initial={false}>
+                {error && (
+                    <m.div
+                        key="error"
+                        {...AUTH_COLLAPSE_MOTION}
+                        className="overflow-hidden"
+                    >
+                        <p id={errorId} className="text-error mt-1.5 text-xs">
+                            {error}
+                        </p>
+                    </m.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

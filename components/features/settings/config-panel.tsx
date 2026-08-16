@@ -1,6 +1,6 @@
 "use client";
 
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import { Panel } from "@/components/ui/panel";
 import {
     ConfigFieldGrid,
@@ -13,6 +13,7 @@ export interface ConfigPanelProps<K extends string> {
     fields: readonly ConfigField<K>[];
     values: Record<K, string>;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    lead?: ReactNode;
 }
 
 export function ConfigPanel<K extends string>({
@@ -21,9 +22,11 @@ export function ConfigPanel<K extends string>({
     fields,
     values,
     onChange,
+    lead,
 }: ConfigPanelProps<K>) {
     return (
         <Panel title={title} description={description}>
+            {lead}
             <div className="grid gap-3 sm:grid-cols-2">
                 <ConfigFieldGrid
                     fields={fields}

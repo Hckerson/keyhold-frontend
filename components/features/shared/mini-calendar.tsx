@@ -29,6 +29,9 @@ export const firstWeekdayOfMonth = (year: number, month: number) =>
 export const monthLabel = (year: number, month: number) =>
     `${MONTH_LABELS[month]} ${year}`;
 
+export const dayLabel = (year: number, month: number, day: number) =>
+    `${MONTH_LABELS[month]} ${day}, ${year}`;
+
 export const shiftMonth = (year: number, month: number, delta: number) => {
     const next = new Date(year, month + delta, 1);
     return { year: next.getFullYear(), month: next.getMonth() };

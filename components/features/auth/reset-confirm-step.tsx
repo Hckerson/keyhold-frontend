@@ -1,17 +1,22 @@
 "use client";
 
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { AnimatePresence } from "motion/react";
 import {
     AuthField,
     AuthFormError,
     AuthFormHeader,
-    AuthNotice,
     AuthPlane,
     AuthSubmit,
     AuthTitleBlock,
 } from "@/components/features/auth/parts";
+import { ResetDonePanel } from "@/components/features/auth/reset-done-panel";
 import { apiClient } from "@/lib/api/client";
-import { AUTH_ENDPOINTS, AUTH_ROUTES } from "@/lib/constants";
+import {
+    RECOVERY_PENDING_ENTRIES,
+    RECOVERY_STEP,
+} from "@/lib/config/auth-recovery";
+import { AUTH_ENDPOINTS } from "@/lib/constants";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
     MIN_PASSWORD_LENGTH,
@@ -25,29 +30,6 @@ const RESET_FAILED =
     "We couldn't reset your password. The link may have expired — request a new one.";
 
 const NEW_PASSWORD_VALUES = { password: "", confirmPassword: "" };
-
-const RECOVERY_STEP = { current: 2, total: 2 };
-
-const DONE_ENTRIES = [
-    {
-        label: "Ready when you are",
-        href: AUTH_ROUTES.login,
-        action: "Go to sign in",
-    },
-];
-
-const PENDING_ENTRIES = [
-    {
-        label: "Link expired",
-        href: AUTH_ROUTES.resetPassword,
-        action: "Request a new one",
-    },
-    {
-        label: "Remembered it",
-        href: AUTH_ROUTES.login,
-        action: "Back to sign in",
-    },
-];
 
 export interface ResetConfirmStepProps {
     token: string;
@@ -101,80 +83,67 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
         }
     };
 
-    if (done) {
-        return (
-            <AuthPlane>
-                <AuthFormHeader
-                    kicker="Recovery complete"
-                    title="Password updated"
-                    description="Your new password is active. Sign in to pick up where you left off."
-                    step={RECOVERY_STEP}
-                />
-                <AuthNotice
-                    tone="success"
-                    title="All set"
-                    description="You can now sign in with your new password."
-                />
-                <AuthTitleBlock entries={DONE_ENTRIES} />
-            </AuthPlane>
-        );
-    }
-
     return (
-        <AuthPlane>
-            <AuthFormHeader
-                kicker="New credentials"
-                title="Choose a new password"
-                description={`Pick something you haven't used before, at least ${MIN_PASSWORD_LENGTH} characters long.`}
-                step={RECOVERY_STEP}
-            />
-
-            <AuthFormError title="Reset failed" message={formError} />
-
-            <form
-                onSubmit={(event) => void handleSubmit(event)}
-                noValidate
-                className="flex flex-col gap-4"
-            >
-                <fieldset disabled={pending} className="flex flex-col">
-                    <AuthField
-                        index="01"
-                        label="New password"
-                        name="password"
-                        type="password"
-                        autoComplete="new-password"
-                        autoFocus
-                        placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
-                        value={values.password}
-                        error={errors.password}
-                        onChange={handleChange("password")}
-                        onBlur={handleBlur("password")}
+        <AnimatePresence mode="wait">
+            {done ? (
+                <ResetDonePanel key="done" />
+            ) : (
+                <AuthPlane key="confirm">
+                    <AuthFormHeader
+                        kicker="New credentials"
+                        title="Choose a new password"
+                        description={`Pick something you haven't used before, at least ${MIN_PASSWORD_LENGTH} characters long.`}
+                        step={RECOVERY_STEP.confirm}
                     />
 
-                    <AuthField
-                        index="02"
-                        label="Confirm new password"
-                        name="confirmPassword"
-                        type="password"
-                        autoComplete="new-password"
-                        placeholder="Repeat your new password"
-                        value={values.confirmPassword}
-                        error={errors.confirmPassword}
-                        onChange={handleChange("confirmPassword")}
-                        onBlur={handleBlur("confirmPassword")}
-                    />
-                </fieldset>
+                    <AuthFormError title="Reset failed" message={formError} />
 
-                <AuthSubmit
-                    label="Update password"
-                    pendingLabel="Updating password"
-                    pending={pending}
-                    disabled={!parsed.success}
-                />
-            </form>
+                    <form
+                        onSubmit={(event) => void handleSubmit(event)}
+                        noValidate
+                        className="flex flex-col gap-4"
+                    >
+                        <fieldset disabled={pending} className="flex flex-col">
+                            <AuthField
+                                index="01"
+                                label="New password"
+                                name="password"
+                                type="password"
+                                autoComplete="new-password"
+                                autoFocus
+                                placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
+                                value={values.password}
+                                error={errors.password}
+                                onChange={handleChange("password")}
+                                onBlur={handleBlur("password")}
+                            />
 
-            <AuthTitleBlock entries={PENDING_ENTRIES} />
-        </AuthPlane>
+                            <AuthField
+                                index="02"
+                                label="Confirm new password"
+                                name="confirmPassword"
+                                type="password"
+                                autoComplete="new-password"
+                                placeholder="Repeat your new password"
+                                value={values.confirmPassword}
+                                error={errors.confirmPassword}
+                                onChange={handleChange("confirmPassword")}
+                                onBlur={handleBlur("confirmPassword")}
+                            />
+                        </fieldset>
+
+                        <AuthSubmit
+                            label="Update password"
+                            pendingLabel="Updating password"
+                            pending={pending}
+                            disabled={!parsed.success}
+                        />
+                    </form>
+
+                    <AuthTitleBlock entries={RECOVERY_PENDING_ENTRIES} />
+                </AuthPlane>
+            )}
+        </AnimatePresence>
     );
 }
 

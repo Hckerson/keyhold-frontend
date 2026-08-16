@@ -1,4 +1,11 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { Children, type ReactNode } from "react";
+import { m } from "motion/react";
+import {
+    AUTH_PLANE_MOTION,
+    AUTH_SECTION_MOTION,
+} from "@/lib/config/auth-motion";
 import { cn } from "@/lib/utils";
 
 const REGISTRATION_MARKS = [
@@ -14,7 +21,13 @@ export interface AuthPlaneProps {
 
 export function AuthPlane({ children }: AuthPlaneProps) {
     return (
-        <div className="border-border bg-background-alt relative rounded-xs border p-4 shadow-sm">
+        <m.div
+            variants={AUTH_PLANE_MOTION}
+            initial="hidden"
+            animate="visible"
+            exit="gone"
+            className="border-border bg-background-alt relative rounded-xs border p-4 shadow-sm"
+        >
             {REGISTRATION_MARKS.map((mark) => (
                 <span
                     key={mark}
@@ -25,8 +38,12 @@ export function AuthPlane({ children }: AuthPlaneProps) {
                     )}
                 />
             ))}
-            <div className="flex flex-col gap-5">{children}</div>
-        </div>
+            <div className="flex flex-col gap-5">
+                {Children.map(children, (child) => (
+                    <m.div variants={AUTH_SECTION_MOTION}>{child}</m.div>
+                ))}
+            </div>
+        </m.div>
     );
 }
 

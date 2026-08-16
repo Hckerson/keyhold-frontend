@@ -1,6 +1,14 @@
-import { Mail, MessageSquare, Smartphone, type LucideIcon } from "lucide-react";
+import {
+    Activity,
+    Mail,
+    MessageSquare,
+    Smartphone,
+    UserRound,
+    type LucideIcon,
+} from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
+import type { CredentialState, PrivacyScope, SecurityState } from "@/lib/types";
 
 export const NOTIFICATION_CHANNEL_KEYS = ["push", "email", "sms"] as const;
 export type NotificationChannel = (typeof NOTIFICATION_CHANNEL_KEYS)[number];
@@ -44,13 +52,6 @@ export const NOTIFICATION_CADENCES: Record<
 
 export const NOTIFICATION_MUTED_LABEL = "Muted";
 
-export const CREDENTIAL_STATE_KEYS = [
-    "verified",
-    "expiring",
-    "missing",
-] as const;
-export type CredentialState = (typeof CREDENTIAL_STATE_KEYS)[number];
-
 export interface CredentialStateMeta {
     label: string;
     tone: DotTone;
@@ -61,13 +62,6 @@ export const CREDENTIAL_STATES: Record<CredentialState, CredentialStateMeta> = {
     expiring: { label: "Expiring", tone: "warning" },
     missing: { label: "Missing", tone: "error" },
 };
-
-export const SECURITY_STATE_KEYS = [
-    "enabled",
-    "recommended",
-    "critical",
-] as const;
-export type SecurityState = (typeof SECURITY_STATE_KEYS)[number];
 
 export interface SecurityStateMeta {
     label: string;
@@ -82,6 +76,21 @@ export const SECURITY_STATES: Record<SecurityState, SecurityStateMeta> = {
 };
 
 export const NEVER_CHANGED_LABEL = "Never";
+
+export interface PrivacyScopeMeta {
+    label: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+}
+
+export const PRIVACY_SCOPES: Record<PrivacyScope, PrivacyScopeMeta> = {
+    profile: { label: "Profile", icon: UserRound, tone: "accent" },
+    activity: { label: "Activity", icon: Activity, tone: "info" },
+    contact: { label: "Contact", icon: Mail, tone: "highlight" },
+};
+
+export const PRIVACY_SHARED_LABEL = "Shared";
+export const PRIVACY_WITHHELD_LABEL = "Private";
 
 interface ToneFloor {
     floor: number;

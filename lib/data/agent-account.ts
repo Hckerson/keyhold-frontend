@@ -10,11 +10,10 @@ import {
 import type { ShareDatum } from "@/components/patterns/share-row";
 import {
     signalTone,
-    type CredentialState,
     type NotificationCadence,
     type NotificationChannel,
-    type SecurityState,
-} from "@/lib/config/agent-settings-tones";
+} from "@/lib/config/account-tones";
+import type { AccountCredential, SecurityControl } from "@/lib/types";
 import { percentOf, sum } from "@/lib/utils";
 
 export type NotificationRuleId =
@@ -110,15 +109,7 @@ export const areNotificationsDirty = (state: NotificationState) =>
         (rule) => state[rule.id] !== INITIAL_NOTIFICATION_STATE[rule.id],
     );
 
-export interface AgentCredential {
-    id: string;
-    label: string;
-    issuer: string;
-    state: CredentialState;
-    expiresInMinutes: number;
-}
-
-export const AGENT_CREDENTIALS: readonly AgentCredential[] = [
+export const AGENT_CREDENTIALS: readonly AccountCredential[] = [
     {
         id: "dre-license",
         label: "DRE License",
@@ -154,15 +145,6 @@ export const CREDENTIAL_COUNT = AGENT_CREDENTIALS.length;
 export const verifiedCredentialCount = AGENT_CREDENTIALS.filter(
     (credential) => credential.state === "verified",
 ).length;
-
-export interface SecurityControl {
-    id: string;
-    label: string;
-    caption: string;
-    action: string;
-    state: SecurityState;
-    lastChangedMinutes?: number;
-}
 
 export const SECURITY_CONTROLS: readonly SecurityControl[] = [
     {

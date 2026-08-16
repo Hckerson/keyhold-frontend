@@ -1,5 +1,9 @@
+"use client";
+
+import { AnimatePresence, m } from "motion/react";
 import type { UserRole } from "@/lib/types/auth";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import { AUTH_COLLAPSE_MOTION } from "@/lib/config/auth-motion";
 import { cn } from "@/lib/utils";
 
 export type SignupRole = Extract<UserRole, "BUYER" | "SELLER">;
@@ -118,11 +122,19 @@ export function AuthRoleChoice({
                 })}
             </div>
 
-            {error && (
-                <p id={errorId} className="text-error text-xs">
-                    {error}
-                </p>
-            )}
+            <AnimatePresence initial={false}>
+                {error && (
+                    <m.div
+                        key="error"
+                        {...AUTH_COLLAPSE_MOTION}
+                        className="overflow-hidden"
+                    >
+                        <p id={errorId} className="text-error text-xs">
+                            {error}
+                        </p>
+                    </m.div>
+                )}
+            </AnimatePresence>
         </fieldset>
     );
 }

@@ -1,21 +1,24 @@
-import { CredentialRow } from "@/components/features/agent/credential-row";
-import type { AgentCredential } from "@/lib/data/agent-account";
-
-const TABLE_CAPTION =
-    "Professional credentials by name, issuing body, verification state and time until renewal";
+import { CredentialRow } from "@/components/features/shared/credential-row";
+import type { AccountCredential } from "@/lib/types";
 
 export interface CredentialTableProps {
-    credentials: readonly AgentCredential[];
+    credentials: readonly AccountCredential[];
+    heading: string;
+    caption: string;
 }
 
-export function CredentialTable({ credentials }: CredentialTableProps) {
+export function CredentialTable({
+    credentials,
+    heading,
+    caption,
+}: CredentialTableProps) {
     return (
         <table className="table-flush w-full min-w-lg table-fixed">
-            <caption className="sr-only">{TABLE_CAPTION}</caption>
+            <caption className="sr-only">{caption}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">
                     <th scope="col" className="micro-label text-left">
-                        Credential
+                        {heading}
                     </th>
                     <th scope="col" className="micro-label w-36 pl-3 text-left">
                         Issuer
