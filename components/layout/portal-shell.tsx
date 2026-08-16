@@ -5,8 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Sidebar, type SidebarProps } from "@/components/layout/sidebar";
 import { Topbar, type TopbarProps } from "@/components/layout/topbar";
-import { useAuthStore } from "@/lib/stores/auth-store";
-import { deleteCookie } from "@/lib/utils/cookies";
+import { useSession } from "@/lib/hooks/use-session";
 
 export interface PortalShellProps
     extends
@@ -26,15 +25,13 @@ export function PortalShell({
 }: PortalShellProps) {
     const router = useRouter();
     const pathname = usePathname();
-    const user = useAuthStore((state) => state.user);
-    const clearAuth = useAuthStore((state) => state.clearAuth);
+    const { user, logout } = useSession();
     const [navOpen, setNavOpen] = useState(false);
 
     useEffect(() => setNavOpen(false), [pathname]);
 
     const handleLogout = () => {
-        clearAuth();
-        deleteCookie("access_token");
+        logout();
         router.push("/");
     };
 
