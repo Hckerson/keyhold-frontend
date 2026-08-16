@@ -13,10 +13,13 @@ import { ListingComparables } from "@/components/sections/listing/listing-compar
 import { ListingEnquiryCard } from "@/components/sections/listing/listing-enquiry-card";
 import { ListingAgentCard } from "@/components/sections/listing/listing-agent-card";
 import { ListingActionBar } from "@/components/sections/listing/listing-action-bar";
-import { TYPE_LABELS } from "@/lib/data/listings";
-import { PROPERTY_STATUS_LABELS } from "@/lib/enums/enums";
-
+import {
+    PROPERTY_STATUS_LABELS,
+    PROPERTY_TYPE_LABELS,
+} from "@/lib/enums/enums";
+import { NEW_LISTING_DAYS } from "@/lib/constants";
 import type { Listing } from "@/lib/types";
+
 interface ListingDetailProps {
     listing: Listing;
     comparables: Listing[];
@@ -66,7 +69,11 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                 <ListingGallery
                     images={listing.images}
                     title={listing.title}
-                    badge={listing.status === "new" ? "New listing" : undefined}
+                    badge={
+                        listing.listedDaysAgo <= NEW_LISTING_DAYS
+                            ? "New listing"
+                            : undefined
+                    }
                 />
 
                 <ListingPriceBar
@@ -75,7 +82,7 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                     address={listing.address}
                     locality={listing.locality}
                     zipcode={listing.zipcode}
-                    typeLabel={TYPE_LABELS[listing.type]}
+                    typeLabel={PROPERTY_TYPE_LABELS[listing.type]}
                     saved={saved}
                     onToggleSave={toggleSave}
                 />

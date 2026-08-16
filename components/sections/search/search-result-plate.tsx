@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { SearchResultLedger } from "@/components/sections/search/search-result-ledger";
-import { TYPE_LABELS, formatPrice } from "@/lib/data/listings";
+import { formatPrice } from "@/lib/data/listings";
+import { PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
 import { PROPERTY_STATUS_LABELS } from "@/lib/enums/enums";
 import type { Listing } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -45,7 +46,7 @@ export function SearchResultPlate({
         <div className="border-border-light bg-background relative z-10 mx-2.5 -mt-7 flex flex-col gap-2 rounded-lg border p-3 shadow-sm">
             <div className="flex items-center justify-between gap-2">
                 <span className="micro-label truncate">
-                    {TYPE_LABELS[listing.type]} ·{" "}
+                    {PROPERTY_TYPE_LABELS[listing.type]} ·{" "}
                     {PROPERTY_STATUS_LABELS[listing.status]}
                 </span>
                 <span
