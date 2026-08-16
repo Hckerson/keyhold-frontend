@@ -364,7 +364,37 @@ export const channelShares = (alerts: Alert[]): ShareDatum[] =>
 export const alertsSummary = (alerts: Alert[]) =>
     `${unreadCount(alerts)} unread · ${formatCompactUsd(valueMoved(alerts))} in price moves`;
 
-export const deliverySummary = (
+export const ALERT_TYPE_COUNT = ALERT_TYPE_KEYS.length;
+
+export const enabledAlertCount = (
+    preferences: Record<AlertType, AlertPreference>,
+) => ALERT_TYPE_KEYS.filter((id) => preferences[id].enabled).length;
+
+export const alertDeliveryCount = (
     preferences: Record<AlertType, AlertPreference>,
 ) =>
-    `${ALERT_TYPE_KEYS.filter((id) => preferences[id].enabled).length} of ${ALERT_TYPE_KEYS.length} signals on`;
+    sum(
+        ALERT_TYPE_KEYS.filter((id) => preferences[id].enabled).map(
+            (id) =>
+                ALERT_CHANNEL_KEYS.filter(
+                    (channel) => preferences[id].channels[channel],
+                ).length,
+        ),
+    );
+
+export const arePreferencesDirty = (
+    preferences: Record<AlertType, AlertPreference>,
+) =>
+    ALERT_TYPE_KEYS.some(
+        (id) =>
+            preferences[id].enabled !== initialPreferences[id].enabled ||
+            ALERT_CHANNEL_KEYS.some(
+                (channel) =>
+                    preferences[id].channels[channel] !==
+                    initialPreferences[id].channels[channel],
+            ),
+    );
+
+export const deliverySummary = (
+    preferences: Record<AlertType, AlertPreference>,
+) => `${enabledAlertCount(preferences)} of ${ALERT_TYPE_COUNT} signals on`;

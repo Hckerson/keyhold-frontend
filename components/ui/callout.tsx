@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -29,30 +30,41 @@ export type CalloutVariant = NonNullable<
 export interface CalloutProps extends VariantProps<typeof calloutVariants> {
     title: string;
     description?: string;
+    action?: ReactNode;
     className?: string;
 }
 
 export function Callout({
     title,
     description,
+    action,
     variant = "neutral",
     className,
 }: CalloutProps) {
     return (
-        <div className={cn(calloutVariants({ variant }), className)}>
-            <p
-                className={cn(
-                    "text-xs font-medium",
-                    titleColor[variant ?? "neutral"],
-                )}
-            >
-                {title}
-            </p>
-            {description && (
-                <p className="text-text-secondary mt-1 text-xs">
-                    {description}
-                </p>
+        <div
+            className={cn(
+                calloutVariants({ variant }),
+                "flex items-center justify-between gap-3",
+                className,
             )}
+        >
+            <div className="min-w-0">
+                <p
+                    className={cn(
+                        "text-xs font-medium",
+                        titleColor[variant ?? "neutral"],
+                    )}
+                >
+                    {title}
+                </p>
+                {description && (
+                    <p className="text-text-secondary mt-1 text-xs">
+                        {description}
+                    </p>
+                )}
+            </div>
+            {action && <div className="shrink-0">{action}</div>}
         </div>
     );
 }

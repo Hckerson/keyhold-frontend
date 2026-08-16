@@ -1,7 +1,7 @@
 import { BadgeCheck, BellRing, Radio, Timer, UserCheck } from "lucide-react";
 import type { ConfigField } from "@/components/patterns/config-field-grid";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import { responseTone, strengthTone } from "@/lib/config/agent-settings-tones";
+import { responseTone, strengthTone } from "@/lib/config/account-tones";
 import {
     CREDENTIAL_COUNT,
     enabledNotificationCount,

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 @import "./tokens.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -137,14 +138,14 @@
     --border-normal: var(--border-widths-normal);
     --border-thick: var(--border-widths-thick);
 
-    --z-base: var(--z-indices-base);
-    --z-dropdown: var(--z-indices-dropdown);
-    --z-sticky: var(--z-indices-sticky);
-    --z-fixed: var(--z-indices-fixed);
-    --z-modal-backdrop: var(--z-indices-modal-backdrop);
-    --z-modal: var(--z-indices-modal);
-    --z-popover: var(--z-indices-popover);
-    --z-tooltip: var(--z-indices-tooltip);
+    --z-index-base: var(--z-indices-base);
+    --z-index-dropdown: var(--z-indices-dropdown);
+    --z-index-sticky: var(--z-indices-sticky);
+    --z-index-fixed: var(--z-indices-fixed);
+    --z-index-modal-backdrop: var(--z-indices-modal-backdrop);
+    --z-index-modal: var(--z-indices-modal);
+    --z-index-popover: var(--z-indices-popover);
+    --z-index-tooltip: var(--z-indices-tooltip);
 }
 
 *,

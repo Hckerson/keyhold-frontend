@@ -1,15 +1,12 @@
 import { StatusBadge } from "@/components/ui/status-badge";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import {
-    CREDENTIAL_STATES,
-    expiryTone,
-} from "@/lib/config/agent-settings-tones";
-import type { AgentCredential } from "@/lib/data/agent-account";
+import { CREDENTIAL_STATES, expiryTone } from "@/lib/config/account-tones";
+import type { AccountCredential } from "@/lib/types";
 
 const UNISSUED_LABEL = "Not issued";
 
 export interface CredentialRowProps {
-    credential: AgentCredential;
+    credential: AccountCredential;
 }
 
 export function CredentialRow({ credential }: CredentialRowProps) {
