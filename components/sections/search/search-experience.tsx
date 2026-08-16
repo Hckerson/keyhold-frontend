@@ -1,10 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AnimatePresence, m } from "motion/react";
 import { SearchHeader } from "@/components/sections/search/search-header";
-import { SearchRail } from "@/components/sections/search/search-rail";
+import { SearchFilterAside } from "@/components/sections/search/search-filter-aside";
 import {
     SearchToolbar,
     type ViewMode,
@@ -15,6 +14,7 @@ import { SearchResultsList } from "@/components/sections/search/search-results-l
 import { SearchEmpty } from "@/components/sections/search/search-empty";
 import { SearchActiveFilters } from "@/components/sections/search/search-active-filters";
 import { SearchPagination } from "@/components/sections/search/search-pagination";
+import { SEARCH_RESULTS_MOTION } from "@/lib/config/public-motion";
 import { EMPTY_FILTERS, type SearchFilters } from "@/lib/config/search-filters";
 import { AVAILABLE_LISTINGS } from "@/lib/data/listings";
 import {
@@ -27,7 +27,6 @@ import {
     type ActiveFilter,
     type SortValue,
 } from "@/lib/utils/search";
-import { cn } from "@/lib/utils";
 
 const COUNTS = buildFilterCounts(AVAILABLE_LISTINGS);
 
@@ -61,8 +60,10 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
         currentPage * SEARCH_PAGE_SIZE,
     );
 
-    const dirty = JSON.stringify(draft) !== JSON.stringify(applied);
+    const appliedKey = JSON.stringify(applied);
+    const dirty = JSON.stringify(draft) !== appliedKey;
     const activeFilters = useMemo(() => buildActiveFilters(applied), [applied]);
+    const resultsKey = `${view}|${sort}|${currentPage}|${appliedKey}`;
 
     const apply = () => {
         setApplied(draft);
@@ -97,34 +98,16 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
             <SearchHeader location={applied.location} />
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
-                <aside className="lg:col-span-1">
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setPanelOpen((open) => !open)}
-                        className="w-full lg:hidden"
-                        icon={<SlidersHorizontal size={12} strokeWidth={1.5} />}
-                    >
-                        {panelOpen ? "Hide filters" : "Filters"}
-                    </Button>
-
-                    <div
-                        className={cn(
-                            "mt-2 lg:mt-0",
-                            panelOpen ? "block" : "hidden lg:block",
-                        )}
-                    >
-                        <SearchRail
-                            draft={draft}
-                            counts={COUNTS}
-                            dirty={dirty}
-                            onChange={setDraft}
-                            onApply={apply}
-                            onReset={reset}
-                        />
-                    </div>
-                </aside>
+                <SearchFilterAside
+                    draft={draft}
+                    counts={COUNTS}
+                    dirty={dirty}
+                    open={panelOpen}
+                    onToggle={() => setPanelOpen((open) => !open)}
+                    onChange={setDraft}
+                    onApply={apply}
+                    onReset={reset}
+                />
 
                 <SearchResultsPanel
                     toolbar={
@@ -156,17 +139,27 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
                         )
                     }
                 >
-                    {visible.length === 0 ? (
-                        <SearchEmpty
-                            activeFilters={activeFilters}
-                            onRemove={removeFilter}
-                            onReset={reset}
-                        />
-                    ) : view === "grid" ? (
-                        <SearchResultsGrid listings={visible} />
-                    ) : (
-                        <SearchResultsList listings={visible} />
-                    )}
+                    <AnimatePresence mode="wait">
+                        <m.div
+                            key={resultsKey}
+                            variants={SEARCH_RESULTS_MOTION}
+                            initial="hidden"
+                            animate="visible"
+                            exit="gone"
+                        >
+                            {visible.length === 0 ? (
+                                <SearchEmpty
+                                    activeFilters={activeFilters}
+                                    onRemove={removeFilter}
+                                    onReset={reset}
+                                />
+                            ) : view === "grid" ? (
+                                <SearchResultsGrid listings={visible} />
+                            ) : (
+                                <SearchResultsList listings={visible} />
+                            )}
+                        </m.div>
+                    </AnimatePresence>
                 </SearchResultsPanel>
             </div>
         </div>

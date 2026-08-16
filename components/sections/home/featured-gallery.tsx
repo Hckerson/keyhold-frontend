@@ -33,7 +33,7 @@ export function FeaturedGallery({ tiles }: FeaturedGalleryProps) {
                     </Link>
                 </div>
 
-                <div className="grid auto-rows-[200px] grid-cols-2 gap-4 sm:grid-cols-3">
+                <div className="grid auto-rows-[150px] grid-cols-2 gap-3 sm:auto-rows-[200px] sm:grid-cols-3 sm:gap-4">
                     {tiles.map((tile, i) => (
                         <GalleryTile
                             key={tile.id}
