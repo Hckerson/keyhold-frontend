@@ -4,16 +4,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
-import { useAuthStore } from "@/lib/stores/auth-store";
-import { deleteCookie } from "@/lib/utils/cookies";
+import { useSession } from "@/lib/hooks/use-session";
+import { portalForRole } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import styles from "@/components/layout/header.module.css";
-
-const PORTAL_BY_ROLE: Record<string, string> = {
-    ADMIN: "/admin",
-    BUYER: "/dashboard",
-    SELLER: "/agent",
-};
 
 const NAV = [
     { label: "Search", href: "/search" },
@@ -23,8 +17,7 @@ const NAV = [
 
 export function Header() {
     const router = useRouter();
-    const user = useAuthStore((state) => state.user);
-    const clearAuth = useAuthStore((state) => state.clearAuth);
+    const { user, logout } = useSession();
     const [contracted, setContracted] = useState(false);
 
     useEffect(() => {
@@ -43,7 +36,7 @@ export function Header() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    const portalHref = user ? PORTAL_BY_ROLE[user.role] || "/" : "/";
+    const portalHref = user ? portalForRole(user.role) : "/";
     const initials = user
         ? user.name
               .split(" ")
@@ -54,8 +47,7 @@ export function Header() {
         : "";
 
     const handleLogout = () => {
-        clearAuth();
-        deleteCookie("access_token");
+        logout();
         router.push("/");
     };
 
