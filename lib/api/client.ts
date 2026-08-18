@@ -11,7 +11,7 @@ const defaultConfig: AxiosRequestConfig = {
     },
 };
 
-interface Response<T> {
+export interface ApiEnvelope<T> {
     data: T;
     message: string;
     timestamp: string;
@@ -20,40 +20,22 @@ interface Response<T> {
 
 export const apiClient: AxiosInstance = axios.create(defaultConfig);
 
-const request = async <T>(config: AxiosRequestConfig): Promise<Response<T>> => {
-    const response = await apiClient.request<Response<T>>(config);
-    return response.data;
+const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
+    const response = await apiClient.request<ApiEnvelope<T>>(config);
+    return response.data.data;
 };
 
 export const query = {
-    get: async <T>(url: string, config?: AxiosRequestConfig) => {
-        return await request<T>({ method: "GET", url, ...config });
-    },
-    post: async <T>(
-        url: string,
-        body: unknown,
-        config?: AxiosRequestConfig,
-    ) => {
-        return await request<T>({ method: "POST", url, data: body, ...config });
-    },
-    patch: async <T>(
-        url: string,
-        body: unknown,
-        config?: AxiosRequestConfig,
-    ) => {
-        return await request<T>({
-            method: "PATCH",
-            url,
-            data: body,
-            ...config,
-        });
-    },
-    put: async <T>(url: string, body: unknown, config?: AxiosRequestConfig) => {
-        return await request<T>({ method: "PUT", url, data: body, ...config });
-    },
-    delete: async <T>(url: string, config?: AxiosRequestConfig) => {
-        return await request<T>({ method: "DELETE", url, ...config });
-    },
+    get: <T>(url: string, config?: AxiosRequestConfig) =>
+        request<T>({ method: "GET", url, ...config }),
+    post: <T>(url: string, body?: unknown, config?: AxiosRequestConfig) =>
+        request<T>({ method: "POST", url, data: body, ...config }),
+    patch: <T>(url: string, body?: unknown, config?: AxiosRequestConfig) =>
+        request<T>({ method: "PATCH", url, data: body, ...config }),
+    put: <T>(url: string, body?: unknown, config?: AxiosRequestConfig) =>
+        request<T>({ method: "PUT", url, data: body, ...config }),
+    delete: <T>(url: string, config?: AxiosRequestConfig) =>
+        request<T>({ method: "DELETE", url, ...config }),
 };
 
 apiClient.interceptors.request.use((config) => {

@@ -15,16 +15,14 @@ import {
     SignupFields,
     type SignupFieldValues,
 } from "@/components/features/auth/signup-fields";
-import { apiClient } from "@/lib/api/client";
+import { authAPI } from "@/lib/api/auth";
 import {
     ACCESS_TOKEN_COOKIE,
-    AUTH_ENDPOINTS,
     AUTH_ROUTES,
     SESSION_DAYS,
     portalForRole,
 } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import type { AuthResponse } from "@/lib/types/auth";
 import { setCookie } from "@/lib/utils/cookies";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
@@ -119,16 +117,12 @@ export function SignupForm() {
         setFormError(null);
 
         try {
-            const { data } = await apiClient.post<{ data: AuthResponse }>(
-                AUTH_ENDPOINTS.register,
-                {
-                    fullName: parsed.data.fullName,
-                    email: parsed.data.email,
-                    password: parsed.data.password,
-                    role: parsed.data.role,
-                },
-            );
-            const { user, accessToken } = data.data;
+            const { user, accessToken } = await authAPI.register({
+                fullName: parsed.data.fullName,
+                email: parsed.data.email,
+                password: parsed.data.password,
+                role: parsed.data.role,
+            });
 
             setAuth(user, accessToken);
             setCookie(ACCESS_TOKEN_COOKIE, accessToken, SESSION_DAYS);

@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/patterns/reveal";
 import { HeroSection } from "@/components/sections/home/hero";
 import { PremierListing } from "@/components/sections/home/premier-listing";
 import { FeaturedGallery } from "@/components/sections/home/featured-gallery";
@@ -48,13 +49,27 @@ export default function Home() {
     return (
         <>
             <HeroSection />
-            <PremierListing />
-            <FeaturedGallery tiles={GALLERY} />
-            <ConciergeSection />
-            <StatsBand />
-            <TestimonialsSection />
-            <LatestSales sales={SALES} />
-            <CtaBanner />
+            <Reveal>
+                <PremierListing />
+            </Reveal>
+            <Reveal>
+                <FeaturedGallery tiles={GALLERY} />
+            </Reveal>
+            <Reveal>
+                <ConciergeSection />
+            </Reveal>
+            <Reveal>
+                <StatsBand />
+            </Reveal>
+            <Reveal>
+                <TestimonialsSection />
+            </Reveal>
+            <Reveal>
+                <LatestSales sales={SALES} />
+            </Reveal>
+            <Reveal>
+                <CtaBanner />
+            </Reveal>
         </>
     );
 }
