@@ -11,12 +11,11 @@ import {
     AuthTitleBlock,
 } from "@/components/features/auth/parts";
 import { ResetSentPanel } from "@/components/features/auth/reset-sent-panel";
-import { apiClient } from "@/lib/api/client";
+import { authAPI } from "@/lib/api/auth";
 import {
     RECOVERY_BACK_ENTRIES,
     RECOVERY_STEP,
 } from "@/lib/config/auth-recovery";
-import { AUTH_ENDPOINTS } from "@/lib/constants";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
     fieldErrorFor,
@@ -57,7 +56,7 @@ export function ResetRequestStep() {
         setFormError(null);
 
         try {
-            await apiClient.post(AUTH_ENDPOINTS.forgotPassword, parsed.data);
+            await authAPI.forgotPassword(parsed.data);
             setSentTo(parsed.data.email);
         } catch (error) {
             setFormError(errorMessage(error, REQUEST_FAILED));
@@ -67,7 +66,7 @@ export function ResetRequestStep() {
     };
 
     return (
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" propagate>
             {sentTo ? (
                 <ResetSentPanel
                     key="sent"

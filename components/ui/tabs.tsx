@@ -10,6 +10,9 @@ import {
     type KeyboardEvent,
     type ReactNode,
 } from "react";
+import { m, type HTMLMotionProps } from "motion/react";
+import { FAST } from "@/lib/config/motion";
+import { TAB_PANEL_MOTION } from "@/lib/config/public-motion";
 import { cn } from "@/lib/utils";
 
 interface TabsContextValue {
@@ -44,7 +47,7 @@ interface TabsTriggerProps extends HTMLAttributes<HTMLButtonElement> {
     children: ReactNode;
 }
 
-interface TabsContentProps extends HTMLAttributes<HTMLDivElement> {
+interface TabsContentProps extends HTMLMotionProps<"div"> {
     value: string;
     children: ReactNode;
 }
@@ -127,7 +130,7 @@ const TabsList = forwardRef<HTMLDivElement, TabsListProps>(
 TabsList.displayName = "TabsList";
 
 const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
-    ({ value, className, onClick, ...props }, ref) => {
+    ({ value, className, onClick, children, ...props }, ref) => {
         const {
             value: current,
             setValue,
@@ -150,14 +153,24 @@ const TabsTrigger = forwardRef<HTMLButtonElement, TabsTriggerProps>(
                     setValue(value);
                 }}
                 className={cn(
-                    "ease-smooth focus-visible:ring-accent -mb-px border-b-2 px-3 py-2 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                    "ease-smooth focus-visible:ring-accent relative -mb-px border-b-2 border-transparent px-3 py-2 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                     active
-                        ? "border-accent text-text"
-                        : "text-text-secondary hover:text-text border-transparent",
+                        ? "text-text"
+                        : "text-text-secondary hover:text-text",
                     className,
                 )}
                 {...props}
-            />
+            >
+                {active && (
+                    <m.span
+                        layoutId={`${baseId}-tab-indicator`}
+                        transition={FAST}
+                        aria-hidden="true"
+                        className="bg-accent absolute inset-x-0 -bottom-0.5 h-0.5"
+                    />
+                )}
+                {children}
+            </button>
         );
     },
 );
@@ -170,8 +183,12 @@ const TabsContent = forwardRef<HTMLDivElement, TabsContentProps>(
         if (current !== value) return null;
 
         return (
-            <div
+            <m.div
                 ref={ref}
+                key={value}
+                variants={TAB_PANEL_MOTION}
+                initial="hidden"
+                animate="visible"
                 role="tabpanel"
                 id={`${baseId}-panel-${value}`}
                 aria-labelledby={`${baseId}-tab-${value}`}

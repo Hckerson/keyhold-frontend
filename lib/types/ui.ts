@@ -2,6 +2,13 @@ import type { LucideIcon } from "lucide-react";
 
 export type Trend = "up" | "down";
 
+export interface NavRoute {
+    label: string;
+    href: string;
+    icon: LucideIcon;
+    badge?: number;
+}
+
 export type BadgeTone = "neutral" | "success" | "warning" | "error" | "info";
 
 export interface StatItem {

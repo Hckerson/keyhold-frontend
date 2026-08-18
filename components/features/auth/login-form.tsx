@@ -14,18 +14,16 @@ import {
     SocialAuthRow,
 } from "@/components/features/auth/parts";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
-import { apiClient } from "@/lib/api/client";
+import { authAPI } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 import {
     ACCESS_TOKEN_COOKIE,
-    AUTH_ENDPOINTS,
     AUTH_ROUTES,
     SESSION_DAYS,
     isSafeRedirect,
     portalForRole,
 } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import type { AuthResponse } from "@/lib/types/auth";
 import { setCookie } from "@/lib/utils/cookies";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
@@ -91,11 +89,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         setFormError(null);
 
         try {
-            const { data } = await apiClient.post<{ data: AuthResponse }>(
-                AUTH_ENDPOINTS.login,
-                parsed.data,
-            );
-            const { user, accessToken } = data.data;
+            const { user, accessToken } = await authAPI.login(parsed.data);
 
             setAuth(user, accessToken);
             setCookie(

@@ -1,6 +1,11 @@
 "use client";
 
 import { X } from "lucide-react";
+import { AnimatePresence, m } from "motion/react";
+import {
+    SEARCH_CHIP_MOTION,
+    SEARCH_FILTER_BAR_MOTION,
+} from "@/lib/config/public-motion";
 import type { ActiveFilter } from "@/lib/utils/search";
 
 const chipBase =
@@ -13,7 +18,9 @@ interface ActiveFilterChipProps {
 
 function ActiveFilterChip({ filter, onRemove }: ActiveFilterChipProps) {
     return (
-        <button
+        <m.button
+            layout
+            {...SEARCH_CHIP_MOTION}
             type="button"
             onClick={() => onRemove(filter)}
             aria-label={`Remove ${filter.group} filter ${filter.label}`}
@@ -28,7 +35,7 @@ function ActiveFilterChip({ filter, onRemove }: ActiveFilterChipProps) {
                 strokeWidth={1.5}
                 className="text-text-muted group-hover:text-text ease-smooth shrink-0 transition-colors duration-200"
             />
-        </button>
+        </m.button>
     );
 }
 
@@ -45,28 +52,40 @@ export function SearchActiveFilters({
     onRemove,
     onClear,
 }: SearchActiveFiltersProps) {
-    if (filters.length === 0) return null;
-
     return (
-        <div className="border-border flex flex-wrap items-center gap-1.5 border-b px-3 py-2">
-            <span className="micro-label shrink-0">Filtering by</span>
+        <AnimatePresence initial={false}>
+            {filters.length > 0 && (
+                <m.div
+                    key="bar"
+                    {...SEARCH_FILTER_BAR_MOTION}
+                    className="overflow-hidden"
+                >
+                    <div className="border-border flex flex-wrap items-center gap-1.5 border-b px-3 py-2">
+                        <span className="micro-label shrink-0">
+                            Filtering by
+                        </span>
 
-            {filters.map((filter) => (
-                <ActiveFilterChip
-                    key={`${filter.key}-${filter.id}`}
-                    filter={filter}
-                    onRemove={onRemove}
-                />
-            ))}
+                        <AnimatePresence initial={false}>
+                            {filters.map((filter) => (
+                                <ActiveFilterChip
+                                    key={`${filter.key}-${filter.id}`}
+                                    filter={filter}
+                                    onRemove={onRemove}
+                                />
+                            ))}
+                        </AnimatePresence>
 
-            <button
-                type="button"
-                onClick={onClear}
-                className="text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth ml-auto shrink-0 rounded-xs text-xs underline underline-offset-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-            >
-                Clear all
-            </button>
-        </div>
+                        <button
+                            type="button"
+                            onClick={onClear}
+                            className="text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth ml-auto shrink-0 rounded-xs text-xs underline underline-offset-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                        >
+                            Clear all
+                        </button>
+                    </div>
+                </m.div>
+            )}
+        </AnimatePresence>
     );
 }
 

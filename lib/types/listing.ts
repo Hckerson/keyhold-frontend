@@ -1,13 +1,8 @@
-import type { PropertyStatus } from "@/lib/enums/enums";
+import type { PropertyStatus, PropertyType } from "@/lib/enums/enums";
 
-export type ListingStatus = Exclude<PropertyStatus, "for-rent">;
+export type ListingStatus = PropertyStatus;
 
-export type ListingType =
-    | "estate"
-    | "villa"
-    | "penthouse"
-    | "townhouse"
-    | "condo";
+export type ListingType = PropertyType;
 
 export interface ListingAgent {
     id: string;
