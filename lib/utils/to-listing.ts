@@ -1,13 +1,6 @@
 import type { Property } from "@/lib/validations/property";
+import { daysSince } from "@/lib/utils/elapsed";
 import type { Listing, ListingAgent } from "@/lib/types/listing";
-
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
-
-const daysSince = (iso: string) =>
-    Math.max(
-        0,
-        Math.floor((Date.now() - new Date(iso).getTime()) / MS_PER_DAY),
-    );
 
 const toAgent = (property: Property): ListingAgent => {
     const seller = property.seller;
