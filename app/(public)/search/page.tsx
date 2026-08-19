@@ -14,9 +14,9 @@ interface SearchPageProps {
 }
 
 const PRICE_BAND_BY_MINIMUM: Record<string, string> = {
-    "1000000": "1m-2m",
-    "5000000": "5m-plus",
-    "10000000": "5m-plus",
+    "1000000": "1000000-2000000",
+    "5000000": "5000000-",
+    "10000000": "5000000-",
 };
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
@@ -26,7 +26,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     const initialFilters: SearchFilters = {
         ...EMPTY_FILTERS,
         location: q,
-        type: type ? [type] : [],
+        type: type ? [type.toUpperCase()] : [],
         price: band ? [band] : [],
     };
 

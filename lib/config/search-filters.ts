@@ -1,3 +1,6 @@
+import { PROPERTY_TYPES, PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
+import type { PropertyType } from "@/lib/enums/enums";
+
 export interface SearchFilters {
     location: string;
     price: string[];
@@ -27,47 +30,49 @@ export const EMPTY_FILTERS: SearchFilters = {
     type: [],
 };
 
+const LISTABLE_TYPES: PropertyType[] = PROPERTY_TYPES.filter(
+    (type) => type !== "LAND" && type !== "OTHER",
+);
+
+export const PRICE_BANDS: FilterOption[] = [
+    { id: "0-1000000", label: "Under $1M" },
+    { id: "1000000-2000000", label: "$1M – $2M" },
+    { id: "2000000-5000000", label: "$2M – $5M" },
+    { id: "5000000-", label: "$5M and above" },
+];
+
+const countOptions = (tokens: string[], noun: string): FilterOption[] =>
+    tokens.map((id) => ({
+        id,
+        label: id.endsWith("plus")
+            ? `${id.replace("plus", "")}+ ${noun}s`
+            : `${id} ${noun}${id === "1" ? "" : "s"}`,
+    }));
+
 export const FILTER_GROUPS: FilterGroup[] = [
-    {
-        key: "price",
-        label: "Price range",
-        options: [
-            { id: "under-1m", label: "Under $1M" },
-            { id: "1m-2m", label: "$1M – $2M" },
-            { id: "2m-5m", label: "$2M – $5M" },
-            { id: "5m-plus", label: "$5M and above" },
-        ],
-    },
+    { key: "price", label: "Price range", options: PRICE_BANDS },
     {
         key: "beds",
         label: "Bedrooms",
-        options: [
-            { id: "1", label: "1 bedroom" },
-            { id: "2", label: "2 bedrooms" },
-            { id: "3", label: "3 bedrooms" },
-            { id: "4", label: "4 bedrooms" },
-            { id: "5plus", label: "5+ bedrooms" },
-        ],
+        options: countOptions(["1", "2", "3", "4", "5plus"], "bedroom"),
     },
     {
         key: "baths",
         label: "Bathrooms",
-        options: [
-            { id: "1", label: "1 bathroom" },
-            { id: "2", label: "2 bathrooms" },
-            { id: "3", label: "3 bathrooms" },
-            { id: "4plus", label: "4+ bathrooms" },
-        ],
+        options: countOptions(["1", "2", "3", "4plus"], "bathroom"),
     },
     {
         key: "type",
         label: "Property type",
-        options: [
-            { id: "estate", label: "Estate" },
-            { id: "villa", label: "Villa" },
-            { id: "penthouse", label: "Penthouse" },
-            { id: "townhouse", label: "Townhouse" },
-            { id: "condo", label: "Condominium" },
-        ],
+        options: LISTABLE_TYPES.map((type) => ({
+            id: type,
+            label: PROPERTY_TYPE_LABELS[type],
+        })),
     },
 ];
+
+export const FILTER_OPTION_LABELS: Record<string, string> = Object.fromEntries(
+    FILTER_GROUPS.flatMap((group) =>
+        group.options.map((option) => [option.id, option.label]),
+    ),
+);
