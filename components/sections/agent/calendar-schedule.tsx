@@ -6,6 +6,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterPills } from "@/components/patterns/filter-pills";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { CalendarNextCard } from "@/components/features/agent/calendar-next-card";
 import { AppointmentList } from "@/components/features/agent/appointment-list";
 import { AppointmentDayGroup } from "@/components/features/agent/appointment-day-group";
@@ -70,34 +71,40 @@ export function CalendarSchedule({
                     />
                 }
             >
-                {rest.length > 0 ? (
-                    <PanelInset>
-                        {isDayView ? (
-                            <AppointmentList appointments={rest} />
-                        ) : (
-                            <div className="flex flex-col gap-2 py-1">
-                                {groupAppointmentsByDate(rest).map((group) => (
-                                    <AppointmentDayGroup
-                                        key={group.date}
-                                        group={group}
-                                    />
-                                ))}
-                            </div>
-                        )}
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        className="mt-2.5 py-8"
-                        icon={CalendarX2}
-                        title={next ? REMAINDER_TITLE : EMPTY_TITLE}
-                        description={next ? undefined : emptyDescription}
-                        action={
-                            <Button variant="secondary" size="sm">
-                                {SCHEDULE_ACTION}
-                            </Button>
-                        }
-                    />
-                )}
+                <PresenceSwap
+                    swapKey={`${view}-${selectedIso}-${rest.length > 0 ? "list" : "empty"}`}
+                >
+                    {rest.length > 0 ? (
+                        <PanelInset>
+                            {isDayView ? (
+                                <AppointmentList appointments={rest} />
+                            ) : (
+                                <div className="flex flex-col gap-2 py-1">
+                                    {groupAppointmentsByDate(rest).map(
+                                        (group) => (
+                                            <AppointmentDayGroup
+                                                key={group.date}
+                                                group={group}
+                                            />
+                                        ),
+                                    )}
+                                </div>
+                            )}
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            className="mt-2.5 py-8"
+                            icon={CalendarX2}
+                            title={next ? REMAINDER_TITLE : EMPTY_TITLE}
+                            description={next ? undefined : emptyDescription}
+                            action={
+                                <Button variant="secondary" size="sm">
+                                    {SCHEDULE_ACTION}
+                                </Button>
+                            }
+                        />
+                    )}
+                </PresenceSwap>
             </Panel>
         </div>
     );

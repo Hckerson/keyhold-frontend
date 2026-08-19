@@ -1,6 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/forms/checkbox";
+import { AnimatePresence } from "motion/react";
 import { ListingRow } from "@/components/features/agent/listing-row";
 import type { ManagedListing } from "@/lib/types";
 
@@ -72,15 +73,17 @@ export function ListingTable({
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {listings.map((listing) => (
-                    <ListingRow
-                        key={listing.id}
-                        listing={listing}
-                        peak={peak}
-                        selected={selectedIds.includes(listing.id)}
-                        onSelectedChange={onSelectedChange}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {listings.map((listing) => (
+                        <ListingRow
+                            key={listing.id}
+                            listing={listing}
+                            peak={peak}
+                            selected={selectedIds.includes(listing.id)}
+                            onSelectedChange={onSelectedChange}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

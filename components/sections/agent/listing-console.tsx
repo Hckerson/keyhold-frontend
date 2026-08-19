@@ -5,10 +5,9 @@ import { ListingsHeader } from "@/components/sections/agent/listings-header";
 import { ListingsMain } from "@/components/sections/agent/listings-main";
 import { ListingsRail } from "@/components/sections/agent/listings-rail";
 import { ListingsStatBand } from "@/components/sections/agent/listings-stat-band";
+import { ConsoleUnavailable } from "@/components/sections/agent/console-unavailable";
 import {
-    applyBulkAction,
     countByStatus,
-    initialListings,
     listingStats,
     listingsSummary,
     peakViews,
@@ -16,11 +15,39 @@ import {
     type BulkAction,
     type StatusFilter,
 } from "@/lib/data/agent-listings";
+import { useSession } from "@/lib/hooks/use-session";
+import {
+    useDeleteProperty,
+    useSellerProperties,
+    useUpdatePropertyStatus,
+} from "@/lib/hooks/use-properties";
+import { toManagedListing } from "@/lib/utils/to-managed-listing";
+import type { PropertyStatus } from "@/lib/enums/enums";
+
+const BULK_STATUS: Record<Exclude<BulkAction, "delete">, PropertyStatus> = {
+    publish: "AVAILABLE",
+    draft: "DRAFT",
+    renew: "AVAILABLE",
+};
+
+const SELLER_QUERY = { limit: 100 } as const;
 
 export function ListingConsole() {
-    const [listings, setListings] = useState(initialListings);
+    const { user } = useSession();
+    const { data, isPending, isError, refetch } = useSellerProperties(
+        user?.id,
+        SELLER_QUERY,
+    );
+    const updateStatus = useUpdatePropertyStatus();
+    const removeProperty = useDeleteProperty();
+
     const [filter, setFilter] = useState<StatusFilter>("all");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+    const listings = useMemo(
+        () => (data?.items ?? []).map(toManagedListing),
+        [data?.items],
+    );
 
     const ranked = useMemo(() => rankListings(listings), [listings]);
     const peers = useMemo(() => ranked.slice(1), [ranked]);
@@ -56,10 +83,23 @@ export function ListingConsole() {
 
     const clearSelection = useCallback(() => setSelectedIds([]), []);
 
-    const runBulkAction = (action: BulkAction) => {
-        setListings((current) => applyBulkAction(current, selectedIds, action));
+    const runBulkAction = async (action: BulkAction) => {
+        const targets = [...selectedIds];
         setSelectedIds([]);
+
+        await Promise.all(
+            targets.map((id) =>
+                action === "delete"
+                    ? removeProperty.mutateAsync(id)
+                    : updateStatus.mutateAsync({
+                          id,
+                          status: BULK_STATUS[action],
+                      }),
+            ),
+        );
     };
+
+    if (isError) return <ConsoleUnavailable onRetry={() => void refetch()} />;
 
     return (
         <div className="flex flex-col gap-4">
@@ -76,11 +116,12 @@ export function ListingConsole() {
                     counts={counts}
                     selectedIds={visibleSelected.map((listing) => listing.id)}
                     allSelected={allSelected}
+                    pending={isPending}
                     onFilterChange={setFilter}
                     onToggleAll={toggleAll}
                     onSelectedChange={toggleOne}
                     onClearSelection={clearSelection}
-                    onBulkAction={runBulkAction}
+                    onBulkAction={(action) => void runBulkAction(action)}
                 />
                 <ListingsRail listings={listings} />
             </div>
