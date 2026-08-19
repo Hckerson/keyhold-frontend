@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { propertiesAPI } from "@/lib/api/properties";
+import { propertiesAPI, type FacetOptions } from "@/lib/api/properties";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type {
@@ -9,6 +9,7 @@ import type {
     PropertyQuery,
     UpdatePropertyInput,
 } from "@/lib/validations/property";
+import type { PropertyStatus } from "@/lib/enums/enums";
 
 export function useProperties(input: PropertyQuery = {}) {
     return useQuery({
@@ -27,6 +28,15 @@ export function useSellerProperties(
         queryKey: queryKeys.properties.bySeller(sellerId ?? "", input),
         queryFn: () => propertiesAPI.bySeller(sellerId as string, input),
         enabled: Boolean(sellerId),
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function usePropertyFacets(input: PropertyQuery, options: FacetOptions) {
+    return useQuery({
+        queryKey: queryKeys.properties.facets(input),
+        queryFn: () => propertiesAPI.facets(input, options),
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
     });
@@ -56,6 +66,16 @@ export function useUpdateProperty(id: string) {
     return useMutation({
         mutationFn: (input: UpdatePropertyInput) =>
             propertiesAPI.update(id, input),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
+    });
+}
+
+export function useUpdatePropertyStatus() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, status }: { id: string; status: PropertyStatus }) =>
+            propertiesAPI.update(id, { status }),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
     });
