@@ -9,23 +9,22 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ListingDetail } from "@/components/sections/listing/listing-detail";
 import { ListingUnavailable } from "@/components/sections/listing/listing-unavailable";
-import { LISTINGS, getListing, getComparables } from "@/lib/data/listings";
+import { propertiesServerAPI } from "@/lib/api/server";
+import { toListing } from "@/lib/utils/to-listing";
+
+const COMPARABLE_COUNT = 3;
 
 interface ListingDetailPageProps {
     params: Promise<{ id: string }>;
-}
-
-export function generateStaticParams() {
-    return LISTINGS.map((listing) => ({ id: listing.id }));
 }
 
 export async function generateMetadata({
     params,
 }: ListingDetailPageProps): Promise<Metadata> {
     const { id } = await params;
-    const listing = getListing(id);
+    const property = await propertiesServerAPI.detail(id);
 
-    if (!listing) {
+    if (!property) {
         return {
             title: "Listing unavailable | Luxury Real Estate",
             description: "This listing is no longer available.",
@@ -33,8 +32,8 @@ export async function generateMetadata({
     }
 
     return {
-        title: `${listing.title}, ${listing.locality} | Luxury Real Estate`,
-        description: listing.description,
+        title: `${property.title}, ${property.locality} | Luxury Real Estate`,
+        description: property.description,
     };
 }
 
@@ -42,9 +41,21 @@ export default async function ListingDetailPage({
     params,
 }: ListingDetailPageProps) {
     const { id } = await params;
-    const listing = getListing(id);
+    const property = await propertiesServerAPI.detail(id);
 
-    if (!listing) return <ListingUnavailable />;
+    if (!property) return <ListingUnavailable />;
+
+    const listing = toListing(property);
+    const nearby = await propertiesServerAPI.list({
+        locality: property.locality,
+        status: "AVAILABLE",
+        limit: COMPARABLE_COUNT + 1,
+    });
+
+    const comparables = (nearby?.items ?? [])
+        .filter((candidate) => candidate.id !== property.id)
+        .slice(0, COMPARABLE_COUNT)
+        .map(toListing);
 
     return (
         <>
@@ -70,10 +81,7 @@ export default async function ListingDetailPage({
                 </Breadcrumb>
             </Container>
 
-            <ListingDetail
-                listing={listing}
-                comparables={getComparables(listing)}
-            />
+            <ListingDetail listing={listing} comparables={comparables} />
         </>
     );
 }
