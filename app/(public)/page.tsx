@@ -11,12 +11,11 @@ import {
 } from "@/components/sections/home/latest-sales";
 import { CtaBanner } from "@/components/sections/home/cta-banner";
 import type { GalleryTileData } from "@/components/sections/home/gallery-tile";
-import {
-    FEATURED_LISTINGS,
-    RECENT_SALES,
-    formatPrice,
-} from "@/lib/data/listings";
-import { formatCompactUsd } from "@/lib/utils";
+import { propertiesServerAPI } from "@/lib/api/server";
+import { toListing } from "@/lib/utils/to-listing";
+import { formatCompactUsd, formatUsd } from "@/lib/utils";
+import { daysBetween, monthsSince } from "@/lib/utils/elapsed";
+import type { Property } from "@/lib/validations/property";
 
 export const metadata = {
     title: "Home | Luxury Real Estate Marketplace",
@@ -24,37 +23,58 @@ export const metadata = {
         "A quiet, considered approach to extraordinary property — off-market estates and architectural landmarks.",
 };
 
-const GALLERY: GalleryTileData[] = FEATURED_LISTINGS.map((listing, index) => ({
-    id: listing.id,
-    imageUrl: listing.images[0],
-    price: formatPrice(listing.price),
-    address: `${listing.address}, ${listing.locality}`,
-    specs: `${listing.beds} Bd · ${listing.baths} Ba · ${listing.sqft.toLocaleString()} Sq Ft`,
-    agentName: listing.agent.name,
+const FEATURED_COUNT = 6;
+const SALES_COUNT = 4;
+
+const toGalleryTile = (property: Property, index: number): GalleryTileData => ({
+    id: property.id,
+    imageUrl: property.images[0]?.url ?? "",
+    price: formatUsd(property.price),
+    address: `${property.address}, ${property.locality}`,
+    specs: `${property.bedrooms} Bd · ${property.bathrooms} Ba · ${(property.sqFt ?? 0).toLocaleString()} Sq Ft`,
+    agentName: property.seller?.fullName ?? "Listing advisor",
     featured: index === 0,
-}));
+});
 
-const SALES: LatestSaleData[] = RECENT_SALES.map((listing) => ({
-    id: listing.id,
-    imageUrl: listing.images[0],
-    address: listing.address,
-    locality: listing.locality,
-    price: formatCompactUsd(listing.price),
-    specs: `${listing.beds} Bd · ${listing.baths} Ba`,
-    soldLabel: `Sold ${listing.soldMonthsAgo}mo ago`,
-    daysOnMarket: 12 + Number(listing.id) * 2,
-}));
+const toLatestSale = (property: Property): LatestSaleData => ({
+    id: property.id,
+    imageUrl: property.images[0]?.url ?? "",
+    address: property.address,
+    locality: property.locality,
+    price: formatCompactUsd(property.price),
+    specs: `${property.bedrooms} Bd · ${property.bathrooms} Ba`,
+    soldLabel: `Sold ${monthsSince(property.updatedAt)}mo ago`,
+    daysOnMarket: daysBetween(property.createdAt, property.updatedAt),
+});
 
-export default function Home() {
+export default async function Home() {
+    const [featured, sold] = await Promise.all([
+        propertiesServerAPI.list({
+            status: "AVAILABLE",
+            sort: "popular",
+            limit: FEATURED_COUNT,
+        }),
+        propertiesServerAPI.list({ status: "SOLD", limit: SALES_COUNT }),
+    ]);
+
+    const properties = featured?.items ?? [];
+    const premier = properties[0];
+    const gallery = properties.map(toGalleryTile);
+    const sales = (sold?.items ?? []).map(toLatestSale);
+
     return (
         <>
             <HeroSection />
-            <Reveal>
-                <PremierListing />
-            </Reveal>
-            <Reveal>
-                <FeaturedGallery tiles={GALLERY} />
-            </Reveal>
+            {premier && (
+                <Reveal>
+                    <PremierListing listing={toListing(premier)} />
+                </Reveal>
+            )}
+            {gallery.length > 0 && (
+                <Reveal>
+                    <FeaturedGallery tiles={gallery} />
+                </Reveal>
+            )}
             <Reveal>
                 <ConciergeSection />
             </Reveal>
@@ -64,9 +84,11 @@ export default function Home() {
             <Reveal>
                 <TestimonialsSection />
             </Reveal>
-            <Reveal>
-                <LatestSales sales={SALES} />
-            </Reveal>
+            {sales.length > 0 && (
+                <Reveal>
+                    <LatestSales sales={sales} />
+                </Reveal>
+            )}
             <Reveal>
                 <CtaBanner />
             </Reveal>
