@@ -1,5 +1,8 @@
 "use client";
 
+import { useId } from "react";
+import { m } from "motion/react";
+import { FAST } from "@/lib/config/motion";
 import { cn } from "@/lib/utils";
 
 export interface FilterPill<T extends string> {
@@ -22,6 +25,8 @@ export function FilterPills<T extends string>({
     counts,
     className,
 }: FilterPillsProps<T>) {
+    const groupId = useId();
+
     return (
         <div className={cn("flex flex-wrap items-center gap-2", className)}>
             {filters.map((filter) => {
@@ -34,18 +39,28 @@ export function FilterPills<T extends string>({
                         aria-pressed={selected}
                         onClick={() => onChange(filter.id)}
                         className={cn(
-                            "ease-smooth focus-visible:ring-accent inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                            "ease-smooth focus-visible:ring-accent relative inline-flex items-center rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                             selected
-                                ? "border-accent bg-accent-light text-accent"
+                                ? "text-accent border-transparent"
                                 : "border-border bg-background text-text-secondary hover:text-text hover:border-border-dark",
                         )}
                     >
-                        {filter.label}
-                        {count !== undefined && (
-                            <span className="tabular-nums opacity-70">
-                                {count}
-                            </span>
+                        {selected && (
+                            <m.span
+                                layoutId={`${groupId}-pill`}
+                                transition={FAST}
+                                aria-hidden="true"
+                                className="border-accent bg-accent-light absolute -inset-px rounded-lg border"
+                            />
                         )}
+                        <span className="relative inline-flex items-center gap-1.5">
+                            {filter.label}
+                            {count !== undefined && (
+                                <span className="tabular-nums opacity-70">
+                                    {count}
+                                </span>
+                            )}
+                        </span>
                     </button>
                 );
             })}
