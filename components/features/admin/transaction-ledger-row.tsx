@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
+import { m } from "motion/react";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { EscrowMeter } from "@/components/features/admin/escrow-meter";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
@@ -8,6 +9,7 @@ import {
     dealAgeTone,
     TRANSACTION_STATUSES,
 } from "@/lib/config/transaction-tones";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import { cn, formatMillions } from "@/lib/utils";
 import type { Transaction } from "@/lib/types";
 
@@ -25,7 +27,8 @@ export function TransactionLedgerRow({
     const meta = TRANSACTION_STATUSES[transaction.status];
 
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth hover:bg-background-muted h-11 transition-colors",
                 meta.rowTone,
@@ -76,7 +79,7 @@ export function TransactionLedgerRow({
                     />
                 </button>
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

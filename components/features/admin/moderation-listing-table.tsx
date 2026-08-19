@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { ModerationListingRow } from "@/components/features/admin/moderation-listing-row";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
 
@@ -64,15 +65,17 @@ export function ModerationListingTable({
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {listings.map((listing) => (
-                    <ModerationListingRow
-                        key={listing.id}
-                        listing={listing}
-                        onOpen={onOpen}
-                        onApprove={onApprove}
-                        onDecide={onDecide}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {listings.map((listing) => (
+                        <ModerationListingRow
+                            key={listing.id}
+                            listing={listing}
+                            onOpen={onOpen}
+                            onApprove={onApprove}
+                            onDecide={onDecide}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );
