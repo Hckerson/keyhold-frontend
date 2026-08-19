@@ -1,6 +1,9 @@
 "use client";
 
+import { AnimatePresence, m } from "motion/react";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { VerificationQueueRow } from "@/components/features/admin/verification-queue-row";
+import { LIST_ROW_MOTION } from "@/lib/config/motion";
 import type { VerificationRequest } from "@/lib/data/admin-verifications";
 
 export interface VerificationQueueRailProps {
@@ -23,23 +26,31 @@ export function VerificationQueueRail({
                 </span>
             </div>
 
-            {requests.length === 0 ? (
-                <p className="text-text-muted px-3 py-10 text-center text-xs">
-                    No requests in this view.
-                </p>
-            ) : (
-                <ul className="divide-border scroll-y max-h-[32rem] divide-y">
-                    {requests.map((request) => (
-                        <li key={request.id}>
-                            <VerificationQueueRow
-                                request={request}
-                                selected={request.id === selectedId}
-                                onSelect={onSelect}
-                            />
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <PresenceSwap swapKey={requests.length === 0 ? "empty" : "queue"}>
+                {requests.length === 0 ? (
+                    <p className="text-text-muted px-3 py-10 text-center text-xs">
+                        No requests in this view.
+                    </p>
+                ) : (
+                    <ul className="divide-border scroll-y max-h-[32rem] divide-y">
+                        <AnimatePresence initial={false}>
+                            {requests.map((request) => (
+                                <m.li
+                                    key={request.id}
+                                    {...LIST_ROW_MOTION}
+                                    className="overflow-hidden"
+                                >
+                                    <VerificationQueueRow
+                                        request={request}
+                                        selected={request.id === selectedId}
+                                        onSelect={onSelect}
+                                    />
+                                </m.li>
+                            ))}
+                        </AnimatePresence>
+                    </ul>
+                )}
+            </PresenceSwap>
         </div>
     );
 }

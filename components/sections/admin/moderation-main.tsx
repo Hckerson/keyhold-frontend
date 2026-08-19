@@ -2,6 +2,7 @@
 
 import { ClipboardCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
@@ -49,12 +50,14 @@ export function ModerationMain({
     return (
         <div className="flex flex-col gap-3 lg:col-span-2">
             {focus && (
-                <ModerationFocusHero
-                    listing={focus}
-                    onOpen={onOpen}
-                    onApprove={onApprove}
-                    onDecide={onDecide}
-                />
+                <PresenceSwap swapKey={focus.id}>
+                    <ModerationFocusHero
+                        listing={focus}
+                        onOpen={onOpen}
+                        onApprove={onApprove}
+                        onDecide={onDecide}
+                    />
+                </PresenceSwap>
             )}
 
             <Panel
@@ -73,22 +76,24 @@ export function ModerationMain({
                     onCheckFilterChange={onCheckFilterChange}
                 />
 
-                {listings.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
-                        <ModerationListingTable
-                            listings={listings}
-                            onOpen={onOpen}
-                            onApprove={onApprove}
-                            onDecide={onDecide}
+                <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
+                    {listings.length > 0 ? (
+                        <PanelInset scroll className="mt-0">
+                            <ModerationListingTable
+                                listings={listings}
+                                onOpen={onOpen}
+                                onApprove={onApprove}
+                                onDecide={onDecide}
+                            />
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            icon={ClipboardCheck}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={ClipboardCheck}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
+                    )}
+                </PresenceSwap>
             </Panel>
         </div>
     );

@@ -2,6 +2,7 @@
 
 import { Users } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
@@ -63,13 +64,15 @@ export function AdminUsersMain({
     return (
         <div className="flex flex-col gap-3 lg:col-span-2">
             {focus && (
-                <AdminUsersFocusHero
-                    user={focus}
-                    directoryVolume={directoryVolume}
-                    onOpen={onOpen}
-                    onSuspend={onSuspend}
-                    onReactivate={onReactivate}
-                />
+                <PresenceSwap swapKey={focus.id}>
+                    <AdminUsersFocusHero
+                        user={focus}
+                        directoryVolume={directoryVolume}
+                        onOpen={onOpen}
+                        onSuspend={onSuspend}
+                        onReactivate={onReactivate}
+                    />
+                </PresenceSwap>
             )}
 
             <Panel
@@ -95,23 +98,25 @@ export function AdminUsersMain({
                     onSortChange={onSortChange}
                 />
 
-                {users.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
-                        <UserTable
-                            users={users}
-                            peak={peak}
-                            onOpen={onOpen}
-                            onSuspend={onSuspend}
-                            onReactivate={onReactivate}
+                <PresenceSwap swapKey={users.length > 0 ? "rows" : "empty"}>
+                    {users.length > 0 ? (
+                        <PanelInset scroll className="mt-0">
+                            <UserTable
+                                users={users}
+                                peak={peak}
+                                onOpen={onOpen}
+                                onSuspend={onSuspend}
+                                onReactivate={onReactivate}
+                            />
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            icon={Users}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={Users}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
+                    )}
+                </PresenceSwap>
             </Panel>
         </div>
     );

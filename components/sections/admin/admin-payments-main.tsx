@@ -1,5 +1,6 @@
 import { Wallet } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
@@ -54,17 +55,19 @@ export function AdminPaymentsMain({
                     onMethodFilterChange={onMethodFilterChange}
                 />
 
-                {payouts.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
-                        <PayoutTable payouts={payouts} />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={Wallet}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
+                <PresenceSwap swapKey={payouts.length > 0 ? "rows" : "empty"}>
+                    {payouts.length > 0 ? (
+                        <PanelInset scroll className="mt-0">
+                            <PayoutTable payouts={payouts} />
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            icon={Wallet}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
+                        />
+                    )}
+                </PresenceSwap>
             </Panel>
 
             <Panel

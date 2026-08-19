@@ -1,3 +1,6 @@
+"use client";
+
+import { m } from "motion/react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { AgeMark } from "@/components/features/shared/age-mark";
@@ -6,6 +9,7 @@ import { PayoutMethodMark } from "@/components/features/admin/payout-method-mark
 import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";
 import { payoutAgeTone, PAYOUT_STATES } from "@/lib/config/admin-tones";
 import { payoutFee, payoutNet } from "@/lib/data/admin-payments";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import type { Payout } from "@/lib/types";
 
 const OPEN_LABEL = "Open the deal behind";
@@ -16,7 +20,10 @@ export interface PayoutRowProps {
 
 export function PayoutRow({ payout }: PayoutRowProps) {
     return (
-        <tr className="ease-smooth hover:bg-background-muted h-11 transition-colors">
+        <m.tr
+            {...TABLE_ROW_MOTION}
+            className="ease-smooth hover:bg-background-muted h-11 transition-colors"
+        >
             <td className="text-text truncate py-0 text-xs font-medium">
                 {payout.recipient}
             </td>
@@ -55,7 +62,7 @@ export function PayoutRow({ payout }: PayoutRowProps) {
                     />
                 </Link>
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

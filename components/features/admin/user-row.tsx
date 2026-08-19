@@ -1,5 +1,6 @@
 "use client";
 
+import { m } from "motion/react";
 import { UserActivityMark } from "@/components/features/admin/user-activity-mark";
 import { UserDealMark } from "@/components/features/admin/user-deal-mark";
 import { UserMark } from "@/components/features/admin/user-mark";
@@ -10,6 +11,7 @@ import { UserTierMark } from "@/components/features/admin/user-tier-mark";
 import { UserVolumeMeter } from "@/components/features/admin/user-volume-meter";
 import { USER_STATUSES } from "@/lib/config/user-tones";
 import { idleDays } from "@/lib/data/admin-users";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import { cn } from "@/lib/utils";
 import type { ManagedUser } from "@/lib/types";
 
@@ -29,7 +31,8 @@ export function UserRow({
     onReactivate,
 }: UserRowProps) {
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth hover:bg-background-muted h-11 transition-colors",
                 USER_STATUSES[user.status].rowTone,
@@ -63,7 +66,7 @@ export function UserRow({
                     onReactivate={onReactivate}
                 />
             </td>
-        </tr>
+        </m.tr>
     );
 }
 
