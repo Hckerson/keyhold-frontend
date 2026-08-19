@@ -36,14 +36,6 @@ export const BULK_LABELS: Record<BulkAction, string> = {
     delete: "Delete",
 };
 
-type StatusChangeAction = Exclude<BulkAction, "delete">;
-
-const BULK_STATUS: Record<StatusChangeAction, ManagedListingStatus> = {
-    publish: "active",
-    draft: "draft",
-    renew: "active",
-};
-
 export const initialListings: ManagedListing[] = [
     {
         id: "oak-avenue",
@@ -254,22 +246,6 @@ export const countByStatus = (
     };
     for (const listing of listings) counts[listing.status] += 1;
     return counts;
-};
-
-export const applyBulkAction = (
-    listings: ManagedListing[],
-    selectedIds: string[],
-    action: BulkAction,
-): ManagedListing[] => {
-    if (action === "delete") {
-        return listings.filter((listing) => !selectedIds.includes(listing.id));
-    }
-    const status = BULK_STATUS[action];
-    return listings.map((listing) => {
-        if (!selectedIds.includes(listing.id)) return listing;
-        if (action === "renew") return { ...listing, status, listedDaysAgo: 0 };
-        return { ...listing, status };
-    });
 };
 
 export const portfolioValue = (listings: ManagedListing[]) =>

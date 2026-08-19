@@ -1,5 +1,6 @@
 "use client";
 
+import { m } from "motion/react";
 import { Checkbox } from "@/components/ui/forms/checkbox";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
@@ -8,6 +9,7 @@ import { chartToneText } from "@/lib/config/chart-tones";
 import { AGE_BANDS, LISTING_STATUSES } from "@/lib/config/listing-tones";
 import { ageBandOf, exposureOf } from "@/lib/data/agent-listings";
 import type { ManagedListing } from "@/lib/types";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import { cn, formatMillions } from "@/lib/utils";
 
 const DAYS_SUFFIX = "d";
@@ -29,7 +31,8 @@ export function ListingRow({
     const age = AGE_BANDS[ageBandOf(listing)];
 
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth h-11 transition-colors",
                 selected ? "bg-accent-light/40" : "hover:bg-background-muted",
@@ -95,7 +98,7 @@ export function ListingRow({
             >
                 {listing.offers}
             </td>
-        </tr>
+        </m.tr>
     );
 }
 
