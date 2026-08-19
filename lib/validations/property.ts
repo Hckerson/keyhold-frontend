@@ -93,21 +93,29 @@ export const createPropertySchema = z.object({
     features: z.array(z.string()).optional(),
 });
 
-export const updatePropertySchema = createPropertySchema.partial();
+export const updatePropertySchema = createPropertySchema.partial().extend({
+    status: z.enum(PROPERTY_STATUSES).optional(),
+});
 
 export const propertyQuerySchema = z.object({
     status: z.enum(PROPERTY_STATUSES).optional(),
-    type: z.enum(PROPERTY_TYPES).optional(),
+    types: z.array(z.enum(PROPERTY_TYPES)).optional(),
     locality: z.string().optional(),
     q: z.string().optional(),
-    minPrice: z.number().optional(),
-    maxPrice: z.number().optional(),
-    bedrooms: z.number().int().optional(),
-    bathrooms: z.number().int().optional(),
+    priceRanges: z.array(z.string()).optional(),
+    beds: z.array(z.string()).optional(),
+    baths: z.array(z.string()).optional(),
     minSqFt: z.number().optional(),
     sort: z.enum(PROPERTY_SORTS).optional(),
     page: z.number().int().optional(),
     limit: z.number().int().optional(),
+});
+
+export const facetCountsSchema = z.object({
+    price: z.record(z.string(), z.number()),
+    beds: z.record(z.string(), z.number()),
+    baths: z.record(z.string(), z.number()),
+    type: z.record(z.string(), z.number()),
 });
 
 export type PropertyImage = z.infer<typeof propertyImageSchema>;
@@ -117,3 +125,4 @@ export type PropertyPage = z.infer<typeof propertyPageSchema>;
 export type CreatePropertyInput = z.infer<typeof createPropertySchema>;
 export type UpdatePropertyInput = z.infer<typeof updatePropertySchema>;
 export type PropertyQuery = z.infer<typeof propertyQuerySchema>;
+export type FacetCounts = z.infer<typeof facetCountsSchema>;

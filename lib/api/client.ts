@@ -4,11 +4,37 @@ import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
 import { ACCESS_TOKEN_COOKIE, AUTH_ROUTES, config } from "@/lib/constants";
 
+type ParamValue = string | number | boolean;
+
+const isParamValue = (value: unknown): value is ParamValue =>
+    typeof value === "string" ||
+    typeof value === "number" ||
+    typeof value === "boolean";
+
+const serializeParams = (params: Record<string, unknown>) => {
+    const search = new URLSearchParams();
+
+    const append = (key: string, value: unknown) => {
+        if (isParamValue(value)) search.append(key, String(value));
+    };
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+            value.forEach((entry) => append(key, entry));
+            return;
+        }
+        append(key, value);
+    });
+
+    return search.toString();
+};
+
 const defaultConfig: AxiosRequestConfig = {
     baseURL: config.api.base,
     headers: {
         "Content-Type": "application/json",
     },
+    paramsSerializer: serializeParams,
 };
 
 export interface ApiEnvelope<T> {
