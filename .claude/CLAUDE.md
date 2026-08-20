@@ -42,6 +42,7 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 | `/design-os`            | _(flat)_                                                                                               | Design-system seed prompt. Not application code.                                                                                                   |
 | `/public`               | `fonts`                                                                                                | Static assets.                                                                                                                                     |
 | `/styles`               | _(flat)_                                                                                               | Global styles and token exports.                                                                                                                   |
+| `/docs`                 | _(flat)_                                                                                               | Prose documentation. Not application code. Only `README.md` stays at the repo root.                                                                |
 
 ## File rules
 
