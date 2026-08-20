@@ -61,5 +61,6 @@ export const queryKeys = {
         seller: ["stats", "seller"] as const,
         platform: ["stats", "platform"] as const,
         users: ["stats", "users"] as const,
+        dashboard: (filter: string) => ["stats", "dashboard", filter] as const,
     },
 };

@@ -16,7 +16,7 @@ export interface StatCellProps {
     stat: StatDatum;
 }
 
-const CELL = "flex h-14 min-w-0 flex-1 items-center gap-2 px-3";
+const CELL = "flex h-14 items-center gap-2 px-3";
 
 export function StatCell({ stat }: StatCellProps) {
     const Icon = stat.icon;

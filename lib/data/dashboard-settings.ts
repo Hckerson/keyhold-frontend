@@ -7,13 +7,9 @@ import {
     alertDeliveryCount,
     enabledAlertCount,
 } from "@/lib/data/alerts";
-import {
-    DOCUMENT_COUNT,
-    SEARCH_PROFILE_STRENGTH,
-    verifiedDocumentCount,
-} from "@/lib/data/buyer-account";
 import type { AlertPreference, AlertType } from "@/lib/types";
-import { formatCompactUsd, formatCount } from "@/lib/utils";
+import { formatCount, percentOf } from "@/lib/utils";
+import type { User } from "@/lib/validations/user";
 
 export type ContactMethod = "email" | "sms" | "phone" | "in-app";
 
@@ -40,25 +36,36 @@ export const INITIAL_CONTACT_METHOD: ContactMethod = "email";
 export const EMPTY_PASSWORD = { current: "", next: "", confirm: "" };
 export type PasswordForm = typeof EMPTY_PASSWORD;
 
-export const INITIAL_PROFILE = {
-    fullName: "John Doe",
-    email: "john@example.com",
-    phone: "(310) 555-0123",
-    preferredLocation: "Beverly Hills, CA",
-    budgetMin: "2500000",
-    budgetMax: "5000000",
+export const EMPTY_PROFILE = {
+    fullName: "",
+    email: "",
+    phone: "",
+    bio: "",
 };
-export type ProfileForm = typeof INITIAL_PROFILE;
+export type ProfileForm = typeof EMPTY_PROFILE;
 
-export const changedFieldCount = (current: ProfileForm) => {
-    const initial: Record<string, string> = INITIAL_PROFILE;
+export const toProfileForm = (user: User | undefined): ProfileForm => ({
+    fullName: user?.fullName ?? "",
+    email: user?.email ?? "",
+    phone: user?.phoneNumber ?? "",
+    bio: user?.bio ?? "",
+});
+
+export const changedFieldCount = (
+    current: ProfileForm,
+    initial: ProfileForm,
+) => {
+    const baseline: Record<string, string> = initial;
     return Object.entries(current).filter(
-        ([key, value]) => initial[key] !== value,
+        ([key, value]) => baseline[key] !== value,
     ).length;
 };
 
-export const budgetRange = (form: ProfileForm) =>
-    `${formatCompactUsd(Number(form.budgetMin) || 0)} – ${formatCompactUsd(Number(form.budgetMax) || 0)}`;
+export const profileStrength = (form: ProfileForm) =>
+    percentOf(
+        Object.values(form).filter((value) => value.trim().length > 0).length,
+        Object.keys(form).length,
+    );
 
 export const PROFILE_FIELDS: readonly ConfigField<keyof ProfileForm>[] = [
     { name: "fullName", label: "Full Name", placeholder: "John Doe" },
@@ -76,46 +83,31 @@ export const PROFILE_FIELDS: readonly ConfigField<keyof ProfileForm>[] = [
         variant: "numeric",
     },
     {
-        name: "preferredLocation",
-        label: "Preferred Location",
-        placeholder: "Beverly Hills, CA",
-    },
-];
-
-export const BUDGET_FIELDS: readonly ConfigField<keyof ProfileForm>[] = [
-    {
-        name: "budgetMin",
-        label: "Minimum Budget",
-        placeholder: "2,500,000",
-        prefix: "$",
-        variant: "numeric",
-    },
-    {
-        name: "budgetMax",
-        label: "Maximum Budget",
-        placeholder: "5,000,000",
-        prefix: "$",
-        variant: "numeric",
+        name: "bio",
+        label: "About You",
+        placeholder: "What you are looking for",
     },
 ];
 
 export const buildDashboardSettingsStats = (
-    form: ProfileForm,
+    strength: number,
+    verified: number,
+    documents: number,
     preferences: Record<AlertType, AlertPreference>,
 ): StatDatum[] => [
     {
         id: "strength",
         icon: UserCheck,
-        label: "Search profile",
-        value: `${SEARCH_PROFILE_STRENGTH}%`,
-        tone: strengthTone(SEARCH_PROFILE_STRENGTH),
+        label: "Profile strength",
+        value: `${strength}%`,
+        tone: strengthTone(strength),
     },
     {
-        id: "ceiling",
+        id: "verification",
         icon: Wallet,
-        label: "Budget ceiling",
-        value: formatCompactUsd(Number(form.budgetMax) || 0),
-        tone: "highlight",
+        label: "Verified",
+        value: `${verified}/${documents}`,
+        tone: verified === documents ? "success" : "highlight",
     },
     {
         id: "alerts",
@@ -135,7 +127,7 @@ export const buildDashboardSettingsStats = (
         id: "documents",
         icon: BadgeCheck,
         label: "Documents",
-        value: `${verifiedDocumentCount}/${DOCUMENT_COUNT}`,
-        tone: verifiedDocumentCount === DOCUMENT_COUNT ? "success" : "warning",
+        value: `${verified}/${documents}`,
+        tone: verified === documents ? "success" : "warning",
     },
 ];

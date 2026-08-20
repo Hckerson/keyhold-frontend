@@ -79,7 +79,7 @@ export function ModerationFocusHero({
                     </div>
                 </div>
 
-                <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:shrink-0 sm:items-center">
+                <div className="flex flex-wrap items-center gap-2">
                     <Button
                         type="button"
                         variant="secondary"
@@ -115,7 +115,7 @@ export function ModerationFocusHero({
                 </div>
             </div>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={COMPLIANCE_LABEL}>
                     <ComplianceMeter
                         score={complianceScore(listing)}

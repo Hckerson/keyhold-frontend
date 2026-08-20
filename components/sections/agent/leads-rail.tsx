@@ -1,25 +1,37 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
-import {
-    playShares,
-    sourceShares,
-    stageShares,
-    type Lead,
-} from "@/lib/data/agent-leads";
+import { MetricList } from "@/components/patterns/metric-list";
+import { stageShares } from "@/lib/data/agent-leads";
+import type { Lead } from "@/lib/types/lead";
+import type { MetricItem } from "@/lib/types";
+import { formatCount, sum } from "@/lib/utils";
 
 const STAGE_TITLE = "Stage Mix";
 const STAGE_LEDE = "Where the book sits right now";
-const SOURCE_TITLE = "Lead Sources";
-const SOURCE_LEDE = "Which channels are filling the funnel";
-const PLAYBOOK_TITLE = "Nurture Playbook";
-const PLAYBOOK_LEDE = "Cadence owed to each temperature band";
+const ENGAGEMENT_TITLE = "Engagement";
+const ENGAGEMENT_LEDE = "What these enquiries have generated so far";
 
 export interface LeadsRailProps {
     leads: Lead[];
 }
 
 export function LeadsRail({ leads }: LeadsRailProps) {
+    const engagement: MetricItem[] = [
+        {
+            label: "Unread messages",
+            value: formatCount(sum(leads.map((lead) => lead.unread))),
+        },
+        {
+            label: "Viewings booked",
+            value: formatCount(sum(leads.map((lead) => lead.viewings))),
+        },
+        {
+            label: "Offers received",
+            value: formatCount(sum(leads.map((lead) => lead.offers))),
+        },
+    ];
+
     return (
         <div className="flex flex-col gap-3">
             <Panel
@@ -32,15 +44,9 @@ export function LeadsRail({ leads }: LeadsRailProps) {
                 </PanelInset>
             </Panel>
 
-            <Panel title={SOURCE_TITLE} description={SOURCE_LEDE}>
+            <Panel title={ENGAGEMENT_TITLE} description={ENGAGEMENT_LEDE}>
                 <PanelInset>
-                    <ShareList shares={sourceShares(leads)} />
-                </PanelInset>
-            </Panel>
-
-            <Panel title={PLAYBOOK_TITLE} description={PLAYBOOK_LEDE}>
-                <PanelInset>
-                    <ShareList shares={playShares(leads)} />
+                    <MetricList metrics={engagement} />
                 </PanelInset>
             </Panel>
         </div>

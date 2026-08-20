@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { m } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { MoveChip } from "@/components/patterns/move-chip";
@@ -10,6 +11,7 @@ import { ALERT_TYPES } from "@/lib/config/alert-tones";
 import { movePercent } from "@/lib/data/alerts";
 import type { Alert } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const READ_LABEL = "Read";
 const MARK_LABEL = "Mark read";
@@ -21,7 +23,8 @@ export interface AlertRowProps {
 
 export function AlertRow({ alert, onMarkRead }: AlertRowProps) {
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth h-11 transition-colors",
                 alert.read ? "hover:bg-background-muted" : "bg-accent-light/40",
@@ -78,7 +81,7 @@ export function AlertRow({ alert, onMarkRead }: AlertRowProps) {
                     </Button>
                 )}
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

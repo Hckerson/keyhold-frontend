@@ -4,19 +4,26 @@ import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Panel } from "@/components/ui/panel";
+import type { ConsoleFallback } from "@/lib/config/console-fallbacks";
 
-const TITLE = "We couldn't load your portfolio";
-const LEDE =
-    "The listing service is unreachable right now. Try again in a moment.";
+const RETRY_LABEL = "Retry";
 
 export interface ConsoleUnavailableProps {
+    fallback: ConsoleFallback;
     onRetry: () => void;
 }
 
-export function ConsoleUnavailable({ onRetry }: ConsoleUnavailableProps) {
+export function ConsoleUnavailable({
+    fallback,
+    onRetry,
+}: ConsoleUnavailableProps) {
     return (
-        <Panel title="Listing Book" description={LEDE}>
-            <EmptyState icon={TriangleAlert} title={TITLE} description={LEDE} />
+        <Panel title={fallback.panel} description={fallback.description}>
+            <EmptyState
+                icon={TriangleAlert}
+                title={fallback.title}
+                description={fallback.description}
+            />
             <div className="flex justify-center pb-4">
                 <Button
                     type="button"
@@ -24,7 +31,7 @@ export function ConsoleUnavailable({ onRetry }: ConsoleUnavailableProps) {
                     size="sm"
                     onClick={onRetry}
                 >
-                    Retry
+                    {RETRY_LABEL}
                 </Button>
             </div>
         </Panel>

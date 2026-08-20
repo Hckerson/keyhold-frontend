@@ -54,7 +54,7 @@ export function AdminReportsChart() {
                 />
             </div>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-3 gap-3 rounded-md border p-3">
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 {metric.summary.map((item) => (
                     <MetricCell key={item.label} label={item.label}>
                         <span className="truncate tabular-nums">

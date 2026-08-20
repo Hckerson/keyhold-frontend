@@ -1,6 +1,6 @@
 export type ManagedUserRole = "buyer" | "agent" | "admin";
 export type UserTier = "standard" | "premium" | "platinum";
-export type UserStatus = "active" | "suspended" | "inactive";
+export type UserStatus = "active" | "pending" | "suspended";
 
 export type UserStatusFilter = UserStatus | "all";
 export type UserRoleFilter = ManagedUserRole | "all";
@@ -11,7 +11,6 @@ export interface ManagedUser {
     name: string;
     email: string;
     role: ManagedUserRole;
-    tier: UserTier;
     joinDate: string;
     lastActive: string;
     status: UserStatus;

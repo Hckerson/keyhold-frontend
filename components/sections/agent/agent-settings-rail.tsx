@@ -4,12 +4,12 @@ import { ShareList } from "@/components/patterns/share-list";
 import { CredentialTable } from "@/components/features/shared/credential-table";
 import { SecurityControlList } from "@/components/features/shared/security-control-list";
 import {
-    AGENT_CREDENTIALS,
-    PROFILE_STRENGTH,
     profileSignalShares,
     SECURITY_CONTROLS,
     verifiedCredentialCount,
+    type ProfileSignal,
 } from "@/lib/data/agent-account";
+import type { AccountCredential } from "@/lib/types";
 
 const STRENGTH_TITLE = "Profile Strength";
 const STRENGTH_LEDE = "Weight each signal carries on your public profile";
@@ -21,27 +21,37 @@ const CREDENTIALS_HEADING = "Credential";
 const CREDENTIALS_CAPTION =
     "Professional credentials by name, issuing body, verification state and time until renewal";
 
-export function AgentSettingsRail() {
+export interface AgentSettingsRailProps {
+    signals: ProfileSignal[];
+    strength: number;
+    credentials: AccountCredential[];
+}
+
+export function AgentSettingsRail({
+    signals,
+    strength,
+    credentials,
+}: AgentSettingsRailProps) {
     return (
         <div className="flex flex-col gap-3">
             <Panel
                 title={STRENGTH_TITLE}
                 description={STRENGTH_LEDE}
-                count={`${PROFILE_STRENGTH}%`}
+                count={`${strength}%`}
             >
                 <PanelInset>
-                    <ShareList shares={profileSignalShares} />
+                    <ShareList shares={profileSignalShares(signals)} />
                 </PanelInset>
             </Panel>
 
             <Panel
                 title={CREDENTIALS_TITLE}
                 description={CREDENTIALS_LEDE}
-                count={`${verifiedCredentialCount}/${AGENT_CREDENTIALS.length}`}
+                count={`${verifiedCredentialCount(credentials)}/${credentials.length}`}
             >
                 <PanelInset scroll>
                     <CredentialTable
-                        credentials={AGENT_CREDENTIALS}
+                        credentials={credentials}
                         heading={CREDENTIALS_HEADING}
                         caption={CREDENTIALS_CAPTION}
                     />

@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { UserRoleMark } from "@/components/features/admin/user-role-mark";
-import { UserTierMark } from "@/components/features/admin/user-tier-mark";
 import { idleDays, joinedLabel } from "@/lib/data/admin-users";
 import type { ManagedUser } from "@/lib/types";
 
@@ -20,11 +19,6 @@ export function UserAccountList({ user }: UserAccountListProps) {
             id: "role",
             label: "Role",
             value: <UserRoleMark role={user.role} />,
-        },
-        {
-            id: "tier",
-            label: "Tier",
-            value: <UserTierMark tier={user.tier} />,
         },
         { id: "joined", label: "Joined", value: joinedLabel(user) },
         {

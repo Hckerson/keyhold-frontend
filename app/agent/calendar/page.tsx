@@ -19,7 +19,6 @@ export default function AgentCalendarPage() {
 
             <div className="console-split console-split--quarters gap-3">
                 <CalendarRail
-                    className="lg:col-span-1"
                     year={calendar.year}
                     month={calendar.month}
                     selected={calendar.selected}
@@ -32,7 +31,7 @@ export default function AgentCalendarPage() {
                 />
 
                 <CalendarSchedule
-                    className="lg:col-span-3"
+                    className="console-span-3"
                     view={calendar.view}
                     appointments={calendar.visible}
                     selectedIso={calendar.selectedIso}

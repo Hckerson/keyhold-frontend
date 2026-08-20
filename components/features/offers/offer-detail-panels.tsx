@@ -45,7 +45,7 @@ export function OfferDetailPanels({
 }: OfferDetailPanelsProps) {
     return (
         <div className="console-split gap-3">
-            <div className="space-y-3 lg:col-span-2">
+            <div className="console-span-2 space-y-3">
                 <Panel
                     title="Offer Comparison"
                     description="Click any term to expand the detail"
@@ -75,11 +75,7 @@ export function OfferDetailPanels({
                 />
             </div>
 
-            <Panel
-                title="Offer Timeline"
-                count={timeline.length}
-                className="lg:col-span-1"
-            >
+            <Panel title="Offer Timeline" count={timeline.length}>
                 <TimelineList entries={timeline} />
             </Panel>
         </div>

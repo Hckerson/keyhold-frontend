@@ -4,12 +4,14 @@ import {
     type StatusBadgeProps,
 } from "@/components/ui/status-badge";
 import { formatCompactUsd, initialsOf } from "@/lib/utils";
-import type { LeadScore, RecentLead } from "@/lib/data/agent-overview";
+import type { RecentLead } from "@/lib/data/agent-overview";
+import type { LeadStage } from "@/lib/types/lead";
+import { LEAD_STAGES } from "@/lib/config/lead-tones";
 
-const scoreTone: Record<LeadScore, StatusBadgeProps["tone"]> = {
-    Hot: "success",
-    Warm: "warning",
-    Cold: "neutral",
+const stageTone: Record<LeadStage, StatusBadgeProps["tone"]> = {
+    pending: "warning",
+    accepted: "success",
+    declined: "neutral",
 };
 
 export interface OverviewLeadRowProps {
@@ -32,7 +34,9 @@ export function OverviewLeadRow({ lead }: OverviewLeadRowProps) {
             <span className="text-text shrink-0 text-xs font-semibold tabular-nums">
                 {formatCompactUsd(lead.budget)}
             </span>
-            <StatusBadge tone={scoreTone[lead.score]}>{lead.score}</StatusBadge>
+            <StatusBadge tone={stageTone[lead.stage]}>
+                {LEAD_STAGES[lead.stage].label}
+            </StatusBadge>
             <span className="micro-label w-6 shrink-0 text-right">
                 {lead.received}
             </span>

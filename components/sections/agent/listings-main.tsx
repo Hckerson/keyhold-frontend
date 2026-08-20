@@ -49,7 +49,7 @@ export function ListingsMain({
     onBulkAction,
 }: ListingsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {top && <ListingsTopHero listing={top} peak={peak} />}
 
             <Panel

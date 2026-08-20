@@ -30,8 +30,8 @@ export function AdminVerificationConsole() {
                 counts={counts}
             />
 
-            <div className="grid items-start gap-3 lg:grid-cols-[20rem_minmax(0,1fr)]">
-                <div className="lg:sticky lg:top-0">
+            <div className="review-split items-start gap-3">
+                <div className="review-rail">
                     <VerificationQueueRail
                         requests={queue.visible}
                         selectedId={active?.id ?? null}

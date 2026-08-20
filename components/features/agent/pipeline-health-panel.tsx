@@ -35,7 +35,7 @@ export function PipelineHealthPanel({
 
     return (
         <Panel title="Pipeline Health" description="Key metrics and insights">
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="card-grid gap-3">
                 {health.map((metric) => (
                     <div key={metric.label}>
                         <p className="text-text-muted font-mono text-[10px] tracking-wide uppercase">

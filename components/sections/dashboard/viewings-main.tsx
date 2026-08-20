@@ -52,7 +52,7 @@ export function ViewingsMain({
     onCancel,
 }: ViewingsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {next && (
                 <ViewingsNextHero
                     viewing={next}

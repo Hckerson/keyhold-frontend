@@ -56,6 +56,7 @@ export const config = {
             byConnection: (connectionId: string) =>
                 `/offers/connection/${connectionId}`,
             respond: (id: string) => `/offers/${id}/respond`,
+            acceptCounter: (id: string) => `/offers/${id}/accept-counter`,
         },
         transactions: {
             create: "/transactions",

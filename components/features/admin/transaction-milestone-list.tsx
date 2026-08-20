@@ -10,7 +10,7 @@ export function TransactionMilestoneList({
     cleared,
 }: TransactionMilestoneListProps) {
     return (
-        <ul className="grid gap-1.5 sm:grid-cols-2">
+        <ul className="card-grid gap-1.5">
             {MILESTONE_ORDER.map((id) => (
                 <TransactionMilestoneMark
                     key={id}

@@ -40,7 +40,7 @@ export function AdminPaymentsMain({
     onMethodFilterChange,
 }: AdminPaymentsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <AdminPaymentsRevenueHero />
 
             <Panel

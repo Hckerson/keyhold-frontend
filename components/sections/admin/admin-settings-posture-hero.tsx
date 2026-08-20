@@ -56,7 +56,7 @@ export function AdminSettingsPostureHero({
                 {dirty ? PENDING_LEDE : SYNCED_LEDE}
             </p>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={POLICIES_LABEL}>
                     <span className="tabular-nums">
                         {enabled} {OF_LABEL} {POLICY_COUNT}

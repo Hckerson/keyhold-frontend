@@ -21,6 +21,8 @@ const EMPTY_TITLE = "Nothing saved in this view";
 const EMPTY_LEDE =
     "Widen the status filter, or keep browsing to build out your book.";
 const EMPTY_ACTION = "Start Browsing";
+const LOADING_TITLE = "Loading your saved homes";
+const LOADING_LEDE = "Fetching the latest pricing for your book.";
 
 export interface SavedMainProps {
     top?: SavedListing;
@@ -28,6 +30,7 @@ export interface SavedMainProps {
     filter: SavedStatusFilter;
     sort: SavedSortKey;
     counts: Record<SavedStatusFilter, number>;
+    pending?: boolean;
     onFilterChange: (filter: SavedStatusFilter) => void;
     onSortChange: (sort: SavedSortKey) => void;
     onRemove: (id: string) => void;
@@ -39,12 +42,13 @@ export function SavedMain({
     filter,
     sort,
     counts,
+    pending = false,
     onFilterChange,
     onSortChange,
     onRemove,
 }: SavedMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {top && <SavedTopHero listing={top} onRemove={onRemove} />}
 
             <Panel
@@ -70,8 +74,8 @@ export function SavedMain({
                 ) : (
                     <EmptyState
                         icon={Heart}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                         action={
                             <Link
                                 href="/search"

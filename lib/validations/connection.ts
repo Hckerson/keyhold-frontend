@@ -5,6 +5,8 @@ import { userSummarySchema } from "@/lib/validations/user";
 export const connectionPropertySchema = z.object({
     id: z.string(),
     title: z.string().optional(),
+    address: z.string().optional(),
+    price: z.number().optional(),
 });
 
 export const connectionSchema = z.object({

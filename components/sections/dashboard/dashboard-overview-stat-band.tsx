@@ -1,9 +1,15 @@
 import { StatBand } from "@/components/patterns/stat-band";
-import { stats } from "@/lib/data/dashboard-overview";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 
 const BAND_LABEL = "Your property journey";
 
-export function DashboardOverviewStatBand() {
+export interface DashboardOverviewStatBandProps {
+    stats: StatDatum[];
+}
+
+export function DashboardOverviewStatBand({
+    stats,
+}: DashboardOverviewStatBandProps) {
     return <StatBand label={BAND_LABEL} stats={stats} />;
 }
 

@@ -5,10 +5,14 @@ import type { ChangeEvent } from "react";
 import { Trash2, Upload } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { INITIAL_PROFILE } from "@/lib/data/dashboard-settings";
 import { initialsOf } from "@/lib/utils";
 
-export function ProfilePhotoUploader() {
+export interface ProfilePhotoUploaderProps {
+    name: string;
+    src?: string;
+}
+
+export function ProfilePhotoUploader({ name, src }: ProfilePhotoUploaderProps) {
     const [photo, setPhoto] = useState<string | null>(null);
     const photoInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,8 +38,8 @@ export function ProfilePhotoUploader() {
         <div className="border-border-light mb-3 flex flex-wrap items-center gap-3 border-b pb-3">
             <Avatar
                 size="xl"
-                src={photo ?? undefined}
-                initials={initialsOf(INITIAL_PROFILE.fullName)}
+                src={photo ?? src}
+                initials={initialsOf(name)}
                 alt="Profile photo"
             />
             <div className="space-y-1.5">

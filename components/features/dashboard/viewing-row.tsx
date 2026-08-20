@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarClock, X } from "lucide-react";
+import { m } from "motion/react";
 import { ViewingAgentMark } from "@/components/features/dashboard/viewing-agent-mark";
 import { ViewingCountdown } from "@/components/features/dashboard/viewing-countdown";
 import { ViewingModeMark } from "@/components/features/dashboard/viewing-mode-mark";
@@ -9,6 +10,7 @@ import { ViewingStatusMark } from "@/components/features/dashboard/viewing-statu
 import { daysUntil, formatViewingDate, isActive } from "@/lib/data/viewings";
 import type { Viewing } from "@/lib/types";
 import { cn, formatMillions } from "@/lib/utils";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const RESCHEDULE_LABEL = "Reschedule";
 const CANCEL_LABEL = "Cancel";
@@ -31,7 +33,8 @@ export function ViewingRow({
     const active = isActive(viewing);
 
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth hover:bg-background-muted h-11 transition-colors",
                 !active && "opacity-60",
@@ -94,7 +97,7 @@ export function ViewingRow({
                     </span>
                 )}
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

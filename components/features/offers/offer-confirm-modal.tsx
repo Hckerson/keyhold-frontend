@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/modal";
 import { formatUsd } from "@/lib/utils";
 
-export type OfferConfirmAction = "counter" | "accept" | "withdraw";
+export type OfferConfirmAction = "counter" | "accept";
 
 export interface OfferConfirmModalProps {
     action: OfferConfirmAction | null;
@@ -20,7 +20,6 @@ export interface OfferConfirmModalProps {
     onClose: () => void;
     onAccept: () => void;
     onCounter: () => void;
-    onWithdraw: () => void;
 }
 
 export function OfferConfirmModal({
@@ -31,7 +30,6 @@ export function OfferConfirmModal({
     onClose,
     onAccept,
     onCounter,
-    onWithdraw,
 }: OfferConfirmModalProps) {
     return (
         <Modal
@@ -44,7 +42,6 @@ export function OfferConfirmModal({
                 <ModalTitle>
                     {action === "accept" && "Accept counter offer"}
                     {action === "counter" && "Submit counter offer"}
-                    {action === "withdraw" && "Withdraw offer"}
                 </ModalTitle>
             </ModalHeader>
             <ModalBody>
@@ -54,8 +51,6 @@ export function OfferConfirmModal({
                         `You are accepting the seller's counter of ${formatUsd(counterPrice)} for ${address}.`}
                     {action === "counter" &&
                         `You are countering at ${formatUsd(counterValue)} for ${address}.`}
-                    {action === "withdraw" &&
-                        `Withdrawing removes your offer on ${address}. This cannot be undone.`}
                 </p>
             </ModalBody>
             <ModalFooter>
@@ -70,11 +65,6 @@ export function OfferConfirmModal({
                 {action === "counter" && (
                     <Button variant="primary" size="sm" onClick={onCounter}>
                         Send Counter
-                    </Button>
-                )}
-                {action === "withdraw" && (
-                    <Button variant="danger" size="sm" onClick={onWithdraw}>
-                        Withdraw Offer
                     </Button>
                 )}
             </ModalFooter>

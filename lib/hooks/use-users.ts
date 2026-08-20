@@ -5,6 +5,7 @@ import { usersAPI } from "@/lib/api/users";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import type { UserAccountStatus } from "@/lib/enums/enums";
 import type { UpdateUserInput } from "@/lib/validations/user";
 
 export function useCurrentUser() {
@@ -48,6 +49,25 @@ export function useUpdateUser(id: string) {
                 client.invalidateQueries({
                     queryKey: queryKeys.users.detail(id),
                 }),
+            ]);
+        },
+    });
+}
+
+export function useSetUserStatus() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            id,
+            status,
+        }: {
+            id: string;
+            status: UserAccountStatus;
+        }) => usersAPI.update(id, { status }),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.users.all }),
+                client.invalidateQueries({ queryKey: queryKeys.stats.users }),
             ]);
         },
     });

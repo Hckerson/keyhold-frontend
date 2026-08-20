@@ -47,3 +47,20 @@ export function useRespondToOffer() {
             client.invalidateQueries({ queryKey: queryKeys.offers.all }),
     });
 }
+
+export function useAcceptCounter() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => offersAPI.acceptCounter(id),
+        onSuccess: async (offer) => {
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: queryKeys.offers.detail(offer.id),
+                }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
+    });
+}

@@ -70,7 +70,7 @@ export const USER_TIERS: Record<UserTier, UserTierMeta> = {
 
 export const USER_STATUS_KEYS: UserStatus[] = [
     "active",
-    "inactive",
+    "pending",
     "suspended",
 ];
 
@@ -96,14 +96,14 @@ export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
         noteTitle: "Account note",
         noteTone: "success",
     },
-    inactive: {
-        label: "Inactive",
+    pending: {
+        label: "Pending",
         icon: PauseCircle,
         tone: "neutral",
         chartTone: "warning",
         risk: 1,
-        note: "No sign-in recorded in the last thirty days. The account keeps every permission until it is suspended.",
-        noteTitle: "Dormant account",
+        note: "This account has not completed verification. It keeps every permission until it is suspended.",
+        noteTitle: "Pending account",
         noteTone: "warning",
     },
     suspended: {

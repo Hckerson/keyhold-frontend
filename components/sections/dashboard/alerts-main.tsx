@@ -37,7 +37,7 @@ export function AlertsMain({
     onMarkRead,
 }: AlertsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {top && <AlertsTopHero alert={top} onMarkRead={onMarkRead} />}
 
             <Panel

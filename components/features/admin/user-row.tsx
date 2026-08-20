@@ -7,7 +7,6 @@ import { UserMark } from "@/components/features/admin/user-mark";
 import { UserRoleMark } from "@/components/features/admin/user-role-mark";
 import { UserRowActions } from "@/components/features/admin/user-row-actions";
 import { UserStatusMark } from "@/components/features/admin/user-status-mark";
-import { UserTierMark } from "@/components/features/admin/user-tier-mark";
 import { UserVolumeMeter } from "@/components/features/admin/user-volume-meter";
 import { USER_STATUSES } from "@/lib/config/user-tones";
 import { idleDays } from "@/lib/data/admin-users";
@@ -43,9 +42,6 @@ export function UserRow({
             </td>
             <td className="py-0 pl-3">
                 <UserRoleMark role={user.role} />
-            </td>
-            <td className="py-0 pl-3">
-                <UserTierMark tier={user.tier} />
             </td>
             <td className="py-0 pl-3 text-right">
                 <UserDealMark deals={user.transactions} />

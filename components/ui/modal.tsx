@@ -7,8 +7,10 @@ import {
     type HTMLAttributes,
     type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, m, type HTMLMotionProps } from "motion/react";
 import { MODAL_BACKDROP_MOTION, MODAL_PLATE_MOTION } from "@/lib/config/motion";
+import { useMounted } from "@/lib/hooks/use-mounted";
 import { cn } from "@/lib/utils";
 
 const ESCAPE_KEY = "Escape";
@@ -42,6 +44,7 @@ interface ModalFooterProps extends HTMLAttributes<HTMLDivElement> {
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
     ({ open = false, onOpenChange, className, children, ...props }, ref) => {
         const settled = useRef<ReactNode>(null);
+        const mounted = useMounted();
 
         useEffect(() => {
             if (open) settled.current = children;
@@ -64,7 +67,9 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             };
         }, [open, onOpenChange]);
 
-        return (
+        if (!mounted) return null;
+
+        return createPortal(
             <AnimatePresence>
                 {open && (
                     <m.div
@@ -95,7 +100,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                         </m.div>
                     </div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence>,
+            document.body,
         );
     },
 );
