@@ -6,7 +6,7 @@ export interface ReviewMetricStripProps {
 
 export function ReviewMetricStrip({ children }: ReviewMetricStripProps) {
     return (
-        <div className="grid-orphan-fill bg-background border-border-light grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-5">
+        <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
             {children}
         </div>
     );

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { AlertRow } from "@/components/features/dashboard/alert-row";
 import type { Alert } from "@/lib/types";
 
@@ -53,13 +54,15 @@ export function AlertTable({ alerts, onMarkRead }: AlertTableProps) {
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {alerts.map((alert) => (
-                    <AlertRow
-                        key={alert.id}
-                        alert={alert}
-                        onMarkRead={onMarkRead}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {alerts.map((alert) => (
+                        <AlertRow
+                            key={alert.id}
+                            alert={alert}
+                            onMarkRead={onMarkRead}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

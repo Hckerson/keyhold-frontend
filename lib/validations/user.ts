@@ -19,6 +19,8 @@ export const userSchema = userSummarySchema.extend({
     emailVerified: z.boolean().optional(),
     phoneVerified: z.boolean().optional(),
     kycVerified: z.boolean().optional(),
+    transactions: z.number().int().optional(),
+    volume: z.number().optional(),
     lastActive: z.iso.datetime().nullable().optional(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime().optional(),
@@ -26,12 +28,14 @@ export const userSchema = userSummarySchema.extend({
 
 export const updateUserSchema = z.object({
     fullName: z.string().min(3).optional(),
+    email: z.email().optional(),
     phoneNumber: z.string().optional(),
     bio: z.string().optional(),
     avatar: z.string().optional(),
     jobTitle: z.string().optional(),
     agencyName: z.string().optional(),
     licenseNumber: z.string().optional(),
+    status: z.enum(USER_ACCOUNT_STATUSES).optional(),
 });
 
 export type UserSummary = z.infer<typeof userSummarySchema>;

@@ -27,7 +27,7 @@ export function ConfigPanel<K extends string>({
     return (
         <Panel title={title} description={description}>
             {lead}
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="card-grid gap-3">
                 <ConfigFieldGrid
                     fields={fields}
                     values={values}

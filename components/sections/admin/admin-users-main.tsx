@@ -23,6 +23,8 @@ const DIRECTORY_ACTION = "Verifications";
 const EMPTY_TITLE = "No account matches this view";
 const EMPTY_LEDE =
     "Clear the search or widen the status and role filters to see the full directory.";
+const LOADING_TITLE = "Loading the directory";
+const LOADING_LEDE = "Fetching every managed account on the platform.";
 
 export interface AdminUsersMainProps {
     focus?: ManagedUser;
@@ -34,6 +36,7 @@ export interface AdminUsersMainProps {
     role: UserRoleFilter;
     sort: UserSortKey;
     counts: Record<UserStatusFilter, number>;
+    pending?: boolean;
     onQueryChange: (next: string) => void;
     onStatusChange: (next: UserStatusFilter) => void;
     onRoleChange: (next: UserRoleFilter) => void;
@@ -53,6 +56,7 @@ export function AdminUsersMain({
     role,
     sort,
     counts,
+    pending = false,
     onQueryChange,
     onStatusChange,
     onRoleChange,
@@ -62,7 +66,7 @@ export function AdminUsersMain({
     onReactivate,
 }: AdminUsersMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {focus && (
                 <PresenceSwap swapKey={focus.id}>
                     <AdminUsersFocusHero
@@ -112,8 +116,8 @@ export function AdminUsersMain({
                     ) : (
                         <EmptyState
                             icon={Users}
-                            title={EMPTY_TITLE}
-                            description={EMPTY_LEDE}
+                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
                         />
                     )}
                 </PresenceSwap>

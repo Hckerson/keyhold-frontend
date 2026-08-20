@@ -51,6 +51,8 @@ export const TRANSACTION_STATUSES = [
     "CANCELLED",
 ] as const;
 
+export const TIME_FILTERS = ["day", "month", "year"] as const;
+
 export const USER_ROLES = ["ADMIN", "BUYER", "SELLER"] as const;
 
 export const USER_ACCOUNT_STATUSES = [
@@ -66,6 +68,7 @@ export type ConnectionStatus = (typeof CONNECTION_STATUSES)[number];
 export type ViewingStatus = (typeof VIEWING_STATUSES)[number];
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
 export type TransactionStatus = (typeof TRANSACTION_STATUSES)[number];
+export type TimeFilter = (typeof TIME_FILTERS)[number];
 export type UserRole = (typeof USER_ROLES)[number];
 export type UserAccountStatus = (typeof USER_ACCOUNT_STATUSES)[number];
 

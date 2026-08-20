@@ -4,20 +4,18 @@ import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { strengthTone } from "@/lib/config/account-tones";
 import { ALERT_TYPE_COUNT } from "@/lib/data/alerts";
-import {
-    PRIVACY_CONTROL_COUNT,
-    SEARCH_PROFILE_STRENGTH,
-} from "@/lib/data/buyer-account";
-import { PROFILE_UPDATED } from "@/lib/data/dashboard-settings";
+import { PRIVACY_CONTROL_COUNT } from "@/lib/data/buyer-account";
+import { minutesSince } from "@/lib/utils/elapsed";
 
 const HERO_EYEBROW = "Buyer profile";
+const NEVER_SAVED = "Not saved yet";
 const TUNED_SUFFIX = "tuned";
 const PENDING_SUFFIX = "pending";
 const UNSAVED_LABEL = "Awaiting save";
 const SYNCED_LABEL = "Synced";
 const PENDING_LEDE = "Unsaved edits reach your matches once you save";
 const SYNCED_LEDE = "Live values match what your search and alerts run on";
-const BUDGET_LABEL = "Budget range";
+const VERIFIED_LABEL = "Verified";
 const ALERTS_LABEL = "Signals on";
 const SHARING_LABEL = "Sharing";
 const UPDATED_LABEL = "Last updated";
@@ -26,16 +24,20 @@ const STRENGTH_METER_LABEL = "Search profile strength";
 
 export interface DashboardSettingsProfileHeroProps {
     pending: number;
-    preferredLocation: string;
-    budget: string;
+    strength: number;
+    verified: number;
+    documents: number;
+    updatedAt?: string;
     enabledAlerts: number;
     sharedAudiences: number;
 }
 
 export function DashboardSettingsProfileHero({
     pending,
-    preferredLocation,
-    budget,
+    strength,
+    verified,
+    documents,
+    updatedAt,
     enabledAlerts,
     sharedAudiences,
 }: DashboardSettingsProfileHeroProps) {
@@ -43,14 +45,12 @@ export function DashboardSettingsProfileHero({
 
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
-            <p className="micro-label">
-                {HERO_EYEBROW} · {preferredLocation}
-            </p>
+            <p className="micro-label">{HERO_EYEBROW}</p>
             <div className="mt-1 flex flex-wrap items-baseline gap-2">
                 <p className="text-h4 font-display text-text font-light tabular-nums">
                     {dirty
                         ? `${pending} ${PENDING_SUFFIX}`
-                        : `${SEARCH_PROFILE_STRENGTH}% ${TUNED_SUFFIX}`}
+                        : `${strength}% ${TUNED_SUFFIX}`}
                 </p>
                 <span className="flex items-center gap-1.5">
                     <StatusDot tone={dirty ? "warning" : "success"} />
@@ -65,17 +65,16 @@ export function DashboardSettingsProfileHero({
 
             <span
                 className="mt-3 block"
-                aria-label={`${STRENGTH_METER_LABEL} ${SEARCH_PROFILE_STRENGTH}%`}
+                aria-label={`${STRENGTH_METER_LABEL} ${strength}%`}
             >
-                <ProgressBar
-                    value={SEARCH_PROFILE_STRENGTH}
-                    tone={strengthTone(SEARCH_PROFILE_STRENGTH)}
-                />
+                <ProgressBar value={strength} tone={strengthTone(strength)} />
             </span>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
-                <MetricCell label={BUDGET_LABEL}>
-                    <span className="truncate tabular-nums">{budget}</span>
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
+                <MetricCell label={VERIFIED_LABEL}>
+                    <span className="tabular-nums">
+                        {verified} {OF_LABEL} {documents}
+                    </span>
                 </MetricCell>
                 <MetricCell label={ALERTS_LABEL}>
                     <span className="tabular-nums">
@@ -88,15 +87,14 @@ export function DashboardSettingsProfileHero({
                     </span>
                 </MetricCell>
                 <MetricCell label={UPDATED_LABEL}>
-                    <span className="flex min-w-0 items-baseline gap-1.5">
+                    {updatedAt ? (
                         <AgeMark
-                            minutes={PROFILE_UPDATED.ageMinutes}
+                            minutes={minutesSince(updatedAt)}
                             tone="neutral"
                         />
-                        <span className="text-text-secondary min-w-0 truncate text-xs">
-                            {PROFILE_UPDATED.actor}
-                        </span>
-                    </span>
+                    ) : (
+                        <span className="micro-label">{NEVER_SAVED}</span>
+                    )}
                 </MetricCell>
             </div>
         </section>

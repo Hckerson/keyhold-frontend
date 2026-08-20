@@ -3,7 +3,6 @@ import { ShareMeter } from "@/components/patterns/share-meter";
 import { UserActivityMark } from "@/components/features/admin/user-activity-mark";
 import { UserDealMark } from "@/components/features/admin/user-deal-mark";
 import { UserRoleMark } from "@/components/features/admin/user-role-mark";
-import { UserTierMark } from "@/components/features/admin/user-tier-mark";
 import { volumeTone } from "@/lib/config/user-tones";
 import { idleDays } from "@/lib/data/admin-users";
 import { percentOf } from "@/lib/utils";
@@ -27,12 +26,9 @@ export function UserFocusMetrics({
     const share = percentOf(user.volume, directoryVolume);
 
     return (
-        <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+        <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
             <MetricCell label={STANDING_LABEL}>
-                <span className="flex min-w-0 items-center gap-1.5">
-                    <UserRoleMark role={user.role} />
-                    <UserTierMark tier={user.tier} />
-                </span>
+                <UserRoleMark role={user.role} />
             </MetricCell>
             <MetricCell label={DEALS_LABEL}>
                 <UserDealMark deals={user.transactions} />

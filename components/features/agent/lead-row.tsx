@@ -1,20 +1,23 @@
-import { ChevronRight } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusDot } from "@/components/patterns/status-dot";
-import { LeadFitMeter } from "@/components/features/agent/lead-fit-meter";
-import { chartToneText } from "@/lib/config/chart-tones";
-import { LEAD_SCORES, LEAD_STAGES } from "@/lib/config/lead-tones";
-import type { Lead } from "@/lib/data/agent-leads";
-import { cn, formatCompactUsd, initialsOf } from "@/lib/utils";
+import { LEAD_STAGES } from "@/lib/config/lead-tones";
+import type { Lead } from "@/lib/types/lead";
+import { formatCompactUsd, initialsOf } from "@/lib/utils";
+
+const ACCEPT_LABEL = "Accept enquiry from";
+const DECLINE_LABEL = "Decline enquiry from";
+const UNREAD_SUFFIX = "unread";
+const ACTION_CLASS =
+    "ease-smooth focus-visible:ring-accent grid size-6 place-items-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none";
 
 export interface LeadRowProps {
     lead: Lead;
-    onAdvance: (id: string) => void;
+    onRespond: (id: string, accept: boolean) => void;
 }
 
-export function LeadRow({ lead, onAdvance }: LeadRowProps) {
+export function LeadRow({ lead, onRespond }: LeadRowProps) {
     const stage = LEAD_STAGES[lead.stage];
-    const score = LEAD_SCORES[lead.score];
 
     return (
         <tr className="hover:bg-background-muted ease-smooth h-11 transition-colors">
@@ -41,35 +44,39 @@ export function LeadRow({ lead, onAdvance }: LeadRowProps) {
                     </span>
                 </span>
             </td>
-            <td
-                className={cn(
-                    "truncate py-0 pl-3 text-xs font-medium",
-                    chartToneText[score.tone],
-                )}
-            >
-                {score.label}
+            <td className="text-text-secondary truncate py-0 pl-3 text-xs">
+                {lead.interests[0]}
             </td>
             <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
                 {formatCompactUsd(lead.budget)}
             </td>
-            <td className="py-0 pl-3">
-                <LeadFitMeter percent={lead.fit} />
+            <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
+                {lead.unread > 0 ? `${lead.unread} ${UNREAD_SUFFIX}` : "—"}
             </td>
-            <td className="text-text-secondary truncate py-0 pl-3 text-xs">
+            <td className="text-text-secondary truncate py-0 pl-3 text-xs tabular-nums">
                 {lead.lastContact}
             </td>
-            <td className="text-text-secondary truncate py-0 pl-3 text-xs">
-                {lead.nextAction}
-            </td>
             <td className="py-0 pl-3">
-                <button
-                    type="button"
-                    onClick={() => onAdvance(lead.id)}
-                    aria-label={`${stage.next.label} for ${lead.name}`}
-                    className="text-text-muted hover:bg-background-muted hover:text-text ease-smooth focus-visible:ring-accent grid size-6 place-items-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                >
-                    <ChevronRight className="size-3" strokeWidth={1.5} />
-                </button>
+                {lead.stage === "pending" && (
+                    <span className="flex items-center gap-1">
+                        <button
+                            type="button"
+                            onClick={() => onRespond(lead.id, true)}
+                            aria-label={`${ACCEPT_LABEL} ${lead.name}`}
+                            className={`${ACTION_CLASS} text-success hover:bg-success-light`}
+                        >
+                            <Check className="size-3" strokeWidth={1.5} />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => onRespond(lead.id, false)}
+                            aria-label={`${DECLINE_LABEL} ${lead.name}`}
+                            className={`${ACTION_CLASS} text-text-muted hover:bg-background-muted hover:text-error`}
+                        >
+                            <X className="size-3" strokeWidth={1.5} />
+                        </button>
+                    </span>
+                )}
             </td>
         </tr>
     );

@@ -1,31 +1,21 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { PanelLink } from "@/components/features/shared/panel-link";
-import { OverviewAlertList } from "@/components/features/dashboard/overview-alert-list";
 import { OverviewTaskList } from "@/components/features/dashboard/overview-task-list";
-import { journeyTasks, matchAlerts } from "@/lib/data/dashboard-overview";
+import type { JourneyTask } from "@/lib/data/dashboard-overview";
 
-export function DashboardOverviewRail() {
+const STEPS_TITLE = "Next Steps";
+const STEPS_LEDE = "Where you stand in the purchase";
+
+export interface DashboardOverviewRailProps {
+    tasks: JourneyTask[];
+}
+
+export function DashboardOverviewRail({ tasks }: DashboardOverviewRailProps) {
     return (
         <div className="flex flex-col gap-3">
-            <Panel
-                title="Saved-Search Alerts"
-                count={matchAlerts.length}
-                action={
-                    <PanelLink href="/dashboard/alerts" label="All alerts" />
-                }
-            >
+            <Panel title={STEPS_TITLE} description={STEPS_LEDE}>
                 <PanelInset>
-                    <OverviewAlertList alerts={matchAlerts} />
-                </PanelInset>
-            </Panel>
-
-            <Panel
-                title="Next Steps"
-                description="Where you stand in the purchase"
-            >
-                <PanelInset>
-                    <OverviewTaskList tasks={journeyTasks} />
+                    <OverviewTaskList tasks={tasks} />
                 </PanelInset>
             </Panel>
         </div>

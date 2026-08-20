@@ -46,7 +46,7 @@ export function AdminSettingsMain({
     onSubmit,
 }: AdminSettingsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <AdminSettingsPostureHero
                 pending={pending}
                 enabled={enabledPolicyCount(policies)}

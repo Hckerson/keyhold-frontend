@@ -27,7 +27,7 @@ export function RegionLeaderTile({ region }: RegionLeaderTileProps) {
                 </p>
             </div>
 
-            <div className="grid-orphan-fill bg-background-muted border-border-light mt-2.5 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-3">
+            <div className="metric-strip bg-background-muted border-border-light mt-2.5 gap-3 rounded-md border p-3">
                 <MetricCell label="Listings">
                     <span className="tabular-nums">
                         {formatCount(region.listings)}

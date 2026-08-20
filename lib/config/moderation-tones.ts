@@ -189,15 +189,9 @@ interface ToneBand {
     tone: ChartTone;
 }
 
-const SCORE_BANDS: ToneBand[] = [
-    { floor: 90, tone: "success" },
-    { floor: 65, tone: "warning" },
-];
+const SCORE_BANDS: ToneBand[] = [{ floor: 65, tone: "neutral" }];
 
-const REPORT_BANDS: ToneBand[] = [
-    { floor: 6, tone: "error" },
-    { floor: 1, tone: "warning" },
-];
+const REPORT_BANDS: ToneBand[] = [{ floor: 6, tone: "error" }];
 
 const bandTone = (bands: ToneBand[], value: number, fallback: ChartTone) =>
     bands.find((band) => value >= band.floor)?.tone ?? fallback;

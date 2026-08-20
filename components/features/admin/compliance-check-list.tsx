@@ -8,7 +8,7 @@ export interface ComplianceCheckListProps {
 
 export function ComplianceCheckList({ compliance }: ComplianceCheckListProps) {
     return (
-        <ul className="grid gap-1.5 sm:grid-cols-2">
+        <ul className="card-grid gap-1.5">
             {COMPLIANCE_CHECK_KEYS.map((id) => (
                 <ComplianceCheckMark key={id} id={id} state={compliance[id]} />
             ))}

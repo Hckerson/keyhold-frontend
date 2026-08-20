@@ -1,10 +1,10 @@
 import {
     BadgeCheck,
+    Building2,
     FileText,
     MapPin,
-    Quote,
-    UserRound,
-    Video,
+    Phone,
+    ShieldCheck,
     type LucideIcon,
 } from "lucide-react";
 import type { ShareDatum } from "@/components/patterns/share-row";
@@ -15,6 +15,10 @@ import {
 } from "@/lib/config/account-tones";
 import type { AccountCredential, SecurityControl } from "@/lib/types";
 import { percentOf, sum } from "@/lib/utils";
+import type { User } from "@/lib/validations/user";
+
+const UNVERIFIED_ISSUER = "Not on file";
+const IDENTITY_ISSUER = "Identity document";
 
 export type NotificationRuleId =
     | "new-lead"
@@ -109,42 +113,41 @@ export const areNotificationsDirty = (state: NotificationState) =>
         (rule) => state[rule.id] !== INITIAL_NOTIFICATION_STATE[rule.id],
     );
 
-export const AGENT_CREDENTIALS: readonly AccountCredential[] = [
+export const agentCredentials = (
+    user: User | undefined,
+): AccountCredential[] => [
     {
-        id: "dre-license",
-        label: "DRE License",
-        issuer: "CA Dept. of Real Estate",
-        state: "verified",
-        expiresInMinutes: 267_840,
+        id: "email",
+        label: "Email Address",
+        issuer: user?.email ?? UNVERIFIED_ISSUER,
+        state: user?.emailVerified ? "verified" : "missing",
+        expiresInMinutes: 0,
     },
     {
-        id: "brokerage",
-        label: "Brokerage Association",
-        issuer: "Agent Pro Realty",
-        state: "verified",
-        expiresInMinutes: 528_480,
+        id: "phone",
+        label: "Phone Number",
+        issuer: user?.phoneNumber ?? UNVERIFIED_ISSUER,
+        state: user?.phoneVerified ? "verified" : "missing",
+        expiresInMinutes: 0,
     },
     {
-        id: "eo-insurance",
-        label: "E&O Insurance",
-        issuer: "Meridian Underwriters",
-        state: "expiring",
-        expiresInMinutes: 40_320,
+        id: "identity",
+        label: "Government ID",
+        issuer: IDENTITY_ISSUER,
+        state: user?.kycVerified ? "verified" : "missing",
+        expiresInMinutes: 0,
     },
     {
-        id: "luxury-cert",
-        label: "Luxury Specialist",
-        issuer: "Institute for Luxury Home Marketing",
-        state: "missing",
+        id: "licence",
+        label: "Real Estate Licence",
+        issuer: user?.agencyName ?? UNVERIFIED_ISSUER,
+        state: user?.licenseNumber ? "verified" : "missing",
         expiresInMinutes: 0,
     },
 ];
 
-export const CREDENTIAL_COUNT = AGENT_CREDENTIALS.length;
-
-export const verifiedCredentialCount = AGENT_CREDENTIALS.filter(
-    (credential) => credential.state === "verified",
-).length;
+export const verifiedCredentialCount = (credentials: AccountCredential[]) =>
+    credentials.filter((credential) => credential.state === "verified").length;
 
 export const SECURITY_CONTROLS: readonly SecurityControl[] = [
     {
@@ -179,71 +182,69 @@ export interface ProfileSignal {
     complete: boolean;
 }
 
-export const PROFILE_SIGNALS: readonly ProfileSignal[] = [
+export const profileSignals = (
+    user: User | undefined,
+    listingCount: number,
+): ProfileSignal[] => [
     {
-        id: "license",
+        id: "licence",
         icon: BadgeCheck,
-        label: "License verified",
+        label: "Licence number on file",
+        impact: 24,
+        complete: Boolean(user?.licenseNumber),
+    },
+    {
+        id: "brokerage",
+        icon: Building2,
+        label: "Brokerage named",
         impact: 20,
-        complete: true,
+        complete: Boolean(user?.agencyName),
     },
     {
-        id: "headshot",
-        icon: UserRound,
-        label: "Professional headshot",
+        id: "identity",
+        icon: ShieldCheck,
+        label: "Identity verified",
         impact: 18,
-        complete: true,
-    },
-    {
-        id: "testimonials",
-        icon: Quote,
-        label: "Client testimonials",
-        impact: 18,
-        complete: true,
+        complete: Boolean(user?.kycVerified),
     },
     {
         id: "bio",
         icon: FileText,
         label: "Long-form biography",
         impact: 16,
-        complete: true,
+        complete: Boolean(user?.bio),
     },
     {
-        id: "service-area",
+        id: "contact",
+        icon: Phone,
+        label: "Phone reachable",
+        impact: 12,
+        complete: Boolean(user?.phoneNumber),
+    },
+    {
+        id: "listings",
         icon: MapPin,
-        label: "Service area mapped",
-        impact: 14,
-        complete: true,
-    },
-    {
-        id: "intro-video",
-        icon: Video,
-        label: "Intro video",
-        impact: 14,
-        complete: false,
+        label: "Listings published",
+        impact: 10,
+        complete: listingCount > 0,
     },
 ];
 
-const PEAK_SIGNAL_IMPACT = Math.max(
-    ...PROFILE_SIGNALS.map((signal) => signal.impact),
-);
+export const profileStrength = (signals: ProfileSignal[]) =>
+    percentOf(
+        sum(signals.filter((signal) => signal.complete).map((s) => s.impact)),
+        sum(signals.map((signal) => signal.impact)),
+    );
 
-export const PROFILE_STRENGTH = percentOf(
-    sum(
-        PROFILE_SIGNALS.filter((signal) => signal.complete).map(
-            (signal) => signal.impact,
-        ),
-    ),
-    sum(PROFILE_SIGNALS.map((signal) => signal.impact)),
-);
+export const profileSignalShares = (signals: ProfileSignal[]): ShareDatum[] => {
+    const peak = Math.max(...signals.map((signal) => signal.impact));
 
-export const profileSignalShares: ShareDatum[] = PROFILE_SIGNALS.map(
-    (signal) => ({
+    return signals.map((signal) => ({
         id: signal.id,
         icon: signal.icon,
         label: signal.label,
         value: `${signal.impact}%`,
-        percent: percentOf(signal.impact, PEAK_SIGNAL_IMPACT),
+        percent: percentOf(signal.impact, peak),
         tone: signalTone(signal.complete),
-    }),
-);
+    }));
+};

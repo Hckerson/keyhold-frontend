@@ -17,4 +17,7 @@ export const offersAPI = {
 
     respond: (id: string, input: RespondOfferInput) =>
         query.patch<Offer>(config.api.offers.respond(id), input),
+
+    acceptCounter: (id: string) =>
+        query.patch<Offer>(config.api.offers.acceptCounter(id)),
 };

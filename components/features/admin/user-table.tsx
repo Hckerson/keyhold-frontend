@@ -34,9 +34,6 @@ export function UserTable({
                     <th scope="col" className="micro-label w-16 pl-3 text-left">
                         Role
                     </th>
-                    <th scope="col" className="micro-label w-20 pl-3 text-left">
-                        Tier
-                    </th>
                     <th
                         scope="col"
                         className="micro-label w-14 pl-3 text-right"

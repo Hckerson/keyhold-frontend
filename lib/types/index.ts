@@ -4,6 +4,7 @@ export * from "./alert";
 export * from "./auth";
 export * from "./deal";
 export * from "./journey";
+export * from "./lead";
 export * from "./listing";
 export * from "./message";
 export * from "./moderation";

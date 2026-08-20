@@ -7,22 +7,18 @@ import type { OfferStatus } from "@/lib/types";
 
 export interface OfferDetailActionsProps {
     status: OfferStatus;
-    closed: boolean;
     canAccept: boolean;
     canCounter: boolean;
     onAccept: () => void;
     onCounter: () => void;
-    onWithdraw: () => void;
 }
 
 export function OfferDetailActions({
     status,
-    closed,
     canAccept,
     canCounter,
     onAccept,
     onCounter,
-    onWithdraw,
 }: OfferDetailActionsProps) {
     return (
         <div className="flex flex-wrap items-center gap-2">
@@ -44,14 +40,6 @@ export function OfferDetailActions({
                 onClick={onCounter}
             >
                 Counter
-            </Button>
-            <Button
-                variant="outline-danger"
-                size="sm"
-                disabled={closed}
-                onClick={onWithdraw}
-            >
-                Withdraw
             </Button>
         </div>
     );

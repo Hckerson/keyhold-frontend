@@ -28,7 +28,7 @@ export function ThreadContextRail({
     files,
 }: ThreadContextRailProps) {
     return (
-        <div className="scroll-y flex flex-col gap-3 lg:h-full">
+        <div className="scroll-y flex flex-col gap-3">
             {conversation && (
                 <>
                     <Panel title={PROPERTY_TITLE} description={PROPERTY_LEDE}>

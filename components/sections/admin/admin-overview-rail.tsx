@@ -4,11 +4,7 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { AudienceMix } from "@/components/features/admin/audience-mix";
 import { ModerationQueueTable } from "@/components/features/admin/moderation-queue-table";
 import { MODERATION_LOAD, OPEN_BACKLOG } from "@/lib/data/admin-overview";
-import {
-    TOTAL_USERS,
-    USER_ROLE_SEGMENTS,
-    USER_TIER_SEGMENTS,
-} from "@/lib/data/admin-users";
+import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import { formatCount } from "@/lib/utils";
 
 const QUEUE_TITLE = "Moderation Load";
@@ -16,9 +12,19 @@ const QUEUE_LEDE = "Backlog against reviewer capacity";
 const QUEUE_ACTION = "Listings";
 const AUDIENCE_TITLE = "Audience";
 const AUDIENCE_ACTION = "Users";
-const TIER_LABEL = "By tier";
+const STATUS_LABEL = "By account status";
 
-export function AdminOverviewRail() {
+export interface AdminOverviewRailProps {
+    roles: DonutSegment[];
+    statuses: DonutSegment[];
+    total: number;
+}
+
+export function AdminOverviewRail({
+    roles,
+    statuses,
+    total,
+}: AdminOverviewRailProps) {
     return (
         <div className="flex flex-col gap-3">
             <Panel
@@ -42,10 +48,10 @@ export function AdminOverviewRail() {
                 bodyClassName="pt-3"
             >
                 <AudienceMix
-                    roles={USER_ROLE_SEGMENTS}
-                    tiers={USER_TIER_SEGMENTS}
-                    total={formatCount(TOTAL_USERS)}
-                    tierLabel={TIER_LABEL}
+                    roles={roles}
+                    tiers={statuses}
+                    total={formatCount(total)}
+                    tierLabel={STATUS_LABEL}
                 />
             </Panel>
         </div>

@@ -48,7 +48,7 @@ export function ModerationMain({
     onDecide,
 }: ModerationMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {focus && (
                 <PresenceSwap swapKey={focus.id}>
                     <ModerationFocusHero

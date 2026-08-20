@@ -5,7 +5,7 @@ import { ListingsHeader } from "@/components/sections/agent/listings-header";
 import { ListingsMain } from "@/components/sections/agent/listings-main";
 import { ListingsRail } from "@/components/sections/agent/listings-rail";
 import { ListingsStatBand } from "@/components/sections/agent/listings-stat-band";
-import { ConsoleUnavailable } from "@/components/sections/agent/console-unavailable";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import {
     countByStatus,
     listingStats,
@@ -15,6 +15,7 @@ import {
     type BulkAction,
     type StatusFilter,
 } from "@/lib/data/agent-listings";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useSession } from "@/lib/hooks/use-session";
 import {
     useDeleteProperty,
@@ -99,7 +100,13 @@ export function ListingConsole() {
         );
     };
 
-    if (isError) return <ConsoleUnavailable onRetry={() => void refetch()} />;
+    if (isError)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.agentListings}
+                onRetry={() => void refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">

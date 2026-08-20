@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { OfferRow } from "@/components/features/dashboard/offer-row";
 import type { Offer } from "@/lib/types";
 
@@ -62,13 +63,15 @@ export function OfferTable({ offers, onWithdraw }: OfferTableProps) {
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {offers.map((offer) => (
-                    <OfferRow
-                        key={offer.id}
-                        offer={offer}
-                        onWithdraw={onWithdraw}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {offers.map((offer) => (
+                        <OfferRow
+                            key={offer.id}
+                            offer={offer}
+                            onWithdraw={onWithdraw}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

@@ -11,21 +11,19 @@ import type { OfferStatus } from "@/lib/types";
 export interface OfferDetailHeaderProps {
     detail: OfferDetail;
     status: OfferStatus;
-    closed: boolean;
+    canAccept: boolean;
     canCounter: boolean;
     onAccept: () => void;
     onCounter: () => void;
-    onWithdraw: () => void;
 }
 
 export function OfferDetailHeader({
     detail,
     status,
-    closed,
+    canAccept,
     canCounter,
     onAccept,
     onCounter,
-    onWithdraw,
 }: OfferDetailHeaderProps) {
     return (
         <>
@@ -43,12 +41,10 @@ export function OfferDetailHeader({
                 action={
                     <OfferDetailActions
                         status={status}
-                        closed={closed}
-                        canAccept={!closed && detail.counterPrice !== undefined}
+                        canAccept={canAccept}
                         canCounter={canCounter}
                         onAccept={onAccept}
                         onCounter={onCounter}
-                        onWithdraw={onWithdraw}
                     />
                 }
             />

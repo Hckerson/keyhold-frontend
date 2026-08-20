@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TRANSACTION_STATUSES } from "@/lib/enums/enums";
 import { userSummarySchema } from "@/lib/validations/user";
-import { connectionPropertySchema } from "@/lib/validations/connection";
+import { connectionListPropertySchema } from "@/lib/validations/connection-list";
 
 export const transactionSchema = z.object({
     id: z.string(),
@@ -16,7 +16,7 @@ export const transactionSchema = z.object({
     sellerId: z.string(),
     buyer: userSummarySchema.optional(),
     seller: userSummarySchema.optional(),
-    property: connectionPropertySchema.optional(),
+    property: connectionListPropertySchema.optional(),
     completedAt: z.iso.datetime().nullable(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),

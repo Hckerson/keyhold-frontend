@@ -7,10 +7,7 @@ import {
 } from "lucide-react";
 import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import {
-    QUEUE_SEED_BACKLOG,
-    SIGNAL_SEVERITIES,
-} from "@/lib/config/admin-tones";
+import { QUEUE_SEED_BACKLOG } from "@/lib/config/admin-tones";
 import type {
     MetricItem,
     ModerationQueueLoad,
@@ -19,15 +16,13 @@ import type {
 } from "@/lib/types";
 import {
     AVG_COMMISSION_PER_DEAL,
-    CLOSED_DEALS_30D,
     COMMISSIONS_30D,
     COMMISSIONS_YTD,
     GMV_30D,
     GMV_YTD,
     TAKE_RATE_LABEL,
 } from "@/lib/data/admin-platform";
-import { ACTIVE_LISTINGS } from "@/lib/data/admin-reports";
-import { TOTAL_USERS } from "@/lib/data/admin-users";
+import type { PlatformStats, UserStats } from "@/lib/validations/stats";
 import {
     formatCount,
     formatMillions,
@@ -70,12 +65,15 @@ export const OPEN_BACKLOG = MODERATION_LOAD.reduce(
 export const queueShare = (queue: ModerationQueueLoad) =>
     Math.round((queue.backlog / queue.capacity) * 100);
 
-export const PLATFORM_STATS: StatDatum[] = [
+export const platformStatBand = (
+    platform: PlatformStats | undefined,
+    users: UserStats | undefined,
+): StatDatum[] => [
     {
         id: "members",
         icon: Users,
         label: "Members",
-        value: formatCount(TOTAL_USERS),
+        value: formatCount(platform?.users ?? 0),
         tone: "accent",
         href: "/admin/users",
     },
@@ -83,33 +81,33 @@ export const PLATFORM_STATS: StatDatum[] = [
         id: "listings",
         icon: Home,
         label: "Live listings",
-        value: formatCount(ACTIVE_LISTINGS),
+        value: formatCount(platform?.activeProperties ?? 0),
         tone: "info",
         href: "/admin/listings",
     },
     {
         id: "deals",
         icon: ArrowLeftRight,
-        label: "Deals 30d",
-        value: formatCount(CLOSED_DEALS_30D),
+        label: "Deals closed",
+        value: formatCount(platform?.completedTransactions ?? 0),
         tone: "highlight",
         href: "/admin/transactions",
     },
     {
         id: "gmv",
         icon: Wallet,
-        label: "GMV 30d",
-        value: formatMillions(GMV_30D, 0),
+        label: "Settled volume",
+        value: formatMillions(platform?.volume ?? 0, 0),
         tone: "success",
         href: "/admin/reports",
     },
     {
-        id: "backlog",
+        id: "pending",
         icon: ClipboardCheck,
-        label: "Open queue",
-        value: formatCount(OPEN_BACKLOG),
+        label: "Pending accounts",
+        value: formatCount(users?.pending ?? 0),
         tone: "warning",
-        href: "/admin/verifications",
+        href: "/admin/users",
     },
 ];
 
@@ -199,10 +197,6 @@ export const PLATFORM_SIGNALS: PlatformSignal[] = [
     },
 ];
 
-const CRITICAL_SIGNALS = PLATFORM_SIGNALS.filter(
-    (signal) => SIGNAL_SEVERITIES[signal.severity].rank > 1,
-).length;
-
 const SIGNAL_EXPOSURE = PLATFORM_SIGNALS.reduce(
     (total, signal) => total + (signal.exposure ?? 0),
     0,
@@ -261,4 +255,10 @@ export const SERVICE_SUMMARY = `Uptime ${averageUptime.toFixed(2)}% · ${
     SERVICES.filter((service) => service.state !== "operational").length
 } degraded (24h)`;
 
-export const OVERVIEW_SUMMARY = `${CRITICAL_SIGNALS} critical · ${OPEN_BACKLOG} queued · ${SIGNAL_EXPOSURE_LABEL} exposed`;
+export const overviewSummary = (
+    platform: PlatformStats | undefined,
+    users: UserStats | undefined,
+) =>
+    `${formatCount(users?.active ?? 0)} active · ${formatCount(
+        platform?.connections ?? 0,
+    )} connections · ${formatMillions(platform?.volume ?? 0, 0)} settled`;

@@ -60,3 +60,10 @@ export const COLLAPSE_MOTION: MotionPresence = {
     exit: { opacity: 0, height: 0 },
     transition: FAST,
 };
+
+export const ENTRY_MOTION: MotionPresence = {
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0 },
+    transition: NORMAL,
+};
