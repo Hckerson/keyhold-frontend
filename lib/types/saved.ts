@@ -11,6 +11,7 @@ export interface SavedListing {
     baths: number;
     sqft: number;
     status: SavedStatus;
+    matchScore: number;
     savedDaysAgo: number;
     viewedDaysAgo: number;
     offerId?: string;

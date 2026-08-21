@@ -4,6 +4,7 @@ import Link from "next/link";
 import { m } from "motion/react";
 import { Trash2 } from "lucide-react";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
+import { SavedMatchMeter } from "@/components/features/dashboard/saved-match-meter";
 import { SavedMoveMark } from "@/components/features/dashboard/saved-move-mark";
 import { SavedStatusMark } from "@/components/features/dashboard/saved-status-mark";
 import { chartToneText } from "@/lib/config/chart-tones";
@@ -52,6 +53,9 @@ export function SavedRow({ listing, onRemove }: SavedRowProps) {
             </td>
             <td className="py-0 pl-3 text-right">
                 <SavedMoveMark percent={movePercent(listing)} />
+            </td>
+            <td className="py-0 pl-3">
+                <SavedMatchMeter score={listing.matchScore} />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
                 {listing.savedDaysAgo}

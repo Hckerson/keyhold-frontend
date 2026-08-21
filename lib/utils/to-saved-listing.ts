@@ -25,6 +25,7 @@ export const toSavedListing = (entry: SavedProperty): SavedListing => {
         baths: property.bathrooms,
         sqft: property.sqFt ?? 0,
         status: SAVED_STATUS_BY_PROPERTY[property.status],
+        matchScore: 0,
         savedDaysAgo: daysSince(entry.createdAt),
         viewedDaysAgo: daysSince(entry.createdAt),
     };

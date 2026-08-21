@@ -8,10 +8,13 @@ import {
 import type { ShareDatum } from "@/components/patterns/share-row";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
+    MATCH_BANDS,
+    MATCH_BAND_KEYS,
     SAVED_STATUSES,
     SAVED_STATUS_KEYS,
     WATCH_BANDS,
     WATCH_BAND_KEYS,
+    matchBandOf,
     watchBandOf,
 } from "@/lib/config/saved-tones";
 import type { SavedListing, SavedStatus } from "@/lib/types";
@@ -19,7 +22,7 @@ import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
 export type SavedStatusFilter = SavedStatus | "all";
 
-export type SavedSortKey = "rank" | "move" | "price-asc" | "recent";
+export type SavedSortKey = "rank" | "move" | "match" | "price-asc" | "recent";
 
 export const SAVED_FILTERS: { id: SavedStatusFilter; label: string }[] = [
     { id: "all", label: "All" },
@@ -29,6 +32,7 @@ export const SAVED_FILTERS: { id: SavedStatusFilter; label: string }[] = [
 export const SAVED_SORTS: { value: SavedSortKey; label: string }[] = [
     { value: "rank", label: "Priority" },
     { value: "move", label: "Biggest cut" },
+    { value: "match", label: "Best match" },
     { value: "price-asc", label: "Price low-high" },
     { value: "recent", label: "Recently saved" },
 ];
@@ -63,6 +67,7 @@ export const rankSaved = (listings: SavedListing[]) =>
             Number(SAVED_STATUSES[b.status].live) -
                 Number(SAVED_STATUSES[a.status].live) ||
             Number(b.offerId !== undefined) - Number(a.offerId !== undefined) ||
+            b.matchScore - a.matchScore ||
             priceMove(a) - priceMove(b) ||
             a.savedDaysAgo - b.savedDaysAgo,
     );
@@ -73,6 +78,7 @@ const SORTERS: Record<
 > = {
     rank: () => 0,
     move: (a, b) => priceMove(a) - priceMove(b),
+    match: (a, b) => b.matchScore - a.matchScore,
     "price-asc": (a, b) => a.price - b.price,
     recent: (a, b) => a.savedDaysAgo - b.savedDaysAgo,
 };
@@ -144,6 +150,21 @@ export const statusShares = (listings: SavedListing[]): ShareDatum[] => {
         tone: SAVED_STATUSES[id].chartTone,
     }));
 };
+
+export const matchShares = (listings: SavedListing[]): ShareDatum[] =>
+    MATCH_BAND_KEYS.map((id) => {
+        const count = listings.filter(
+            (listing) => matchBandOf(listing.matchScore) === id,
+        ).length;
+        return {
+            id,
+            icon: MATCH_BANDS[id].icon,
+            label: MATCH_BANDS[id].label,
+            value: `${count}`,
+            percent: percentOf(count, listings.length),
+            tone: MATCH_BANDS[id].tone,
+        };
+    });
 
 export const watchShares = (listings: SavedListing[]): ShareDatum[] =>
     WATCH_BAND_KEYS.map((id) => {
