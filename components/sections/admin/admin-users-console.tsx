@@ -19,12 +19,19 @@ import {
     userStats,
     userSummary,
 } from "@/lib/data/admin-users";
-import { useSetUserStatus, useUsers } from "@/lib/hooks/use-users";
+import { useUsers } from "@/lib/hooks/use-users";
 import {
-    ACCOUNT_STATUS_BY_MANAGED,
-    toManagedUser,
-} from "@/lib/utils/to-managed-user";
+    useLiftSuspension,
+    useSuspendUser,
+    useSuspensions,
+} from "@/lib/hooks/use-suspensions";
+import {
+    EMPTY_SUSPENSION_DRAFT,
+    isSuspensionReady,
+} from "@/lib/config/suspension";
+import { toManagedUser } from "@/lib/utils/to-managed-user";
 import type {
+    SuspensionDraft,
     UserRoleFilter,
     UserSortKey,
     UserStatusFilter,
@@ -36,7 +43,9 @@ const DEFAULT_SORT: UserSortKey = "priority";
 
 export function AdminUsersConsole() {
     const { data, isPending, isError, refetch } = useUsers();
-    const updateStatus = useSetUserStatus();
+    const activeSuspensions = useSuspensions({ active: true });
+    const suspendUser = useSuspendUser();
+    const liftSuspension = useLiftSuspension();
 
     const [query, setQuery] = useState("");
     const [status, setStatus] = useState<UserStatusFilter>(EVERY_STATUS);
@@ -44,9 +53,20 @@ export function AdminUsersConsole() {
     const [sort, setSort] = useState<UserSortKey>(DEFAULT_SORT);
     const [detailId, setDetailId] = useState<string | null>(null);
     const [suspendId, setSuspendId] = useState<string | null>(null);
-    const [note, setNote] = useState("");
+    const [draft, setDraft] = useState<SuspensionDraft>(EMPTY_SUSPENSION_DRAFT);
 
     const users = useMemo(() => (data ?? []).map(toManagedUser), [data]);
+
+    const suspensionByUser = useMemo(
+        () =>
+            new Map(
+                (activeSuspensions.data?.items ?? []).map((suspension) => [
+                    suspension.userId,
+                    suspension.id,
+                ]),
+            ),
+        [activeSuspensions.data],
+    );
 
     const counts = useMemo(() => countUsersByStatus(users), [users]);
     const stats = useMemo(() => userStats(users), [users]);
@@ -72,30 +92,30 @@ export function AdminUsersConsole() {
     const onReactivate = useCallback(
         (id: string) => {
             setDetailId(null);
-            void updateStatus.mutateAsync({
-                id,
-                status: ACCOUNT_STATUS_BY_MANAGED.active,
-            });
+            const suspensionId = suspensionByUser.get(id);
+            if (suspensionId) void liftSuspension.mutateAsync(suspensionId);
         },
-        [updateStatus],
+        [liftSuspension, suspensionByUser],
     );
 
     const onSuspend = useCallback((id: string) => {
         setDetailId(null);
-        setNote("");
+        setDraft(EMPTY_SUSPENSION_DRAFT);
         setSuspendId(id);
     }, []);
 
     const onCloseSuspend = useCallback(() => {
         setSuspendId(null);
-        setNote("");
+        setDraft(EMPTY_SUSPENSION_DRAFT);
     }, []);
 
     const onSubmitSuspend = () => {
-        if (!suspendId || !note.trim()) return;
-        void updateStatus.mutateAsync({
-            id: suspendId,
-            status: ACCOUNT_STATUS_BY_MANAGED.suspended,
+        if (!suspendId || !isSuspensionReady(draft)) return;
+        void suspendUser.mutateAsync({
+            userId: suspendId,
+            reason: draft.reason.trim(),
+            duration: draft.duration ? Number(draft.duration) : undefined,
+            notes: draft.notes.trim() || undefined,
         });
         onCloseSuspend();
     };
@@ -147,8 +167,9 @@ export function AdminUsersConsole() {
 
             <UserSuspendModal
                 user={users.find((user) => user.id === suspendId)}
-                note={note}
-                onNoteChange={setNote}
+                draft={draft}
+                pending={suspendUser.isPending}
+                onDraftChange={setDraft}
                 onClose={onCloseSuspend}
                 onSubmit={onSubmitSuspend}
             />

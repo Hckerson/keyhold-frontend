@@ -19,6 +19,12 @@ export interface ManagedUser {
     note?: string;
 }
 
+export interface SuspensionDraft {
+    reason: string;
+    duration: string;
+    notes: string;
+}
+
 export interface UserDirectoryFilters {
     query: string;
     status: UserStatusFilter;

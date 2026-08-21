@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/forms/select";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
 import {
     Modal,
@@ -9,35 +10,49 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import type { ManagedUser } from "@/lib/types";
+import {
+    isSuspensionReady,
+    SUSPENSION_DURATIONS,
+} from "@/lib/config/suspension";
+import type { ManagedUser, SuspensionDraft } from "@/lib/types";
 
-const NOTE_ID = "user-suspension-note";
-const NOTE_NAME = "userSuspensionNote";
-const NOTE_ROWS = 4;
+const REASON_NAME = "userSuspensionReason";
+const NOTES_NAME = "userSuspensionNotes";
+const REASON_ROWS = 4;
+const NOTES_ROWS = 2;
 const MODAL_TITLE = "Suspend account";
-const NOTE_FIELD = "Reason for suspension";
-const NOTE_PLACEHOLDER =
+const REASON_FIELD = "Reason for suspension";
+const REASON_PLACEHOLDER =
     "Explain what the account did and what it must resolve before it is reinstated. This reason is stored with the account.";
-const NOTE_HINT =
+const REASON_HINT =
     "Required. A suspended account cannot list, bid or transact until it is reactivated.";
+const DURATION_FIELD = "Duration";
+const NOTES_FIELD = "Internal notes";
+const NOTES_PLACEHOLDER =
+    "Context for other moderators. Never shown to the account.";
 const CANCEL_ACTION = "Cancel";
 const SUBMIT_ACTION = "Suspend account";
 
 export interface UserSuspendModalProps {
     user?: ManagedUser;
-    note: string;
-    onNoteChange: (value: string) => void;
+    draft: SuspensionDraft;
+    pending?: boolean;
+    onDraftChange: (draft: SuspensionDraft) => void;
     onClose: () => void;
     onSubmit: () => void;
 }
 
 export function UserSuspendModal({
     user,
-    note,
-    onNoteChange,
+    draft,
+    pending,
+    onDraftChange,
     onClose,
     onSubmit,
 }: UserSuspendModalProps) {
+    const patch = (change: Partial<SuspensionDraft>) =>
+        onDraftChange({ ...draft, ...change });
+
     return (
         <Modal
             open={user !== undefined}
@@ -54,21 +69,44 @@ export function UserSuspendModal({
                         </p>
                     </ModalHeader>
 
-                    <ModalBody className="p-4">
+                    <ModalBody className="flex flex-col gap-3 p-4">
                         <TextareaField
-                            id={NOTE_ID}
-                            name={NOTE_NAME}
-                            label={NOTE_FIELD}
-                            rows={NOTE_ROWS}
-                            value={note}
+                            name={REASON_NAME}
+                            label={REASON_FIELD}
+                            rows={REASON_ROWS}
+                            value={draft.reason}
                             onChange={(event) =>
-                                onNoteChange(event.target.value)
+                                patch({ reason: event.target.value })
                             }
-                            placeholder={NOTE_PLACEHOLDER}
+                            placeholder={REASON_PLACEHOLDER}
                         />
-                        <p className="text-text-muted mt-1.5 text-xs">
-                            {NOTE_HINT}
+                        <p className="text-text-muted -mt-1.5 text-xs">
+                            {REASON_HINT}
                         </p>
+
+                        <div className="flex w-full flex-col gap-1.5">
+                            <span className="text-text-secondary text-xs font-medium">
+                                {DURATION_FIELD}
+                            </span>
+                            <Select
+                                size="sm"
+                                label={DURATION_FIELD}
+                                options={SUSPENSION_DURATIONS}
+                                value={draft.duration}
+                                onChange={(duration) => patch({ duration })}
+                            />
+                        </div>
+
+                        <TextareaField
+                            name={NOTES_NAME}
+                            label={NOTES_FIELD}
+                            rows={NOTES_ROWS}
+                            value={draft.notes}
+                            onChange={(event) =>
+                                patch({ notes: event.target.value })
+                            }
+                            placeholder={NOTES_PLACEHOLDER}
+                        />
                     </ModalBody>
 
                     <ModalFooter className="gap-2 p-4">
@@ -84,7 +122,7 @@ export function UserSuspendModal({
                             type="button"
                             variant="danger"
                             size="sm"
-                            disabled={note.trim().length === 0}
+                            disabled={pending || !isSuspensionReady(draft)}
                             onClick={onSubmit}
                         >
                             {SUBMIT_ACTION}
