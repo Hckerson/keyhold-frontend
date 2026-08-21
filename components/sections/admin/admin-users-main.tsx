@@ -2,6 +2,7 @@
 
 import { Users } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
@@ -22,6 +23,8 @@ const DIRECTORY_ACTION = "Verifications";
 const EMPTY_TITLE = "No account matches this view";
 const EMPTY_LEDE =
     "Clear the search or widen the status and role filters to see the full directory.";
+const LOADING_TITLE = "Loading the directory";
+const LOADING_LEDE = "Fetching every managed account on the platform.";
 
 export interface AdminUsersMainProps {
     focus?: ManagedUser;
@@ -33,6 +36,7 @@ export interface AdminUsersMainProps {
     role: UserRoleFilter;
     sort: UserSortKey;
     counts: Record<UserStatusFilter, number>;
+    pending?: boolean;
     onQueryChange: (next: string) => void;
     onStatusChange: (next: UserStatusFilter) => void;
     onRoleChange: (next: UserRoleFilter) => void;
@@ -52,6 +56,7 @@ export function AdminUsersMain({
     role,
     sort,
     counts,
+    pending = false,
     onQueryChange,
     onStatusChange,
     onRoleChange,
@@ -61,15 +66,17 @@ export function AdminUsersMain({
     onReactivate,
 }: AdminUsersMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {focus && (
-                <AdminUsersFocusHero
-                    user={focus}
-                    directoryVolume={directoryVolume}
-                    onOpen={onOpen}
-                    onSuspend={onSuspend}
-                    onReactivate={onReactivate}
-                />
+                <PresenceSwap swapKey={focus.id}>
+                    <AdminUsersFocusHero
+                        user={focus}
+                        directoryVolume={directoryVolume}
+                        onOpen={onOpen}
+                        onSuspend={onSuspend}
+                        onReactivate={onReactivate}
+                    />
+                </PresenceSwap>
             )}
 
             <Panel
@@ -95,23 +102,25 @@ export function AdminUsersMain({
                     onSortChange={onSortChange}
                 />
 
-                {users.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
-                        <UserTable
-                            users={users}
-                            peak={peak}
-                            onOpen={onOpen}
-                            onSuspend={onSuspend}
-                            onReactivate={onReactivate}
+                <PresenceSwap swapKey={users.length > 0 ? "rows" : "empty"}>
+                    {users.length > 0 ? (
+                        <PanelInset scroll className="mt-0">
+                            <UserTable
+                                users={users}
+                                peak={peak}
+                                onOpen={onOpen}
+                                onSuspend={onSuspend}
+                                onReactivate={onReactivate}
+                            />
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            icon={Users}
+                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
                         />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={Users}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
+                    )}
+                </PresenceSwap>
             </Panel>
         </div>
     );

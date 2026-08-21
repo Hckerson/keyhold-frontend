@@ -68,7 +68,7 @@ export function UserDetailModal({
                     </ModalHeader>
 
                     <ModalBody className="scroll-y max-h-[60vh] space-y-4 p-4">
-                        <div className="bg-background border-border-light grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+                        <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
                             <MetricCell label={VOLUME_LABEL}>
                                 <UserVolumeMeter
                                     volume={user.volume}

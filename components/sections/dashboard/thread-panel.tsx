@@ -27,7 +27,7 @@ export function ThreadPanel({
     onSend,
 }: ThreadPanelProps) {
     return (
-        <section className="bg-background-muted border-border-light flex flex-col overflow-hidden rounded-xl border shadow-sm lg:col-span-2 lg:h-full">
+        <section className="console-span-2 bg-background-muted border-border-light flex flex-col overflow-hidden rounded-xl border shadow-sm">
             {conversation ? (
                 <>
                     <ThreadHeader conversation={conversation} />

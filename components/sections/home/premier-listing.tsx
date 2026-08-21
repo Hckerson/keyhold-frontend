@@ -12,7 +12,8 @@ import {
 import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
 import { Button } from "@/components/ui/button";
-import { FEATURED_LISTINGS, formatPrice } from "@/lib/data/listings";
+import { formatUsd } from "@/lib/utils";
+import type { Listing } from "@/lib/types";
 
 interface Spec {
     icon: LucideIcon;
@@ -20,25 +21,39 @@ interface Spec {
     label: string;
 }
 
-const SOURCE = FEATURED_LISTINGS[0];
+interface PremierListingProps {
+    listing: Listing;
+}
 
-const LISTING = {
-    id: SOURCE.id,
-    image: SOURCE.images[0],
-    place: `${SOURCE.locality.split(",")[0]} · Off-market`,
-    name: SOURCE.title,
-    address: `${SOURCE.address}, ${SOURCE.locality}`,
-    price: formatPrice(SOURCE.price),
-    priceLabel: "Guide price",
-};
+interface ListingView {
+    id: string;
+    image: string;
+    place: string;
+    name: string;
+    address: string;
+    price: string;
+    priceLabel: string;
+}
 
-const SPECS: Spec[] = [
-    { icon: BedDouble, value: String(SOURCE.beds), label: "Bedrooms" },
-    { icon: Bath, value: String(SOURCE.baths), label: "Bathrooms" },
-    { icon: Ruler, value: SOURCE.sqft.toLocaleString(), label: "Sq Ft" },
+const PRICE_LABEL = "Guide price";
+
+const toView = (listing: Listing): ListingView => ({
+    id: listing.id,
+    image: listing.images[0] ?? "",
+    place: `${listing.locality.split(",")[0]} · Off-market`,
+    name: listing.title,
+    address: `${listing.address}, ${listing.locality}`,
+    price: formatUsd(listing.price),
+    priceLabel: PRICE_LABEL,
+});
+
+const toSpecs = (listing: Listing): Spec[] => [
+    { icon: BedDouble, value: String(listing.beds), label: "Bedrooms" },
+    { icon: Bath, value: String(listing.baths), label: "Bathrooms" },
+    { icon: Ruler, value: listing.sqft.toLocaleString(), label: "Sq Ft" },
 ];
 
-function ListingMedia() {
+function ListingMedia({ listing }: { listing: ListingView }) {
     return (
         <div className="relative">
             <span className="bg-sidebar/75 text-text-inverse ring-highlight/30 absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[10px] tracking-[0.14em] uppercase shadow-md ring-1 backdrop-blur-md">
@@ -46,18 +61,18 @@ function ListingMedia() {
                 Premier listing
             </span>
             <img
-                src={LISTING.image}
-                alt={LISTING.name}
+                src={listing.image}
+                alt={listing.name}
                 className="h-100 w-full rounded-xl object-cover shadow-md md:h-140"
             />
         </div>
     );
 }
 
-function SpecCluster() {
+function SpecCluster({ specs }: { specs: Spec[] }) {
     return (
         <div className="bg-background-muted/60 border-border-light flex flex-wrap gap-x-8 gap-y-3 rounded-md border p-3">
-            {SPECS.map((spec) => (
+            {specs.map((spec) => (
                 <div key={spec.label} className="flex items-center gap-2">
                     <spec.icon
                         size={12}
@@ -76,18 +91,21 @@ function SpecCluster() {
     );
 }
 
-export function PremierListing() {
+export function PremierListing({ listing }: PremierListingProps) {
+    const view = toView(listing);
+    const specs = toSpecs(listing);
+
     return (
         <section className="bg-background py-16 md:py-20">
             <SectionShell>
                 <div className="grid items-center gap-10 lg:grid-cols-[58%_1fr] lg:gap-14">
-                    <ListingMedia />
+                    <ListingMedia listing={view} />
 
                     <div className="flex flex-col gap-5">
                         <div className="flex flex-col gap-2.5">
                             <SectionHeading
-                                eyebrow={LISTING.place}
-                                title={LISTING.name}
+                                eyebrow={view.place}
+                                title={view.name}
                             />
                             <p className="text-text-secondary flex items-center gap-1.5 text-xs">
                                 <MapPin
@@ -95,7 +113,7 @@ export function PremierListing() {
                                     strokeWidth={1.5}
                                     className="text-text-muted shrink-0"
                                 />
-                                {LISTING.address}
+                                {view.address}
                             </p>
                         </div>
 
@@ -105,14 +123,14 @@ export function PremierListing() {
                                 className="bg-highlight/25 pointer-events-none absolute -top-6 -left-6 -z-10 h-24 w-56 rounded-full blur-3xl"
                             />
                             <span className="font-display text-text text-h3 leading-none font-light tracking-tight tabular-nums">
-                                {LISTING.price}
+                                {view.price}
                             </span>
                             <span className="text-text-muted font-mono text-[10px] tracking-[0.14em] uppercase">
-                                {LISTING.priceLabel}
+                                {view.priceLabel}
                             </span>
                         </div>
 
-                        <SpecCluster />
+                        <SpecCluster specs={specs} />
 
                         <div className="flex flex-wrap items-center gap-6">
                             <Button variant="primary" size="md">
@@ -124,7 +142,7 @@ export function PremierListing() {
                                 />
                             </Button>
                             <Link
-                                href={`/listing/${LISTING.id}`}
+                                href={`/listing/${view.id}`}
                                 className="border-border-dark hover:border-accent text-text ease-smooth inline-flex items-center gap-1.5 border-b pb-0.5 text-xs font-medium transition-colors duration-200"
                             >
                                 View full dossier

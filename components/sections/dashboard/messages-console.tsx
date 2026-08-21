@@ -118,7 +118,7 @@ export function MessagesConsole() {
 
             <MessagesStatBand stats={stats} />
 
-            <div className="console-split console-split--quarters gap-3 lg:h-150">
+            <div className="console-split console-split--quarters console-split--tall gap-3">
                 <ConversationRail
                     conversations={visible}
                     selectedId={selectedId}

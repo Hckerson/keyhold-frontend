@@ -36,7 +36,7 @@ export function ConversationRail({
     onSelect,
 }: ConversationRailProps) {
     return (
-        <section className="bg-background-muted border-border-light flex flex-col overflow-hidden rounded-xl border shadow-sm lg:h-full">
+        <section className="bg-background-muted border-border-light flex flex-col overflow-hidden rounded-xl border shadow-sm">
             <div className="border-border-light shrink-0 border-b px-3 py-2.5">
                 <Input
                     id="conversation-search"

@@ -890,7 +890,3 @@ export function getComparables(listing: Listing, limit = 4): Listing[] {
     );
     return [...sameArea, ...elsewhere].slice(0, limit);
 }
-
-export function formatPrice(price: number): string {
-    return `$${price.toLocaleString()}`;
-}

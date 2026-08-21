@@ -15,7 +15,6 @@ import {
     type NotificationState,
 } from "@/lib/data/agent-account";
 import {
-    AGENT_BUSINESS_FIELDS,
     AGENT_PROFILE_FIELDS,
     AGENT_SETTINGS_FORM_ID,
     type AgentSettingsForm,
@@ -23,8 +22,6 @@ import {
 
 const PROFILE_TITLE = "Agent Profile";
 const PROFILE_LEDE = "Identity buyers see beside every one of your listings";
-const BUSINESS_TITLE = "Business Preferences";
-const BUSINESS_LEDE = "Defaults applied to new listings and inbound leads";
 const ROUTING_TITLE = "Alert Routing";
 const ROUTING_LEDE =
     "Which channel carries each alert and how much traffic it sends";
@@ -33,6 +30,10 @@ export interface AgentSettingsMainProps {
     form: AgentSettingsForm;
     notifications: NotificationState;
     pending: number;
+    strength: number;
+    verified: number;
+    credentials: number;
+    updatedAt?: string;
     onFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onNotificationToggle: (id: NotificationRuleId) => void;
     onSubmit: (event: FormEvent) => void;
@@ -42,16 +43,23 @@ export function AgentSettingsMain({
     form,
     notifications,
     pending,
+    strength,
+    verified,
+    credentials,
+    updatedAt,
     onFieldChange,
     onNotificationToggle,
     onSubmit,
 }: AgentSettingsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <AgentSettingsProfileHero
                 pending={pending}
-                serviceArea={form.serviceArea}
+                strength={strength}
+                verified={verified}
+                credentials={credentials}
                 brokerage={form.brokerage}
+                updatedAt={updatedAt}
                 enabledAlerts={enabledNotificationCount(notifications)}
                 weeklySends={weeklyAlertVolume(notifications)}
             />
@@ -65,14 +73,6 @@ export function AgentSettingsMain({
                     title={PROFILE_TITLE}
                     description={PROFILE_LEDE}
                     fields={AGENT_PROFILE_FIELDS}
-                    values={form}
-                    onChange={onFieldChange}
-                />
-
-                <ConfigPanel
-                    title={BUSINESS_TITLE}
-                    description={BUSINESS_LEDE}
-                    fields={AGENT_BUSINESS_FIELDS}
                     values={form}
                     onChange={onFieldChange}
                 />

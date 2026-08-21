@@ -3,14 +3,19 @@
 import {
     forwardRef,
     useEffect,
+    useRef,
     type HTMLAttributes,
     type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, m, type HTMLMotionProps } from "motion/react";
+import { MODAL_BACKDROP_MOTION, MODAL_PLATE_MOTION } from "@/lib/config/motion";
+import { useMounted } from "@/lib/hooks/use-mounted";
 import { cn } from "@/lib/utils";
 
 const ESCAPE_KEY = "Escape";
 
-interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+interface ModalProps extends HTMLMotionProps<"div"> {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
     children: ReactNode;
@@ -38,6 +43,13 @@ interface ModalFooterProps extends HTMLAttributes<HTMLDivElement> {
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
     ({ open = false, onOpenChange, className, children, ...props }, ref) => {
+        const settled = useRef<ReactNode>(null);
+        const mounted = useMounted();
+
+        useEffect(() => {
+            if (open) settled.current = children;
+        });
+
         useEffect(() => {
             if (!open) return;
 
@@ -55,30 +67,41 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             };
         }, [open, onOpenChange]);
 
-        if (!open) return null;
+        if (!mounted) return null;
 
-        return (
-            <>
-                <div
-                    aria-hidden="true"
-                    onClick={() => onOpenChange?.(false)}
-                    className="bg-overlay animate-in fade-in z-modal-backdrop fixed inset-0"
-                />
-                <div className="z-modal pointer-events-none fixed inset-0 flex items-center justify-center p-4">
+        return createPortal(
+            <AnimatePresence>
+                {open && (
+                    <m.div
+                        key="backdrop"
+                        aria-hidden="true"
+                        onClick={() => onOpenChange?.(false)}
+                        {...MODAL_BACKDROP_MOTION}
+                        className="bg-overlay z-modal-backdrop fixed inset-0"
+                    />
+                )}
+                {open && (
                     <div
-                        ref={ref}
-                        role="dialog"
-                        aria-modal="true"
-                        className={cn(
-                            "bg-background-muted border-border animate-in fade-in zoom-in-95 pointer-events-auto flex max-h-full w-full max-w-md flex-col overflow-hidden rounded-xl border shadow-2xl",
-                            className,
-                        )}
-                        {...props}
+                        key="plate"
+                        className="z-modal pointer-events-none fixed inset-0 flex items-center justify-center p-4"
                     >
-                        {children}
+                        <m.div
+                            ref={ref}
+                            role="dialog"
+                            aria-modal="true"
+                            {...MODAL_PLATE_MOTION}
+                            className={cn(
+                                "bg-background-muted border-border pointer-events-auto flex max-h-full w-full max-w-md flex-col overflow-hidden rounded-xl border shadow-2xl",
+                                className,
+                            )}
+                            {...props}
+                        >
+                            {open ? children : settled.current}
+                        </m.div>
                     </div>
-                </div>
-            </>
+                )}
+            </AnimatePresence>,
+            document.body,
         );
     },
 );

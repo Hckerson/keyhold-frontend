@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { statsAPI } from "@/lib/api/stats";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
+import type { TimeFilter } from "@/lib/enums/enums";
 
 export function useSellerStats(enabled = true) {
     return useQuery({
@@ -29,6 +30,46 @@ export function useUserStats(enabled = true) {
     return useQuery({
         queryKey: queryKeys.stats.users,
         queryFn: () => statsAPI.users(),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useDashboardStats(filter: TimeFilter, enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.stats.dashboard(filter),
+        queryFn: () => statsAPI.dashboard(filter),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useRegionMetrics(enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.stats.regions,
+        queryFn: () => statsAPI.regions(),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useTrendStats(filter: TimeFilter, enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.stats.trend(filter),
+        queryFn: () => statsAPI.trend(filter),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useAgentAnalytics(enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.stats.agent,
+        queryFn: () => statsAPI.agent(),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,

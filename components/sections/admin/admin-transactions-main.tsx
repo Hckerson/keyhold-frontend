@@ -2,6 +2,7 @@
 
 import { ArrowLeftRight } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { TransactionFocusTile } from "@/components/features/admin/transaction-focus-tile";
@@ -39,7 +40,7 @@ export function AdminTransactionsMain({
     onOpen,
 }: AdminTransactionsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <TransactionFocusTile
                 transaction={FOCUS_TRANSACTION}
                 onOpen={onOpen}
@@ -57,20 +58,24 @@ export function AdminTransactionsMain({
                     onFinancingFilterChange={onFinancingFilterChange}
                 />
 
-                {transactions.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
-                        <TransactionLedgerTable
-                            transactions={transactions}
-                            onOpen={onOpen}
+                <PresenceSwap
+                    swapKey={transactions.length > 0 ? "rows" : "empty"}
+                >
+                    {transactions.length > 0 ? (
+                        <PanelInset scroll className="mt-0">
+                            <TransactionLedgerTable
+                                transactions={transactions}
+                                onOpen={onOpen}
+                            />
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            icon={ArrowLeftRight}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={ArrowLeftRight}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
+                    )}
+                </PresenceSwap>
             </Panel>
         </div>
     );

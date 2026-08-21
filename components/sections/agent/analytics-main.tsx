@@ -9,7 +9,7 @@ const LEDGER_LEDE = "Volume against target, with month-over-month change";
 
 export function AnalyticsMain() {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <AnalyticsProductionHero />
 
             <Panel

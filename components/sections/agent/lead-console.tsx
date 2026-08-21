@@ -5,19 +5,28 @@ import { LeadsHeader } from "@/components/sections/agent/leads-header";
 import { LeadsMain } from "@/components/sections/agent/leads-main";
 import { LeadsRail } from "@/components/sections/agent/leads-rail";
 import { LeadsStatBand } from "@/components/sections/agent/leads-stat-band";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    advanceStage,
     countByStage,
-    initialLeads,
     leadStats,
     leadsSummary,
     rankLeads,
-    type LeadStageFilter,
 } from "@/lib/data/agent-leads";
+import {
+    useIncomingConnections,
+    useRespondToConnection,
+} from "@/lib/hooks/use-connections";
+import { toLead } from "@/lib/utils/to-lead";
+import type { LeadStageFilter } from "@/lib/types/lead";
 
 export function LeadConsole() {
-    const [leads, setLeads] = useState(initialLeads);
+    const { data, isPending, isError, refetch } = useIncomingConnections();
+    const respond = useRespondToConnection();
+
     const [stageFilter, setStageFilter] = useState<LeadStageFilter>("all");
+
+    const leads = useMemo(() => (data ?? []).map(toLead), [data]);
 
     const ranked = useMemo(() => rankLeads(leads), [leads]);
     const peers = useMemo(() => ranked.slice(1), [ranked]);
@@ -31,10 +40,19 @@ export function LeadConsole() {
         [peers, stageFilter],
     );
 
-    const advance = useCallback(
-        (id: string) => setLeads((current) => advanceStage(current, id)),
-        [],
+    const onRespond = useCallback(
+        (id: string, accept: boolean) =>
+            void respond.mutateAsync({ id, accept }),
+        [respond],
     );
+
+    if (isError)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.agentLeads}
+                onRetry={() => void refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">
@@ -48,8 +66,9 @@ export function LeadConsole() {
                     leads={visible}
                     stageFilter={stageFilter}
                     counts={counts}
+                    pending={isPending}
                     onFilterChange={setStageFilter}
-                    onAdvance={advance}
+                    onRespond={onRespond}
                 />
                 <LeadsRail leads={leads} />
             </div>

@@ -3,15 +3,11 @@ import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { strengthTone } from "@/lib/config/account-tones";
-import {
-    CREDENTIAL_COUNT,
-    NOTIFICATION_RULE_COUNT,
-    PROFILE_STRENGTH,
-    verifiedCredentialCount,
-} from "@/lib/data/agent-account";
-import { PROFILE_PUBLISHED } from "@/lib/data/agent-settings";
+import { NOTIFICATION_RULE_COUNT } from "@/lib/data/agent-account";
+import { minutesSince } from "@/lib/utils/elapsed";
 
 const HERO_EYEBROW = "Public profile";
+const NEVER_SAVED = "Not saved yet";
 const COMPLETE_SUFFIX = "complete";
 const PENDING_SUFFIX = "pending";
 const UNSAVED_LABEL = "Awaiting save";
@@ -27,16 +23,22 @@ const STRENGTH_METER_LABEL = "Profile strength";
 
 export interface AgentSettingsProfileHeroProps {
     pending: number;
-    serviceArea: string;
+    strength: number;
+    verified: number;
+    credentials: number;
     brokerage: string;
+    updatedAt?: string;
     enabledAlerts: number;
     weeklySends: number;
 }
 
 export function AgentSettingsProfileHero({
     pending,
-    serviceArea,
+    strength,
+    verified,
+    credentials,
     brokerage,
+    updatedAt,
     enabledAlerts,
     weeklySends,
 }: AgentSettingsProfileHeroProps) {
@@ -45,13 +47,13 @@ export function AgentSettingsProfileHero({
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
             <p className="micro-label">
-                {HERO_EYEBROW} · {serviceArea} · {brokerage}
+                {HERO_EYEBROW} · {brokerage}
             </p>
             <div className="mt-1 flex flex-wrap items-baseline gap-2">
                 <p className="text-h4 font-display text-text font-light tabular-nums">
                     {dirty
                         ? `${pending} ${PENDING_SUFFIX}`
-                        : `${PROFILE_STRENGTH}% ${COMPLETE_SUFFIX}`}
+                        : `${strength}% ${COMPLETE_SUFFIX}`}
                 </p>
                 <span className="flex items-center gap-1.5">
                     <StatusDot tone={dirty ? "warning" : "success"} />
@@ -66,15 +68,12 @@ export function AgentSettingsProfileHero({
 
             <span
                 className="mt-3 block"
-                aria-label={`${STRENGTH_METER_LABEL} ${PROFILE_STRENGTH}%`}
+                aria-label={`${STRENGTH_METER_LABEL} ${strength}%`}
             >
-                <ProgressBar
-                    value={PROFILE_STRENGTH}
-                    tone={strengthTone(PROFILE_STRENGTH)}
-                />
+                <ProgressBar value={strength} tone={strengthTone(strength)} />
             </span>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={ALERTS_LABEL}>
                     <span className="tabular-nums">
                         {enabledAlerts} {OF_LABEL} {NOTIFICATION_RULE_COUNT}
@@ -85,19 +84,18 @@ export function AgentSettingsProfileHero({
                 </MetricCell>
                 <MetricCell label={CREDENTIALS_LABEL}>
                     <span className="tabular-nums">
-                        {verifiedCredentialCount} {OF_LABEL} {CREDENTIAL_COUNT}
+                        {verified} {OF_LABEL} {credentials}
                     </span>
                 </MetricCell>
                 <MetricCell label={PUBLISHED_METRIC_LABEL}>
-                    <span className="flex min-w-0 items-baseline gap-1.5">
+                    {updatedAt ? (
                         <AgeMark
-                            minutes={PROFILE_PUBLISHED.ageMinutes}
+                            minutes={minutesSince(updatedAt)}
                             tone="neutral"
                         />
-                        <span className="text-text-secondary min-w-0 truncate text-xs">
-                            {PROFILE_PUBLISHED.actor}
-                        </span>
-                    </span>
+                    ) : (
+                        <span className="micro-label">{NEVER_SAVED}</span>
+                    )}
                 </MetricCell>
             </div>
         </section>

@@ -11,18 +11,17 @@ import { ContactMethodPicker } from "@/components/features/dashboard/contact-met
 import { PrivacyControlList } from "@/components/features/dashboard/privacy-control-list";
 import {
     buyerSecurityControls,
-    BUYER_DOCUMENTS,
-    DOCUMENT_COUNT,
     PRIVACY_CONTROL_COUNT,
     PRIVACY_CONTROLS,
-    SEARCH_PROFILE_STRENGTH,
     searchSignalShares,
     sharedAudienceCount,
     verifiedDocumentCount,
     type PrivacyControlId,
     type PrivacyState,
+    type SearchSignal,
     type SettingsDialogKey,
 } from "@/lib/data/buyer-account";
+import type { AccountCredential } from "@/lib/types";
 import type { ContactMethod } from "@/lib/data/dashboard-settings";
 
 const STRENGTH_TITLE = "Search Profile";
@@ -39,6 +38,9 @@ const SECURITY_LEDE = "Controls that govern access to this account";
 const DOWNLOAD_ACTION = "Download";
 
 export interface DashboardSettingsRailProps {
+    signals: SearchSignal[];
+    strength: number;
+    documents: AccountCredential[];
     privacy: PrivacyState;
     contactMethod: ContactMethod;
     twoFactorEnabled: boolean;
@@ -49,6 +51,9 @@ export interface DashboardSettingsRailProps {
 }
 
 export function DashboardSettingsRail({
+    signals,
+    strength,
+    documents,
     privacy,
     contactMethod,
     twoFactorEnabled,
@@ -62,21 +67,21 @@ export function DashboardSettingsRail({
             <Panel
                 title={STRENGTH_TITLE}
                 description={STRENGTH_LEDE}
-                count={`${SEARCH_PROFILE_STRENGTH}%`}
+                count={`${strength}%`}
             >
                 <PanelInset>
-                    <ShareList shares={searchSignalShares} />
+                    <ShareList shares={searchSignalShares(signals)} />
                 </PanelInset>
             </Panel>
 
             <Panel
                 title={DOCUMENTS_TITLE}
                 description={DOCUMENTS_LEDE}
-                count={`${verifiedDocumentCount}/${DOCUMENT_COUNT}`}
+                count={`${verifiedDocumentCount(documents)}/${documents.length}`}
             >
                 <PanelInset scroll>
                     <CredentialTable
-                        credentials={BUYER_DOCUMENTS}
+                        credentials={documents}
                         heading={DOCUMENTS_HEADING}
                         caption={DOCUMENTS_CAPTION}
                     />

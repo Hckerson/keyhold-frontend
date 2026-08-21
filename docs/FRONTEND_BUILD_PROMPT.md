@@ -41,7 +41,7 @@ Build a **production-ready, fully-functional real estate marketplace frontend** 
 - **Response Format:** `{ status, data, message }`
 - **45+ endpoints** across 8 modules ready to consume
 
-**Full API docs:** See `FRONTEND_MVP_ANALYSIS.md` in `.claude/` (all endpoints listed)
+**Full API docs:** See `FRONTEND_MVP_ANALYSIS.md` in `docs/` (all endpoints listed)
 
 ### Frontend Tech Stack (Already Set Up)
 

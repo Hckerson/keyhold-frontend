@@ -72,7 +72,7 @@ export function AlertsRail({
                     />
                 </PanelInset>
 
-                {preferences["price-drop"].enabled && (
+                {preferences.PRICE_DROP.enabled && (
                     <PanelInset>
                         <div className="py-3">
                             <FormField

@@ -4,7 +4,33 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { transactionsAPI } from "@/lib/api/transactions";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
-import type { CreateTransactionInput } from "@/lib/validations/transaction";
+import type {
+    CreateTransactionInput,
+    TransactionQuery,
+} from "@/lib/validations/transaction";
+
+export function useTransactionLedger(
+    input: TransactionQuery = {},
+    enabled = true,
+) {
+    return useQuery({
+        queryKey: queryKeys.transactions.list(input),
+        queryFn: () => transactionsAPI.list(input),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useTransactionStages(enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.transactions.stages,
+        queryFn: () => transactionsAPI.stages(),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
 
 export function usePurchases(enabled = true) {
     return useQuery({
@@ -49,7 +75,13 @@ export function useCreateTransaction() {
 export function useConfirmPayment() {
     const client = useQueryClient();
     return useMutation({
-        mutationFn: (id: string) => transactionsAPI.confirmPayment(id),
+        mutationFn: ({
+            id,
+            paymentIntentId,
+        }: {
+            id: string;
+            paymentIntentId: string;
+        }) => transactionsAPI.confirmPayment(id, paymentIntentId),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.transactions.all }),
     });

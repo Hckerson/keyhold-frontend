@@ -10,8 +10,6 @@ import {
     USER_ROLE_KEYS,
     USER_STATUSES,
     USER_STATUS_KEYS,
-    USER_TIERS,
-    USER_TIER_KEYS,
 } from "@/lib/config/user-tones";
 import {
     formatCompactUsd,
@@ -27,7 +25,6 @@ import type {
     UserDirectoryFilters,
     UserRoleFilter,
     UserSortKey,
-    UserStatus,
     UserStatusFilter,
 } from "@/lib/types";
 
@@ -65,160 +62,10 @@ export const USER_GROWTH_LABEL = `+${(
     100
 ).toFixed(1)}%`;
 
-export const DIRECTORY_NOW = new Date(2026, 7, 5);
-
 const COHORT_FORMAT = "yyyy";
 const JOINED_FORMAT = "MMM yyyy";
 const EVERY_STATUS: UserStatusFilter = "all";
 const EVERY_ROLE: UserRoleFilter = "all";
-
-export const MANAGED_USERS: ManagedUser[] = [
-    {
-        id: "1",
-        name: "Elena Vasquez",
-        email: "elena.vasquez@meridian.re",
-        role: "agent",
-        tier: "platinum",
-        joinDate: "2022-11-02",
-        lastActive: "2026-08-03",
-        status: "active",
-        transactions: 28,
-        volume: 41_200_000,
-    },
-    {
-        id: "2",
-        name: "Thomas Beaumont",
-        email: "t.beaumont@northlake.com",
-        role: "buyer",
-        tier: "platinum",
-        joinDate: "2021-04-19",
-        lastActive: "2026-07-25",
-        status: "active",
-        transactions: 9,
-        volume: 32_900_000,
-    },
-    {
-        id: "3",
-        name: "Sarah Chen",
-        email: "sarah.chen@meridian.re",
-        role: "agent",
-        tier: "premium",
-        joinDate: "2023-06-20",
-        lastActive: "2026-08-02",
-        status: "active",
-        transactions: 15,
-        volume: 24_600_000,
-    },
-    {
-        id: "4",
-        name: "Robert Astor",
-        email: "robert.astor@astorgroup.com",
-        role: "buyer",
-        tier: "platinum",
-        joinDate: "2023-03-10",
-        lastActive: "2026-07-30",
-        status: "active",
-        transactions: 5,
-        volume: 18_400_000,
-    },
-    {
-        id: "5",
-        name: "Nina Lindqvist",
-        email: "nina.lindqvist@meridian.re",
-        role: "agent",
-        tier: "premium",
-        joinDate: "2023-10-27",
-        lastActive: "2026-06-30",
-        status: "inactive",
-        transactions: 7,
-        volume: 9_300_000,
-    },
-    {
-        id: "6",
-        name: "Daniel Okafor",
-        email: "d.okafor@kestrelcap.com",
-        role: "buyer",
-        tier: "premium",
-        joinDate: "2024-09-08",
-        lastActive: "2026-07-19",
-        status: "active",
-        transactions: 3,
-        volume: 4_750_000,
-    },
-    {
-        id: "7",
-        name: "Grace Okonjo",
-        email: "grace.okonjo@meridian.re",
-        role: "agent",
-        tier: "standard",
-        joinDate: "2025-02-11",
-        lastActive: "2026-07-31",
-        status: "active",
-        transactions: 4,
-        volume: 3_200_000,
-    },
-    {
-        id: "8",
-        name: "John Doe",
-        email: "john.doe@example.com",
-        role: "buyer",
-        tier: "standard",
-        joinDate: "2024-01-15",
-        lastActive: "2026-07-28",
-        status: "active",
-        transactions: 2,
-        volume: 1_850_000,
-    },
-    {
-        id: "9",
-        name: "Victor Hale",
-        email: "victor.hale@example.com",
-        role: "buyer",
-        tier: "standard",
-        joinDate: "2025-06-03",
-        lastActive: "2026-05-22",
-        status: "inactive",
-        transactions: 1,
-        volume: 620_000,
-    },
-    {
-        id: "10",
-        name: "Marcus Sterling",
-        email: "m.sterling@sterlingrealty.com",
-        role: "agent",
-        tier: "standard",
-        joinDate: "2024-05-01",
-        lastActive: "2026-04-12",
-        status: "suspended",
-        transactions: 0,
-        volume: 0,
-        note: "Two listings were withdrawn for photo provenance and the submitting licence lapsed in June. Reinstate only once a current licence is on file.",
-    },
-    {
-        id: "11",
-        name: "Priya Raghavan",
-        email: "priya.raghavan@meridian.re",
-        role: "admin",
-        tier: "premium",
-        joinDate: "2022-08-14",
-        lastActive: "2026-08-01",
-        status: "active",
-        transactions: 0,
-        volume: 0,
-    },
-    {
-        id: "12",
-        name: "Amara Diallo",
-        email: "amara.diallo@meridian.re",
-        role: "admin",
-        tier: "platinum",
-        joinDate: "2021-09-30",
-        lastActive: "2026-08-02",
-        status: "active",
-        transactions: 0,
-        volume: 0,
-    },
-];
 
 export const USER_STATUS_FILTERS: FilterPill<UserStatusFilter>[] = [
     { id: EVERY_STATUS, label: "All" },
@@ -244,10 +91,7 @@ export const USER_SORT_OPTIONS: SelectOption<UserSortKey>[] = [
 export const idleDays = (user: ManagedUser) =>
     Math.max(
         0,
-        differenceInCalendarDays(
-            DIRECTORY_NOW,
-            parseLocalDate(user.lastActive),
-        ),
+        differenceInCalendarDays(new Date(), parseLocalDate(user.lastActive)),
     );
 
 export const joinedLabel = (user: ManagedUser) =>
@@ -303,7 +147,7 @@ export const countUsersByStatus = (
             ...counts,
             [id]: users.filter((user) => user.status === id).length,
         }),
-        { all: users.length, active: 0, inactive: 0, suspended: 0 },
+        { all: users.length, active: 0, pending: 0, suspended: 0 },
     );
 
 export const countUsersByRole = (users: ManagedUser[], role: ManagedUserRole) =>
@@ -390,15 +234,6 @@ const breakdownOf = (
     volume: directoryVolume(rows),
 });
 
-export const tierBreakdowns = (users: ManagedUser[]) =>
-    USER_TIER_KEYS.map((id) =>
-        breakdownOf(
-            id,
-            USER_TIERS[id].label,
-            users.filter((user) => user.tier === id),
-        ),
-    );
-
 export const cohortBreakdowns = (users: ManagedUser[]) =>
     [...new Set(users.map(cohortOf))].sort().map((year) =>
         breakdownOf(
@@ -410,13 +245,3 @@ export const cohortBreakdowns = (users: ManagedUser[]) =>
 
 export const peakBreakdownVolume = (breakdowns: UserBreakdown[]) =>
     Math.max(0, ...breakdowns.map((breakdown) => breakdown.volume));
-
-export const setUserStatus = (
-    users: ManagedUser[],
-    ids: string[],
-    status: UserStatus,
-    note?: string,
-): ManagedUser[] =>
-    users.map((user) =>
-        ids.includes(user.id) ? { ...user, status, note } : user,
-    );

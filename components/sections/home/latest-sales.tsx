@@ -22,7 +22,7 @@ function SaleCard({ sale }: { sale: LatestSaleData }) {
     return (
         <Link
             href={`/listing/${sale.id}`}
-            className="group border-border bg-background-muted hover:border-border-dark focus-visible:ring-accent ease-smooth flex min-w-[248px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none md:min-w-0"
+            className="group border-border bg-background-muted hover:border-border-dark focus-visible:ring-accent ease-smooth flex w-[68vw] max-w-[248px] min-w-0 shrink-0 snap-start flex-col overflow-hidden rounded-xl border shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none md:w-auto md:max-w-none"
         >
             <div className="relative aspect-4/3 overflow-hidden">
                 <img

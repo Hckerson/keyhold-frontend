@@ -11,7 +11,7 @@ const CLIENTS_ACTION = "View pipeline";
 
 export function ConciergeMain() {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <ConciergeTopClientHero client={topClient} />
 
             <Panel

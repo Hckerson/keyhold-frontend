@@ -24,6 +24,7 @@ export const PROPERTY_SORTS = [
     "price-desc",
     "bedrooms-desc",
     "sqft-desc",
+    "popular",
 ] as const;
 
 export const CONNECTION_STATUSES = ["PENDING", "ACCEPTED", "REJECTED"] as const;
@@ -50,6 +51,8 @@ export const TRANSACTION_STATUSES = [
     "CANCELLED",
 ] as const;
 
+export const TIME_FILTERS = ["day", "month", "year"] as const;
+
 export const USER_ROLES = ["ADMIN", "BUYER", "SELLER"] as const;
 
 export const USER_ACCOUNT_STATUSES = [
@@ -65,6 +68,7 @@ export type ConnectionStatus = (typeof CONNECTION_STATUSES)[number];
 export type ViewingStatus = (typeof VIEWING_STATUSES)[number];
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
 export type TransactionStatus = (typeof TRANSACTION_STATUSES)[number];
+export type TimeFilter = (typeof TIME_FILTERS)[number];
 export type UserRole = (typeof USER_ROLES)[number];
 export type UserAccountStatus = (typeof USER_ACCOUNT_STATUSES)[number];
 
@@ -122,4 +126,142 @@ export const PROPERTY_SORT_LABELS: Record<PropertySort, string> = {
     "price-desc": "Price: high to low",
     "bedrooms-desc": "Most bedrooms",
     "sqft-desc": "Largest first",
+    popular: "Most viewed",
+};
+
+export const FLAG_TYPES = ["USER", "PROPERTY", "MESSAGE"] as const;
+
+export const FLAG_STATUSES = ["ACTIVE", "RESOLVED", "DISMISSED"] as const;
+
+export const VERIFICATION_STATUSES = [
+    "PENDING",
+    "VERIFIED",
+    "REJECTED",
+] as const;
+
+export const DISPUTE_STATUSES = [
+    "OPEN",
+    "PENDING_REVIEW",
+    "RESOLVED",
+    "DISMISSED",
+] as const;
+
+export const DISPUTE_EVIDENCE_TYPES = ["MESSAGE", "PHOTO", "DOCUMENT"] as const;
+
+export const ESCROW_STATUSES = [
+    "HELD",
+    "RELEASED",
+    "REFUNDED",
+    "DISPUTED",
+] as const;
+
+export const NOTIFICATION_TYPES = [
+    "PRICE_DROP",
+    "NEW_LISTING",
+    "UNDER_OFFER",
+    "STATUS_CHANGE",
+    "OFFER_RESPONSE",
+    "VIEWING_CONFIRMATION",
+    "MESSAGE_RECEIVED",
+    "CONNECTION_REQUEST",
+] as const;
+
+export const NOTIFICATION_CHANNELS = ["EMAIL", "SMS", "IN_APP"] as const;
+
+export const SETTING_CATEGORIES = [
+    "PLATFORM",
+    "COMMERCE",
+    "MODERATION",
+    "AVAILABILITY",
+] as const;
+
+export const AUDIT_ACTION_TYPES = [
+    "USER_CREATED",
+    "USER_UPDATED",
+    "USER_DELETED",
+    "USER_SUSPENDED",
+    "PROPERTY_CREATED",
+    "PROPERTY_UPDATED",
+    "PROPERTY_DELETED",
+    "PROPERTY_FLAGGED",
+    "TRANSACTION_CREATED",
+    "TRANSACTION_UPDATED",
+    "TRANSACTION_COMPLETED",
+    "OFFER_CREATED",
+    "OFFER_ACCEPTED",
+    "DISPUTE_CREATED",
+    "DISPUTE_RESOLVED",
+    "LOGIN",
+    "LOGOUT",
+] as const;
+
+export const MODERATION_DECISIONS = ["approve", "changes", "reject"] as const;
+
+export type FlagType = (typeof FLAG_TYPES)[number];
+export type FlagStatus = (typeof FLAG_STATUSES)[number];
+export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
+export type DisputeStatus = (typeof DISPUTE_STATUSES)[number];
+export type DisputeEvidenceType = (typeof DISPUTE_EVIDENCE_TYPES)[number];
+export type EscrowStatus = (typeof ESCROW_STATUSES)[number];
+export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
+export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number];
+export type SettingCategory = (typeof SETTING_CATEGORIES)[number];
+export type AuditActionType = (typeof AUDIT_ACTION_TYPES)[number];
+export type ModerationDecision = (typeof MODERATION_DECISIONS)[number];
+
+export const FLAG_TYPE_LABELS: Record<FlagType, string> = {
+    USER: "Member",
+    PROPERTY: "Listing",
+    MESSAGE: "Message",
+};
+
+export const FLAG_STATUS_LABELS: Record<FlagStatus, string> = {
+    ACTIVE: "Open",
+    RESOLVED: "Resolved",
+    DISMISSED: "Dismissed",
+};
+
+export const VERIFICATION_STATUS_LABELS: Record<VerificationStatus, string> = {
+    PENDING: "Awaiting review",
+    VERIFIED: "Verified",
+    REJECTED: "Rejected",
+};
+
+export const DISPUTE_STATUS_LABELS: Record<DisputeStatus, string> = {
+    OPEN: "Open",
+    PENDING_REVIEW: "In review",
+    RESOLVED: "Resolved",
+    DISMISSED: "Dismissed",
+};
+
+export const ESCROW_STATUS_LABELS: Record<EscrowStatus, string> = {
+    HELD: "Held",
+    RELEASED: "Released",
+    REFUNDED: "Refunded",
+    DISPUTED: "Disputed",
+};
+
+export const NOTIFICATION_TYPE_LABELS: Record<NotificationType, string> = {
+    PRICE_DROP: "Price drop",
+    NEW_LISTING: "New listing",
+    UNDER_OFFER: "Under offer",
+    STATUS_CHANGE: "Status change",
+    OFFER_RESPONSE: "Offer response",
+    VIEWING_CONFIRMATION: "Viewing confirmation",
+    MESSAGE_RECEIVED: "Message received",
+    CONNECTION_REQUEST: "Connection request",
+};
+
+export const NOTIFICATION_CHANNEL_LABELS: Record<NotificationChannel, string> =
+    {
+        EMAIL: "Email",
+        SMS: "SMS",
+        IN_APP: "In app",
+    };
+
+export const SETTING_CATEGORY_LABELS: Record<SettingCategory, string> = {
+    PLATFORM: "Platform",
+    COMMERCE: "Commerce",
+    MODERATION: "Moderation",
+    AVAILABILITY: "Availability",
 };

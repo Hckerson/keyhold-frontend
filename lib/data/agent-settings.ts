@@ -1,42 +1,46 @@
-import { BadgeCheck, BellRing, Radio, Timer, UserCheck } from "lucide-react";
+import { BadgeCheck, BellRing, Radio, UserCheck } from "lucide-react";
 import type { ConfigField } from "@/components/patterns/config-field-grid";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import { responseTone, strengthTone } from "@/lib/config/account-tones";
+import { strengthTone } from "@/lib/config/account-tones";
 import {
-    CREDENTIAL_COUNT,
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
-    PROFILE_STRENGTH,
-    verifiedCredentialCount,
     weeklyAlertVolume,
     type NotificationState,
 } from "@/lib/data/agent-account";
 import { formatCount } from "@/lib/utils";
+import type { User } from "@/lib/validations/user";
 
 export const AGENT_SETTINGS_FORM_ID = "agent-settings-form";
 
-export const PROFILE_PUBLISHED = {
-    actor: "Sarah Mitchell",
-    role: "Listing agent",
-    ageMinutes: 420,
+export const EMPTY_AGENT_FORM = {
+    fullName: "",
+    email: "",
+    phone: "",
+    jobTitle: "",
+    brokerage: "",
+    license: "",
+    bio: "",
 };
+export type AgentSettingsForm = typeof EMPTY_AGENT_FORM;
 
-export const INITIAL_AGENT_FORM = {
-    fullName: "Sarah Mitchell",
-    email: "sarah@agentpro.com",
-    phone: "(310) 555-0180",
-    brokerage: "Agent Pro Realty",
-    license: "DRE #01987654",
-    serviceArea: "Beverly Hills, CA",
-    commissionRate: "2.5",
-    responseTime: "2",
-};
-export type AgentSettingsForm = typeof INITIAL_AGENT_FORM;
+export const toAgentForm = (user: User | undefined): AgentSettingsForm => ({
+    fullName: user?.fullName ?? "",
+    email: user?.email ?? "",
+    phone: user?.phoneNumber ?? "",
+    jobTitle: user?.jobTitle ?? "",
+    brokerage: user?.agencyName ?? "",
+    license: user?.licenseNumber ?? "",
+    bio: user?.bio ?? "",
+});
 
-export const changedFieldCount = (current: AgentSettingsForm) => {
-    const initial: Record<string, string> = INITIAL_AGENT_FORM;
+export const changedFieldCount = (
+    current: AgentSettingsForm,
+    initial: AgentSettingsForm,
+) => {
+    const baseline: Record<string, string> = initial;
     return Object.entries(current).filter(
-        ([key, value]) => initial[key] !== value,
+        ([key, value]) => baseline[key] !== value,
     ).length;
 };
 
@@ -64,42 +68,26 @@ export const AGENT_PROFILE_FIELDS: readonly ConfigField<
         placeholder: "DRE #01987654",
         variant: "code",
     },
+    { name: "jobTitle", label: "Title", placeholder: "Senior Advisor" },
     {
-        name: "serviceArea",
-        label: "Service Area",
-        placeholder: "Beverly Hills, CA",
-    },
-];
-
-export const AGENT_BUSINESS_FIELDS: readonly ConfigField<
-    keyof AgentSettingsForm
->[] = [
-    {
-        name: "commissionRate",
-        label: "Commission Rate",
-        placeholder: "2.5",
-        suffix: "%",
-        variant: "numeric",
-    },
-    {
-        name: "responseTime",
-        label: "Lead Response Target",
-        placeholder: "2",
-        suffix: "hours",
-        variant: "numeric",
+        name: "bio",
+        label: "Biography",
+        placeholder: "How you work with buyers",
     },
 ];
 
 export const buildAgentSettingsStats = (
-    form: AgentSettingsForm,
+    strength: number,
+    verified: number,
+    credentials: number,
     state: NotificationState,
 ): StatDatum[] => [
     {
         id: "strength",
         icon: UserCheck,
         label: "Profile strength",
-        value: `${PROFILE_STRENGTH}%`,
-        tone: strengthTone(PROFILE_STRENGTH),
+        value: `${strength}%`,
+        tone: strengthTone(strength),
     },
     {
         id: "alerts",
@@ -116,20 +104,10 @@ export const buildAgentSettingsStats = (
         tone: "info",
     },
     {
-        id: "response",
-        icon: Timer,
-        label: "Response target",
-        value: `${form.responseTime || 0}h`,
-        tone: responseTone(Number(form.responseTime)),
-    },
-    {
         id: "credentials",
         icon: BadgeCheck,
         label: "Credentials",
-        value: `${verifiedCredentialCount}/${CREDENTIAL_COUNT}`,
-        tone:
-            verifiedCredentialCount === CREDENTIAL_COUNT
-                ? "success"
-                : "warning",
+        value: `${verified}/${credentials}`,
+        tone: verified === credentials ? "success" : "warning",
     },
 ];

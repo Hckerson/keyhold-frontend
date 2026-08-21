@@ -13,8 +13,6 @@ import {
     type PrivacyState,
 } from "@/lib/data/buyer-account";
 import {
-    budgetRange,
-    BUDGET_FIELDS,
     DASHBOARD_SETTINGS_FORM_ID,
     PROFILE_FIELDS,
     type ProfileForm,
@@ -23,8 +21,6 @@ import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
 
 const PROFILE_TITLE = "Buyer Profile";
 const PROFILE_LEDE = "Details agents see when you enquire on a listing";
-const BUDGET_TITLE = "Search Budget";
-const BUDGET_LEDE = "The range every match and price alert is measured against";
 const DELIVERY_TITLE = "Alert Delivery";
 const DELIVERY_LEDE = "Which signals fire and where each one lands";
 
@@ -33,6 +29,11 @@ export interface DashboardSettingsMainProps {
     preferences: Record<AlertType, AlertPreference>;
     privacy: PrivacyState;
     pending: number;
+    strength: number;
+    verified: number;
+    documents: number;
+    updatedAt?: string;
+    avatar?: string;
     onFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onToggleEnabled: (type: AlertType) => void;
     onToggleChannel: (type: AlertType, channel: AlertChannel) => void;
@@ -44,17 +45,24 @@ export function DashboardSettingsMain({
     preferences,
     privacy,
     pending,
+    strength,
+    verified,
+    documents,
+    updatedAt,
+    avatar,
     onFieldChange,
     onToggleEnabled,
     onToggleChannel,
     onSubmit,
 }: DashboardSettingsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             <DashboardSettingsProfileHero
                 pending={pending}
-                preferredLocation={form.preferredLocation}
-                budget={budgetRange(form)}
+                strength={strength}
+                verified={verified}
+                documents={documents}
+                updatedAt={updatedAt}
                 enabledAlerts={enabledAlertCount(preferences)}
                 sharedAudiences={sharedAudienceCount(privacy)}
             />
@@ -70,15 +78,12 @@ export function DashboardSettingsMain({
                     fields={PROFILE_FIELDS}
                     values={form}
                     onChange={onFieldChange}
-                    lead={<ProfilePhotoUploader />}
-                />
-
-                <ConfigPanel
-                    title={BUDGET_TITLE}
-                    description={BUDGET_LEDE}
-                    fields={BUDGET_FIELDS}
-                    values={form}
-                    onChange={onFieldChange}
+                    lead={
+                        <ProfilePhotoUploader
+                            name={form.fullName}
+                            src={avatar}
+                        />
+                    }
                 />
             </form>
 
