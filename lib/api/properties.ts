@@ -9,7 +9,7 @@ import type {
     PropertyQuery,
     UpdatePropertyInput,
 } from "@/lib/validations/property";
-import type { PropertyType } from "@/lib/enums/enums";
+import type { ModerationDecision, PropertyType } from "@/lib/enums/enums";
 
 export interface FacetOptions {
     price: string[];
@@ -59,6 +59,12 @@ export const propertiesAPI = {
 
     markSold: (id: string) =>
         query.patch<Property>(config.api.properties.markSold(id)),
+
+    moderate: (id: string, decision: ModerationDecision, note?: string) =>
+        query.patch<Property>(config.api.properties.moderate(id), {
+            decision,
+            note,
+        }),
 
     recordView: (id: string) =>
         query.post<{ recorded: boolean }>(config.api.properties.view(id)),
