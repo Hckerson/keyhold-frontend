@@ -10,13 +10,6 @@ export const MANAGED_STATUS_BY_ACCOUNT: Record<UserAccountStatus, UserStatus> =
         SUSPENDED: "suspended",
     };
 
-export const ACCOUNT_STATUS_BY_MANAGED: Record<UserStatus, UserAccountStatus> =
-    {
-        active: "ACTIVE",
-        pending: "PENDING",
-        suspended: "SUSPENDED",
-    };
-
 export const toManagedUser = (user: User): ManagedUser => ({
     id: user.id,
     name: user.fullName,
