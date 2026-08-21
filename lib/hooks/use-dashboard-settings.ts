@@ -4,9 +4,11 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
 import {
     arePreferencesDirty,
-    initialPreferences,
+    emptyPreferences,
     toggleChannel,
     toggleEnabled,
+    toPreferenceList,
+    toPreferenceMap,
 } from "@/lib/data/alerts";
 import {
     buyerDocuments,
@@ -31,6 +33,10 @@ import {
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useSavedProperties } from "@/lib/hooks/use-saved-properties";
 import { useCurrentUser, useUpdateUser } from "@/lib/hooks/use-users";
+import {
+    useNotificationPreferences,
+    useUpdateNotificationPreferences,
+} from "@/lib/hooks/use-notifications";
 import { verifiedDocumentCount } from "@/lib/data/buyer-account";
 import { downloadJson } from "@/lib/utils/download";
 import type { AlertChannel, AlertType } from "@/lib/types";
@@ -40,6 +46,8 @@ export function useDashboardSettings() {
     const saved_ = useSavedProperties();
     const connections = useMyInterests();
     const updateUser = useUpdateUser(user?.id ?? "");
+    const storedPreferences = useNotificationPreferences();
+    const updatePreferences = useUpdateNotificationPreferences();
 
     const baseline = toProfileForm(user);
     const [form, setForm] = useState<ProfileForm>(EMPTY_PROFILE);
@@ -49,7 +57,17 @@ export function useDashboardSettings() {
         setForm(baseline);
         setHydrated(true);
     }
-    const [preferences, setPreferences] = useState(initialPreferences);
+    const preferenceBaseline = storedPreferences.data
+        ? toPreferenceMap(storedPreferences.data)
+        : emptyPreferences();
+    const [preferences, setPreferences] = useState(preferenceBaseline);
+    const [preferencesHydrated, setPreferencesHydrated] = useState(false);
+
+    if (storedPreferences.data && !preferencesHydrated) {
+        setPreferences(preferenceBaseline);
+        setPreferencesHydrated(true);
+    }
+
     const [privacy, setPrivacy] = useState(INITIAL_PRIVACY_STATE);
     const [contactMethod, setContactMethod] = useState<ContactMethod>(
         INITIAL_CONTACT_METHOD,
@@ -63,7 +81,7 @@ export function useDashboardSettings() {
     const pending = changedFieldCount(form, baseline);
     const dirty =
         pending > 0 ||
-        arePreferencesDirty(preferences) ||
+        arePreferencesDirty(preferences, preferenceBaseline) ||
         isPrivacyDirty(privacy) ||
         contactMethod !== INITIAL_CONTACT_METHOD;
 
@@ -98,19 +116,22 @@ export function useDashboardSettings() {
     const submit = (event: FormEvent) => {
         event.preventDefault();
         if (!user) return;
-        void updateUser
-            .mutateAsync({
+        void Promise.all([
+            updateUser.mutateAsync({
                 fullName: form.fullName,
                 email: form.email,
                 phoneNumber: form.phone,
                 bio: form.bio,
-            })
-            .then(() => setSaved(true));
+            }),
+            updatePreferences.mutateAsync({
+                preferences: toPreferenceList(preferences),
+            }),
+        ]).then(() => setSaved(true));
     };
 
     const reset = () => {
         setForm(baseline);
-        setPreferences(initialPreferences);
+        setPreferences(preferenceBaseline);
         setPrivacy(INITIAL_PRIVACY_STATE);
         setContactMethod(INITIAL_CONTACT_METHOD);
         setSaved(false);

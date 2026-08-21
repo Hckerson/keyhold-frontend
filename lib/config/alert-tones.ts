@@ -11,6 +11,7 @@ import {
     Radio,
     Sparkles,
     TrendingDown,
+    UserPlus,
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
@@ -18,12 +19,14 @@ import type { DotTone } from "@/components/patterns/status-dot";
 import type { AlertChannel, AlertType } from "@/lib/types";
 
 export const ALERT_TYPE_KEYS: AlertType[] = [
-    "price-drop",
-    "offer-response",
-    "new-listing",
-    "under-offer",
-    "viewing-confirmation",
-    "status-change",
+    "PRICE_DROP",
+    "OFFER_RESPONSE",
+    "NEW_LISTING",
+    "MESSAGE_RECEIVED",
+    "CONNECTION_REQUEST",
+    "UNDER_OFFER",
+    "VIEWING_CONFIRMATION",
+    "STATUS_CHANGE",
 ];
 
 export interface AlertTypeMeta {
@@ -35,42 +38,56 @@ export interface AlertTypeMeta {
 }
 
 export const ALERT_TYPES: Record<AlertType, AlertTypeMeta> = {
-    "price-drop": {
+    PRICE_DROP: {
         label: "Price Drop",
         icon: TrendingDown,
         tone: "success",
         chartTone: "success",
-        rank: 6,
+        rank: 8,
     },
-    "offer-response": {
+    OFFER_RESPONSE: {
         label: "Offer Reply",
         icon: FileText,
         tone: "info",
         chartTone: "info",
-        rank: 5,
+        rank: 7,
     },
-    "new-listing": {
+    NEW_LISTING: {
         label: "New Match",
         icon: Sparkles,
         tone: "info",
         chartTone: "highlight",
+        rank: 6,
+    },
+    MESSAGE_RECEIVED: {
+        label: "Message",
+        icon: MessageSquare,
+        tone: "info",
+        chartTone: "info",
+        rank: 5,
+    },
+    CONNECTION_REQUEST: {
+        label: "Enquiry",
+        icon: UserPlus,
+        tone: "info",
+        chartTone: "accent",
         rank: 4,
     },
-    "under-offer": {
+    UNDER_OFFER: {
         label: "Under Offer",
         icon: Handshake,
         tone: "warning",
         chartTone: "warning",
         rank: 3,
     },
-    "viewing-confirmation": {
+    VIEWING_CONFIRMATION: {
         label: "Viewing",
         icon: CalendarCheck,
         tone: "success",
         chartTone: "accent",
         rank: 2,
     },
-    "status-change": {
+    STATUS_CHANGE: {
         label: "Status Move",
         icon: Activity,
         tone: "neutral",
