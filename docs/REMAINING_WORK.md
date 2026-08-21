@@ -51,17 +51,18 @@ Thirty routes. **Live** reads from the API today; **Ready** means the endpoint e
 | `/dashboard/viewings`    | Ready | Connections `.viewings[]`              |
 | `/dashboard/alerts`      | Ready | `/notifications`                       |
 
-### Agent — 4 of 7 live
+### Agent — 4 of 8 live
 
-| Route              | State | Data source                      |
-| ------------------ | ----- | -------------------------------- |
-| `/agent`           | Live  | Seller stats, connections, sales |
-| `/agent/leads`     | Live  | `/connections/incoming`          |
-| `/agent/listings`  | Live  | `/properties/seller/:id`         |
-| `/agent/settings`  | Live  | `/users/me`                      |
-| `/agent/pipeline`  | Ready | Connections + transactions       |
-| `/agent/calendar`  | Ready | Connections `.viewings[]`        |
-| `/agent/analytics` | Ready | `/stats/agent`                   |
+| Route              | State       | Data source                      |
+| ------------------ | ----------- | -------------------------------- |
+| `/agent`           | Live        | Seller stats, connections, sales |
+| `/agent/leads`     | Live        | `/connections/incoming`          |
+| `/agent/listings`  | Live        | `/properties/seller/:id`         |
+| `/agent/settings`  | Live        | `/users/me`                      |
+| `/agent/pipeline`  | Ready       | Connections + transactions       |
+| `/agent/calendar`  | Ready       | Connections `.viewings[]`        |
+| `/agent/analytics` | Ready       | `/stats/agent`                   |
+| `/agent/concierge` | **Blocked** | No model — needs a product call  |
 
 ### Admin — 2 of 8 live
 
@@ -122,20 +123,16 @@ There is no test coverage anywhere in either half — the backend has a single g
 
 ---
 
-## Decided and applied
+## Waiting on a decision
 
-Four surfaces had no model behind them. Each has been resolved rather than left pending.
+Four surfaces can't be finished by writing code — they need a decision about what the product actually does.
 
-| Surface                           | Decision                                    | What changed                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| --------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Agent concierge**               | Dropped the route                           | It was a CRM and service desk bolted onto a marketplace, duplicating leads, pipeline and calendar in luxury vocabulary. Route, sections, feature components, tone config and seed data are gone; the nav entry with them. Concierge survives as marketing copy on the public home page, which costs nothing. If agents later need client prioritisation, that is a `priority` field on `Connection`, not a parallel VIP hierarchy.                                                                                                                                         |
-| **Service health**                | Removed the panel                           | Uptime, error rate and latency are the one class of metric a system cannot honestly report about itself. Answering it properly means a probe and time-series storage — an observability stack, not an application feature. The operational-backlog panel proposed as its replacement turned out to already exist in the overview rail, so the panel was simply removed rather than duplicated. True uptime becomes a link to the host's status page.                                                                                                                       |
-| **Saved searches & match scores** | Match score removed; `SavedSearch` deferred | A percentage is a ranking claim that cannot be defended when a user asks why, and with no stated criteria there is nothing to rank against. The meter, column, sort key, match bands and rail panel are gone. `SavedSearch` is worth building — it is the retention loop, and `Notification` is now in place to deliver it — but it is additive work that belongs after the money path ships. Match returns then as explainable facets (price ✓, beds ✓, locality ✗), not a number.                                                                                        |
-| **Membership tiers**              | Finished removing them                      | Tiers are a monetisation model and there is no billing — Stripe is disabled behind a placeholder key. A tier with nothing to purchase and no entitlement to gate is a label with no behaviour. They were half-removed already, which was the worst state: a convincing chart of a field that does not exist. `UserTier`, `USER_TIERS`, `USER_TIER_SEGMENTS` and the reports rail chart are gone, replaced by a verification breakdown built on `emailVerified` / `phoneVerified` / `kycVerified`. If tiers return they arrive as a `Subscription`, not a `User` attribute. |
-
-`VerificationTier` on `/admin/verifications` is deliberately untouched — it is a separate surface with its own KYC workflow, and reframing it from tier-upgrade requests to identity-document review is already tracked in step 03.
-
-The product is visibly smaller as a result. That is the intended trade: every one of these rendered a promise the backend could not keep, and each would have cost real work to keep faking.
+| Surface                           | Situation                                                                                                                                             | The ask                                        |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| **Agent concierge**               | VIP clients, a service catalogue and practice allocation. Nothing in the schema maps to it, and it isn't derivable from existing data.                | Define it, or drop the route.                  |
+| **Service health**                | The uptime, error-rate and latency panel on the admin overview is infrastructure telemetry, not application data. No database can honestly answer it. | Point it at a real probe, or remove the panel. |
+| **Saved searches & match scores** | The buyer budget and location fields removed earlier, plus the match score on saved homes. A real feature with no model behind it.                    | Worth a `SavedSearch` model?                   |
+| **Membership tiers**              | Removed from the user directory as fabricated, but the reports rail still renders a tier breakdown from a frontend constant.                          | Model tiers, or finish removing them.          |
 
 ---
 
