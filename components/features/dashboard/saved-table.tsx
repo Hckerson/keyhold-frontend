@@ -5,7 +5,7 @@ import { SavedRow } from "@/components/features/dashboard/saved-row";
 import type { SavedListing } from "@/lib/types";
 
 const TABLE_CAPTION =
-    "Saved properties by market status, asking price, movement since saving and recency";
+    "Saved properties by market status, asking price, movement since saving, search match and recency";
 const ACTION_HEADING = "Remove from saved";
 
 export interface SavedTableProps {
@@ -36,6 +36,9 @@ export function SavedTable({ listings, onRemove }: SavedTableProps) {
                         className="micro-label w-16 pl-3 text-right"
                     >
                         Move
+                    </th>
+                    <th scope="col" className="micro-label w-24 pl-3 text-left">
+                        Match
                     </th>
                     <th
                         scope="col"

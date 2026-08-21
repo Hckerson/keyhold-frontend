@@ -1,11 +1,17 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
-import { statusShares, watchShares } from "@/lib/data/saved-listings";
+import {
+    matchShares,
+    statusShares,
+    watchShares,
+} from "@/lib/data/saved-listings";
 import type { SavedListing } from "@/lib/types";
 
 const STATUS_TITLE = "Market State";
 const STATUS_LEDE = "Where your saved properties stand today";
+const MATCH_TITLE = "Match Bands";
+const MATCH_LEDE = "How closely each one answers your saved search";
 const WATCH_TITLE = "Attention";
 const WATCH_LEDE = "How recently you last opened each listing";
 
@@ -23,6 +29,12 @@ export function SavedRail({ listings }: SavedRailProps) {
             >
                 <PanelInset>
                     <ShareList shares={statusShares(listings)} />
+                </PanelInset>
+            </Panel>
+
+            <Panel title={MATCH_TITLE} description={MATCH_LEDE}>
+                <PanelInset>
+                    <ShareList shares={matchShares(listings)} />
                 </PanelInset>
             </Panel>
 
