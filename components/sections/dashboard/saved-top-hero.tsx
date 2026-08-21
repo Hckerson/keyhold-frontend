@@ -5,7 +5,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { MoveChip } from "@/components/patterns/move-chip";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { SavedMatchMeter } from "@/components/features/dashboard/saved-match-meter";
 import { SavedStatusMark } from "@/components/features/dashboard/saved-status-mark";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { WATCH_BANDS, watchBandOf } from "@/lib/config/saved-tones";
@@ -19,7 +18,6 @@ const RATE_SUFFIX = "per sq ft";
 const ASKING_LABEL = "Asking";
 const LAYOUT_LABEL = "Layout";
 const MOVE_LABEL = "Since you saved";
-const MATCH_LABEL = "Search match";
 const WATCH_LABEL = "Last seen";
 const DAYS_SUFFIX = "d";
 const VIEW_ACTION = "View Listing";
@@ -109,9 +107,6 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
                 </MetricCell>
                 <MetricCell label={MOVE_LABEL}>
                     <MoveChip percent={movePercent(listing)} />
-                </MetricCell>
-                <MetricCell label={MATCH_LABEL}>
-                    <SavedMatchMeter score={listing.matchScore} />
                 </MetricCell>
                 <MetricCell label={WATCH_LABEL}>
                     <span
