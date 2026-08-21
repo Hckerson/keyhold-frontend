@@ -13,6 +13,8 @@ export type ModerationQueueId =
     | "flags"
     | "disputes";
 
+export type ServiceState = "operational" | "degraded" | "down";
+
 export interface PlatformSignal {
     id: string;
     severity: SignalSeverity;
@@ -29,6 +31,15 @@ export interface ModerationQueueLoad {
     backlog: number;
     capacity: number;
     oldestMinutes: number;
+}
+
+export interface ServiceHealth {
+    id: string;
+    label: string;
+    state: ServiceState;
+    uptime: number;
+    errorRate: number;
+    latencyMs: number;
 }
 
 export type PayoutState =
