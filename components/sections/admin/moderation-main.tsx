@@ -67,15 +67,16 @@ export function ModerationMain({
                 action={
                     <PanelLink href="/admin/reports" label={QUEUE_ACTION} />
                 }
+                toolbar={
+                    <ModerationToolbar
+                        statusFilter={statusFilter}
+                        checkFilter={checkFilter}
+                        counts={counts}
+                        onStatusFilterChange={onStatusFilterChange}
+                        onCheckFilterChange={onCheckFilterChange}
+                    />
+                }
             >
-                <ModerationToolbar
-                    statusFilter={statusFilter}
-                    checkFilter={checkFilter}
-                    counts={counts}
-                    onStatusFilterChange={onStatusFilterChange}
-                    onCheckFilterChange={onCheckFilterChange}
-                />
-
                 <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
                     {listings.length > 0 ? (
                         <PanelInset scroll className="mt-0">

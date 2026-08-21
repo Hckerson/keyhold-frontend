@@ -6,6 +6,7 @@ export interface PanelProps {
     description?: string;
     count?: number | string;
     action?: ReactNode;
+    toolbar?: ReactNode;
     children: ReactNode;
     className?: string;
     bodyClassName?: string;
@@ -16,11 +17,12 @@ export function Panel({
     description,
     count,
     action,
+    toolbar,
     children,
     className,
     bodyClassName,
 }: PanelProps) {
-    const hasHeader = title || description || action;
+    const hasHeader = title || description || action || toolbar;
 
     return (
         <section
@@ -30,30 +32,39 @@ export function Panel({
             )}
         >
             {hasHeader && (
-                <div className="border-border-light -mx-4 flex items-center justify-between gap-3 border-b px-4 pb-2.5">
-                    {(title || description) && (
-                        <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                                {title && (
-                                    <h3 className="text-h6 font-display text-text font-light">
-                                        {title}
-                                    </h3>
-                                )}
-                                {count !== undefined && (
-                                    <span className="bg-background-alt text-text-secondary rounded-full px-2 py-0.5 text-xs font-medium tabular-nums">
-                                        {count}
-                                    </span>
+                <header className="border-border-light bg-background-alt -mx-4 -mt-3 rounded-t-xl border-b px-4">
+                    <div className="flex min-h-11 items-center justify-between gap-3 py-2">
+                        {(title || description) && (
+                            <div className="min-w-0">
+                                <div className="flex items-baseline gap-2">
+                                    {title && (
+                                        <h3 className="text-h6 font-display text-text truncate font-light">
+                                            {title}
+                                        </h3>
+                                    )}
+                                    {count !== undefined && (
+                                        <span className="border-border-light bg-background text-text-secondary shrink-0 rounded-md border px-1.5 py-px font-mono text-[10px] tabular-nums">
+                                            {count}
+                                        </span>
+                                    )}
+                                </div>
+                                {description && (
+                                    <p className="text-text-secondary truncate text-xs">
+                                        {description}
+                                    </p>
                                 )}
                             </div>
-                            {description && (
-                                <p className="text-text-secondary mt-0.5 text-xs">
-                                    {description}
-                                </p>
-                            )}
+                        )}
+                        {action && (
+                            <div className="ml-auto shrink-0">{action}</div>
+                        )}
+                    </div>
+                    {toolbar && (
+                        <div className="border-border-light -mx-4 flex min-h-11 flex-wrap items-center justify-between gap-2 border-t px-4 py-1.5">
+                            {toolbar}
                         </div>
                     )}
-                    {action && <div className="shrink-0">{action}</div>}
-                </div>
+                </header>
             )}
             <div className={bodyClassName}>{children}</div>
         </section>
