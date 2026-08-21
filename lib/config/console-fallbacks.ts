@@ -59,4 +59,22 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The account service is unreachable right now. Try again in a moment.",
     },
+    adminPortal: {
+        panel: "Admin Console",
+        title: "This console stopped responding",
+        description:
+            "Something failed while rendering this page. Nothing was changed — retry, or pick another section from the sidebar.",
+    },
+    agentPortal: {
+        panel: "Agent Console",
+        title: "This console stopped responding",
+        description:
+            "Something failed while rendering this page. Your listings and enquiries are untouched — retry, or pick another section from the sidebar.",
+    },
+    buyerPortal: {
+        panel: "Your Dashboard",
+        title: "This page stopped responding",
+        description:
+            "Something failed while rendering this page. Your saved homes and offers are untouched — retry, or pick another section from the sidebar.",
+    },
 } as const satisfies Record<string, ConsoleFallback>;
