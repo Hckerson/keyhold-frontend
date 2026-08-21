@@ -189,12 +189,6 @@ export const DEFAULT_COMMISSION_RATE = 0.025;
 export const PLATFORM_PAYOUT_FEE_RATE = 0.05;
 export const TABLE_PAGE_SIZE = 10;
 
-export const USER_TIERS = {
-    STANDARD: "standard",
-    PREMIUM: "premium",
-    PLATINUM: "platinum",
-} as const;
-
 export const RAIL_QUERY = "(min-width: 64rem)";
 
 export const STALE_TIME = 5 * 60 * 1000;

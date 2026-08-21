@@ -34,10 +34,10 @@ export const USER_ROLE_SEGMENTS: DonutSegment[] = [
     { name: "Admins", value: 90, tone: "neutral" },
 ];
 
-export const USER_TIER_SEGMENTS: DonutSegment[] = [
-    { name: "Standard", value: 845, tone: "neutral" },
-    { name: "Premium", value: 315, tone: "info" },
-    { name: "Platinum", value: 87, tone: "highlight" },
+export const USER_VERIFICATION_SEGMENTS: DonutSegment[] = [
+    { name: "Email", value: 1_189, tone: "success" },
+    { name: "Phone", value: 902, tone: "info" },
+    { name: "Identity", value: 604, tone: "accent" },
 ];
 
 const sumSegments = (segments: DonutSegment[]) =>

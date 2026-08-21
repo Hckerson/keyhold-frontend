@@ -1,5 +1,4 @@
 export type ManagedUserRole = "buyer" | "agent" | "admin";
-export type UserTier = "standard" | "premium" | "platinum";
 export type UserStatus = "active" | "pending" | "suspended";
 
 export type UserStatusFilter = UserStatus | "all";
