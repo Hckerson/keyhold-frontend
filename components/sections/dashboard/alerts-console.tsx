@@ -12,7 +12,7 @@ import {
     countByRead,
     deliverySummary,
     initialAlerts,
-    initialPreferences,
+    emptyPreferences,
     markAllRead,
     markRead,
     matchesFilters,
@@ -27,7 +27,7 @@ import type { AlertChannel, AlertType } from "@/lib/types";
 
 export function AlertsConsole() {
     const [alerts, setAlerts] = useState(initialAlerts);
-    const [preferences, setPreferences] = useState(initialPreferences);
+    const [preferences, setPreferences] = useState(emptyPreferences);
     const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD);
     const [readFilter, setReadFilter] = useState<ReadFilter>("all");
     const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
