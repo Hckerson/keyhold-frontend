@@ -12,7 +12,6 @@ import type {
     MetricItem,
     ModerationQueueLoad,
     PlatformSignal,
-    ServiceHealth,
 } from "@/lib/types";
 import {
     AVG_COMMISSION_PER_DEAL,
@@ -203,57 +202,6 @@ const SIGNAL_EXPOSURE = PLATFORM_SIGNALS.reduce(
 );
 
 export const SIGNAL_EXPOSURE_LABEL = formatUsd(SIGNAL_EXPOSURE);
-
-export const SERVICES: ServiceHealth[] = [
-    {
-        id: "database",
-        label: "Database",
-        state: "operational",
-        uptime: 99.99,
-        errorRate: 0.01,
-        latencyMs: 38,
-    },
-    {
-        id: "api",
-        label: "API gateway",
-        state: "operational",
-        uptime: 99.96,
-        errorRate: 0.04,
-        latencyMs: 112,
-    },
-    {
-        id: "search",
-        label: "Search index",
-        state: "operational",
-        uptime: 99.94,
-        errorRate: 0.06,
-        latencyMs: 187,
-    },
-    {
-        id: "storage",
-        label: "File storage",
-        state: "degraded",
-        uptime: 99.82,
-        errorRate: 0.21,
-        latencyMs: 640,
-    },
-    {
-        id: "payments",
-        label: "Payments webhook",
-        state: "operational",
-        uptime: 99.91,
-        errorRate: 0.09,
-        latencyMs: 296,
-    },
-];
-
-const averageUptime =
-    SERVICES.reduce((total, service) => total + service.uptime, 0) /
-    SERVICES.length;
-
-export const SERVICE_SUMMARY = `Uptime ${averageUptime.toFixed(2)}% · ${
-    SERVICES.filter((service) => service.state !== "operational").length
-} degraded (24h)`;
 
 export const overviewSummary = (
     platform: PlatformStats | undefined,
