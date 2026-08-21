@@ -49,9 +49,9 @@ export function AdminOverviewRail({
             >
                 <AudienceMix
                     roles={roles}
-                    segments={statuses}
+                    tiers={statuses}
                     total={formatCount(total)}
-                    segmentLabel={STATUS_LABEL}
+                    tierLabel={STATUS_LABEL}
                 />
             </Panel>
         </div>

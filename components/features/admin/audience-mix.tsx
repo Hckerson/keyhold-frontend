@@ -10,32 +10,25 @@ const DONUT_SIZE = 132;
 
 export interface AudienceMixProps {
     roles: DonutSegment[];
-    segments: DonutSegment[];
+    tiers: DonutSegment[];
     total: string;
-    segmentLabel: string;
-    segmentTotal?: number;
+    tierLabel: string;
 }
 
-function SegmentRow({
-    segment,
-    share,
-}: {
-    segment: DonutSegment;
-    share: number;
-}) {
+function TierRow({ tier, share }: { tier: DonutSegment; share: number }) {
     return (
         <li className="flex items-center gap-2.5 py-2">
             <span
                 aria-hidden="true"
                 className="size-2.5 shrink-0 rounded-sm"
-                style={{ background: chartToneVar[segment.tone] }}
+                style={{ background: chartToneVar[tier.tone] }}
             />
             <span className="text-text w-20 shrink-0 truncate text-xs font-medium">
-                {segment.name}
+                {tier.name}
             </span>
-            <ProgressBar value={share} tone={segment.tone} className="flex-1" />
+            <ProgressBar value={share} tone={tier.tone} className="flex-1" />
             <span className="text-text w-10 shrink-0 text-right text-xs font-semibold tabular-nums">
-                {formatCount(segment.value)}
+                {formatCount(tier.value)}
             </span>
             <span className="micro-label w-8 shrink-0 text-right tabular-nums">
                 {share}%
@@ -46,14 +39,11 @@ function SegmentRow({
 
 export function AudienceMix({
     roles,
-    segments,
+    tiers,
     total,
-    segmentLabel,
-    segmentTotal,
+    tierLabel,
 }: AudienceMixProps) {
-    const denominator =
-        segmentTotal ??
-        segments.reduce((sum, segment) => sum + segment.value, 0);
+    const tierTotal = tiers.reduce((sum, tier) => sum + tier.value, 0);
 
     return (
         <div className="flex flex-col gap-3">
@@ -65,15 +55,13 @@ export function AudienceMix({
             />
 
             <div className="border-border-dark border-t pt-2">
-                <p className="micro-label">{segmentLabel}</p>
+                <p className="micro-label">{tierLabel}</p>
                 <ul className="divide-border divide-y">
-                    {segments.map((segment) => (
-                        <SegmentRow
-                            key={segment.name}
-                            segment={segment}
-                            share={Math.round(
-                                (segment.value / denominator) * 100,
-                            )}
+                    {tiers.map((tier) => (
+                        <TierRow
+                            key={tier.name}
+                            tier={tier}
+                            share={Math.round((tier.value / tierTotal) * 100)}
                         />
                     ))}
                 </ul>
