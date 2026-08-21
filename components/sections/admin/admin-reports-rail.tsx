@@ -5,17 +5,16 @@ import { AudienceMix } from "@/components/features/admin/audience-mix";
 import { ReportSignalTable } from "@/components/features/admin/report-signal-table";
 import {
     REPORT_SIGNALS,
-    TOTAL_USERS,
     TOTAL_USERS_LABEL,
     USER_ROLE_SEGMENTS,
-    USER_VERIFICATION_SEGMENTS,
+    USER_TIER_SEGMENTS,
 } from "@/lib/data/admin-reports";
 
 const SIGNALS_TITLE = "Platform Signals";
 const SIGNALS_LEDE = "Month over month movement";
 const AUDIENCE_TITLE = "Audience Mix";
 const AUDIENCE_ACTION = "Users";
-const VERIFICATION_LABEL = "Verified accounts";
+const TIER_LABEL = "By tier";
 
 export function AdminReportsRail() {
     return (
@@ -39,10 +38,9 @@ export function AdminReportsRail() {
             >
                 <AudienceMix
                     roles={USER_ROLE_SEGMENTS}
-                    segments={USER_VERIFICATION_SEGMENTS}
+                    tiers={USER_TIER_SEGMENTS}
                     total={TOTAL_USERS_LABEL}
-                    segmentLabel={VERIFICATION_LABEL}
-                    segmentTotal={TOTAL_USERS}
+                    tierLabel={TIER_LABEL}
                 />
             </Panel>
         </div>

@@ -10,7 +10,7 @@ import {
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { CalloutVariant } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { ManagedUserRole, UserStatus } from "@/lib/types";
+import type { ManagedUserRole, UserStatus, UserTier } from "@/lib/types";
 
 interface ToneBand {
     ceiling: number;
@@ -52,6 +52,20 @@ export const USER_ROLES: Record<ManagedUserRole, UserRoleMeta> = {
         tone: "accent",
         rank: 3,
     },
+};
+
+export const USER_TIER_KEYS: UserTier[] = ["platinum", "premium", "standard"];
+
+export interface UserTierMeta {
+    label: string;
+    tone: ChartTone;
+    rank: number;
+}
+
+export const USER_TIERS: Record<UserTier, UserTierMeta> = {
+    platinum: { label: "Platinum", tone: "highlight", rank: 3 },
+    premium: { label: "Premium", tone: "info", rank: 2 },
+    standard: { label: "Standard", tone: "neutral", rank: 1 },
 };
 
 export const USER_STATUS_KEYS: UserStatus[] = [
