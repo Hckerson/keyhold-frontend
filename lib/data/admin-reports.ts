@@ -17,7 +17,7 @@ import {
     TOTAL_USERS,
     USER_GROWTH_LABEL,
     USER_ROLE_SEGMENTS,
-    USER_TIER_SEGMENTS,
+    USER_VERIFICATION_SEGMENTS,
 } from "@/lib/data/admin-users";
 import { formatCount, formatMillions } from "@/lib/utils";
 
@@ -163,4 +163,4 @@ export const REPORT_SIGNALS: ReportSignal[] = [
 
 export const TOTAL_USERS_LABEL = formatCount(TOTAL_USERS);
 
-export { USER_ROLE_SEGMENTS, USER_TIER_SEGMENTS };
+export { TOTAL_USERS, USER_ROLE_SEGMENTS, USER_VERIFICATION_SEGMENTS };
