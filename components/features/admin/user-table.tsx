@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { UserRow } from "@/components/features/admin/user-row";
 import type { ManagedUser } from "@/lib/types";
 
@@ -33,9 +34,6 @@ export function UserTable({
                     <th scope="col" className="micro-label w-16 pl-3 text-left">
                         Role
                     </th>
-                    <th scope="col" className="micro-label w-20 pl-3 text-left">
-                        Tier
-                    </th>
                     <th
                         scope="col"
                         className="micro-label w-14 pl-3 text-right"
@@ -63,16 +61,18 @@ export function UserTable({
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {users.map((user) => (
-                    <UserRow
-                        key={user.id}
-                        user={user}
-                        peak={peak}
-                        onOpen={onOpen}
-                        onSuspend={onSuspend}
-                        onReactivate={onReactivate}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {users.map((user) => (
+                        <UserRow
+                            key={user.id}
+                            user={user}
+                            peak={peak}
+                            onOpen={onOpen}
+                            onSuspend={onSuspend}
+                            onReactivate={onReactivate}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

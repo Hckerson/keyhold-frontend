@@ -92,7 +92,7 @@ export function OffersTopHero({ offer, onWithdraw }: OffersTopHeroProps) {
                 </div>
             </div>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={ASK_LABEL}>
                     <span className="tabular-nums">
                         {formatMillions(offer.listPrice, 2)}

@@ -6,25 +6,25 @@ import { FilterPills } from "@/components/patterns/filter-pills";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { LeadTable } from "@/components/features/agent/lead-table";
 import { LeadsTopProspectHero } from "@/components/sections/agent/leads-top-prospect-hero";
-import {
-    LEAD_STAGE_FILTERS,
-    type Lead,
-    type LeadStageFilter,
-} from "@/lib/data/agent-leads";
+import { LEAD_STAGE_FILTERS } from "@/lib/data/agent-leads";
+import type { Lead, LeadStageFilter } from "@/lib/types/lead";
 
 const PIPELINE_TITLE = "Working Set";
-const PIPELINE_LEDE = "Every prospect behind your top opportunity";
+const PIPELINE_LEDE = "Every enquiry behind your top opportunity";
 const PIPELINE_ACTION = "Open pipeline";
-const EMPTY_TITLE = "No prospects in this stage";
-const EMPTY_LEDE = "Change the filter or capture a new prospect.";
+const EMPTY_TITLE = "No enquiries in this stage";
+const EMPTY_LEDE = "Change the filter, or publish a listing to attract buyers.";
+const LOADING_TITLE = "Loading your enquiries";
+const LOADING_LEDE = "Fetching the buyers who reached out about your listings.";
 
 export interface LeadsMainProps {
-    top: Lead;
+    top?: Lead;
     leads: Lead[];
     stageFilter: LeadStageFilter;
     counts: Record<LeadStageFilter, number>;
+    pending?: boolean;
     onFilterChange: (stage: LeadStageFilter) => void;
-    onAdvance: (id: string) => void;
+    onRespond: (id: string, accept: boolean) => void;
 }
 
 export function LeadsMain({
@@ -32,12 +32,13 @@ export function LeadsMain({
     leads,
     stageFilter,
     counts,
+    pending = false,
     onFilterChange,
-    onAdvance,
+    onRespond,
 }: LeadsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
-            <LeadsTopProspectHero lead={top} onAdvance={onAdvance} />
+        <div className="console-span-2 flex flex-col gap-3">
+            {top && <LeadsTopProspectHero lead={top} onRespond={onRespond} />}
 
             <Panel
                 title={PIPELINE_TITLE}
@@ -58,13 +59,13 @@ export function LeadsMain({
 
                 {leads.length > 0 ? (
                     <PanelInset scroll className="mt-0">
-                        <LeadTable leads={leads} onAdvance={onAdvance} />
+                        <LeadTable leads={leads} onRespond={onRespond} />
                     </PanelInset>
                 ) : (
                     <EmptyState
                         icon={UserSearch}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                     />
                 )}
             </Panel>

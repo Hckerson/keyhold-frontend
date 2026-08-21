@@ -3,27 +3,16 @@ import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { ShareList } from "@/components/patterns/share-list";
 import { UserBreakdownTable } from "@/components/features/admin/user-breakdown-table";
-import {
-    cohortBreakdowns,
-    directoryDeals,
-    roleShares,
-    tierBreakdowns,
-} from "@/lib/data/admin-users";
-import { formatCount } from "@/lib/utils";
+import { cohortBreakdowns, roleShares } from "@/lib/data/admin-users";
 import type { ManagedUser } from "@/lib/types";
 
 const ROLE_TITLE = "Role Mix";
 const ROLE_LEDE = "How the directory splits across the three account types";
-const TIER_TITLE = "Tier Ladder";
-const TIER_CAPTION =
-    "Membership tiers by accounts held, closed deals and lifetime volume";
-const TIER_GROUP = "Tier";
 const COHORT_TITLE = "Joining Cohorts";
 const COHORT_CAPTION =
     "Sign-up years by accounts held, closed deals and lifetime volume";
 const COHORT_GROUP = "Joined";
 const COHORT_ACTION = "Reports";
-const DEALS_SUFFIX = "closed deals on the book";
 
 export interface AdminUsersRailProps {
     users: ManagedUser[];
@@ -41,19 +30,6 @@ export function AdminUsersRail({ users }: AdminUsersRailProps) {
             >
                 <PanelInset>
                     <ShareList shares={roleShares(users)} />
-                </PanelInset>
-            </Panel>
-
-            <Panel
-                title={TIER_TITLE}
-                description={`${formatCount(directoryDeals(users))} ${DEALS_SUFFIX}`}
-            >
-                <PanelInset scroll>
-                    <UserBreakdownTable
-                        groupLabel={TIER_GROUP}
-                        breakdowns={tierBreakdowns(users)}
-                        caption={TIER_CAPTION}
-                    />
                 </PanelInset>
             </Panel>
 

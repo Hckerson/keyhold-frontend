@@ -72,7 +72,7 @@ export function ListingsTopHero({ listing, peak }: ListingsTopHeroProps) {
                 </div>
             </div>
 
-            <div className="bg-background-muted border-border-light mt-3 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={LAYOUT_LABEL}>
                     <span className="truncate tabular-nums">
                         {listing.beds} bd · {listing.baths} ba ·{" "}

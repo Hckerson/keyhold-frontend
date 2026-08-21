@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { TransactionLedgerRow } from "@/components/features/admin/transaction-ledger-row";
 import {
     COMMISSION_RATE_LABEL,
@@ -67,13 +68,15 @@ export function TransactionLedgerTable({
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {transactions.map((transaction) => (
-                    <TransactionLedgerRow
-                        key={transaction.id}
-                        transaction={transaction}
-                        onOpen={onOpen}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {transactions.map((transaction) => (
+                        <TransactionLedgerRow
+                            key={transaction.id}
+                            transaction={transaction}
+                            onOpen={onOpen}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
             <tfoot>
                 <tr className="border-border h-9 border-t">

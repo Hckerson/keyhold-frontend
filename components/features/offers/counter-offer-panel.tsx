@@ -35,7 +35,7 @@ export function CounterOfferPanel({
     return (
         <Panel title="Counter Offer" description="Respond with new terms">
             <div className="space-y-3">
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="card-grid gap-3">
                     <div className="border-border-light bg-background rounded-lg border p-3">
                         <p className="micro-label">Your Current Offer</p>
                         <p className="text-text mt-0.5 text-xs font-medium tabular-nums">

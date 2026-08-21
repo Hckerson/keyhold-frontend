@@ -17,6 +17,7 @@ import type {
     AlertPreference,
     AlertType,
 } from "@/lib/types";
+import type { NotificationPreference } from "@/lib/validations/notification";
 import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
 export type ReadFilter = "all" | "unread" | "read";
@@ -39,38 +40,54 @@ export const TYPE_OPTIONS: { value: TypeFilter; label: string }[] = [
 
 export const DEFAULT_THRESHOLD = "50000";
 
-export const initialPreferences: Record<AlertType, AlertPreference> = {
-    "price-drop": {
-        enabled: true,
-        channels: { email: true, sms: false, inApp: true },
-    },
-    "offer-response": {
-        enabled: true,
-        channels: { email: true, sms: true, inApp: true },
-    },
-    "new-listing": {
-        enabled: true,
-        channels: { email: true, sms: false, inApp: true },
-    },
-    "under-offer": {
-        enabled: false,
-        channels: { email: false, sms: false, inApp: true },
-    },
-    "viewing-confirmation": {
-        enabled: true,
-        channels: { email: false, sms: true, inApp: true },
-    },
-    "status-change": {
-        enabled: false,
-        channels: { email: false, sms: false, inApp: false },
-    },
+export const DEFAULT_PREFERENCE: AlertPreference = {
+    enabled: true,
+    channels: { email: true, sms: false, inApp: true },
 };
+
+export const toPreferenceMap = (
+    stored: NotificationPreference[],
+): Record<AlertType, AlertPreference> => {
+    const byType = new Map(stored.map((entry) => [entry.type, entry]));
+
+    return Object.fromEntries(
+        ALERT_TYPE_KEYS.map((id) => {
+            const entry = byType.get(id);
+            return [
+                id,
+                entry
+                    ? {
+                          enabled: entry.enabled,
+                          channels: {
+                              email: entry.email,
+                              sms: entry.sms,
+                              inApp: entry.inApp,
+                          },
+                      }
+                    : DEFAULT_PREFERENCE,
+            ];
+        }),
+    ) as Record<AlertType, AlertPreference>;
+};
+
+export const emptyPreferences = () => toPreferenceMap([]);
+
+export const toPreferenceList = (
+    preferences: Record<AlertType, AlertPreference>,
+): NotificationPreference[] =>
+    ALERT_TYPE_KEYS.map((type) => ({
+        type,
+        enabled: preferences[type].enabled,
+        email: preferences[type].channels.email,
+        sms: preferences[type].channels.sms,
+        inApp: preferences[type].channels.inApp,
+    }));
 
 export const initialAlerts: Alert[] = [
     {
         id: "oak-avenue-drop",
         listingId: "1",
-        type: "price-drop",
+        type: "PRICE_DROP",
         description:
             "The seller cut the ask by $150,000 after four weeks without a second offer. Your saved search still ranks it first on price per square foot.",
         address: "456 Oak Avenue",
@@ -85,7 +102,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "palisades-drop",
         listingId: "7",
-        type: "price-drop",
+        type: "PRICE_DROP",
         description:
             "A $250,000 reduction brings the bluff house inside your ceiling for the first time since it listed.",
         address: "18 Palisades Bluff",
@@ -100,7 +117,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "montana-match",
         listingId: "8",
-        type: "new-listing",
+        type: "NEW_LISTING",
         description:
             "A new four-bedroom north of Montana matches your saved criteria on beds, lot size and locality.",
         address: "301 Montana Row",
@@ -114,7 +131,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "oak-street-counter",
         listingId: "3",
-        type: "offer-response",
+        type: "OFFER_RESPONSE",
         description:
             "The seller countered your $4,250,000 offer at $4,400,000 and asked for a 30-day close.",
         address: "234 Oak Street",
@@ -129,7 +146,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "elm-street-match",
         listingId: "2",
-        type: "new-listing",
+        type: "NEW_LISTING",
         description:
             "A new listing on Elm Street matches your saved search on price band and school catchment.",
         address: "678 Elm Street",
@@ -143,7 +160,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "oak-avenue-viewing",
         listingId: "1",
-        type: "viewing-confirmation",
+        type: "VIEWING_CONFIRMATION",
         description:
             "Your tour is confirmed for 3:00 PM with the listing agent meeting you at the gate.",
         address: "456 Oak Avenue",
@@ -157,7 +174,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "brentwood-drop",
         listingId: "9",
-        type: "price-drop",
+        type: "PRICE_DROP",
         description:
             "A quiet $150,000 trim on the mews house, its second reduction this quarter.",
         address: "64 Brentwood Mews",
@@ -172,7 +189,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "palm-drive-offer",
         listingId: "5",
-        type: "under-offer",
+        type: "UNDER_OFFER",
         description:
             "The Malibu house you saved has gone under offer and is no longer taking viewings.",
         address: "567 Palm Drive",
@@ -186,7 +203,7 @@ export const initialAlerts: Alert[] = [
     {
         id: "hillcrest-status",
         listingId: "6",
-        type: "status-change",
+        type: "STATUS_CHANGE",
         description:
             "The Hillcrest listing expired and has been withdrawn from the market by its agent.",
         address: "77 Hillcrest Terrace",
@@ -384,14 +401,15 @@ export const alertDeliveryCount = (
 
 export const arePreferencesDirty = (
     preferences: Record<AlertType, AlertPreference>,
+    baseline: Record<AlertType, AlertPreference>,
 ) =>
     ALERT_TYPE_KEYS.some(
         (id) =>
-            preferences[id].enabled !== initialPreferences[id].enabled ||
+            preferences[id].enabled !== baseline[id].enabled ||
             ALERT_CHANNEL_KEYS.some(
                 (channel) =>
                     preferences[id].channels[channel] !==
-                    initialPreferences[id].channels[channel],
+                    baseline[id].channels[channel],
             ),
     );
 

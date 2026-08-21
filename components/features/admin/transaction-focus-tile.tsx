@@ -43,7 +43,7 @@ export function TransactionFocusTile({
                 </p>
             </div>
 
-            <div className="bg-background-muted border-border-light mt-2.5 grid grid-cols-2 gap-3 rounded-md border p-3 sm:grid-cols-4">
+            <div className="metric-strip bg-background-muted border-border-light mt-2.5 gap-3 rounded-md border p-3">
                 <MetricCell label={COMMISSION_LABEL}>
                     <span className="tabular-nums">
                         {formatThousands(commissionOf(transaction))}

@@ -1,6 +1,9 @@
 "use client";
 
-import { DealRow, type Deal } from "@/components/features/agent/deal-row";
+import { AnimatePresence } from "motion/react";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
+import { DealRow } from "@/components/features/agent/deal-row";
+import type { Deal } from "@/lib/types/deal";
 import { nextStageOf } from "@/lib/data/agent-pipeline";
 
 export interface PipelineStageColumnProps {
@@ -35,19 +38,23 @@ export function PipelineStageColumn({
                 </span>
             </div>
 
-            {items.length > 0 ? (
-                items.map((deal) => (
+            <AnimatePresence initial={false}>
+                {items.map((deal) => (
                     <DealRow
                         key={deal.id}
                         deal={deal}
                         actionLabel={`Move to ${nextStageOf(deal.stage).label}`}
                         onAdvance={onAdvance}
                     />
-                ))
-            ) : (
-                <p className="border-border text-text-muted rounded-lg border border-dashed px-3 py-6 text-center text-xs">
-                    No deals in {label.toLowerCase()}
-                </p>
+                ))}
+            </AnimatePresence>
+
+            {items.length === 0 && (
+                <PresenceSwap swapKey="empty">
+                    <p className="border-border text-text-muted rounded-lg border border-dashed px-3 py-6 text-center text-xs">
+                        No deals in {label.toLowerCase()}
+                    </p>
+                </PresenceSwap>
             )}
         </section>
     );

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { m } from "motion/react";
 import { Trash2 } from "lucide-react";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { SavedMatchMeter } from "@/components/features/dashboard/saved-match-meter";
@@ -11,6 +12,7 @@ import { watchTone } from "@/lib/config/saved-tones";
 import { movePercent } from "@/lib/data/saved-listings";
 import type { SavedListing } from "@/lib/types";
 import { cn, formatMillions } from "@/lib/utils";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const DAYS_SUFFIX = "d";
 const REMOVE_LABEL = "Remove";
@@ -22,7 +24,10 @@ export interface SavedRowProps {
 
 export function SavedRow({ listing, onRemove }: SavedRowProps) {
     return (
-        <tr className="ease-smooth hover:bg-background-muted h-11 transition-colors">
+        <m.tr
+            {...TABLE_ROW_MOTION}
+            className="ease-smooth hover:bg-background-muted h-11 transition-colors"
+        >
             <td className="py-0">
                 <Link
                     href={`/listing/${listing.id}`}
@@ -79,7 +84,7 @@ export function SavedRow({ listing, onRemove }: SavedRowProps) {
                     />
                 </button>
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

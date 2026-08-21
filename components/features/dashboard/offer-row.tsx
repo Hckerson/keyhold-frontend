@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { m } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { OfferGapChip } from "@/components/features/dashboard/offer-gap-chip";
@@ -9,6 +10,7 @@ import { OFFER_STATUSES } from "@/lib/config/offer-tones";
 import { gapPercent, isOpen } from "@/lib/data/offers";
 import type { Offer } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const NO_COUNTER = "—";
 const WITHDRAW_LABEL = "Withdraw";
@@ -22,7 +24,8 @@ export function OfferRow({ offer, onWithdraw }: OfferRowProps) {
     const open = isOpen(offer);
 
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth h-11 transition-colors",
                 offer.status === "countered"
@@ -95,7 +98,7 @@ export function OfferRow({ offer, onWithdraw }: OfferRowProps) {
                     </span>
                 )}
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

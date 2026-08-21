@@ -7,15 +7,26 @@ import {
     CalendarPlus,
     type LucideIcon,
 } from "lucide-react";
+import { format, isToday, isTomorrow } from "date-fns";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import type { ActivityEntry } from "@/lib/types";
+import type { Lead, LeadStage } from "@/lib/types/lead";
+import { formatAge, formatCompactUsd } from "@/lib/utils";
+import { daysBetween, minutesSince } from "@/lib/utils/elapsed";
+import type { ConnectionListItem } from "@/lib/validations/connection-list";
+import type { SellerStats } from "@/lib/validations/stats";
+import type { Transaction } from "@/lib/validations/transaction";
 
 export const DAYS_ON_MARKET_BENCHMARK = 60;
 export const FAST_SALE_DAYS = 21;
 export const SLOW_SALE_DAYS = 40;
-export const GOAL_ON_TRACK_RATIO = 0.75;
-export const GOAL_AT_RISK_RATIO = 0.4;
+
+const SHOWING_TIME_FORMAT = "EEE H:mm";
+const CLOSED_DATE_FORMAT = "MMM dd";
+const RECENT_LIMIT = 3;
+const ACTIVITY_LIMIT = 5;
+const PERCENT = 100;
 
 export interface PipelineSummary {
     label: string;
@@ -51,21 +62,12 @@ export interface UpcomingShowing {
     timing: ShowingTiming;
 }
 
-export type LeadScore = "Hot" | "Warm" | "Cold";
-
 export interface RecentLead {
     id: string;
     name: string;
     budget: number;
-    score: LeadScore;
+    stage: LeadStage;
     received: string;
-}
-
-export interface MonthlyGoal {
-    id: string;
-    label: string;
-    value: number;
-    target: number;
 }
 
 export interface AgentQuickAction {
@@ -75,166 +77,6 @@ export interface AgentQuickAction {
     icon: LucideIcon;
     tone: ChartTone;
 }
-
-export const pipelineSummary: PipelineSummary = {
-    label: "Total pipeline",
-    value: 34_450_000,
-    dealCount: 25,
-    href: "/agent/pipeline",
-};
-
-export const pipelineStages: PipelineStage[] = [
-    { id: "leads", name: "Leads", count: 12, value: 0, tone: "neutral" },
-    { id: "offers", name: "Offers", count: 8, value: 18_400_000, tone: "info" },
-    {
-        id: "pending",
-        name: "Pending",
-        count: 3,
-        value: 9_850_000,
-        tone: "warning",
-    },
-    {
-        id: "closed",
-        name: "Closed",
-        count: 2,
-        value: 6_200_000,
-        tone: "success",
-    },
-];
-
-export const stats: StatDatum[] = [
-    {
-        id: "listings",
-        label: "Active listings",
-        value: "14",
-        icon: Home,
-        href: "/agent/listings",
-        tone: "accent",
-    },
-    {
-        id: "leads",
-        label: "Active leads",
-        value: "12",
-        icon: Users,
-        href: "/agent/leads",
-        tone: "info",
-    },
-    {
-        id: "offers",
-        label: "Open offers",
-        value: "8",
-        icon: FileSignature,
-        href: "/agent/pipeline",
-        tone: "warning",
-    },
-    {
-        id: "closed",
-        label: "Closed YTD",
-        value: "$42.3M",
-        icon: TrendingUp,
-        href: "/agent/analytics",
-        tone: "success",
-    },
-];
-
-export const closedSales: ClosedSale[] = [
-    {
-        id: "1",
-        address: "890 Beverly Grove",
-        price: 3_450_000,
-        closedOn: "Jul 09",
-        overAskPct: 4.2,
-        days: 18,
-    },
-    {
-        id: "2",
-        address: "1420 Mulholland Drive",
-        price: 5_900_000,
-        closedOn: "Jun 28",
-        overAskPct: 2.8,
-        days: 24,
-    },
-    {
-        id: "3",
-        address: "58 Coldwater Canyon",
-        price: 2_780_000,
-        closedOn: "Jun 14",
-        overAskPct: 0,
-        days: 31,
-    },
-];
-
-export const upcomingShowings: UpcomingShowing[] = [
-    {
-        id: "1",
-        address: "456 Oak Avenue",
-        client: "John Doe",
-        when: "2:00 PM",
-        timing: "today",
-    },
-    {
-        id: "2",
-        address: "12 Canyon Ridge",
-        client: "Priya Raman",
-        when: "11:00 AM",
-        timing: "tomorrow",
-    },
-    {
-        id: "3",
-        address: "234 Oak Street",
-        client: "Michael Chen",
-        when: "Fri 9:30",
-        timing: "later",
-    },
-];
-
-export const recentLeads: RecentLead[] = [
-    {
-        id: "1",
-        name: "Robert Lang",
-        budget: 6_200_000,
-        score: "Hot",
-        received: "20m",
-    },
-    {
-        id: "2",
-        name: "Michael Johnson",
-        budget: 5_000_000,
-        score: "Hot",
-        received: "2h",
-    },
-    {
-        id: "3",
-        name: "Patricia Brown",
-        budget: 3_500_000,
-        score: "Warm",
-        received: "1d",
-    },
-];
-
-export const recentActivity: ActivityEntry[] = [
-    {
-        id: 1,
-        type: "offer",
-        title: "Offer received",
-        description: "$3.1M on 456 Oak Avenue",
-        time: "2h",
-    },
-    {
-        id: 2,
-        type: "showing",
-        title: "Property showed",
-        description: "789 Sunset Blvd shown to client",
-        time: "5h",
-    },
-    {
-        id: 3,
-        type: "listing",
-        title: "New listing posted",
-        description: "234 Oak Street listed at $4.5M",
-        time: "1d",
-    },
-];
 
 export const quickActions: AgentQuickAction[] = [
     {
@@ -246,22 +88,245 @@ export const quickActions: AgentQuickAction[] = [
     },
     {
         id: "add-lead",
-        label: "Add a lead",
+        label: "Review enquiries",
         href: "/agent/leads",
         icon: UserPlus,
         tone: "info",
     },
     {
         id: "schedule-showing",
-        label: "Schedule a showing",
+        label: "Open the calendar",
         href: "/agent/calendar",
         icon: CalendarPlus,
         tone: "highlight",
     },
 ];
 
-export const monthlyGoals: MonthlyGoal[] = [
-    { id: "showings", label: "Showings", value: 24, target: 30 },
-    { id: "listings", label: "New listings", value: 8, target: 10 },
-    { id: "deals", label: "Closed deals", value: 2, target: 4 },
+export const agentStats = (
+    seller: SellerStats | undefined,
+    leads: Lead[],
+): StatDatum[] => [
+    {
+        id: "listings",
+        label: "Active listings",
+        value: `${seller?.activeListings ?? 0}`,
+        icon: Home,
+        href: "/agent/listings",
+        tone: "accent",
+    },
+    {
+        id: "leads",
+        label: "Open enquiries",
+        value: `${leads.filter((lead) => lead.stage !== "declined").length}`,
+        icon: Users,
+        href: "/agent/leads",
+        tone: "info",
+    },
+    {
+        id: "offers",
+        label: "Open offers",
+        value: `${seller?.pendingOffers ?? 0}`,
+        icon: FileSignature,
+        href: "/agent/pipeline",
+        tone: "warning",
+    },
+    {
+        id: "closed",
+        label: "Closed volume",
+        value: formatCompactUsd(seller?.closedValue ?? 0),
+        icon: TrendingUp,
+        href: "/agent/analytics",
+        tone: "success",
+    },
 ];
+
+const stageValue = (connections: ConnectionListItem[]) =>
+    connections.reduce(
+        (total, connection) => total + connection.property.price,
+        0,
+    );
+
+const salesValue = (sales: Transaction[]) =>
+    sales.reduce((total, sale) => total + sale.finalPrice, 0);
+
+export const pipelineStagesFrom = (
+    connections: ConnectionListItem[],
+    sales: Transaction[],
+): PipelineStage[] => {
+    const enquiries = connections.filter(
+        (connection) => connection.status === "PENDING",
+    );
+    const negotiating = connections.filter(
+        (connection) =>
+            connection.status === "ACCEPTED" && connection._count.offers > 0,
+    );
+    const inProgress = sales.filter((sale) => sale.status !== "COMPLETED");
+    const closed = sales.filter((sale) => sale.status === "COMPLETED");
+
+    return [
+        {
+            id: "leads",
+            name: "Enquiries",
+            count: enquiries.length,
+            value: stageValue(enquiries),
+            tone: "neutral",
+        },
+        {
+            id: "offers",
+            name: "Offers",
+            count: negotiating.length,
+            value: stageValue(negotiating),
+            tone: "info",
+        },
+        {
+            id: "pending",
+            name: "Pending",
+            count: inProgress.length,
+            value: salesValue(inProgress),
+            tone: "warning",
+        },
+        {
+            id: "closed",
+            name: "Closed",
+            count: closed.length,
+            value: salesValue(closed),
+            tone: "success",
+        },
+    ];
+};
+
+export const pipelineSummaryFrom = (
+    stages: PipelineStage[],
+): PipelineSummary => ({
+    label: "Total pipeline",
+    value: stages.reduce((total, stage) => total + stage.value, 0),
+    dealCount: stages.reduce((total, stage) => total + stage.count, 0),
+    href: "/agent/pipeline",
+});
+
+export const closedSalesFrom = (sales: Transaction[]): ClosedSale[] =>
+    sales
+        .filter((sale) => sale.status === "COMPLETED" && sale.completedAt)
+        .slice(0, RECENT_LIMIT)
+        .map((sale) => {
+            const ask = sale.property?.price ?? 0;
+            const closedAt = sale.completedAt ?? sale.updatedAt;
+
+            return {
+                id: sale.id,
+                address: sale.property?.address ?? sale.property?.title ?? "",
+                price: sale.finalPrice,
+                closedOn: format(new Date(closedAt), CLOSED_DATE_FORMAT),
+                overAskPct:
+                    ask > 0
+                        ? Number(
+                              (
+                                  ((sale.finalPrice - ask) / ask) *
+                                  PERCENT
+                              ).toFixed(1),
+                          )
+                        : 0,
+                days: daysBetween(sale.createdAt, closedAt),
+            };
+        });
+
+const timingOf = (iso: string): ShowingTiming => {
+    const when = new Date(iso);
+    if (isToday(when)) return "today";
+    if (isTomorrow(when)) return "tomorrow";
+    return "later";
+};
+
+export const upcomingShowingsFrom = (
+    connections: ConnectionListItem[],
+): UpcomingShowing[] =>
+    connections
+        .flatMap((connection) =>
+            connection.viewings.flatMap(({ id, confirmedTime }) =>
+                confirmedTime && new Date(confirmedTime) >= new Date()
+                    ? [
+                          {
+                              id,
+                              confirmedTime,
+                              address: connection.property.address,
+                              client: connection.buyer.fullName,
+                          },
+                      ]
+                    : [],
+            ),
+        )
+        .sort(
+            (a, b) =>
+                new Date(a.confirmedTime).getTime() -
+                new Date(b.confirmedTime).getTime(),
+        )
+        .slice(0, RECENT_LIMIT)
+        .map(({ id, address, client, confirmedTime }) => ({
+            id,
+            address,
+            client,
+            when: format(new Date(confirmedTime), SHOWING_TIME_FORMAT),
+            timing: timingOf(confirmedTime),
+        }));
+
+export const recentLeadsFrom = (leads: Lead[]): RecentLead[] =>
+    leads.slice(0, RECENT_LIMIT).map((lead) => ({
+        id: lead.id,
+        name: lead.name,
+        budget: lead.budget,
+        stage: lead.stage,
+        received: lead.lastContact,
+    }));
+
+export const recentActivityFrom = (
+    connections: ConnectionListItem[],
+): ActivityEntry[] =>
+    connections
+        .flatMap<{ entry: ActivityEntry; at: string }>((connection) => {
+            const place = connection.property.address;
+            const events: { entry: ActivityEntry; at: string }[] = [];
+
+            const offer = connection.offers[0];
+            if (offer)
+                events.push({
+                    at: offer.createdAt,
+                    entry: {
+                        id: offer.id,
+                        type: "offer",
+                        title: "Offer received",
+                        description: `${formatCompactUsd(offer.offeredPrice)} on ${place}`,
+                        time: formatAge(minutesSince(offer.createdAt)),
+                    },
+                });
+
+            const viewing = connection.viewings[0];
+            if (viewing)
+                events.push({
+                    at: viewing.createdAt,
+                    entry: {
+                        id: viewing.id,
+                        type: "showing",
+                        title: "Viewing requested",
+                        description: `${connection.buyer.fullName} on ${place}`,
+                        time: formatAge(minutesSince(viewing.createdAt)),
+                    },
+                });
+
+            const message = connection.messages[0];
+            if (message)
+                events.push({
+                    at: message.createdAt,
+                    entry: {
+                        id: message.id,
+                        type: "message",
+                        title: "New message",
+                        description: `${connection.buyer.fullName} on ${place}`,
+                        time: formatAge(minutesSince(message.createdAt)),
+                    },
+                });
+
+            return events;
+        })
+        .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+        .slice(0, ACTIVITY_LIMIT)
+        .map(({ entry }) => entry);

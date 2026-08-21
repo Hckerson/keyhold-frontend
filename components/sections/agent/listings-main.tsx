@@ -14,6 +14,8 @@ const BOOK_LEDE = "Every property behind your strongest performer";
 const BOOK_ACTION = "Open analytics";
 const EMPTY_TITLE = "No listings in this status";
 const EMPTY_LEDE = "Change the filter or list a new property.";
+const LOADING_TITLE = "Loading your listings";
+const LOADING_LEDE = "Fetching the latest performance for your portfolio.";
 
 export interface ListingsMainProps {
     top?: ManagedListing;
@@ -23,6 +25,7 @@ export interface ListingsMainProps {
     counts: Record<StatusFilter, number>;
     selectedIds: string[];
     allSelected: boolean;
+    pending?: boolean;
     onFilterChange: (filter: StatusFilter) => void;
     onToggleAll: () => void;
     onSelectedChange: (id: string, selected: boolean) => void;
@@ -38,6 +41,7 @@ export function ListingsMain({
     counts,
     selectedIds,
     allSelected,
+    pending = false,
     onFilterChange,
     onToggleAll,
     onSelectedChange,
@@ -45,7 +49,7 @@ export function ListingsMain({
     onBulkAction,
 }: ListingsMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {top && <ListingsTopHero listing={top} peak={peak} />}
 
             <Panel
@@ -79,8 +83,8 @@ export function ListingsMain({
                 ) : (
                     <EmptyState
                         icon={Home}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                     />
                 )}
             </Panel>

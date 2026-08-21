@@ -11,7 +11,7 @@ export function VerificationSignalGrid({
     signals,
 }: VerificationSignalGridProps) {
     return (
-        <dl className="border-border-light grid grid-cols-2 gap-x-3 gap-y-2.5 rounded-lg border px-3 py-2.5 sm:grid-cols-4">
+        <dl className="metric-strip border-border-light gap-x-3 gap-y-2.5 rounded-lg border px-3 py-2.5">
             {signals.map((signal) => (
                 <div key={signal.label} className="min-w-0">
                     <dt className="micro-label truncate">{signal.label}</dt>

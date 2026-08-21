@@ -3,45 +3,50 @@ import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { OverviewShowingList } from "@/components/features/agent/overview-showing-list";
 import { OverviewLeadList } from "@/components/features/agent/overview-lead-list";
-import { OverviewGoalList } from "@/components/features/agent/overview-goal-list";
 import { OverviewActionList } from "@/components/features/agent/overview-action-list";
 import {
-    monthlyGoals,
     quickActions,
-    recentLeads,
-    upcomingShowings,
+    type RecentLead,
+    type UpcomingShowing,
 } from "@/lib/data/agent-overview";
 
-export function AgentOverviewRail() {
+const SHOWINGS_TITLE = "Upcoming Showings";
+const SHOWINGS_ACTION = "Calendar";
+const LEADS_TITLE = "Recent Enquiries";
+const LEADS_ACTION = "All enquiries";
+const ACTIONS_TITLE = "Quick Actions";
+
+export interface AgentOverviewRailProps {
+    showings: UpcomingShowing[];
+    leads: RecentLead[];
+}
+
+export function AgentOverviewRail({ showings, leads }: AgentOverviewRailProps) {
     return (
         <div className="flex flex-col gap-3">
             <Panel
-                title="Upcoming Showings"
-                count={upcomingShowings.length}
-                action={<PanelLink href="/agent/calendar" label="Calendar" />}
+                title={SHOWINGS_TITLE}
+                count={showings.length}
+                action={
+                    <PanelLink href="/agent/calendar" label={SHOWINGS_ACTION} />
+                }
             >
                 <PanelInset>
-                    <OverviewShowingList showings={upcomingShowings} />
+                    <OverviewShowingList showings={showings} />
                 </PanelInset>
             </Panel>
 
             <Panel
-                title="Recent Leads"
-                count={recentLeads.length}
-                action={<PanelLink href="/agent/leads" label="All leads" />}
+                title={LEADS_TITLE}
+                count={leads.length}
+                action={<PanelLink href="/agent/leads" label={LEADS_ACTION} />}
             >
                 <PanelInset>
-                    <OverviewLeadList leads={recentLeads} />
+                    <OverviewLeadList leads={leads} />
                 </PanelInset>
             </Panel>
 
-            <Panel title="This Month">
-                <PanelInset>
-                    <OverviewGoalList goals={monthlyGoals} />
-                </PanelInset>
-            </Panel>
-
-            <Panel title="Quick Actions">
+            <Panel title={ACTIONS_TITLE}>
                 <PanelInset>
                     <OverviewActionList actions={quickActions} />
                 </PanelInset>

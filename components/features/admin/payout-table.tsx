@@ -1,3 +1,6 @@
+"use client";
+
+import { AnimatePresence } from "motion/react";
 import { PayoutRow } from "@/components/features/admin/payout-row";
 import type { Payout } from "@/lib/types";
 
@@ -45,9 +48,11 @@ export function PayoutTable({ payouts }: PayoutTableProps) {
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {payouts.map((payout) => (
-                    <PayoutRow key={payout.id} payout={payout} />
-                ))}
+                <AnimatePresence initial={false}>
+                    {payouts.map((payout) => (
+                        <PayoutRow key={payout.id} payout={payout} />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

@@ -51,7 +51,6 @@ export function OverviewTaskRow({ task }: OverviewTaskRowProps) {
                 >
                     {task.label}
                 </span>
-                <span className="micro-label shrink-0">{task.due}</span>
             </Link>
         </li>
     );

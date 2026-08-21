@@ -4,12 +4,14 @@ import type {
     Connection,
     CreateConnectionInput,
 } from "@/lib/validations/connection";
+import type { ConnectionListItem } from "@/lib/validations/connection-list";
 
 export const connectionsAPI = {
     myInterests: () =>
-        query.get<Connection[]>(config.api.connections.myInterests),
+        query.get<ConnectionListItem[]>(config.api.connections.myInterests),
 
-    incoming: () => query.get<Connection[]>(config.api.connections.incoming),
+    incoming: () =>
+        query.get<ConnectionListItem[]>(config.api.connections.incoming),
 
     detail: (id: string) =>
         query.get<Connection>(config.api.connections.detail(id)),

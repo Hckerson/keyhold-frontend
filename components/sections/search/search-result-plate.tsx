@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { SearchResultLedger } from "@/components/sections/search/search-result-ledger";
-import { formatPrice } from "@/lib/data/listings";
+import { formatUsd } from "@/lib/utils";
 import { PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
 import { PROPERTY_STATUS_LABELS } from "@/lib/enums/enums";
 import type { Listing } from "@/lib/types";
@@ -73,7 +73,7 @@ export function SearchResultPlate({
 
             <div className="flex items-baseline justify-between gap-2">
                 <p className="text-h5 font-display text-text leading-none font-light tabular-nums">
-                    {formatPrice(listing.price)}
+                    {formatUsd(listing.price)}
                 </p>
                 <p className="text-text-muted shrink-0 font-mono text-[10px] tabular-nums">
                     ${listing.pricePerSqft.toLocaleString()}/sq ft

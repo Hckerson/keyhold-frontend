@@ -1,0 +1,56 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import type { ManagedUser } from "@/lib/types";
+
+const REVIEW_ACTION = "Review";
+const SUSPEND_ACTION = "Suspend";
+const REACTIVATE_ACTION = "Reactivate";
+
+export interface UserFocusActionsProps {
+    user: ManagedUser;
+    onOpen: (id: string) => void;
+    onSuspend: (id: string) => void;
+    onReactivate: (id: string) => void;
+}
+
+export function UserFocusActions({
+    user,
+    onOpen,
+    onSuspend,
+    onReactivate,
+}: UserFocusActionsProps) {
+    return (
+        <div className="flex shrink-0 items-center gap-2">
+            <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => onOpen(user.id)}
+            >
+                {REVIEW_ACTION}
+            </Button>
+            {user.status === "suspended" ? (
+                <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={() => onReactivate(user.id)}
+                >
+                    {REACTIVATE_ACTION}
+                </Button>
+            ) : (
+                <Button
+                    type="button"
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => onSuspend(user.id)}
+                >
+                    {SUSPEND_ACTION}
+                </Button>
+            )}
+        </div>
+    );
+}
+
+UserFocusActions.displayName = "UserFocusActions";

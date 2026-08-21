@@ -1,0 +1,203 @@
+"use client";
+
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
+import {
+    arePreferencesDirty,
+    emptyPreferences,
+    toggleChannel,
+    toggleEnabled,
+    toPreferenceList,
+    toPreferenceMap,
+} from "@/lib/data/alerts";
+import {
+    buyerDocuments,
+    INITIAL_PRIVACY_STATE,
+    isPrivacyDirty,
+    searchProfileStrength,
+    searchSignals,
+    type PrivacyControlId,
+    type SettingsDialogKey,
+} from "@/lib/data/buyer-account";
+import {
+    buildDashboardSettingsStats,
+    changedFieldCount,
+    DATA_EXPORT_FILENAME,
+    EMPTY_PROFILE,
+    INITIAL_CONTACT_METHOD,
+    profileStrength,
+    toProfileForm,
+    type ContactMethod,
+    type ProfileForm,
+} from "@/lib/data/dashboard-settings";
+import { useMyInterests } from "@/lib/hooks/use-connections";
+import { useSavedProperties } from "@/lib/hooks/use-saved-properties";
+import { useCurrentUser, useUpdateUser } from "@/lib/hooks/use-users";
+import {
+    useNotificationPreferences,
+    useUpdateNotificationPreferences,
+} from "@/lib/hooks/use-notifications";
+import { verifiedDocumentCount } from "@/lib/data/buyer-account";
+import { downloadJson } from "@/lib/utils/download";
+import type { AlertChannel, AlertType } from "@/lib/types";
+
+export function useDashboardSettings() {
+    const { data: user } = useCurrentUser();
+    const saved_ = useSavedProperties();
+    const connections = useMyInterests();
+    const updateUser = useUpdateUser(user?.id ?? "");
+    const storedPreferences = useNotificationPreferences();
+    const updatePreferences = useUpdateNotificationPreferences();
+
+    const baseline = toProfileForm(user);
+    const [form, setForm] = useState<ProfileForm>(EMPTY_PROFILE);
+    const [hydrated, setHydrated] = useState(false);
+
+    if (user && !hydrated) {
+        setForm(baseline);
+        setHydrated(true);
+    }
+    const preferenceBaseline = storedPreferences.data
+        ? toPreferenceMap(storedPreferences.data)
+        : emptyPreferences();
+    const [preferences, setPreferences] = useState(preferenceBaseline);
+    const [preferencesHydrated, setPreferencesHydrated] = useState(false);
+
+    if (storedPreferences.data && !preferencesHydrated) {
+        setPreferences(preferenceBaseline);
+        setPreferencesHydrated(true);
+    }
+
+    const [privacy, setPrivacy] = useState(INITIAL_PRIVACY_STATE);
+    const [contactMethod, setContactMethod] = useState<ContactMethod>(
+        INITIAL_CONTACT_METHOD,
+    );
+    const [dialog, setDialog] = useState<SettingsDialogKey | null>(null);
+    const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+    const [deletionScheduled, setDeletionScheduled] = useState(false);
+    const [passwordUpdated, setPasswordUpdated] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    const pending = changedFieldCount(form, baseline);
+    const dirty =
+        pending > 0 ||
+        arePreferencesDirty(preferences, preferenceBaseline) ||
+        isPrivacyDirty(privacy) ||
+        contactMethod !== INITIAL_CONTACT_METHOD;
+
+    useUnsavedChangesWarning(dirty && !saved);
+
+    const changeField = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setForm((current) => ({ ...current, [name]: value }));
+        setSaved(false);
+    };
+
+    const switchEnabled = (type: AlertType) => {
+        setPreferences((current) => toggleEnabled(current, type));
+        setSaved(false);
+    };
+
+    const switchChannel = (type: AlertType, channel: AlertChannel) => {
+        setPreferences((current) => toggleChannel(current, type, channel));
+        setSaved(false);
+    };
+
+    const switchPrivacy = (id: PrivacyControlId) => {
+        setPrivacy((current) => ({ ...current, [id]: !current[id] }));
+        setSaved(false);
+    };
+
+    const changeContactMethod = (method: ContactMethod) => {
+        setContactMethod(method);
+        setSaved(false);
+    };
+
+    const submit = (event: FormEvent) => {
+        event.preventDefault();
+        if (!user) return;
+        void Promise.all([
+            updateUser.mutateAsync({
+                fullName: form.fullName,
+                email: form.email,
+                phoneNumber: form.phone,
+                bio: form.bio,
+            }),
+            updatePreferences.mutateAsync({
+                preferences: toPreferenceList(preferences),
+            }),
+        ]).then(() => setSaved(true));
+    };
+
+    const reset = () => {
+        setForm(baseline);
+        setPreferences(preferenceBaseline);
+        setPrivacy(INITIAL_PRIVACY_STATE);
+        setContactMethod(INITIAL_CONTACT_METHOD);
+        setSaved(false);
+    };
+
+    const runSecurityAction = (id: SettingsDialogKey) => {
+        setPasswordUpdated(false);
+        setDialog(id);
+    };
+
+    const documents = buyerDocuments(user);
+    const signals = searchSignals(
+        user,
+        saved_.data?.length ?? 0,
+        connections.data?.length ?? 0,
+    );
+    const strength = Math.round(
+        (searchProfileStrength(signals) + profileStrength(form)) / 2,
+    );
+
+    const exportData = () =>
+        downloadJson(
+            {
+                profile: form,
+                contactMethod,
+                privacy,
+                alertPreferences: preferences,
+            },
+            DATA_EXPORT_FILENAME,
+        );
+
+    return {
+        form,
+        preferences,
+        privacy,
+        contactMethod,
+        dialog,
+        twoFactorEnabled,
+        deletionScheduled,
+        passwordUpdated,
+        saved,
+        dirty,
+        pending,
+        stats: buildDashboardSettingsStats(
+            strength,
+            verifiedDocumentCount(documents),
+            documents.length,
+            preferences,
+        ),
+        user,
+        signals,
+        strength,
+        documents,
+        verifiedCount: verifiedDocumentCount(documents),
+        setDialog,
+        setTwoFactorEnabled,
+        setDeletionScheduled,
+        setPasswordUpdated,
+        changeField,
+        switchEnabled,
+        switchChannel,
+        switchPrivacy,
+        changeContactMethod,
+        submit,
+        reset,
+        runSecurityAction,
+        exportData,
+    };
+}

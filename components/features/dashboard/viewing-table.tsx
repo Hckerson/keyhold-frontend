@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { ViewingRow } from "@/components/features/dashboard/viewing-row";
 import type { Viewing } from "@/lib/types";
 
@@ -59,14 +60,16 @@ export function ViewingTable({
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {viewings.map((viewing) => (
-                    <ViewingRow
-                        key={viewing.id}
-                        viewing={viewing}
-                        onReschedule={onReschedule}
-                        onCancel={onCancel}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {viewings.map((viewing) => (
+                        <ViewingRow
+                            key={viewing.id}
+                            viewing={viewing}
+                            onReschedule={onReschedule}
+                            onCancel={onCancel}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

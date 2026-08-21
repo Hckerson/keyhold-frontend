@@ -1,10 +1,6 @@
-export type AlertType =
-    | "price-drop"
-    | "new-listing"
-    | "under-offer"
-    | "status-change"
-    | "offer-response"
-    | "viewing-confirmation";
+import type { NotificationType } from "@/lib/enums/enums";
+
+export type AlertType = NotificationType;
 
 export type AlertChannel = "email" | "sms" | "inApp";
 

@@ -58,7 +58,9 @@ export function PortalShell({
 
                 <div className="py-4 md:py-6">
                     <Container className="px-4 md:px-12">
-                        <div className="w-full min-w-0">{children}</div>
+                        <div className="console-canvas w-full min-w-0">
+                            {children}
+                        </div>
                     </Container>
                 </div>
             </main>

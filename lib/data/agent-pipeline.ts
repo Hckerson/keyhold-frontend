@@ -1,8 +1,5 @@
-import {
-    DEAL_STAGES,
-    type Deal,
-    type DealStage,
-} from "@/components/features/agent/deal-row";
+import { DEAL_STAGES } from "@/lib/config/deal-stages";
+import type { Deal, DealStage } from "@/lib/types/deal";
 
 export const initialDeals: Deal[] = [
     {

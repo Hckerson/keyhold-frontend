@@ -2,6 +2,7 @@
 
 import { ClipboardCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
@@ -47,14 +48,16 @@ export function ModerationMain({
     onDecide,
 }: ModerationMainProps) {
     return (
-        <div className="flex flex-col gap-3 lg:col-span-2">
+        <div className="console-span-2 flex flex-col gap-3">
             {focus && (
-                <ModerationFocusHero
-                    listing={focus}
-                    onOpen={onOpen}
-                    onApprove={onApprove}
-                    onDecide={onDecide}
-                />
+                <PresenceSwap swapKey={focus.id}>
+                    <ModerationFocusHero
+                        listing={focus}
+                        onOpen={onOpen}
+                        onApprove={onApprove}
+                        onDecide={onDecide}
+                    />
+                </PresenceSwap>
             )}
 
             <Panel
@@ -64,31 +67,34 @@ export function ModerationMain({
                 action={
                     <PanelLink href="/admin/reports" label={QUEUE_ACTION} />
                 }
-            >
-                <ModerationToolbar
-                    statusFilter={statusFilter}
-                    checkFilter={checkFilter}
-                    counts={counts}
-                    onStatusFilterChange={onStatusFilterChange}
-                    onCheckFilterChange={onCheckFilterChange}
-                />
-
-                {listings.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
-                        <ModerationListingTable
-                            listings={listings}
-                            onOpen={onOpen}
-                            onApprove={onApprove}
-                            onDecide={onDecide}
-                        />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={ClipboardCheck}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                toolbar={
+                    <ModerationToolbar
+                        statusFilter={statusFilter}
+                        checkFilter={checkFilter}
+                        counts={counts}
+                        onStatusFilterChange={onStatusFilterChange}
+                        onCheckFilterChange={onCheckFilterChange}
                     />
-                )}
+                }
+            >
+                <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
+                    {listings.length > 0 ? (
+                        <PanelInset scroll className="mt-0">
+                            <ModerationListingTable
+                                listings={listings}
+                                onOpen={onOpen}
+                                onApprove={onApprove}
+                                onDecide={onDecide}
+                            />
+                        </PanelInset>
+                    ) : (
+                        <EmptyState
+                            icon={ClipboardCheck}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
+                        />
+                    )}
+                </PresenceSwap>
             </Panel>
         </div>
     );

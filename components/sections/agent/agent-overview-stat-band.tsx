@@ -1,9 +1,13 @@
 import { StatBand } from "@/components/patterns/stat-band";
-import { stats } from "@/lib/data/agent-overview";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 
 const BAND_LABEL = "Book of business";
 
-export function AgentOverviewStatBand() {
+export interface AgentOverviewStatBandProps {
+    stats: StatDatum[];
+}
+
+export function AgentOverviewStatBand({ stats }: AgentOverviewStatBandProps) {
     return <StatBand label={BAND_LABEL} stats={stats} />;
 }
 

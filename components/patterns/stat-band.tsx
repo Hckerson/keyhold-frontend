@@ -9,11 +9,13 @@ export function StatBand({ label, stats }: StatBandProps) {
     return (
         <section
             aria-label={label}
-            className="stat-band grid-orphan-fill border-border-light bg-background-muted divide-border divide-x divide-y overflow-hidden rounded-lg border shadow-sm sm:divide-y-0"
+            className="border-border-light bg-background-muted overflow-hidden rounded-lg border shadow-sm"
         >
-            {stats.map((stat) => (
-                <StatCell key={stat.id} stat={stat} />
-            ))}
+            <div className="stat-band">
+                {stats.map((stat) => (
+                    <StatCell key={stat.id} stat={stat} />
+                ))}
+            </div>
         </section>
     );
 }

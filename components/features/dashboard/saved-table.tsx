@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "motion/react";
 import { SavedRow } from "@/components/features/dashboard/saved-row";
 import type { SavedListing } from "@/lib/types";
 
@@ -57,13 +58,15 @@ export function SavedTable({ listings, onRemove }: SavedTableProps) {
                 </tr>
             </thead>
             <tbody className="divide-border divide-y">
-                {listings.map((listing) => (
-                    <SavedRow
-                        key={listing.id}
-                        listing={listing}
-                        onRemove={onRemove}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {listings.map((listing) => (
+                        <SavedRow
+                            key={listing.id}
+                            listing={listing}
+                            onRemove={onRemove}
+                        />
+                    ))}
+                </AnimatePresence>
             </tbody>
         </table>
     );

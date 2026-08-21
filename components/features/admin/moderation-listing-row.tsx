@@ -1,5 +1,6 @@
 "use client";
 
+import { m } from "motion/react";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { ComplianceMeter } from "@/components/features/admin/compliance-meter";
 import { ModerationAgentMark } from "@/components/features/admin/moderation-agent-mark";
@@ -8,6 +9,7 @@ import { ModerationRowActions } from "@/components/features/admin/moderation-row
 import { ModerationStatusMark } from "@/components/features/admin/moderation-status-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
 import { complianceScore, isOpen } from "@/lib/data/admin-listings";
+import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import { cn, formatMillions } from "@/lib/utils";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
 
@@ -25,7 +27,8 @@ export function ModerationListingRow({
     onDecide,
 }: ModerationListingRowProps) {
     return (
-        <tr
+        <m.tr
+            {...TABLE_ROW_MOTION}
             className={cn(
                 "ease-smooth hover:bg-background-muted h-11 transition-colors",
                 !isOpen(listing) && "opacity-60",
@@ -62,7 +65,7 @@ export function ModerationListingRow({
                     onDecide={onDecide}
                 />
             </td>
-        </tr>
+        </m.tr>
     );
 }
 

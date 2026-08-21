@@ -4,21 +4,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
+import { HeaderMenu } from "@/components/layout/header-menu";
 import { useSession } from "@/lib/hooks/use-session";
+import { siteNavFor } from "@/lib/config/site-nav";
 import { portalForRole } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import styles from "@/components/layout/header.module.css";
-
-const NAV = [
-    { label: "Search", href: "/search" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
-];
 
 export function Header() {
     const router = useRouter();
     const { user, logout } = useSession();
     const [contracted, setContracted] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         let ticking = false;
@@ -36,6 +33,7 @@ export function Header() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
+    const links = siteNavFor(user?.role);
     const portalHref = user ? portalForRole(user.role) : "/";
     const initials = user
         ? user.name
@@ -52,7 +50,7 @@ export function Header() {
     };
 
     return (
-        <div className={styles.wrap}>
+        <div className={cn(styles.wrap, menuOpen && styles.recessed)}>
             <header
                 className={cn(styles.capsule, contracted && styles.contract)}
             >
@@ -68,26 +66,15 @@ export function Header() {
                 <span className={styles.divider} aria-hidden="true" />
 
                 <nav className={styles.nav} aria-label="Primary">
-                    {user ? (
-                        <>
-                            <Link href="/search" className={styles.navLink}>
-                                Search
-                            </Link>
-                            <Link href={portalHref} className={styles.navLink}>
-                                Dashboard
-                            </Link>
-                        </>
-                    ) : (
-                        NAV.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={styles.navLink}
-                            >
-                                {item.label}
-                            </Link>
-                        ))
-                    )}
+                    {links.map((link) => (
+                        <Link
+                            key={link.href}
+                            href={link.href}
+                            className={styles.navLink}
+                        >
+                            {link.label}
+                        </Link>
+                    ))}
                 </nav>
 
                 <span className={styles.divider} aria-hidden="true" />
@@ -120,6 +107,14 @@ export function Header() {
                             </Link>
                         </>
                     )}
+
+                    <HeaderMenu
+                        open={menuOpen}
+                        onOpenChange={setMenuOpen}
+                        links={links}
+                        signedIn={Boolean(user)}
+                        onLogout={handleLogout}
+                    />
                 </div>
             </header>
         </div>
