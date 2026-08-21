@@ -5,7 +5,6 @@ import {
     BarChart3,
     LineChart,
     CalendarDays,
-    Sparkles,
     Settings,
     type LucideIcon,
 } from "lucide-react";
@@ -73,17 +72,6 @@ export const AGENT_NAV: AgentNavSection[] = [
                 href: "/agent/calendar",
                 icon: CalendarDays,
                 description: "Appointments and showings",
-            },
-        ],
-    },
-    {
-        label: "Concierge",
-        items: [
-            {
-                label: "VIP Concierge",
-                href: "/agent/concierge",
-                icon: Sparkles,
-                description: "White-glove client services",
             },
         ],
     },
