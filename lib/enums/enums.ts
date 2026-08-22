@@ -265,3 +265,43 @@ export const SETTING_CATEGORY_LABELS: Record<SettingCategory, string> = {
     MODERATION: "Moderation",
     AVAILABILITY: "Availability",
 };
+
+export const USER_TIERS = ["STANDARD", "PREMIUM", "PLATINUM"] as const;
+
+export const CONCIERGE_TIERS = ["PREMIUM", "VIP", "PLATINUM"] as const;
+
+export const CONCIERGE_STATUSES = [
+    "ACQUIRING",
+    "UNDER_CONTRACT",
+    "DIVESTING",
+    "DORMANT",
+] as const;
+
+export const CONCIERGE_REQUEST_STATUSES = [
+    "OPEN",
+    "IN_PROGRESS",
+    "CLOSED",
+] as const;
+
+export const SERVICE_COMPONENTS = [
+    "DATABASE",
+    "API",
+    "SEARCH",
+    "STORAGE",
+    "PAYMENTS",
+] as const;
+
+export const SERVICE_STATES = [
+    "operational",
+    "degraded",
+    "down",
+    "unknown",
+] as const;
+
+export type UserTier = (typeof USER_TIERS)[number];
+export type ConciergeTier = (typeof CONCIERGE_TIERS)[number];
+export type ConciergeStatus = (typeof CONCIERGE_STATUSES)[number];
+export type ConciergeRequestStatus =
+    (typeof CONCIERGE_REQUEST_STATUSES)[number];
+export type ServiceComponent = (typeof SERVICE_COMPONENTS)[number];
+export type ServiceState = (typeof SERVICE_STATES)[number];
