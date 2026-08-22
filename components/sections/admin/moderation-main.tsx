@@ -79,7 +79,7 @@ export function ModerationMain({
             >
                 <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
                     {listings.length > 0 ? (
-                        <PanelInset scroll className="mt-0">
+                        <PanelInset scroll>
                             <ModerationListingTable
                                 listings={listings}
                                 onOpen={onOpen}

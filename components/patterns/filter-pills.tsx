@@ -39,7 +39,7 @@ export function FilterPills<T extends string>({
                         aria-pressed={selected}
                         onClick={() => onChange(filter.id)}
                         className={cn(
-                            "ease-smooth focus-visible:ring-accent relative inline-flex items-center rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                            "ease-smooth focus-visible:ring-accent relative inline-flex h-8 items-center rounded-lg border px-2.5 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                             selected
                                 ? "text-accent border-transparent"
                                 : "border-border bg-background text-text-secondary hover:text-text hover:border-border-dark",
