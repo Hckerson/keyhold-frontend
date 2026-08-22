@@ -60,7 +60,7 @@ export function Panel({
                         )}
                     </div>
                     {toolbar && (
-                        <div className="border-border-light -mx-4 flex min-h-11 flex-wrap items-center justify-between gap-2 border-t px-4 py-1.5">
+                        <div className="border-border-light -mx-4 flex min-h-10 flex-wrap items-center justify-between gap-2 border-t px-4 py-1">
                             {toolbar}
                         </div>
                     )}
