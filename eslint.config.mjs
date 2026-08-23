@@ -33,7 +33,7 @@ export default tseslint.config(
             sourceType: "module",
             parserOptions: {
                 projectService: {
-                    allowDefaultProject: ["*.mjs"],
+                    allowDefaultProject: ["*.mjs", "*.mts"],
                 },
                 tsconfigRootDir: import.meta.dirname,
             },

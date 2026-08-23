@@ -26,6 +26,7 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 | Validation         | Zod schemas in `lib/validations/`. Types derive with `z.infer`. API responses are never loosely typed.                                                                                                                                                                                                 |
 | IDs                | `nanoid`. Never `uuid` or `Date.now()`.                                                                                                                                                                                                                                                                |
 | Async flows        | Endpoints in `lib/constants.ts` (`config.api.*`), transport in `lib/api/client.ts`, resource calls in `lib/api/<resource>.ts`, wrapped in hooks in `lib/hooks/use-<resource>.ts`. Components consume hooks — never call the client directly.                                                           |
+| Tests              | Vitest, colocated as `<unit>.test.ts(x)` beside the unit. Mock at the `lib/api/<resource>.ts` boundary, never the hook. Test-only fixtures live in `lib/data/__fixtures__/`. A test name states the criterion it proves, not the function it calls.                                                    |
 
 ## Folder Structure
 
@@ -51,13 +52,15 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Data moves to `lib/data/`, JSX to `components/`.
 - **Add packages with `pnpm add`.** Never hand-edit `package.json`.
+- **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
 
 ## Before you commit or push
 
 These commands run at the commit or push boundary only — not after every edit.
 
-1. `pnpm format` — Prettier owns formatting. Never override it by hand.
-2. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
-3. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
+1. `pnpm test` — all green. A failing test is never left for later.
+2. `pnpm format` — Prettier owns formatting. Never override it by hand.
+3. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
+4. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
 
 The rules above are not restated here. They bind every edit, not the gate.

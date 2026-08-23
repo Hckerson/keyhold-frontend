@@ -1,0 +1,104 @@
+# Money Path — Acceptance Criteria
+
+The buyer-facing escrow release flow: what must be true before `/dashboard/transactions` reaches production.
+
+This is the checklist stage 01 never produced, scoped to the one flow where being wrong costs real money. Each criterion is written to become a test name. Anything here that is not yet true is a defect, not a preference.
+
+**Surface:** `/dashboard/transactions` → `TransactionsConsole` → `ReleaseEscrowModal`
+**Endpoints:** `GET /transactions/my/purchases` · `PATCH /escrow/:id/release`
+
+---
+
+## What the flow is
+
+A buyer pays. Payment confirmation creates a **held** escrow with an inspection window rather than completing the sale. The buyer sees the hold on their transactions screen, and when they are satisfied, releases the funds themselves. Releasing settles the sale, transfers the held amount to the seller, and marks the property sold. There is no undo.
+
+The whole design rests on one asymmetry: **failing to release is recoverable, releasing wrongly is not.** Every criterion below resolves in that direction.
+
+---
+
+## 01 · Reading the hold
+
+| #   | Criterion                                                                                                                                |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| 1.1 | A transaction with no `escrowHold` maps to a purchase with `escrowId`, `escrowStatus`, `escrowAmount` and `inspectionEndsAt` all `null`. |
+| 1.2 | When `escrowHold` is absent, `escrowId` falls back to the transaction's own `escrowHoldId`, and to `null` when that is absent too.       |
+| 1.3 | A missing `property` or `seller` maps to empty strings, never to `undefined` and never to the string `"undefined"`.                      |
+| 1.4 | `price` comes from `finalPrice` — the agreed figure, not the listing's asking price.                                                     |
+| 1.5 | `escrowAmount` comes from the hold and is never inferred from `price`.                                                                   |
+| 1.6 | An empty purchase list renders the empty state, not a spinner and not an error.                                                          |
+
+## 02 · What is releasable
+
+| #   | Criterion                                                                                                                     |
+| --- | ----------------------------------------------------------------------------------------------------------------------------- |
+| 2.1 | A purchase is releasable only when its escrow status is `HELD` **and** it carries an `escrowId`.                              |
+| 2.2 | A purchase whose escrow is already `RELEASED`, `REFUNDED` or `DISPUTED` offers no release action.                             |
+| 2.3 | A purchase with no escrow at all offers no release action.                                                                    |
+| 2.4 | A closed inspection window does **not** by itself make a purchase releasable, nor does it block release.                      |
+| 2.5 | `inspectionLabel` reads `Window closed` at zero days or fewer, `Nd left` above zero, and the em-dash when there is no window. |
+
+## 03 · Releasing
+
+| #   | Criterion                                                                                                                    |
+| --- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 3.1 | The release action never calls the API directly — it opens the confirmation modal.                                           |
+| 3.2 | The modal names the property, the exact amount held, and the inspection window before asking for confirmation.               |
+| 3.3 | The modal states that the action cannot be undone.                                                                           |
+| 3.4 | Confirming calls `PATCH /escrow/:id/release` with the escrow's own id — never the transaction id, never the property id.     |
+| 3.5 | Confirming fires the mutation **exactly once**, whatever the user does to the interface while it is in flight.               |
+| 3.6 | Dismissing the modal without confirming calls nothing.                                                                       |
+| 3.7 | On success, the escrow, transaction and property caches are all invalidated, so no stale "held" figure survives the release. |
+
+## 04 · While it is in flight
+
+The gap between clicking confirm and the server answering is the dangerous window. A held escrow is a real sum of money and the request is not idempotent.
+
+| #   | Criterion                                                                                                                                                                           |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4.1 | The confirm control is disabled for the duration of the request.                                                                                                                    |
+| 4.2 | The release is visible as in-progress on the row it belongs to, for the whole duration.                                                                                             |
+| 4.3 | A release in flight cannot be started again for the same escrow, by any route through the interface — including dismissing the modal and pressing release on the row a second time. |
+| 4.4 | Dismissing the modal mid-flight does not cancel the request, and does not hide the fact that it is still running.                                                                   |
+| 4.5 | A release in flight on one purchase does not disable release on a different purchase.                                                                                               |
+
+## 05 · When it fails
+
+| #   | Criterion                                                                                                                   |
+| --- | --------------------------------------------------------------------------------------------------------------------------- |
+| 5.1 | A failed release leaves the escrow held. Nothing in the interface claims otherwise.                                         |
+| 5.2 | A failed release invalidates no caches — a failure must not be able to erase a correct held figure.                         |
+| 5.3 | The failure is surfaced to the buyer. Silence after clicking a money button is not an acceptable state.                     |
+| 5.4 | After a failure the same release can be attempted again.                                                                    |
+| 5.5 | A failed load of the purchases list renders `ConsoleUnavailable` with the `buyerTransactions` fallback and a working retry. |
+
+## 06 · Ordering and totals
+
+The rail and stat band are read before the table. If they disagree with it, the buyer is being told two different things about their own money.
+
+| #   | Criterion                                                                                                               |
+| --- | ----------------------------------------------------------------------------------------------------------------------- |
+| 6.1 | Releasable purchases sort above everything else; unsettled above settled; newest first within a tier.                   |
+| 6.2 | Sorting does not mutate the array it was given.                                                                         |
+| 6.3 | `Funds held` totals the escrow amounts of held purchases only, and counts a `null` amount as zero rather than as `NaN`. |
+| 6.4 | `In escrow`, `Ready to release` and `Settled` count exactly the sets that criteria 2.1 and the settled rule describe.   |
+| 6.5 | The filter counts match the rows each filter actually renders.                                                          |
+| 6.6 | Every figure holds for an empty list — zeroes and a formatted zero, never `NaN`, `Infinity` or an empty string.         |
+
+---
+
+## What the criteria caught
+
+Writing the checklist first, then the tests, turned up three defects. All three are fixed; the tests that found them now guard them.
+
+**4.3 — a release in flight could be started twice.** `TransactionsConsole` derived the row's in-progress state as `release.isPending ? confirmingId : null`, and dismissing the modal cleared `confirmingId`. Dismissing mid-flight therefore dropped that state to `null`: the row looked idle again, its release control returned, and pressing it re-opened the modal on an escrow that was already being released. Confirming a second time issued a second `PATCH` against the same hold.
+
+**4.4 — dismissing mid-flight hid a running request.** The same clearing removed every trace of an in-flight release from the screen.
+
+Both are fixed by deriving the in-flight id from the mutation itself — `release.isPending ? release.variables : null` — so dismissal cannot clear it and no second piece of state has to be kept in step.
+
+**5.3 — a failed release said nothing.** `release.isError` was never rendered anywhere. A buyer who pressed the money button and hit a failing gateway saw the modal close and the row unchanged, with no way to tell whether the release had gone through. The modal now stays open on failure and states that the funds were not released and the escrow is still held.
+
+## Note on placement
+
+`lib/data/purchases.ts` holds no data. It is the ranking, filtering, totalling and labelling logic behind this flow, and criteria in sections 02, 05 and 06 test it directly. Per ADR 0004 the whole of `lib/data/` is meant to disappear as consoles go live; this module has to move rather than go when that happens. `lib/utils/` is where it belongs.
