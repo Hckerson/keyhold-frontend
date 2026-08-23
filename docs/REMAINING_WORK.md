@@ -4,7 +4,7 @@ Every route in the app, what it reads from today, and the work left to finish it
 
 |                                      | Count |
 | ------------------------------------ | ----: |
-| Routes on live data                  |    16 |
+| Routes on live data                  |    17 |
 | Backend ready, screen still on mocks |    13 |
 | Blocked on a product decision        |     1 |
 | Backend controllers, all resolving   |    20 |
@@ -15,17 +15,17 @@ Both halves currently pass type-check, lint with zero warnings, and Prettier; th
 
 ## The one thing that blocks shipping
 
-### Buyers can pay, but nothing can release their money
+### Buyers can now release their own money — but nothing proves it works
 
-Payment confirmation now creates a **held** escrow with an inspection window instead of completing the sale outright — that was the point of the escrow work. But the release step only exists as an API. There is no `/dashboard/transactions` route anywhere in the app, and no release action on any existing screen.
+Payment confirmation creates a **held** escrow with an inspection window instead of completing the sale outright. The buyer-facing half now exists: `/dashboard/transactions` reads live through `usePurchases`, and `ReleaseEscrowModal` calls `PATCH /escrow/:id/release` via `useReleaseEscrow`. A completed purchase no longer waits on an admin.
 
-As it stands, a completed purchase sits in escrow indefinitely until an admin calls `PATCH /escrow/:id/release` by hand. A buyer-facing transaction screen with a release action has to land before this reaches production.
+What is left is proof. The money path has no test of any kind, and the whole route is untracked in git. Sequenced work item 05 is now the thing standing between this and production, not the missing screen.
 
 ---
 
 ## Route ledger
 
-Thirty routes. **Live** reads from the API today; **Ready** means the endpoint exists and only the screen is left.
+Thirty-one routes. **Live** reads from the API today; **Ready** means the endpoint exists and only the screen is left.
 
 ### Public & auth — 6 of 6 live
 
@@ -38,18 +38,19 @@ Thirty routes. **Live** reads from the API today; **Ready** means the endpoint e
 | `/signup`         | Live  | `/auth/register`         |
 | `/reset-password` | Live  | `/auth/reset-password`   |
 
-### Buyer — 4 of 8 live
+### Buyer — 5 of 9 live
 
-| Route                    | State | Data source                            |
-| ------------------------ | ----- | -------------------------------------- |
-| `/dashboard`             | Live  | Connections, saved, unread             |
-| `/dashboard/saved`       | Live  | `/saved-properties`                    |
-| `/dashboard/offers/[id]` | Live  | `/offers` + thread                     |
-| `/dashboard/settings`    | Live  | Profile + `/notifications/preferences` |
-| `/dashboard/offers`      | Ready | Connections `.offers[]`                |
-| `/dashboard/messages`    | Ready | Connections + `/messages`              |
-| `/dashboard/viewings`    | Ready | Connections `.viewings[]`              |
-| `/dashboard/alerts`      | Ready | `/notifications`                       |
+| Route                     | State | Data source                                          |
+| ------------------------- | ----- | ---------------------------------------------------- |
+| `/dashboard`              | Live  | Connections, saved, unread                           |
+| `/dashboard/saved`        | Live  | `/saved-properties`                                  |
+| `/dashboard/offers/[id]`  | Live  | `/offers` + thread                                   |
+| `/dashboard/settings`     | Live  | Profile + `/notifications/preferences`               |
+| `/dashboard/transactions` | Live  | `/transactions/my/purchases` + `/escrow/:id/release` |
+| `/dashboard/offers`       | Ready | Connections `.offers[]`                              |
+| `/dashboard/messages`     | Ready | Connections + `/messages`                            |
+| `/dashboard/viewings`     | Ready | Connections `.viewings[]`                            |
+| `/dashboard/alerts`       | Ready | `/notifications`                                     |
 
 ### Agent — 4 of 8 live
 
