@@ -1,26 +1,31 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { OffersHeader } from "@/components/sections/dashboard/offers-header";
 import { OffersMain } from "@/components/sections/dashboard/offers-main";
 import { OffersRail } from "@/components/sections/dashboard/offers-rail";
 import { OffersStatBand } from "@/components/sections/dashboard/offers-stat-band";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     countByStage,
-    initialOffers,
     matchesFilters,
     offerStats,
     offersSummary,
     rankOffers,
-    withdrawOffer,
     type StageFilter,
     type StatusFilter,
 } from "@/lib/data/offers";
+import { useMyInterests } from "@/lib/hooks/use-connections";
+import { toOfferBook } from "@/lib/utils/to-offer";
 
 export function OffersConsole() {
-    const [offers, setOffers] = useState(initialOffers);
+    const { data, isPending, isError, refetch } = useMyInterests();
+
     const [stageFilter, setStageFilter] = useState<StageFilter>("all");
     const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+
+    const offers = useMemo(() => toOfferBook(data ?? []), [data]);
 
     const ranked = useMemo(() => rankOffers(offers), [offers]);
     const peers = useMemo(() => ranked.slice(1), [ranked]);
@@ -35,10 +40,13 @@ export function OffersConsole() {
         [peers, stageFilter, statusFilter],
     );
 
-    const onWithdraw = useCallback(
-        (id: string) => setOffers((current) => withdrawOffer(current, id)),
-        [],
-    );
+    if (isError)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.buyerOffers}
+                onRetry={() => void refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">
@@ -53,9 +61,9 @@ export function OffersConsole() {
                     stageFilter={stageFilter}
                     statusFilter={statusFilter}
                     counts={counts}
+                    pending={isPending}
                     onStageFilterChange={setStageFilter}
                     onStatusFilterChange={setStatusFilter}
-                    onWithdraw={onWithdraw}
                 />
                 <OffersRail offers={offers} />
             </div>

@@ -21,6 +21,8 @@ const WALKED_LEDE = "What you toured and where each one left you";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
     "Widen the status or format filter, or clear the date to see the full schedule.";
+const LOADING_TITLE = "Loading your schedule";
+const LOADING_LEDE = "Fetching every viewing across your enquiries.";
 
 export interface ViewingsMainProps {
     next?: Viewing;
@@ -30,6 +32,7 @@ export interface ViewingsMainProps {
     modeFilter: ViewingModeFilter;
     counts: Record<ViewingStatusFilter, number>;
     dayLabel?: string;
+    pending?: boolean;
     onStatusFilterChange: (filter: ViewingStatusFilter) => void;
     onModeFilterChange: (filter: ViewingModeFilter) => void;
     onClearDay: () => void;
@@ -45,6 +48,7 @@ export function ViewingsMain({
     modeFilter,
     counts,
     dayLabel,
+    pending,
     onStatusFilterChange,
     onModeFilterChange,
     onClearDay,
@@ -93,8 +97,8 @@ export function ViewingsMain({
                 ) : (
                     <EmptyState
                         icon={CalendarDays}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                     />
                 )}
             </Panel>

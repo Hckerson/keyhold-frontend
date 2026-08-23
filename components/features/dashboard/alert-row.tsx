@@ -4,22 +4,53 @@ import Link from "next/link";
 import { m } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { MoveChip } from "@/components/patterns/move-chip";
 import { AlertChannelMark } from "@/components/features/dashboard/alert-channel-mark";
 import { AlertTypeGlyph } from "@/components/features/dashboard/alert-type-glyph";
 import { ALERT_TYPES } from "@/lib/config/alert-tones";
-import { movePercent } from "@/lib/data/alerts";
 import type { Alert } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const READ_LABEL = "Read";
 const MARK_LABEL = "Mark read";
+const NO_VALUE = "—";
 
 export interface AlertRowProps {
     alert: Alert;
     onMarkRead: (id: string) => void;
 }
+
+function AlertSubject({ alert }: { alert: Alert }) {
+    const body = (
+        <>
+            <ListingThumb src={alert.photo} alt={alert.address} />
+            <span className="min-w-0 truncate text-xs">
+                <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
+                    {alert.address}
+                </span>
+                {alert.locality && (
+                    <span className="text-text-muted">
+                        {" · "}
+                        {alert.locality}
+                    </span>
+                )}
+            </span>
+        </>
+    );
+
+    return alert.listingId ? (
+        <Link
+            href={`/listing/${alert.listingId}`}
+            className="group flex min-w-0 items-center gap-2"
+        >
+            {body}
+        </Link>
+    ) : (
+        <span className="group flex min-w-0 items-center gap-2">{body}</span>
+    );
+}
+
+AlertSubject.displayName = "AlertSubject";
 
 export function AlertRow({ alert, onMarkRead }: AlertRowProps) {
     return (
@@ -39,27 +70,12 @@ export function AlertRow({ alert, onMarkRead }: AlertRowProps) {
                 </span>
             </td>
             <td className="py-0 pl-3">
-                <Link
-                    href={`/listing/${alert.listingId}`}
-                    className="group flex min-w-0 items-center gap-2"
-                >
-                    <ListingThumb src={alert.photo} alt={alert.address} />
-                    <span className="min-w-0 truncate text-xs">
-                        <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
-                            {alert.address}
-                        </span>
-                        <span className="text-text-muted">
-                            {" · "}
-                            {alert.locality}
-                        </span>
-                    </span>
-                </Link>
+                <AlertSubject alert={alert} />
             </td>
             <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
-                {formatMillions(alert.price, 2)}
-            </td>
-            <td className="py-0 pl-3 text-right">
-                <MoveChip percent={movePercent(alert)} />
+                {alert.price === null
+                    ? NO_VALUE
+                    : formatMillions(alert.price, 2)}
             </td>
             <td className="py-0 pl-3">
                 <AlertChannelMark channel={alert.channel} />

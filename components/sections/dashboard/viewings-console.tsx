@@ -6,10 +6,20 @@ import { ViewingsHeader } from "@/components/sections/dashboard/viewings-header"
 import { ViewingsMain } from "@/components/sections/dashboard/viewings-main";
 import { ViewingsRail } from "@/components/sections/dashboard/viewings-rail";
 import { ViewingsStatBand } from "@/components/sections/dashboard/viewings-stat-band";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useViewingsConsole } from "@/lib/hooks/use-viewings-console";
 
 export function ViewingsConsole() {
     const view = useViewingsConsole();
+
+    if (view.failed)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.buyerViewings}
+                onRetry={() => void view.refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">
@@ -26,6 +36,7 @@ export function ViewingsConsole() {
                     modeFilter={view.modeFilter}
                     counts={view.counts}
                     dayLabel={view.dayLabel}
+                    pending={view.pending}
                     onStatusFilterChange={view.setStatusFilter}
                     onModeFilterChange={view.setModeFilter}
                     onClearDay={view.clearDay}

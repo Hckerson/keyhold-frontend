@@ -9,7 +9,6 @@ import {
     OFFER_STATUS_KEYS,
     gapBandOf,
 } from "@/lib/config/offer-tones";
-import { agentPortrait, propertyImage } from "@/lib/data/sample-images";
 import type { Offer, OfferStatus } from "@/lib/types";
 import { averageOf, formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
@@ -29,123 +28,6 @@ export const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
         value: id,
         label: OFFER_STATUSES[id].label,
     })),
-];
-
-export const initialOffers: Offer[] = [
-    {
-        id: "3",
-        listingId: "3",
-        address: "234 Oak Street",
-        locality: "Bel Air",
-        photo: propertyImage(2),
-        agent: "Michael Rodriguez",
-        agentPortrait: agentPortrait(1),
-        listPrice: 4_500_000,
-        offerPrice: 4_250_000,
-        counterPrice: 4_400_000,
-        status: "countered",
-        minutesAgo: 640,
-        note: "The seller countered at $4.4M and asked for a 30-day close, dropping the repair credit in exchange for a pre-listing inspection report.",
-    },
-    {
-        id: "1",
-        listingId: "1",
-        address: "456 Oak Avenue",
-        locality: "Beverly Hills",
-        photo: propertyImage(0),
-        agent: "Sarah Chen",
-        agentPortrait: agentPortrait(0),
-        listPrice: 3_200_000,
-        offerPrice: 3_100_000,
-        status: "submitted",
-        minutesAgo: 2_880,
-        note: "Delivered to the listing agent and acknowledged. The sellers are reviewing two other offers this week.",
-    },
-    {
-        id: "7",
-        listingId: "7",
-        address: "18 Palisades Bluff",
-        locality: "Pacific Palisades",
-        photo: propertyImage(6),
-        agent: "Sarah Chen",
-        agentPortrait: agentPortrait(0),
-        listPrice: 8_400_000,
-        offerPrice: 8_150_000,
-        counterPrice: 8_320_000,
-        status: "countered",
-        minutesAgo: 310,
-        note: "A counter arrived within the hour of the reduction, holding the ask close and asking you to waive the appraisal contingency.",
-    },
-    {
-        id: "8",
-        listingId: "8",
-        address: "301 Montana Row",
-        locality: "Santa Monica",
-        photo: propertyImage(7),
-        agent: "Priya Anand",
-        agentPortrait: agentPortrait(2),
-        listPrice: 3_950_000,
-        offerPrice: 3_985_000,
-        status: "submitted",
-        minutesAgo: 95,
-        note: "Placed above ask to pre-empt a weekend of showings, with an escalation cap and proof of funds attached.",
-    },
-    {
-        id: "2",
-        listingId: "2",
-        address: "789 Sunset Boulevard",
-        locality: "West Hollywood",
-        photo: propertyImage(1),
-        agent: "Priya Anand",
-        agentPortrait: agentPortrait(2),
-        listPrice: 2_950_000,
-        offerPrice: 2_950_000,
-        status: "accepted",
-        minutesAgo: 7_200,
-        note: "Accepted at full ask. Escrow opened the same afternoon with a 45-day close.",
-    },
-    {
-        id: "9",
-        listingId: "9",
-        address: "64 Brentwood Mews",
-        locality: "Brentwood",
-        photo: propertyImage(8),
-        agent: "Michael Rodriguez",
-        agentPortrait: agentPortrait(1),
-        listPrice: 5_100_000,
-        offerPrice: 4_780_000,
-        status: "rejected",
-        minutesAgo: 12_960,
-        note: "Rejected without a counter; the sellers took a cash offer at ask two days later.",
-    },
-    {
-        id: "5",
-        listingId: "5",
-        address: "567 Palm Drive",
-        locality: "Malibu",
-        photo: propertyImage(4),
-        agent: "Daniel Okafor",
-        agentPortrait: agentPortrait(3),
-        listPrice: 5_600_000,
-        offerPrice: 5_150_000,
-        status: "withdrawn",
-        minutesAgo: 20_160,
-        note: "Withdrawn after the inspection surfaced foundation work the sellers would not credit.",
-    },
-    {
-        id: "6",
-        listingId: "6",
-        address: "77 Hillcrest Terrace",
-        locality: "Pasadena",
-        photo: propertyImage(5),
-        agent: "Daniel Okafor",
-        agentPortrait: agentPortrait(3),
-        listPrice: 1_850_000,
-        offerPrice: 1_720_000,
-        status: "rejected",
-        minutesAgo: 25_920,
-        note: "Rejected as too far under ask; the listing has since expired and come off the market.",
-    },
 ];
 
 export const activePrice = (offer: Offer) =>
@@ -198,11 +80,6 @@ export const rankOffers = (offers: Offer[]) =>
             OFFER_STATUSES[b.status].rank - OFFER_STATUSES[a.status].rank ||
             activePrice(b) - activePrice(a) ||
             a.minutesAgo - b.minutesAgo,
-    );
-
-export const withdrawOffer = (offers: Offer[], id: string): Offer[] =>
-    offers.map((offer) =>
-        offer.id === id ? { ...offer, status: "withdrawn" } : offer,
     );
 
 export const offerStats = (offers: Offer[]): StatDatum[] => [

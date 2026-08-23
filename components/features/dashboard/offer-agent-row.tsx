@@ -6,7 +6,7 @@ import { cn, initialsOf } from "@/lib/utils";
 export interface OfferAgentShare {
     id: string;
     name: string;
-    portrait: string;
+    portrait: string | null;
     value: string;
     count: number;
     percent: number;
@@ -22,7 +22,7 @@ export function OfferAgentRow({ share }: OfferAgentRowProps) {
         <li className="flex h-11 items-center gap-2">
             <Avatar
                 size="xs"
-                src={share.portrait}
+                src={share.portrait ?? undefined}
                 alt={share.name}
                 initials={initialsOf(share.name)}
                 loading="lazy"

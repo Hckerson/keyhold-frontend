@@ -14,6 +14,8 @@ const BOOK_LEDE = "Every position behind the one carrying the most weight";
 const BOOK_ACTION = "Saved properties";
 const EMPTY_TITLE = "Nothing matches this filter";
 const EMPTY_LEDE = "Widen the stage or status filter to see more positions.";
+const LOADING_TITLE = "Loading your offers";
+const LOADING_LEDE = "Fetching every position on your book.";
 
 export interface OffersMainProps {
     top?: Offer;
@@ -21,9 +23,9 @@ export interface OffersMainProps {
     stageFilter: StageFilter;
     statusFilter: StatusFilter;
     counts: Record<StageFilter, number>;
+    pending?: boolean;
     onStageFilterChange: (filter: StageFilter) => void;
     onStatusFilterChange: (filter: StatusFilter) => void;
-    onWithdraw: (id: string) => void;
 }
 
 export function OffersMain({
@@ -32,13 +34,13 @@ export function OffersMain({
     stageFilter,
     statusFilter,
     counts,
+    pending,
     onStageFilterChange,
     onStatusFilterChange,
-    onWithdraw,
 }: OffersMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
-            {top && <OffersTopHero offer={top} onWithdraw={onWithdraw} />}
+            {top && <OffersTopHero offer={top} />}
 
             <Panel
                 title={BOOK_TITLE}
@@ -58,13 +60,13 @@ export function OffersMain({
 
                 {offers.length > 0 ? (
                     <PanelInset scroll className="mt-0">
-                        <OfferTable offers={offers} onWithdraw={onWithdraw} />
+                        <OfferTable offers={offers} />
                     </PanelInset>
                 ) : (
                     <EmptyState
                         icon={FileText}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                     />
                 )}
             </Panel>

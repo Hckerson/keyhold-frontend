@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { m } from "motion/react";
-import { Button } from "@/components/ui/button";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
+import { PanelLink } from "@/components/features/shared/panel-link";
 import { OfferGapChip } from "@/components/features/dashboard/offer-gap-chip";
 import { OfferStatusGlyph } from "@/components/features/dashboard/offer-status-glyph";
 import { OFFER_STATUSES } from "@/lib/config/offer-tones";
@@ -13,14 +13,13 @@ import { cn, formatAge, formatMillions } from "@/lib/utils";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const NO_COUNTER = "—";
-const WITHDRAW_LABEL = "Withdraw";
+const REVIEW_LABEL = "Review";
 
 export interface OfferRowProps {
     offer: Offer;
-    onWithdraw: (id: string) => void;
 }
 
-export function OfferRow({ offer, onWithdraw }: OfferRowProps) {
+export function OfferRow({ offer }: OfferRowProps) {
     const open = isOpen(offer);
 
     return (
@@ -83,15 +82,10 @@ export function OfferRow({ offer, onWithdraw }: OfferRowProps) {
             </td>
             <td className="py-0 pl-3 text-right">
                 {open ? (
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="text-error hover:text-error"
-                        onClick={() => onWithdraw(offer.id)}
-                    >
-                        {WITHDRAW_LABEL}
-                    </Button>
+                    <PanelLink
+                        href={`/dashboard/offers/${offer.id}`}
+                        label={REVIEW_LABEL}
+                    />
                 ) : (
                     <span className="micro-label">
                         {OFFER_STATUSES[offer.status].label}
