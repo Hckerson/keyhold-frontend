@@ -42,29 +42,16 @@ export interface ServiceHealth {
     latencyMs: number;
 }
 
-export type PayoutState =
-    | "failed"
-    | "review"
-    | "approved"
-    | "scheduled"
-    | "released";
-
-export type PayoutMethod = "wire" | "ach" | "instant";
-
-export type RevenueStreamId =
-    | "commission"
-    | "fees"
-    | "subscription"
-    | "featured";
+export type PayoutState = "HELD" | "RELEASED" | "REFUNDED" | "DISPUTED";
 
 export interface Payout {
     id: string;
     recipient: string;
     deal: string;
     state: PayoutState;
-    method: PayoutMethod;
     gross: number;
     ageMinutes: number;
+    inspectionEndsAt: string | null;
     href: string;
 }
 
@@ -73,12 +60,6 @@ export interface PayoutStage {
     count: number;
     amount: number;
     oldestMinutes: number;
-}
-
-export interface RevenueStream {
-    id: RevenueStreamId;
-    ytd: number;
-    momChange: number;
 }
 
 export type PolicyDomain =

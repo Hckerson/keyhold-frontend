@@ -1,8 +1,5 @@
 import { z } from "zod";
-import {
-    CONCIERGE_STATUSES,
-    CONCIERGE_TIERS,
-} from "@/lib/enums/enums";
+import { CONCIERGE_STATUSES, CONCIERGE_TIERS } from "@/lib/enums/enums";
 
 export const conciergeClientSchema = z.object({
     id: z.string(),
@@ -55,8 +52,9 @@ export const createConciergeClientSchema = z.object({
     nextAction: z.string().optional(),
 });
 
-export const updateConciergeClientSchema =
-    createConciergeClientSchema.partial().omit({ clientId: true });
+export const updateConciergeClientSchema = createConciergeClientSchema
+    .partial()
+    .omit({ clientId: true });
 
 export const createConciergeServiceSchema = z.object({
     key: z.string().min(1),

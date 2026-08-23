@@ -13,7 +13,7 @@ export interface Viewing {
     listingId: string;
     address: string;
     locality: string;
-    photo: string;
+    photo: string | null;
     price: number;
     date: string;
     time: string;
@@ -21,7 +21,7 @@ export interface Viewing {
     mode: ViewingMode;
     status: ViewingStatus;
     agent: string;
-    agentPhone: string;
+    agentPhone: string | null;
     survey?: ViewingSurvey;
 }
 

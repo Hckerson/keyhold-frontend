@@ -13,6 +13,8 @@ export const config = {
             list: "/users",
             me: "/users/me",
             detail: (id: string) => `/users/${id}`,
+            tierDistribution: "/users/tiers/distribution",
+            tier: (id: string) => `/users/${id}/tier`,
         },
         properties: {
             list: "/properties",
@@ -50,6 +52,8 @@ export const config = {
             byConnection: (connectionId: string) =>
                 `/viewings/connection/${connectionId}`,
             confirm: (id: string) => `/viewings/${id}/confirm`,
+            reschedule: (id: string) => `/viewings/${id}/reschedule`,
+            cancel: (id: string) => `/viewings/${id}/cancel`,
         },
         offers: {
             create: "/offers",
@@ -124,6 +128,23 @@ export const config = {
         },
         settings: {
             list: "/settings",
+        },
+        concierge: {
+            overview: "/concierge/overview",
+            clients: "/concierge/clients",
+            client: (id: string) => `/concierge/clients/${id}`,
+            services: "/concierge/services",
+            practices: "/concierge/practices",
+            cover: (practiceId: string, clientId: string) =>
+                `/concierge/practices/${practiceId}/clients/${clientId}`,
+        },
+        savedSearches: {
+            list: "/saved-searches",
+            detail: (id: string) => `/saved-searches/${id}`,
+            matches: (id: string) => `/saved-searches/${id}/matches`,
+        },
+        serviceHealth: {
+            list: "/service-health",
         },
         auditLogs: {
             list: "/audit-logs",

@@ -42,6 +42,8 @@ export const transactionSchema = z.object({
     buyer: userSummarySchema.optional(),
     seller: userSummarySchema.optional(),
     property: connectionListPropertySchema.optional(),
+    escrowHold: escrowHoldSchema.nullable().optional(),
+    dispute: disputeSummarySchema.nullable().optional(),
     completedAt: z.iso.datetime().nullable(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
