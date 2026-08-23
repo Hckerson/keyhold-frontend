@@ -1,7 +1,7 @@
 "use client";
 
 import { CalendarX2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { PanelLink } from "@/components/features/shared/panel-link";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -98,9 +98,10 @@ export function CalendarSchedule({
                             title={next ? REMAINDER_TITLE : EMPTY_TITLE}
                             description={next ? undefined : emptyDescription}
                             action={
-                                <Button variant="secondary" size="sm">
-                                    {SCHEDULE_ACTION}
-                                </Button>
+                                <PanelLink
+                                    href="/agent/leads"
+                                    label={SCHEDULE_ACTION}
+                                />
                             }
                         />
                     )}

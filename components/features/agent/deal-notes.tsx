@@ -2,18 +2,13 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { AnimatePresence, m } from "motion/react";
-import { COLLAPSE_MOTION } from "@/lib/config/motion";
 import { cn } from "@/lib/utils";
-
-const NEXT_PREFIX = "Next: ";
 
 export interface DealNotesProps {
     notes: string;
-    nextStep: string;
 }
 
-export function DealNotes({ notes, nextStep }: DealNotesProps) {
+export function DealNotes({ notes }: DealNotesProps) {
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -41,23 +36,6 @@ export function DealNotes({ notes, nextStep }: DealNotesProps) {
                     {notes}
                 </span>
             </button>
-
-            <AnimatePresence initial={false}>
-                {expanded && (
-                    <m.div
-                        key="next"
-                        {...COLLAPSE_MOTION}
-                        className="overflow-hidden"
-                    >
-                        <p className="text-text mt-2 text-xs">
-                            <span className="text-text-secondary">
-                                {NEXT_PREFIX}
-                            </span>
-                            <span className="font-medium">{nextStep}</span>
-                        </p>
-                    </m.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }

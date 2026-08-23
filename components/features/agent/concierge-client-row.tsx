@@ -23,7 +23,7 @@ export function ConciergeClientRow({ client }: ConciergeClientRowProps) {
                     <Avatar
                         size="xs"
                         elevated={false}
-                        src={client.portrait}
+                        src={client.portrait ?? undefined}
                         alt={client.name}
                         initials={initialsOf(client.name)}
                         className="text-[10px]"
@@ -51,7 +51,7 @@ export function ConciergeClientRow({ client }: ConciergeClientRowProps) {
                 <ConciergeAllocation percent={allocationPct(client)} />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
-                {client.deals}
+                {client.openRequests}
             </td>
             <td className="text-text-secondary truncate py-0 pl-3 text-xs">
                 {client.nextAction}

@@ -1,31 +1,22 @@
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { DeltaChip } from "@/components/ui/delta-chip";
 import { formatMillions } from "@/lib/utils";
-import type { ChartTone } from "@/lib/config/chart-tones";
-import {
-    TARGET_MET_PCT,
-    TARGET_NEAR_PCT,
-    type MonthlyProduction,
-} from "@/lib/data/agent-analytics";
+import type { MonthlyProduction } from "@/lib/data/agent-analytics";
 
 const NO_DELTA = "—";
-
-function attainmentTone(percent: number): ChartTone {
-    if (percent >= TARGET_MET_PCT) return "success";
-    if (percent >= TARGET_NEAR_PCT) return "accent";
-    return "warning";
-}
 
 export interface AnalyticsMonthRowProps {
     month: MonthlyProduction;
     previousVolume?: number;
+    peakVolume: number;
 }
 
 export function AnalyticsMonthRow({
     month,
     previousVolume,
+    peakVolume,
 }: AnalyticsMonthRowProps) {
-    const attainment = (month.volume / month.target) * 100;
+    const share = peakVolume > 0 ? (month.volume / peakVolume) * 100 : 0;
     const deltaPct = previousVolume
         ? ((month.volume - previousVolume) / previousVolume) * 100
         : null;
@@ -41,12 +32,12 @@ export function AnalyticsMonthRow({
             <td className="py-0 pl-3">
                 <div className="flex items-center gap-2">
                     <ProgressBar
-                        value={attainment}
-                        tone={attainmentTone(attainment)}
+                        value={share}
+                        tone="accent"
                         className="min-w-0 flex-1"
                     />
                     <span className="text-text-secondary w-9 shrink-0 text-right text-xs tabular-nums">
-                        {Math.round(attainment)}%
+                        {Math.round(share)}%
                     </span>
                 </div>
             </td>

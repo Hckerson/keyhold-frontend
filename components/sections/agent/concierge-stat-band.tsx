@@ -1,10 +1,14 @@
 import { StatBand } from "@/components/patterns/stat-band";
-import { conciergeStats } from "@/lib/data/agent-concierge";
+import type { StatDatum } from "@/components/patterns/stat-cell";
 
 const BAND_LABEL = "VIP book at a glance";
 
-export function ConciergeStatBand() {
-    return <StatBand label={BAND_LABEL} stats={conciergeStats} />;
+export interface ConciergeStatBandProps {
+    stats: StatDatum[];
+}
+
+export function ConciergeStatBand({ stats }: ConciergeStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} />;
 }
 
 ConciergeStatBand.displayName = "ConciergeStatBand";
