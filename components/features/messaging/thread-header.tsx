@@ -20,7 +20,7 @@ export function ThreadHeader({ conversation }: ThreadHeaderProps) {
                     size="sm"
                     tone="accent"
                     elevated={false}
-                    src={conversation.portrait}
+                    src={conversation.portrait ?? undefined}
                     alt={conversation.agent}
                     initials={conversation.initials}
                 />

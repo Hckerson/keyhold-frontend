@@ -5,32 +5,60 @@ import { AlertsHeader } from "@/components/sections/dashboard/alerts-header";
 import { AlertsMain } from "@/components/sections/dashboard/alerts-main";
 import { AlertsRail } from "@/components/sections/dashboard/alerts-rail";
 import { AlertsStatBand } from "@/components/sections/dashboard/alerts-stat-band";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    DEFAULT_THRESHOLD,
     alertStats,
     alertsSummary,
     countByRead,
     deliverySummary,
-    initialAlerts,
     emptyPreferences,
-    markAllRead,
-    markRead,
     matchesFilters,
     rankAlerts,
     toggleChannel,
     toggleEnabled,
+    toPreferenceList,
+    toPreferenceMap,
     unreadCount,
     type ReadFilter,
     type TypeFilter,
 } from "@/lib/data/alerts";
-import type { AlertChannel, AlertType } from "@/lib/types";
+import {
+    useMarkAllNotificationsRead,
+    useMarkNotificationRead,
+    useNotificationPreferences,
+    useNotifications,
+    useUpdateNotificationPreferences,
+} from "@/lib/hooks/use-notifications";
+import { toAlert } from "@/lib/utils/to-alert";
+import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
+
+const ALERT_PAGE_SIZE = 100;
 
 export function AlertsConsole() {
-    const [alerts, setAlerts] = useState(initialAlerts);
-    const [preferences, setPreferences] = useState(emptyPreferences);
-    const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD);
+    const { data, isPending, isError, refetch } = useNotifications({
+        limit: ALERT_PAGE_SIZE,
+    });
+    const storedPreferences = useNotificationPreferences();
+    const updatePreferences = useUpdateNotificationPreferences();
+    const markRead = useMarkNotificationRead();
+    const markAllRead = useMarkAllNotificationsRead();
+
     const [readFilter, setReadFilter] = useState<ReadFilter>("all");
     const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+
+    const alerts = useMemo(
+        () => (data?.items ?? []).map(toAlert),
+        [data?.items],
+    );
+
+    const preferences = useMemo(
+        () =>
+            storedPreferences.data
+                ? toPreferenceMap(storedPreferences.data)
+                : emptyPreferences(),
+        [storedPreferences.data],
+    );
 
     const ranked = useMemo(() => rankAlerts(alerts), [alerts]);
     const peers = useMemo(() => ranked.slice(1), [ranked]);
@@ -46,23 +74,38 @@ export function AlertsConsole() {
     );
 
     const onMarkRead = useCallback(
-        (id: string) => setAlerts((current) => markRead(current, id)),
-        [],
+        (id: string) => void markRead.mutateAsync(id),
+        [markRead],
     );
 
-    const onMarkAllRead = () => setAlerts(markAllRead);
+    const onMarkAllRead = () => void markAllRead.mutateAsync();
+
+    const savePreferences = useCallback(
+        (next: Record<AlertType, AlertPreference>) =>
+            void updatePreferences.mutateAsync({
+                preferences: toPreferenceList(next),
+            }),
+        [updatePreferences],
+    );
 
     const onToggleEnabled = useCallback(
-        (type: AlertType) =>
-            setPreferences((current) => toggleEnabled(current, type)),
-        [],
+        (type: AlertType) => savePreferences(toggleEnabled(preferences, type)),
+        [preferences, savePreferences],
     );
 
     const onToggleChannel = useCallback(
         (type: AlertType, channel: AlertChannel) =>
-            setPreferences((current) => toggleChannel(current, type, channel)),
-        [],
+            savePreferences(toggleChannel(preferences, type, channel)),
+        [preferences, savePreferences],
     );
+
+    if (isError)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.buyerAlerts}
+                onRetry={() => void refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">
@@ -81,6 +124,7 @@ export function AlertsConsole() {
                     readFilter={readFilter}
                     typeFilter={typeFilter}
                     counts={counts}
+                    pending={isPending}
                     onReadFilterChange={setReadFilter}
                     onTypeFilterChange={setTypeFilter}
                     onMarkRead={onMarkRead}
@@ -88,9 +132,7 @@ export function AlertsConsole() {
                 <AlertsRail
                     alerts={alerts}
                     preferences={preferences}
-                    threshold={threshold}
                     deliverySummary={deliverySummary(preferences)}
-                    onThresholdChange={setThreshold}
                     onToggleEnabled={onToggleEnabled}
                     onToggleChannel={onToggleChannel}
                 />

@@ -2,7 +2,6 @@
 
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { FormField } from "@/components/ui/forms/form-field";
 import { ShareList } from "@/components/patterns/share-list";
 import { AlertPreferenceList } from "@/components/features/dashboard/alert-preference-list";
 import { recencyShares, typeShares } from "@/lib/data/alerts";
@@ -19,15 +18,11 @@ const RECENCY_TITLE = "Recency";
 const RECENCY_LEDE = "How fresh the stream is right now";
 const DELIVERY_TITLE = "Delivery";
 const DELIVERY_LEDE = "Choose what fires and where it lands";
-const THRESHOLD_LABEL = "Drop threshold";
-const THRESHOLD_HINT = "Minimum reduction before a price drop fires";
 
 export interface AlertsRailProps {
     alerts: Alert[];
     preferences: Record<AlertType, AlertPreference>;
-    threshold: string;
     deliverySummary: string;
-    onThresholdChange: (value: string) => void;
     onToggleEnabled: (type: AlertType) => void;
     onToggleChannel: (type: AlertType, channel: AlertChannel) => void;
 }
@@ -35,9 +30,7 @@ export interface AlertsRailProps {
 export function AlertsRail({
     alerts,
     preferences,
-    threshold,
     deliverySummary,
-    onThresholdChange,
     onToggleEnabled,
     onToggleChannel,
 }: AlertsRailProps) {
@@ -71,30 +64,6 @@ export function AlertsRail({
                         onToggleChannel={onToggleChannel}
                     />
                 </PanelInset>
-
-                {preferences.PRICE_DROP.enabled && (
-                    <PanelInset>
-                        <div className="py-3">
-                            <FormField
-                                label={THRESHOLD_LABEL}
-                                name="priceDropThreshold"
-                                value={threshold}
-                                onChange={(event) =>
-                                    onThresholdChange(event.target.value)
-                                }
-                                prefix="$"
-                                variant="numeric"
-                                inputMode="numeric"
-                                placeholder="50,000"
-                                hint={
-                                    <span className="text-text-muted text-xs">
-                                        {THRESHOLD_HINT}
-                                    </span>
-                                }
-                            />
-                        </div>
-                    </PanelInset>
-                )}
             </Panel>
         </div>
     );

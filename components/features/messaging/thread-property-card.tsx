@@ -1,4 +1,4 @@
-import { Image } from "@/components/ui/image";
+import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import type { Conversation } from "@/lib/types";
 import { formatMillions } from "@/lib/utils";
@@ -13,11 +13,9 @@ export interface ThreadPropertyCardProps {
 export function ThreadPropertyCard({ conversation }: ThreadPropertyCardProps) {
     return (
         <div className="flex flex-col gap-2 py-3">
-            <Image
-                variant="thumbnail"
+            <ListingThumb
                 src={conversation.photo}
                 alt={conversation.property}
-                loading="lazy"
                 className="border-border-light h-20 w-full rounded-lg border object-cover"
             />
             <div className="min-w-0">

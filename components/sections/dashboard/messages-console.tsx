@@ -1,47 +1,39 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ConversationRail } from "@/components/sections/dashboard/conversation-rail";
 import { MessagesHeader } from "@/components/sections/dashboard/messages-header";
 import { MessagesStatBand } from "@/components/sections/dashboard/messages-stat-band";
 import { ThreadContextRail } from "@/components/sections/dashboard/thread-context-rail";
 import { ThreadPanel } from "@/components/sections/dashboard/thread-panel";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    AGENT_REPLY_CONTENT,
-    AGENT_REPLY_DELAY,
-    DEFAULT_AGENT_INITIALS,
-    USER_INITIALS,
-    applyIncoming,
-    applyOutgoing,
     countByFilter,
-    createMessage,
-    initialConversations,
-    initialThreads,
     matchesConversation,
     messageStats,
     messagesSummary,
     rankConversations,
-    readConversation,
-    threadFiles,
     type ConversationFilter,
 } from "@/lib/data/messages";
-import type { Message } from "@/lib/types";
+import { useMyInterests } from "@/lib/hooks/use-connections";
+import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
+import { useSession } from "@/lib/hooks/use-session";
+import { toConversationList } from "@/lib/utils/to-conversation";
+import { medianReplyMinutes, toThread } from "@/lib/utils/to-thread";
 
 export function MessagesConsole() {
-    const [conversations, setConversations] = useState(initialConversations);
-    const [threads, setThreads] =
-        useState<Record<string, Message[]>>(initialThreads);
-    const [selectedId, setSelectedId] = useState(initialConversations[0].id);
+    const { user } = useSession();
+    const interests = useMyInterests();
+    const sendMessage = useSendMessage();
+
+    const [selectedId, setSelectedId] = useState<string | null>(null);
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<ConversationFilter>("all");
-    const [typingId, setTypingId] = useState<string | null>(null);
-    const replyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    useEffect(
-        () => () => {
-            if (replyTimer.current) clearTimeout(replyTimer.current);
-        },
-        [],
+    const conversations = useMemo(
+        () => toConversationList(interests.data ?? [], user?.id),
+        [interests.data, user?.id],
     );
 
     const ranked = useMemo(
@@ -49,10 +41,7 @@ export function MessagesConsole() {
         [conversations],
     );
     const counts = useMemo(() => countByFilter(conversations), [conversations]);
-    const stats = useMemo(
-        () => messageStats(conversations, threads),
-        [conversations, threads],
-    );
+    const stats = useMemo(() => messageStats(conversations), [conversations]);
 
     const visible = useMemo(
         () =>
@@ -62,55 +51,40 @@ export function MessagesConsole() {
         [ranked, filter, query],
     );
 
+    const activeId = selectedId ?? ranked[0]?.id;
     const selected = conversations.find(
-        (conversation) => conversation.id === selectedId,
+        (conversation) => conversation.id === activeId,
     );
+
+    const thread = useConversation(activeId);
+
     const messages = useMemo(
-        () => threads[selectedId] ?? [],
-        [threads, selectedId],
+        () => toThread(thread.data ?? [], user?.id, selected?.agent ?? ""),
+        [thread.data, user?.id, selected?.agent],
     );
-    const files = useMemo(() => threadFiles(messages), [messages]);
 
-    const appendMessage = useCallback((id: string, message: Message) => {
-        setThreads((current) => ({
-            ...current,
-            [id]: [...(current[id] ?? []), message],
-        }));
-    }, []);
+    const replyMinutes = useMemo(
+        () => medianReplyMinutes(thread.data ?? [], user?.id),
+        [thread.data, user?.id],
+    );
 
-    const onSelect = useCallback((id: string) => {
-        setSelectedId(id);
-        setConversations((current) => readConversation(current, id));
-    }, []);
+    const onSelect = useCallback((id: string) => setSelectedId(id), []);
 
     const onSend = useCallback(
-        (content: string, attachments: string[]) => {
-            const id = selectedId;
-            const initials =
-                conversations.find((conversation) => conversation.id === id)
-                    ?.initials ?? DEFAULT_AGENT_INITIALS;
-
-            appendMessage(
-                id,
-                createMessage("user", content, USER_INITIALS, attachments),
-            );
-            setConversations((current) => applyOutgoing(current, id, content));
-
-            setTypingId(id);
-            if (replyTimer.current) clearTimeout(replyTimer.current);
-            replyTimer.current = setTimeout(() => {
-                appendMessage(
-                    id,
-                    createMessage("agent", AGENT_REPLY_CONTENT, initials),
-                );
-                setConversations((current) =>
-                    applyIncoming(current, id, AGENT_REPLY_CONTENT),
-                );
-                setTypingId(null);
-            }, AGENT_REPLY_DELAY);
+        (content: string) => {
+            if (!activeId) return;
+            void sendMessage.mutateAsync({ connectionId: activeId, content });
         },
-        [appendMessage, conversations, selectedId],
+        [activeId, sendMessage],
     );
+
+    if (interests.isError)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.buyerMessages}
+                onRetry={() => void interests.refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">
@@ -121,7 +95,7 @@ export function MessagesConsole() {
             <div className="console-split console-split--quarters console-split--tall gap-3">
                 <ConversationRail
                     conversations={visible}
-                    selectedId={selectedId}
+                    selectedId={activeId}
                     query={query}
                     filter={filter}
                     counts={counts}
@@ -132,13 +106,13 @@ export function MessagesConsole() {
                 <ThreadPanel
                     conversation={selected}
                     messages={messages}
-                    typing={typingId === selectedId}
+                    typing={sendMessage.isPending}
                     onSend={onSend}
                 />
                 <ThreadContextRail
                     conversation={selected}
                     conversations={conversations}
-                    files={files}
+                    replyMinutes={replyMinutes}
                 />
             </div>
         </div>
