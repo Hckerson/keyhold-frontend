@@ -21,6 +21,8 @@ const QUEUE_ACTION = "Platform reports";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
     "Widen the status filter or drop back to every check to see the full queue.";
+const LOADING_TITLE = "Loading the queue";
+const LOADING_LEDE = "Fetching reported listings.";
 
 export interface ModerationMainProps {
     focus?: ModerationListing;
@@ -28,6 +30,7 @@ export interface ModerationMainProps {
     statusFilter: ModerationStatusFilter;
     checkFilter: ModerationCheckFilter;
     counts: Record<ModerationStatusFilter, number>;
+    pending?: boolean;
     onStatusFilterChange: (filter: ModerationStatusFilter) => void;
     onCheckFilterChange: (filter: ModerationCheckFilter) => void;
     onOpen: (id: string) => void;
@@ -41,6 +44,7 @@ export function ModerationMain({
     statusFilter,
     checkFilter,
     counts,
+    pending,
     onStatusFilterChange,
     onCheckFilterChange,
     onOpen,
@@ -90,8 +94,8 @@ export function ModerationMain({
                     ) : (
                         <EmptyState
                             icon={ClipboardCheck}
-                            title={EMPTY_TITLE}
-                            description={EMPTY_LEDE}
+                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
                         />
                     )}
                 </PresenceSwap>

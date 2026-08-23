@@ -7,11 +7,7 @@ export type ModerationStatus =
 
 export type CheckState = "pass" | "warn" | "fail";
 
-export type ComplianceCheckId =
-    | "photos"
-    | "accuracy"
-    | "licence"
-    | "fair-housing";
+export type ComplianceCheckId = "photos" | "accuracy" | "licence";
 
 export type ComplianceReport = Record<ComplianceCheckId, CheckState>;
 
@@ -20,12 +16,13 @@ export type DecisionMode = "changes" | "reject";
 export interface ModerationAgent {
     name: string;
     email: string;
-    phone: string;
+    phone: string | null;
 }
 
 export interface ModerationListing {
     id: string;
     listingId: string;
+    title: string;
     address: string;
     locality: string;
     price: number;

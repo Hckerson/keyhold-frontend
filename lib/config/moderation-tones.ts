@@ -7,7 +7,6 @@ import {
     Flag,
     Images,
     PenLine,
-    Scale,
     XCircle,
     type LucideIcon,
 } from "lucide-react";
@@ -100,7 +99,6 @@ export const COMPLIANCE_CHECK_KEYS: ComplianceCheckId[] = [
     "photos",
     "accuracy",
     "licence",
-    "fair-housing",
 ];
 
 export interface ComplianceCheckMeta {
@@ -113,7 +111,6 @@ export const COMPLIANCE_CHECKS: Record<ComplianceCheckId, ComplianceCheckMeta> =
         photos: { label: "Photo provenance", icon: Images },
         accuracy: { label: "Description accuracy", icon: FileText },
         licence: { label: "Licence on file", icon: BadgeCheck },
-        "fair-housing": { label: "Fair housing language", icon: Scale },
     };
 
 export const CHECK_STATE_KEYS: CheckState[] = ["pass", "warn", "fail"];
