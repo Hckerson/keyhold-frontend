@@ -16,102 +16,109 @@ import {
 import type { AccountCredential, SecurityControl } from "@/lib/types";
 import { percentOf, sum } from "@/lib/utils";
 import type { User } from "@/lib/validations/user";
+import type { NotificationPreference } from "@/lib/validations/notification";
+import type { NotificationType } from "@/lib/enums/enums";
 
 const UNVERIFIED_ISSUER = "Not on file";
 const IDENTITY_ISSUER = "Identity document";
 
-export type NotificationRuleId =
-    | "new-lead"
-    | "offer-activity"
-    | "showing-reminder"
-    | "client-message"
-    | "listing-milestone"
-    | "performance-digest";
+export type NotificationRuleId = NotificationType;
 
 export interface NotificationRule {
     id: NotificationRuleId;
     channel: NotificationChannel;
     title: string;
     cadence: NotificationCadence;
-    volume: number;
 }
 
 export type NotificationState = Record<NotificationRuleId, boolean>;
 
 export const NOTIFICATION_RULES: readonly NotificationRule[] = [
     {
-        id: "new-lead",
+        id: "CONNECTION_REQUEST",
         channel: "push",
         title: "New Lead Alerts",
         cadence: "instant",
-        volume: 34,
     },
     {
-        id: "offer-activity",
+        id: "OFFER_RESPONSE",
         channel: "push",
         title: "Offer Activity",
         cadence: "instant",
-        volume: 12,
     },
     {
-        id: "showing-reminder",
+        id: "VIEWING_CONFIRMATION",
         channel: "sms",
         title: "Showing Reminders",
         cadence: "instant",
-        volume: 21,
     },
     {
-        id: "client-message",
+        id: "MESSAGE_RECEIVED",
         channel: "email",
         title: "Client Messages",
         cadence: "daily",
-        volume: 48,
     },
     {
-        id: "listing-milestone",
+        id: "STATUS_CHANGE",
         channel: "email",
         title: "Listing Milestones",
         cadence: "daily",
-        volume: 9,
     },
     {
-        id: "performance-digest",
+        id: "UNDER_OFFER",
         channel: "email",
-        title: "Performance Digest",
-        cadence: "weekly",
-        volume: 1,
+        title: "Under Offer",
+        cadence: "daily",
     },
 ];
 
-export const INITIAL_NOTIFICATION_STATE: NotificationState = {
-    "new-lead": true,
-    "offer-activity": true,
-    "showing-reminder": true,
-    "client-message": true,
-    "listing-milestone": false,
-    "performance-digest": false,
+export const EMPTY_NOTIFICATION_STATE: NotificationState =
+    NOTIFICATION_RULES.reduce(
+        (state, rule) => ({ ...state, [rule.id]: false }),
+        {} as NotificationState,
+    );
+
+export const toNotificationState = (
+    preferences: NotificationPreference[],
+): NotificationState => {
+    const byType = new Map(
+        preferences.map((preference) => [preference.type, preference]),
+    );
+
+    return NOTIFICATION_RULES.reduce(
+        (state, rule) => ({
+            ...state,
+            [rule.id]: byType.get(rule.id)?.enabled ?? false,
+        }),
+        {} as NotificationState,
+    );
+};
+
+export const toNotificationPayload = (
+    preferences: NotificationPreference[],
+    state: NotificationState,
+): NotificationPreference[] => {
+    const byType = new Map(
+        preferences.map((preference) => [preference.type, preference]),
+    );
+
+    return preferences.map((preference) => {
+        const enabled = state[preference.type];
+        return enabled === undefined
+            ? preference
+            : { ...(byType.get(preference.type) ?? preference), enabled };
+    });
 };
 
 export const NOTIFICATION_RULE_COUNT = NOTIFICATION_RULES.length;
 
-export const PEAK_NOTIFICATION_VOLUME = Math.max(
-    ...NOTIFICATION_RULES.map((rule) => rule.volume),
-);
-
 export const enabledNotificationCount = (state: NotificationState) =>
     NOTIFICATION_RULES.filter((rule) => state[rule.id]).length;
 
-export const weeklyAlertVolume = (state: NotificationState) =>
-    sum(
-        NOTIFICATION_RULES.filter((rule) => state[rule.id]).map(
-            (rule) => rule.volume,
-        ),
-    );
-
-export const areNotificationsDirty = (state: NotificationState) =>
-    NOTIFICATION_RULES.some(
-        (rule) => state[rule.id] !== INITIAL_NOTIFICATION_STATE[rule.id],
-    );
+export const areNotificationsDirty = (
+    state: NotificationState,
+    baseline: NotificationState,
+) => NOTIFICATION_RULES.some((rule) => state[rule.id] !== baseline[rule.id]);
 
 export const agentCredentials = (
     user: User | undefined,
@@ -149,30 +156,20 @@ export const agentCredentials = (
 export const verifiedCredentialCount = (credentials: AccountCredential[]) =>
     credentials.filter((credential) => credential.state === "verified").length;
 
-export const SECURITY_CONTROLS: readonly SecurityControl[] = [
-    {
-        id: "password",
-        label: "Password",
-        caption: "Rotate the credentials used to sign in to the agent portal",
-        action: "Change",
-        state: "enabled",
-        lastChangedMinutes: 129_600,
-    },
-    {
-        id: "two-factor",
-        label: "Two-Factor Authentication",
-        caption: "Require a second factor on every new device",
-        action: "Enable",
-        state: "recommended",
-    },
-    {
-        id: "delete",
-        label: "Delete Account",
-        caption: "Unpublish every listing and erase your agent profile",
-        action: "Delete",
-        state: "critical",
-    },
-];
+export const AGENT_SECURITY_DIALOG = "password" as const;
+
+export type AgentSecurityDialog = typeof AGENT_SECURITY_DIALOG;
+
+export const SECURITY_CONTROLS: readonly SecurityControl<AgentSecurityDialog>[] =
+    [
+        {
+            id: "password",
+            label: "Password",
+            caption: "Send a reset link to the email on this account",
+            action: "Send link",
+            state: "enabled",
+        },
+    ];
 
 export interface ProfileSignal {
     id: string;

@@ -10,7 +10,6 @@ import {
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
     NOTIFICATION_RULES,
-    weeklyAlertVolume,
     type NotificationRuleId,
     type NotificationState,
 } from "@/lib/data/agent-account";
@@ -61,7 +60,6 @@ export function AgentSettingsMain({
                 brokerage={form.brokerage}
                 updatedAt={updatedAt}
                 enabledAlerts={enabledNotificationCount(notifications)}
-                weeklySends={weeklyAlertVolume(notifications)}
             />
 
             <form

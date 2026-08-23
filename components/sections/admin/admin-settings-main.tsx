@@ -18,7 +18,7 @@ import {
     SETTINGS_FORM_ID,
     type AdminConfig,
 } from "@/lib/data/admin-settings";
-import type { PolicyState, PolicySwitchId } from "@/lib/types";
+import type { ConfigChange, PolicyState, PolicySwitchId } from "@/lib/types";
 
 const PLATFORM_TITLE = "Platform";
 const PLATFORM_LEDE = "Identity and defaults used across every surface";
@@ -35,6 +35,7 @@ export interface AdminSettingsMainProps {
     onFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onPolicyToggle: (id: PolicySwitchId) => void;
     onSubmit: (event: FormEvent) => void;
+    lastChange?: ConfigChange;
 }
 
 export function AdminSettingsMain({
@@ -44,6 +45,7 @@ export function AdminSettingsMain({
     onFieldChange,
     onPolicyToggle,
     onSubmit,
+    lastChange,
 }: AdminSettingsMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
@@ -51,6 +53,7 @@ export function AdminSettingsMain({
                 pending={pending}
                 enabled={enabledPolicyCount(policies)}
                 blocking={blockingPolicyCount(policies)}
+                lastChange={lastChange}
             />
 
             <form

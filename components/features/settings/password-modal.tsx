@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import type { ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/ui/forms/form-field";
+import { Callout } from "@/components/ui/callout";
 import {
     Modal,
     ModalHeader,
@@ -11,96 +9,82 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import {
-    EMPTY_PASSWORD,
-    MIN_PASSWORD_LENGTH,
-    type PasswordForm,
-} from "@/lib/data/dashboard-settings";
+
+const MODAL_TITLE = "Reset your password";
+const BODY_TITLE = "We will email you a link";
+const CANCEL_ACTION = "Cancel";
+const SEND_ACTION = "Send reset link";
+const SENT_TITLE = "Check your inbox";
+const SENT_BODY =
+    "The link expires after a short window. Request another if it lapses.";
 
 export interface PasswordModalProps {
     open: boolean;
+    email: string;
+    pending: boolean;
+    sent: boolean;
     onClose: () => void;
-    onPasswordUpdated: () => void;
+    onSend: () => void;
 }
 
 export function PasswordModal({
     open,
+    email,
+    pending,
+    sent,
     onClose,
-    onPasswordUpdated,
+    onSend,
 }: PasswordModalProps) {
-    const [password, setPassword] = useState<PasswordForm>(EMPTY_PASSWORD);
-    const [error, setError] = useState<string | null>(null);
-
-    const close = () => {
-        setPassword(EMPTY_PASSWORD);
-        setError(null);
-        onClose();
-    };
-
-    const update =
-        (key: keyof PasswordForm) => (event: ChangeEvent<HTMLInputElement>) =>
-            setPassword((prev) => ({ ...prev, [key]: event.target.value }));
-
-    const submit = () => {
-        if (password.next.length < MIN_PASSWORD_LENGTH) {
-            setError(
-                `Use at least ${MIN_PASSWORD_LENGTH} characters for your new password.`,
-            );
-            return;
-        }
-        if (password.next !== password.confirm) {
-            setError("The new passwords do not match.");
-            return;
-        }
-        onPasswordUpdated();
-        close();
-    };
-
     return (
         <Modal
             open={open}
             onOpenChange={(next) => {
-                if (!next) close();
+                if (!next) onClose();
             }}
         >
-            <ModalHeader>
-                <ModalTitle>Change Password</ModalTitle>
+            <ModalHeader className="p-4">
+                <ModalTitle>{MODAL_TITLE}</ModalTitle>
             </ModalHeader>
-            <ModalBody className="space-y-3">
-                <FormField
-                    id="current-password"
-                    name="currentPassword"
-                    label="Current password"
-                    type="password"
-                    value={password.current}
-                    onChange={update("current")}
-                />
-                <FormField
-                    id="new-password"
-                    name="newPassword"
-                    label="New password"
-                    type="password"
-                    value={password.next}
-                    onChange={update("next")}
-                />
-                <FormField
-                    id="confirm-password"
-                    name="confirmPassword"
-                    label="Confirm new password"
-                    type="password"
-                    value={password.confirm}
-                    error={error ?? undefined}
-                    onChange={update("confirm")}
-                />
+
+            <ModalBody className="p-4">
+                {sent ? (
+                    <Callout
+                        variant="success"
+                        title={SENT_TITLE}
+                        description={SENT_BODY}
+                    />
+                ) : (
+                    <Callout
+                        variant="info"
+                        title={BODY_TITLE}
+                        description={`Follow the link we send to ${email} to choose a new password.`}
+                    />
+                )}
             </ModalBody>
-            <ModalFooter>
-                <Button variant="secondary" size="sm" onClick={close}>
-                    Cancel
+
+            <ModalFooter className="gap-2 p-4">
+                <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={onClose}
+                >
+                    {CANCEL_ACTION}
                 </Button>
-                <Button variant="primary" size="sm" onClick={submit}>
-                    Update Password
-                </Button>
+                {!sent && (
+                    <Button
+                        type="button"
+                        variant="primary"
+                        size="sm"
+                        disabled={pending || !email}
+                        onClick={onSend}
+                    >
+                        {SEND_ACTION}
+                    </Button>
+                )}
             </ModalFooter>
         </Modal>
     );
 }
+
+PasswordModal.displayName = "PasswordModal";

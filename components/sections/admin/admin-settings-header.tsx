@@ -2,11 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
-import {
-    CONFIG_REVISION,
-    ENVIRONMENT_LABEL,
-    SETTINGS_FORM_ID,
-} from "@/lib/data/admin-settings";
+import { ENVIRONMENT_LABEL, SETTINGS_FORM_ID } from "@/lib/data/admin-settings";
 
 const SETTINGS_TITLE = "System Settings";
 const SETTINGS_LEDE =
@@ -30,7 +26,7 @@ export function AdminSettingsHeader({
         <PortalHeader
             title={SETTINGS_TITLE}
             lede={SETTINGS_LEDE}
-            summary={`${ENVIRONMENT_LABEL} · rev ${CONFIG_REVISION}`}
+            summary={ENVIRONMENT_LABEL}
             action={
                 <>
                     <Button

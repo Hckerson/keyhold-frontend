@@ -37,12 +37,6 @@ export function NotificationRuleTable({
                     </th>
                     <th
                         scope="col"
-                        className="micro-label w-28 pl-3 text-right"
-                    >
-                        Volume
-                    </th>
-                    <th
-                        scope="col"
                         className="micro-label w-16 pl-3 text-right"
                     >
                         State

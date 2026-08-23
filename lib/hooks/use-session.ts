@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { authAPI } from "@/lib/api/auth";
+import type { ResetPasswordInput } from "@/lib/validations/auth";
 import { useCurrentUser } from "@/lib/hooks/use-users";
 import { useAuthStore } from "@/lib/stores/auth-store";
 
@@ -29,4 +32,11 @@ export function useSession() {
         isError,
         logout,
     };
+}
+
+export function useRequestPasswordReset() {
+    return useMutation({
+        mutationFn: (input: ResetPasswordInput) =>
+            authAPI.forgotPassword(input),
+    });
 }
