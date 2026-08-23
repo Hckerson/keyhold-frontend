@@ -7,7 +7,7 @@ import {
     commissionOf,
 } from "@/lib/data/admin-transactions";
 import { formatMillions, formatThousands, sum } from "@/lib/utils";
-import type { Transaction } from "@/lib/types";
+import type { LedgerTransaction } from "@/lib/types";
 
 const TABLE_CAPTION =
     "Marketplace deals by property, buyer and agent, sale price, escrow milestones cleared, settlement status and age";
@@ -16,7 +16,7 @@ const TOTAL_LABEL = "Total";
 const DEALS_NOUN = "deals";
 
 export interface TransactionLedgerTableProps {
-    transactions: Transaction[];
+    transactions: LedgerTransaction[];
     onOpen: (id: string) => void;
 }
 

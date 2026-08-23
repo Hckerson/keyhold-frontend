@@ -1,44 +1,40 @@
 import { MetricList } from "@/components/patterns/metric-list";
-import { ShareList } from "@/components/patterns/share-list";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PayoutStageTable } from "@/components/features/admin/payout-stage-table";
-import {
-    HELD_PAYOUT_COUNT,
-    PAYOUT_METHOD_SHARES,
-    PAYOUT_STAGES,
-    SETTLEMENT_METRICS,
-} from "@/lib/data/admin-payments";
+import type { MetricItem, PayoutStage } from "@/lib/types";
 
-const PIPELINE_TITLE = "Release Pipeline";
-const PIPELINE_LEDE = "Where commission sits between approval and the bank";
+const PIPELINE_TITLE = "Escrow Pipeline";
+const PIPELINE_LEDE = "Value and count held at each escrow stage";
 const SETTLEMENT_TITLE = "Settlement";
-const SETTLEMENT_LEDE = "What the next run clears and what it withholds";
-const RAILS_TITLE = "Rail Mix";
-const RAILS_LEDE = "Share of held value by payment rail";
+const SETTLEMENT_LEDE = "What a release clears and what it withholds";
 
-export function AdminPaymentsRail() {
+export interface AdminPaymentsRailProps {
+    stages: PayoutStage[];
+    heldCount: number;
+    metrics: MetricItem[];
+}
+
+export function AdminPaymentsRail({
+    stages,
+    heldCount,
+    metrics,
+}: AdminPaymentsRailProps) {
     return (
         <div className="flex flex-col gap-3">
             <Panel
                 title={PIPELINE_TITLE}
                 description={PIPELINE_LEDE}
-                count={HELD_PAYOUT_COUNT}
+                count={heldCount}
             >
                 <PanelInset scroll>
-                    <PayoutStageTable stages={PAYOUT_STAGES} />
+                    <PayoutStageTable stages={stages} />
                 </PanelInset>
             </Panel>
 
             <Panel title={SETTLEMENT_TITLE} description={SETTLEMENT_LEDE}>
                 <PanelInset>
-                    <MetricList metrics={SETTLEMENT_METRICS} />
-                </PanelInset>
-            </Panel>
-
-            <Panel title={RAILS_TITLE} description={RAILS_LEDE}>
-                <PanelInset>
-                    <ShareList shares={PAYOUT_METHOD_SHARES} />
+                    <MetricList metrics={metrics} />
                 </PanelInset>
             </Panel>
         </div>

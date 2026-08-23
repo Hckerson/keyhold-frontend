@@ -7,22 +7,25 @@ import {
 } from "lucide-react";
 import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import { QUEUE_SEED_BACKLOG } from "@/lib/config/admin-tones";
+import { MODERATION_QUEUES } from "@/lib/config/admin-tones";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import type {
     MetricItem,
     ModerationQueueLoad,
+    ModerationQueueId,
     PlatformSignal,
-    ServiceHealth,
+    ServiceHealth as ServiceHealthRow,
 } from "@/lib/types";
-import {
-    AVG_COMMISSION_PER_DEAL,
-    COMMISSIONS_30D,
-    COMMISSIONS_YTD,
-    GMV_30D,
-    GMV_YTD,
-    TAKE_RATE_LABEL,
-} from "@/lib/data/admin-platform";
-import type { PlatformStats, UserStats } from "@/lib/validations/stats";
+import type { DisputeCounts } from "@/lib/validations/dispute";
+import type { FlagCounts } from "@/lib/validations/flag";
+import type { KycCounts } from "@/lib/validations/kyc";
+import type { ServiceHealth } from "@/lib/validations/service-health";
+import type {
+    PlatformStats,
+    TrendStats,
+    UserStats,
+} from "@/lib/validations/stats";
+import { minutesSince } from "@/lib/utils/elapsed";
 import {
     formatCount,
     formatMillions,
@@ -30,40 +33,126 @@ import {
     formatUsd,
 } from "@/lib/utils";
 
-export const MODERATION_LOAD: ModerationQueueLoad[] = [
+const MONTH_LABELS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
+
+const CRITICAL_AGE_MINUTES = 24 * 60;
+const ELEVATED_AGE_MINUTES = 4 * 60;
+const REVIEWER_CAPACITY = 12;
+
+const monthLabel = (key: string) => MONTH_LABELS[Number(key.slice(5, 7)) - 1];
+
+const ageOf = (iso: string | null) => (iso ? minutesSince(iso) : 0);
+
+const severityFor = (ageMinutes: number) => {
+    if (ageMinutes >= CRITICAL_AGE_MINUTES) return "critical" as const;
+    if (ageMinutes >= ELEVATED_AGE_MINUTES) return "elevated" as const;
+    return "routine" as const;
+};
+
+export const moderationLoad = (
+    flags: FlagCounts | undefined,
+    kyc: KycCounts | undefined,
+    disputes: DisputeCounts | undefined,
+): ModerationQueueLoad[] => [
     {
         id: "verifications",
-        backlog: QUEUE_SEED_BACKLOG.verifications,
-        capacity: 12,
-        oldestMinutes: 190,
+        backlog: kyc?.pending ?? 0,
+        capacity: REVIEWER_CAPACITY,
+        oldestMinutes: ageOf(kyc?.oldestPendingAt ?? null),
     },
     {
         id: "listings",
-        backlog: QUEUE_SEED_BACKLOG.listings,
-        capacity: 16,
-        oldestMinutes: 640,
+        backlog: flags?.byType.properties ?? 0,
+        capacity: REVIEWER_CAPACITY,
+        oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
     },
     {
         id: "flags",
-        backlog: QUEUE_SEED_BACKLOG.flags,
-        capacity: 6,
-        oldestMinutes: 95,
+        backlog: flags?.active ?? 0,
+        capacity: REVIEWER_CAPACITY,
+        oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
     },
     {
         id: "disputes",
-        backlog: QUEUE_SEED_BACKLOG.disputes,
-        capacity: 4,
-        oldestMinutes: 2_760,
+        backlog: disputes?.byStatus.OPEN ?? 0,
+        capacity: REVIEWER_CAPACITY,
+        oldestMinutes: ageOf(disputes?.oldestOpenAt ?? null),
     },
 ];
 
-export const OPEN_BACKLOG = MODERATION_LOAD.reduce(
-    (total, queue) => total + queue.backlog,
-    0,
-);
+export const openBacklog = (queues: ModerationQueueLoad[]) =>
+    queues.reduce((total, queue) => total + queue.backlog, 0);
 
 export const queueShare = (queue: ModerationQueueLoad) =>
     Math.round((queue.backlog / queue.capacity) * 100);
+
+const SIGNAL_DOMAIN: Record<ModerationQueueId, PlatformSignal["domain"]> = {
+    verifications: "verification",
+    listings: "moderation",
+    flags: "moderation",
+    disputes: "transaction",
+};
+
+export const platformSignals = (
+    queues: ModerationQueueLoad[],
+): PlatformSignal[] =>
+    queues
+        .filter((queue) => queue.backlog > 0)
+        .map((queue) => ({
+            id: queue.id,
+            severity: severityFor(queue.oldestMinutes),
+            domain: SIGNAL_DOMAIN[queue.id],
+            title: `${MODERATION_QUEUES[queue.id].label} awaiting review`,
+            subject: `${queue.backlog} in queue`,
+            ageMinutes: queue.oldestMinutes,
+            href: MODERATION_QUEUES[queue.id].href,
+        }))
+        .sort((a, b) => b.ageMinutes - a.ageMinutes);
+
+export const signalExposureLabel = (platform: PlatformStats | undefined) =>
+    formatUsd(platform?.volume ?? 0);
+
+export const toServiceRows = (
+    health: ServiceHealth | undefined,
+): ServiceHealthRow[] =>
+    (health?.services ?? []).flatMap((service) =>
+        service.state === "unknown"
+            ? []
+            : [
+                  {
+                      id: service.id,
+                      label: service.label,
+                      state: service.state,
+                      uptime: service.uptime,
+                      errorRate: service.errorRate,
+                      latencyMs: service.latencyMs,
+                  },
+              ],
+    );
+
+export const serviceSummary = (health: ServiceHealth | undefined) => {
+    const rows = health?.services ?? [];
+    const measured = rows.filter((service) => service.samples > 0);
+    const degraded = measured.filter(
+        (service) => service.state !== "operational",
+    ).length;
+
+    if (measured.length === 0) return "No traffic recorded yet";
+    return `Uptime ${(health?.averageUptime ?? 0).toFixed(2)}% · ${degraded} degraded (${health?.windowHours ?? 0}h)`;
+};
 
 export const platformStatBand = (
     platform: PlatformStats | undefined,
@@ -111,149 +200,63 @@ export const platformStatBand = (
     },
 ];
 
-export const GMV_MONTHS: Record<string, string | number>[] = [
-    { month: "Feb", gmv: 231_000_000 },
-    { month: "Mar", gmv: 248_000_000 },
-    { month: "Apr", gmv: 267_000_000 },
-    { month: "May", gmv: 289_000_000 },
-    { month: "Jun", gmv: 304_000_000 },
-    { month: "Jul", gmv: GMV_30D },
-];
-
 export const GMV_SERIES: ColumnSeries[] = [
     { key: "gmv", name: "Gross merchandise value", tone: "accent" },
 ];
 
-export const GMV_GROWTH_LABEL = "+22% vs prior month";
+export const gmvMonths = (
+    trend: TrendStats | undefined,
+): Record<string, string | number>[] =>
+    (trend?.gmv ?? []).map((point) => ({
+        month: monthLabel(point.name),
+        gmv: point.value,
+    }));
 
-export const REVENUE_METRICS: MetricItem[] = [
-    { label: "Commissions 30d", value: formatMillions(COMMISSIONS_30D, 1) },
-    { label: "GMV year to date", value: formatMillions(GMV_YTD, 0) },
-    { label: "Take rate", value: TAKE_RATE_LABEL },
-    {
-        label: "Avg per deal",
-        value: formatThousands(AVG_COMMISSION_PER_DEAL, 1),
-    },
-];
+export const gmvLatest = (trend: TrendStats | undefined) => {
+    const points = trend?.gmv ?? [];
+    return points[points.length - 1]?.value ?? 0;
+};
 
-export const COMMISSIONS_YTD_LABEL = formatMillions(COMMISSIONS_YTD, 1);
+export const gmvGrowthLabel = (trend: TrendStats | undefined) => {
+    const points = trend?.gmv ?? [];
+    const latest = points[points.length - 1]?.value ?? 0;
+    const previous = points[points.length - 2]?.value ?? 0;
+    if (previous <= 0) return "";
+    const change = Math.round(((latest - previous) / previous) * 100);
+    return `${change > 0 ? "+" : ""}${change}% vs prior month`;
+};
 
-export const PLATFORM_SIGNALS: PlatformSignal[] = [
-    {
-        id: "sig-escrow-8m",
-        severity: "critical",
-        domain: "transaction",
-        title: "Escrow confirmation overdue",
-        subject: "Ravenswood Estate",
-        exposure: 8_500_000,
-        ageMinutes: 245,
-        href: "/admin/transactions",
-    },
-    {
-        id: "sig-explicit-image",
-        severity: "critical",
-        domain: "moderation",
-        title: "Explicit image reported",
-        subject: "Listing #4521",
-        ageMinutes: 118,
-        href: "/admin/listings",
-    },
-    {
-        id: "sig-payout-retry",
-        severity: "elevated",
-        domain: "payout",
-        title: "Payout retried twice",
-        subject: "Marcus Webb",
-        exposure: 184_000,
-        ageMinutes: 52,
-        href: "/admin/payments",
-    },
-    {
-        id: "sig-platinum-tier",
-        severity: "elevated",
-        domain: "verification",
-        title: "Platinum tier requested",
-        subject: "Robert Chen",
-        ageMinutes: 64,
-        href: "/admin/verifications",
-    },
-    {
-        id: "sig-storage-latency",
-        severity: "elevated",
-        domain: "infrastructure",
-        title: "File storage latency spike",
-        subject: "eu-west-1",
-        ageMinutes: 26,
-        href: "/admin/settings",
-    },
-    {
-        id: "sig-licence-expiry",
-        severity: "routine",
-        domain: "verification",
-        title: "Licence expires in 14 days",
-        subject: "Elena Vasquez",
-        ageMinutes: 1_560,
-        href: "/admin/verifications",
-    },
-];
+export const commissionsFor = (volume: number, rate: number) => volume * rate;
 
-const SIGNAL_EXPOSURE = PLATFORM_SIGNALS.reduce(
-    (total, signal) => total + (signal.exposure ?? 0),
-    0,
-);
+export const revenueMetrics = (
+    trend: TrendStats | undefined,
+    platform: PlatformStats | undefined,
+    rate = DEFAULT_COMMISSION_RATE,
+): MetricItem[] => {
+    const settled = platform?.volume ?? 0;
+    const deals = platform?.completedTransactions ?? 0;
+    const latest = gmvLatest(trend);
 
-export const SIGNAL_EXPOSURE_LABEL = formatUsd(SIGNAL_EXPOSURE);
+    return [
+        {
+            label: "Commissions this month",
+            value: formatMillions(commissionsFor(latest, rate), 1),
+        },
+        { label: "Settled volume", value: formatMillions(settled, 0) },
+        { label: "Take rate", value: `${(rate * 100).toFixed(2)}%` },
+        {
+            label: "Avg per deal",
+            value: deals
+                ? formatThousands(commissionsFor(settled, rate) / deals, 1)
+                : formatThousands(0, 1),
+        },
+    ];
+};
 
-export const SERVICES: ServiceHealth[] = [
-    {
-        id: "database",
-        label: "Database",
-        state: "operational",
-        uptime: 99.99,
-        errorRate: 0.01,
-        latencyMs: 38,
-    },
-    {
-        id: "api",
-        label: "API gateway",
-        state: "operational",
-        uptime: 99.96,
-        errorRate: 0.04,
-        latencyMs: 112,
-    },
-    {
-        id: "search",
-        label: "Search index",
-        state: "operational",
-        uptime: 99.94,
-        errorRate: 0.06,
-        latencyMs: 187,
-    },
-    {
-        id: "storage",
-        label: "File storage",
-        state: "degraded",
-        uptime: 99.82,
-        errorRate: 0.21,
-        latencyMs: 640,
-    },
-    {
-        id: "payments",
-        label: "Payments webhook",
-        state: "operational",
-        uptime: 99.91,
-        errorRate: 0.09,
-        latencyMs: 296,
-    },
-];
-
-const averageUptime =
-    SERVICES.reduce((total, service) => total + service.uptime, 0) /
-    SERVICES.length;
-
-export const SERVICE_SUMMARY = `Uptime ${averageUptime.toFixed(2)}% · ${
-    SERVICES.filter((service) => service.state !== "operational").length
-} degraded (24h)`;
+export const commissionsLabel = (
+    platform: PlatformStats | undefined,
+    rate = DEFAULT_COMMISSION_RATE,
+) => formatMillions(commissionsFor(platform?.volume ?? 0, rate), 1);
 
 export const overviewSummary = (
     platform: PlatformStats | undefined,
