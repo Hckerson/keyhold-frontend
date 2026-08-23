@@ -13,14 +13,23 @@ import {
     weekBounds,
     type CalendarViewMode,
 } from "@/lib/data/agent-calendar";
+import { useIncomingConnections } from "@/lib/hooks/use-connections";
+import { toAppointmentBook } from "@/lib/utils/to-appointment";
 
 const DEFAULT_VIEW: CalendarViewMode = "month";
 
 export function useAgentCalendar() {
+    const connections = useIncomingConnections();
+
     const [year, setYear] = useState(ANCHOR.year);
     const [month, setMonth] = useState(ANCHOR.month);
     const [selected, setSelected] = useState(ANCHOR.day);
     const [view, setView] = useState<CalendarViewMode>(DEFAULT_VIEW);
+
+    const book = useMemo(
+        () => toAppointmentBook(connections.data ?? []),
+        [connections.data],
+    );
 
     const selectedIso = isoOf(year, month, selected);
 
@@ -28,15 +37,21 @@ export function useAgentCalendar() {
         () => weekBounds(selectedIso),
         [selectedIso],
     );
-    const marked = useMemo(() => appointmentDays(year, month), [year, month]);
-    const dayItems = useMemo(() => appointmentsOn(selectedIso), [selectedIso]);
+    const marked = useMemo(
+        () => appointmentDays(book, year, month),
+        [book, year, month],
+    );
+    const dayItems = useMemo(
+        () => appointmentsOn(book, selectedIso),
+        [book, selectedIso],
+    );
     const weekItems = useMemo(
-        () => appointmentsInRange(start, end),
-        [start, end],
+        () => appointmentsInRange(book, start, end),
+        [book, start, end],
     );
     const visible = useMemo(
-        () => appointmentsInView(view, selectedIso, start, end),
-        [view, selectedIso, start, end],
+        () => appointmentsInView(book, view, selectedIso, start, end),
+        [book, view, selectedIso, start, end],
     );
     const shares = useMemo(() => appointmentTypeMix(weekItems), [weekItems]);
 
@@ -60,6 +75,9 @@ export function useAgentCalendar() {
         dayCount: dayItems.length,
         weekCount: weekItems.length,
         weekItems,
+        pending: connections.isPending,
+        failed: connections.isError,
+        refetch: connections.refetch,
         rangeLabel: `${shortDate(start)} – ${shortDate(end)}`,
         today: isAnchorMonth ? ANCHOR.day : undefined,
         setSelected,

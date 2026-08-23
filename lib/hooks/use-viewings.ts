@@ -7,6 +7,7 @@ import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type {
     ConfirmViewingInput,
     CreateViewingInput,
+    RescheduleViewingInput,
 } from "@/lib/validations/viewing";
 
 export function useConnectionViewings(connectionId: string | undefined) {
@@ -45,5 +46,39 @@ export function useConfirmViewing() {
             viewingsAPI.confirm(id, input),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+    });
+}
+
+export function useRescheduleViewing() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            id,
+            ...input
+        }: RescheduleViewingInput & { id: string }) =>
+            viewingsAPI.reschedule(id, input),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
+    });
+}
+
+export function useCancelViewing() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: (id: string) => viewingsAPI.cancel(id),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
     });
 }
