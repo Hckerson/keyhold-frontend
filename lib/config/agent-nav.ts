@@ -49,7 +49,6 @@ export const AGENT_NAV: AgentNavSection[] = [
                 href: "/agent/leads",
                 icon: Users,
                 description: "Track and nurture prospects",
-                badge: 4,
             },
             {
                 label: "Pipeline",
@@ -103,3 +102,13 @@ export const AGENT_NAV: AgentNavSection[] = [
 export const AGENT_ROUTES: AgentNavItem[] = AGENT_NAV.flatMap(
     (section) => section.items,
 );
+
+export const agentNav = (openLeads: number): AgentNavSection[] =>
+    AGENT_NAV.map((section) => ({
+        ...section,
+        items: section.items.map((item) =>
+            item.href === "/agent/leads"
+                ? { ...item, badge: openLeads || undefined }
+                : item,
+        ),
+    }));

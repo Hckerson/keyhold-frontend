@@ -6,8 +6,7 @@ import {
     Settings,
     type LucideIcon,
 } from "lucide-react";
-import { buyerJourney } from "@/lib/data/dashboard-journey";
-import type { JourneyStationState } from "@/lib/types";
+import type { JourneyStation, JourneyStationState } from "@/lib/types";
 
 export interface DashboardNavItem {
     label: string;
@@ -25,7 +24,13 @@ export interface DashboardNavSection {
     items: DashboardNavItem[];
 }
 
-export const DASHBOARD_NAV: DashboardNavSection[] = [
+export const JOURNEY_LABEL = "Journey";
+
+export const dashboardNav = (
+    stations: JourneyStation[],
+    unreadMessages: number,
+    unreadAlerts: number,
+): DashboardNavSection[] => [
     {
         items: [
             {
@@ -37,9 +42,9 @@ export const DASHBOARD_NAV: DashboardNavSection[] = [
         ],
     },
     {
-        label: buyerJourney.label,
+        label: JOURNEY_LABEL,
         spine: true,
-        items: buyerJourney.stations,
+        items: stations,
     },
     {
         label: "Inbox",
@@ -49,14 +54,14 @@ export const DASHBOARD_NAV: DashboardNavSection[] = [
                 href: "/dashboard/messages",
                 icon: MessageSquare,
                 description: "Chat with your agents",
-                badge: 1,
+                badge: unreadMessages || undefined,
             },
             {
                 label: "Alerts",
                 href: "/dashboard/alerts",
                 icon: Bell,
                 description: "Price drops and new matches",
-                badge: 2,
+                badge: unreadAlerts || undefined,
             },
         ],
     },
@@ -84,11 +89,9 @@ export const DASHBOARD_NAV: DashboardNavSection[] = [
     },
 ];
 
-export const DASHBOARD_STATUS = buyerJourney.status;
-
-export const DASHBOARD_ROUTES = DASHBOARD_NAV.flatMap(
-    (section) => section.items,
-).filter(
-    (item): item is DashboardNavItem & { href: string } =>
-        item.href !== undefined,
-);
+export const DASHBOARD_ROUTES = dashboardNav([], 0, 0)
+    .flatMap((section) => section.items)
+    .filter(
+        (item): item is DashboardNavItem & { href: string } =>
+            item.href !== undefined,
+    );
