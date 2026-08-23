@@ -1,8 +1,6 @@
 "use client";
 
 import { PasswordModal } from "@/components/features/settings/password-modal";
-import { TwoFactorModal } from "@/components/features/settings/two-factor-modal";
-import { DeleteAccountModal } from "@/components/features/settings/delete-account-modal";
 import { DashboardSettingsHeader } from "@/components/sections/dashboard/dashboard-settings-header";
 import { DashboardSettingsMain } from "@/components/sections/dashboard/dashboard-settings-main";
 import { DashboardSettingsNotices } from "@/components/sections/dashboard/dashboard-settings-notices";
@@ -25,16 +23,13 @@ export function DashboardSettingsConsole() {
 
             <DashboardSettingsNotices
                 saved={settings.saved}
-                passwordUpdated={settings.passwordUpdated}
-                deletionScheduled={settings.deletionScheduled}
-                onRestore={() => settings.setDeletionScheduled(false)}
+                resetSent={settings.resetSent}
             />
 
             <div className="console-split gap-3">
                 <DashboardSettingsMain
                     form={settings.form}
                     preferences={settings.preferences}
-                    privacy={settings.privacy}
                     pending={settings.pending}
                     strength={settings.strength}
                     verified={settings.verifiedCount}
@@ -50,11 +45,6 @@ export function DashboardSettingsConsole() {
                     signals={settings.signals}
                     strength={settings.strength}
                     documents={settings.documents}
-                    privacy={settings.privacy}
-                    contactMethod={settings.contactMethod}
-                    twoFactorEnabled={settings.twoFactorEnabled}
-                    onPrivacyToggle={settings.switchPrivacy}
-                    onContactMethodChange={settings.changeContactMethod}
                     onSecurityAction={settings.runSecurityAction}
                     onDownloadData={settings.exportData}
                 />
@@ -62,21 +52,11 @@ export function DashboardSettingsConsole() {
 
             <PasswordModal
                 open={settings.dialog === "password"}
+                email={settings.user?.email ?? ""}
+                pending={settings.resettingPassword}
+                sent={settings.resetSent}
                 onClose={() => settings.setDialog(null)}
-                onPasswordUpdated={() => settings.setPasswordUpdated(true)}
-            />
-
-            <TwoFactorModal
-                open={settings.dialog === "two-factor"}
-                enabled={settings.twoFactorEnabled}
-                onClose={() => settings.setDialog(null)}
-                onEnabledChange={settings.setTwoFactorEnabled}
-            />
-
-            <DeleteAccountModal
-                open={settings.dialog === "delete"}
-                onClose={() => settings.setDialog(null)}
-                onConfirm={() => settings.setDeletionScheduled(true)}
+                onSend={settings.sendPasswordReset}
             />
         </div>
     );

@@ -15,7 +15,6 @@ const PUBLISHED_LABEL = "Published";
 const PENDING_LEDE = "Unsaved edits reach buyers once you save this profile";
 const PUBLISHED_LEDE = "Live values match what buyers see on your listings";
 const ALERTS_LABEL = "Alerts on";
-const SENDS_LABEL = "Weekly sends";
 const CREDENTIALS_LABEL = "Credentials";
 const PUBLISHED_METRIC_LABEL = "Last published";
 const OF_LABEL = "of";
@@ -29,7 +28,6 @@ export interface AgentSettingsProfileHeroProps {
     brokerage: string;
     updatedAt?: string;
     enabledAlerts: number;
-    weeklySends: number;
 }
 
 export function AgentSettingsProfileHero({
@@ -40,7 +38,6 @@ export function AgentSettingsProfileHero({
     brokerage,
     updatedAt,
     enabledAlerts,
-    weeklySends,
 }: AgentSettingsProfileHeroProps) {
     const dirty = pending > 0;
 
@@ -78,9 +75,6 @@ export function AgentSettingsProfileHero({
                     <span className="tabular-nums">
                         {enabledAlerts} {OF_LABEL} {NOTIFICATION_RULE_COUNT}
                     </span>
-                </MetricCell>
-                <MetricCell label={SENDS_LABEL}>
-                    <span className="tabular-nums">{weeklySends}</span>
                 </MetricCell>
                 <MetricCell label={CREDENTIALS_LABEL}>
                     <span className="tabular-nums">

@@ -8,10 +8,7 @@ import { ProfilePhotoUploader } from "@/components/features/settings/profile-pho
 import { AlertPreferenceList } from "@/components/features/dashboard/alert-preference-list";
 import { DashboardSettingsProfileHero } from "@/components/sections/dashboard/dashboard-settings-profile-hero";
 import { deliverySummary, enabledAlertCount } from "@/lib/data/alerts";
-import {
-    sharedAudienceCount,
-    type PrivacyState,
-} from "@/lib/data/buyer-account";
+import {} from "@/lib/data/buyer-account";
 import {
     DASHBOARD_SETTINGS_FORM_ID,
     PROFILE_FIELDS,
@@ -27,7 +24,6 @@ const DELIVERY_LEDE = "Which signals fire and where each one lands";
 export interface DashboardSettingsMainProps {
     form: ProfileForm;
     preferences: Record<AlertType, AlertPreference>;
-    privacy: PrivacyState;
     pending: number;
     strength: number;
     verified: number;
@@ -43,7 +39,6 @@ export interface DashboardSettingsMainProps {
 export function DashboardSettingsMain({
     form,
     preferences,
-    privacy,
     pending,
     strength,
     verified,
@@ -64,7 +59,6 @@ export function DashboardSettingsMain({
                 documents={documents}
                 updatedAt={updatedAt}
                 enabledAlerts={enabledAlertCount(preferences)}
-                sharedAudiences={sharedAudienceCount(privacy)}
             />
 
             <form
