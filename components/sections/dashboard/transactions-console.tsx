@@ -42,15 +42,20 @@ export function TransactionsConsole() {
         (purchase) => purchase.escrowId === confirmingId,
     );
 
+    const releasingId = release.isPending ? (release.variables ?? null) : null;
+
     const onRelease = useCallback(
-        (escrowId: string) => setConfirmingId(escrowId),
-        [],
+        (escrowId: string) => {
+            if (!release.isPending) release.reset();
+            setConfirmingId(escrowId);
+        },
+        [release],
     );
 
     const onConfirm = () => {
         if (!confirmingId) return;
-        void release.mutateAsync(confirmingId).finally(() => {
-            setConfirmingId(null);
+        release.mutate(confirmingId, {
+            onSuccess: () => setConfirmingId(null),
         });
     };
 
@@ -74,7 +79,7 @@ export function TransactionsConsole() {
                     filter={filter}
                     counts={counts}
                     pending={isPending}
-                    releasingId={release.isPending ? confirmingId : null}
+                    releasingId={releasingId}
                     onFilterChange={setFilter}
                     onRelease={onRelease}
                 />
@@ -84,6 +89,7 @@ export function TransactionsConsole() {
             <ReleaseEscrowModal
                 purchase={confirming}
                 pending={release.isPending}
+                failed={release.isError && release.variables === confirmingId}
                 onClose={() => setConfirmingId(null)}
                 onConfirm={onConfirm}
             />

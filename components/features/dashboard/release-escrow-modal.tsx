@@ -21,10 +21,14 @@ const AMOUNT_LABEL = "Held in escrow";
 const WINDOW_LABEL = "Inspection window";
 const CANCEL_ACTION = "Keep it held";
 const CONFIRM_ACTION = "Release funds";
+const FAILURE_TITLE = "The funds could not be released";
+const FAILURE_BODY =
+    "Nothing has moved and the escrow is still held. Try again in a moment.";
 
 export interface ReleaseEscrowModalProps {
     purchase?: Purchase;
     pending: boolean;
+    failed?: boolean;
     onClose: () => void;
     onConfirm: () => void;
 }
@@ -32,6 +36,7 @@ export interface ReleaseEscrowModalProps {
 export function ReleaseEscrowModal({
     purchase,
     pending,
+    failed,
     onClose,
     onConfirm,
 }: ReleaseEscrowModalProps) {
@@ -53,9 +58,9 @@ export function ReleaseEscrowModal({
 
                     <ModalBody className="flex flex-col gap-3 p-4">
                         <Callout
-                            variant="warning"
-                            title={WARNING_TITLE}
-                            description={WARNING_BODY}
+                            variant={failed ? "error" : "warning"}
+                            title={failed ? FAILURE_TITLE : WARNING_TITLE}
+                            description={failed ? FAILURE_BODY : WARNING_BODY}
                         />
 
                         <div className="bg-background-muted border-border-light grid grid-cols-2 gap-3 rounded-md border p-3">
