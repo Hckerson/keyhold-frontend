@@ -1,9 +1,20 @@
 import Link from "next/link";
-import { LOCALITY_INDEX } from "@/lib/data/localities";
+import { propertiesServerAPI } from "@/lib/api/server";
+import { toLocalityIndex } from "@/lib/data/localities";
 
-const REGIONS = [...new Set(LOCALITY_INDEX.map((locality) => locality.region))];
+const LOCALITY_SAMPLE = 200;
+const HEADING = "Where we work";
 
-export function FooterLocalityIndex() {
+export async function FooterLocalityIndex() {
+    const page = await propertiesServerAPI.list({ limit: LOCALITY_SAMPLE });
+    const localities = toLocalityIndex(page?.items ?? []);
+
+    if (localities.length === 0) return null;
+
+    const regions = [
+        ...new Set(localities.map((locality) => locality.region)),
+    ].filter(Boolean);
+
     return (
         <section
             aria-labelledby="footer-localities"
@@ -14,16 +25,16 @@ export function FooterLocalityIndex() {
                     id="footer-localities"
                     className="text-highlight font-mono text-[10px] tracking-[0.18em] uppercase"
                 >
-                    Where we work
+                    {HEADING}
                 </h2>
                 <span className="text-sidebar-text-muted font-mono text-[10px] tracking-[0.14em] uppercase tabular-nums">
-                    {LOCALITY_INDEX.length} localities · {REGIONS.join(" · ")}
+                    {localities.length} localities · {regions.join(" · ")}
                 </span>
             </div>
 
             <ul className="grid grid-cols-2 gap-x-8 sm:grid-cols-3 lg:grid-cols-4">
-                {LOCALITY_INDEX.map((locality) => (
-                    <li key={locality.name}>
+                {localities.map((locality) => (
+                    <li key={`${locality.name}-${locality.region}`}>
                         <Link
                             href={`/search?q=${encodeURIComponent(locality.name)}`}
                             className="group border-sidebar-border focus-visible:ring-highlight flex items-baseline justify-between gap-3 border-b py-2.5 focus-visible:ring-2 focus-visible:outline-none"
