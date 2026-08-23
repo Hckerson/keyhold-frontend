@@ -1,6 +1,4 @@
 import {
-    Banknote,
-    Building2,
     CircleCheck,
     CircleX,
     ClipboardCheck,

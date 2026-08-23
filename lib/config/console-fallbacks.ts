@@ -101,6 +101,12 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The stats service is unreachable right now. Try again in a moment.",
     },
+    adminTransactions: {
+        panel: "Transactions",
+        title: "We could not load the deal ledger",
+        description:
+            "The transaction service is unreachable right now. Try again in a moment.",
+    },
     adminPayments: {
         panel: "Payments",
         title: "We couldn't load escrow holds",
