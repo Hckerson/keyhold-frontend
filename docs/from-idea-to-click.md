@@ -85,7 +85,7 @@ The stage everyone skips and everyone regrets skipping. Code is expensive to wri
 > **Where first-timers lose months**
 > Building the admin panel first. It feels productive because it is unambiguous — but nobody is waiting for it. Build the one flow that a real user would pay for, all the way through to production, before building anything else. That single vertical slice teaches you more than six horizontal ones.
 
-**In your repo** — `horizon-grove-real-estate.md` and `frontend/docs/FRONTEND_MVP_ANALYSIS.md` are this stage's artifacts: the written argument for what the product is, produced before the code existed.
+**In your repo** — `design-os/CORE-PHASES/phase-1-product-vision.md` is this stage's artifact: the problem statement, four personas, the jobs each one hires the product for, and a KPI table with a target and a rationale per row — all written before the code existed. (`horizon-grove-real-estate.md` at the workspace root is often mistaken for it; that one is a design-system definition, and belongs to stage 02.)
 
 ---
 
@@ -113,7 +113,7 @@ Design is not decoration applied at the end. It is the decision about structure 
 >
 > **Verdict — for a first project: primitives + your own tokens.** Accessible dropdowns and dialogs are genuinely hard to write correctly and teach you nothing about your product.
 
-**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `design-os/` the system's seed document.
+**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `horizon-grove-real-estate.md` at the workspace root defines the brand, palette and type scale · `design-os/` the system's seed document.
 
 ---
 
@@ -263,7 +263,7 @@ This is where HTML lives — as roughly a tenth of the work. The other nine tent
 > **Two sizes in one card**
 > An interface reads as amateur mostly through _density_, not colour. Dashboards, tables, and forms are an application register: small type, tight rows, one emphasised value per card, differences carried by weight and colour rather than size. Big display type belongs on marketing pages. This is the single fastest way to make a first project stop looking like a first project.
 
-**In your repo** — `lib/api/client.ts` is the only place that talks HTTP · `lib/api/properties.ts` wraps the endpoints · `lib/hooks/use-properties.ts` wraps that in a query hook · components consume the hook and never the client. That chain is the pattern, repeated 13 times.
+**In your repo** — `lib/api/client.ts` is the only place that talks HTTP · `lib/api/properties.ts` wraps the endpoints · `lib/hooks/use-properties.ts` wraps that in a query hook · components consume the hook and never the client. That chain is the pattern, repeated once per resource — 21 of them in `lib/api/`, against 20 domain modules on the backend.
 
 ---
 
@@ -346,7 +346,7 @@ Tests are not about proving code correct. They are about changing code six month
 >
 > **Verdict** — in order: **types and lint on everything** (nearly free) → **integration tests on the money paths** → **unit tests on genuinely tricky logic** → **three or four end-to-end tests** on the flows that would be an emergency. Ignore the coverage number.
 
-**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · husky + lint-staged run the formatter on staged files, so quality gates fire before a commit exists.
+**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · husky and lint-staged are installed and configured, but the hook file sits at `.husky/pre-commit.disabled`, so nothing currently runs at commit time. Renaming it back restores a gate that type-checks, lints, and formats before a commit exists.
 
 ---
 
@@ -379,7 +379,7 @@ The gap between "works on my machine" and "works for everyone" is this stage. Au
 >
 > **Verdict — managed for the product, a VPS as a side quest.** Learning to run a server is genuinely valuable, just not while you are also learning everything else and trying to launch something.
 
-**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output · husky hooks are the local half of CI. The missing half is a pipeline file that runs lint, type-check, and test on every push.
+**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output. Neither half of CI is running: the husky pre-commit hook is disabled locally, and there is no pipeline file that runs lint, type-check, and test on every push.
 
 ---
 
@@ -432,7 +432,7 @@ The stage that closes the circle and gets neglected the most. Everything up to h
 > **The measurement trap**
 > Tracking everything produces a dashboard nobody reads. Pick the **three** numbers that would change a decision — one acquisition, one activation, one retention — and instrument those properly. Add the fourth only when someone asks a question the first three cannot answer.
 
-**In your repo** — nothing yet: no analytics, no metadata strategy, no Web Vitals reporting. That is normal at this point and worth naming. The project currently has eleven stages out of twelve, and stage 12 is the one that tells you which of the other eleven to work on next.
+**In your repo** — barely started: seven routes set page metadata, including a dynamic `generateMetadata` on the listing page, but there is no `sitemap.ts`, no `robots.ts`, no structured data, no product analytics, and no field Web Vitals. That is normal at this point and worth naming. The project currently has eleven stages out of twelve, and stage 12 is the one that tells you which of the other eleven to work on next.
 
 ---
 
@@ -487,4 +487,4 @@ Concepts age slowly, thresholds and rankings do not. The two facts in this guide
 
 ---
 
-_Field guide · twelve stages · anchored to a Next.js 16 + NestJS 11 codebase. A styled HTML version of this document lives at the workspace root as `from-idea-to-click.html`._
+_Field guide · twelve stages · anchored to a Next.js 16 + NestJS 11 codebase._
