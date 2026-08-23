@@ -1,13 +1,15 @@
 import { AnalyticsMonthRow } from "@/components/features/agent/analytics-month-row";
 import type { MonthlyProduction } from "@/lib/data/agent-analytics";
 
-const TABLE_CAPTION = "Monthly closings, volume against target and change";
+const TABLE_CAPTION = "Monthly closings, volume share and change";
 
 export interface AnalyticsMonthTableProps {
     months: MonthlyProduction[];
 }
 
 export function AnalyticsMonthTable({ months }: AnalyticsMonthTableProps) {
+    const peakVolume = Math.max(...months.map((month) => month.volume), 0);
+
     return (
         <table className="table-flush w-full">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
@@ -23,7 +25,7 @@ export function AnalyticsMonthTable({ months }: AnalyticsMonthTableProps) {
                         Sold
                     </th>
                     <th scope="col" className="micro-label pl-3 text-left">
-                        Attainment
+                        Share of peak
                     </th>
                     <th
                         scope="col"
@@ -45,6 +47,7 @@ export function AnalyticsMonthTable({ months }: AnalyticsMonthTableProps) {
                         key={month.id}
                         month={month}
                         previousVolume={months[index - 1]?.volume}
+                        peakVolume={peakVolume}
                     />
                 ))}
             </tbody>

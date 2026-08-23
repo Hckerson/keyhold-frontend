@@ -5,18 +5,22 @@ export interface PipelineHealthPanelProps {
     avgDays: number;
     totalValue: number;
     openCount: number;
+    closeRate: number;
+    closedCount: number;
 }
 
 export function PipelineHealthPanel({
     avgDays,
     totalValue,
     openCount,
+    closeRate,
+    closedCount,
 }: PipelineHealthPanelProps) {
     const health = [
         {
             label: "Avg Days in Stage",
             value: String(avgDays),
-            caption: "Target: 45–60 days to close",
+            caption: `across ${openCount} open deals`,
             tone: "text-text",
         },
         {
@@ -27,8 +31,8 @@ export function PipelineHealthPanel({
         },
         {
             label: "Close Rate",
-            value: "68%",
-            caption: "vs 52% industry avg",
+            value: `${closeRate}%`,
+            caption: `${closedCount} closed of ${closedCount + openCount}`,
             tone: "text-success",
         },
     ];

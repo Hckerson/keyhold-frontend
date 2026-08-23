@@ -1,10 +1,27 @@
 import { Award, Clock, Gauge, TrendingUp } from "lucide-react";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import type { Trend } from "@/lib/types";
+import type { AgentAnalytics, GrowthPoint } from "@/lib/validations/stats";
+import { formatMillions, formatUsd } from "@/lib/utils";
 
-export const ANALYTICS_PERIOD = "Jan – Jul 2024";
-export const TARGET_MET_PCT = 100;
-export const TARGET_NEAR_PCT = 85;
+const MONTHS_PER_QUARTER = 3;
+const MONTH_KEY_LENGTH = 7;
+const NO_VALUE = "—";
+
+const MONTH_LABELS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
 
 export interface ProductionSummary {
     label: string;
@@ -19,7 +36,6 @@ export interface MonthlyProduction {
     month: string;
     closings: number;
     volume: number;
-    target: number;
 }
 
 export type QuarterStatus = "complete" | "in-progress";
@@ -43,152 +59,158 @@ export interface Benchmark {
     higherIsBetter: boolean;
 }
 
-export const production: ProductionSummary = {
-    label: "YTD production",
-    volume: 42_300_000,
-    closings: 15,
-    change: "+12%",
-    trend: "up",
+const monthIndex = (key: string) => Number(key.slice(5, 7)) - 1;
+
+const yearOf = (key: string) => key.slice(0, 4);
+
+const quarterOf = (key: string) =>
+    Math.floor(monthIndex(key) / MONTHS_PER_QUARTER) + 1;
+
+const currentMonthKey = () =>
+    new Date().toISOString().slice(0, MONTH_KEY_LENGTH);
+
+const dealsByMonth = (analytics: AgentAnalytics) =>
+    new Map(analytics.monthlyDeals.map((point) => [point.name, point.value]));
+
+export const analyticsPeriod = (monthly: GrowthPoint[]) => {
+    if (monthly.length === 0) return NO_VALUE;
+    const first = monthly[0].name;
+    const last = monthly[monthly.length - 1].name;
+    const from = `${MONTH_LABELS[monthIndex(first)]} ${yearOf(first)}`;
+    const to = `${MONTH_LABELS[monthIndex(last)]} ${yearOf(last)}`;
+    return from === to ? from : `${from} – ${to}`;
 };
 
-export const analyticsStats: StatDatum[] = [
-    {
-        id: "avg-price",
-        label: "Avg sale price",
-        value: "$2.82M",
-        icon: TrendingUp,
-        tone: "highlight",
-    },
-    {
-        id: "days-to-close",
-        label: "Days to close",
-        value: "48d",
-        icon: Clock,
-        tone: "info",
-    },
-    {
-        id: "attainment",
-        label: "Target attainment",
-        value: "97%",
-        icon: Gauge,
-        tone: "accent",
-    },
-    {
-        id: "rating",
-        label: "Client rating",
-        value: "4.8/5",
-        icon: Award,
-        tone: "success",
-    },
-];
+export const monthlyProduction = (
+    analytics: AgentAnalytics,
+): MonthlyProduction[] => {
+    const deals = dealsByMonth(analytics);
 
-export const monthlyProduction: MonthlyProduction[] = [
-    {
-        id: "jan",
-        month: "Jan",
-        closings: 2,
-        volume: 5_400_000,
-        target: 5_000_000,
-    },
-    {
-        id: "feb",
-        month: "Feb",
-        closings: 2,
-        volume: 6_100_000,
-        target: 5_500_000,
-    },
-    {
-        id: "mar",
-        month: "Mar",
-        closings: 2,
-        volume: 5_200_000,
-        target: 6_000_000,
-    },
-    {
-        id: "apr",
-        month: "Apr",
-        closings: 3,
-        volume: 8_400_000,
-        target: 6_500_000,
-    },
-    {
-        id: "may",
-        month: "May",
-        closings: 2,
-        volume: 5_900_000,
-        target: 6_500_000,
-    },
-    {
-        id: "jun",
-        month: "Jun",
-        closings: 3,
-        volume: 8_600_000,
-        target: 7_000_000,
-    },
-    {
-        id: "jul",
-        month: "Jul",
-        closings: 1,
-        volume: 2_700_000,
-        target: 7_000_000,
-    },
-];
+    return analytics.monthly.map((point) => ({
+        id: point.name,
+        month: MONTH_LABELS[monthIndex(point.name)],
+        closings: deals.get(point.name) ?? 0,
+        volume: point.value,
+    }));
+};
 
-export const quarters: QuarterSummary[] = [
-    {
-        id: "q1",
-        label: "Q1 2024",
-        status: "complete",
-        closings: 6,
-        volume: 16_700_000,
-    },
-    {
-        id: "q2",
-        label: "Q2 2024",
-        status: "complete",
-        closings: 8,
-        volume: 22_900_000,
-    },
-    {
-        id: "q3",
-        label: "Q3 2024",
-        status: "in-progress",
-        closings: 1,
-        volume: 2_700_000,
-    },
-];
+export const production = (analytics: AgentAnalytics): ProductionSummary => {
+    const months = analytics.monthly;
+    const latest = months[months.length - 1]?.value ?? 0;
+    const previous = months[months.length - 2]?.value ?? 0;
+    const change = previous > 0 ? ((latest - previous) / previous) * 100 : 0;
 
-export const benchmarks: Benchmark[] = [
+    return {
+        label: "Production",
+        volume: analytics.production.volume,
+        closings: analytics.production.deals,
+        change:
+            previous > 0
+                ? `${change > 0 ? "+" : ""}${Math.round(change)}%`
+                : NO_VALUE,
+        trend: change < 0 ? "down" : "up",
+    };
+};
+
+export const quarters = (analytics: AgentAnalytics): QuarterSummary[] => {
+    const deals = dealsByMonth(analytics);
+    const current = currentMonthKey();
+    const buckets = new Map<string, QuarterSummary>();
+
+    for (const point of analytics.monthly) {
+        const id = `${yearOf(point.name)}-Q${quarterOf(point.name)}`;
+        const bucket = buckets.get(id) ?? {
+            id,
+            label: `Q${quarterOf(point.name)} ${yearOf(point.name)}`,
+            status: "complete" as QuarterStatus,
+            closings: 0,
+            volume: 0,
+        };
+
+        bucket.volume += point.value;
+        bucket.closings += deals.get(point.name) ?? 0;
+        if (
+            yearOf(point.name) === yearOf(current) &&
+            quarterOf(point.name) === quarterOf(current)
+        ) {
+            bucket.status = "in-progress";
+        }
+        buckets.set(id, bucket);
+    }
+
+    return [...buckets.values()].sort((a, b) => a.id.localeCompare(b.id));
+};
+
+export const benchmarks = (analytics: AgentAnalytics): Benchmark[] => [
     {
         id: "avg-price",
         label: "Average sale price",
-        you: 2_820_000,
-        market: 2_150_000,
+        you: analytics.benchmarks.averagePrice,
+        market: analytics.benchmarks.platformAveragePrice,
         unit: "usd",
         higherIsBetter: true,
     },
     {
-        id: "days-on-market",
-        label: "Days on market",
-        you: 48,
-        market: 56,
+        id: "days-to-close",
+        label: "Days to close",
+        you: analytics.benchmarks.daysToClose,
+        market: analytics.benchmarks.platformDaysToClose,
         unit: "days",
         higherIsBetter: false,
     },
     {
         id: "sale-to-list",
         label: "Sale-to-list ratio",
-        you: 101.4,
-        market: 98.2,
+        you: analytics.benchmarks.saleToList,
+        market: analytics.benchmarks.platformSaleToList,
         unit: "percent",
         higherIsBetter: true,
     },
     {
         id: "rating",
         label: "Client rating",
-        you: 4.8,
-        market: 4.1,
+        you: analytics.benchmarks.rating,
+        market: analytics.benchmarks.platformRating,
         unit: "score",
         higherIsBetter: true,
+    },
+];
+
+export const analyticsStats = (analytics: AgentAnalytics): StatDatum[] => [
+    {
+        id: "avg-price",
+        label: "Avg sale price",
+        value: analytics.production.averagePrice
+            ? formatMillions(analytics.production.averagePrice, 2)
+            : NO_VALUE,
+        icon: TrendingUp,
+        tone: "highlight",
+    },
+    {
+        id: "days-to-close",
+        label: "Days to close",
+        value: analytics.benchmarks.daysToClose
+            ? `${analytics.benchmarks.daysToClose}d`
+            : NO_VALUE,
+        icon: Clock,
+        tone: "info",
+    },
+    {
+        id: "volume",
+        label: "Volume closed",
+        value: analytics.production.volume
+            ? formatUsd(analytics.production.volume)
+            : NO_VALUE,
+        icon: Gauge,
+        tone: "accent",
+    },
+    {
+        id: "rating",
+        label: "Client rating",
+        value: analytics.benchmarks.rating
+            ? `${analytics.benchmarks.rating}/5`
+            : NO_VALUE,
+        icon: Award,
+        tone: "success",
     },
 ];

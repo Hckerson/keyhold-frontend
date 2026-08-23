@@ -2,14 +2,19 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { AnalyticsBenchmarkTable } from "@/components/features/agent/analytics-benchmark-table";
 import { AnalyticsQuarterList } from "@/components/features/agent/analytics-quarter-list";
-import { benchmarks, quarters } from "@/lib/data/agent-analytics";
+import type { Benchmark, QuarterSummary } from "@/lib/data/agent-analytics";
 
 const BENCHMARK_TITLE = "Market Position";
-const BENCHMARK_LEDE = "Your figures against the market average";
+const BENCHMARK_LEDE = "Your figures against the platform average";
 const QUARTER_TITLE = "Quarterly Pacing";
-const QUARTER_LEDE = "Share of year-to-date volume";
+const QUARTER_LEDE = "Share of volume closed";
 
-export function AnalyticsRail() {
+export interface AnalyticsRailProps {
+    benchmarks: Benchmark[];
+    quarters: QuarterSummary[];
+}
+
+export function AnalyticsRail({ benchmarks, quarters }: AnalyticsRailProps) {
     return (
         <div className="flex flex-col gap-3">
             <Panel title={BENCHMARK_TITLE} description={BENCHMARK_LEDE}>
