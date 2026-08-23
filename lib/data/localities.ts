@@ -1,4 +1,4 @@
-import { AVAILABLE_LISTINGS } from "@/lib/data/listings";
+import type { Property } from "@/lib/validations/property";
 
 export interface LocalityEntry {
     name: string;
@@ -6,17 +6,21 @@ export interface LocalityEntry {
     count: number;
 }
 
-const countByLocality = AVAILABLE_LISTINGS.reduce<Record<string, number>>(
-    (counts, listing) => {
-        counts[listing.locality] = (counts[listing.locality] ?? 0) + 1;
-        return counts;
-    },
-    {},
-);
+export const toLocalityIndex = (properties: Property[]): LocalityEntry[] => {
+    const counts = properties.reduce<Record<string, LocalityEntry>>(
+        (index, property) => {
+            const key = `${property.locality}|${property.region}`;
+            const entry = index[key] ?? {
+                name: property.locality,
+                region: property.region,
+                count: 0,
+            };
+            return { ...index, [key]: { ...entry, count: entry.count + 1 } };
+        },
+        {},
+    );
 
-export const LOCALITY_INDEX: LocalityEntry[] = Object.entries(countByLocality)
-    .map(([locality, count]) => {
-        const [name = locality, region = ""] = locality.split(", ");
-        return { name, region, count };
-    })
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    return Object.values(counts).sort(
+        (a, b) => b.count - a.count || a.name.localeCompare(b.name),
+    );
+};
