@@ -28,7 +28,7 @@ export function PayoutTable({ payouts }: PayoutTableProps) {
                         State
                     </th>
                     <th scope="col" className="micro-label w-24 pl-3 text-left">
-                        Rail
+                        Inspection
                     </th>
                     <th
                         scope="col"

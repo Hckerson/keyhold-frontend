@@ -5,28 +5,28 @@ import { DeltaChip } from "@/components/ui/delta-chip";
 import { ColumnChart } from "@/components/ui/charts/column-chart";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { MetricCell } from "@/components/patterns/metric-cell";
-import {
-    REPORT_MONTHS,
-    REPORT_PERIOD_LABEL,
-    REPORT_TREND_METRICS,
-} from "@/lib/data/admin-report-trend";
-import type { ReportMetricKey } from "@/lib/types";
-
-const METRIC_FILTERS = REPORT_TREND_METRICS.map(({ id, label }) => ({
-    id,
-    label,
-}));
+import type { ReportMetricKey, ReportTrendMetric } from "@/lib/types";
 
 const CHART_HEIGHT = 208;
+const DEFAULT_METRIC: ReportMetricKey = "gmv";
 
-export function AdminReportsChart() {
-    const [metricId, setMetricId] = useState<ReportMetricKey>(
-        REPORT_TREND_METRICS[0].id,
-    );
+export interface AdminReportsChartProps {
+    metrics: ReportTrendMetric[];
+    months: Record<string, string | number>[];
+    period: string;
+}
 
-    const metric =
-        REPORT_TREND_METRICS.find((item) => item.id === metricId) ??
-        REPORT_TREND_METRICS[0];
+export function AdminReportsChart({
+    metrics,
+    months,
+    period,
+}: AdminReportsChartProps) {
+    const [metricId, setMetricId] = useState<ReportMetricKey>(DEFAULT_METRIC);
+
+    const filters = metrics.map(({ id, label }) => ({ id, label }));
+    const metric = metrics.find((item) => item.id === metricId) ?? metrics[0];
+
+    if (!metric) return null;
 
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
@@ -43,12 +43,12 @@ export function AdminReportsChart() {
                         />
                     </div>
                     <p className="text-text-secondary mt-0.5 truncate text-xs">
-                        {REPORT_PERIOD_LABEL}
+                        {period}
                     </p>
                 </div>
 
                 <FilterPills
-                    filters={METRIC_FILTERS}
+                    filters={filters}
                     active={metricId}
                     onChange={setMetricId}
                 />
@@ -66,7 +66,7 @@ export function AdminReportsChart() {
 
             <ColumnChart
                 className="mt-3"
-                data={REPORT_MONTHS}
+                data={months}
                 xKey="month"
                 series={metric.series}
                 height={CHART_HEIGHT}
