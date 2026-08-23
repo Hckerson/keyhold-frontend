@@ -2,7 +2,6 @@
 
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { VerificationTierPath } from "@/components/features/admin/verification-tier-path";
 import {
     statusMeta,
     type VerificationRequest,
@@ -48,11 +47,9 @@ export function VerificationQueueRow({
                 <p className="text-text truncate text-xs font-semibold">
                     {request.name}
                 </p>
-                <VerificationTierPath
-                    from={request.currentTier}
-                    to={request.requestedTier}
-                    className="mt-1"
-                />
+                <p className="text-text-muted mt-1 truncate text-xs">
+                    {request.documentType} · {request.issuerCountry}
+                </p>
             </div>
 
             <div className="flex shrink-0 flex-col items-end gap-1">

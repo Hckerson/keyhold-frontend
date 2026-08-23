@@ -101,6 +101,18 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The stats service is unreachable right now. Try again in a moment.",
     },
+    adminListings: {
+        panel: "Listing Moderation",
+        title: "We could not load the moderation queue",
+        description:
+            "The moderation service is unreachable right now. Try again in a moment.",
+    },
+    adminVerifications: {
+        panel: "Verifications",
+        title: "We could not load the verification queue",
+        description:
+            "The identity service is unreachable right now. Try again in a moment.",
+    },
     adminTransactions: {
         panel: "Transactions",
         title: "We could not load the deal ledger",

@@ -10,14 +10,13 @@ import {
     VerificationSignalGrid,
     type VerificationSignal,
 } from "@/components/features/admin/verification-signal-grid";
-import { VerificationTierLadder } from "@/components/features/admin/verification-tier-ladder";
 import {
     noteMeta,
     statusMeta,
     type VerificationActionMode,
     type VerificationRequest,
 } from "@/lib/data/admin-verifications";
-import { formatMillions, initialsOf } from "@/lib/utils";
+import { initialsOf } from "@/lib/utils";
 
 export interface VerificationReviewPaneProps {
     request: VerificationRequest;
@@ -32,10 +31,10 @@ export function VerificationReviewPane({
     const note = request.noteKind ? noteMeta[request.noteKind] : null;
 
     const signals: VerificationSignal[] = [
-        { label: "Closed volume", value: formatMillions(request.closedVolume) },
-        { label: "Closed deals", value: String(request.closedDeals) },
-        { label: "Tenure", value: `${request.tenureYears} yrs` },
-        { label: "Region", value: request.region },
+        { label: "Document", value: request.documentType },
+        { label: "Number", value: request.documentNumber },
+        { label: "Issuer", value: request.issuerCountry },
+        { label: "Waiting", value: `${request.waitingDays}d` },
     ];
 
     return (
@@ -53,7 +52,7 @@ export function VerificationReviewPane({
                             {request.name}
                         </h2>
                         <p className="text-text-muted truncate text-xs">
-                            {request.brokerage}
+                            {request.agency}
                         </p>
                     </div>
                 </div>
@@ -63,8 +62,6 @@ export function VerificationReviewPane({
             </div>
 
             <div className="flex flex-col gap-4 px-4 py-3">
-                <VerificationTierLadder request={request} />
-
                 <VerificationSignalGrid signals={signals} />
 
                 {note && request.note && (
