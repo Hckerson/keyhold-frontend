@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { USER_ACCOUNT_STATUSES, USER_ROLES } from "@/lib/enums/enums";
+import {
+    USER_ACCOUNT_STATUSES,
+    USER_ROLES,
+    USER_TIERS,
+} from "@/lib/enums/enums";
 
 export const userSummarySchema = z.object({
     id: z.string(),
@@ -12,6 +16,7 @@ export const userSummarySchema = z.object({
 export const userSchema = userSummarySchema.extend({
     role: z.enum(USER_ROLES),
     status: z.enum(USER_ACCOUNT_STATUSES),
+    tier: z.enum(USER_TIERS).optional(),
     bio: z.string().nullable().optional(),
     jobTitle: z.string().nullable().optional(),
     agencyName: z.string().nullable().optional(),
@@ -38,6 +43,17 @@ export const updateUserSchema = z.object({
     status: z.enum(USER_ACCOUNT_STATUSES).optional(),
 });
 
+export const tierDistributionSchema = z.object({
+    total: z.number().int(),
+    segments: z.array(
+        z.object({
+            tier: z.enum(USER_TIERS),
+            count: z.number().int(),
+        }),
+    ),
+});
+
 export type UserSummary = z.infer<typeof userSummarySchema>;
+export type TierDistribution = z.infer<typeof tierDistributionSchema>;
 export type User = z.infer<typeof userSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;

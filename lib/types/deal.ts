@@ -7,8 +7,6 @@ export interface Deal {
     price: number;
     stage: DealStage;
     daysInStage: number;
-    daysToClose: number;
     lastActivity: string;
-    nextStep: string;
     notes: string;
 }

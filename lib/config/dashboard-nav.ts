@@ -2,6 +2,7 @@ import {
     Bell,
     LayoutDashboard,
     MessageSquare,
+    Receipt,
     Settings,
     type LucideIcon,
 } from "lucide-react";
@@ -56,6 +57,17 @@ export const DASHBOARD_NAV: DashboardNavSection[] = [
                 icon: Bell,
                 description: "Price drops and new matches",
                 badge: 2,
+            },
+        ],
+    },
+    {
+        label: "Money",
+        items: [
+            {
+                label: "Transactions",
+                href: "/dashboard/transactions",
+                icon: Receipt,
+                description: "Escrow holds and settlements",
             },
         ],
     },

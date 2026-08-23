@@ -10,9 +10,9 @@ export interface Offer {
     listingId: string;
     address: string;
     locality: string;
-    photo: string;
+    photo: string | null;
     agent: string;
-    agentPortrait: string;
+    agentPortrait: string | null;
     listPrice: number;
     offerPrice: number;
     counterPrice?: number;
