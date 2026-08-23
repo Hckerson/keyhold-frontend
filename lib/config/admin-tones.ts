@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import { PENDING_VERIFICATIONS } from "@/lib/config/admin-nav";
 import type {
     ModerationQueueId,
     PayoutState,
@@ -91,13 +90,6 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
             tone: "error",
         },
     };
-
-export const QUEUE_SEED_BACKLOG: Record<ModerationQueueId, number> = {
-    verifications: PENDING_VERIFICATIONS,
-    listings: 12,
-    flags: 3,
-    disputes: 2,
-};
 
 export interface ServiceStateMeta {
     label: string;
