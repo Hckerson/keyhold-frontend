@@ -19,7 +19,7 @@ export interface ListingAgent {
     activeListings: number;
 }
 
-export interface ListingSeed {
+export interface Listing {
     id: string;
     title: string;
     price: number;
@@ -37,16 +37,7 @@ export interface ListingSeed {
     saves: number;
     walkScore: number;
     agentId: string;
-    blurb: string;
-    imageSeed: number;
-    featureOffset: number;
     soldMonthsAgo?: number;
-}
-
-export interface Listing extends Omit<
-    ListingSeed,
-    "blurb" | "imageSeed" | "featureOffset"
-> {
     agent: ListingAgent;
     images: string[];
     description: string;
