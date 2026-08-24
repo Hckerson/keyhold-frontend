@@ -5,6 +5,7 @@ import { AdminReportsHeader } from "@/components/sections/admin/admin-reports-he
 import { AdminReportsMain } from "@/components/sections/admin/admin-reports-main";
 import { AdminReportsRail } from "@/components/sections/admin/admin-reports-rail";
 import { AdminReportsStatBand } from "@/components/sections/admin/admin-reports-stat-band";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
@@ -52,17 +53,17 @@ export function AdminReportsConsole() {
         [tiers.data],
     );
 
-    if (platform.isError || regions.isError || trend.isError)
+    const queries = [platform, users, directory, tiers, regions, trend];
+
+    if (queries.some((entry) => entry.isError))
         return (
             <ConsoleUnavailable
                 fallback={CONSOLE_FALLBACKS.adminReports}
-                onRetry={() => {
-                    void platform.refetch();
-                    void regions.refetch();
-                    void trend.refetch();
-                }}
+                onRetry={() => queries.forEach((entry) => void entry.refetch())}
             />
         );
+
+    if (queries.some((entry) => entry.isPending)) return <ConsoleSkeleton />;
 
     return (
         <div className="flex flex-col gap-4">
