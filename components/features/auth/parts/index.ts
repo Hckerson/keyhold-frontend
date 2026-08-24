@@ -22,6 +22,9 @@ export type { AuthFormErrorProps } from "./auth-form-error";
 export { AuthRoleChoice } from "./auth-role-choice";
 export type { AuthRoleChoiceProps, SignupRole } from "./auth-role-choice";
 
+export { DevAuthRow } from "./dev-auth-row";
+export type { DevAuthRowProps } from "./dev-auth-row";
+
 export { SocialAuthRow } from "./social-auth-row";
 export type { SocialAuthRowProps } from "./social-auth-row";
 
