@@ -9,7 +9,8 @@ import {
 } from "@/lib/config/escrow-tones";
 import { TRANSACTION_STATUSES } from "@/lib/enums/enums";
 import type { Purchase } from "@/lib/types";
-import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
+import { formatCompactUsd } from "@/lib/utils/format";
+import { percentOf, sum } from "@/lib/utils/math";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const NO_VALUE = "—";

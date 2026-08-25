@@ -87,6 +87,48 @@ The rail and stat band are read before the table. If they disagree with it, the 
 
 ---
 
+# The server half
+
+Everything above is enforced in the browser, where nothing is trustworthy. The rules that actually decide whether a hold may be released live in `EscrowService.release`, and until now had no tests at all.
+
+**Surface:** `PATCH /escrow/:id/release` → `EscrowController.release` → `EscrowService.release`
+
+## 07 · Who may release
+
+The window is the pivot. Before it closes the money is the buyer's to hold; after it closes the seller is entitled to be paid without waiting on someone who has stopped answering.
+
+| #   | Criterion                                                                                                           |
+| --- | ------------------------------------------------------------------------------------------------------------------- |
+| 7.1 | The buyer on the transaction may release, whether the inspection window is open or closed.                          |
+| 7.2 | An admin may release, whether the window is open or closed.                                                         |
+| 7.3 | The seller may release once the inspection window has closed.                                                       |
+| 7.4 | The seller may **not** release while the window is still open.                                                      |
+| 7.5 | A caller who is neither buyer, seller nor admin may never release, whatever the window.                             |
+| 7.6 | A refused release has no side effect: no agreement generated, nothing uploaded, nothing emailed, nothing written.   |
+| 7.7 | The identity that decides comes from the authenticated caller, never from the route, the body or a query parameter. |
+
+## 08 · What may be released
+
+| #   | Criterion                                                                                        |
+| --- | ------------------------------------------------------------------------------------------------ |
+| 8.1 | An escrow id that matches nothing is refused as not found.                                       |
+| 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.       |
+| 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.          |
+| 8.4 | A refusal of any of the above writes nothing — the hold survives every rejected release intact. |
+
+## 09 · What a release does
+
+| #   | Criterion                                                                                                     |
+| --- | --------------------------------------------------------------------------------------------------------------- |
+| 9.1 | The hold becomes `RELEASED` and carries the moment it was released.                                           |
+| 9.2 | The transaction becomes `COMPLETED`, carries its completion time, and stores the agreement it was settled on. |
+| 9.3 | The property becomes `SOLD`.                                                                                  |
+| 9.4 | The agreement is generated and stored **before** any of those three writes, so a failure to produce it leaves the hold untouched. |
+| 9.5 | The agreement names the parties, the property and the agreed price — `finalPrice`, not the asking price.    |
+| 9.6 | Settlement email that fails does not fail the release. The money is settled; the notification is not the record. |
+
+---
+
 ## What the criteria caught
 
 Writing the checklist first, then the tests, turned up three defects. All three are fixed; the tests that found them now guard them.
@@ -101,4 +143,4 @@ Both are fixed by deriving the in-flight id from the mutation itself — `releas
 
 ## Note on placement
 
-`lib/data/purchases.ts` holds no data. It is the ranking, filtering, totalling and labelling logic behind this flow, and criteria in sections 02, 05 and 06 test it directly. Per ADR 0004 the whole of `lib/data/` is meant to disappear as consoles go live; this module has to move rather than go when that happens. `lib/utils/` is where it belongs.
+`lib/data/purchases.ts` held no data. It is the ranking, filtering, totalling and labelling logic behind this flow, and criteria in sections 02, 05 and 06 test it directly — so it now lives at `lib/utils/purchases.ts`, beside the other derivations, with its tests colocated. `lib/data/` is meant to disappear as the consoles go live; this module had to move rather than go. Its fixtures stay in `lib/data/__fixtures__/`, which is where test fixtures belong.

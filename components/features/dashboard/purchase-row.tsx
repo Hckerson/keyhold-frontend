@@ -7,7 +7,7 @@ import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ESCROW_STATES, PURCHASE_STATES } from "@/lib/config/escrow-tones";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
-import { canRelease, inspectionLabel } from "@/lib/data/purchases";
+import { canRelease, inspectionLabel } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
 import { cn, formatMillions } from "@/lib/utils";
 

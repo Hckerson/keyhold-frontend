@@ -9,6 +9,7 @@ import { AdminSettingsRail } from "@/components/sections/admin/admin-settings-ra
 import { AdminSettingsStatBand } from "@/components/sections/admin/admin-settings-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { TABLE_PAGE_SIZE } from "@/lib/constants";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
 import { arePoliciesDirty } from "@/lib/data/admin-policies";
 import {
@@ -31,12 +32,18 @@ import type { PolicySwitchId } from "@/lib/types";
 const SAVED_TITLE = "Configuration saved";
 const SAVED_LEDE =
     "New values apply to listings and payouts created from now on.";
-const LOG_PAGE_SIZE = 20;
+const FIRST_PAGE = 1;
+const LATEST_LIMIT = 1;
 
 export function AdminSettingsConsole() {
     const settings = usePlatformSettings();
     const update = useUpdatePlatformSettings();
-    const logs = useAuditLogs({ limit: LOG_PAGE_SIZE });
+    const [logPage, setLogPage] = useState(FIRST_PAGE);
+    const logs = useAuditLogs({ page: logPage, limit: TABLE_PAGE_SIZE });
+    const latestLog = useAuditLogs({
+        page: FIRST_PAGE,
+        limit: LATEST_LIMIT,
+    });
 
     const [config, setConfig] = useState(EMPTY_ADMIN_CONFIG);
     const [policies, setPolicies] = useState(EMPTY_POLICY_STATE);
@@ -62,6 +69,13 @@ export function AdminSettingsConsole() {
         () => toConfigChanges(logs.data?.items ?? []),
         [logs.data?.items],
     );
+
+    const lastChange = useMemo(
+        () => toConfigChanges(latestLog.data?.items ?? [])[0],
+        [latestLog.data?.items],
+    );
+
+    const loggedChanges = logs.data?.total ?? changes.length;
 
     const pending = changedFieldCount(config, baselineConfig);
     const dirty = pending > 0 || arePoliciesDirty(policies, baselinePolicies);
@@ -110,7 +124,7 @@ export function AdminSettingsConsole() {
             />
 
             <AdminSettingsStatBand
-                stats={buildSettingsStats(policies, changes.length)}
+                stats={buildSettingsStats(policies, loggedChanges)}
             />
 
             {saved && (
@@ -129,9 +143,15 @@ export function AdminSettingsConsole() {
                     onFieldChange={handleFieldChange}
                     onPolicyToggle={handlePolicyToggle}
                     onSubmit={handleSubmit}
-                    lastChange={changes[0]}
+                    lastChange={lastChange}
                 />
-                <AdminSettingsRail changes={changes} />
+                <AdminSettingsRail
+                    changes={changes}
+                    total={loggedChanges}
+                    page={logs.data?.page ?? logPage}
+                    pageCount={logs.data?.pageCount ?? FIRST_PAGE}
+                    onPageChange={setLogPage}
+                />
             </div>
         </div>
     );

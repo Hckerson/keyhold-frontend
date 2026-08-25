@@ -15,7 +15,7 @@ import {
     purchasesSummary,
     rankPurchases,
     type PurchaseFilter,
-} from "@/lib/data/purchases";
+} from "@/lib/utils/purchases";
 import { useReleaseEscrow } from "@/lib/hooks/use-escrow";
 import { usePurchases } from "@/lib/hooks/use-transactions";
 import { toPurchases } from "@/lib/utils/to-purchase";
