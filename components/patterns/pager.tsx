@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SEARCH_PAGE_SIZE } from "@/lib/utils/search";
 import { cn } from "@/lib/utils";
 
 const EDGE_PAGES = 1;
@@ -37,28 +36,37 @@ function buildPageSlots(currentPage: number, pageCount: number): PageSlot[] {
     return slots;
 }
 
-interface SearchPaginationProps {
+export interface PagerProps {
     currentPage: number;
     pageCount: number;
+    pageSize: number;
     visibleCount: number;
-    resultCount: number;
+    totalCount: number;
     onPageChange: (next: number) => void;
+    className?: string;
 }
 
-export function SearchPagination({
+export function Pager({
     currentPage,
     pageCount,
+    pageSize,
     visibleCount,
-    resultCount,
+    totalCount,
     onPageChange,
-}: SearchPaginationProps) {
-    const firstIndex = (currentPage - 1) * SEARCH_PAGE_SIZE + 1;
+    className,
+}: PagerProps) {
+    const firstIndex = (currentPage - 1) * pageSize + 1;
     const lastIndex = firstIndex + visibleCount - 1;
 
     return (
-        <div className="border-border-dark flex flex-wrap items-center justify-between gap-2 border-t px-3 py-2">
+        <div
+            className={cn(
+                "flex flex-wrap items-center justify-between gap-2",
+                className,
+            )}
+        >
             <p className="micro-label tabular-nums">
-                Showing {firstIndex}&ndash;{lastIndex} of {resultCount}
+                Showing {firstIndex}&ndash;{lastIndex} of {totalCount}
             </p>
 
             <nav aria-label="Pagination" className="flex items-center gap-1">
@@ -114,4 +122,4 @@ export function SearchPagination({
     );
 }
 
-SearchPagination.displayName = "SearchPagination";
+Pager.displayName = "Pager";

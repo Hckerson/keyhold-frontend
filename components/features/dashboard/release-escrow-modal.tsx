@@ -9,7 +9,7 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import { inspectionLabel } from "@/lib/data/purchases";
+import { inspectionLabel } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
 import { formatUsd } from "@/lib/utils";
 

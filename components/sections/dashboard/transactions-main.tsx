@@ -6,7 +6,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { PurchaseTable } from "@/components/features/dashboard/purchase-table";
-import { PURCHASE_FILTERS, type PurchaseFilter } from "@/lib/data/purchases";
+import { PURCHASE_FILTERS, type PurchaseFilter } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
 
 const LEDGER_TITLE = "Your Purchases";

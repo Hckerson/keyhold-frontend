@@ -9,6 +9,7 @@ import { AdminUsersRail } from "@/components/sections/admin/admin-users-rail";
 import { AdminUsersStatBand } from "@/components/sections/admin/admin-users-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { TABLE_PAGE_SIZE } from "@/lib/constants";
 import {
     countUsersByStatus,
     directoryVolume,
@@ -40,6 +41,7 @@ import type {
 const EVERY_STATUS: UserStatusFilter = "all";
 const EVERY_ROLE: UserRoleFilter = "all";
 const DEFAULT_SORT: UserSortKey = "priority";
+const FIRST_PAGE = 1;
 
 export function AdminUsersConsole() {
     const { data, isPending, isError, refetch } = useUsers();
@@ -54,6 +56,7 @@ export function AdminUsersConsole() {
     const [detailId, setDetailId] = useState<string | null>(null);
     const [suspendId, setSuspendId] = useState<string | null>(null);
     const [draft, setDraft] = useState<SuspensionDraft>(EMPTY_SUSPENSION_DRAFT);
+    const [page, setPage] = useState(FIRST_PAGE);
 
     const users = useMemo(() => (data ?? []).map(toManagedUser), [data]);
 
@@ -84,6 +87,41 @@ export function AdminUsersConsole() {
             ),
         [users, query, status, role, sort],
     );
+
+    const pageCount = Math.max(
+        FIRST_PAGE,
+        Math.ceil(visible.length / TABLE_PAGE_SIZE),
+    );
+    const currentPage = Math.min(page, pageCount);
+
+    const rows = useMemo(
+        () =>
+            visible.slice(
+                (currentPage - FIRST_PAGE) * TABLE_PAGE_SIZE,
+                currentPage * TABLE_PAGE_SIZE,
+            ),
+        [visible, currentPage],
+    );
+
+    const onQueryChange = useCallback((next: string) => {
+        setQuery(next);
+        setPage(FIRST_PAGE);
+    }, []);
+
+    const onStatusChange = useCallback((next: UserStatusFilter) => {
+        setStatus(next);
+        setPage(FIRST_PAGE);
+    }, []);
+
+    const onRoleChange = useCallback((next: UserRoleFilter) => {
+        setRole(next);
+        setPage(FIRST_PAGE);
+    }, []);
+
+    const onSortChange = useCallback((next: UserSortKey) => {
+        setSort(next);
+        setPage(FIRST_PAGE);
+    }, []);
 
     const onOpen = useCallback((id: string) => setDetailId(id), []);
 
@@ -137,7 +175,10 @@ export function AdminUsersConsole() {
             <div className="console-split gap-3">
                 <AdminUsersMain
                     focus={focus}
-                    users={visible}
+                    users={rows}
+                    total={visible.length}
+                    page={currentPage}
+                    pageCount={pageCount}
                     peak={peak}
                     directoryVolume={volume}
                     query={query}
@@ -146,10 +187,11 @@ export function AdminUsersConsole() {
                     sort={sort}
                     counts={counts}
                     pending={isPending}
-                    onQueryChange={setQuery}
-                    onStatusChange={setStatus}
-                    onRoleChange={setRole}
-                    onSortChange={setSort}
+                    onQueryChange={onQueryChange}
+                    onStatusChange={onStatusChange}
+                    onRoleChange={onRoleChange}
+                    onSortChange={onSortChange}
+                    onPageChange={setPage}
                     onOpen={onOpen}
                     onSuspend={onSuspend}
                     onReactivate={onReactivate}

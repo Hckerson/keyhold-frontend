@@ -1,7 +1,7 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
-import { escrowShares, stageShares } from "@/lib/data/purchases";
+import { escrowShares, stageShares } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
 
 const ESCROW_TITLE = "Escrow Mix";

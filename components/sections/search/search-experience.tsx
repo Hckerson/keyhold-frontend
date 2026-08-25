@@ -15,7 +15,7 @@ import { SearchResultsGridSkeleton } from "@/components/sections/search/search-s
 import { SearchResultsError } from "@/components/sections/search/search-results-error";
 import { SearchEmpty } from "@/components/sections/search/search-empty";
 import { SearchActiveFilters } from "@/components/sections/search/search-active-filters";
-import { SearchPagination } from "@/components/sections/search/search-pagination";
+import { Pager } from "@/components/patterns/pager";
 import { SEARCH_RESULTS_MOTION } from "@/lib/config/public-motion";
 import {
     EMPTY_FILTERS,
@@ -29,6 +29,7 @@ import {
     buildActiveFilters,
     removeActiveFilter,
     toPropertyQuery,
+    SEARCH_PAGE_SIZE,
     type ActiveFilter,
     type SortValue,
 } from "@/lib/utils/search";
@@ -162,12 +163,14 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
                     }
                     footer={
                         resultCount > 0 && (
-                            <SearchPagination
+                            <Pager
                                 currentPage={currentPage}
                                 pageCount={pageCount}
+                                pageSize={SEARCH_PAGE_SIZE}
                                 visibleCount={listings.length}
-                                resultCount={resultCount}
+                                totalCount={resultCount}
                                 onPageChange={goToPage}
+                                className="border-border-dark border-t px-3 py-2"
                             />
                         )
                     }
