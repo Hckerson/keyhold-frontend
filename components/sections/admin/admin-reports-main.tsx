@@ -43,7 +43,6 @@ export function AdminReportsMain({
                 action={
                     <PanelLink href="/admin/listings" label={REGION_ACTION} />
                 }
-                bodyClassName="pt-3"
             >
                 {regions.length > 0 ? (
                     <>

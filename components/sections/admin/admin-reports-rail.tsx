@@ -42,7 +42,6 @@ export function AdminReportsRail({
                 action={
                     <PanelLink href="/admin/users" label={AUDIENCE_ACTION} />
                 }
-                bodyClassName="pt-3"
             >
                 <AudienceMix
                     roles={roles}

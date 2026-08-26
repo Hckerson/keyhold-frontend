@@ -59,7 +59,7 @@ export function OffersMain({
                 />
 
                 {offers.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <OfferTable offers={offers} />
                     </PanelInset>
                 ) : (

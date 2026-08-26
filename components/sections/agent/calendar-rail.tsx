@@ -53,7 +53,6 @@ export function CalendarRail({
                 action={<CalendarMonthNav onShift={handleShift} />}
             >
                 <MiniCalendar
-                    className="mt-3"
                     year={year}
                     month={month}
                     selected={selected}

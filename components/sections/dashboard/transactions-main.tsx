@@ -53,7 +53,7 @@ export function TransactionsMain({
                 </div>
 
                 {purchases.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <PurchaseTable
                             purchases={purchases}
                             releasingId={releasingId}
