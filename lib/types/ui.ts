@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { JourneyStationState } from "./journey";
 
 export type Trend = "up" | "down";
 
@@ -22,6 +23,15 @@ export interface SidebarSection {
     label?: string;
     spine?: boolean;
     items: SidebarNavItem[];
+}
+
+export interface CommandItem {
+    id: string;
+    label: string;
+    icon: LucideIcon;
+    badge?: number;
+    here?: boolean;
+    run: () => void;
 }
 
 export interface TrailCrumb {

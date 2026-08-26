@@ -4,26 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, X } from "lucide-react";
 import { LogoChip } from "@/components/brand/logo-chip";
-import {
-    SidebarNav,
-    type SidebarSection,
-} from "@/components/layout/sidebar-nav";
+import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { SidebarStatus } from "@/components/layout/sidebar-status";
 import { SidebarFooter } from "@/components/layout/sidebar-footer";
 import { useMediaQuery } from "@/lib/hooks/use-media-query";
-import type { AuthUser, JourneyStatus } from "@/lib/types";
+import type { AuthUser, JourneyStatus, SidebarSection } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { RAIL_QUERY } from "@/lib/constants";
-
-export type {
-    SidebarNavItem,
-    SidebarSection,
-} from "@/components/layout/sidebar-nav";
 
 export interface SidebarProps {
     brand: { full: string; tagline?: string };
     sections: SidebarSection[];
-    status?: JourneyStatus;
+    status?: JourneyStatus | null;
     user?: AuthUser | null;
     onLogout?: () => void;
     open?: boolean;

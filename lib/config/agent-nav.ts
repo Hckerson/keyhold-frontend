@@ -99,10 +99,6 @@ export const AGENT_NAV: AgentNavSection[] = [
     },
 ];
 
-export const AGENT_ROUTES: AgentNavItem[] = AGENT_NAV.flatMap(
-    (section) => section.items,
-);
-
 export const agentNav = (openLeads: number): AgentNavSection[] =>
     AGENT_NAV.map((section) => ({
         ...section,
