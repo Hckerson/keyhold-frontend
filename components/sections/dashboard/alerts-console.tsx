@@ -121,6 +121,9 @@ export function AlertsConsole() {
                 <AlertsMain
                     top={ranked[0]}
                     alerts={visible}
+                    allAlerts={alerts}
+                    preferences={preferences}
+                    deliverySummary={deliverySummary(preferences)}
                     readFilter={readFilter}
                     typeFilter={typeFilter}
                     counts={counts}
@@ -128,14 +131,10 @@ export function AlertsConsole() {
                     onReadFilterChange={setReadFilter}
                     onTypeFilterChange={setTypeFilter}
                     onMarkRead={onMarkRead}
-                />
-                <AlertsRail
-                    alerts={alerts}
-                    preferences={preferences}
-                    deliverySummary={deliverySummary(preferences)}
                     onToggleEnabled={onToggleEnabled}
                     onToggleChannel={onToggleChannel}
                 />
+                <AlertsRail alerts={alerts} />
             </div>
         </div>
     );
