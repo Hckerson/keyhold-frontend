@@ -21,7 +21,7 @@ export interface SidebarSection {
 }
 
 export const rowBase =
-    "group relative flex h-9 items-center gap-2 rounded-md text-xs transition-colors duration-200 ease-smooth";
+    "group relative flex h-9 items-center gap-2 rounded-md px-2 text-xs transition-colors duration-200 ease-smooth";
 export const rowIdle =
     "text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active";
 export const rowIconSlot =
@@ -84,7 +84,7 @@ function NavRow({
 
     const className = cn(
         rowBase,
-        collapsed ? "justify-center pr-0" : "pr-2",
+        collapsed && "justify-center px-0",
         active && "bg-sidebar-active text-sidebar-text-active",
         !active && (item.href ? rowIdle : "text-sidebar-text-muted"),
     );
@@ -182,7 +182,7 @@ function SectionHeader({
         : 0;
 
     return (
-        <div className="flex h-6 items-center justify-between gap-2 pr-2 pl-1">
+        <div className="flex h-6 items-center justify-between gap-2 px-2">
             <span className="rail-label">{section.label}</span>
             {stage > 0 && (
                 <span className="text-highlight font-mono text-[10px] tabular-nums">

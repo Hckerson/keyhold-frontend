@@ -9,8 +9,8 @@ function UserCard({ user, collapsed }: { user: AuthUser; collapsed: boolean }) {
     return (
         <div
             className={cn(
-                "flex h-11 items-center gap-2 rounded-lg",
-                collapsed ? "justify-center" : "pr-2",
+                "flex h-11 items-center gap-2 rounded-lg px-2",
+                collapsed && "justify-center px-0",
             )}
         >
             <span className={cn(rowIconSlot, "h-11")}>
@@ -41,7 +41,7 @@ export function SidebarFooter({
     collapsed: boolean;
 }) {
     return (
-        <div className="border-sidebar-border flex flex-col gap-0.5 border-t px-2 py-1.5">
+        <div className="border-sidebar-border flex shrink-0 flex-col gap-0.5 border-t px-2 py-1.5">
             {user && <UserCard user={user} collapsed={collapsed} />}
 
             {onLogout && (
@@ -53,7 +53,7 @@ export function SidebarFooter({
                     className={cn(
                         rowBase,
                         rowIdle,
-                        collapsed ? "justify-center pr-0" : "pr-2",
+                        collapsed && "justify-center px-0",
                     )}
                 >
                     <span className={rowIconSlot}>
