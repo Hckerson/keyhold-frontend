@@ -109,23 +109,23 @@ The window is the pivot. Before it closes the money is the buyer's to hold; afte
 
 ## 08 · What may be released
 
-| #   | Criterion                                                                                        |
-| --- | ------------------------------------------------------------------------------------------------ |
-| 8.1 | An escrow id that matches nothing is refused as not found.                                       |
-| 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.       |
-| 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.          |
+| #   | Criterion                                                                                       |
+| --- | ----------------------------------------------------------------------------------------------- |
+| 8.1 | An escrow id that matches nothing is refused as not found.                                      |
+| 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
+| 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
 | 8.4 | A refusal of any of the above writes nothing — the hold survives every rejected release intact. |
 
 ## 09 · What a release does
 
-| #   | Criterion                                                                                                     |
-| --- | --------------------------------------------------------------------------------------------------------------- |
-| 9.1 | The hold becomes `RELEASED` and carries the moment it was released.                                           |
-| 9.2 | The transaction becomes `COMPLETED`, carries its completion time, and stores the agreement it was settled on. |
-| 9.3 | The property becomes `SOLD`.                                                                                  |
+| #   | Criterion                                                                                                                         |
+| --- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 9.1 | The hold becomes `RELEASED` and carries the moment it was released.                                                               |
+| 9.2 | The transaction becomes `COMPLETED`, carries its completion time, and stores the agreement it was settled on.                     |
+| 9.3 | The property becomes `SOLD`.                                                                                                      |
 | 9.4 | The agreement is generated and stored **before** any of those three writes, so a failure to produce it leaves the hold untouched. |
-| 9.5 | The agreement names the parties, the property and the agreed price — `finalPrice`, not the asking price.    |
-| 9.6 | Settlement email that fails does not fail the release. The money is settled; the notification is not the record. |
+| 9.5 | The agreement names the parties, the property and the agreed price — `finalPrice`, not the asking price.                          |
+| 9.6 | Settlement email that fails does not fail the release. The money is settled; the notification is not the record.                  |
 
 ---
 
