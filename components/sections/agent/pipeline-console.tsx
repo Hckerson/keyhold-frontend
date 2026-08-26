@@ -1,6 +1,6 @@
 "use client";
 
-import { PageHeader } from "@/components/ui/page-header";
+import { PortalHeader } from "@/components/patterns/portal-header";
 import { PipelineStageColumn } from "@/components/features/agent/pipeline-stage-column";
 import { PipelineHealthPanel } from "@/components/features/agent/pipeline-health-panel";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
@@ -22,9 +22,9 @@ export function PipelineConsole() {
 
     return (
         <div className="space-y-3">
-            <PageHeader
+            <PortalHeader
                 title={TITLE}
-                description={`${pipeline.openCount} open deals worth $${pipeline.totalValue.toFixed(2)}M`}
+                lede={`${pipeline.openCount} open deals worth $${pipeline.totalValue.toFixed(2)}M`}
             />
 
             <div className="card-grid gap-3">
