@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Sidebar, type SidebarProps } from "@/components/layout/sidebar";
 import { Topbar, type TopbarProps } from "@/components/layout/topbar";
 import { useSession } from "@/lib/hooks/use-session";
+import { routesFrom } from "@/lib/utils/nav";
 
 export interface PortalShellProps
     extends
         Pick<SidebarProps, "brand" | "sections" | "status">,
-        Pick<TopbarProps, "routes" | "rootLabel" | "rootHref"> {
+        Pick<TopbarProps, "rootLabel" | "rootHref"> {
     children: ReactNode;
 }
 
@@ -18,7 +19,6 @@ export function PortalShell({
     brand,
     sections,
     status,
-    routes,
     rootLabel,
     rootHref,
     children,
@@ -27,6 +27,8 @@ export function PortalShell({
     const pathname = usePathname();
     const { user, logout } = useSession();
     const [navOpen, setNavOpen] = useState(false);
+
+    const routes = useMemo(() => routesFrom(sections), [sections]);
 
     useEffect(() => setNavOpen(false), [pathname]);
 
@@ -54,6 +56,7 @@ export function PortalShell({
                     rootHref={rootHref}
                     user={user}
                     onNavOpen={() => setNavOpen(true)}
+                    onLogout={handleLogout}
                 />
 
                 <div className="py-4 md:py-6">

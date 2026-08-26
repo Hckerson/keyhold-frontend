@@ -1,5 +1,4 @@
-import type { SidebarSection } from "@/components/layout/sidebar-nav";
-import type { NavRoute, TrailCrumb } from "@/lib/types";
+import type { NavRoute, SidebarSection, TrailCrumb } from "@/lib/types";
 
 export const routesFrom = (sections: SidebarSection[]): NavRoute[] =>
     sections
@@ -59,4 +58,12 @@ export const trailFor = ({
             current: pathname === branch.href,
         },
     ];
+};
+
+export const matchRoutes = (routes: NavRoute[], query: string): NavRoute[] => {
+    const needle = query.trim().toLowerCase();
+
+    return needle
+        ? routes.filter((route) => route.label.toLowerCase().includes(needle))
+        : routes;
 };
