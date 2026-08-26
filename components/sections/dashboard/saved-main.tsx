@@ -68,7 +68,7 @@ export function SavedMain({
                 />
 
                 {listings.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <SavedTable listings={listings} onRemove={onRemove} />
                     </PanelInset>
                 ) : (

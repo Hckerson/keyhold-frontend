@@ -70,7 +70,7 @@ export function ListingsMain({
                 />
 
                 {listings.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <ListingTable
                             listings={listings}
                             peak={peak}

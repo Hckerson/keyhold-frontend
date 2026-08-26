@@ -48,7 +48,6 @@ export function AdminOverviewRail({
                 action={
                     <PanelLink href="/admin/users" label={AUDIENCE_ACTION} />
                 }
-                bodyClassName="pt-3"
             >
                 <AudienceMix
                     roles={roles}

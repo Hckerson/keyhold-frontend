@@ -93,7 +93,6 @@ export function CalendarSchedule({
                         </PanelInset>
                     ) : (
                         <EmptyState
-                            className="mt-2.5 py-8"
                             icon={CalendarX2}
                             title={next ? REMAINDER_TITLE : EMPTY_TITLE}
                             description={next ? undefined : emptyDescription}

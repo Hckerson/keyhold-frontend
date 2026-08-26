@@ -11,7 +11,7 @@ export function SecurityControlList<K extends string>({
     onAction,
 }: SecurityControlListProps<K>) {
     return (
-        <ul className="mt-2.5 space-y-2">
+        <ul className="space-y-2">
             {controls.map((control) => (
                 <SecurityControlRow
                     key={control.id}
