@@ -8,11 +8,6 @@ import type {
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
 import type { Transaction } from "@/lib/validations/transaction";
 
-const IDLE_STATUS: JourneyStatus = {
-    title: "Nothing scheduled",
-    detail: "Save a home to start your search",
-};
-
 const TIME_FORMAT: Intl.DateTimeFormatOptions = {
     weekday: "short",
     hour: "numeric",
@@ -111,7 +106,7 @@ const nextViewing = (connections: ConnectionListItem[]) => {
 export const journeyStatus = (
     connections: ConnectionListItem[],
     purchases: Transaction[],
-): JourneyStatus => {
+): JourneyStatus | null => {
     const held = purchases.find(
         (purchase) => purchase.escrowHold?.status === "HELD",
     );
@@ -140,7 +135,7 @@ export const journeyStatus = (
         };
     }
 
-    return IDLE_STATUS;
+    return null;
 };
 
 export const buildBuyerJourney = (

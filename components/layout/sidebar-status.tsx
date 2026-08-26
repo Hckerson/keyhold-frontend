@@ -8,7 +8,7 @@ export function SidebarStatus({ status }: { status: JourneyStatus }) {
                 <p className="text-sidebar-text-active mt-1 truncate text-xs font-semibold">
                     {status.title}
                 </p>
-                <p className="text-sidebar-text mt-0.5 truncate text-xs">
+                <p className="text-sidebar-text mt-0.5 line-clamp-2 text-xs">
                     {status.detail}
                 </p>
             </div>

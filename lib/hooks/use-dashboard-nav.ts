@@ -32,9 +32,14 @@ export function useDashboardNav() {
 
     const stations = useMemo(() => buildJourneyStations(counts), [counts]);
 
+    const pending = connections.isPending || purchases.isPending;
+
     const status = useMemo(
-        () => journeyStatus(connections.data ?? [], purchases.data ?? []),
-        [connections.data, purchases.data],
+        () =>
+            pending
+                ? null
+                : journeyStatus(connections.data ?? [], purchases.data ?? []),
+        [pending, connections.data, purchases.data],
     );
 
     const sections = useMemo(
