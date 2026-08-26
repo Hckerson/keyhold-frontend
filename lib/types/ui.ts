@@ -9,6 +9,27 @@ export interface NavRoute {
     badge?: number;
 }
 
+export interface SidebarNavItem {
+    label: string;
+    icon: LucideIcon;
+    href?: string;
+    badge?: number | string;
+    count?: number;
+    state?: JourneyStationState;
+}
+
+export interface SidebarSection {
+    label?: string;
+    spine?: boolean;
+    items: SidebarNavItem[];
+}
+
+export interface TrailCrumb {
+    label: string;
+    href: string;
+    current: boolean;
+}
+
 export type BadgeTone = "neutral" | "success" | "warning" | "error" | "info";
 
 export interface StatItem {
