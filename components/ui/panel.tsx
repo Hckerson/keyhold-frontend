@@ -66,7 +66,11 @@ export function Panel({
                     )}
                 </header>
             )}
-            <div className={bodyClassName}>{children}</div>
+            <div
+                className={cn(hasHeader && "space-y-2.5 pt-2.5", bodyClassName)}
+            >
+                {children}
+            </div>
         </section>
     );
 }
