@@ -65,7 +65,7 @@ export function OffersConsole() {
                     onStageFilterChange={setStageFilter}
                     onStatusFilterChange={setStatusFilter}
                 />
-                <OffersRail offers={offers} />
+                <OffersRail offers={offers} pending={isPending} />
             </div>
         </div>
     );
