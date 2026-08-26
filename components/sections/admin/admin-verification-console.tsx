@@ -2,7 +2,7 @@
 
 import { ShieldCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PageHeader } from "@/components/ui/page-header";
+import { PortalHeader } from "@/components/patterns/portal-header";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { VerificationDecisionModal } from "@/components/features/admin/verification-decision-modal";
 import { VerificationQueueRail } from "@/components/features/admin/verification-queue-rail";
@@ -28,9 +28,9 @@ export function AdminVerificationConsole() {
 
     return (
         <div className="space-y-3">
-            <PageHeader
+            <PortalHeader
                 title={TITLE}
-                description={`${counts.PENDING} pending · ${counts.VERIFIED} verified · ${counts.REJECTED} rejected`}
+                lede={`${counts.PENDING} pending · ${counts.VERIFIED} verified · ${counts.REJECTED} rejected`}
             />
 
             <FilterPills
