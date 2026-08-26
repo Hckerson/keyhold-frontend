@@ -31,6 +31,7 @@ export function ViewingsConsole() {
                 <ViewingsMain
                     next={view.next}
                     viewings={view.visible}
+                    allViewings={view.viewings}
                     walked={view.walked}
                     statusFilter={view.statusFilter}
                     modeFilter={view.modeFilter}
@@ -44,7 +45,6 @@ export function ViewingsConsole() {
                     onCancel={view.cancel}
                 />
                 <ViewingsRail
-                    viewings={view.viewings}
                     year={view.calendar.year}
                     month={view.calendar.month}
                     selectedDay={view.selectedDay}
