@@ -31,6 +31,7 @@ export interface ListingsMainProps {
     onSelectedChange: (id: string, selected: boolean) => void;
     onClearSelection: () => void;
     onBulkAction: (action: BulkAction) => void;
+    onPromote: (id: string) => void;
 }
 
 export function ListingsMain({
@@ -47,10 +48,17 @@ export function ListingsMain({
     onSelectedChange,
     onClearSelection,
     onBulkAction,
+    onPromote,
 }: ListingsMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
-            {top && <ListingsTopHero listing={top} peak={peak} />}
+            {top && (
+                <ListingsTopHero
+                    listing={top}
+                    peak={peak}
+                    onPromote={onPromote}
+                />
+            )}
 
             <Panel
                 title={BOOK_TITLE}
