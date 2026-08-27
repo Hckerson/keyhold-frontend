@@ -1,6 +1,7 @@
 import { CalendarDays, CheckCircle2, Clock, Flame, Users } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { parseLocalDate } from "@/lib/utils";
+import type { RescheduleDraft } from "@/lib/types";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     APPOINTMENT_TYPES,
@@ -45,6 +46,9 @@ const EMPTY_VALUE = "—";
 export const DURATION_SCALE_MINUTES = 180;
 
 export const SCHEDULE_ACTION = "Propose a viewing";
+
+export const RESCHEDULE_HINT =
+    "The buyer reconfirms once you propose a new slot.";
 
 const anchorDate = () => new Date();
 
@@ -93,6 +97,13 @@ export const formatTime = (start: string) => {
     const display = hour % HOURS_PER_HALF_DAY || HOURS_PER_HALF_DAY;
     return `${display}:${minutePart} ${period}`;
 };
+
+export const toRescheduleDraft = (
+    appointment: Appointment,
+): RescheduleDraft => ({
+    date: appointment.date,
+    time: formatTime(appointment.start),
+});
 
 export const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / MINUTES_PER_HOUR);

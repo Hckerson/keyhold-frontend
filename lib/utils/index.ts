@@ -13,4 +13,6 @@ export {
     toDigits,
     formatCurrencyInput,
     initialsOf,
+    telHref,
+    mailHref,
 } from "./format";

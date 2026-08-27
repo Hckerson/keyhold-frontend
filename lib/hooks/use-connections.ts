@@ -4,7 +4,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { connectionsAPI } from "@/lib/api/connections";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
-import type { CreateConnectionInput } from "@/lib/validations/connection";
+import type {
+    CreateConnectionInput,
+    CreateLeadInput,
+} from "@/lib/validations/connection";
 
 export function useMyInterests(enabled = true) {
     return useQuery({
@@ -41,6 +44,16 @@ export function useCreateConnection() {
     return useMutation({
         mutationFn: (input: CreateConnectionInput) =>
             connectionsAPI.create(input),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.connections.all }),
+    });
+}
+
+export function useRecordLead() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: (input: CreateLeadInput) =>
+            connectionsAPI.recordLead(input),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.connections.all }),
     });

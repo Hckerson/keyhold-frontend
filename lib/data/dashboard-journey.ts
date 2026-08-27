@@ -1,4 +1,11 @@
-import { CalendarDays, FileText, Heart, KeyRound } from "lucide-react";
+import {
+    CalendarDays,
+    FileText,
+    Handshake,
+    Heart,
+    KeyRound,
+} from "lucide-react";
+import { BUYER_ROUTES } from "@/lib/constants";
 import type {
     BuyerJourney,
     JourneyStation,
@@ -16,6 +23,7 @@ const TIME_FORMAT: Intl.DateTimeFormatOptions = {
 
 export interface JourneyCounts {
     saved: number;
+    interests: number;
     viewings: number;
     offers: number;
     closings: number;
@@ -27,6 +35,7 @@ export const journeyCounts = (
     purchases: Transaction[],
 ): JourneyCounts => ({
     saved,
+    interests: connections.length,
     viewings: connections.reduce(
         (total, connection) => total + connection.viewings.length,
         0,
@@ -51,10 +60,11 @@ export const buildJourneyStations = (
 ): JourneyStation[] => [
     {
         label: "Saved",
-        href: "/dashboard/saved",
+        href: BUYER_ROUTES.saved,
         icon: Heart,
         description: "Properties you've bookmarked",
         state: stateFor(counts.saved, [
+            counts.interests,
             counts.viewings,
             counts.offers,
             counts.closings,
@@ -62,8 +72,20 @@ export const buildJourneyStations = (
         count: counts.saved,
     },
     {
+        label: "Interest",
+        href: BUYER_ROUTES.interests,
+        icon: Handshake,
+        description: "Introductions awaiting a listing office",
+        state: stateFor(counts.interests, [
+            counts.viewings,
+            counts.offers,
+            counts.closings,
+        ]),
+        count: counts.interests,
+    },
+    {
         label: "Viewings",
-        href: "/dashboard/viewings",
+        href: BUYER_ROUTES.viewings,
         icon: CalendarDays,
         description: "Upcoming property tours",
         state: stateFor(counts.viewings, [counts.offers, counts.closings]),
@@ -71,7 +93,7 @@ export const buildJourneyStations = (
     },
     {
         label: "Offers",
-        href: "/dashboard/offers",
+        href: BUYER_ROUTES.offers,
         icon: FileText,
         description: "Track your submitted offers",
         state: stateFor(counts.offers, [counts.closings]),
@@ -79,7 +101,7 @@ export const buildJourneyStations = (
     },
     {
         label: "Closing",
-        href: "/dashboard/transactions",
+        href: BUYER_ROUTES.transactions,
         icon: KeyRound,
         description: "Escrow, title and handover",
         state: stateFor(counts.closings, []),
@@ -132,6 +154,16 @@ export const journeyStatus = (
         return {
             title: "Offer countered",
             detail: `${countered.seller.fullName} · ${countered.property.address}`,
+        };
+    }
+
+    const awaiting = connections.find(
+        (connection) => connection.status === "PENDING",
+    );
+    if (awaiting) {
+        return {
+            title: "Awaiting the listing office",
+            detail: `${awaiting.seller.fullName} · ${awaiting.property.address}`,
         };
     }
 

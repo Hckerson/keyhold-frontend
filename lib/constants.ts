@@ -26,6 +26,7 @@ export const config = {
             markSold: (id: string) => `/properties/${id}/mark-sold`,
             moderate: (id: string) => `/properties/${id}/moderate`,
             view: (id: string) => `/properties/${id}/view`,
+            promote: (id: string) => `/properties/${id}/promote`,
         },
         savedProperties: {
             list: "/saved-properties",
@@ -39,6 +40,7 @@ export const config = {
             detail: (id: string) => `/connections/${id}`,
             accept: (id: string) => `/connections/${id}/accept`,
             reject: (id: string) => `/connections/${id}/reject`,
+            leads: "/connections/leads",
         },
         messages: {
             create: "/messages",
@@ -220,3 +222,44 @@ export const RAIL_QUERY = "(min-width: 64rem)";
 
 export const STALE_TIME = 5 * 60 * 1000;
 export const CACHE_TIME = 10 * 60 * 1000;
+
+export const PUBLIC_ROUTES = {
+    listing: (id: string) => `/listing/${id}`,
+} as const;
+
+export const BUYER_ROUTES = {
+    overview: "/dashboard",
+    saved: "/dashboard/saved",
+    interests: "/dashboard/interests",
+    viewings: "/dashboard/viewings",
+    offers: "/dashboard/offers",
+    offer: (id: string) => `/dashboard/offers/${id}`,
+    transactions: "/dashboard/transactions",
+    messages: "/dashboard/messages",
+    alerts: "/dashboard/alerts",
+    settings: "/dashboard/settings",
+} as const;
+
+export const withRedirect = (route: string, target?: string) =>
+    isSafeRedirect(target)
+        ? `${route}?${REDIRECT_PARAM}=${encodeURIComponent(target)}`
+        : route;
+
+export const loginWithRedirect = (target: string) =>
+    withRedirect(AUTH_ROUTES.login, target);
+
+export const AGENT_ROUTES = {
+    overview: "/agent",
+    requests: "/agent/requests",
+    listings: "/agent/listings",
+    leads: "/agent/leads",
+    pipeline: "/agent/pipeline",
+    analytics: "/agent/analytics",
+    calendar: "/agent/calendar",
+    concierge: "/agent/concierge",
+    settings: "/agent/settings",
+} as const;
+
+export const OFFER_WINDOW_DAYS = 14;
+export const VIEWING_SLOT_COUNT = 3;
+export const VIEWING_LEAD_DAYS = 2;

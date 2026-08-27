@@ -100,15 +100,33 @@ export const ALERT_CHANNEL_KEYS: AlertChannel[] = ["email", "sms", "inApp"];
 
 export interface AlertChannelMeta {
     label: string;
+    short: string;
     icon: LucideIcon;
     chartTone: ChartTone;
 }
 
 export const ALERT_CHANNELS: Record<AlertChannel, AlertChannelMeta> = {
-    email: { label: "Email", icon: Mail, chartTone: "info" },
-    sms: { label: "SMS", icon: MessageSquare, chartTone: "warning" },
-    inApp: { label: "In-app", icon: Bell, chartTone: "accent" },
+    email: { label: "Email", short: "Eml", icon: Mail, chartTone: "info" },
+    sms: {
+        label: "SMS",
+        short: "Sms",
+        icon: MessageSquare,
+        chartTone: "warning",
+    },
+    inApp: { label: "In-app", short: "App", icon: Bell, chartTone: "accent" },
 };
+
+const DELIVERY_GRID_BASE = "grid items-center gap-x-2";
+
+export const ALERT_DELIVERY_COLUMNS = {
+    volume: "grid-cols-[1.5rem_minmax(0,1fr)_1.75rem_2.5rem_repeat(3,1.75rem)_1.75rem]",
+    plain: "grid-cols-[1.5rem_minmax(0,1fr)_repeat(3,1.75rem)_1.75rem]",
+} as const;
+
+export type AlertDeliveryVariant = keyof typeof ALERT_DELIVERY_COLUMNS;
+
+export const alertDeliveryGrid = (variant: AlertDeliveryVariant) =>
+    `${DELIVERY_GRID_BASE} ${ALERT_DELIVERY_COLUMNS[variant]}`;
 
 export const RECENCY_BAND_KEYS = ["live", "today", "earlier"] as const;
 
