@@ -12,6 +12,7 @@ import { WATCH_BANDS, watchBandOf } from "@/lib/config/saved-tones";
 import { movePercent, pricePerSqft } from "@/lib/data/saved-listings";
 import type { SavedListing } from "@/lib/types";
 import { cn, formatCount, formatMillions, formatUsd } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const HERO_EYEBROW = "Top of your book";
 const SAVED_PREFIX = "saved";
@@ -70,7 +71,7 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
 
                 <div className="flex shrink-0 items-center gap-2">
                     <Link
-                        href={`/listing/${listing.id}`}
+                        href={PUBLIC_ROUTES.listing(listing.id)}
                         className={buttonVariants({
                             variant: "secondary",
                             size: "sm",

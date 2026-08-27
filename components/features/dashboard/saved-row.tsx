@@ -13,6 +13,7 @@ import { movePercent } from "@/lib/data/saved-listings";
 import type { SavedListing } from "@/lib/types";
 import { cn, formatMillions } from "@/lib/utils";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const DAYS_SUFFIX = "d";
 const REMOVE_LABEL = "Remove";
@@ -30,7 +31,7 @@ export function SavedRow({ listing, onRemove }: SavedRowProps) {
         >
             <td className="py-0">
                 <Link
-                    href={`/listing/${listing.id}`}
+                    href={PUBLIC_ROUTES.listing(listing.id)}
                     className="group flex min-w-0 items-center gap-2"
                 >
                     <ListingThumb src={listing.photo} alt={listing.address} />
