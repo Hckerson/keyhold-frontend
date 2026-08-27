@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 export interface SearchResultCardProps {
     listing: Listing;
     href: string;
-    saved?: boolean;
-    onSaveChange?: (saved: boolean) => void;
+    saved: boolean;
+    onSaveChange: () => void;
     className?: string;
 }
 
@@ -22,14 +22,6 @@ export function SearchResultCard({
     className,
 }: SearchResultCardProps) {
     const [activeFrame, setActiveFrame] = useState(0);
-    const [internalSaved, setInternalSaved] = useState(false);
-    const isSaved = saved ?? internalSaved;
-
-    const toggleSave = () => {
-        const next = !isSaved;
-        onSaveChange?.(next);
-        if (saved === undefined) setInternalSaved(next);
-    };
 
     return (
         <article
@@ -50,8 +42,8 @@ export function SearchResultCard({
             <SearchResultPlate
                 listing={listing}
                 href={href}
-                saved={isSaved}
-                onToggleSave={toggleSave}
+                saved={saved}
+                onToggleSave={onSaveChange}
             />
         </article>
     );
