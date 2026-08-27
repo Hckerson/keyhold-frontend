@@ -7,9 +7,13 @@ import {
 
 export interface AppointmentDayGroupProps {
     group: AppointmentGroup;
+    onReschedule: (id: string) => void;
 }
 
-export function AppointmentDayGroup({ group }: AppointmentDayGroupProps) {
+export function AppointmentDayGroup({
+    group,
+    onReschedule,
+}: AppointmentDayGroupProps) {
     const booked = group.items.reduce(
         (total, item) => total + item.durationMinutes,
         0,
@@ -25,7 +29,10 @@ export function AppointmentDayGroup({ group }: AppointmentDayGroupProps) {
                     {group.items.length} · {formatHours(booked)}
                 </span>
             </div>
-            <AppointmentList appointments={group.items} />
+            <AppointmentList
+                appointments={group.items}
+                onReschedule={onReschedule}
+            />
         </div>
     );
 }

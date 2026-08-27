@@ -1,6 +1,6 @@
 "use client";
 
-import { RescheduleViewingModal } from "@/components/features/dashboard/reschedule-viewing-modal";
+import { RescheduleViewingModal } from "@/components/features/shared/reschedule-viewing-modal";
 import { ViewingDayModal } from "@/components/features/dashboard/viewing-day-modal";
 import { ViewingsHeader } from "@/components/sections/dashboard/viewings-header";
 import { ViewingsMain } from "@/components/sections/dashboard/viewings-main";
@@ -9,6 +9,7 @@ import { ViewingsStatBand } from "@/components/sections/dashboard/viewings-stat-
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useViewingsConsole } from "@/lib/hooks/use-viewings-console";
+import { RESCHEDULE_HINT } from "@/lib/data/viewings";
 
 export function ViewingsConsole() {
     const view = useViewingsConsole();
@@ -64,7 +65,9 @@ export function ViewingsConsole() {
             />
 
             <RescheduleViewingModal
-                viewing={view.rescheduleTarget}
+                address={view.rescheduleTarget?.address}
+                hint={RESCHEDULE_HINT}
+                pending={view.rescheduling}
                 draft={view.draft}
                 onDraftChange={view.setDraft}
                 onClose={view.closeReschedule}
