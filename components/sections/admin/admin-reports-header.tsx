@@ -9,9 +9,15 @@ const CUSTOM_ACTION = "Generate Custom";
 
 export interface AdminReportsHeaderProps {
     period: string;
+    onDownload: () => void;
+    onCustomise: () => void;
 }
 
-export function AdminReportsHeader({ period }: AdminReportsHeaderProps) {
+export function AdminReportsHeader({
+    period,
+    onDownload,
+    onCustomise,
+}: AdminReportsHeaderProps) {
     return (
         <PortalHeader
             title={REPORTS_TITLE}
@@ -19,10 +25,20 @@ export function AdminReportsHeader({ period }: AdminReportsHeaderProps) {
             summary={period}
             action={
                 <>
-                    <Button type="button" variant="secondary" size="sm">
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={onDownload}
+                    >
                         {DOWNLOAD_ACTION}
                     </Button>
-                    <Button type="button" variant="primary" size="sm">
+                    <Button
+                        type="button"
+                        variant="primary"
+                        size="sm"
+                        onClick={onCustomise}
+                    >
                         {CUSTOM_ACTION}
                     </Button>
                 </>
