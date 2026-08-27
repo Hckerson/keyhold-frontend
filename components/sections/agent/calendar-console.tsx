@@ -4,9 +4,11 @@ import { CalendarHeader } from "@/components/sections/agent/calendar-header";
 import { CalendarStatBand } from "@/components/sections/agent/calendar-stat-band";
 import { CalendarRail } from "@/components/sections/agent/calendar-rail";
 import { CalendarSchedule } from "@/components/sections/agent/calendar-schedule";
+import { RescheduleViewingModal } from "@/components/features/shared/reschedule-viewing-modal";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useAgentCalendar } from "@/lib/hooks/use-agent-calendar";
+import { RESCHEDULE_HINT } from "@/lib/data/agent-calendar";
 
 export function CalendarConsole() {
     const calendar = useAgentCalendar();
@@ -49,8 +51,19 @@ export function CalendarConsole() {
                     dayCount={calendar.dayCount}
                     weekCount={calendar.weekCount}
                     onViewChange={calendar.setView}
+                    onReschedule={calendar.startReschedule}
                 />
             </div>
+
+            <RescheduleViewingModal
+                address={calendar.rescheduleAddress}
+                hint={RESCHEDULE_HINT}
+                pending={calendar.rescheduling}
+                draft={calendar.draft}
+                onDraftChange={calendar.setDraft}
+                onClose={calendar.closeReschedule}
+                onConfirm={calendar.confirmReschedule}
+            />
         </div>
     );
 }
