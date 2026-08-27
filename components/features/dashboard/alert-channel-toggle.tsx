@@ -1,6 +1,7 @@
 "use client";
 
 import { ALERT_CHANNELS } from "@/lib/config/alert-tones";
+import { chartToneSoft } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { AlertChannel } from "@/lib/types";
 
@@ -19,7 +20,7 @@ export function AlertChannelToggle({
     disabled,
     onToggle,
 }: AlertChannelToggleProps) {
-    const { icon: Icon } = ALERT_CHANNELS[channel];
+    const { icon: Icon, chartTone } = ALERT_CHANNELS[channel];
 
     return (
         <button
@@ -29,13 +30,29 @@ export function AlertChannelToggle({
             disabled={disabled}
             onClick={onToggle}
             className={cn(
-                "ease-smooth focus-visible:ring-accent grid size-6 shrink-0 place-items-center rounded-md border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40",
-                active
-                    ? "border-accent bg-accent-light text-accent"
-                    : "border-border bg-background text-text-muted hover:border-border-dark hover:text-text-secondary",
+                "ease-smooth focus-visible:ring-accent grid h-9 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40",
+                !disabled && !active && "hover:bg-background-alt",
             )}
         >
-            <Icon className="size-3" strokeWidth={1.5} aria-hidden="true" />
+            <span
+                className={cn(
+                    "ease-smooth grid size-5 place-items-center rounded-md transition-colors duration-200",
+                    active && chartToneSoft[chartTone],
+                )}
+            >
+                {active ? (
+                    <Icon
+                        className="size-3"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                    />
+                ) : (
+                    <span
+                        className="bg-border-dark size-1.5 rounded-full"
+                        aria-hidden="true"
+                    />
+                )}
+            </span>
         </button>
     );
 }

@@ -4,10 +4,10 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { AlertTable } from "@/components/features/dashboard/alert-table";
-import { AlertsShares } from "@/components/sections/dashboard/alerts-shares";
+import { AlertsDelivery } from "@/components/sections/dashboard/alerts-delivery";
 import { AlertsToolbar } from "@/components/sections/dashboard/alerts-toolbar";
 import { AlertsTopHero } from "@/components/sections/dashboard/alerts-top-hero";
-import type { ReadFilter, TypeFilter } from "@/lib/data/alerts";
+import type { AlertVolume, ReadFilter, TypeFilter } from "@/lib/data/alerts";
 import type {
     Alert,
     AlertChannel,
@@ -26,8 +26,8 @@ const LOADING_LEDE = "Fetching the signals across your saved book.";
 export interface AlertsMainProps {
     top?: Alert;
     alerts: Alert[];
-    allAlerts: Alert[];
     preferences: Record<AlertType, AlertPreference>;
+    volumes: Record<AlertType, AlertVolume>;
     deliverySummary: string;
     readFilter: ReadFilter;
     typeFilter: TypeFilter;
@@ -43,8 +43,8 @@ export interface AlertsMainProps {
 export function AlertsMain({
     top,
     alerts,
-    allAlerts,
     preferences,
+    volumes,
     deliverySummary,
     readFilter,
     typeFilter,
@@ -89,9 +89,9 @@ export function AlertsMain({
                 )}
             </Panel>
 
-            <AlertsShares
-                alerts={allAlerts}
+            <AlertsDelivery
                 preferences={preferences}
+                volumes={volumes}
                 deliverySummary={deliverySummary}
                 onToggleEnabled={onToggleEnabled}
                 onToggleChannel={onToggleChannel}
