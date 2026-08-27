@@ -9,16 +9,22 @@ const COMPOSE_ACTION = "New Message";
 
 export interface MessagesHeaderProps {
     summary: string;
+    onCompose: () => void;
 }
 
-export function MessagesHeader({ summary }: MessagesHeaderProps) {
+export function MessagesHeader({ summary, onCompose }: MessagesHeaderProps) {
     return (
         <PortalHeader
             title={MESSAGES_TITLE}
             lede={MESSAGES_LEDE}
             summary={summary}
             action={
-                <Button type="button" variant="primary" size="sm">
+                <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={onCompose}
+                >
                     <PenSquare
                         className="mr-1.5 size-3"
                         strokeWidth={1.5}
