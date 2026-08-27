@@ -16,7 +16,12 @@ import {
 } from "@/components/features/auth/parts";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { cn } from "@/lib/utils";
-import { AUTH_ROUTES, isSafeRedirect, portalForRole } from "@/lib/constants";
+import {
+    AUTH_ROUTES,
+    isSafeRedirect,
+    portalForRole,
+    withRedirect,
+} from "@/lib/constants";
 import { useSignIn } from "@/lib/hooks/use-sign-in";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
@@ -31,10 +36,10 @@ const INITIAL_VALUES = { email: "", password: "" };
 const SIGN_IN_FAILED =
     "We couldn't sign you in. Check your email and password, then try again.";
 
-const FOOTER_ENTRIES = [
+const footerEntries = (redirectTo?: string) => [
     {
         label: "New here",
-        href: AUTH_ROUTES.signup,
+        href: withRedirect(AUTH_ROUTES.signup, redirectTo),
         action: "Apply for access",
     },
 ];
@@ -176,7 +181,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
 
             <DevAuthRow redirectTo={redirectTo} disabled={pending} />
 
-            <AuthTitleBlock entries={FOOTER_ENTRIES} />
+            <AuthTitleBlock entries={footerEntries(redirectTo)} />
         </AuthPlane>
     );
 }

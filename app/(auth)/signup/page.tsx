@@ -6,6 +6,12 @@ export const metadata = {
         "Apply for access to the marketplace — as a buyer seeking a residence, or an agent presenting one.",
 };
 
-export default function SignupPage() {
-    return <SignupForm />;
+export default async function SignupPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ redirect?: string }>;
+}) {
+    const { redirect } = await searchParams;
+
+    return <SignupForm redirectTo={redirect} />;
 }
