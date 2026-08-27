@@ -5,9 +5,11 @@ import { ListingsHeader } from "@/components/sections/agent/listings-header";
 import { ListingsMain } from "@/components/sections/agent/listings-main";
 import { ListingsRail } from "@/components/sections/agent/listings-rail";
 import { ListingsStatBand } from "@/components/sections/agent/listings-stat-band";
+import { ListingPromoteModal } from "@/components/features/agent/listing-promote-modal";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import {
     countByStatus,
+    featuredUntilLabel,
     listingStats,
     listingsSummary,
     peakViews,
@@ -19,6 +21,7 @@ import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useSession } from "@/lib/hooks/use-session";
 import {
     useDeleteProperty,
+    usePromoteProperty,
     useSellerProperties,
     useUpdatePropertyStatus,
 } from "@/lib/hooks/use-properties";
@@ -41,9 +44,11 @@ export function ListingConsole() {
     );
     const updateStatus = useUpdatePropertyStatus();
     const removeProperty = useDeleteProperty();
+    const promoteProperty = usePromoteProperty();
 
     const [filter, setFilter] = useState<StatusFilter>("all");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [promoteId, setPromoteId] = useState<string | null>(null);
 
     const listings = useMemo(
         () => (data?.items ?? []).map(toManagedListing),
@@ -100,6 +105,15 @@ export function ListingConsole() {
         );
     };
 
+    const promoteTarget = listings.find((listing) => listing.id === promoteId);
+
+    const confirmPromotion = (days: number) => {
+        if (!promoteId) return;
+        void promoteProperty
+            .mutateAsync({ id: promoteId, days })
+            .then(() => setPromoteId(null));
+    };
+
     if (isError)
         return (
             <ConsoleUnavailable
@@ -129,9 +143,21 @@ export function ListingConsole() {
                     onSelectedChange={toggleOne}
                     onClearSelection={clearSelection}
                     onBulkAction={(action) => void runBulkAction(action)}
+                    onPromote={setPromoteId}
                 />
                 <ListingsRail listings={listings} />
             </div>
+
+            <ListingPromoteModal
+                address={promoteTarget?.address}
+                featuredUntil={
+                    promoteTarget && featuredUntilLabel(promoteTarget)
+                }
+                pending={promoteProperty.isPending}
+                failed={promoteProperty.isError}
+                onClose={() => setPromoteId(null)}
+                onConfirm={confirmPromotion}
+            />
         </div>
     );
 }
