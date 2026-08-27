@@ -9,10 +9,9 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import type { RescheduleDraft, Viewing } from "@/lib/types";
+import type { RescheduleDraft } from "@/lib/types";
 
 const MODAL_TITLE = "Reschedule Viewing";
-const MODAL_HINT = "The agent reconfirms once you propose a new slot.";
 const DATE_LABEL = "New date";
 const TIME_LABEL = "New time";
 const TIME_PLACEHOLDER = "3:00 PM";
@@ -20,23 +19,27 @@ const CANCEL_ACTION = "Keep current slot";
 const CONFIRM_ACTION = "Propose Change";
 
 export interface RescheduleViewingModalProps {
-    viewing?: Viewing;
+    address?: string;
+    hint: string;
     draft: RescheduleDraft;
+    pending?: boolean;
     onDraftChange: (draft: RescheduleDraft) => void;
     onClose: () => void;
     onConfirm: () => void;
 }
 
 export function RescheduleViewingModal({
-    viewing,
+    address,
+    hint,
     draft,
+    pending = false,
     onDraftChange,
     onClose,
     onConfirm,
 }: RescheduleViewingModalProps) {
     return (
         <Modal
-            open={viewing !== undefined}
+            open={address !== undefined}
             onOpenChange={(open) => {
                 if (!open) onClose();
             }}
@@ -46,12 +49,8 @@ export function RescheduleViewingModal({
             </ModalHeader>
             <ModalBody className="space-y-3 p-4">
                 <div>
-                    <p className="text-text text-xs font-semibold">
-                        {viewing?.address}
-                    </p>
-                    <p className="text-text-secondary mt-0.5 text-xs">
-                        {MODAL_HINT}
-                    </p>
+                    <p className="text-text text-xs font-semibold">{address}</p>
+                    <p className="text-text-secondary mt-0.5 text-xs">{hint}</p>
                 </div>
                 <FormField
                     id="reschedule-date"
@@ -89,6 +88,7 @@ export function RescheduleViewingModal({
                     type="button"
                     variant="primary"
                     size="sm"
+                    isLoading={pending}
                     onClick={onConfirm}
                 >
                     {CONFIRM_ACTION}
