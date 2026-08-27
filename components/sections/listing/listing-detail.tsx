@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Container } from "@/components/ui/container";
 import { ListingGallery } from "@/components/sections/listing/listing-gallery";
@@ -18,6 +18,7 @@ import {
     PROPERTY_TYPE_LABELS,
 } from "@/lib/enums/enums";
 import { NEW_LISTING_DAYS } from "@/lib/constants";
+import { usePropertyJourney } from "@/lib/hooks/use-property-journey";
 import type { Listing } from "@/lib/types";
 
 interface ListingDetailProps {
@@ -59,8 +60,9 @@ function buildTabs(listing: Listing, comparables: Listing[]): DossierTab[] {
 }
 
 export function ListingDetail({ listing, comparables }: ListingDetailProps) {
-    const [saved, setSaved] = useState(false);
-    const toggleSave = () => setSaved((value) => !value);
+    const { journey, actions, toggleSave, savePending } = usePropertyJourney(
+        listing.id,
+    );
     const tabs = buildTabs(listing, comparables);
 
     return (
@@ -83,7 +85,8 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                     locality={listing.locality}
                     zipcode={listing.zipcode}
                     typeLabel={PROPERTY_TYPE_LABELS[listing.type]}
-                    saved={saved}
+                    saved={journey.saved}
+                    savePending={savePending}
                     onToggleSave={toggleSave}
                 />
 
@@ -128,6 +131,9 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                         className="flex flex-col gap-4 lg:col-span-1"
                     >
                         <ListingEnquiryCard
+                            propertyId={listing.id}
+                            address={listing.address}
+                            listPrice={listing.price}
                             responseTime={listing.agent.responseTime}
                         />
                         <ListingAgentCard agent={listing.agent} />
@@ -138,8 +144,10 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
             <ListingActionBar
                 price={listing.price}
                 address={listing.address}
-                saved={saved}
+                saved={journey.saved}
+                savePending={savePending}
                 onToggleSave={toggleSave}
+                action={actions.primary}
             />
         </>
     );
