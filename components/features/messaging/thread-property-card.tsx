@@ -2,6 +2,7 @@ import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import type { Conversation } from "@/lib/types";
 import { formatMillions } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const ASKING_LABEL = "Asking";
 const VIEW_ACTION = "View listing";
@@ -33,7 +34,7 @@ export function ThreadPropertyCard({ conversation }: ThreadPropertyCardProps) {
                 </p>
             </div>
             <PanelLink
-                href={`/listing/${conversation.listingId}`}
+                href={PUBLIC_ROUTES.listing(conversation.listingId)}
                 label={VIEW_ACTION}
             />
         </div>

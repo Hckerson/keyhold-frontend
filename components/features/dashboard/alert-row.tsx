@@ -10,6 +10,7 @@ import { ALERT_TYPES } from "@/lib/config/alert-tones";
 import type { Alert } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const READ_LABEL = "Read";
 const MARK_LABEL = "Mark read";
@@ -40,7 +41,7 @@ function AlertSubject({ alert }: { alert: Alert }) {
 
     return alert.listingId ? (
         <Link
-            href={`/listing/${alert.listingId}`}
+            href={PUBLIC_ROUTES.listing(alert.listingId)}
             className="group flex min-w-0 items-center gap-2"
         >
             {body}

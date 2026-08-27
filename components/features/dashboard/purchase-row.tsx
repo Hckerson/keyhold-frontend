@@ -10,6 +10,7 @@ import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import { canRelease, inspectionLabel } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
 import { cn, formatMillions } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const RELEASE_LABEL = "Release funds";
 const NO_ESCROW = "—";
@@ -39,7 +40,7 @@ export function PurchaseRow({
         >
             <td className="py-0">
                 <Link
-                    href={`/listing/${purchase.listingId}`}
+                    href={PUBLIC_ROUTES.listing(purchase.listingId)}
                     className="group flex min-w-0 items-center gap-2"
                 >
                     <ListingThumb src={purchase.photo} alt={purchase.address} />

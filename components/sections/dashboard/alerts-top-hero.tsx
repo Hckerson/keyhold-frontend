@@ -11,6 +11,7 @@ import { chartToneText } from "@/lib/config/chart-tones";
 import { recencyBandOf } from "@/lib/data/alerts";
 import type { Alert } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const HERO_EYEBROW = "Needs attention";
 const ASKING_LABEL = "Asking";
@@ -71,7 +72,7 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
                 <div className="flex shrink-0 items-center gap-2">
                     {alert.listingId && (
                         <PanelLink
-                            href={`/listing/${alert.listingId}`}
+                            href={PUBLIC_ROUTES.listing(alert.listingId)}
                             label={VIEW_ACTION}
                         />
                     )}
