@@ -12,6 +12,7 @@ export interface Conversation {
     agentTitle: string;
     initials: string;
     portrait: string | null;
+    phone: string | null;
     listingId: string;
     property: string;
     locality: string;

@@ -43,3 +43,7 @@ export const initialsOf = (name: string) =>
         .join("")
         .slice(0, 2)
         .toUpperCase();
+
+export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
+
+export const mailHref = (email: string) => `mailto:${email}`;

@@ -173,3 +173,28 @@ export const transactionsSummary = (transactions: LedgerTransaction[]) =>
     } in flight · ${formatCompactUsd(
         volumeOf(openTransactions(transactions)),
     )} open volume`;
+
+export const TRANSACTION_EXPORT_FILENAME = "transactions.csv";
+
+export const TRANSACTION_EXPORT_COLUMNS = [
+    "Reference",
+    "Property",
+    "Buyer",
+    "Agent",
+    "Price",
+    "Status",
+    "Initiated",
+    "Completed",
+] as const;
+
+export const toTransactionExportRows = (transactions: LedgerTransaction[]) =>
+    transactions.map((transaction) => [
+        transaction.reference,
+        transaction.property,
+        transaction.buyer,
+        transaction.agent,
+        transaction.price,
+        TRANSACTION_STATUSES[transaction.status].label,
+        transaction.initiatedDate,
+        transaction.completedDate ?? "",
+    ]);

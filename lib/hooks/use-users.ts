@@ -5,7 +5,7 @@ import { usersAPI } from "@/lib/api/users";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import type { UpdateUserInput } from "@/lib/validations/user";
+import type { CreateUserInput, UpdateUserInput } from "@/lib/validations/user";
 import type { UserTier } from "@/lib/enums/enums";
 
 export function useCurrentUser() {
@@ -36,6 +36,21 @@ export function useUser(id: string | undefined) {
         enabled: Boolean(id),
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
+    });
+}
+
+export function useCreateUser() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: (input: CreateUserInput) => usersAPI.create(input),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.users.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.users.tierDistribution,
+                }),
+            ]);
+        },
     });
 }
 

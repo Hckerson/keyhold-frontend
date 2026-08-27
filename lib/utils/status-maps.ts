@@ -1,4 +1,5 @@
 import type {
+    ConnectionStatus as ApiConnectionStatus,
     ConciergeStatus as ApiConciergeStatus,
     ConciergeTier as ApiConciergeTier,
     OfferStatus as ApiOfferStatus,
@@ -9,8 +10,18 @@ import type {
     ConciergeStatus,
     ConciergeTier,
 } from "@/lib/config/concierge-tones";
+import type { InterestStatus } from "@/lib/types/interest";
 import type { OfferStatus } from "@/lib/types/offer";
 import type { ViewingMode, ViewingStatus } from "@/lib/types/viewing";
+
+export const CONNECTION_STATUS_BY_API: Record<
+    ApiConnectionStatus,
+    InterestStatus
+> = {
+    PENDING: "pending",
+    ACCEPTED: "connected",
+    REJECTED: "declined",
+};
 
 export const OFFER_STATUS_BY_API: Record<ApiOfferStatus, OfferStatus> = {
     PENDING: "submitted",

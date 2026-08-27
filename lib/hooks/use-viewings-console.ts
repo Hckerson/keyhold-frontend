@@ -5,7 +5,6 @@ import {
     TODAY,
     countByStatus,
     dayFilterLabel,
-    draftToIso,
     isOnDay,
     markedDaysInMonth,
     matchesFilters,
@@ -24,7 +23,7 @@ import {
     useCancelViewing,
     useRescheduleViewing,
 } from "@/lib/hooks/use-viewings";
-import { toViewingBook } from "@/lib/utils/to-viewing";
+import { draftToIso, toViewingBook } from "@/lib/utils/to-viewing";
 import type { RescheduleDraft } from "@/lib/types";
 
 const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
@@ -151,6 +150,7 @@ export function useViewingsConsole() {
         statusFilter,
         modeFilter,
         pending: interests.isPending,
+        rescheduling: rescheduleViewing.isPending,
         failed: interests.isError,
         refetch: interests.refetch,
         summary: viewingsSummary(viewings),

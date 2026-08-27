@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
     ANCHOR,
     appointmentDays,
@@ -10,21 +10,29 @@ import {
     appointmentsOn,
     isoOf,
     shortDate,
+    toRescheduleDraft,
     weekBounds,
     type CalendarViewMode,
 } from "@/lib/data/agent-calendar";
 import { useIncomingConnections } from "@/lib/hooks/use-connections";
+import { useRescheduleViewing } from "@/lib/hooks/use-viewings";
 import { toAppointmentBook } from "@/lib/utils/to-appointment";
+import { draftToIso } from "@/lib/utils/to-viewing";
+import type { RescheduleDraft } from "@/lib/types";
 
 const DEFAULT_VIEW: CalendarViewMode = "month";
+const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
 
 export function useAgentCalendar() {
     const connections = useIncomingConnections();
+    const rescheduleViewing = useRescheduleViewing();
 
     const [year, setYear] = useState(ANCHOR.year);
     const [month, setMonth] = useState(ANCHOR.month);
     const [selected, setSelected] = useState(ANCHOR.day);
     const [view, setView] = useState<CalendarViewMode>(DEFAULT_VIEW);
+    const [rescheduleId, setRescheduleId] = useState<string | null>(null);
+    const [draft, setDraft] = useState<RescheduleDraft>(EMPTY_DRAFT);
 
     const book = useMemo(
         () => toAppointmentBook(connections.data ?? []),
@@ -61,6 +69,28 @@ export function useAgentCalendar() {
         setSelected(1);
     };
 
+    const startReschedule = useCallback(
+        (id: string) => {
+            const target = book.find((appointment) => appointment.id === id);
+            if (!target) return;
+            setDraft(toRescheduleDraft(target));
+            setRescheduleId(id);
+        },
+        [book],
+    );
+
+    const closeReschedule = useCallback(() => setRescheduleId(null), []);
+
+    const confirmReschedule = () => {
+        const proposed = draftToIso(draft);
+        if (!rescheduleId || !proposed) return;
+        void rescheduleViewing.mutateAsync({
+            id: rescheduleId,
+            proposedTimes: [proposed],
+        });
+        setRescheduleId(null);
+    };
+
     const isAnchorMonth = year === ANCHOR.year && month === ANCHOR.month;
 
     return {
@@ -75,13 +105,22 @@ export function useAgentCalendar() {
         dayCount: dayItems.length,
         weekCount: weekItems.length,
         weekItems,
+        draft,
         pending: connections.isPending,
+        rescheduling: rescheduleViewing.isPending,
+        rescheduleAddress: book.find(
+            (appointment) => appointment.id === rescheduleId,
+        )?.property,
         failed: connections.isError,
         refetch: connections.refetch,
         rangeLabel: `${shortDate(start)} – ${shortDate(end)}`,
         today: isAnchorMonth ? ANCHOR.day : undefined,
         setSelected,
         setView,
+        setDraft,
         changeMonth,
+        startReschedule,
+        closeReschedule,
+        confirmReschedule,
     };
 }

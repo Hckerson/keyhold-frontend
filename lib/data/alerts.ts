@@ -181,18 +181,31 @@ export const alertStats = (alerts: Alert[]): StatDatum[] => [
     },
 ];
 
-export const typeShares = (alerts: Alert[]): ShareDatum[] =>
-    ALERT_TYPE_KEYS.map((id) => {
-        const count = alerts.filter((alert) => alert.type === id).length;
-        return {
-            id,
-            icon: ALERT_TYPES[id].icon,
-            label: ALERT_TYPES[id].label,
-            value: `${count}`,
-            percent: percentOf(count, alerts.length),
-            tone: ALERT_TYPES[id].chartTone,
-        };
-    });
+export interface AlertVolume {
+    count: number;
+    percent: number;
+}
+
+export const typeVolumes = (alerts: Alert[]): Record<AlertType, AlertVolume> =>
+    Object.fromEntries(
+        ALERT_TYPE_KEYS.map((id) => {
+            const count = alerts.filter((alert) => alert.type === id).length;
+            return [id, { count, percent: percentOf(count, alerts.length) }];
+        }),
+    ) as Record<AlertType, AlertVolume>;
+
+export const typeShares = (alerts: Alert[]): ShareDatum[] => {
+    const volumes = typeVolumes(alerts);
+
+    return ALERT_TYPE_KEYS.map((id) => ({
+        id,
+        icon: ALERT_TYPES[id].icon,
+        label: ALERT_TYPES[id].label,
+        value: `${volumes[id].count}`,
+        percent: volumes[id].percent,
+        tone: ALERT_TYPES[id].chartTone,
+    }));
+};
 
 export const recencyShares = (alerts: Alert[]): ShareDatum[] =>
     RECENCY_BAND_KEYS.map((id) => {

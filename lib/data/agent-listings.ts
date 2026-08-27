@@ -12,7 +12,15 @@ import {
     type DemandBand,
 } from "@/lib/config/listing-tones";
 import type { ManagedListing, ManagedListingStatus } from "@/lib/types";
-import { formatCompactUsd, formatCount, percentOf, sum } from "@/lib/utils";
+import {
+    dateFormatter,
+    formatCompactUsd,
+    formatCount,
+    percentOf,
+    sum,
+} from "@/lib/utils";
+
+const FEATURED_DATE_FORMAT = "MMM d, yyyy";
 
 export type StatusFilter = ManagedListingStatus | "all";
 
@@ -37,6 +45,15 @@ export const BULK_LABELS: Record<BulkAction, string> = {
 
 export const saveRate = (listing: ManagedListing) =>
     percentOf(listing.saves, listing.views);
+
+export const isFeatured = (listing: ManagedListing) =>
+    listing.featuredUntil !== null &&
+    new Date(listing.featuredUntil) > new Date();
+
+export const featuredUntilLabel = (listing: ManagedListing) =>
+    listing.featuredUntil
+        ? dateFormatter(listing.featuredUntil, FEATURED_DATE_FORMAT)
+        : undefined;
 
 export const pricePerSqft = (listing: ManagedListing) =>
     Math.round(listing.price / listing.sqft);

@@ -21,3 +21,38 @@ export interface BuyerJourney {
     stations: JourneyStation[];
     status: JourneyStatus;
 }
+
+export type PropertyStage =
+    | "browsing"
+    | "requested"
+    | "declined"
+    | "connected"
+    | "viewing"
+    | "offered"
+    | "countered"
+    | "closing"
+    | "owned";
+
+export type PropertyActionKind =
+    | "interest"
+    | "viewing"
+    | "offer"
+    | "track"
+    | "none";
+
+export interface StageAction {
+    kind: PropertyActionKind;
+    label: string;
+}
+
+export interface PropertyAction extends StageAction {
+    href: string | null;
+}
+
+export interface PropertyJourney {
+    stage: PropertyStage;
+    connectionId: string | null;
+    offerId: string | null;
+    transactionId: string | null;
+    saved: boolean;
+}
