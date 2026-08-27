@@ -14,10 +14,13 @@ import {
     matchesTransactionFilters,
     openTransactions,
     rankTransactions,
+    toTransactionExportRows,
     toTransactionStages,
     transactionCounts,
     transactionStats,
     transactionsSummary,
+    TRANSACTION_EXPORT_COLUMNS,
+    TRANSACTION_EXPORT_FILENAME,
     type TransactionStatusFilter,
 } from "@/lib/data/admin-transactions";
 import {
@@ -25,6 +28,7 @@ import {
     useTransactionStages,
 } from "@/lib/hooks/use-transactions";
 import { toLedger } from "@/lib/utils/to-ledger-transaction";
+import { downloadCsv } from "@/lib/utils/download";
 
 const EVERY_STATUS: TransactionStatusFilter = "all";
 const LEDGER_PAGE_SIZE = 100;
@@ -68,6 +72,20 @@ export function AdminTransactionsConsole() {
 
     const onCloseReview = useCallback(() => setReviewId(null), []);
 
+    const onExport = useCallback(
+        () =>
+            downloadCsv(
+                [
+                    {
+                        columns: TRANSACTION_EXPORT_COLUMNS,
+                        rows: toTransactionExportRows(transactions),
+                    },
+                ],
+                TRANSACTION_EXPORT_FILENAME,
+            ),
+        [transactions],
+    );
+
     if (ledger.isError)
         return (
             <ConsoleUnavailable
@@ -80,6 +98,7 @@ export function AdminTransactionsConsole() {
         <div className="flex flex-col gap-4">
             <AdminTransactionsHeader
                 summary={transactionsSummary(transactions)}
+                onExport={onExport}
             />
 
             <AdminTransactionsStatBand stats={transactionStats(transactions)} />

@@ -10,10 +10,12 @@ const PAYOUTS_ACTION = "Payouts";
 
 export interface AdminTransactionsHeaderProps {
     summary: string;
+    onExport: () => void;
 }
 
 export function AdminTransactionsHeader({
     summary,
+    onExport,
 }: AdminTransactionsHeaderProps) {
     return (
         <PortalHeader
@@ -22,7 +24,12 @@ export function AdminTransactionsHeader({
             summary={summary}
             action={
                 <>
-                    <Button type="button" variant="secondary" size="sm">
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={onExport}
+                    >
                         {EXPORT_ACTION}
                     </Button>
                     <Link
