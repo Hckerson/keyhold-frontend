@@ -16,7 +16,7 @@ const STATS: Stat[] = [
 
 export function StatsBand({ stats = STATS }: { stats?: Stat[] }) {
     return (
-        <section className="bg-background border-border relative isolate overflow-hidden border-y py-12 md:py-14">
+        <section className="band-pady bg-background border-border relative isolate overflow-hidden border-y">
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-text)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,#000,transparent)] bg-[size:32px_32px] opacity-[0.04]"

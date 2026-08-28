@@ -59,9 +59,9 @@ const drawerVariants = cva(
     {
         variants: {
             size: {
-                sm: "sm:max-w-sm",
-                md: "sm:max-w-md",
-                lg: "sm:max-w-xl",
+                sm: "drawer-panel--sm",
+                md: "drawer-panel--md",
+                lg: "drawer-panel--lg",
             },
         },
         defaultVariants: { size: "md" },

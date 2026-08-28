@@ -45,7 +45,7 @@ export function AdminUsersToolbar({
 }: AdminUsersToolbarProps) {
     return (
         <div className="flex min-h-11 flex-wrap items-center gap-2 py-1.5">
-            <div className="w-full sm:w-48">
+            <div className="toolbar-field toolbar-field--wide">
                 <Input
                     type="search"
                     value={query}

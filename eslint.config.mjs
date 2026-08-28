@@ -45,6 +45,25 @@ export default tseslint.config(
         },
     },
     {
+        files: ["components/ui/**/*.tsx", "components/patterns/**/*.tsx"],
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "Literal[value=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
+                    message:
+                        "Primitives and patterns must not decide their own breakpoints. Promote the chain to a named scale class in styles/globals.css.",
+                },
+                {
+                    selector:
+                        "TemplateElement[value.raw=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
+                    message:
+                        "Primitives and patterns must not decide their own breakpoints. Promote the chain to a named scale class in styles/globals.css.",
+                },
+            ],
+        },
+    },
+    {
         rules: {
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/no-explicit-any": "off",

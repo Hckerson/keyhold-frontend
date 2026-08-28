@@ -11,7 +11,7 @@ export function SectionShell({
     return (
         <div
             className={cn(
-                "mx-auto w-full max-w-[1280px] px-6 md:px-10",
+                "gutter-x gutter-x--inset mx-auto w-full max-w-[1280px]",
                 className,
             )}
         >

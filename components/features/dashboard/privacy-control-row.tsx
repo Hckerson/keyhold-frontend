@@ -37,7 +37,7 @@ export function PrivacyControlRow<K extends string>({
             <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
                 {control.label}
             </span>
-            <span className="text-text-secondary hidden w-32 shrink-0 truncate text-xs sm:block">
+            <span className="wide-only text-text-secondary w-32 shrink-0 truncate text-xs">
                 {control.audience}
             </span>
             <span
