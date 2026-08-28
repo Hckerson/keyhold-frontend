@@ -38,13 +38,16 @@ import { downloadJson } from "@/lib/utils/download";
 import type { AlertChannel, AlertType } from "@/lib/types";
 
 export function useDashboardSettings() {
-    const { data: user } = useCurrentUser();
+    const currentUser = useCurrentUser();
+    const user = currentUser.data;
     const saved_ = useSavedProperties();
     const connections = useMyInterests();
     const updateUser = useUpdateUser(user?.id ?? "");
     const storedPreferences = useNotificationPreferences();
     const updatePreferences = useUpdateNotificationPreferences();
     const requestReset = useRequestPasswordReset();
+
+    const queries = [currentUser, saved_, connections, storedPreferences];
 
     const baseline = toProfileForm(user);
     const [form, setForm] = useState<ProfileForm>(EMPTY_PROFILE);
@@ -146,6 +149,8 @@ export function useDashboardSettings() {
         preferences,
         dialog,
         resetSent,
+        failed: queries.some((query) => query.isError),
+        retry: () => queries.forEach((query) => void query.refetch()),
         resettingPassword: requestReset.isPending,
         saved,
         dirty,
