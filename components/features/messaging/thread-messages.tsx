@@ -29,7 +29,7 @@ export function ThreadMessages({
     return (
         <div
             aria-label={LOG_LABEL}
-            className="scroll-y flex min-h-0 flex-1 flex-col gap-3 p-3"
+            className="scroll-y flex flex-1 flex-col gap-3 p-3"
         >
             <AnimatePresence initial={false}>
                 {messages.map((message) => (
@@ -39,7 +39,6 @@ export function ThreadMessages({
                             caption={message.timestamp}
                             isUser={message.senderRole === "user"}
                             avatarInitials={message.initials}
-                            attachments={message.attachments}
                         />
                     </m.div>
                 ))}

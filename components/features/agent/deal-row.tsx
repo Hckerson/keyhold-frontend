@@ -1,7 +1,7 @@
 "use client";
 
 import { m } from "motion/react";
-import { Button } from "@/components/ui/button";
+import { PanelLink } from "@/components/features/shared/panel-link";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { DealNotes } from "@/components/features/agent/deal-notes";
 import { DealProgress } from "@/components/features/agent/deal-progress";
@@ -13,16 +13,10 @@ import type { Deal } from "@/lib/types/deal";
 export interface DealRowProps {
     deal: Deal;
     actionLabel: string;
-    onAdvance: (id: string) => void;
     className?: string;
 }
 
-export function DealRow({
-    deal,
-    actionLabel,
-    onAdvance,
-    className,
-}: DealRowProps) {
+export function DealRow({ deal, actionLabel, className }: DealRowProps) {
     const stage = DEAL_STAGES.find((item) => item.id === deal.stage);
     if (!stage) return null;
 
@@ -57,22 +51,15 @@ export function DealRow({
                 </span>
             </div>
 
-            <DealProgress stage={deal.stage} daysToClose={deal.daysToClose} />
+            <DealProgress stage={deal.stage} daysInStage={deal.daysInStage} />
 
             <p className="text-text-secondary truncate text-xs">
                 {deal.lastActivity}
             </p>
 
-            <DealNotes notes={deal.notes} nextStep={deal.nextStep} />
+            {deal.notes && <DealNotes notes={deal.notes} />}
 
-            <Button
-                variant="secondary"
-                size="sm"
-                className="w-full"
-                onClick={() => onAdvance(deal.id)}
-            >
-                {actionLabel}
-            </Button>
+            <PanelLink href="/agent/leads" label={actionLabel} />
         </m.article>
     );
 }

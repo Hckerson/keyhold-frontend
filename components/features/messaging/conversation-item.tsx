@@ -36,7 +36,7 @@ export function ConversationItem({
                     size="sm"
                     tone="accent"
                     elevated={false}
-                    src={conversation.portrait}
+                    src={conversation.portrait ?? undefined}
                     alt={conversation.agent}
                     initials={conversation.initials}
                 />

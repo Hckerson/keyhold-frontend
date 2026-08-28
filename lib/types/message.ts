@@ -11,17 +11,17 @@ export interface Conversation {
     agent: string;
     agentTitle: string;
     initials: string;
-    portrait: string;
+    portrait: string | null;
+    phone: string | null;
     listingId: string;
     property: string;
     locality: string;
-    photo: string;
+    photo: string | null;
     price: number;
     lastMessage: string;
     minutesAgo: number;
     unread: number;
     status: ConversationStatus;
-    responseMinutes: number;
 }
 
 export interface Message {
@@ -30,5 +30,4 @@ export interface Message {
     content: string;
     timestamp: string;
     initials: string;
-    attachments?: string[];
 }

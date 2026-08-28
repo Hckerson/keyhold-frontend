@@ -4,20 +4,19 @@ import { AnimatePresence } from "motion/react";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { DealRow } from "@/components/features/agent/deal-row";
 import type { Deal } from "@/lib/types/deal";
-import { nextStageOf } from "@/lib/data/agent-pipeline";
+
+const OPEN_LEAD_ACTION = "Open in lead desk";
 
 export interface PipelineStageColumnProps {
     label: string;
     items: Deal[];
     value: number;
-    onAdvance: (id: string) => void;
 }
 
 export function PipelineStageColumn({
     label,
     items,
     value,
-    onAdvance,
 }: PipelineStageColumnProps) {
     return (
         <section
@@ -43,8 +42,7 @@ export function PipelineStageColumn({
                     <DealRow
                         key={deal.id}
                         deal={deal}
-                        actionLabel={`Move to ${nextStageOf(deal.stage).label}`}
-                        onAdvance={onAdvance}
+                        actionLabel={OPEN_LEAD_ACTION}
                     />
                 ))}
             </AnimatePresence>

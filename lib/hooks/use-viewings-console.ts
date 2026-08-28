@@ -3,16 +3,13 @@
 import { useCallback, useMemo, useState } from "react";
 import {
     TODAY,
-    cancelViewingById,
     countByStatus,
     dayFilterLabel,
-    initialViewings,
     isOnDay,
     markedDaysInMonth,
     matchesFilters,
     nextViewing,
     rankViewings,
-    rescheduleViewing,
     scheduledViewings,
     viewingStats,
     viewingsOnDate,
@@ -21,12 +18,21 @@ import {
     type ViewingModeFilter,
     type ViewingStatusFilter,
 } from "@/lib/data/viewings";
+import { useMyInterests } from "@/lib/hooks/use-connections";
+import {
+    useCancelViewing,
+    useRescheduleViewing,
+} from "@/lib/hooks/use-viewings";
+import { draftToIso, toViewingBook } from "@/lib/utils/to-viewing";
 import type { RescheduleDraft } from "@/lib/types";
 
 const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
 
 export function useViewingsConsole() {
-    const [viewings, setViewings] = useState(initialViewings);
+    const interests = useMyInterests();
+    const rescheduleViewing = useRescheduleViewing();
+    const cancelViewing = useCancelViewing();
+
     const [calendar, setCalendar] = useState({
         year: TODAY.year,
         month: TODAY.month,
@@ -38,6 +44,11 @@ export function useViewingsConsole() {
     const [statusFilter, setStatusFilter] =
         useState<ViewingStatusFilter>("all");
     const [modeFilter, setModeFilter] = useState<ViewingModeFilter>("all");
+
+    const viewings = useMemo(
+        () => toViewingBook(interests.data ?? []),
+        [interests.data],
+    );
 
     const ranked = useMemo(
         () => rankViewings(scheduledViewings(viewings)),
@@ -107,18 +118,19 @@ export function useViewingsConsole() {
     );
 
     const cancel = useCallback(
-        (id: string) =>
-            setViewings((current) => cancelViewingById(current, id)),
-        [],
+        (id: string) => void cancelViewing.mutateAsync(id),
+        [cancelViewing],
     );
 
     const closeReschedule = useCallback(() => setRescheduleId(null), []);
 
     const confirmReschedule = () => {
-        if (!rescheduleId) return;
-        setViewings((current) =>
-            rescheduleViewing(current, rescheduleId, draft),
-        );
+        const proposed = draftToIso(draft);
+        if (!rescheduleId || !proposed) return;
+        void rescheduleViewing.mutateAsync({
+            id: rescheduleId,
+            proposedTimes: [proposed],
+        });
         setRescheduleId(null);
     };
 
@@ -137,6 +149,10 @@ export function useViewingsConsole() {
         draft,
         statusFilter,
         modeFilter,
+        pending: interests.isPending,
+        rescheduling: rescheduleViewing.isPending,
+        failed: interests.isError,
+        refetch: interests.refetch,
         summary: viewingsSummary(viewings),
         dayLabel:
             selectedDay === null

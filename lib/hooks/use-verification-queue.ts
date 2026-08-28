@@ -2,37 +2,36 @@
 
 import { useMemo, useState } from "react";
 import {
-    DECISION_RESULT,
-    INITIAL_REQUESTS,
     type VerificationActionMode,
     type VerificationDecision,
     type VerificationFilterKey,
-    type VerificationRequest,
-    type VerificationStatus,
 } from "@/lib/data/admin-verifications";
+import { useKycQueue, useReviewKyc } from "@/lib/hooks/use-kyc";
+import { toVerificationQueue } from "@/lib/utils/to-verification-request";
 
 const ALL_FILTER: VerificationFilterKey = "all";
-
-interface Resolution {
-    note: string;
-    kind: VerificationDecision["mode"];
-}
+const QUEUE_PAGE_SIZE = 100;
 
 export function useVerificationQueue() {
-    const [items, setItems] = useState<VerificationRequest[]>(INITIAL_REQUESTS);
+    const queue = useKycQueue({ limit: QUEUE_PAGE_SIZE });
+    const review = useReviewKyc();
+
     const [filter, setFilter] = useState<VerificationFilterKey>(ALL_FILTER);
-    const [selectedId, setSelectedId] = useState<string | null>(
-        INITIAL_REQUESTS[0]?.id ?? null,
-    );
+    const [selectedId, setSelectedId] = useState<string | null>(null);
     const [decision, setDecision] = useState<VerificationDecision | null>(null);
     const [note, setNote] = useState("");
+
+    const items = useMemo(
+        () => toVerificationQueue(queue.data?.items ?? []),
+        [queue.data?.items],
+    );
 
     const counts = useMemo(() => {
         const base: Record<VerificationFilterKey, number> = {
             all: items.length,
-            pending: 0,
-            approved: 0,
-            rejected: 0,
+            PENDING: 0,
+            VERIFIED: 0,
+            REJECTED: 0,
         };
         for (const item of items) base[item.status] += 1;
         return base;
@@ -49,32 +48,9 @@ export function useVerificationQueue() {
     const active =
         visible.find((item) => item.id === selectedId) ?? visible[0] ?? null;
 
-    const settle = (
-        id: string,
-        status: VerificationStatus,
-        resolution?: Resolution,
-    ) => {
-        setItems((current) =>
-            current.map((item) =>
-                item.id === id
-                    ? {
-                          ...item,
-                          status,
-                          note: resolution?.note,
-                          noteKind: resolution?.kind,
-                      }
-                    : item,
-            ),
-        );
-    };
-
     const runAction = (mode: VerificationActionMode, id: string) => {
         if (mode === "approve") {
-            settle(id, "approved");
-            return;
-        }
-        if (mode === "resubmit") {
-            settle(id, "pending");
+            void review.mutateAsync({ id });
             return;
         }
         setDecision({ mode, id });
@@ -89,9 +65,9 @@ export function useVerificationQueue() {
     const submitDecision = () => {
         const trimmed = note.trim();
         if (!decision || !trimmed) return;
-        settle(decision.id, DECISION_RESULT[decision.mode], {
-            note: trimmed,
-            kind: decision.mode,
+        void review.mutateAsync({
+            id: decision.id,
+            rejectionReason: trimmed,
         });
         closeDecision();
     };
@@ -110,13 +86,16 @@ export function useVerificationQueue() {
         visible,
         active,
         decision,
-        applicantName,
         note,
-        setNote,
+        applicantName,
+        pending: queue.isPending,
+        failed: queue.isError,
+        refetch: queue.refetch,
         setSelectedId,
-        changeFilter,
+        setNote,
         runAction,
         closeDecision,
         submitDecision,
+        changeFilter,
     };
 }

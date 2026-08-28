@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/modal";
 import { TransactionReviewBody } from "@/components/features/admin/transaction-review-body";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
-import type { Transaction } from "@/lib/types";
+import type { LedgerTransaction } from "@/lib/types";
 
 const PAYOUT_ACTION = "Agent payout";
 const CLOSE_ACTION = "Close";
 
 export interface TransactionReviewModalProps {
-    transaction?: Transaction;
+    transaction?: LedgerTransaction;
     onClose: () => void;
 }
 

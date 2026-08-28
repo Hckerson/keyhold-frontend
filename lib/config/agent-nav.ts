@@ -1,6 +1,7 @@
 import {
     LayoutDashboard,
     Home,
+    Inbox,
     Users,
     BarChart3,
     LineChart,
@@ -9,6 +10,7 @@ import {
     Settings,
     type LucideIcon,
 } from "lucide-react";
+import { AGENT_ROUTES } from "@/lib/constants";
 
 export interface AgentNavItem {
     label: string;
@@ -29,9 +31,15 @@ export const AGENT_NAV: AgentNavSection[] = [
         items: [
             {
                 label: "Dashboard",
-                href: "/agent",
+                href: AGENT_ROUTES.overview,
                 icon: LayoutDashboard,
                 description: "Your book of business at a glance",
+            },
+            {
+                label: "Requests",
+                href: AGENT_ROUTES.requests,
+                icon: Inbox,
+                description: "Viewings and offers awaiting your reply",
             },
         ],
     },
@@ -40,26 +48,25 @@ export const AGENT_NAV: AgentNavSection[] = [
         items: [
             {
                 label: "Listings",
-                href: "/agent/listings",
+                href: AGENT_ROUTES.listings,
                 icon: Home,
                 description: "Manage your active listings",
             },
             {
                 label: "Leads",
-                href: "/agent/leads",
+                href: AGENT_ROUTES.leads,
                 icon: Users,
                 description: "Track and nurture prospects",
-                badge: 4,
             },
             {
                 label: "Pipeline",
-                href: "/agent/pipeline",
+                href: AGENT_ROUTES.pipeline,
                 icon: BarChart3,
                 description: "Deals in progress",
             },
             {
                 label: "Analytics",
-                href: "/agent/analytics",
+                href: AGENT_ROUTES.analytics,
                 icon: LineChart,
                 description: "Performance and market insights",
             },
@@ -70,7 +77,7 @@ export const AGENT_NAV: AgentNavSection[] = [
         items: [
             {
                 label: "Calendar",
-                href: "/agent/calendar",
+                href: AGENT_ROUTES.calendar,
                 icon: CalendarDays,
                 description: "Appointments and showings",
             },
@@ -81,7 +88,7 @@ export const AGENT_NAV: AgentNavSection[] = [
         items: [
             {
                 label: "VIP Concierge",
-                href: "/agent/concierge",
+                href: AGENT_ROUTES.concierge,
                 icon: Sparkles,
                 description: "White-glove client services",
             },
@@ -92,7 +99,7 @@ export const AGENT_NAV: AgentNavSection[] = [
         items: [
             {
                 label: "Settings",
-                href: "/agent/settings",
+                href: AGENT_ROUTES.settings,
                 icon: Settings,
                 description: "Profile, preferences, and notifications",
             },
@@ -100,6 +107,21 @@ export const AGENT_NAV: AgentNavSection[] = [
     },
 ];
 
-export const AGENT_ROUTES: AgentNavItem[] = AGENT_NAV.flatMap(
-    (section) => section.items,
-);
+export interface AgentBadges {
+    leads: number;
+    requests: number;
+}
+
+const BADGE_BY_ROUTE: Record<string, keyof AgentBadges> = {
+    [AGENT_ROUTES.leads]: "leads",
+    [AGENT_ROUTES.requests]: "requests",
+};
+
+export const agentNav = (badges: AgentBadges): AgentNavSection[] =>
+    AGENT_NAV.map((section) => ({
+        ...section,
+        items: section.items.map((item) => {
+            const key = BADGE_BY_ROUTE[item.href];
+            return key ? { ...item, badge: badges[key] || undefined } : item;
+        }),
+    }));

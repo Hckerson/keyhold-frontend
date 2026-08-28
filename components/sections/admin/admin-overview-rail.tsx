@@ -3,8 +3,9 @@ import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { AudienceMix } from "@/components/features/admin/audience-mix";
 import { ModerationQueueTable } from "@/components/features/admin/moderation-queue-table";
-import { MODERATION_LOAD, OPEN_BACKLOG } from "@/lib/data/admin-overview";
+import { openBacklog } from "@/lib/data/admin-overview";
 import type { DonutSegment } from "@/components/ui/charts/donut-chart";
+import type { ModerationQueueLoad } from "@/lib/types";
 import { formatCount } from "@/lib/utils";
 
 const QUEUE_TITLE = "Moderation Load";
@@ -18,25 +19,27 @@ export interface AdminOverviewRailProps {
     roles: DonutSegment[];
     statuses: DonutSegment[];
     total: number;
+    queues: ModerationQueueLoad[];
 }
 
 export function AdminOverviewRail({
     roles,
     statuses,
     total,
+    queues,
 }: AdminOverviewRailProps) {
     return (
         <div className="flex flex-col gap-3">
             <Panel
                 title={QUEUE_TITLE}
                 description={QUEUE_LEDE}
-                count={OPEN_BACKLOG}
+                count={openBacklog(queues)}
                 action={
                     <PanelLink href="/admin/listings" label={QUEUE_ACTION} />
                 }
             >
                 <PanelInset scroll>
-                    <ModerationQueueTable queues={MODERATION_LOAD} />
+                    <ModerationQueueTable queues={queues} />
                 </PanelInset>
             </Panel>
 
@@ -45,7 +48,6 @@ export function AdminOverviewRail({
                 action={
                     <PanelLink href="/admin/users" label={AUDIENCE_ACTION} />
                 }
-                bodyClassName="pt-3"
             >
                 <AudienceMix
                     roles={roles}

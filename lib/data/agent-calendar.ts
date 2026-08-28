@@ -1,6 +1,7 @@
 import { CalendarDays, CheckCircle2, Clock, Flame, Users } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { parseLocalDate } from "@/lib/utils";
+import type { RescheduleDraft } from "@/lib/types";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     APPOINTMENT_TYPES,
@@ -44,9 +45,24 @@ const EMPTY_VALUE = "—";
 
 export const DURATION_SCALE_MINUTES = 180;
 
-export const SCHEDULE_ACTION = "Schedule Appointment";
+export const SCHEDULE_ACTION = "Propose a viewing";
 
-export const ANCHOR = { year: 2024, month: 6, day: 13 };
+export const RESCHEDULE_HINT =
+    "The buyer reconfirms once you propose a new slot.";
+
+const anchorDate = () => new Date();
+
+export const ANCHOR = {
+    get year() {
+        return anchorDate().getFullYear();
+    },
+    get month() {
+        return anchorDate().getMonth();
+    },
+    get day() {
+        return anchorDate().getDate();
+    },
+};
 
 export const VIEW_MODES: { id: CalendarViewMode; label: string }[] = [
     { id: "month", label: "Day" },
@@ -82,6 +98,13 @@ export const formatTime = (start: string) => {
     return `${display}:${minutePart} ${period}`;
 };
 
+export const toRescheduleDraft = (
+    appointment: Appointment,
+): RescheduleDraft => ({
+    date: appointment.date,
+    time: formatTime(appointment.start),
+});
+
 export const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / MINUTES_PER_HOUR);
     const rest = minutes % MINUTES_PER_HOUR;
@@ -97,162 +120,18 @@ export const formatHours = (minutes: number) => {
 export const durationShare = (minutes: number) =>
     Math.min(FULL_PERCENT, (minutes / DURATION_SCALE_MINUTES) * FULL_PERCENT);
 
-export const appointments: Appointment[] = [
-    {
-        id: "1",
-        type: "showing",
-        status: "confirmed",
-        title: "Property Showing",
-        property: "456 Oak Avenue",
-        client: "John Doe",
-        date: "2024-07-13",
-        start: "14:00",
-        durationMinutes: 60,
-        notes: "Client interested in modern updates",
-    },
-    {
-        id: "2",
-        type: "meeting",
-        status: "tentative",
-        title: "Client Meeting",
-        property: "789 Sunset Blvd",
-        client: "Sarah Johnson",
-        date: "2024-07-13",
-        start: "15:30",
-        durationMinutes: 30,
-        notes: "Discuss counter-offer strategy",
-    },
-    {
-        id: "3",
-        type: "inspection",
-        status: "confirmed",
-        title: "Home Inspection",
-        property: "234 Oak Street",
-        client: "Michael Chen",
-        date: "2024-07-13",
-        start: "10:00",
-        durationMinutes: 120,
-        notes: "Professional inspector scheduled, meet on site fifteen minutes early to open the lockbox",
-    },
-    {
-        id: "4",
-        type: "follow-up",
-        status: "unconfirmed",
-        title: "Follow-up Call",
-        property: "567 Palm Drive",
-        client: "Elizabeth Brown",
-        date: "2024-07-11",
-        start: "09:00",
-        durationMinutes: 15,
-        notes: "Check in after second viewing",
-    },
-    {
-        id: "5",
-        type: "showing",
-        status: "confirmed",
-        title: "Private Showing",
-        property: "12 Canyon Ridge",
-        client: "Priya Raman",
-        date: "2024-07-12",
-        start: "11:00",
-        durationMinutes: 45,
-        notes: "Buyer flying in from New York",
-    },
-    {
-        id: "6",
-        type: "closing",
-        status: "confirmed",
-        title: "Closing Appointment",
-        property: "890 Beverly Grove",
-        client: "Daniel Ortiz",
-        date: "2024-07-15",
-        start: "13:00",
-        durationMinutes: 60,
-        notes: "Final walkthrough before signing",
-    },
-    {
-        id: "7",
-        type: "follow-up",
-        status: "tentative",
-        title: "Nurture Call",
-        property: "234 Oak Street",
-        client: "Jennifer Davis",
-        date: "2024-07-16",
-        start: "16:00",
-        durationMinutes: 20,
-        notes: "Send comparable sales summary",
-    },
-    {
-        id: "8",
-        type: "meeting",
-        status: "confirmed",
-        title: "Listing Presentation",
-        property: "77 Hillcrest Terrace",
-        client: "Robert Lang",
-        date: "2024-07-20",
-        start: "10:30",
-        durationMinutes: 60,
-        notes: "Bring updated pricing analysis",
-    },
-    {
-        id: "9",
-        type: "showing",
-        status: "confirmed",
-        title: "Open House",
-        property: "456 Oak Avenue",
-        client: "Public",
-        date: "2024-07-20",
-        start: "13:00",
-        durationMinutes: 180,
-        notes: "Catering and signage confirmed",
-    },
-    {
-        id: "10",
-        type: "inspection",
-        status: "unconfirmed",
-        title: "Appraisal Visit",
-        property: "789 Sunset Blvd",
-        client: "Sarah Johnson",
-        date: "2024-07-26",
-        start: "09:30",
-        durationMinutes: 90,
-        notes: "Lender-ordered appraisal",
-    },
-    {
-        id: "11",
-        type: "showing",
-        status: "confirmed",
-        title: "Twilight Tour",
-        property: "18 Marina Vista",
-        client: "Nora Whitfield",
-        date: "2024-07-09",
-        start: "17:30",
-        durationMinutes: 45,
-        notes: "Golden hour walkthrough of the terrace",
-    },
-    {
-        id: "12",
-        type: "meeting",
-        status: "confirmed",
-        title: "Buyer Consultation",
-        property: "Downtown Office",
-        client: "Aaron Diaz",
-        date: "2024-07-10",
-        start: "09:00",
-        durationMinutes: 45,
-        notes: "Review financing options and search criteria",
-    },
-];
+const byStart = (a: Appointment, b: Appointment) =>
+    startMinutes(a.start) - startMinutes(b.start);
 
-const byStart = (first: Appointment, second: Appointment) =>
-    first.date.localeCompare(second.date) ||
-    startMinutes(first.start) - startMinutes(second.start);
+export const appointmentsOn = (items: Appointment[], iso: string) =>
+    items.filter((item) => item.date === iso).sort(byStart);
 
-export const appointmentsOn = (iso: string) =>
-    appointments.filter((item) => item.date === iso).sort(byStart);
-
-export const appointmentsInRange = (start: Date, end: Date) =>
-    appointments
+export const appointmentsInRange = (
+    items: Appointment[],
+    start: Date,
+    end: Date,
+) =>
+    items
         .filter((item) => {
             const date = parseLocalDate(item.date);
             return date >= start && date <= end;
@@ -260,11 +139,15 @@ export const appointmentsInRange = (start: Date, end: Date) =>
         .sort(byStart);
 
 export const appointmentsInView = (
+    items: Appointment[],
     mode: CalendarViewMode,
     iso: string,
     start: Date,
     end: Date,
-) => (mode === "month" ? appointmentsOn(iso) : appointmentsInRange(start, end));
+) =>
+    mode === "month"
+        ? appointmentsOn(items, iso)
+        : appointmentsInRange(items, start, end);
 
 export const groupAppointmentsByDate = (
     items: Appointment[],
@@ -274,9 +157,13 @@ export const groupAppointmentsByDate = (
         items: items.filter((item) => item.date === date),
     }));
 
-export const appointmentDays = (year: number, month: number) => {
+export const appointmentDays = (
+    items: Appointment[],
+    year: number,
+    month: number,
+) => {
     const prefix = `${year}-${String(month + 1).padStart(2, "0")}`;
-    return appointments
+    return items
         .filter((item) => item.date.startsWith(prefix))
         .map((item) => parseLocalDate(item.date).getDate());
 };

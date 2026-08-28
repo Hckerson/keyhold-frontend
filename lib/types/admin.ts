@@ -42,29 +42,16 @@ export interface ServiceHealth {
     latencyMs: number;
 }
 
-export type PayoutState =
-    | "failed"
-    | "review"
-    | "approved"
-    | "scheduled"
-    | "released";
-
-export type PayoutMethod = "wire" | "ach" | "instant";
-
-export type RevenueStreamId =
-    | "commission"
-    | "fees"
-    | "subscription"
-    | "featured";
+export type PayoutState = "HELD" | "RELEASED" | "REFUNDED" | "DISPUTED";
 
 export interface Payout {
     id: string;
     recipient: string;
     deal: string;
     state: PayoutState;
-    method: PayoutMethod;
     gross: number;
     ageMinutes: number;
+    inspectionEndsAt: string | null;
     href: string;
 }
 
@@ -73,12 +60,6 @@ export interface PayoutStage {
     count: number;
     amount: number;
     oldestMinutes: number;
-}
-
-export interface RevenueStream {
-    id: RevenueStreamId;
-    ytd: number;
-    momChange: number;
 }
 
 export type PolicyDomain =
@@ -90,15 +71,7 @@ export type PolicyDomain =
 
 export type PolicyEnforcement = "blocking" | "advisory";
 
-export type PolicySwitchId =
-    | "photo-scan"
-    | "license-verification"
-    | "high-value-review"
-    | "repeat-rejection-suspend"
-    | "maintenance-mode"
-    | "open-signups"
-    | "health-digest"
-    | "payout-automation";
+export type PolicySwitchId = "maintenance-mode" | "open-signups";
 
 export type PolicyState = Record<PolicySwitchId, boolean>;
 
@@ -108,18 +81,6 @@ export interface PolicySwitch {
     title: string;
     caption: string;
     enforcement: PolicyEnforcement;
-    reach: number;
-}
-
-export type MaintenanceRisk = "routine" | "elevated" | "destructive";
-
-export interface MaintenanceOperation {
-    id: string;
-    label: string;
-    caption: string;
-    action: string;
-    risk: MaintenanceRisk;
-    lastRunMinutes: number;
 }
 
 export interface ConfigChange {

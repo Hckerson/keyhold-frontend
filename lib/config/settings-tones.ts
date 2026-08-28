@@ -1,7 +1,5 @@
 import {
-    DatabaseZap,
     Flag,
-    KeyRound,
     Power,
     Server,
     ShieldCheck,
@@ -10,11 +8,7 @@ import {
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type {
-    MaintenanceRisk,
-    PolicyDomain,
-    PolicyEnforcement,
-} from "@/lib/types";
+import type { PolicyDomain, PolicyEnforcement } from "@/lib/types";
 
 export interface PolicyDomainMeta {
     label: string;
@@ -45,34 +39,6 @@ export const POLICY_ENFORCEMENTS: Record<
 };
 
 export const POLICY_OFF_LABEL = "Off";
-
-export interface MaintenanceRiskMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-    danger: boolean;
-}
-
-export const MAINTENANCE_RISKS: Record<MaintenanceRisk, MaintenanceRiskMeta> = {
-    routine: {
-        label: "Routine",
-        icon: DatabaseZap,
-        tone: "info",
-        danger: false,
-    },
-    elevated: {
-        label: "Elevated",
-        icon: KeyRound,
-        tone: "warning",
-        danger: false,
-    },
-    destructive: {
-        label: "Destructive",
-        icon: DatabaseZap,
-        tone: "error",
-        danger: true,
-    },
-};
 
 const REACH_CEILINGS: { ceiling: number; tone: ChartTone }[] = [
     { ceiling: 25, tone: "info" },

@@ -2,6 +2,8 @@ import { CalendarClock, Handshake, Inbox, Users, Wallet } from "lucide-react";
 import type { ShareDatum } from "@/components/patterns/share-row";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import { LEAD_STAGES, LEAD_STAGE_KEYS } from "@/lib/config/lead-tones";
+import type { SelectOption } from "@/components/ui/forms/select";
+import type { Property } from "@/lib/validations/property";
 import type { Lead, LeadStageFilter } from "@/lib/types/lead";
 import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
@@ -10,9 +12,13 @@ export const LEAD_STAGE_FILTERS: { id: LeadStageFilter; label: string }[] = [
     ...LEAD_STAGE_KEYS.map((id) => ({ id, label: LEAD_STAGES[id].label })),
 ];
 
-export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
-
-export const mailHref = (email: string) => `mailto:${email}`;
+export const toListingOptions = (
+    properties: Property[],
+): SelectOption<string>[] =>
+    properties.map((property) => ({
+        value: property.id,
+        label: `${property.address}, ${property.locality}`,
+    }));
 
 export const rankLeads = (leads: Lead[]) =>
     [...leads].sort(

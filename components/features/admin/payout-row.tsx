@@ -5,10 +5,13 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { PayoutAmount } from "@/components/features/admin/payout-amount";
-import { PayoutMethodMark } from "@/components/features/admin/payout-method-mark";
 import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";
 import { payoutAgeTone, PAYOUT_STATES } from "@/lib/config/admin-tones";
-import { payoutFee, payoutNet } from "@/lib/data/admin-payments";
+import {
+    inspectionLabel,
+    payoutFee,
+    payoutNet,
+} from "@/lib/data/admin-payments";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import type { Payout } from "@/lib/types";
 
@@ -33,8 +36,8 @@ export function PayoutRow({ payout }: PayoutRowProps) {
             <td className="py-0 pl-3">
                 <PayoutStateMark state={payout.state} />
             </td>
-            <td className="py-0 pl-3">
-                <PayoutMethodMark method={payout.method} />
+            <td className="text-text-secondary py-0 pl-3 text-xs tabular-nums">
+                {inspectionLabel(payout)}
             </td>
             <td className="py-0 pl-3 text-right">
                 <PayoutAmount net={payoutNet(payout)} fee={payoutFee(payout)} />

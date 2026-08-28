@@ -1,6 +1,4 @@
 import {
-    Banknote,
-    Building2,
     CircleCheck,
     CircleX,
     ClipboardCheck,
@@ -13,11 +11,7 @@ import {
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { CalloutProps } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type {
-    TransactionFinancing,
-    TransactionMilestoneId,
-    TransactionStatus,
-} from "@/lib/types";
+import type { LedgerStatus, TransactionMilestoneId } from "@/lib/types";
 
 interface ToneBand {
     ceiling: number;
@@ -38,82 +32,47 @@ export interface TransactionStatusMeta {
     rowTone?: string;
 }
 
-export const TRANSACTION_STATUSES: Record<
-    TransactionStatus,
-    TransactionStatusMeta
-> = {
-    failed: {
-        label: "Failed",
-        icon: CircleX,
-        tone: "error",
-        chartTone: "error",
-        rank: 4,
-        open: false,
-        note: {
-            variant: "error",
-            title: "Collapsed before settlement",
-            description:
-                "Financing was withdrawn after inspection. The deal is closed and the agent payout is reversed.",
+export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
+    {
+        PENDING: {
+            label: "Awaiting payment",
+            icon: Clock,
+            tone: "warning",
+            chartTone: "warning",
+            rank: 3,
+            open: true,
         },
-        rowTone: "bg-error/5",
-    },
-    closing: {
-        label: "Closing",
-        icon: FileSignature,
-        tone: "info",
-        chartTone: "info",
-        rank: 3,
-        open: true,
-        note: {
-            variant: "info",
-            title: "Closing — settlement pending",
-            description:
-                "Paperwork sits with the closing agent. Commission releases once settlement funds land.",
+        IN_PROGRESS: {
+            label: "In escrow",
+            icon: Landmark,
+            tone: "info",
+            chartTone: "info",
+            rank: 4,
+            open: true,
         },
-    },
-    escrow: {
-        label: "Escrow",
-        icon: Landmark,
-        tone: "warning",
-        chartTone: "warning",
-        rank: 2,
-        open: true,
-        note: {
-            variant: "warning",
-            title: "Escrow — not yet settled",
-            description: "Funds are held until every closing condition clears.",
+        COMPLETED: {
+            label: "Settled",
+            icon: CircleCheck,
+            tone: "success",
+            chartTone: "success",
+            rank: 1,
+            open: false,
         },
-    },
-    pending: {
-        label: "Pending",
-        icon: Clock,
-        tone: "info",
-        chartTone: "accent",
-        rank: 1,
-        open: true,
-        note: {
-            variant: "neutral",
-            title: "Pending — escrow not open",
-            description:
-                "Awaiting a signed purchase agreement before the deposit can be placed.",
+        CANCELLED: {
+            label: "Cancelled",
+            icon: CircleX,
+            tone: "neutral",
+            chartTone: "neutral",
+            rank: 2,
+            open: false,
         },
-    },
-    completed: {
-        label: "Completed",
-        icon: CircleCheck,
-        tone: "success",
-        chartTone: "success",
-        rank: 0,
-        open: false,
-    },
-};
+    };
 
-export const TRANSACTION_PIPELINE_ORDER: TransactionStatus[] = [
-    "pending",
-    "escrow",
-    "closing",
-    "completed",
-    "failed",
+export const TRANSACTION_PIPELINE_ORDER: LedgerStatus[] = [
+    "PENDING",
+    "IN_PROGRESS",
+    "COMPLETED",
+    "CANCELLED",
 ];
 
 export interface TransactionMilestoneMeta {
@@ -127,38 +86,15 @@ export const TRANSACTION_MILESTONES: Record<
 > = {
     agreement: { label: "Purchase agreement", icon: FileSignature },
     deposit: { label: "Escrow deposit", icon: Landmark },
-    inspection: { label: "Inspection cleared", icon: ClipboardCheck },
-    financing: { label: "Financing confirmed", icon: Banknote },
-    settlement: { label: "Settlement funds", icon: Wallet },
+    inspection: { label: "Inspection window closed", icon: ClipboardCheck },
+    settlement: { label: "Funds released", icon: Wallet },
 };
 
 export const MILESTONE_ORDER: TransactionMilestoneId[] = [
     "agreement",
     "deposit",
     "inspection",
-    "financing",
     "settlement",
-];
-
-export interface TransactionFinancingMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const FINANCING_TYPES: Record<
-    TransactionFinancing,
-    TransactionFinancingMeta
-> = {
-    cash: { label: "Cash", icon: Banknote, tone: "success" },
-    mortgage: { label: "Mortgage", icon: Landmark, tone: "info" },
-    portfolio: { label: "Portfolio loan", icon: Building2, tone: "highlight" },
-};
-
-export const FINANCING_ORDER: TransactionFinancing[] = [
-    "cash",
-    "mortgage",
-    "portfolio",
 ];
 
 export const DEAL_SLA_MINUTES = 86_400;

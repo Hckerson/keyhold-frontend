@@ -9,10 +9,9 @@ const TABLE_CAPTION =
 
 export interface OfferTableProps {
     offers: Offer[];
-    onWithdraw: (id: string) => void;
 }
 
-export function OfferTable({ offers, onWithdraw }: OfferTableProps) {
+export function OfferTable({ offers }: OfferTableProps) {
     return (
         <table className="table-flush w-full min-w-4xl table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
@@ -65,11 +64,7 @@ export function OfferTable({ offers, onWithdraw }: OfferTableProps) {
             <tbody className="divide-border divide-y">
                 <AnimatePresence initial={false}>
                     {offers.map((offer) => (
-                        <OfferRow
-                            key={offer.id}
-                            offer={offer}
-                            onWithdraw={onWithdraw}
-                        />
+                        <OfferRow key={offer.id} offer={offer} />
                     ))}
                 </AnimatePresence>
             </tbody>

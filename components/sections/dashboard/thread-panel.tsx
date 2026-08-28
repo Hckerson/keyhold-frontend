@@ -9,7 +9,6 @@ import type { Conversation, Message } from "@/lib/types";
 
 const COMPOSER_LABEL = "Message";
 const COMPOSER_PLACEHOLDER = "Type your message…";
-const ATTACH_LABEL = "Attach file";
 const EMPTY_TITLE = "No conversation selected";
 const EMPTY_LEDE = "Pick a thread from the rail to start messaging.";
 
@@ -17,7 +16,7 @@ export interface ThreadPanelProps {
     conversation?: Conversation;
     messages: Message[];
     typing: boolean;
-    onSend: (content: string, attachments: string[]) => void;
+    onSend: (content: string) => void;
 }
 
 export function ThreadPanel({
@@ -40,7 +39,6 @@ export function ThreadPanel({
                         inputId="message-composer"
                         inputLabel={COMPOSER_LABEL}
                         placeholder={COMPOSER_PLACEHOLDER}
-                        attachLabel={ATTACH_LABEL}
                         onSend={onSend}
                     />
                 </>

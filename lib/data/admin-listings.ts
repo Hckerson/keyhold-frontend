@@ -7,14 +7,11 @@ import {
     CHECK_STATE_KEYS,
     COMPLIANCE_CHECKS,
     COMPLIANCE_CHECK_KEYS,
-    MODERATION_DECISIONS,
     MODERATION_STATUSES,
     MODERATION_STATUS_KEYS,
 } from "@/lib/config/moderation-tones";
-import { propertyGallery } from "@/lib/data/sample-images";
 import type {
     ComplianceCheckId,
-    DecisionMode,
     ModerationAgentLoad,
     ModerationListing,
     ModerationStatus,
@@ -35,207 +32,6 @@ const NO_QUEUE_LABEL = "—";
 export type ModerationStatusFilter = ModerationStatus | "all";
 
 export type ModerationCheckFilter = ComplianceCheckId | typeof EVERY_CHECK;
-
-export const QUEUE_NOW = new Date(2026, 7, 5, 9, 0);
-
-export const MODERATION_LISTINGS: ModerationListing[] = [
-    {
-        id: "sunset-penthouse",
-        listingId: "4",
-        address: "789 Sunset Blvd",
-        locality: "West Hollywood",
-        price: 2_950_000,
-        status: "flagged",
-        queuedMinutes: 3_240,
-        description:
-            "Rare Sunset Strip penthouse with 180-degree city views. Over 4,800 square feet of entertaining space, private elevator access and a rooftop deck. Building amenities include valet, concierge and a residents' screening room.",
-        photos: propertyGallery(3, 3),
-        compliance: {
-            photos: "fail",
-            accuracy: "warn",
-            licence: "pass",
-            "fair-housing": "pass",
-        },
-        reports: 7,
-        agent: {
-            name: "Michael Rodriguez",
-            email: "michael@sunsetproperties.com",
-            phone: "(323) 555-0178",
-        },
-        note: "An automated scan matched the second photograph to a stock library and the stated square footage does not reconcile with county records.",
-    },
-    {
-        id: "rodeo-trophy",
-        listingId: "12",
-        address: "88 Rodeo Drive",
-        locality: "Beverly Hills",
-        price: 5_400_000,
-        status: "flagged",
-        queuedMinutes: 1_180,
-        description:
-            "Trophy address steps from the flagship boutiques. Five bedrooms across three levels, private motor court and a subterranean garage for six cars.",
-        photos: propertyGallery(9, 3),
-        compliance: {
-            photos: "fail",
-            accuracy: "fail",
-            licence: "pass",
-            "fair-housing": "warn",
-        },
-        reports: 4,
-        agent: {
-            name: "Marcus Sterling",
-            email: "marcus@sterlingluxe.com",
-            phone: "(310) 555-0166",
-        },
-        note: "Interior photographs belong to a different property and the copy repeats claims that cannot be verified.",
-    },
-    {
-        id: "malibu-beachfront",
-        listingId: "5",
-        address: "1120 Ocean Front Walk",
-        locality: "Malibu",
-        price: 7_850_000,
-        status: "pending",
-        queuedMinutes: 640,
-        description:
-            "Beachfront modern on 60 feet of private sand. Walls of glass frame the water from every principal room. Four bedrooms, a spa-level primary bath and a rooftop lounge with a fire pit.",
-        photos: propertyGallery(4, 3),
-        compliance: {
-            photos: "pass",
-            accuracy: "warn",
-            licence: "pass",
-            "fair-housing": "warn",
-        },
-        reports: 1,
-        agent: {
-            name: "David Williams",
-            email: "david@coastlineestates.com",
-            phone: "(424) 555-0113",
-        },
-    },
-    {
-        id: "belair-villa",
-        listingId: "3",
-        address: "234 Oak Street",
-        locality: "Bel Air",
-        price: 4_500_000,
-        status: "pending",
-        queuedMinutes: 265,
-        description:
-            "Mediterranean villa behind private gates with mature olive trees and a motor court. Seven bedrooms, a two-story library, screening room and a guest house. Fully renovated in 2022 with new systems throughout.",
-        photos: propertyGallery(2, 3),
-        compliance: {
-            photos: "pass",
-            accuracy: "pass",
-            licence: "warn",
-            "fair-housing": "pass",
-        },
-        reports: 0,
-        agent: {
-            name: "Jennifer Martinez",
-            email: "jennifer@belairgroup.com",
-            phone: "(310) 555-0190",
-        },
-    },
-    {
-        id: "brentwood-mews",
-        listingId: "9",
-        address: "64 Brentwood Mews",
-        locality: "Brentwood",
-        price: 4_950_000,
-        status: "pending",
-        queuedMinutes: 95,
-        description:
-            "Garden-level mews house rebuilt to the studs in 2024. Three bedrooms, a walled courtyard and a detached studio that reads as a fourth.",
-        photos: propertyGallery(8, 3),
-        compliance: {
-            photos: "pass",
-            accuracy: "pass",
-            licence: "pass",
-            "fair-housing": "pass",
-        },
-        reports: 0,
-        agent: {
-            name: "Sarah Chen",
-            email: "sarah@luxuryrealestate.com",
-            phone: "(310) 555-0142",
-        },
-    },
-    {
-        id: "montana-row",
-        listingId: "8",
-        address: "301 Montana Row",
-        locality: "Santa Monica",
-        price: 3_950_000,
-        status: "changes",
-        queuedMinutes: 2_100,
-        description:
-            "Corner townhouse two blocks from the promenade. Three bedrooms over two levels with a roof terrace and secure parking for two.",
-        photos: propertyGallery(7, 3),
-        compliance: {
-            photos: "warn",
-            accuracy: "pass",
-            licence: "pass",
-            "fair-housing": "pass",
-        },
-        reports: 2,
-        agent: {
-            name: "Daniel Okafor",
-            email: "daniel@sunsetproperties.com",
-            phone: "(310) 555-0264",
-        },
-        note: "Replace the twilight exterior shots with daylight originals and remove the unverified school-district claim.",
-    },
-    {
-        id: "oak-avenue-estate",
-        listingId: "1",
-        address: "456 Oak Avenue",
-        locality: "Beverly Hills",
-        price: 3_200_000,
-        status: "approved",
-        queuedMinutes: 4_320,
-        description:
-            "Contemporary six-bedroom estate on a gated half-acre lot. Floor-to-ceiling glass opens to a level lawn, 60-foot pool and outdoor kitchen. Chef's kitchen with dual islands and a 900-bottle wine room.",
-        photos: propertyGallery(0, 3),
-        compliance: {
-            photos: "pass",
-            accuracy: "pass",
-            licence: "pass",
-            "fair-housing": "pass",
-        },
-        reports: 0,
-        agent: {
-            name: "Sarah Chen",
-            email: "sarah@luxuryrealestate.com",
-            phone: "(310) 555-0142",
-        },
-    },
-    {
-        id: "canyon-road",
-        listingId: "10",
-        address: "1220 Canyon Road",
-        locality: "Bel Air",
-        price: 6_400_000,
-        status: "rejected",
-        queuedMinutes: 7_200,
-        description:
-            "Canyon compound on two gated acres with a tennis pavilion, guest house and a pool terrace cut into the hillside.",
-        photos: propertyGallery(11, 3),
-        compliance: {
-            photos: "fail",
-            accuracy: "fail",
-            licence: "fail",
-            "fair-housing": "pass",
-        },
-        reports: 9,
-        agent: {
-            name: "Marcus Sterling",
-            email: "marcus@sterlingluxe.com",
-            phone: "(310) 555-0166",
-        },
-        note: "The submitting licence lapsed in June and the gallery duplicates a listing already live under another agent.",
-    },
-];
 
 export const MODERATION_FILTERS: {
     id: ModerationStatusFilter;
@@ -272,7 +68,7 @@ export const isOpen = (listing: ModerationListing) =>
     MODERATION_STATUSES[listing.status].open;
 
 export const submittedAt = (listing: ModerationListing) =>
-    new Date(QUEUE_NOW.getTime() - listing.queuedMinutes * MS_PER_MINUTE);
+    new Date(Date.now() - listing.queuedMinutes * MS_PER_MINUTE);
 
 export const agentFirm = (email: string) => email.slice(email.indexOf("@") + 1);
 
@@ -429,27 +225,5 @@ export const clearedCheckShare = (listings: ModerationListing[]) => {
         states.length,
     );
 };
-
-export const approveListings = (
-    listings: ModerationListing[],
-    ids: string[],
-): ModerationListing[] =>
-    listings.map((listing) =>
-        ids.includes(listing.id)
-            ? { ...listing, status: "approved", note: undefined, reports: 0 }
-            : listing,
-    );
-
-export const decideListings = (
-    listings: ModerationListing[],
-    ids: string[],
-    mode: DecisionMode,
-    note: string,
-): ModerationListing[] =>
-    listings.map((listing) =>
-        ids.includes(listing.id)
-            ? { ...listing, status: MODERATION_DECISIONS[mode].status, note }
-            : listing,
-    );
 
 export const CHECK_COUNT_LABEL = `${CHECK_TOTAL} checks`;

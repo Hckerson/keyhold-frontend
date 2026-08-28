@@ -1,31 +1,33 @@
 import {
-    Briefcase,
-    CheckCircle2,
-    Eye,
-    PhoneCall,
-    Search,
+    CalendarCheck,
+    CalendarClock,
+    CircleCheck,
+    CircleX,
+    DoorOpen,
+    Users,
+    Video,
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { DotTone } from "@/components/patterns/status-dot";
+import type { ViewingMode, ViewingStatus } from "@/lib/types/viewing";
 
-export const APPOINTMENT_TYPE_KEYS = [
-    "showing",
-    "meeting",
-    "inspection",
-    "closing",
-    "follow-up",
-] as const;
+export const APPOINTMENT_TYPE_KEYS: ViewingMode[] = [
+    "in-person",
+    "virtual",
+    "open-house",
+];
 
-export type AppointmentType = (typeof APPOINTMENT_TYPE_KEYS)[number];
+export type AppointmentType = ViewingMode;
 
-export const APPOINTMENT_STATUS_KEYS = [
+export const APPOINTMENT_STATUS_KEYS: ViewingStatus[] = [
     "confirmed",
-    "tentative",
-    "unconfirmed",
-] as const;
+    "pending",
+    "completed",
+    "cancelled",
+];
 
-export type AppointmentStatus = (typeof APPOINTMENT_STATUS_KEYS)[number];
+export type AppointmentStatus = ViewingStatus;
 
 export interface AppointmentTypeMeta {
     icon: LucideIcon;
@@ -34,14 +36,13 @@ export interface AppointmentTypeMeta {
 }
 
 export const APPOINTMENT_TYPES: Record<AppointmentType, AppointmentTypeMeta> = {
-    showing: { icon: Eye, tone: "info", label: "Showing" },
-    meeting: { icon: Briefcase, tone: "neutral", label: "Meeting" },
-    inspection: { icon: Search, tone: "warning", label: "Inspection" },
-    closing: { icon: CheckCircle2, tone: "success", label: "Closing" },
-    "follow-up": { icon: PhoneCall, tone: "accent", label: "Follow-up" },
+    "in-person": { icon: DoorOpen, tone: "accent", label: "In person" },
+    virtual: { icon: Video, tone: "info", label: "Virtual" },
+    "open-house": { icon: Users, tone: "highlight", label: "Open house" },
 };
 
 export interface AppointmentStatusMeta {
+    icon: LucideIcon;
     tone: DotTone;
     label: string;
 }
@@ -50,7 +51,16 @@ export const APPOINTMENT_STATUSES: Record<
     AppointmentStatus,
     AppointmentStatusMeta
 > = {
-    confirmed: { tone: "success", label: "Confirmed" },
-    tentative: { tone: "warning", label: "Tentative" },
-    unconfirmed: { tone: "neutral", label: "Unconfirmed" },
+    confirmed: {
+        icon: CalendarCheck,
+        tone: "success",
+        label: "Confirmed",
+    },
+    pending: {
+        icon: CalendarClock,
+        tone: "warning",
+        label: "Awaiting confirmation",
+    },
+    completed: { icon: CircleCheck, tone: "info", label: "Walked" },
+    cancelled: { icon: CircleX, tone: "neutral", label: "Cancelled" },
 };

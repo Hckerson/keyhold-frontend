@@ -1,14 +1,12 @@
-import { BadgeCheck, BellRing, Radio, UserCheck } from "lucide-react";
+import { BadgeCheck, BellRing, UserCheck } from "lucide-react";
 import type { ConfigField } from "@/components/patterns/config-field-grid";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import { strengthTone } from "@/lib/config/account-tones";
 import {
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
-    weeklyAlertVolume,
     type NotificationState,
 } from "@/lib/data/agent-account";
-import { formatCount } from "@/lib/utils";
 import type { User } from "@/lib/validations/user";
 
 export const AGENT_SETTINGS_FORM_ID = "agent-settings-form";
@@ -95,13 +93,6 @@ export const buildAgentSettingsStats = (
         label: "Alerts on",
         value: `${enabledNotificationCount(state)}/${NOTIFICATION_RULE_COUNT}`,
         tone: "accent",
-    },
-    {
-        id: "volume",
-        icon: Radio,
-        label: "Weekly sends",
-        value: formatCount(weeklyAlertVolume(state)),
-        tone: "info",
     },
     {
         id: "credentials",

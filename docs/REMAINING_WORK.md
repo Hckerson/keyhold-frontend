@@ -4,9 +4,9 @@ Every route in the app, what it reads from today, and the work left to finish it
 
 |                                      | Count |
 | ------------------------------------ | ----: |
-| Routes on live data                  |    16 |
-| Backend ready, screen still on mocks |    13 |
-| Blocked on a product decision        |     1 |
+| Routes on live data                  |    17 |
+| Backend ready, screen still on mocks |     0 |
+| Blocked on a product decision        |     0 |
 | Backend controllers, all resolving   |    20 |
 
 Both halves currently pass type-check, lint with zero warnings, and Prettier; the frontend also builds clean. The Nest container resolves every module. Nothing is committed — all of it is sitting in the working tree.
@@ -15,17 +15,17 @@ Both halves currently pass type-check, lint with zero warnings, and Prettier; th
 
 ## The one thing that blocks shipping
 
-### Buyers can pay, but nothing can release their money
+### Buyers can now release their own money — but nothing proves it works
 
-Payment confirmation now creates a **held** escrow with an inspection window instead of completing the sale outright — that was the point of the escrow work. But the release step only exists as an API. There is no `/dashboard/transactions` route anywhere in the app, and no release action on any existing screen.
+Payment confirmation creates a **held** escrow with an inspection window instead of completing the sale outright. The buyer-facing half now exists: `/dashboard/transactions` reads live through `usePurchases`, and `ReleaseEscrowModal` calls `PATCH /escrow/:id/release` via `useReleaseEscrow`. A completed purchase no longer waits on an admin.
 
-As it stands, a completed purchase sits in escrow indefinitely until an admin calls `PATCH /escrow/:id/release` by hand. A buyer-facing transaction screen with a release action has to land before this reaches production.
+What is left is proof on the backend. The buyer-facing half is now covered against a written checklist (`docs/MONEY_PATH.md`), but the authorisation rules that decide who may release a hold, and when, are enforced server-side and have no tests at all. That is the last thing standing between this and production.
 
 ---
 
 ## Route ledger
 
-Thirty routes. **Live** reads from the API today; **Ready** means the endpoint exists and only the screen is left.
+Thirty-one routes. **Live** reads from the API today; **Ready** means the endpoint exists and only the screen is left.
 
 ### Public & auth — 6 of 6 live
 
@@ -38,31 +38,32 @@ Thirty routes. **Live** reads from the API today; **Ready** means the endpoint e
 | `/signup`         | Live  | `/auth/register`         |
 | `/reset-password` | Live  | `/auth/reset-password`   |
 
-### Buyer — 4 of 8 live
+### Buyer — 5 of 9 live
 
-| Route                    | State | Data source                            |
-| ------------------------ | ----- | -------------------------------------- |
-| `/dashboard`             | Live  | Connections, saved, unread             |
-| `/dashboard/saved`       | Live  | `/saved-properties`                    |
-| `/dashboard/offers/[id]` | Live  | `/offers` + thread                     |
-| `/dashboard/settings`    | Live  | Profile + `/notifications/preferences` |
-| `/dashboard/offers`      | Ready | Connections `.offers[]`                |
-| `/dashboard/messages`    | Ready | Connections + `/messages`              |
-| `/dashboard/viewings`    | Ready | Connections `.viewings[]`              |
-| `/dashboard/alerts`      | Ready | `/notifications`                       |
+| Route                     | State | Data source                                          |
+| ------------------------- | ----- | ---------------------------------------------------- |
+| `/dashboard`              | Live  | Connections, saved, unread                           |
+| `/dashboard/saved`        | Live  | `/saved-properties`                                  |
+| `/dashboard/offers/[id]`  | Live  | `/offers` + thread                                   |
+| `/dashboard/settings`     | Live  | Profile + `/notifications/preferences`               |
+| `/dashboard/transactions` | Live  | `/transactions/my/purchases` + `/escrow/:id/release` |
+| `/dashboard/offers`       | Ready | Connections `.offers[]`                              |
+| `/dashboard/messages`     | Ready | Connections + `/messages`                            |
+| `/dashboard/viewings`     | Ready | Connections `.viewings[]`                            |
+| `/dashboard/alerts`       | Ready | `/notifications`                                     |
 
 ### Agent — 4 of 8 live
 
-| Route              | State       | Data source                      |
-| ------------------ | ----------- | -------------------------------- |
-| `/agent`           | Live        | Seller stats, connections, sales |
-| `/agent/leads`     | Live        | `/connections/incoming`          |
-| `/agent/listings`  | Live        | `/properties/seller/:id`         |
-| `/agent/settings`  | Live        | `/users/me`                      |
-| `/agent/pipeline`  | Ready       | Connections + transactions       |
-| `/agent/calendar`  | Ready       | Connections `.viewings[]`        |
-| `/agent/analytics` | Ready       | `/stats/agent`                   |
-| `/agent/concierge` | **Blocked** | No model — needs a product call  |
+| Route              | State | Data source                      |
+| ------------------ | ----- | -------------------------------- |
+| `/agent`           | Live  | Seller stats, connections, sales |
+| `/agent/leads`     | Live  | `/connections/incoming`          |
+| `/agent/listings`  | Live  | `/properties/seller/:id`         |
+| `/agent/settings`  | Live  | `/users/me`                      |
+| `/agent/pipeline`  | Live  | Connections + transactions       |
+| `/agent/calendar`  | Live  | Connections `.viewings[]`        |
+| `/agent/analytics` | Live  | `/stats/agent`                   |
+| `/agent/concierge` | Live  | `/concierge/*`                   |
 
 ### Admin — 2 of 8 live
 
@@ -83,13 +84,13 @@ Thirty routes. **Live** reads from the API today; **Ready** means the endpoint e
 
 Ordered by dependency, not priority — each step needs the one above it to have landed.
 
-### 01 · Push the schema — _blocked on the database_
+### 01 · Push the schema — _done_
 
 _One command · blocks phase 03._
 
 Three new models — `Notification`, `NotificationPreference`, `PlatformSetting` — are written into `schema.prisma` and the client is generated, but nothing is in the database yet. Every notification and settings endpoint returns an error until `pnpm prisma:push` runs. The change is purely additive.
 
-`prisma db push` currently fails with `P1001: Can't reach database server at localhost:5432` — Postgres is not running. Start it, then run the push.
+Pushed and verified against `pooled.db.prisma.io`. Two additive columns were added later for viewings (`mode`, `durationMinutes`) and pushed the same way.
 
 ### 02 · Build the client transport layer — _done_
 
@@ -101,7 +102,7 @@ _8 domains · unblocked all 13 screens._
 - **Enums** for flag, verification, dispute, escrow, notification, setting, audit and moderation values in `lib/enums/enums.ts`
 - The three new stats calls — `regions`, `trend`, `agent`
 
-### 03 · Wire the thirteen screens
+### 03 · Wire the thirteen screens — _done_
 
 _6 admin · 3 agent · 4 buyer._
 
@@ -115,11 +116,11 @@ Each follows the same transform already proven on the live consoles: server hook
 - **Admin user suspension** now posts to `/suspensions` with reason, duration and notes, and reactivation lifts the recorded suspension through `PATCH /suspensions/:id/lift`. The old status-flip path (`useSetUserStatus`, `ACCOUNT_STATUS_BY_MANAGED`) is gone.
 - **Buyer alert preferences** read and write `/notifications/preferences`. `AlertType` is now the backend `NotificationType`, so the settings screen covers all eight signals rather than a private set of six.
 
-### 05 · Cover the money path with tests
+### 05 · Cover the money path with tests — _frontend done, backend open_
 
-_Currently zero._
+The buyer half is covered. `docs/MONEY_PATH.md` states the acceptance criteria for the escrow release flow, and 49 tests across four files encode them: the transaction→purchase mapping, the ranking, filtering and totalling logic, `useReleaseEscrow`, and `TransactionsConsole` end to end through a mocked API. Writing them found three defects — a release that could be fired twice, an in-flight release that could be hidden, and a failure the buyer was never told about. All three are fixed and guarded.
 
-There is no test coverage anywhere in either half — the backend has a single generated `Hello World` end-to-end stub and the frontend has none. Funds now move through a hold-and-release state machine with authorisation rules about who may release and when. That path needs tests before it handles real money.
+The backend half is untouched: it still has a single generated `Hello World` end-to-end stub. Funds move through a hold-and-release state machine with authorisation rules about who may release and when, and none of those rules is tested. That is what remains before this handles real money.
 
 ---
 

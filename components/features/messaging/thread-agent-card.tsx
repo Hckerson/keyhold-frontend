@@ -13,12 +13,18 @@ import { formatAge } from "@/lib/utils";
 const STATUS_LABEL = "Thread state";
 const REPLY_LABEL = "Median reply";
 
+const NO_REPLY = "—";
+
 export interface ThreadAgentCardProps {
     conversation: Conversation;
+    replyMinutes: number | null;
 }
 
-export function ThreadAgentCard({ conversation }: ThreadAgentCardProps) {
-    const band = RESPONSE_BANDS[responseBandOf(conversation)];
+export function ThreadAgentCard({
+    conversation,
+    replyMinutes,
+}: ThreadAgentCardProps) {
+    const band = RESPONSE_BANDS[responseBandOf(replyMinutes ?? Infinity)];
 
     return (
         <div className="flex flex-col gap-3 py-3">
@@ -26,7 +32,7 @@ export function ThreadAgentCard({ conversation }: ThreadAgentCardProps) {
                 <Avatar
                     size="sm"
                     elevated={false}
-                    src={conversation.portrait}
+                    src={conversation.portrait ?? undefined}
                     alt={conversation.agent}
                     initials={conversation.initials}
                 />
@@ -45,18 +51,20 @@ export function ThreadAgentCard({ conversation }: ThreadAgentCardProps) {
                     <ConversationStatusMark status={conversation.status} />
                 </MetricCell>
                 <MetricCell label={REPLY_LABEL}>
-                    <span className="flex items-center gap-1.5">
-                        <ProgressBar
-                            value={responsePercent(
-                                conversation.responseMinutes,
-                            )}
-                            tone={band.tone}
-                            className="w-10 shrink-0"
-                        />
-                        <span className="text-text-secondary shrink-0 tabular-nums">
-                            {formatAge(conversation.responseMinutes)}
+                    {replyMinutes === null ? (
+                        <span className="text-text-secondary">{NO_REPLY}</span>
+                    ) : (
+                        <span className="flex items-center gap-1.5">
+                            <ProgressBar
+                                value={responsePercent(replyMinutes)}
+                                tone={band.tone}
+                                className="w-10 shrink-0"
+                            />
+                            <span className="text-text-secondary shrink-0 tabular-nums">
+                                {formatAge(replyMinutes)}
+                            </span>
                         </span>
-                    </span>
+                    )}
                 </MetricCell>
             </div>
         </div>

@@ -11,9 +11,17 @@ import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
 import {
+    useNotificationPreferences,
+    useUpdateNotificationPreferences,
+} from "@/lib/hooks/use-notifications";
+import { useRequestPasswordReset } from "@/lib/hooks/use-session";
+import { PasswordModal } from "@/components/features/settings/password-modal";
+import {
     agentCredentials,
     areNotificationsDirty,
-    INITIAL_NOTIFICATION_STATE,
+    EMPTY_NOTIFICATION_STATE,
+    toNotificationPayload,
+    toNotificationState,
     profileSignals,
     profileStrength,
     verifiedCredentialCount,
@@ -38,18 +46,31 @@ export function AgentSettingsConsole() {
     const { data: user, isError, refetch } = useCurrentUser();
     const listings = useSellerProperties(user?.id, LISTING_QUERY);
     const updateUser = useUpdateUser(user?.id ?? "");
+    const storedPreferences = useNotificationPreferences();
+    const updatePreferences = useUpdateNotificationPreferences();
+    const requestReset = useRequestPasswordReset();
 
     const baseline = toAgentForm(user);
     const [form, setForm] = useState<AgentSettingsForm>(EMPTY_AGENT_FORM);
     const [hydrated, setHydrated] = useState(false);
     const [notifications, setNotifications] = useState(
-        INITIAL_NOTIFICATION_STATE,
+        EMPTY_NOTIFICATION_STATE,
     );
+    const [alertsHydrated, setAlertsHydrated] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [resetOpen, setResetOpen] = useState(false);
+    const [resetSent, setResetSent] = useState(false);
+
+    const baselineAlerts = toNotificationState(storedPreferences.data ?? []);
 
     if (user && !hydrated) {
         setForm(baseline);
         setHydrated(true);
+    }
+
+    if (storedPreferences.data && !alertsHydrated) {
+        setNotifications(baselineAlerts);
+        setAlertsHydrated(true);
     }
 
     const credentials = agentCredentials(user);
@@ -58,7 +79,8 @@ export function AgentSettingsConsole() {
     const verified = verifiedCredentialCount(credentials);
 
     const pending = changedFieldCount(form, baseline);
-    const dirty = pending > 0 || areNotificationsDirty(notifications);
+    const dirty =
+        pending > 0 || areNotificationsDirty(notifications, baselineAlerts);
     useUnsavedChangesWarning(dirty && !saved);
 
     const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -75,8 +97,8 @@ export function AgentSettingsConsole() {
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         if (!user) return;
-        void updateUser
-            .mutateAsync({
+        void Promise.all([
+            updateUser.mutateAsync({
                 fullName: form.fullName,
                 email: form.email,
                 phoneNumber: form.phone,
@@ -84,13 +106,26 @@ export function AgentSettingsConsole() {
                 agencyName: form.brokerage,
                 licenseNumber: form.license,
                 bio: form.bio,
-            })
-            .then(() => setSaved(true));
+            }),
+            updatePreferences.mutateAsync({
+                preferences: toNotificationPayload(
+                    storedPreferences.data ?? [],
+                    notifications,
+                ),
+            }),
+        ]).then(() => setSaved(true));
+    };
+
+    const sendPasswordReset = () => {
+        if (!user?.email) return;
+        void requestReset
+            .mutateAsync({ email: user.email })
+            .then(() => setResetSent(true));
     };
 
     const handleReset = () => {
         setForm(baseline);
-        setNotifications(INITIAL_NOTIFICATION_STATE);
+        setNotifications(baselineAlerts);
         setSaved(false);
     };
 
@@ -145,8 +180,21 @@ export function AgentSettingsConsole() {
                     signals={signals}
                     strength={strength}
                     credentials={credentials}
+                    onSecurityAction={() => {
+                        setResetSent(false);
+                        setResetOpen(true);
+                    }}
                 />
             </div>
+
+            <PasswordModal
+                open={resetOpen}
+                email={user?.email ?? ""}
+                pending={requestReset.isPending}
+                sent={resetSent}
+                onClose={() => setResetOpen(false)}
+                onSend={sendPasswordReset}
+            />
         </div>
     );
 }

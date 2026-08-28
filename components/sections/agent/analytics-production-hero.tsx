@@ -4,10 +4,9 @@ import {
     type ColumnSeries,
 } from "@/components/ui/charts/column-chart";
 import { formatMillions } from "@/lib/utils";
-import {
-    ANALYTICS_PERIOD,
-    monthlyProduction,
-    production,
+import type {
+    MonthlyProduction,
+    ProductionSummary,
 } from "@/lib/data/agent-analytics";
 
 const MILLION = 1_000_000;
@@ -18,18 +17,25 @@ const volumeSeries: ColumnSeries[] = [
     { key: "volume", name: "Volume", tone: "accent" },
 ];
 
-export function AnalyticsProductionHero() {
-    const plot = monthlyProduction.map(({ month, volume }) => ({
-        month,
-        volume,
-    }));
+export interface AnalyticsProductionHeroProps {
+    period: string;
+    production: ProductionSummary;
+    months: MonthlyProduction[];
+}
+
+export function AnalyticsProductionHero({
+    period,
+    production,
+    months,
+}: AnalyticsProductionHeroProps) {
+    const plot = months.map(({ month, volume }) => ({ month, volume }));
 
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
             <div className="min-w-0">
                 <p className="micro-label">
                     {production.label} · {production.closings} {CLOSINGS_LABEL}{" "}
-                    · {ANALYTICS_PERIOD}
+                    · {period}
                 </p>
                 <div className="mt-1 flex items-center gap-2">
                     <p className="text-h4 font-display text-text font-light tabular-nums">

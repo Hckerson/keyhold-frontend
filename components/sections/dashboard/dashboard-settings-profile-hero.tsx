@@ -4,7 +4,6 @@ import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { strengthTone } from "@/lib/config/account-tones";
 import { ALERT_TYPE_COUNT } from "@/lib/data/alerts";
-import { PRIVACY_CONTROL_COUNT } from "@/lib/data/buyer-account";
 import { minutesSince } from "@/lib/utils/elapsed";
 
 const HERO_EYEBROW = "Buyer profile";
@@ -17,7 +16,6 @@ const PENDING_LEDE = "Unsaved edits reach your matches once you save";
 const SYNCED_LEDE = "Live values match what your search and alerts run on";
 const VERIFIED_LABEL = "Verified";
 const ALERTS_LABEL = "Signals on";
-const SHARING_LABEL = "Sharing";
 const UPDATED_LABEL = "Last updated";
 const OF_LABEL = "of";
 const STRENGTH_METER_LABEL = "Search profile strength";
@@ -29,7 +27,6 @@ export interface DashboardSettingsProfileHeroProps {
     documents: number;
     updatedAt?: string;
     enabledAlerts: number;
-    sharedAudiences: number;
 }
 
 export function DashboardSettingsProfileHero({
@@ -39,7 +36,6 @@ export function DashboardSettingsProfileHero({
     documents,
     updatedAt,
     enabledAlerts,
-    sharedAudiences,
 }: DashboardSettingsProfileHeroProps) {
     const dirty = pending > 0;
 
@@ -79,11 +75,6 @@ export function DashboardSettingsProfileHero({
                 <MetricCell label={ALERTS_LABEL}>
                     <span className="tabular-nums">
                         {enabledAlerts} {OF_LABEL} {ALERT_TYPE_COUNT}
-                    </span>
-                </MetricCell>
-                <MetricCell label={SHARING_LABEL}>
-                    <span className="tabular-nums">
-                        {sharedAudiences} {OF_LABEL} {PRIVACY_CONTROL_COUNT}
                     </span>
                 </MetricCell>
                 <MetricCell label={UPDATED_LABEL}>

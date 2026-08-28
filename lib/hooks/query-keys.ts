@@ -97,6 +97,23 @@ export const queryKeys = {
     settings: {
         all: ["settings"] as const,
     },
+    concierge: {
+        all: ["concierge"] as const,
+        overview: ["concierge", "overview"] as const,
+        clients: ["concierge", "clients"] as const,
+        client: (id: string) => ["concierge", "clients", id] as const,
+        services: ["concierge", "services"] as const,
+        practices: ["concierge", "practices"] as const,
+    },
+    savedSearches: {
+        all: ["saved-searches"] as const,
+        detail: (id: string) => ["saved-searches", "detail", id] as const,
+        matches: (id: string) => ["saved-searches", "matches", id] as const,
+    },
+    serviceHealth: {
+        all: ["service-health"] as const,
+        window: (hours: number) => ["service-health", hours] as const,
+    },
     auditLogs: {
         all: ["audit-logs"] as const,
         list: (input: AuditLogQuery) => ["audit-logs", "list", input] as const,
@@ -112,6 +129,7 @@ export const queryKeys = {
     users: {
         all: ["users"] as const,
         me: ["users", "me"] as const,
+        tierDistribution: ["users", "tiers", "distribution"] as const,
         detail: (id: string) => ["users", "detail", id] as const,
     },
     stats: {

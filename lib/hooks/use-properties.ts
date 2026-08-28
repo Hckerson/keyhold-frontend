@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { propertiesAPI, type FacetOptions } from "@/lib/api/properties";
 import { queryKeys } from "@/lib/hooks/query-keys";
+import type { ModerationDecision } from "@/lib/enums/enums";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type {
     CreatePropertyInput,
@@ -90,6 +91,16 @@ export function useDeleteProperty() {
     });
 }
 
+export function usePromoteProperty() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, days }: { id: string; days: number }) =>
+            propertiesAPI.promote(id, days),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
+    });
+}
+
 export function useMarkPropertySold() {
     const client = useQueryClient();
     return useMutation({
@@ -107,5 +118,28 @@ export function useUploadPropertyImages(id: string) {
             client.invalidateQueries({
                 queryKey: queryKeys.properties.detail(id),
             }),
+    });
+}
+
+export function useModerateProperty() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({
+            id,
+            decision,
+            note,
+        }: {
+            id: string;
+            decision: ModerationDecision;
+            note?: string;
+        }) => propertiesAPI.moderate(id, decision, note),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({
+                    queryKey: queryKeys.properties.all,
+                }),
+                client.invalidateQueries({ queryKey: queryKeys.flags.all }),
+            ]);
+        },
     });
 }

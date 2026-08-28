@@ -23,8 +23,6 @@ export interface AdminNavSection {
     items: AdminNavItem[];
 }
 
-export const PENDING_VERIFICATIONS = 7;
-
 export const ADMIN_NAV: AdminNavSection[] = [
     {
         label: "Overview",
@@ -90,7 +88,6 @@ export const ADMIN_NAV: AdminNavSection[] = [
                 href: "/admin/verifications",
                 icon: ShieldCheck,
                 description: "Identity & listing checks",
-                badge: PENDING_VERIFICATIONS,
             },
         ],
     },
@@ -107,6 +104,12 @@ export const ADMIN_NAV: AdminNavSection[] = [
     },
 ];
 
-export const ADMIN_ROUTES: AdminNavItem[] = ADMIN_NAV.flatMap(
-    (section) => section.items,
-);
+export const adminNav = (pendingVerifications: number): AdminNavSection[] =>
+    ADMIN_NAV.map((section) => ({
+        ...section,
+        items: section.items.map((item) =>
+            item.href === "/admin/verifications"
+                ? { ...item, badge: pendingVerifications || undefined }
+                : item,
+        ),
+    }));

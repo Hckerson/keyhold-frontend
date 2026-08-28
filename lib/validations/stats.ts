@@ -67,11 +67,16 @@ export const agentAnalyticsSchema = z.object({
         listings: z.number().int(),
     }),
     monthly: z.array(growthPointSchema),
+    monthlyDeals: z.array(growthPointSchema),
     benchmarks: z.object({
         daysToClose: z.number(),
         platformDaysToClose: z.number(),
         saleToList: z.number(),
         platformSaleToList: z.number(),
+        averagePrice: z.number(),
+        platformAveragePrice: z.number(),
+        rating: z.number(),
+        platformRating: z.number(),
     }),
 });
 

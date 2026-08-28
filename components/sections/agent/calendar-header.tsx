@@ -1,9 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
-import { SCHEDULE_ACTION } from "@/lib/data/agent-calendar";
+import { PanelLink } from "@/components/features/shared/panel-link";
 
 const CALENDAR_TITLE = "Calendar";
-const CALENDAR_LEDE = "Showings, inspections and closings across your week";
+const CALENDAR_LEDE = "Viewings across your week, by day and by format";
 
 export interface CalendarHeaderProps {
     summary: string;
@@ -15,11 +14,7 @@ export function CalendarHeader({ summary }: CalendarHeaderProps) {
             title={CALENDAR_TITLE}
             lede={CALENDAR_LEDE}
             summary={summary}
-            action={
-                <Button type="button" variant="primary" size="sm">
-                    {SCHEDULE_ACTION}
-                </Button>
-            }
+            action={<PanelLink href="/agent/leads" label="Lead desk" />}
         />
     );
 }

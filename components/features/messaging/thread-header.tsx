@@ -1,9 +1,9 @@
 import { Phone } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ConversationStatusMark } from "@/components/features/messaging/conversation-status-mark";
 import type { Conversation } from "@/lib/types";
-import { formatAge } from "@/lib/utils";
+import { formatAge, telHref } from "@/lib/utils";
 
 const CALL_ACTION = "Call";
 const LAST_SUFFIX = "since last reply";
@@ -20,7 +20,7 @@ export function ThreadHeader({ conversation }: ThreadHeaderProps) {
                     size="sm"
                     tone="accent"
                     elevated={false}
-                    src={conversation.portrait}
+                    src={conversation.portrait ?? undefined}
                     alt={conversation.agent}
                     initials={conversation.initials}
                 />
@@ -43,14 +43,23 @@ export function ThreadHeader({ conversation }: ThreadHeaderProps) {
                 <p className="micro-label hidden md:block">
                     {formatAge(conversation.minutesAgo)} {LAST_SUFFIX}
                 </p>
-                <Button type="button" variant="secondary" size="sm">
-                    <Phone
-                        className="mr-1.5 size-3"
-                        strokeWidth={1.5}
-                        aria-hidden="true"
-                    />
-                    {CALL_ACTION}
-                </Button>
+                {conversation.phone && (
+                    <a
+                        href={telHref(conversation.phone)}
+                        aria-label={`${CALL_ACTION} ${conversation.agent}`}
+                        className={buttonVariants({
+                            variant: "secondary",
+                            size: "sm",
+                        })}
+                    >
+                        <Phone
+                            className="mr-1.5 size-3"
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                        {CALL_ACTION}
+                    </a>
+                )}
             </div>
         </header>
     );

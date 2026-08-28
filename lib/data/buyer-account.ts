@@ -1,7 +1,6 @@
 import {
     BadgeCheck,
     CalendarClock,
-    Eye,
     Phone,
     Search,
     Signpost,
@@ -10,22 +9,14 @@ import {
 } from "lucide-react";
 import type { ShareDatum } from "@/components/patterns/share-row";
 import { signalTone } from "@/lib/config/account-tones";
-import type {
-    AccountCredential,
-    PrivacyControl,
-    SecurityControl,
-} from "@/lib/types";
+import type { AccountCredential, SecurityControl } from "@/lib/types";
 import { percentOf, sum } from "@/lib/utils";
 import type { User } from "@/lib/validations/user";
 
 const UNVERIFIED_ISSUER = "Not on file";
 const IDENTITY_ISSUER = "Identity document";
 
-export const SETTINGS_DIALOG_KEYS = [
-    "password",
-    "two-factor",
-    "delete",
-] as const;
+export const SETTINGS_DIALOG_KEYS = ["password"] as const;
 export type SettingsDialogKey = (typeof SETTINGS_DIALOG_KEYS)[number];
 
 export const buyerDocuments = (user: User | undefined): AccountCredential[] => [
@@ -58,79 +49,16 @@ export const documentCount = (documents: AccountCredential[]) =>
 export const verifiedDocumentCount = (documents: AccountCredential[]) =>
     documents.filter((document) => document.state === "verified").length;
 
-export const buyerSecurityControls = (
-    twoFactorEnabled: boolean,
-): readonly SecurityControl<SettingsDialogKey>[] => [
-    {
-        id: "password",
-        label: "Password",
-        caption: "Rotate the password you use to sign in to the dashboard",
-        action: "Change",
-        state: "enabled",
-        lastChangedMinutes: 86_400,
-    },
-    {
-        id: "two-factor",
-        label: "Two-Factor Authentication",
-        caption: "Require a second factor on every new device",
-        action: twoFactorEnabled ? "Disable" : "Enable",
-        state: twoFactorEnabled ? "enabled" : "recommended",
-    },
-    {
-        id: "delete",
-        label: "Delete Account",
-        caption: "Erase your saved searches, offers and viewing history",
-        action: "Delete",
-        state: "critical",
-    },
-];
-
-export type PrivacyControlId =
-    | "profile-visibility"
-    | "activity-sharing"
-    | "contact-sharing";
-
-export type PrivacyState = Record<PrivacyControlId, boolean>;
-
-export const PRIVACY_CONTROLS: readonly PrivacyControl<PrivacyControlId>[] = [
-    {
-        id: "profile-visibility",
-        icon: Eye,
-        label: "Profile visible to agents",
-        audience: "Verified agents",
-        scope: "profile",
-    },
-    {
-        id: "activity-sharing",
-        icon: Signpost,
-        label: "Search activity sharing",
-        audience: "Recommendation engine",
-        scope: "activity",
-    },
-    {
-        id: "contact-sharing",
-        icon: Phone,
-        label: "Contact details on enquiry",
-        audience: "Listing agents",
-        scope: "contact",
-    },
-];
-
-export const PRIVACY_CONTROL_COUNT = PRIVACY_CONTROLS.length;
-
-export const INITIAL_PRIVACY_STATE: PrivacyState = {
-    "profile-visibility": true,
-    "activity-sharing": false,
-    "contact-sharing": true,
-};
-
-export const sharedAudienceCount = (state: PrivacyState) =>
-    PRIVACY_CONTROLS.filter((control) => state[control.id]).length;
-
-export const isPrivacyDirty = (state: PrivacyState) =>
-    PRIVACY_CONTROLS.some(
-        (control) => state[control.id] !== INITIAL_PRIVACY_STATE[control.id],
-    );
+export const buyerSecurityControls =
+    (): readonly SecurityControl<SettingsDialogKey>[] => [
+        {
+            id: "password",
+            label: "Password",
+            caption: "Send a reset link to the email on this account",
+            action: "Send link",
+            state: "enabled",
+        },
+    ];
 
 export interface SearchSignal {
     id: string;

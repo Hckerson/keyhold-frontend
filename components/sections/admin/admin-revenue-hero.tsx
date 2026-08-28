@@ -2,25 +2,33 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ColumnChart } from "@/components/ui/charts/column-chart";
 import { MetricCell } from "@/components/patterns/metric-cell";
-import {
-    COMMISSIONS_YTD_LABEL,
-    GMV_GROWTH_LABEL,
-    GMV_MONTHS,
-    GMV_SERIES,
-    REVENUE_METRICS,
-} from "@/lib/data/admin-overview";
-import { GMV_30D } from "@/lib/data/admin-platform";
+import { GMV_SERIES } from "@/lib/data/admin-overview";
+import type { MetricItem } from "@/lib/types";
 import { formatMillions } from "@/lib/utils";
 
-const HERO_EYEBROW = "Gross merchandise value · last 30 days";
+const HERO_EYEBROW = "Gross merchandise value · latest month";
 const GMV_LABEL = "Settled";
-const COMMISSION_LEAD = "Commissions year to date";
+const COMMISSION_LEAD = "Commissions on settled volume";
 const PAYMENTS_ACTION = "Payments";
 const TRANSACTIONS_ACTION = "Transactions";
 const CHART_HEIGHT = 200;
 const MILLIONS = 1_000_000;
 
-export function AdminRevenueHero() {
+export interface AdminRevenueHeroProps {
+    gmv: number;
+    growthLabel: string;
+    commissionsLabel: string;
+    months: Record<string, string | number>[];
+    metrics: MetricItem[];
+}
+
+export function AdminRevenueHero({
+    gmv,
+    growthLabel,
+    commissionsLabel,
+    months,
+    metrics,
+}: AdminRevenueHeroProps) {
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -28,17 +36,17 @@ export function AdminRevenueHero() {
                     <p className="micro-label truncate">{HERO_EYEBROW}</p>
                     <div className="mt-1 flex items-baseline gap-2">
                         <p className="text-h4 font-display text-text font-light tabular-nums">
-                            {formatMillions(GMV_30D, 0)}
+                            {formatMillions(gmv, 0)}
                         </p>
                         <span className="micro-label">{GMV_LABEL}</span>
                         <span className="text-success text-xs font-medium tabular-nums">
-                            {GMV_GROWTH_LABEL}
+                            {growthLabel}
                         </span>
                     </div>
                     <p className="text-text-secondary mt-0.5 truncate text-xs">
                         {COMMISSION_LEAD} ·{" "}
                         <span className="text-text font-semibold tabular-nums">
-                            {COMMISSIONS_YTD_LABEL}
+                            {commissionsLabel}
                         </span>
                     </p>
                 </div>
@@ -66,7 +74,7 @@ export function AdminRevenueHero() {
             </div>
 
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
-                {REVENUE_METRICS.map((metric) => (
+                {metrics.map((metric) => (
                     <MetricCell key={metric.label} label={metric.label}>
                         <span className="truncate tabular-nums">
                             {metric.value}
@@ -77,7 +85,7 @@ export function AdminRevenueHero() {
 
             <ColumnChart
                 className="mt-3"
-                data={GMV_MONTHS}
+                data={months}
                 xKey="month"
                 series={GMV_SERIES}
                 divideBy={MILLIONS}

@@ -40,4 +40,5 @@ export const toManagedListing = (property: Property): ManagedListing => ({
     saves: property._count?.savedBy ?? 0,
     showings: property._count?.viewings ?? 0,
     offers: property._count?.offers ?? 0,
+    featuredUntil: property.featuredUntil ?? null,
 });

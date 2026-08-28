@@ -35,7 +35,7 @@ export function ConciergeClientTable({ clients }: ConciergeClientTableProps) {
                         scope="col"
                         className="micro-label w-12 pl-3 text-right"
                     >
-                        Closed
+                        Open
                     </th>
                     <th scope="col" className="micro-label w-28 pl-3 text-left">
                         Next

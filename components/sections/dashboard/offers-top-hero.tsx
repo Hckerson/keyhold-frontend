@@ -1,18 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { OfferGapChip } from "@/components/features/dashboard/offer-gap-chip";
 import { GAP_BANDS, OFFER_STATUSES, gapBandOf } from "@/lib/config/offer-tones";
-import {
-    activePrice,
-    discountPercent,
-    gapPercent,
-    isOpen,
-} from "@/lib/data/offers";
+import { activePrice, discountPercent, gapPercent } from "@/lib/data/offers";
 import type { Offer } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
 
@@ -25,14 +19,12 @@ const GAP_LABEL = "Gap to ask";
 const AGENT_LABEL = "Represented by";
 const NO_COUNTER = "—";
 const VIEW_ACTION = "View Details";
-const WITHDRAW_ACTION = "Withdraw";
 
 export interface OffersTopHeroProps {
     offer: Offer;
-    onWithdraw: (id: string) => void;
 }
 
-export function OffersTopHero({ offer, onWithdraw }: OffersTopHeroProps) {
+export function OffersTopHero({ offer }: OffersTopHeroProps) {
     const status = OFFER_STATUSES[offer.status];
     const band = GAP_BANDS[gapBandOf(discountPercent(offer))];
 
@@ -80,15 +72,6 @@ export function OffersTopHero({ offer, onWithdraw }: OffersTopHeroProps) {
                         href={`/dashboard/offers/${offer.id}`}
                         label={VIEW_ACTION}
                     />
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        disabled={!isOpen(offer)}
-                        onClick={() => onWithdraw(offer.id)}
-                    >
-                        {WITHDRAW_ACTION}
-                    </Button>
                 </div>
             </div>
 

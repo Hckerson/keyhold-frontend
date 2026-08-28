@@ -11,9 +11,10 @@ import {
 } from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { formatUsd } from "@/lib/utils";
 import type { Listing } from "@/lib/types";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 interface Spec {
     icon: LucideIcon;
@@ -36,6 +37,8 @@ interface ListingView {
 }
 
 const PRICE_LABEL = "Guide price";
+const VIEWING_ACTION = "Private viewing";
+const DOSSIER_ACTION = "View full dossier";
 
 const toView = (listing: Listing): ListingView => ({
     id: listing.id,
@@ -133,19 +136,25 @@ export function PremierListing({ listing }: PremierListingProps) {
                         <SpecCluster specs={specs} />
 
                         <div className="flex flex-wrap items-center gap-6">
-                            <Button variant="primary" size="md">
-                                Private viewing
+                            <Link
+                                href={`${PUBLIC_ROUTES.listing(view.id)}#agent`}
+                                className={buttonVariants({
+                                    variant: "primary",
+                                    size: "md",
+                                })}
+                            >
+                                {VIEWING_ACTION}
                                 <ArrowUpRight
                                     size={15}
                                     strokeWidth={1.5}
                                     className="ml-1.5"
                                 />
-                            </Button>
+                            </Link>
                             <Link
-                                href={`/listing/${view.id}`}
+                                href={PUBLIC_ROUTES.listing(view.id)}
                                 className="border-border-dark hover:border-accent text-text ease-smooth inline-flex items-center gap-1.5 border-b pb-0.5 text-xs font-medium transition-colors duration-200"
                             >
-                                View full dossier
+                                {DOSSIER_ACTION}
                                 <ArrowRight
                                     size={12}
                                     strokeWidth={1.5}

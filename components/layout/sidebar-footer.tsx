@@ -1,7 +1,12 @@
 "use client";
 
 import { LogOut } from "lucide-react";
-import { rowBase, rowIconSlot, rowIdle } from "@/components/layout/sidebar-nav";
+import {
+    rowBase,
+    rowCollapsed,
+    rowIconSlot,
+    rowIdle,
+} from "@/components/layout/sidebar-nav";
 import type { AuthUser } from "@/lib/types/auth";
 import { cn, initialsOf } from "@/lib/utils";
 
@@ -9,8 +14,8 @@ function UserCard({ user, collapsed }: { user: AuthUser; collapsed: boolean }) {
     return (
         <div
             className={cn(
-                "flex h-11 items-center gap-2 rounded-lg",
-                collapsed ? "justify-center" : "pr-2",
+                "flex h-11 items-center gap-2 rounded-lg px-2",
+                collapsed && rowCollapsed,
             )}
         >
             <span className={cn(rowIconSlot, "h-11")}>
@@ -41,7 +46,12 @@ export function SidebarFooter({
     collapsed: boolean;
 }) {
     return (
-        <div className="border-sidebar-border flex flex-col gap-0.5 border-t px-2 py-1.5">
+        <div
+            className={cn(
+                "border-sidebar-border flex shrink-0 flex-col gap-0.5 border-t py-1.5",
+                collapsed ? "px-1.5" : "px-2",
+            )}
+        >
             {user && <UserCard user={user} collapsed={collapsed} />}
 
             {onLogout && (
@@ -50,11 +60,7 @@ export function SidebarFooter({
                     onClick={onLogout}
                     title={collapsed ? "Log out" : undefined}
                     aria-label="Log out"
-                    className={cn(
-                        rowBase,
-                        rowIdle,
-                        collapsed ? "justify-center pr-0" : "pr-2",
-                    )}
+                    className={cn(rowBase, rowIdle, collapsed && rowCollapsed)}
                 >
                     <span className={rowIconSlot}>
                         <LogOut size={12} strokeWidth={1.5} />

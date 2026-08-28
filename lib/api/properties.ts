@@ -57,6 +57,9 @@ export const propertiesAPI = {
     remove: (id: string) =>
         query.delete<Property>(config.api.properties.detail(id)),
 
+    promote: (id: string, days: number) =>
+        query.patch<Property>(config.api.properties.promote(id), { days }),
+
     markSold: (id: string) =>
         query.patch<Property>(config.api.properties.markSold(id)),
 

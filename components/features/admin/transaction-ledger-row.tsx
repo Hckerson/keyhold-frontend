@@ -11,12 +11,12 @@ import {
 } from "@/lib/config/transaction-tones";
 import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 import { cn, formatMillions } from "@/lib/utils";
-import type { Transaction } from "@/lib/types";
+import type { LedgerTransaction } from "@/lib/types";
 
 const OPEN_LABEL = "Open the deal";
 
 export interface TransactionLedgerRowProps {
-    transaction: Transaction;
+    transaction: LedgerTransaction;
     onOpen: (id: string) => void;
 }
 

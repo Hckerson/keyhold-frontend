@@ -19,5 +19,10 @@ export const createMessageSchema = z.object({
     content: z.string().min(1, "Write a message before sending"),
 });
 
+export const unreadMessageCountSchema = z.object({
+    unreadCount: z.number().int(),
+});
+
 export type Message = z.infer<typeof messageSchema>;
 export type CreateMessageInput = z.infer<typeof createMessageSchema>;
+export type UnreadMessageCount = z.infer<typeof unreadMessageCountSchema>;
