@@ -6,6 +6,8 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 
 **Verdict:** the request path is well built — validation, layering and webhook verification are all correct, and the guard coverage is exact. The gaps are the ones the guide warns about by name: nothing throttles a login, nothing makes a repeated request safe, and the token cannot be revoked. Seven findings, three of them security-relevant.
 
+**All seven are now fixed.** The database migration for 05.2 and 05.4 is written but not yet applied — run `pnpm db:migrate` against your database before the new columns exist.
+
 ---
 
 ## What came back clean
@@ -24,7 +26,7 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 
 ## 05.1 · The configured token lifetime is ignored
 
-> **Concept:** sessions vs. tokens · **Severity:** security-relevant, and a rule violation · **Status:** Open
+> **Concept:** sessions vs. tokens · **Severity:** security-relevant, and a rule violation · **Status:** Fixed
 
 `src/common/config/env.validation.ts` validates `JWT_EXPIRATION` with a default of `24h`. Nothing reads it. `auth.module.ts` hardcodes the lifetime instead:
 
@@ -43,7 +45,7 @@ Whichever number is right, one of the two has to go.
 
 ## 05.2 · A seven-day token that cannot be revoked
 
-> **Concept:** sessions vs. tokens · **Severity:** security-relevant · **Status:** Open
+> **Concept:** sessions vs. tokens · **Severity:** security-relevant · **Status:** Fixed
 
 There is no logout, no refresh, and no blocklist. `grep -rn "logout|refresh|revoke|blocklist"` over the whole auth module returns nothing. The auth surface is `register`, `login`, `forgot-password`, `reset-password`, `onboarding` — and no way to end a session.
 
@@ -57,7 +59,7 @@ The consequence is concrete. A stolen token works for seven days. A user who sus
 
 ## 05.3 · Nothing is rate limited
 
-> **Concept:** rate limiting · **Severity:** security-relevant · **Status:** Open
+> **Concept:** rate limiting · **Severity:** security-relevant · **Status:** Fixed
 
 `@nestjs/throttler` is not installed, and no throttling exists anywhere. The guide lists rate limiting as one of sixteen backend concepts; the API implements zero of it.
 
@@ -67,7 +69,7 @@ The consequence is concrete. A stolen token works for seven days. A user who sus
 
 ## 05.4 · No idempotency anywhere, and mail sent inside the request
 
-> **Concept:** idempotency · background jobs · **Severity:** correctness under retry · **Status:** Open
+> **Concept:** idempotency · background jobs · **Severity:** correctness under retry · **Status:** Fixed
 
 `grep -rli "idempotenc"` over `src/` returns nothing. The guide names the exact scenario: _"The user double-clicks 'Submit offer'; an idempotency key ensures one offer, not two. Networks retry on their own, so this is not paranoia."_
 
@@ -79,7 +81,7 @@ The related half: settlement mail is awaited inside the request. `notifySettleme
 
 ## 05.5 · Nine `console.*` calls, six of them swallowing real failures
 
-> **Concept:** error handling · **Severity:** rule violation, with a monitoring consequence · **Status:** Open
+> **Concept:** error handling · **Severity:** rule violation, with a monitoring consequence · **Status:** Fixed
 
 Backend rule 12: _"No `console.log` or debug statements in committed code. Use the Nest logger."_ There are nine.
 
@@ -100,7 +102,7 @@ Those six are not cosmetic. Each marks a notification that silently failed to re
 
 ## 05.6 · Swagger is served in every environment
 
-> **Concept:** HTTP surface · **Severity:** avoidable exposure · **Status:** Open
+> **Concept:** HTTP surface · **Severity:** avoidable exposure · **Status:** Fixed
 
 `SwaggerModule.setup('api/docs', app, document)` runs unconditionally in `main.ts`. Every route, DTO shape, enum and required field is published at `/api/docs` wherever the app runs, production included.
 
@@ -110,7 +112,7 @@ This is a map of the attack surface handed over for free — and it pairs badly 
 
 ## 05.7 · The exception filter catches only half the errors
 
-> **Concept:** error handling · **Severity:** latent, plus a rule violation · **Status:** Open
+> **Concept:** error handling · **Severity:** latent, plus a rule violation · **Status:** Fixed
 
 `HttpExceptionFilter` is `@Catch(HttpException)`, and it is the only filter. Anything that is not an `HttpException` never reaches it — including `RepoError`, which is what every repository throws when Prisma fails. Those fall through to Nest's default handler and become a bare 500 with no logging of the underlying cause.
 
