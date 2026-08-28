@@ -2,6 +2,14 @@ import type { AuthStep } from "@/components/features/auth/parts/auth-form-header
 import type { AuthTitleBlockEntry } from "@/components/features/auth/parts/auth-title-block";
 import { AUTH_ROUTES } from "@/lib/constants";
 
+export const AUTH_FAILURES = {
+    register:
+        "We couldn't create your account. Review your details and try again.",
+    request:
+        "We couldn't send the reset link. Check the address and try again.",
+    reset: "We couldn't reset your password. The link may have expired — request a new one.",
+} as const;
+
 export const RECOVERY_STEP: Record<"request" | "confirm", AuthStep> = {
     request: { current: 1, total: 2 },
     confirm: { current: 2, total: 2 },

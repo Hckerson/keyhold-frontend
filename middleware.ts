@@ -1,6 +1,19 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import {
+    ACCESS_TOKEN_COOKIE,
+    AUTH_ROUTES,
+    PORTAL_BY_ROLE,
+    loginWithRedirect,
+    portalForRole,
+} from "@/lib/constants";
 import type { JwtPayload } from "@/lib/types/auth";
+
+type PortalRole = keyof typeof PORTAL_BY_ROLE;
+
+const PORTAL_ENTRIES = Object.entries(PORTAL_BY_ROLE) as [PortalRole, string][];
+
+const AUTH_PATHS: string[] = [AUTH_ROUTES.login, AUTH_ROUTES.signup];
 
 const decodeJwt = (token: string): JwtPayload | null => {
     try {
@@ -16,63 +29,47 @@ const decodeJwt = (token: string): JwtPayload | null => {
     }
 };
 
-const isTokenExpired = (exp: number): boolean => {
-    return Math.floor(Date.now() / 1000) > exp;
-};
+const isTokenExpired = (exp: number): boolean =>
+    Math.floor(Date.now() / 1000) > exp;
 
-const getPortalForRole = (role: string): string => {
-    const portalMap: Record<string, string> = {
-        ADMIN: "/admin",
-        BUYER: "/dashboard",
-        SELLER: "/agent",
-    };
-    return portalMap[role] || "/";
-};
+const portalFor = (pathname: string) =>
+    PORTAL_ENTRIES.find(([, prefix]) => pathname.startsWith(prefix));
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
-    const token = request.cookies.get("access_token")?.value;
+    const token = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
+    const portal = portalFor(pathname);
+    const isAuthRoute = AUTH_PATHS.includes(pathname);
 
-    const isProtectedRoute = ["/admin", "/agent", "/dashboard"].some((route) =>
-        pathname.startsWith(route),
-    );
-    const isAuthRoute = ["/login", "/signup"].includes(pathname);
+    const toLogin = () =>
+        NextResponse.redirect(
+            new URL(loginWithRedirect(pathname), request.url),
+        );
 
     if (!token) {
-        if (isProtectedRoute) {
-            const loginUrl = new URL("/login", request.url);
-            loginUrl.searchParams.set("redirect", pathname);
-            return NextResponse.redirect(loginUrl);
-        }
+        if (portal) return toLogin();
         return NextResponse.next();
     }
 
     const decoded = decodeJwt(token);
 
     if (!decoded || isTokenExpired(decoded.exp)) {
-        const response = NextResponse.redirect(new URL("/login", request.url));
-        response.cookies.delete("access_token");
+        const response = portal
+            ? toLogin()
+            : NextResponse.redirect(new URL(AUTH_ROUTES.login, request.url));
+        response.cookies.delete(ACCESS_TOKEN_COOKIE);
         return response;
     }
 
+    const home = portalForRole(decoded.role as PortalRole);
+
     if (isAuthRoute) {
-        return NextResponse.redirect(
-            new URL(getPortalForRole(decoded.role), request.url),
-        );
+        return NextResponse.redirect(new URL(home, request.url));
     }
 
-    if (isProtectedRoute) {
-        let allowedRole: string | null = null;
-        if (pathname.startsWith("/admin")) allowedRole = "ADMIN";
-        else if (pathname.startsWith("/agent")) allowedRole = "SELLER";
-        else if (pathname.startsWith("/dashboard")) allowedRole = "BUYER";
-
-        if (allowedRole && decoded.role !== allowedRole) {
-            return NextResponse.redirect(
-                new URL(getPortalForRole(decoded.role), request.url),
-            );
-        }
+    if (portal && portal[0] !== decoded.role) {
+        return NextResponse.redirect(new URL(home, request.url));
     }
 
     return NextResponse.next();
