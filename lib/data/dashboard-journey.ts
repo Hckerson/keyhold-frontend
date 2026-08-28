@@ -14,12 +14,7 @@ import type {
 } from "@/lib/types";
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
 import type { Transaction } from "@/lib/validations/transaction";
-
-const TIME_FORMAT: Intl.DateTimeFormatOptions = {
-    weekday: "short",
-    hour: "numeric",
-    minute: "2-digit",
-};
+import { formatWeekdayAndTime } from "@/lib/utils/format";
 
 export interface JourneyCounts {
     saved: number;
@@ -143,7 +138,7 @@ export const journeyStatus = (
     if (viewing) {
         return {
             title: "Next viewing",
-            detail: `${viewing.agent} · ${viewing.at.toLocaleString("en-US", TIME_FORMAT)}`,
+            detail: `${viewing.agent} · ${formatWeekdayAndTime(viewing.at)}`,
         };
     }
 

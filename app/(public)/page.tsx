@@ -16,6 +16,7 @@ import { toListing } from "@/lib/utils/to-listing";
 import { formatCompactUsd, formatUsd } from "@/lib/utils";
 import { daysBetween, monthsSince } from "@/lib/utils/elapsed";
 import type { Property } from "@/lib/validations/property";
+import { formatCount } from "@/lib/utils/format";
 
 export const metadata = {
     title: "Home | Luxury Real Estate Marketplace",
@@ -31,7 +32,7 @@ const toGalleryTile = (property: Property, index: number): GalleryTileData => ({
     imageUrl: property.images[0]?.url ?? "",
     price: formatUsd(property.price),
     address: `${property.address}, ${property.locality}`,
-    specs: `${property.bedrooms} Bd · ${property.bathrooms} Ba · ${(property.sqFt ?? 0).toLocaleString()} Sq Ft`,
+    specs: `${property.bedrooms} Bd · ${property.bathrooms} Ba · ${formatCount(property.sqFt ?? 0)} Sq Ft`,
     agentName: property.seller?.fullName ?? "Listing advisor",
     featured: index === 0,
 });

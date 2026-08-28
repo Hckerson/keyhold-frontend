@@ -1,5 +1,6 @@
 import { BedDouble, Bath, Ruler } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@/lib/utils/format";
 
 export interface PropertySpecsProps {
     beds: number;
@@ -17,7 +18,7 @@ export function PropertySpecs({
     const specs = [
         { icon: BedDouble, value: beds, label: beds === 1 ? "Bed" : "Beds" },
         { icon: Bath, value: baths, label: baths === 1 ? "Bath" : "Baths" },
-        { icon: Ruler, value: sqft.toLocaleString(), label: "Sq Ft" },
+        { icon: Ruler, value: formatCount(sqft), label: "Sq Ft" },
     ];
     return (
         <div

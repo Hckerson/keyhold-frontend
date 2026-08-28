@@ -11,6 +11,7 @@ import { FactCell } from "@/components/sections/listing/fact-cell";
 import { SectionEyebrow } from "@/components/patterns/section-heading";
 
 import type { Listing } from "@/lib/types";
+import { formatCount, formatUsd } from "@/lib/utils/format";
 const SQFT_PER_ACRE = 43560;
 
 interface KeyFact {
@@ -23,7 +24,7 @@ function buildKeyFacts(listing: Listing): KeyFact[] {
     return [
         { icon: BedDouble, label: "Beds", value: String(listing.beds) },
         { icon: Bath, label: "Baths", value: String(listing.baths) },
-        { icon: Ruler, label: "Sq ft", value: listing.sqft.toLocaleString() },
+        { icon: Ruler, label: "Sq ft", value: formatCount(listing.sqft) },
         {
             icon: LandPlot,
             label: "Lot size",
@@ -39,7 +40,7 @@ function buildKeyFacts(listing: Listing): KeyFact[] {
         {
             icon: TrendingUp,
             label: "$ / sq ft",
-            value: `$${listing.pricePerSqft.toLocaleString()}`,
+            value: formatUsd(listing.pricePerSqft),
         },
     ];
 }
