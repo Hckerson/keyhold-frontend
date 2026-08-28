@@ -8,6 +8,7 @@ import type {
 } from "@/lib/data/home-concierge";
 import { propertyImage } from "@/lib/data/sample-images";
 import { cn } from "@/lib/utils";
+import { Image } from "@/components/ui/image";
 
 const SLOT_TONE: Record<ItinerarySlot["tone"], string> = {
     settled: "bg-accent-light text-accent",
@@ -40,7 +41,11 @@ function ShortlistStack({ items }: { items: ShortlistItem[] }) {
         <ul className="flex flex-col gap-2.5">
             {items.map((item) => (
                 <li key={item.address} className="flex items-center gap-3">
-                    <img
+                    <Image
+                        variant="bare"
+                        width={40}
+                        height={40}
+                        sizes="40px"
                         src={propertyImage(item.imageSeed)}
                         alt=""
                         className="border-border-light size-10 shrink-0 rounded-sm border object-cover"
