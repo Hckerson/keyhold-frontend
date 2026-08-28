@@ -4,7 +4,9 @@ The data layer, audited against `docs/from-idea-to-click.md` stage 04. Twelve co
 
 Each finding carries its own **Status** — `Open` or `Fixed`. The status line on each finding is the record; this header makes no claim about the set.
 
-**Verdict:** the schema itself is in good order — indexed, related, eagerly loaded. What is missing sits around it: there is no migration history, no transaction anywhere in the codebase, and no backup story. The guide's line for this stage is _"code is disposable; data is not"_, and all three findings are about the data outliving the code.
+**Verdict:** the schema itself is in good order — indexed, related, eagerly loaded. What was missing sat around it: no migration history, no transaction anywhere in the codebase, and no backup story. The guide's line for this stage is _"code is disposable; data is not"_, and all three findings are about the data outliving the code.
+
+**04.1 and 04.2 are now fixed. 04.3 is partly closed and stays open** — the scripts and the procedure exist, but no restore has been run, and an untested restore is the thing the finding is about.
 
 ---
 
@@ -39,7 +41,13 @@ db:setup  → prisma db push && tsx prisma/seed.ts --reset
 
 The timing sharpens it. The `Float → Decimal(14, 2)` change ([ADR 0007](adr/0007-money-is-decimal.md)) is in flight right now, and it is a column type change on money. Under `db push` that change arrives as a diff computed at run time against whatever the database happens to contain, with no reviewed SQL and no staged rollout. It is precisely the change that should not reach a database holding real rows without a migration file someone read first.
 
-**To close:** adopt `prisma migrate`, baseline the current schema as the initial migration, and make the Decimal change the second. `db push` stays useful for local iteration; it should not be the only road to a deployed database.
+**Fixed.** `prisma migrate` is adopted. `prisma/migrations/0000_baseline/` captures the live database as it actually stood — generated with `migrate diff --from-empty --to-config-datasource`, then marked applied with `migrate resolve --applied` so no SQL ran against real rows. `db:migrate`, `db:deploy` and `db:status` are now scripts, and `db:setup` runs `migrate deploy` instead of `db push`. `db push` remains for local iteration only.
+
+**The timing was worse than this finding assumed, and the drift check is what showed it.** The audit described the `Float → Decimal(14, 2)` change as "in flight". It was not in flight — it was in `schema.prisma` and had never reached the database. `migrate diff --from-config-datasource --to-schema` returned four `ALTER TABLE` statements: `Escrow.amount`, `Offer.offeredPrice`, `Offer.responsePrice`, `Property.price` and `Transaction.finalPrice` were all still `DOUBLE PRECISION` in the live database while every Prisma client in the codebase had been generated believing they were `Decimal`.
+
+So the baseline captures `DOUBLE PRECISION`, and `prisma/migrations/0001_money_is_decimal/` holds the change as reviewed SQL — which is exactly the ordering this finding asked for, arrived at by accident rather than by plan.
+
+**0001 has not been applied.** It rewrites five money columns on a database holding real rows, and `DOUBLE PRECISION → DECIMAL(14,2)` rounds every value to two decimal places with no way back. Applying it is a deliberate act that wants a backup taken first — see `BACKUP.md`, where the pre-release cadence row exists for this migration specifically.
 
 ## 04.2 · Nothing in the codebase is transactional
 
@@ -53,7 +61,22 @@ The sharpest instance is escrow settlement, already recorded in `MONEY_PATH.md`:
 
 There is a structural reason it has not been fixed: `$transaction` has no home. The repository layer is a per-model wrapper, and a transaction spans models. Closing this needs a decision about where the boundary lives — a `TransactionalRepo`, an interactive `$transaction` callback handed down from the service, or a unit-of-work helper — and that decision is an ADR.
 
-**To close:** decide the shape, record it, and convert the money path first.
+**Fixed.** The shape is decided and recorded as [ADR 0011](adr/0011-transactions-via-ambient-client.md): a `PrismaContext` service holds the active `Prisma.TransactionClient` in an `AsyncLocalStorage`. Repositories resolve `this.db.client` from it instead of holding `PrismaService`, so a service opens a boundary with `this.db.transaction(async () => { ... })` and every repository call inside joins it — no client threaded through 29 repositories × 13 methods. The alternative, explicit threading, is written up in the ADR along with why it lost.
+
+All six multi-write sites are converted:
+
+| Site                                     | What was at risk                                      |
+| ---------------------------------------- | ----------------------------------------------------- |
+| `EscrowService.release`                  | Released hold against an in-progress transaction      |
+| `EscrowService.refund`                   | Refunded hold against a property still marked pending |
+| `KycService.approve` / `.reject`         | Document verified, user's `kycVerified` flag unset    |
+| `SuspensionsService.create` / `.lift`    | Suspension recorded, account never actually suspended |
+| `NotificationsService.updatePreferences` | Half a preference form saved                          |
+| `SettingsService.update`                 | Half a settings form saved                            |
+
+The `Promise.all` calls that remain in services are all reads, where running in parallel is correct.
+
+Settlement atomicity is now a written criterion rather than an intention: `MONEY_PATH.md` section 10 carries 10.1–10.4, and `escrow.service.spec.ts` tests them by name — one transaction opened, the Cloudinary upload proved to happen before it opens, a failed write failing the whole release, and a refused release never opening one at all. 39 backend tests pass.
 
 ## 04.3 · A backup you have never restored is a rumour
 
@@ -65,7 +88,11 @@ The guide's formulation is the one that matters: _"The number that matters is no
 
 The deployment gap belongs to stage 10 and is only noted here. The backup gap belongs to this stage, because it is about the data, and it is the one item in this audit where the cost of being wrong is unbounded.
 
-**To close:** whichever host is chosen, write down the backup cadence, the retention window, and a restore procedure someone has actually run once against a scratch database.
+**Partly closed; still open.** `docs/BACKUP.md` now records what holds the data, the backup cadence, the retention window and a restore procedure. `pnpm db:backup` and `pnpm db:restore` wrap `pg_dump` and `pg_restore` over `DATABASE_URL`: the backup refuses to leave an empty dump behind, prunes past the retention window, and the restore runs under `--single-transaction` and refuses to touch a production database without an explicit acknowledgement variable. The retention logic has tests. `backups/` is git-ignored.
+
+**What is still missing is the only part that mattered.** The finding asks for "a restore procedure someone has actually run once against a scratch database", and nobody has run one. That needs a scratch database and a host decision, neither of which exists yet — the repository still contains no Dockerfile, no compose file, no CI workflow and no deployment manifest, which the audit files under stage 10.
+
+`BACKUP.md` ends with an empty drill table for exactly this reason. Filling one row in it closes this finding; until then the restore time is still unknown, and a written procedure is not evidence.
 
 ---
 
@@ -73,4 +100,5 @@ The deployment gap belongs to stage 10 and is only noted here. The backup gap be
 
 - **Index coverage was counted, not proven.** 80 indexes across 29 models is healthy, but no query plan was read. Confirming that every hot query uses an index needs `EXPLAIN`, against real data volumes.
 - **Normalisation was assessed by reading the schema, not by hunting for duplicated facts.** No field was traced to prove it is stored exactly once.
-- **The seed was not run.** `pnpm db:setup` is assumed to work because it is the documented path; this audit did not execute it against a fresh database.
+- **The seed was not run.** `pnpm db:setup` is assumed to work because it is the documented path; this audit did not execute it against a fresh database. It now runs `migrate deploy` rather than `db push`, which changes what it does and has likewise not been executed.
+- **No migration was applied.** `0000_baseline` was marked applied without running; `0001_money_is_decimal` has not been run at all. Neither migration's SQL has executed against any database.
