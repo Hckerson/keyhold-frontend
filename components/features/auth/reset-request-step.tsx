@@ -11,12 +11,11 @@ import {
     AuthTitleBlock,
 } from "@/components/features/auth/parts";
 import { ResetSentPanel } from "@/components/features/auth/reset-sent-panel";
-import { authAPI } from "@/lib/api/auth";
+import { useRequestPasswordReset } from "@/lib/hooks/use-auth-recovery";
 import {
     RECOVERY_BACK_ENTRIES,
     RECOVERY_STEP,
 } from "@/lib/config/auth-recovery";
-import { errorMessage } from "@/lib/utils/api-error";
 import {
     fieldErrorFor,
     resetPasswordSchema,
@@ -24,24 +23,23 @@ import {
     type FieldErrors,
 } from "@/lib/validations/auth";
 
-const REQUEST_FAILED =
-    "We couldn't send the reset link. Check the address and try again.";
-
 const REQUEST_VALUES = { email: "" };
 
 export function ResetRequestStep() {
+    const request = useRequestPasswordReset();
+
     const [values, setValues] = useState(REQUEST_VALUES);
     const [errors, setErrors] = useState<FieldErrors>({});
-    const [formError, setFormError] = useState<string | null>(null);
-    const [pending, setPending] = useState(false);
     const [sentTo, setSentTo] = useState<string | null>(null);
+
+    const { pending, error: formError } = request;
 
     const parsed = resetPasswordSchema.safeParse(values);
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setValues({ email: event.target.value });
         setErrors({});
-        setFormError(null);
+        request.clearError();
     };
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -52,16 +50,11 @@ export function ResetRequestStep() {
             return;
         }
 
-        setPending(true);
-        setFormError(null);
-
         try {
-            await authAPI.forgotPassword(parsed.data);
+            await request.submit(parsed.data);
             setSentTo(parsed.data.email);
-        } catch (error) {
-            setFormError(errorMessage(error, REQUEST_FAILED));
-        } finally {
-            setPending(false);
+        } catch {
+            return;
         }
     };
 

@@ -7,6 +7,7 @@ import type {
     User,
 } from "@/lib/validations/user";
 import type { UserTier } from "@/lib/enums/enums";
+import type { PersonalDataExport } from "@/lib/types/personal-data";
 
 export const usersAPI = {
     me: () => query.get<User>(config.api.users.me),
@@ -28,4 +29,11 @@ export const usersAPI = {
         query.patch<User>(config.api.users.tier(id), { tier }),
 
     remove: (id: string) => query.delete<User>(config.api.users.detail(id)),
+
+    exportMine: () => query.get<PersonalDataExport>(config.api.users.export),
+
+    eraseMine: () =>
+        query.delete<{ erased: boolean; alreadyErased: boolean }>(
+            config.api.users.eraseMe,
+        ),
 };
