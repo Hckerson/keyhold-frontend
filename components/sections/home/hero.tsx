@@ -6,6 +6,7 @@ import { HeroSearch } from "@/components/sections/home/hero-search";
 import { CityChips } from "@/components/sections/home/city-chips";
 import { Button } from "@/components/ui/button";
 import { propertyImage } from "@/lib/data/sample-images";
+import { Image } from "@/components/ui/image";
 
 const HERO_IMAGE = propertyImage(0);
 
@@ -66,7 +67,12 @@ export function HeroSection() {
                             aria-hidden="true"
                             className="bg-highlight/15 pointer-events-none absolute -right-8 -bottom-8 h-3/5 w-3/4 rounded-full blur-[70px]"
                         />
-                        <img
+                        <Image
+                            variant="bare"
+                            priority
+                            width={408}
+                            height={520}
+                            sizes="(min-width: 64rem) 408px, 100vw"
                             src={HERO_IMAGE}
                             alt=""
                             aria-hidden="true"
