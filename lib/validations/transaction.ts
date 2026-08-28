@@ -71,6 +71,23 @@ export const createTransactionSchema = z.object({
     terms: z.string().min(1),
 });
 
+export const paymentIntentSchema = z.object({
+    id: z.string(),
+    clientSecret: z.string().nullable(),
+    amount: z.number(),
+});
+
+export const createTransactionResultSchema = z.object({
+    transaction: transactionSchema,
+    paymentIntent: paymentIntentSchema,
+});
+
+export const settledTransactionSchema = z.object({
+    transaction: transactionSchema.nullable(),
+    escrow: escrowHoldSchema,
+    inspectionEndDate: z.iso.datetime(),
+});
+
 export const transactionQuerySchema = pageQuerySchema.extend({
     status: z.enum(TRANSACTION_STATUSES).optional(),
     q: z.string().optional(),
@@ -83,4 +100,9 @@ export type SettlementTransaction = z.infer<typeof settlementTransactionSchema>;
 export type TransactionPage = z.infer<typeof transactionPageSchema>;
 export type TransactionStage = z.infer<typeof transactionStageSchema>;
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
+export type PaymentIntent = z.infer<typeof paymentIntentSchema>;
+export type CreateTransactionResult = z.infer<
+    typeof createTransactionResultSchema
+>;
+export type SettledTransaction = z.infer<typeof settledTransactionSchema>;
 export type TransactionQuery = z.infer<typeof transactionQuerySchema>;
