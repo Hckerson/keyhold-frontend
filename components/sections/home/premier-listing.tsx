@@ -96,7 +96,7 @@ export function PremierListing({ listing }: PremierListingProps) {
     const specs = toSpecs(listing);
 
     return (
-        <section className="bg-background py-16 md:py-20">
+        <section className="section-pady bg-background">
             <SectionShell>
                 <div className="grid items-center gap-10 lg:grid-cols-[58%_1fr] lg:gap-14">
                     <ListingMedia listing={view} />

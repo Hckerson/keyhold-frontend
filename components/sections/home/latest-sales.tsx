@@ -63,7 +63,7 @@ function SaleCard({ sale }: { sale: LatestSaleData }) {
 
 export function LatestSales({ sales }: LatestSalesProps) {
     return (
-        <section className="bg-background-alt py-16 md:py-20">
+        <section className="section-pady bg-background-alt">
             <SectionShell>
                 <div className="mb-8 flex items-end justify-between gap-6">
                     <SectionHeading

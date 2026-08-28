@@ -79,7 +79,7 @@ export function TopbarActions({
                 <Link
                     href={TOPBAR_SEARCH.route}
                     aria-label={TOPBAR_SEARCH.label}
-                    className={cn(segmentClass, "md:hidden")}
+                    className={cn(segmentClass, "reading-hidden")}
                 >
                     <Search
                         size={14}

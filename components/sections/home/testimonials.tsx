@@ -134,7 +134,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
 export function TestimonialsSection() {
     return (
-        <section className="bg-background py-16 md:py-20">
+        <section className="section-pady bg-background">
             <SectionShell>
                 <div className="mb-8">
                     <SectionHeading

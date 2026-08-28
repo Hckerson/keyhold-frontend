@@ -28,7 +28,7 @@ export function SearchFilterAside({
                 variant="secondary"
                 size="sm"
                 onClick={onToggle}
-                className="w-full lg:hidden"
+                className="desk-hidden w-full"
                 icon={<SlidersHorizontal size={12} strokeWidth={1.5} />}
             >
                 {open ? "Hide filters" : "Filters"}

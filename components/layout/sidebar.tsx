@@ -116,7 +116,7 @@ export function Sidebar({
                 aria-hidden="true"
                 onClick={onClose}
                 className={cn(
-                    "bg-text/50 ease-smooth fixed inset-0 z-40 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden",
+                    "desk-hidden bg-text/50 ease-smooth fixed inset-0 z-40 backdrop-blur-[2px] transition-opacity duration-300",
                     open ? "opacity-100" : "pointer-events-none opacity-0",
                 )}
             />

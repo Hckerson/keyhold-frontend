@@ -25,7 +25,7 @@ export function ConsoleSkeleton() {
                 <Skeleton className="h-3 w-full max-w-md" />
             </div>
 
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <div className="tile-quad gap-3">
                 {STAT_SLOTS.map((slot) => (
                     <StatSkeleton key={slot} />
                 ))}

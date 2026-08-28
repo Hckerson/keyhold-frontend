@@ -43,7 +43,7 @@ export function TopbarSearch() {
     return (
         <form
             onSubmit={submit}
-            className="focus-within:bg-background ease-smooth hidden h-8 items-center gap-2 px-2.5 transition-colors duration-200 md:flex"
+            className="reading-only focus-within:bg-background ease-smooth h-8 items-center gap-2 px-2.5 transition-colors duration-200"
         >
             <Search
                 size={14}
