@@ -88,10 +88,3 @@ export const dashboardNav = (
         ],
     },
 ];
-
-export const DASHBOARD_ROUTES = dashboardNav([], 0, 0)
-    .flatMap((section) => section.items)
-    .filter(
-        (item): item is DashboardNavItem & { href: string } =>
-            item.href !== undefined,
-    );

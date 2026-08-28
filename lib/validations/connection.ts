@@ -26,5 +26,11 @@ export const createConnectionSchema = z.object({
     propertyId: z.string().min(1, "Select a property"),
 });
 
+export const createLeadSchema = z.object({
+    propertyId: z.string().min(1, "Choose one of your listings"),
+    buyerEmail: z.email("Enter the buyer's registered email address"),
+});
+
 export type Connection = z.infer<typeof connectionSchema>;
+export type CreateLeadInput = z.infer<typeof createLeadSchema>;
 export type CreateConnectionInput = z.infer<typeof createConnectionSchema>;

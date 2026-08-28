@@ -58,7 +58,7 @@ export function AdminPaymentsMain({
 
                 <PresenceSwap swapKey={payouts.length > 0 ? "rows" : "empty"}>
                     {payouts.length > 0 ? (
-                        <PanelInset scroll className="mt-0">
+                        <PanelInset scroll>
                             <PayoutTable payouts={payouts} />
                         </PanelInset>
                     ) : (

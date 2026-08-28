@@ -19,6 +19,7 @@ import {
     toggleEnabled,
     toPreferenceList,
     toPreferenceMap,
+    typeVolumes,
     unreadCount,
     type ReadFilter,
     type TypeFilter,
@@ -64,6 +65,7 @@ export function AlertsConsole() {
     const peers = useMemo(() => ranked.slice(1), [ranked]);
     const counts = useMemo(() => countByRead(peers), [peers]);
     const stats = useMemo(() => alertStats(alerts), [alerts]);
+    const volumes = useMemo(() => typeVolumes(alerts), [alerts]);
 
     const visible = useMemo(
         () =>
@@ -121,6 +123,9 @@ export function AlertsConsole() {
                 <AlertsMain
                     top={ranked[0]}
                     alerts={visible}
+                    preferences={preferences}
+                    volumes={volumes}
+                    deliverySummary={deliverySummary(preferences)}
                     readFilter={readFilter}
                     typeFilter={typeFilter}
                     counts={counts}
@@ -128,14 +133,10 @@ export function AlertsConsole() {
                     onReadFilterChange={setReadFilter}
                     onTypeFilterChange={setTypeFilter}
                     onMarkRead={onMarkRead}
-                />
-                <AlertsRail
-                    alerts={alerts}
-                    preferences={preferences}
-                    deliverySummary={deliverySummary(preferences)}
                     onToggleEnabled={onToggleEnabled}
                     onToggleChannel={onToggleChannel}
                 />
+                <AlertsRail alerts={alerts} />
             </div>
         </div>
     );

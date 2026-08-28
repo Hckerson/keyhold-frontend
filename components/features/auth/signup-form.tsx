@@ -20,7 +20,9 @@ import {
     ACCESS_TOKEN_COOKIE,
     AUTH_ROUTES,
     SESSION_DAYS,
+    isSafeRedirect,
     portalForRole,
+    withRedirect,
 } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { setCookie } from "@/lib/utils/cookies";
@@ -42,10 +44,10 @@ const INITIAL_VALUES: SignupFieldValues = {
 const SIGN_UP_FAILED =
     "We couldn't create your account. Review your details and try again.";
 
-const FOOTER_ENTRIES = [
+const footerEntries = (redirectTo?: string) => [
     {
         label: "Already a member",
-        href: AUTH_ROUTES.login,
+        href: withRedirect(AUTH_ROUTES.login, redirectTo),
         action: "Sign in",
     },
     {
@@ -55,7 +57,11 @@ const FOOTER_ENTRIES = [
     },
 ];
 
-export function SignupForm() {
+export interface SignupFormProps {
+    redirectTo?: string;
+}
+
+export function SignupForm({ redirectTo }: SignupFormProps) {
     const router = useRouter();
     const setAuth = useAuthStore((state) => state.setAuth);
 
@@ -126,7 +132,11 @@ export function SignupForm() {
 
             setAuth(user, accessToken);
             setCookie(ACCESS_TOKEN_COOKIE, accessToken, SESSION_DAYS);
-            router.replace(portalForRole(user.role));
+            router.replace(
+                isSafeRedirect(redirectTo)
+                    ? redirectTo
+                    : portalForRole(user.role),
+            );
         } catch (error) {
             setFormError(errorMessage(error, SIGN_UP_FAILED));
             setPending(false);
@@ -172,10 +182,11 @@ export function SignupForm() {
             <SocialAuthRow
                 action="Sign up"
                 label="Or apply with"
+                redirectTo={redirectTo}
                 disabled={pending}
             />
 
-            <AuthTitleBlock entries={FOOTER_ENTRIES} />
+            <AuthTitleBlock entries={footerEntries(redirectTo)} />
         </AuthPlane>
     );
 }

@@ -168,3 +168,6 @@ export const agentShares = (offers: Offer[]): OfferAgentShare[] => {
 
 export const offersSummary = (offers: Offer[]) =>
     `${openOffers(offers).length} open · ${formatCompactUsd(committedCapital(offers))} at stake`;
+
+export const representationSummary = (agentCount: number) =>
+    agentCount === 0 ? "None" : String(agentCount);

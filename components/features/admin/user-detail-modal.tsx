@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import {
     Modal,
@@ -114,9 +115,15 @@ export function UserDetailModal({
                         >
                             {CLOSE_ACTION}
                         </Button>
-                        <Button type="button" variant="secondary" size="sm">
+                        <Link
+                            href={`/admin/users/${user.id}`}
+                            className={buttonVariants({
+                                variant: "secondary",
+                                size: "sm",
+                            })}
+                        >
                             {PROFILE_ACTION}
-                        </Button>
+                        </Link>
                         {user.status === "suspended" ? (
                             <Button
                                 type="button"

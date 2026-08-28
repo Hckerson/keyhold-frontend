@@ -1,6 +1,7 @@
 import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
+    CreateUserInput,
     TierDistribution,
     UpdateUserInput,
     User,
@@ -11,6 +12,9 @@ export const usersAPI = {
     me: () => query.get<User>(config.api.users.me),
 
     list: () => query.get<User[]>(config.api.users.list),
+
+    create: (input: CreateUserInput) =>
+        query.post<User>(config.api.users.list, input),
 
     detail: (id: string) => query.get<User>(config.api.users.detail(id)),
 

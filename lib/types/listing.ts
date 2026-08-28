@@ -67,4 +67,5 @@ export interface ManagedListing {
     saves: number;
     showings: number;
     offers: number;
+    featuredUntil: string | null;
 }

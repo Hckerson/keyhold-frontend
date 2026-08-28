@@ -7,6 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 import type { Listing } from "@/lib/types";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 interface ListingComparablesProps {
     listing: Listing;
     comparables: Listing[];
@@ -60,7 +61,7 @@ export function ListingComparables({
                 return (
                     <Link
                         key={comparable.id}
-                        href={`/listing/${comparable.id}`}
+                        href={PUBLIC_ROUTES.listing(comparable.id)}
                         className="group border-border hover:bg-background/70 focus-visible:ring-accent ease-smooth flex items-center gap-2.5 border-b px-2.5 py-2 transition-colors duration-200 last:border-b-0 focus-visible:ring-2 focus-visible:outline-none sm:gap-3 sm:px-3 sm:py-2.5"
                     >
                         {comparable.images[0] ? (

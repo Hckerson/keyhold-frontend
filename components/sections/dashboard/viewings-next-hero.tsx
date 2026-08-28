@@ -12,6 +12,7 @@ import { VIEWING_MODES, VIEWING_STATUSES } from "@/lib/config/viewing-tones";
 import { daysUntil, formatViewingDate } from "@/lib/data/viewings";
 import type { Viewing } from "@/lib/types";
 import { formatMillions } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const HERO_EYEBROW = "Next viewing";
 const ASKING_LABEL = "Asking";
@@ -78,7 +79,7 @@ export function ViewingsNextHero({
 
                 <div className="flex shrink-0 items-center gap-2">
                     <Link
-                        href={`/listing/${viewing.listingId}`}
+                        href={PUBLIC_ROUTES.listing(viewing.listingId)}
                         className={buttonVariants({
                             variant: "secondary",
                             size: "sm",

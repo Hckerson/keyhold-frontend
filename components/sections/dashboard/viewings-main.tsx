@@ -6,6 +6,7 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { ViewingTable } from "@/components/features/dashboard/viewing-table";
 import { WalkedViewingTable } from "@/components/features/dashboard/walked-viewing-table";
 import { ViewingsNextHero } from "@/components/sections/dashboard/viewings-next-hero";
+import { ViewingsShares } from "@/components/sections/dashboard/viewings-shares";
 import { ViewingsToolbar } from "@/components/sections/dashboard/viewings-toolbar";
 import type {
     ViewingModeFilter,
@@ -27,6 +28,7 @@ const LOADING_LEDE = "Fetching every viewing across your enquiries.";
 export interface ViewingsMainProps {
     next?: Viewing;
     viewings: Viewing[];
+    allViewings: Viewing[];
     walked: Viewing[];
     statusFilter: ViewingStatusFilter;
     modeFilter: ViewingModeFilter;
@@ -43,6 +45,7 @@ export interface ViewingsMainProps {
 export function ViewingsMain({
     next,
     viewings,
+    allViewings,
     walked,
     statusFilter,
     modeFilter,
@@ -87,7 +90,7 @@ export function ViewingsMain({
                 />
 
                 {viewings.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <ViewingTable
                             viewings={viewings}
                             onReschedule={onReschedule}
@@ -114,6 +117,8 @@ export function ViewingsMain({
                     </PanelInset>
                 </Panel>
             )}
+
+            <ViewingsShares viewings={allViewings} />
         </div>
     );
 }

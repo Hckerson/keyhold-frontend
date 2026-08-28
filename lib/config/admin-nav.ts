@@ -104,10 +104,6 @@ export const ADMIN_NAV: AdminNavSection[] = [
     },
 ];
 
-export const ADMIN_ROUTES: AdminNavItem[] = ADMIN_NAV.flatMap(
-    (section) => section.items,
-);
-
 export const adminNav = (pendingVerifications: number): AdminNavSection[] =>
     ADMIN_NAV.map((section) => ({
         ...section,

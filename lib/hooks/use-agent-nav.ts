@@ -2,12 +2,14 @@
 
 import { useMemo } from "react";
 import { agentNav } from "@/lib/config/agent-nav";
+import { pendingCount } from "@/lib/data/agent-requests";
 import { useIncomingConnections } from "@/lib/hooks/use-connections";
+import { toRequestBook } from "@/lib/utils/to-agent-request";
 
 export function useAgentNav() {
     const connections = useIncomingConnections();
 
-    const openLeads = useMemo(
+    const leads = useMemo(
         () =>
             (connections.data ?? []).filter(
                 (connection) => connection.status === "PENDING",
@@ -15,5 +17,10 @@ export function useAgentNav() {
         [connections.data],
     );
 
-    return useMemo(() => agentNav(openLeads), [openLeads]);
+    const requests = useMemo(
+        () => pendingCount(toRequestBook(connections.data ?? [])),
+        [connections.data],
+    );
+
+    return useMemo(() => agentNav({ leads, requests }), [leads, requests]);
 }

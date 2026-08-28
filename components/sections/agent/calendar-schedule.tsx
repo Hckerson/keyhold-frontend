@@ -33,6 +33,7 @@ export interface CalendarScheduleProps {
     dayCount: number;
     weekCount: number;
     onViewChange: (view: CalendarViewMode) => void;
+    onReschedule: (id: string) => void;
     className?: string;
 }
 
@@ -44,6 +45,7 @@ export function CalendarSchedule({
     dayCount,
     weekCount,
     onViewChange,
+    onReschedule,
     className,
 }: CalendarScheduleProps) {
     const isDayView = view === "month";
@@ -77,7 +79,10 @@ export function CalendarSchedule({
                     {rest.length > 0 ? (
                         <PanelInset>
                             {isDayView ? (
-                                <AppointmentList appointments={rest} />
+                                <AppointmentList
+                                    appointments={rest}
+                                    onReschedule={onReschedule}
+                                />
                             ) : (
                                 <div className="flex flex-col gap-2 py-1">
                                     {groupAppointmentsByDate(rest).map(
@@ -85,6 +90,7 @@ export function CalendarSchedule({
                                             <AppointmentDayGroup
                                                 key={group.date}
                                                 group={group}
+                                                onReschedule={onReschedule}
                                             />
                                         ),
                                     )}
@@ -93,7 +99,6 @@ export function CalendarSchedule({
                         </PanelInset>
                     ) : (
                         <EmptyState
-                            className="mt-2.5 py-8"
                             icon={CalendarX2}
                             title={next ? REMAINDER_TITLE : EMPTY_TITLE}
                             description={next ? undefined : emptyDescription}

@@ -1,14 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import type { AuthUser, NavRoute } from "@/lib/types";
 import { Container } from "@/components/ui/container";
+import { TopbarTrail } from "@/components/layout/topbar-trail";
 import { TopbarActions } from "@/components/layout/topbar-actions";
 import { TOPBAR_SETTINGS_SEGMENT } from "@/lib/config/topbar";
-import { cn } from "@/lib/utils";
+import { trailFor } from "@/lib/utils/nav";
 
 export interface TopbarProps {
     routes: NavRoute[];
@@ -16,63 +16,8 @@ export interface TopbarProps {
     rootHref: string;
     user?: AuthUser | null;
     onNavOpen?: () => void;
+    onLogout?: () => void;
 }
-
-/* ── route identity ── */
-
-function RouteIdentity({
-    rootLabel,
-    rootHref,
-    active,
-}: {
-    rootLabel: string;
-    rootHref: string;
-    active?: NavRoute;
-}) {
-    const ActiveIcon = active?.icon;
-
-    return (
-        <nav
-            aria-label="Breadcrumb"
-            className="flex min-w-0 items-center gap-2 select-none"
-        >
-            <Link
-                href={rootHref}
-                className={cn(
-                    "hover:text-accent focus-visible:ring-accent ease-smooth rounded-xs font-mono text-[10px] tracking-wide uppercase transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
-                    active ? "text-text-muted" : "text-text-secondary",
-                )}
-            >
-                {rootLabel}
-            </Link>
-
-            {active && ActiveIcon && (
-                <>
-                    <ChevronRight
-                        size={12}
-                        strokeWidth={1.5}
-                        className="text-text-muted shrink-0"
-                    />
-                    <span className="flex min-w-0 items-center gap-1.5">
-                        <ActiveIcon
-                            size={12}
-                            strokeWidth={1.5}
-                            className="text-text-secondary shrink-0"
-                        />
-                        <span
-                            aria-current="page"
-                            className="text-text truncate text-xs font-semibold"
-                        >
-                            {active.label}
-                        </span>
-                    </span>
-                </>
-            )}
-        </nav>
-    );
-}
-
-/* ── shell ── */
 
 export function Topbar({
     routes,
@@ -80,20 +25,16 @@ export function Topbar({
     rootHref,
     user,
     onNavOpen,
+    onLogout,
 }: TopbarProps) {
     const pathname = usePathname();
 
-    const active = useMemo(() => {
-        return routes
-            .filter(
-                (route) =>
-                    pathname === route.href ||
-                    pathname.startsWith(`${route.href}/`),
-            )
-            .sort((a, b) => b.href.length - a.href.length)[0];
-    }, [routes, pathname]);
+    const crumbs = useMemo(
+        () => trailFor({ pathname, routes, rootLabel, rootHref }),
+        [pathname, routes, rootLabel, rootHref],
+    );
 
-    const accountHref =
+    const settingsHref =
         routes.find((route) => route.href.endsWith(TOPBAR_SETTINGS_SEGMENT))
             ?.href ?? rootHref;
 
@@ -112,17 +53,14 @@ export function Topbar({
                         </button>
                     )}
 
-                    <RouteIdentity
-                        rootLabel={rootLabel}
-                        rootHref={rootHref}
-                        active={active}
-                    />
+                    <TopbarTrail crumbs={crumbs} />
                 </div>
 
                 <TopbarActions
                     routes={routes}
-                    accountHref={accountHref}
+                    settingsHref={settingsHref}
                     user={user}
+                    onLogout={onLogout}
                 />
             </Container>
         </header>

@@ -15,7 +15,7 @@ import {
     VIEWING_STATUS_KEYS,
     timingBandOf,
 } from "@/lib/config/viewing-tones";
-import type { RescheduleDraft, Viewing, ViewingMode } from "@/lib/types";
+import type { Viewing, ViewingMode } from "@/lib/types";
 import { formatCompactUsd, parseLocalDate, percentOf, sum } from "@/lib/utils";
 
 const MS_PER_DAY = 86_400_000;
@@ -34,6 +34,9 @@ const startOfToday = () => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 };
+
+export const RESCHEDULE_HINT =
+    "The agent reconfirms once you propose a new slot.";
 
 export const TODAY = {
     get year() {
@@ -173,18 +176,6 @@ export const viewingsOnDate = (
     day === null
         ? []
         : viewings.filter((viewing) => isOnDay(viewing, calendar, day));
-
-export const draftToIso = (draft: RescheduleDraft) => {
-    if (!draft.date) return null;
-    const parts = TIME_PATTERN.exec(draft.time.trim());
-    if (!parts) return null;
-
-    const hour =
-        (Number(parts[1]) % 12) + (parts[3].toUpperCase() === "PM" ? 12 : 0);
-    const when = parseLocalDate(draft.date);
-    when.setHours(hour, Number(parts[2]), 0, 0);
-    return when.toISOString();
-};
 
 export const viewingStats = (viewings: Viewing[]): StatDatum[] => {
     const next = nextViewing(viewings);

@@ -15,6 +15,7 @@ interface ListingPriceBarProps {
     zipcode: string;
     typeLabel: string;
     saved: boolean;
+    savePending: boolean;
     onToggleSave: () => void;
 }
 
@@ -26,6 +27,7 @@ export function ListingPriceBar({
     zipcode,
     typeLabel,
     saved,
+    savePending,
     onToggleSave,
 }: ListingPriceBarProps) {
     const [copied, setCopied] = useState(false);
@@ -74,6 +76,7 @@ export function ListingPriceBar({
                     variant="secondary"
                     size="sm"
                     onClick={onToggleSave}
+                    disabled={savePending}
                     aria-pressed={saved}
                     icon={
                         <Heart

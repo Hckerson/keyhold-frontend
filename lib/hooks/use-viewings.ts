@@ -34,8 +34,14 @@ export function useRequestViewing() {
     const client = useQueryClient();
     return useMutation({
         mutationFn: (input: CreateViewingInput) => viewingsAPI.create(input),
-        onSuccess: () =>
-            client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
     });
 }
 
@@ -44,8 +50,14 @@ export function useConfirmViewing() {
     return useMutation({
         mutationFn: ({ id, ...input }: ConfirmViewingInput & { id: string }) =>
             viewingsAPI.confirm(id, input),
-        onSuccess: () =>
-            client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
     });
 }
 
