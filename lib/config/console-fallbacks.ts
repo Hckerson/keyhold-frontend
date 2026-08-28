@@ -65,6 +65,12 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The buyer service is unreachable right now. Try again in a moment.",
     },
+    buyerSettings: {
+        panel: "Settings",
+        title: "We couldn't load your account",
+        description:
+            "The account service is unreachable right now. Try again in a moment.",
+    },
     buyerTransactions: {
         panel: "Transactions",
         title: "We couldn't load your purchases",
