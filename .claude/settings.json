@@ -1,5 +1,23 @@
 {
     "permissions": {
+        "deny": [
+            "Bash(pnpm add:*)",
+            "Bash(pnpm remove:*)",
+            "Bash(pnpm up:*)",
+            "Bash(pnpm update:*)",
+            "Bash(pnpm dlx:*)",
+            "Bash(npm install:*)",
+            "Bash(npm i:*)",
+            "Bash(npm add:*)",
+            "Bash(npm uninstall:*)",
+            "Bash(yarn add:*)",
+            "Bash(yarn remove:*)",
+            "Bash(bun add:*)",
+            "Bash(bun install:*)",
+            "Bash(npx playwright install:*)",
+            "Edit(**/pnpm-lock.yaml)",
+            "Write(**/pnpm-lock.yaml)"
+        ],
         "allow": [
             "WebSearch",
             "Read(//c//**)",
