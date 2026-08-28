@@ -6,14 +6,13 @@ export type AlertChannel = "email" | "sms" | "inApp";
 
 export interface Alert {
     id: string;
-    listingId: string;
+    listingId: string | null;
     type: AlertType;
     description: string;
     address: string;
     locality: string;
-    photo: string;
-    price: number;
-    previousPrice?: number;
+    photo: string | null;
+    price: number | null;
     minutesAgo: number;
     channel: AlertChannel;
     read: boolean;

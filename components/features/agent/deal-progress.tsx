@@ -6,10 +6,10 @@ const COMPLETE_LABEL = "Complete";
 
 export interface DealProgressProps {
     stage: DealStage;
-    daysToClose: number;
+    daysInStage: number;
 }
 
-export function DealProgress({ stage, daysToClose }: DealProgressProps) {
+export function DealProgress({ stage, daysInStage }: DealProgressProps) {
     const index = DEAL_STAGES.findIndex((item) => item.id === stage);
     const percent = Math.round(((index + 1) / DEAL_STAGES.length) * 100);
     const closed = stage === "closed";
@@ -18,7 +18,7 @@ export function DealProgress({ stage, daysToClose }: DealProgressProps) {
         <div>
             <div className="mb-1.5 flex items-center justify-between gap-2">
                 <span className="text-text-muted font-mono text-[10px] tracking-wide uppercase">
-                    {closed ? COMPLETE_LABEL : `${daysToClose}d to close`}
+                    {closed ? COMPLETE_LABEL : `${daysInStage}d in stage`}
                 </span>
                 <span className="text-accent text-xs font-medium tabular-nums">
                     {percent}%

@@ -1,92 +1,65 @@
 import { ArrowLeftRight, Home, Layers, Users, Wallet } from "lucide-react";
 import type { StatDatum } from "@/components/patterns/stat-cell";
+import type { RegionPerformance, ReportSignal, Trend } from "@/lib/types";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import type { RegionMetric } from "@/lib/validations/stats";
 import type {
-    RegionMetric,
-    RegionPerformance,
-    ReportSignal,
-} from "@/lib/types";
-import {
-    CLOSED_DEALS_30D,
-    CLOSED_DEALS_YTD,
-    COMMISSIONS_YTD,
-    GMV_YTD,
-    TAKE_RATE_LABEL,
-} from "@/lib/data/admin-platform";
-import {
-    ACTIVE_USERS,
-    TOTAL_USERS,
-    USER_GROWTH_LABEL,
-    USER_ROLE_SEGMENTS,
-    USER_TIER_SEGMENTS,
-} from "@/lib/data/admin-users";
+    PlatformStats,
+    TrendStats,
+    UserStats,
+} from "@/lib/validations/stats";
 import { formatCount, formatMillions } from "@/lib/utils";
+import type { CsvSection } from "@/lib/utils/download";
+import type { ReportSectionId } from "@/lib/config/report-export";
+import type { TimeFilter } from "@/lib/enums/enums";
 
-const LISTINGS_MOM_CHANGE = "+18%";
-const AVG_TRANSACTION_CHANGE = "+8%";
-const COMMISSION_MOM_CHANGE = "+19%";
-const DEAL_VELOCITY_CHANGE = "-4%";
-
-export const REGION_METRICS: RegionMetric[] = [
-    {
-        region: "Beverly Hills",
-        listings: 87,
-        volume: 285_000_000,
-        avgPrice: 3_200_000,
-    },
-    {
-        region: "Bel Air",
-        listings: 56,
-        volume: 198_000_000,
-        avgPrice: 3_500_000,
-    },
-    {
-        region: "Santa Monica",
-        listings: 82,
-        volume: 166_000_000,
-        avgPrice: 2_000_000,
-    },
-    {
-        region: "West Hollywood",
-        listings: 72,
-        volume: 156_000_000,
-        avgPrice: 2_100_000,
-    },
-    {
-        region: "Malibu",
-        listings: 45,
-        volume: 142_000_000,
-        avgPrice: 3_100_000,
-    },
-];
+const NO_VALUE = "—";
 
 const totalOf = (values: number[]) =>
     values.reduce((total, value) => total + value, 0);
 
-const REGION_VOLUME = totalOf(REGION_METRICS.map((metric) => metric.volume));
+const latestChange = (points: { value: number }[]) => {
+    const prior = points[points.length - 2]?.value;
+    const latest = points[points.length - 1]?.value;
+    if (!prior || latest === undefined) return 0;
+    return Math.round(((latest - prior) / prior) * 100);
+};
 
-export const REGION_PERFORMANCE: RegionPerformance[] = [...REGION_METRICS]
-    .sort((a, b) => b.volume - a.volume)
-    .map((metric, index) => ({
-        ...metric,
-        rank: index + 1,
-        share: Math.round((metric.volume / REGION_VOLUME) * 100),
-    }));
+const signed = (value: number) => `${value >= 0 ? "+" : ""}${value}%`;
 
-export const REGION_LEADER = REGION_PERFORMANCE[0];
-export const REGION_PEERS = REGION_PERFORMANCE.slice(1);
+const trendOf = (change: number): Trend => (change < 0 ? "down" : "up");
 
-export const ACTIVE_LISTINGS = totalOf(
-    REGION_METRICS.map((metric) => metric.listings),
-);
+export const regionPerformance = (
+    regions: RegionMetric[],
+): RegionPerformance[] => {
+    const volume = totalOf(regions.map((metric) => metric.volume));
 
-export const AVG_TRANSACTION_VALUE = GMV_YTD / CLOSED_DEALS_YTD;
+    return [...regions]
+        .sort((a, b) => b.volume - a.volume)
+        .map((metric, index) => ({
+            ...metric,
+            rank: index + 1,
+            share: volume ? Math.round((metric.volume / volume) * 100) : 0,
+        }));
+};
 
-export const REPORT_STATS: StatDatum[] = [
+export const activeListings = (regions: RegionMetric[]) =>
+    totalOf(regions.map((metric) => metric.listings));
+
+export const averageTransactionValue = (platform: PlatformStats | undefined) =>
+    platform?.completedTransactions
+        ? platform.volume / platform.completedTransactions
+        : 0;
+
+export const reportStats = (
+    platform: PlatformStats | undefined,
+    users: UserStats | undefined,
+): StatDatum[] => [
     {
         id: "gmv",
         icon: Wallet,
-        label: "GMV YTD",
-        value: formatMillions(GMV_YTD, 0),
+        label: "Settled volume",
+        value: formatMillions(platform?.volume ?? 0, 0),
         tone: "success",
         href: "/admin/transactions",
     },
@@ -94,7 +67,7 @@ export const REPORT_STATS: StatDatum[] = [
         id: "deals",
         icon: ArrowLeftRight,
         label: "Closed deals",
-        value: formatCount(CLOSED_DEALS_YTD),
+        value: formatCount(platform?.completedTransactions ?? 0),
         tone: "highlight",
         href: "/admin/transactions",
     },
@@ -102,7 +75,7 @@ export const REPORT_STATS: StatDatum[] = [
         id: "listings",
         icon: Home,
         label: "Live listings",
-        value: formatCount(ACTIVE_LISTINGS),
+        value: formatCount(platform?.activeProperties ?? 0),
         tone: "info",
         href: "/admin/listings",
     },
@@ -110,57 +83,120 @@ export const REPORT_STATS: StatDatum[] = [
         id: "avg-deal",
         icon: Layers,
         label: "Avg deal",
-        value: formatMillions(AVG_TRANSACTION_VALUE, 2),
+        value: averageTransactionValue(platform)
+            ? formatMillions(averageTransactionValue(platform), 2)
+            : NO_VALUE,
         tone: "accent",
     },
     {
         id: "members",
         icon: Users,
         label: "Members",
-        value: formatCount(TOTAL_USERS),
+        value: formatCount(users?.total ?? 0),
         tone: "neutral",
         href: "/admin/users",
     },
 ];
 
-export const REPORT_SIGNALS: ReportSignal[] = [
-    {
-        id: "listings",
-        value: formatCount(ACTIVE_LISTINGS),
-        caption: `${REGION_METRICS.length} regions`,
-        change: LISTINGS_MOM_CHANGE,
-        trend: "up",
-    },
-    {
-        id: "transaction",
-        value: formatMillions(AVG_TRANSACTION_VALUE, 2),
-        caption: "vs benchmark",
-        change: AVG_TRANSACTION_CHANGE,
-        trend: "up",
-    },
-    {
-        id: "revenue",
-        value: formatMillions(COMMISSIONS_YTD, 1),
-        caption: `${TAKE_RATE_LABEL} take rate`,
-        change: COMMISSION_MOM_CHANGE,
-        trend: "up",
-    },
-    {
-        id: "velocity",
-        value: formatCount(CLOSED_DEALS_30D),
-        caption: "last 30 days",
-        change: DEAL_VELOCITY_CHANGE,
-        trend: "down",
-    },
-    {
-        id: "audience",
-        value: formatCount(ACTIVE_USERS),
-        caption: `${formatCount(TOTAL_USERS)} registered`,
-        change: USER_GROWTH_LABEL,
-        trend: "up",
-    },
+export const reportSignals = (
+    platform: PlatformStats | undefined,
+    users: UserStats | undefined,
+    regions: RegionMetric[],
+    trend: TrendStats | undefined,
+): ReportSignal[] => {
+    const listingsChange = latestChange(trend?.listings ?? []);
+    const dealsChange = latestChange(trend?.deals ?? []);
+    const gmvChange = latestChange(trend?.gmv ?? []);
+    const usersChange = latestChange(trend?.users ?? []);
+    const commissions = (platform?.volume ?? 0) * DEFAULT_COMMISSION_RATE;
+
+    return [
+        {
+            id: "listings",
+            value: formatCount(platform?.activeProperties ?? 0),
+            caption: `${regions.length} regions`,
+            change: signed(listingsChange),
+            trend: trendOf(listingsChange),
+        },
+        {
+            id: "transaction",
+            value: averageTransactionValue(platform)
+                ? formatMillions(averageTransactionValue(platform), 2)
+                : NO_VALUE,
+            caption: "per closed deal",
+            change: signed(gmvChange),
+            trend: trendOf(gmvChange),
+        },
+        {
+            id: "revenue",
+            value: formatMillions(commissions, 1),
+            caption: `${(DEFAULT_COMMISSION_RATE * 100).toFixed(2)}% take rate`,
+            change: signed(gmvChange),
+            trend: trendOf(gmvChange),
+        },
+        {
+            id: "velocity",
+            value: formatCount(platform?.completedTransactions ?? 0),
+            caption: "closed to date",
+            change: signed(dealsChange),
+            trend: trendOf(dealsChange),
+        },
+        {
+            id: "audience",
+            value: formatCount(users?.active ?? 0),
+            caption: `${formatCount(users?.total ?? 0)} registered`,
+            change: signed(usersChange),
+            trend: trendOf(usersChange),
+        },
+    ];
+};
+
+export const REPORT_EXPORT_FILENAME = (period: TimeFilter) =>
+    `platform-report-${period}.csv`;
+
+const REGION_SECTION: CsvSection = {
+    title: "Regional performance",
+    columns: ["Rank", "Region", "Listings", "Average price", "Volume", "Share"],
+    rows: [],
+};
+
+const PERIOD_SECTION: CsvSection = {
+    title: "Trend",
+    columns: ["Period", "GMV", "Closed deals", "Members joined"],
+    rows: [],
+};
+
+export const toReportSections = (
+    sections: readonly ReportSectionId[],
+    regions: RegionPerformance[],
+    periods: Record<string, string | number>[],
+): CsvSection[] => [
+    ...(sections.includes("regions")
+        ? [
+              {
+                  ...REGION_SECTION,
+                  rows: regions.map((region) => [
+                      region.rank,
+                      region.region,
+                      region.listings,
+                      region.avgPrice,
+                      region.volume,
+                      `${region.share}%`,
+                  ]),
+              },
+          ]
+        : []),
+    ...(sections.includes("periods")
+        ? [
+              {
+                  ...PERIOD_SECTION,
+                  rows: periods.map((period) => [
+                      period.month,
+                      period.gmv,
+                      period.deals,
+                      period.users,
+                  ]),
+              },
+          ]
+        : []),
 ];
-
-export const TOTAL_USERS_LABEL = formatCount(TOTAL_USERS);
-
-export { USER_ROLE_SEGMENTS, USER_TIER_SEGMENTS };

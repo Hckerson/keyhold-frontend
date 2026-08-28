@@ -3,7 +3,6 @@ import { Building2, CircleSlash, UserCheck, Users, Wallet } from "lucide-react";
 import type { FilterPill } from "@/components/patterns/filter-pills";
 import type { ShareDatum } from "@/components/patterns/share-row";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import type { SelectOption } from "@/components/ui/forms/select";
 import {
     USER_ROLES,
@@ -27,40 +26,6 @@ import type {
     UserSortKey,
     UserStatusFilter,
 } from "@/lib/types";
-
-export const USER_ROLE_SEGMENTS: DonutSegment[] = [
-    { name: "Buyers", value: 722, tone: "accent" },
-    { name: "Agents", value: 435, tone: "info" },
-    { name: "Admins", value: 90, tone: "neutral" },
-];
-
-export const USER_TIER_SEGMENTS: DonutSegment[] = [
-    { name: "Standard", value: 845, tone: "neutral" },
-    { name: "Premium", value: 315, tone: "info" },
-    { name: "Platinum", value: 87, tone: "highlight" },
-];
-
-const sumSegments = (segments: DonutSegment[]) =>
-    segments.reduce((total, segment) => total + segment.value, 0);
-
-export const TOTAL_USERS = sumSegments(USER_ROLE_SEGMENTS);
-export const ACTIVE_USERS = 1_102;
-
-const PRIOR_MONTH_USERS = 1_174;
-
-export const USER_GROWTH_SERIES = [
-    980,
-    1_015,
-    1_060,
-    1_108,
-    PRIOR_MONTH_USERS,
-    TOTAL_USERS,
-];
-
-export const USER_GROWTH_LABEL = `+${(
-    ((TOTAL_USERS - PRIOR_MONTH_USERS) / PRIOR_MONTH_USERS) *
-    100
-).toFixed(1)}%`;
 
 const COHORT_FORMAT = "yyyy";
 const JOINED_FORMAT = "MMM yyyy";

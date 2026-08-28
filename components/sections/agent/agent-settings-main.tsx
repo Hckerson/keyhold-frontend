@@ -3,14 +3,13 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { ConfigPanel } from "@/components/features/settings/config-panel";
+import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { NotificationRuleTable } from "@/components/features/agent/notification-rule-table";
 import { AgentSettingsProfileHero } from "@/components/sections/agent/agent-settings-profile-hero";
 import {
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
     NOTIFICATION_RULES,
-    weeklyAlertVolume,
     type NotificationRuleId,
     type NotificationState,
 } from "@/lib/data/agent-account";
@@ -61,7 +60,6 @@ export function AgentSettingsMain({
                 brokerage={form.brokerage}
                 updatedAt={updatedAt}
                 enabledAlerts={enabledNotificationCount(notifications)}
-                weeklySends={weeklyAlertVolume(notifications)}
             />
 
             <form

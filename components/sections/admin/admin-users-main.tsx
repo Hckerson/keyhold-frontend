@@ -2,11 +2,14 @@
 
 import { Users } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Pager } from "@/components/patterns/pager";
+import { PageSwap } from "@/components/patterns/page-swap";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { UserTable } from "@/components/features/admin/user-table";
+import { TABLE_PAGE_SIZE } from "@/lib/constants";
 import { AdminUsersFocusHero } from "@/components/sections/admin/admin-users-focus-hero";
 import { AdminUsersToolbar } from "@/components/sections/admin/admin-users-toolbar";
 import type {
@@ -29,6 +32,9 @@ const LOADING_LEDE = "Fetching every managed account on the platform.";
 export interface AdminUsersMainProps {
     focus?: ManagedUser;
     users: ManagedUser[];
+    total: number;
+    page: number;
+    pageCount: number;
     peak: number;
     directoryVolume: number;
     query: string;
@@ -37,6 +43,7 @@ export interface AdminUsersMainProps {
     sort: UserSortKey;
     counts: Record<UserStatusFilter, number>;
     pending?: boolean;
+    onPageChange: (next: number) => void;
     onQueryChange: (next: string) => void;
     onStatusChange: (next: UserStatusFilter) => void;
     onRoleChange: (next: UserRoleFilter) => void;
@@ -49,6 +56,9 @@ export interface AdminUsersMainProps {
 export function AdminUsersMain({
     focus,
     users,
+    total,
+    page,
+    pageCount,
     peak,
     directoryVolume,
     query,
@@ -57,6 +67,7 @@ export function AdminUsersMain({
     sort,
     counts,
     pending = false,
+    onPageChange,
     onQueryChange,
     onStatusChange,
     onRoleChange,
@@ -82,7 +93,7 @@ export function AdminUsersMain({
             <Panel
                 title={DIRECTORY_TITLE}
                 description={DIRECTORY_LEDE}
-                count={users.length}
+                count={total}
                 action={
                     <PanelLink
                         href="/admin/verifications"
@@ -104,14 +115,19 @@ export function AdminUsersMain({
 
                 <PresenceSwap swapKey={users.length > 0 ? "rows" : "empty"}>
                     {users.length > 0 ? (
-                        <PanelInset scroll className="mt-0">
-                            <UserTable
-                                users={users}
-                                peak={peak}
-                                onOpen={onOpen}
-                                onSuspend={onSuspend}
-                                onReactivate={onReactivate}
-                            />
+                        <PanelInset
+                            scroll
+                            className="scroll-y mt-0 max-h-[38rem]"
+                        >
+                            <PageSwap swapKey={page} className="min-w-fit">
+                                <UserTable
+                                    users={users}
+                                    peak={peak}
+                                    onOpen={onOpen}
+                                    onSuspend={onSuspend}
+                                    onReactivate={onReactivate}
+                                />
+                            </PageSwap>
                         </PanelInset>
                     ) : (
                         <EmptyState
@@ -121,6 +137,18 @@ export function AdminUsersMain({
                         />
                     )}
                 </PresenceSwap>
+
+                {pageCount > 1 && (
+                    <Pager
+                        currentPage={page}
+                        pageCount={pageCount}
+                        pageSize={TABLE_PAGE_SIZE}
+                        visibleCount={users.length}
+                        totalCount={total}
+                        onPageChange={onPageChange}
+                        className="border-border-light -mx-4 border-t px-4 pt-2"
+                    />
+                )}
             </Panel>
         </div>
     );

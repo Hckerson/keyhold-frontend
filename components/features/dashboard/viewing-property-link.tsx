@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import type { Viewing } from "@/lib/types";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export interface ViewingPropertyLinkProps {
     viewing: Viewing;
@@ -9,7 +10,7 @@ export interface ViewingPropertyLinkProps {
 export function ViewingPropertyLink({ viewing }: ViewingPropertyLinkProps) {
     return (
         <Link
-            href={`/listing/${viewing.listingId}`}
+            href={PUBLIC_ROUTES.listing(viewing.listingId)}
             className="group flex min-w-0 items-center gap-2"
         >
             <ListingThumb src={viewing.photo} alt={viewing.address} />

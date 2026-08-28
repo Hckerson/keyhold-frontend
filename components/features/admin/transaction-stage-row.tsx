@@ -10,11 +10,15 @@ const VOLUME_NOUN = "of deal volume";
 
 export interface TransactionStageRowProps {
     stage: TransactionStage;
+    stages: TransactionStage[];
 }
 
-export function TransactionStageRow({ stage }: TransactionStageRowProps) {
+export function TransactionStageRow({
+    stage,
+    stages,
+}: TransactionStageRowProps) {
     const meta = TRANSACTION_STATUSES[stage.id];
-    const share = stageShare(stage);
+    const share = stageShare(stage, stages);
 
     return (
         <tr className="ease-smooth hover:bg-background-muted h-11 transition-colors">

@@ -39,7 +39,11 @@ export function PayoutStageTable({ stages }: PayoutStageTableProps) {
             </thead>
             <tbody className="divide-border divide-y">
                 {stages.map((stage) => (
-                    <PayoutStageRow key={stage.id} stage={stage} />
+                    <PayoutStageRow
+                        key={stage.id}
+                        stage={stage}
+                        stages={stages}
+                    />
                 ))}
             </tbody>
         </table>

@@ -18,22 +18,22 @@ export function ConsoleUnavailable({
     onRetry,
 }: ConsoleUnavailableProps) {
     return (
-        <Panel title={fallback.panel} description={fallback.description}>
+        <Panel title={fallback.panel}>
             <EmptyState
                 icon={TriangleAlert}
                 title={fallback.title}
                 description={fallback.description}
+                action={
+                    <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={onRetry}
+                    >
+                        {RETRY_LABEL}
+                    </Button>
+                }
             />
-            <div className="flex justify-center pb-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onRetry}
-                >
-                    {RETRY_LABEL}
-                </Button>
-            </div>
         </Panel>
     );
 }

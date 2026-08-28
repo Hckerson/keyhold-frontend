@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { JwtPayload } from "@/lib/types/auth";
 
-const DEV_BYPASS_AUTH = process.env.NEXT_PUBLIC_BYPASS_AUTH === "true";
-
 const decodeJwt = (token: string): JwtPayload | null => {
     try {
         const parts = token.split(".");
@@ -33,10 +31,6 @@ const getPortalForRole = (role: string): string => {
 
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
-
-    if (DEV_BYPASS_AUTH) {
-        return NextResponse.next();
-    }
 
     const token = request.cookies.get("access_token")?.value;
 

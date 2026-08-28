@@ -7,16 +7,22 @@ const ADD_ACTION = "Add Lead";
 
 export interface LeadsHeaderProps {
     summary: string;
+    onAdd: () => void;
 }
 
-export function LeadsHeader({ summary }: LeadsHeaderProps) {
+export function LeadsHeader({ summary, onAdd }: LeadsHeaderProps) {
     return (
         <PortalHeader
             title={LEADS_TITLE}
             lede={LEADS_LEDE}
             summary={summary}
             action={
-                <Button type="button" variant="primary" size="sm">
+                <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={onAdd}
+                >
                     {ADD_ACTION}
                 </Button>
             }

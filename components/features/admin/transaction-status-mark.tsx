@@ -1,10 +1,10 @@
 import { StatusDot } from "@/components/patterns/status-dot";
 import { TRANSACTION_STATUSES } from "@/lib/config/transaction-tones";
 import { cn } from "@/lib/utils";
-import type { TransactionStatus } from "@/lib/types";
+import type { LedgerStatus } from "@/lib/types";
 
 export interface TransactionStatusMarkProps {
-    status: TransactionStatus;
+    status: LedgerStatus;
     className?: string;
 }
 

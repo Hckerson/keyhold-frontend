@@ -5,7 +5,7 @@ import { AlertRow } from "@/components/features/dashboard/alert-row";
 import type { Alert } from "@/lib/types";
 
 const TABLE_CAPTION =
-    "Saved-property alerts by signal, price movement, delivery channel and age";
+    "Saved-property alerts by signal, value, delivery channel and age";
 
 export interface AlertTableProps {
     alerts: Alert[];
@@ -29,12 +29,6 @@ export function AlertTable({ alerts, onMarkRead }: AlertTableProps) {
                         className="micro-label w-20 pl-3 text-right"
                     >
                         Value
-                    </th>
-                    <th
-                        scope="col"
-                        className="micro-label w-20 pl-3 text-right"
-                    >
-                        Move
                     </th>
                     <th scope="col" className="micro-label w-24 pl-3 text-left">
                         Channel

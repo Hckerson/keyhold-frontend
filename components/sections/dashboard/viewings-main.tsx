@@ -6,6 +6,7 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { ViewingTable } from "@/components/features/dashboard/viewing-table";
 import { WalkedViewingTable } from "@/components/features/dashboard/walked-viewing-table";
 import { ViewingsNextHero } from "@/components/sections/dashboard/viewings-next-hero";
+import { ViewingsShares } from "@/components/sections/dashboard/viewings-shares";
 import { ViewingsToolbar } from "@/components/sections/dashboard/viewings-toolbar";
 import type {
     ViewingModeFilter,
@@ -21,15 +22,19 @@ const WALKED_LEDE = "What you toured and where each one left you";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
     "Widen the status or format filter, or clear the date to see the full schedule.";
+const LOADING_TITLE = "Loading your schedule";
+const LOADING_LEDE = "Fetching every viewing across your enquiries.";
 
 export interface ViewingsMainProps {
     next?: Viewing;
     viewings: Viewing[];
+    allViewings: Viewing[];
     walked: Viewing[];
     statusFilter: ViewingStatusFilter;
     modeFilter: ViewingModeFilter;
     counts: Record<ViewingStatusFilter, number>;
     dayLabel?: string;
+    pending?: boolean;
     onStatusFilterChange: (filter: ViewingStatusFilter) => void;
     onModeFilterChange: (filter: ViewingModeFilter) => void;
     onClearDay: () => void;
@@ -40,11 +45,13 @@ export interface ViewingsMainProps {
 export function ViewingsMain({
     next,
     viewings,
+    allViewings,
     walked,
     statusFilter,
     modeFilter,
     counts,
     dayLabel,
+    pending,
     onStatusFilterChange,
     onModeFilterChange,
     onClearDay,
@@ -83,7 +90,7 @@ export function ViewingsMain({
                 />
 
                 {viewings.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <ViewingTable
                             viewings={viewings}
                             onReschedule={onReschedule}
@@ -93,8 +100,8 @@ export function ViewingsMain({
                 ) : (
                     <EmptyState
                         icon={CalendarDays}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                     />
                 )}
             </Panel>
@@ -110,6 +117,8 @@ export function ViewingsMain({
                     </PanelInset>
                 </Panel>
             )}
+
+            <ViewingsShares viewings={allViewings} />
         </div>
     );
 }

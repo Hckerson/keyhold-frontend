@@ -7,7 +7,7 @@ import { EscrowMeter } from "@/components/features/admin/escrow-meter";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
 import { commissionOf } from "@/lib/data/admin-transactions";
 import { formatMillions, formatThousands, parseLocalDate } from "@/lib/utils";
-import type { Transaction } from "@/lib/types";
+import type { LedgerTransaction } from "@/lib/types";
 
 const TILE_EYEBROW = "Largest deal in flight";
 const COMMISSION_LABEL = "Commission";
@@ -16,10 +16,11 @@ const STATUS_LABEL = "Stage";
 const CLOSE_LABEL = "Target close";
 const INITIATED_LABEL = "Initiated";
 const REVIEW_ACTION = "Review deal";
+const NO_DATE = "—";
 const DATE_FORMAT = "MMM d, yyyy";
 
 export interface TransactionFocusTileProps {
-    transaction: Transaction;
+    transaction: LedgerTransaction;
     onOpen: (id: string) => void;
 }
 
@@ -61,10 +62,12 @@ export function TransactionFocusTile({
                 </MetricCell>
                 <MetricCell label={CLOSE_LABEL}>
                     <span className="truncate tabular-nums">
-                        {format(
-                            parseLocalDate(transaction.closingDate),
-                            DATE_FORMAT,
-                        )}
+                        {transaction.completedDate
+                            ? format(
+                                  parseLocalDate(transaction.completedDate),
+                                  DATE_FORMAT,
+                              )
+                            : NO_DATE}
                     </span>
                 </MetricCell>
             </div>

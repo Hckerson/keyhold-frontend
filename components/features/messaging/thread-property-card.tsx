@@ -1,7 +1,8 @@
-import { Image } from "@/components/ui/image";
+import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import type { Conversation } from "@/lib/types";
 import { formatMillions } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const ASKING_LABEL = "Asking";
 const VIEW_ACTION = "View listing";
@@ -13,11 +14,9 @@ export interface ThreadPropertyCardProps {
 export function ThreadPropertyCard({ conversation }: ThreadPropertyCardProps) {
     return (
         <div className="flex flex-col gap-2 py-3">
-            <Image
-                variant="thumbnail"
+            <ListingThumb
                 src={conversation.photo}
                 alt={conversation.property}
-                loading="lazy"
                 className="border-border-light h-20 w-full rounded-lg border object-cover"
             />
             <div className="min-w-0">
@@ -35,7 +34,7 @@ export function ThreadPropertyCard({ conversation }: ThreadPropertyCardProps) {
                 </p>
             </div>
             <PanelLink
-                href={`/listing/${conversation.listingId}`}
+                href={PUBLIC_ROUTES.listing(conversation.listingId)}
                 label={VIEW_ACTION}
             />
         </div>

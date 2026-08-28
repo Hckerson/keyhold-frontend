@@ -1,28 +1,18 @@
 import {
     ArrowLeftRight,
-    Banknote,
     ClipboardCheck,
     Flag,
     Gavel,
-    Landmark,
-    Percent,
-    Receipt,
     Server,
     ShieldCheck,
-    Sparkles,
-    Star,
     Wallet,
-    Zap,
     type LucideIcon,
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import { PENDING_VERIFICATIONS } from "@/lib/config/admin-nav";
 import type {
     ModerationQueueId,
-    PayoutMethod,
     PayoutState,
-    RevenueStreamId,
     ServiceState,
     SignalDomain,
     SignalSeverity,
@@ -101,13 +91,6 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
         },
     };
 
-export const QUEUE_SEED_BACKLOG: Record<ModerationQueueId, number> = {
-    verifications: PENDING_VERIFICATIONS,
-    listings: 12,
-    flags: 3,
-    disputes: 2,
-};
-
 export interface ServiceStateMeta {
     label: string;
     tone: DotTone;
@@ -133,87 +116,41 @@ export interface PayoutStateMeta {
 }
 
 export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
-    failed: {
-        label: "Failed",
+    DISPUTED: {
+        label: "Disputed",
         tone: "error",
         chartTone: "error",
         rank: 4,
         held: true,
     },
-    review: {
-        label: "In review",
+    HELD: {
+        label: "Held",
         tone: "warning",
         chartTone: "warning",
         rank: 3,
         held: true,
     },
-    approved: {
-        label: "Approved",
-        tone: "info",
-        chartTone: "info",
+    REFUNDED: {
+        label: "Refunded",
+        tone: "neutral",
+        chartTone: "neutral",
         rank: 2,
-        held: true,
+        held: false,
     },
-    scheduled: {
-        label: "Scheduled",
-        tone: "info",
-        chartTone: "accent",
-        rank: 1,
-        held: true,
-    },
-    released: {
+    RELEASED: {
         label: "Released",
         tone: "success",
         chartTone: "success",
-        rank: 0,
+        rank: 1,
         held: false,
     },
 };
 
 export const PAYOUT_PIPELINE_ORDER: PayoutState[] = [
-    "failed",
-    "review",
-    "approved",
-    "scheduled",
-    "released",
-];
-
-export interface PayoutMethodMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const PAYOUT_METHODS: Record<PayoutMethod, PayoutMethodMeta> = {
-    wire: { label: "Wire", icon: Landmark, tone: "accent" },
-    ach: { label: "ACH", icon: Banknote, tone: "info" },
-    instant: { label: "Instant", icon: Zap, tone: "highlight" },
-};
-
-export const PAYOUT_METHOD_ORDER: PayoutMethod[] = ["wire", "ach", "instant"];
-
-export interface RevenueStreamMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const REVENUE_STREAMS: Record<RevenueStreamId, RevenueStreamMeta> = {
-    commission: { label: "Commission", icon: Percent, tone: "accent" },
-    fees: { label: "Platform fees", icon: Receipt, tone: "info" },
-    subscription: {
-        label: "Agent subscriptions",
-        icon: Sparkles,
-        tone: "highlight",
-    },
-    featured: { label: "Featured placement", icon: Star, tone: "success" },
-};
-
-export const REVENUE_STREAM_ORDER: RevenueStreamId[] = [
-    "commission",
-    "fees",
-    "subscription",
-    "featured",
+    "DISPUTED",
+    "HELD",
+    "REFUNDED",
+    "RELEASED",
 ];
 
 export const PAYOUT_SLA_MINUTES = 4_320;

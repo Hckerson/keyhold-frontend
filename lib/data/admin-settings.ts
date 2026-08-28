@@ -1,45 +1,111 @@
-import { KeyRound, Power, Server, ShieldCheck, UserPlus } from "lucide-react";
-import type { ConfigField } from "@/components/patterns/config-field-grid";
+import { Power, Server, ShieldCheck, UserPlus } from "lucide-react";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import { keyAgeTone } from "@/lib/config/settings-tones";
+import type { ConfigField } from "@/components/patterns/config-field-grid";
 import {
+    POLICY_COUNT,
+    POLICY_SETTING_KEY,
+    POLICY_SWITCHES,
     enabledPolicyCount,
     isPolicyOn,
-    KEY_AGE_MINUTES,
-    POLICY_COUNT,
 } from "@/lib/data/admin-policies";
-import { formatAge } from "@/lib/utils";
 import type { PolicyState } from "@/lib/types";
+import type {
+    PlatformSetting,
+    UpdateSettingsInput,
+} from "@/lib/validations/setting";
+import type { SettingCategory } from "@/lib/enums/enums";
 
 export const SETTINGS_FORM_ID = "admin-settings-form";
-export const ENVIRONMENT_LABEL = "Production";
-export const CONFIG_REVISION = 148;
+export const ENVIRONMENT_LABEL = "Live";
 
-export const INITIAL_ADMIN_CONFIG = {
-    platformName: "Luxury Estates",
-    supportEmail: "support@luxuryestates.com",
-    baseCurrency: "USD",
-    timezone: "America/Los_Angeles",
-    commissionRate: "2.5",
-    platformFee: "495",
-    listingExpiryDays: "90",
-    maxPhotosPerListing: "24",
-    autoApproveThreshold: "1000000",
-    escrowHoldDays: "3",
+const TRUE = "true";
+
+export const ADMIN_CONFIG_KEYS = [
+    "platformName",
+    "supportEmail",
+    "baseCurrency",
+    "commissionRate",
+    "platformFee",
+    "listingExpiryDays",
+    "maxPhotosPerListing",
+    "autoApproveThreshold",
+    "escrowHoldDays",
+] as const;
+
+export type AdminConfigKey = (typeof ADMIN_CONFIG_KEYS)[number];
+
+export type AdminConfig = Record<AdminConfigKey, string>;
+
+export const EMPTY_ADMIN_CONFIG: AdminConfig = ADMIN_CONFIG_KEYS.reduce(
+    (config, key) => ({ ...config, [key]: "" }),
+    {} as AdminConfig,
+);
+
+export const EMPTY_POLICY_STATE: PolicyState = POLICY_SWITCHES.reduce(
+    (state, policy) => ({ ...state, [policy.id]: false }),
+    {} as PolicyState,
+);
+
+export const toAdminConfig = (settings: PlatformSetting[]): AdminConfig => {
+    const byKey = new Map(
+        settings.map((setting) => [setting.key, setting.value]),
+    );
+
+    return ADMIN_CONFIG_KEYS.reduce(
+        (config, key) => ({ ...config, [key]: byKey.get(key) ?? "" }),
+        {} as AdminConfig,
+    );
 };
-export type AdminConfig = typeof INITIAL_ADMIN_CONFIG;
 
-export const changedFieldCount = (current: AdminConfig) => {
-    const initial: Record<string, string> = INITIAL_ADMIN_CONFIG;
-    return Object.entries(current).filter(
-        ([key, value]) => initial[key] !== value,
-    ).length;
+export const toPolicyState = (settings: PlatformSetting[]): PolicyState => {
+    const byKey = new Map(
+        settings.map((setting) => [setting.key, setting.value]),
+    );
+
+    return POLICY_SWITCHES.reduce(
+        (state, policy) => ({
+            ...state,
+            [policy.id]: byKey.get(POLICY_SETTING_KEY[policy.id]) === TRUE,
+        }),
+        {} as PolicyState,
+    );
 };
 
-export const isAdminConfigDirty = (current: AdminConfig) =>
-    changedFieldCount(current) > 0;
+export const changedFieldCount = (
+    current: AdminConfig,
+    baseline: AdminConfig,
+) => ADMIN_CONFIG_KEYS.filter((key) => current[key] !== baseline[key]).length;
 
-export const PLATFORM_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
+export const isAdminConfigDirty = (
+    current: AdminConfig,
+    baseline: AdminConfig,
+) => changedFieldCount(current, baseline) > 0;
+
+export const toSettingsPayload = (
+    settings: PlatformSetting[],
+    config: AdminConfig,
+    policies: PolicyState,
+): UpdateSettingsInput => {
+    const categoryOf = (key: string): SettingCategory =>
+        settings.find((setting) => setting.key === key)?.category ?? "PLATFORM";
+
+    return {
+        settings: [
+            ...ADMIN_CONFIG_KEYS.map((key) => ({
+                key,
+                value: config[key],
+                category: categoryOf(key),
+            })),
+            ...POLICY_SWITCHES.map((policy) => ({
+                key: POLICY_SETTING_KEY[policy.id],
+                value: String(policies[policy.id]),
+                category: categoryOf(POLICY_SETTING_KEY[policy.id]),
+            })),
+        ],
+    };
+};
+
+export const PLATFORM_FIELDS: readonly ConfigField<AdminConfigKey>[] = [
     {
         name: "platformName",
         label: "Platform Name",
@@ -52,14 +118,9 @@ export const PLATFORM_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
         type: "email",
     },
     { name: "baseCurrency", label: "Base Currency", placeholder: "USD" },
-    {
-        name: "timezone",
-        label: "Reporting Timezone",
-        placeholder: "America/Los_Angeles",
-    },
 ];
 
-export const MARKETPLACE_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
+export const MARKETPLACE_FIELDS: readonly ConfigField<AdminConfigKey>[] = [
     {
         name: "commissionRate",
         label: "Commission Rate",
@@ -90,7 +151,7 @@ export const MARKETPLACE_FIELDS: readonly ConfigField<keyof AdminConfig>[] = [
     {
         name: "autoApproveThreshold",
         label: "Auto-Approve Below",
-        placeholder: "1000000",
+        placeholder: "0",
         prefix: "$",
         variant: "numeric",
     },
@@ -108,7 +169,10 @@ const MARKETPLACE_OFFLINE = "Offline";
 const SIGNUPS_OPEN = "Open";
 const SIGNUPS_CLOSED = "Closed";
 
-export const buildSettingsStats = (state: PolicyState): StatDatum[] => {
+export const buildSettingsStats = (
+    state: PolicyState,
+    changes: number,
+): StatDatum[] => {
     const offline = isPolicyOn(state, "maintenance-mode");
     const signupsOpen = isPolicyOn(state, "open-signups");
 
@@ -143,11 +207,11 @@ export const buildSettingsStats = (state: PolicyState): StatDatum[] => {
             href: "/admin/users",
         },
         {
-            id: "keys",
-            icon: KeyRound,
-            label: "Key age",
-            value: formatAge(KEY_AGE_MINUTES),
-            tone: keyAgeTone(KEY_AGE_MINUTES),
+            id: "changes",
+            icon: ShieldCheck,
+            label: "Logged changes",
+            value: `${changes}`,
+            tone: "info",
         },
     ];
 };

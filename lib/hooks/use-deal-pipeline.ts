@@ -1,18 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { DEAL_STAGES } from "@/lib/config/deal-stages";
-import { initialDeals, nextStageOf } from "@/lib/data/agent-pipeline";
+import { useIncomingConnections } from "@/lib/hooks/use-connections";
+import { useSales } from "@/lib/hooks/use-transactions";
+import { toDealBook } from "@/lib/utils/to-deal";
 
 const MILLION = 1_000_000;
+const FULL_PERCENT = 100;
 
 export function useDealPipeline() {
-    const [deals, setDeals] = useState(initialDeals);
+    const connections = useIncomingConnections();
+    const sales = useSales();
+
+    const deals = useMemo(
+        () => toDealBook(connections.data ?? [], sales.data ?? []),
+        [connections.data, sales.data],
+    );
 
     const openDeals = useMemo(
         () => deals.filter((deal) => deal.stage !== "closed"),
         [deals],
     );
+
+    const closedCount = deals.length - openDeals.length;
 
     const totalValue =
         openDeals.reduce((sum, deal) => sum + deal.price, 0) / MILLION;
@@ -22,6 +33,10 @@ export function useDealPipeline() {
               openDeals.reduce((sum, deal) => sum + deal.daysInStage, 0) /
                   openDeals.length,
           )
+        : 0;
+
+    const closeRate = deals.length
+        ? Math.round((closedCount / deals.length) * FULL_PERCENT)
         : 0;
 
     const columns = useMemo(
@@ -39,24 +54,18 @@ export function useDealPipeline() {
         [deals],
     );
 
-    const advance = (id: string) =>
-        setDeals((prev) =>
-            prev.map((deal) =>
-                deal.id === id
-                    ? {
-                          ...deal,
-                          stage: nextStageOf(deal.stage).id,
-                          daysInStage: 0,
-                      }
-                    : deal,
-            ),
-        );
-
     return {
         columns,
         openCount: openDeals.length,
+        closedCount,
+        closeRate,
         totalValue,
         avgDays,
-        advance,
+        pending: connections.isPending || sales.isPending,
+        failed: connections.isError || sales.isError,
+        refetch: () => {
+            void connections.refetch();
+            void sales.refetch();
+        },
     };
 }

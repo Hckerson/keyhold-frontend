@@ -32,7 +32,6 @@ export function OfferMessagesPanel({
                     variant="panel"
                     inputLabel="Message to agent"
                     placeholder="Message your agent…"
-                    attachLabel="Attach a file"
                     onSend={onSend}
                 />
             </div>

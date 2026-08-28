@@ -3,6 +3,7 @@ import { config } from "@/lib/constants";
 import type {
     ConfirmViewingInput,
     CreateViewingInput,
+    RescheduleViewingInput,
     Viewing,
 } from "@/lib/validations/viewing";
 
@@ -17,4 +18,10 @@ export const viewingsAPI = {
 
     confirm: (id: string, input: ConfirmViewingInput) =>
         query.patch<Viewing>(config.api.viewings.confirm(id), input),
+
+    reschedule: (id: string, input: RescheduleViewingInput) =>
+        query.patch<Viewing>(config.api.viewings.reschedule(id), input),
+
+    cancel: (id: string) =>
+        query.patch<Viewing>(config.api.viewings.cancel(id)),
 };

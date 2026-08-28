@@ -6,6 +6,7 @@ import { SecurityControlList } from "@/components/features/shared/security-contr
 import {
     profileSignalShares,
     SECURITY_CONTROLS,
+    type AgentSecurityDialog,
     verifiedCredentialCount,
     type ProfileSignal,
 } from "@/lib/data/agent-account";
@@ -25,9 +26,11 @@ export interface AgentSettingsRailProps {
     signals: ProfileSignal[];
     strength: number;
     credentials: AccountCredential[];
+    onSecurityAction: (id: AgentSecurityDialog) => void;
 }
 
 export function AgentSettingsRail({
+    onSecurityAction,
     signals,
     strength,
     credentials,
@@ -63,7 +66,10 @@ export function AgentSettingsRail({
                 description={SECURITY_LEDE}
                 count={SECURITY_CONTROLS.length}
             >
-                <SecurityControlList controls={SECURITY_CONTROLS} />
+                <SecurityControlList
+                    controls={SECURITY_CONTROLS}
+                    onAction={onSecurityAction}
+                />
             </Panel>
         </div>
     );

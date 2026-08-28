@@ -76,9 +76,7 @@ export function VerificationDecisionModal({
                             Cancel
                         </Button>
                         <Button
-                            variant={
-                                decision.mode === "info" ? "primary" : "danger"
-                            }
+                            variant={"danger"}
                             size="sm"
                             disabled={note.trim().length === 0}
                             onClick={onSubmit}

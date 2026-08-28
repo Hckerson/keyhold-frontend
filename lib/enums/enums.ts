@@ -29,6 +29,8 @@ export const PROPERTY_SORTS = [
 
 export const CONNECTION_STATUSES = ["PENDING", "ACCEPTED", "REJECTED"] as const;
 
+export const VIEWING_MODES = ["IN_PERSON", "VIRTUAL", "OPEN_HOUSE"] as const;
+
 export const VIEWING_STATUSES = [
     "PENDING",
     "CONFIRMED",
@@ -66,6 +68,7 @@ export type PropertyStatus = (typeof PROPERTY_STATUSES)[number];
 export type PropertySort = (typeof PROPERTY_SORTS)[number];
 export type ConnectionStatus = (typeof CONNECTION_STATUSES)[number];
 export type ViewingStatus = (typeof VIEWING_STATUSES)[number];
+export type ViewingMode = (typeof VIEWING_MODES)[number];
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
 export type TransactionStatus = (typeof TRANSACTION_STATUSES)[number];
 export type TimeFilter = (typeof TIME_FILTERS)[number];

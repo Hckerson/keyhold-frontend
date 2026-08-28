@@ -19,6 +19,18 @@ export interface MotionPresence {
     transition: Transition;
 }
 
+export interface MotionEnter {
+    initial: TargetAndTransition;
+    animate: TargetAndTransition;
+    transition: Transition;
+}
+
+export const PAGE_SWAP_MOTION: MotionEnter = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: FAST,
+};
+
 export const MODAL_BACKDROP_MOTION: MotionPresence = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },

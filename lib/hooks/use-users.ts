@@ -5,7 +5,8 @@ import { usersAPI } from "@/lib/api/users";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import type { UpdateUserInput } from "@/lib/validations/user";
+import type { CreateUserInput, UpdateUserInput } from "@/lib/validations/user";
+import type { UserTier } from "@/lib/enums/enums";
 
 export function useCurrentUser() {
     const accessToken = useAuthStore((state) => state.accessToken);
@@ -38,6 +39,21 @@ export function useUser(id: string | undefined) {
     });
 }
 
+export function useCreateUser() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: (input: CreateUserInput) => usersAPI.create(input),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.users.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.users.tierDistribution,
+                }),
+            ]);
+        },
+    });
+}
+
 export function useUpdateUser(id: string) {
     const client = useQueryClient();
     return useMutation({
@@ -47,6 +63,32 @@ export function useUpdateUser(id: string) {
                 client.invalidateQueries({ queryKey: queryKeys.users.me }),
                 client.invalidateQueries({
                     queryKey: queryKeys.users.detail(id),
+                }),
+            ]);
+        },
+    });
+}
+
+export function useTierDistribution(enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.users.tierDistribution,
+        queryFn: () => usersAPI.tierDistribution(),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useSetUserTier() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, tier }: { id: string; tier: UserTier }) =>
+            usersAPI.setTier(id, tier),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.users.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.users.tierDistribution,
                 }),
             ]);
         },

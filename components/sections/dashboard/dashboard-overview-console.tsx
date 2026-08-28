@@ -46,7 +46,11 @@ export function DashboardOverviewConsole() {
             <DashboardOverviewHeader name={user?.name} />
 
             <DashboardOverviewStatBand
-                stats={buyerStats(items, savedCount, unread.data ?? 0)}
+                stats={buyerStats(
+                    items,
+                    savedCount,
+                    unread.data?.unreadCount ?? 0,
+                )}
             />
 
             <div className="console-split gap-3">

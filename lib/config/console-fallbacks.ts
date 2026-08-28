@@ -11,11 +11,41 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The listing service is unreachable right now. Try again in a moment.",
     },
+    agentRequests: {
+        panel: "Requests",
+        title: "We couldn't load what's waiting on you",
+        description:
+            "The enquiry service is unreachable right now. Try again in a moment.",
+    },
     agentLeads: {
         panel: "Lead Desk",
         title: "We couldn't load your enquiries",
         description:
             "The enquiry service is unreachable right now. Try again in a moment.",
+    },
+    agentConcierge: {
+        panel: "VIP Concierge",
+        title: "We couldn't load your concierge book",
+        description:
+            "The concierge service is unreachable right now. Try again in a moment.",
+    },
+    agentPipeline: {
+        panel: "Pipeline",
+        title: "We couldn't load your pipeline",
+        description:
+            "The pipeline service is unreachable right now. Try again in a moment.",
+    },
+    agentCalendar: {
+        panel: "Calendar",
+        title: "We couldn't load your calendar",
+        description:
+            "The viewing service is unreachable right now. Try again in a moment.",
+    },
+    agentAnalytics: {
+        panel: "Performance",
+        title: "We couldn't load your analytics",
+        description:
+            "The analytics service is unreachable right now. Try again in a moment.",
     },
     agentOverview: {
         panel: "Practice Overview",
@@ -29,11 +59,47 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The saved-homes service is unreachable right now. Try again in a moment.",
     },
+    buyerInterests: {
+        panel: "Introductions",
+        title: "We couldn't load your enquiries",
+        description:
+            "The connection service is unreachable right now. Try again in a moment.",
+    },
+    buyerAlerts: {
+        panel: "Alerts",
+        title: "We couldn't load your alerts",
+        description:
+            "The alert service is unreachable right now. Try again in a moment.",
+    },
     buyerOverview: {
         panel: "Your Search",
         title: "We couldn't load your search",
         description:
             "The buyer service is unreachable right now. Try again in a moment.",
+    },
+    buyerTransactions: {
+        panel: "Transactions",
+        title: "We couldn't load your purchases",
+        description:
+            "The transaction service is unreachable right now. Try again in a moment.",
+    },
+    buyerMessages: {
+        panel: "Messages",
+        title: "We couldn't load your conversations",
+        description:
+            "The messaging service is unreachable right now. Try again in a moment.",
+    },
+    buyerViewings: {
+        panel: "Viewings",
+        title: "We couldn't load your viewings",
+        description:
+            "The viewing service is unreachable right now. Try again in a moment.",
+    },
+    buyerOffers: {
+        panel: "Offer Book",
+        title: "We couldn't load your offers",
+        description:
+            "The offer service is unreachable right now. Try again in a moment.",
     },
     buyerOffer: {
         panel: "Offer",
@@ -46,6 +112,36 @@ export const CONSOLE_FALLBACKS = {
         title: "We couldn't load platform metrics",
         description:
             "The stats service is unreachable right now. Try again in a moment.",
+    },
+    adminListings: {
+        panel: "Listing Moderation",
+        title: "We could not load the moderation queue",
+        description:
+            "The moderation service is unreachable right now. Try again in a moment.",
+    },
+    adminVerifications: {
+        panel: "Verifications",
+        title: "We could not load the verification queue",
+        description:
+            "The identity service is unreachable right now. Try again in a moment.",
+    },
+    adminTransactions: {
+        panel: "Transactions",
+        title: "We could not load the deal ledger",
+        description:
+            "The transaction service is unreachable right now. Try again in a moment.",
+    },
+    adminPayments: {
+        panel: "Payments",
+        title: "We couldn't load escrow holds",
+        description:
+            "The escrow service is unreachable right now. Try again in a moment.",
+    },
+    adminReports: {
+        panel: "Reports",
+        title: "We couldn't load platform reports",
+        description:
+            "The reporting service is unreachable right now. Try again in a moment.",
     },
     adminUsers: {
         panel: "User Directory",

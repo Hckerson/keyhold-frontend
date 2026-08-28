@@ -1,36 +1,31 @@
-export type TransactionStatus =
-    | "pending"
-    | "escrow"
-    | "closing"
-    | "completed"
-    | "failed";
-
-export type TransactionFinancing = "cash" | "mortgage" | "portfolio";
+export type LedgerStatus =
+    | "PENDING"
+    | "IN_PROGRESS"
+    | "COMPLETED"
+    | "CANCELLED";
 
 export type TransactionMilestoneId =
     | "agreement"
     | "deposit"
     | "inspection"
-    | "financing"
     | "settlement";
 
-export interface Transaction {
+export interface LedgerTransaction {
     id: string;
     reference: string;
     property: string;
     buyer: string;
     agent: string;
     price: number;
-    status: TransactionStatus;
-    financing: TransactionFinancing;
+    status: LedgerStatus;
     cleared: TransactionMilestoneId[];
     initiatedDate: string;
-    closingDate: string;
+    completedDate: string | null;
     ageMinutes: number;
 }
 
 export interface TransactionStage {
-    id: TransactionStatus;
+    id: LedgerStatus;
     count: number;
     volume: number;
 }

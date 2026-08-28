@@ -1,5 +1,4 @@
 import { Avatar } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ConciergeAllocation } from "@/components/features/agent/concierge-allocation";
 import { MetricCell } from "@/components/patterns/metric-cell";
@@ -13,10 +12,10 @@ import { formatMillions, initialsOf } from "@/lib/utils";
 const HERO_EYEBROW = "Top relationship";
 const MANDATE_LABEL = "Mandate";
 const ALLOCATED_LABEL = "Allocated";
-const CLOSED_LABEL = "Closed to date";
+const REQUESTS_LABEL = "Open requests";
 const TOUCH_LABEL = "Last touch";
 const NEXT_LABEL = "Next";
-const CLOSINGS_SUFFIX = "closings";
+const REQUESTS_SUFFIX = "open";
 
 export interface ConciergeTopClientHeroProps {
     client: VIPClient;
@@ -34,7 +33,7 @@ export function ConciergeTopClientHero({
                 <div className="flex min-w-0 items-start gap-3">
                     <Avatar
                         size="md"
-                        src={client.portrait}
+                        src={client.portrait ?? undefined}
                         alt={client.name}
                         initials={initialsOf(client.name)}
                     />
@@ -60,27 +59,15 @@ export function ConciergeTopClientHero({
                         </p>
                     </div>
                 </div>
-
-                <div className="flex shrink-0 gap-2">
-                    <Button type="button" variant="secondary" size="sm">
-                        Call
-                    </Button>
-                    <Button type="button" variant="secondary" size="sm">
-                        Email
-                    </Button>
-                    <Button type="button" variant="ghost" size="sm">
-                        Profile
-                    </Button>
-                </div>
             </div>
 
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={ALLOCATED_LABEL}>
                     <ConciergeAllocation percent={allocationPct(client)} />
                 </MetricCell>
-                <MetricCell label={CLOSED_LABEL}>
+                <MetricCell label={REQUESTS_LABEL}>
                     <span className="tabular-nums">
-                        {client.deals} {CLOSINGS_SUFFIX}
+                        {client.openRequests} {REQUESTS_SUFFIX}
                     </span>
                 </MetricCell>
                 <MetricCell label={TOUCH_LABEL}>

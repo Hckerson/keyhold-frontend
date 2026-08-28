@@ -1,4 +1,4 @@
-import { Bell, Home, Radio, TrendingDown, Wallet } from "lucide-react";
+import { Bell, Home, Radio, TrendingDown } from "lucide-react";
 import type { ShareDatum } from "@/components/patterns/share-row";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
@@ -10,7 +10,6 @@ import {
     RECENCY_BAND_KEYS,
     type RecencyBand,
 } from "@/lib/config/alert-tones";
-import { propertyImage } from "@/lib/data/sample-images";
 import type {
     Alert,
     AlertChannel,
@@ -18,7 +17,7 @@ import type {
     AlertType,
 } from "@/lib/types";
 import type { NotificationPreference } from "@/lib/validations/notification";
-import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
+import { percentOf, sum } from "@/lib/utils";
 
 export type ReadFilter = "all" | "unread" | "read";
 
@@ -83,151 +82,6 @@ export const toPreferenceList = (
         inApp: preferences[type].channels.inApp,
     }));
 
-export const initialAlerts: Alert[] = [
-    {
-        id: "oak-avenue-drop",
-        listingId: "1",
-        type: "PRICE_DROP",
-        description:
-            "The seller cut the ask by $150,000 after four weeks without a second offer. Your saved search still ranks it first on price per square foot.",
-        address: "456 Oak Avenue",
-        locality: "Beverly Hills",
-        photo: propertyImage(0),
-        price: 3_200_000,
-        previousPrice: 3_350_000,
-        minutesAgo: 42,
-        channel: "email",
-        read: false,
-    },
-    {
-        id: "palisades-drop",
-        listingId: "7",
-        type: "PRICE_DROP",
-        description:
-            "A $250,000 reduction brings the bluff house inside your ceiling for the first time since it listed.",
-        address: "18 Palisades Bluff",
-        locality: "Pacific Palisades",
-        photo: propertyImage(6),
-        price: 8_150_000,
-        previousPrice: 8_400_000,
-        minutesAgo: 18,
-        channel: "email",
-        read: false,
-    },
-    {
-        id: "montana-match",
-        listingId: "8",
-        type: "NEW_LISTING",
-        description:
-            "A new four-bedroom north of Montana matches your saved criteria on beds, lot size and locality.",
-        address: "301 Montana Row",
-        locality: "Santa Monica",
-        photo: propertyImage(7),
-        price: 3_950_000,
-        minutesAgo: 28,
-        channel: "inApp",
-        read: false,
-    },
-    {
-        id: "oak-street-counter",
-        listingId: "3",
-        type: "OFFER_RESPONSE",
-        description:
-            "The seller countered your $4,250,000 offer at $4,400,000 and asked for a 30-day close.",
-        address: "234 Oak Street",
-        locality: "Bel Air",
-        photo: propertyImage(2),
-        price: 4_400_000,
-        previousPrice: 4_250_000,
-        minutesAgo: 260,
-        channel: "sms",
-        read: false,
-    },
-    {
-        id: "elm-street-match",
-        listingId: "2",
-        type: "NEW_LISTING",
-        description:
-            "A new listing on Elm Street matches your saved search on price band and school catchment.",
-        address: "678 Elm Street",
-        locality: "Bel Air",
-        photo: propertyImage(1),
-        price: 3_800_000,
-        minutesAgo: 310,
-        channel: "inApp",
-        read: false,
-    },
-    {
-        id: "oak-avenue-viewing",
-        listingId: "1",
-        type: "VIEWING_CONFIRMATION",
-        description:
-            "Your tour is confirmed for 3:00 PM with the listing agent meeting you at the gate.",
-        address: "456 Oak Avenue",
-        locality: "Beverly Hills",
-        photo: propertyImage(0),
-        price: 3_200_000,
-        minutesAgo: 1_490,
-        channel: "sms",
-        read: true,
-    },
-    {
-        id: "brentwood-drop",
-        listingId: "9",
-        type: "PRICE_DROP",
-        description:
-            "A quiet $150,000 trim on the mews house, its second reduction this quarter.",
-        address: "64 Brentwood Mews",
-        locality: "Brentwood",
-        photo: propertyImage(8),
-        price: 4_950_000,
-        previousPrice: 5_100_000,
-        minutesAgo: 1_205,
-        channel: "inApp",
-        read: true,
-    },
-    {
-        id: "palm-drive-offer",
-        listingId: "5",
-        type: "UNDER_OFFER",
-        description:
-            "The Malibu house you saved has gone under offer and is no longer taking viewings.",
-        address: "567 Palm Drive",
-        locality: "Malibu",
-        photo: propertyImage(4),
-        price: 5_600_000,
-        minutesAgo: 2_880,
-        channel: "inApp",
-        read: true,
-    },
-    {
-        id: "hillcrest-status",
-        listingId: "6",
-        type: "STATUS_CHANGE",
-        description:
-            "The Hillcrest listing expired and has been withdrawn from the market by its agent.",
-        address: "77 Hillcrest Terrace",
-        locality: "Pasadena",
-        photo: propertyImage(5),
-        price: 1_850_000,
-        minutesAgo: 4_320,
-        channel: "email",
-        read: true,
-    },
-];
-
-export const priceDelta = (alert: Alert) =>
-    alert.previousPrice === undefined
-        ? undefined
-        : alert.price - alert.previousPrice;
-
-export const movePercent = (alert: Alert) => {
-    const delta = priceDelta(alert);
-    if (delta === undefined || alert.previousPrice === undefined)
-        return undefined;
-    return Math.round((delta / alert.previousPrice) * 100);
-};
-
 export const recencyBandOf = (alert: Alert): RecencyBand =>
     RECENCY_BAND_KEYS.find(
         (id) => alert.minutesAgo < RECENCY_BANDS[id].ceiling,
@@ -236,14 +90,12 @@ export const recencyBandOf = (alert: Alert): RecencyBand =>
 export const unreadCount = (alerts: Alert[]) =>
     alerts.filter((alert) => !alert.read).length;
 
-export const moved = (alerts: Alert[]) =>
-    alerts.filter((alert) => priceDelta(alert) !== undefined);
-
-export const valueMoved = (alerts: Alert[]) =>
-    sum(moved(alerts).map((alert) => Math.abs(priceDelta(alert) ?? 0)));
-
 export const trackedProperties = (alerts: Alert[]) =>
-    new Set(alerts.map((alert) => alert.listingId)).size;
+    new Set(
+        alerts
+            .map((alert) => alert.listingId)
+            .filter((id): id is string => id !== null),
+    ).size;
 
 export const matchesFilters = (
     alert: Alert,
@@ -266,7 +118,6 @@ export const rankAlerts = (alerts: Alert[]) =>
         (a, b) =>
             Number(!b.read) - Number(!a.read) ||
             ALERT_TYPES[b.type].rank - ALERT_TYPES[a.type].rank ||
-            Math.abs(priceDelta(b) ?? 0) - Math.abs(priceDelta(a) ?? 0) ||
             a.minutesAgo - b.minutesAgo,
     );
 
@@ -315,18 +166,11 @@ export const alertStats = (alerts: Alert[]): StatDatum[] => [
         tone: "success",
     },
     {
-        id: "moves",
+        id: "signals",
         icon: TrendingDown,
-        label: "Price moves",
-        value: `${moved(alerts).length}`,
+        label: "Signal types",
+        value: `${new Set(alerts.map((alert) => alert.type)).size}`,
         tone: "info",
-    },
-    {
-        id: "value",
-        icon: Wallet,
-        label: "Value moved",
-        value: formatCompactUsd(valueMoved(alerts)),
-        tone: "highlight",
     },
     {
         id: "tracked",
@@ -337,18 +181,31 @@ export const alertStats = (alerts: Alert[]): StatDatum[] => [
     },
 ];
 
-export const typeShares = (alerts: Alert[]): ShareDatum[] =>
-    ALERT_TYPE_KEYS.map((id) => {
-        const count = alerts.filter((alert) => alert.type === id).length;
-        return {
-            id,
-            icon: ALERT_TYPES[id].icon,
-            label: ALERT_TYPES[id].label,
-            value: `${count}`,
-            percent: percentOf(count, alerts.length),
-            tone: ALERT_TYPES[id].chartTone,
-        };
-    });
+export interface AlertVolume {
+    count: number;
+    percent: number;
+}
+
+export const typeVolumes = (alerts: Alert[]): Record<AlertType, AlertVolume> =>
+    Object.fromEntries(
+        ALERT_TYPE_KEYS.map((id) => {
+            const count = alerts.filter((alert) => alert.type === id).length;
+            return [id, { count, percent: percentOf(count, alerts.length) }];
+        }),
+    ) as Record<AlertType, AlertVolume>;
+
+export const typeShares = (alerts: Alert[]): ShareDatum[] => {
+    const volumes = typeVolumes(alerts);
+
+    return ALERT_TYPE_KEYS.map((id) => ({
+        id,
+        icon: ALERT_TYPES[id].icon,
+        label: ALERT_TYPES[id].label,
+        value: `${volumes[id].count}`,
+        percent: volumes[id].percent,
+        tone: ALERT_TYPES[id].chartTone,
+    }));
+};
 
 export const recencyShares = (alerts: Alert[]): ShareDatum[] =>
     RECENCY_BAND_KEYS.map((id) => {
@@ -379,7 +236,7 @@ export const channelShares = (alerts: Alert[]): ShareDatum[] =>
     });
 
 export const alertsSummary = (alerts: Alert[]) =>
-    `${unreadCount(alerts)} unread · ${formatCompactUsd(valueMoved(alerts))} in price moves`;
+    `${unreadCount(alerts)} unread · ${trackedProperties(alerts)} properties tracked`;
 
 export const ALERT_TYPE_COUNT = ALERT_TYPE_KEYS.length;
 

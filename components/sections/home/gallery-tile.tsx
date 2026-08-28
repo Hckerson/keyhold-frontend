@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Heart, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export interface GalleryTileData {
     id: string;
@@ -103,7 +104,7 @@ export function GalleryTile({
             />
 
             <Link
-                href={`/listing/${tile.id}`}
+                href={PUBLIC_ROUTES.listing(tile.id)}
                 aria-label={`${tile.address} — ${tile.price}`}
                 className="focus-visible:ring-accent absolute inset-0 z-10 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
             />

@@ -1,10 +1,10 @@
-import type { Transaction } from "@/lib/types";
+import type { LedgerTransaction } from "@/lib/types";
 
 const BUYER_LABEL = "Buyer";
 const AGENT_LABEL = "Listing agent";
 
 export interface TransactionPartyListProps {
-    transaction: Transaction;
+    transaction: LedgerTransaction;
 }
 
 export function TransactionPartyList({

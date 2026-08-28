@@ -1,139 +1,182 @@
 import type { ReportTrendMetric } from "@/lib/types";
-import { CLOSED_DEALS_YTD, GMV_YTD } from "@/lib/data/admin-platform";
-import { TOTAL_USERS, USER_GROWTH_SERIES } from "@/lib/data/admin-users";
+import type { GrowthPoint, TrendStats } from "@/lib/validations/stats";
 import { formatCompactUsd, formatCount, formatMillions } from "@/lib/utils";
 
-const MONTH_LABELS = ["Feb", "Mar", "Apr", "May", "Jun", "Jul"];
-const GMV_WEIGHTS = [0.14, 0.15, 0.16, 0.18, 0.19, 0.18];
-const DEAL_WEIGHTS = [0.15, 0.15, 0.17, 0.17, 0.18, 0.18];
-const GMV_YOY_CHANGE = "+22%";
+const MONTH_LABELS = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+];
+
+const MILLION = 1_000_000;
+const NO_PERIOD = "No activity recorded yet";
+
+const monthLabel = (key: string) => MONTH_LABELS[Number(key.slice(5, 7)) - 1];
+
+const valuesOf = (points: GrowthPoint[]) => points.map((point) => point.value);
 
 const sum = (values: number[]) =>
     values.reduce((total, value) => total + value, 0);
 
-const average = (values: number[]) => Math.round(sum(values) / values.length);
+const average = (values: number[]) =>
+    values.length ? Math.round(sum(values) / values.length) : 0;
 
-const distribute = (total: number, weights: number[]) => {
-    const parts = weights.map((weight) => Math.round(total * weight));
-    const drift = total - sum(parts);
-    return parts.map((part, index) =>
-        index === parts.length - 1 ? part + drift : part,
-    );
+const peakMonthFor = (points: GrowthPoint[]) => {
+    if (points.length === 0) return "";
+    const values = valuesOf(points);
+    return monthLabel(points[values.indexOf(Math.max(...values))].name);
 };
-
-const peakMonthFor = (values: number[]) =>
-    MONTH_LABELS[values.indexOf(Math.max(...values))];
 
 const latestChange = (values: number[]) => {
     const prior = values[values.length - 2];
     const latest = values[values.length - 1];
+    if (!prior) return 0;
     return Math.round(((latest - prior) / prior) * 1_000) / 10;
 };
 
 const signed = (value: number) => `${value >= 0 ? "+" : ""}${value}%`;
 
-const GMV_BY_MONTH = distribute(GMV_YTD, GMV_WEIGHTS);
-const DEALS_BY_MONTH = distribute(CLOSED_DEALS_YTD, DEAL_WEIGHTS);
-const USERS_BY_MONTH = USER_GROWTH_SERIES;
+const trendOf = (change: number) => (change < 0 ? "down" : "up");
 
-export const REPORT_MONTHS: Record<string, string | number>[] =
-    MONTH_LABELS.map((month, index) => ({
-        month,
-        gmv: GMV_BY_MONTH[index],
-        deals: DEALS_BY_MONTH[index],
-        users: USERS_BY_MONTH[index],
+export const reportMonths = (
+    trend: TrendStats | undefined,
+): Record<string, string | number>[] => {
+    const keys = [
+        ...new Set([
+            ...(trend?.gmv ?? []).map((point) => point.name),
+            ...(trend?.deals ?? []).map((point) => point.name),
+            ...(trend?.users ?? []).map((point) => point.name),
+        ]),
+    ].sort();
+
+    const valueAt = (points: GrowthPoint[] | undefined, key: string) =>
+        points?.find((point) => point.name === key)?.value ?? 0;
+
+    return keys.map((key) => ({
+        month: monthLabel(key),
+        gmv: valueAt(trend?.gmv, key),
+        deals: valueAt(trend?.deals, key),
+        users: valueAt(trend?.users, key),
     }));
+};
 
-export const REPORT_PERIOD_LABEL = `${MONTH_LABELS[0]}–${
-    MONTH_LABELS[MONTH_LABELS.length - 1]
-} · ${MONTH_LABELS.length} months tracked`;
+export const reportPeriodLabel = (trend: TrendStats | undefined) => {
+    const months = reportMonths(trend);
+    if (months.length === 0) return NO_PERIOD;
+    return `${months[0].month}–${months[months.length - 1].month} · ${months.length} months tracked`;
+};
 
-const dealsChange = latestChange(DEALS_BY_MONTH);
-const usersChange = latestChange(USERS_BY_MONTH);
+export const reportTrendMetrics = (
+    trend: TrendStats | undefined,
+): ReportTrendMetric[] => {
+    const gmv = trend?.gmv ?? [];
+    const deals = trend?.deals ?? [];
+    const users = trend?.users ?? [];
 
-export const REPORT_TREND_METRICS: ReportTrendMetric[] = [
-    {
-        id: "gmv",
-        label: "GMV",
-        eyebrow: "Gross merchandise value · year to date",
-        headline: formatMillions(GMV_YTD, 0),
-        change: GMV_YOY_CHANGE,
-        trend: "up",
-        series: [{ key: "gmv", name: "Gross volume", tone: "accent" }],
-        divideBy: 1_000_000,
-        valuePrefix: "$",
-        valueSuffix: "M",
-        summary: [
-            {
-                label: "Peak month",
-                value: `${peakMonthFor(GMV_BY_MONTH)} · ${formatCompactUsd(
-                    Math.max(...GMV_BY_MONTH),
-                )}`,
-            },
-            {
-                label: "Monthly average",
-                value: formatCompactUsd(average(GMV_BY_MONTH)),
-            },
-            {
-                label: "Month over month",
-                value: signed(latestChange(GMV_BY_MONTH)),
-            },
-        ],
-    },
-    {
-        id: "deals",
-        label: "Closed deals",
-        eyebrow: "Closed deals · year to date",
-        headline: formatCount(CLOSED_DEALS_YTD),
-        change: signed(dealsChange),
-        trend: dealsChange < 0 ? "down" : "up",
-        series: [{ key: "deals", name: "Closed deals", tone: "info" }],
-        divideBy: 1,
-        valuePrefix: "",
-        valueSuffix: "",
-        summary: [
-            {
-                label: "Peak month",
-                value: `${peakMonthFor(DEALS_BY_MONTH)} · ${Math.max(
-                    ...DEALS_BY_MONTH,
-                )}`,
-            },
-            {
-                label: "Monthly average",
-                value: formatCount(average(DEALS_BY_MONTH)),
-            },
-            {
-                label: "Closed year to date",
-                value: formatCount(CLOSED_DEALS_YTD),
-            },
-        ],
-    },
-    {
-        id: "users",
-        label: "Members",
-        eyebrow: "Platform members · registered",
-        headline: formatCount(TOTAL_USERS),
-        change: signed(usersChange),
-        trend: usersChange < 0 ? "down" : "up",
-        series: [{ key: "users", name: "Platform members", tone: "highlight" }],
-        divideBy: 1,
-        valuePrefix: "",
-        valueSuffix: "",
-        summary: [
-            { label: "Registered", value: formatCount(TOTAL_USERS) },
-            {
-                label: "Net added",
-                value: `+${formatCount(
-                    USERS_BY_MONTH[USERS_BY_MONTH.length - 1] -
-                        USERS_BY_MONTH[0],
-                )}`,
-            },
-            {
-                label: "Peak month",
-                value: `${peakMonthFor(USERS_BY_MONTH)} · ${formatCount(
-                    Math.max(...USERS_BY_MONTH),
-                )}`,
-            },
-        ],
-    },
-];
+    const gmvValues = valuesOf(gmv);
+    const dealValues = valuesOf(deals);
+    const userValues = valuesOf(users);
+
+    const gmvChange = latestChange(gmvValues);
+    const dealsChange = latestChange(dealValues);
+    const usersChange = latestChange(userValues);
+
+    return [
+        {
+            id: "gmv",
+            label: "GMV",
+            eyebrow: "Gross merchandise value · settled",
+            headline: formatMillions(sum(gmvValues), 0),
+            change: signed(gmvChange),
+            trend: trendOf(gmvChange),
+            series: [{ key: "gmv", name: "Gross volume", tone: "accent" }],
+            divideBy: MILLION,
+            valuePrefix: "$",
+            valueSuffix: "M",
+            summary: [
+                {
+                    label: "Peak month",
+                    value: gmvValues.length
+                        ? `${peakMonthFor(gmv)} · ${formatCompactUsd(
+                              Math.max(...gmvValues),
+                          )}`
+                        : "—",
+                },
+                {
+                    label: "Monthly average",
+                    value: formatCompactUsd(average(gmvValues)),
+                },
+                { label: "Month over month", value: signed(gmvChange) },
+            ],
+        },
+        {
+            id: "deals",
+            label: "Closed deals",
+            eyebrow: "Closed deals · settled",
+            headline: formatCount(sum(dealValues)),
+            change: signed(dealsChange),
+            trend: trendOf(dealsChange),
+            series: [{ key: "deals", name: "Closed deals", tone: "info" }],
+            divideBy: 1,
+            valuePrefix: "",
+            valueSuffix: "",
+            summary: [
+                {
+                    label: "Peak month",
+                    value: dealValues.length
+                        ? `${peakMonthFor(deals)} · ${Math.max(...dealValues)}`
+                        : "—",
+                },
+                {
+                    label: "Monthly average",
+                    value: formatCount(average(dealValues)),
+                },
+                {
+                    label: "Closed in range",
+                    value: formatCount(sum(dealValues)),
+                },
+            ],
+        },
+        {
+            id: "users",
+            label: "Members",
+            eyebrow: "Platform members · joined",
+            headline: formatCount(sum(userValues)),
+            change: signed(usersChange),
+            trend: trendOf(usersChange),
+            series: [
+                { key: "users", name: "Platform members", tone: "highlight" },
+            ],
+            divideBy: 1,
+            valuePrefix: "",
+            valueSuffix: "",
+            summary: [
+                {
+                    label: "Joined in range",
+                    value: formatCount(sum(userValues)),
+                },
+                {
+                    label: "Monthly average",
+                    value: formatCount(average(userValues)),
+                },
+                {
+                    label: "Peak month",
+                    value: userValues.length
+                        ? `${peakMonthFor(users)} · ${formatCount(
+                              Math.max(...userValues),
+                          )}`
+                        : "—",
+                },
+            ],
+        },
+    ];
+};

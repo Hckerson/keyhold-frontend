@@ -17,10 +17,15 @@ export const flagPropertyTargetSchema = z.object({
     price: z.number(),
     status: z.enum(PROPERTY_STATUSES),
     image: z.string().nullable(),
+    images: z.array(z.string()).default([]),
+    description: z.string(),
+    sqFt: z.number().nullable(),
     sellerId: z.string(),
     sellerName: z.string(),
     sellerEmail: z.string(),
     sellerPhone: z.string().nullable(),
+    sellerLicensed: z.boolean(),
+    sellerVerified: z.boolean(),
 });
 
 export const flagUserTargetSchema = z.object({

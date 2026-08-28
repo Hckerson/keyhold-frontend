@@ -11,20 +11,18 @@ import {
     AuthPlane,
     AuthSubmit,
     AuthTitleBlock,
+    DevAuthRow,
     SocialAuthRow,
 } from "@/components/features/auth/parts";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
-import { authAPI } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 import {
-    ACCESS_TOKEN_COOKIE,
     AUTH_ROUTES,
-    SESSION_DAYS,
     isSafeRedirect,
     portalForRole,
+    withRedirect,
 } from "@/lib/constants";
-import { useAuthStore } from "@/lib/stores/auth-store";
-import { setCookie } from "@/lib/utils/cookies";
+import { useSignIn } from "@/lib/hooks/use-sign-in";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
     fieldErrorFor,
@@ -38,10 +36,10 @@ const INITIAL_VALUES = { email: "", password: "" };
 const SIGN_IN_FAILED =
     "We couldn't sign you in. Check your email and password, then try again.";
 
-const FOOTER_ENTRIES = [
+const footerEntries = (redirectTo?: string) => [
     {
         label: "New here",
-        href: AUTH_ROUTES.signup,
+        href: withRedirect(AUTH_ROUTES.signup, redirectTo),
         action: "Apply for access",
     },
 ];
@@ -52,7 +50,7 @@ export interface LoginFormProps {
 
 export function LoginForm({ redirectTo }: LoginFormProps) {
     const router = useRouter();
-    const setAuth = useAuthStore((state) => state.setAuth);
+    const signIn = useSignIn();
 
     const [values, setValues] = useState(INITIAL_VALUES);
     const [remember, setRemember] = useState(true);
@@ -89,14 +87,7 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
         setFormError(null);
 
         try {
-            const { user, accessToken } = await authAPI.login(parsed.data);
-
-            setAuth(user, accessToken);
-            setCookie(
-                ACCESS_TOKEN_COOKIE,
-                accessToken,
-                remember ? SESSION_DAYS : null,
-            );
+            const user = await signIn(parsed.data, remember);
 
             router.replace(
                 isSafeRedirect(redirectTo)
@@ -188,7 +179,9 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 disabled={pending}
             />
 
-            <AuthTitleBlock entries={FOOTER_ENTRIES} />
+            <DevAuthRow redirectTo={redirectTo} disabled={pending} />
+
+            <AuthTitleBlock entries={footerEntries(redirectTo)} />
         </AuthPlane>
     );
 }

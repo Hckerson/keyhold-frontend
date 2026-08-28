@@ -58,7 +58,7 @@ export function LeadsMain({
                 </div>
 
                 {leads.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <LeadTable leads={leads} onRespond={onRespond} />
                     </PanelInset>
                 ) : (

@@ -3,9 +3,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
-import { mailHref, telHref } from "@/lib/data/agent-leads";
 import type { Lead } from "@/lib/types/lead";
-import { formatCompactUsd, initialsOf } from "@/lib/utils";
+import { formatCompactUsd, initialsOf, mailHref, telHref } from "@/lib/utils";
 
 const HERO_EYEBROW = "Top enquiry";
 const VALUE_LABEL = "Listing value";

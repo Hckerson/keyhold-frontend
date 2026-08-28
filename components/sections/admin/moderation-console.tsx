@@ -7,11 +7,10 @@ import { ModerationHeader } from "@/components/sections/admin/moderation-header"
 import { ModerationMain } from "@/components/sections/admin/moderation-main";
 import { ModerationRail } from "@/components/sections/admin/moderation-rail";
 import { ModerationStatBand } from "@/components/sections/admin/moderation-stat-band";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    MODERATION_LISTINGS,
-    approveListings,
     countByStatus,
-    decideListings,
     focusListing,
     matchesModerationFilters,
     moderationStats,
@@ -20,13 +19,21 @@ import {
     type ModerationCheckFilter,
     type ModerationStatusFilter,
 } from "@/lib/data/admin-listings";
+import { useFlags, useSettleFlag } from "@/lib/hooks/use-flags";
+import { useModerateProperty } from "@/lib/hooks/use-properties";
+import { toModerationQueue } from "@/lib/utils/to-moderation-listing";
 import type { DecisionMode, ModerationDecision } from "@/lib/types";
+import type { ModerationDecision as ModerationDecisionValue } from "@/lib/enums/enums";
 
 const EVERY_STATUS: ModerationStatusFilter = "all";
 const EVERY_CHECK: ModerationCheckFilter = "all";
+const QUEUE_PAGE_SIZE = 100;
 
 export function ModerationConsole() {
-    const [listings, setListings] = useState(MODERATION_LISTINGS);
+    const flags = useFlags({ type: "PROPERTY", limit: QUEUE_PAGE_SIZE });
+    const moderate = useModerateProperty();
+    const settleFlag = useSettleFlag();
+
     const [statusFilter, setStatusFilter] =
         useState<ModerationStatusFilter>(EVERY_STATUS);
     const [checkFilter, setCheckFilter] =
@@ -34,6 +41,11 @@ export function ModerationConsole() {
     const [reviewId, setReviewId] = useState<string | null>(null);
     const [decision, setDecision] = useState<ModerationDecision | null>(null);
     const [note, setNote] = useState("");
+
+    const listings = useMemo(
+        () => toModerationQueue(flags.data?.items ?? []),
+        [flags.data?.items],
+    );
 
     const ranked = useMemo(() => rankListings(listings), [listings]);
     const counts = useMemo(() => countByStatus(listings), [listings]);
@@ -48,14 +60,37 @@ export function ModerationConsole() {
         [ranked, statusFilter, checkFilter],
     );
 
+    const settle = useCallback(
+        (
+            flagId: string,
+            mode: ModerationDecisionValue,
+            reviewNote?: string,
+        ) => {
+            const listing = listings.find((item) => item.id === flagId);
+            if (!listing) return;
+
+            void moderate
+                .mutateAsync({
+                    id: listing.listingId,
+                    decision: mode,
+                    note: reviewNote,
+                })
+                .then(() => settleFlag.mutateAsync({ id: flagId }));
+        },
+        [listings, moderate, settleFlag],
+    );
+
     const onOpen = useCallback((id: string) => setReviewId(id), []);
 
     const onCloseReview = useCallback(() => setReviewId(null), []);
 
-    const onApprove = useCallback((id: string) => {
-        setReviewId(null);
-        setListings((current) => approveListings(current, [id]));
-    }, []);
+    const onApprove = useCallback(
+        (id: string) => {
+            setReviewId(null);
+            settle(id, "approve");
+        },
+        [settle],
+    );
 
     const onDecide = useCallback((mode: DecisionMode, id: string) => {
         setReviewId(null);
@@ -71,11 +106,17 @@ export function ModerationConsole() {
     const onSubmitDecision = () => {
         const trimmed = note.trim();
         if (!decision || !trimmed) return;
-        setListings((current) =>
-            decideListings(current, decision.ids, decision.mode, trimmed),
-        );
+        decision.ids.forEach((id) => settle(id, decision.mode, trimmed));
         onCloseDecision();
     };
+
+    if (flags.isError)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.adminListings}
+                onRetry={() => void flags.refetch()}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">
@@ -90,6 +131,7 @@ export function ModerationConsole() {
                     statusFilter={statusFilter}
                     checkFilter={checkFilter}
                     counts={counts}
+                    pending={flags.isPending}
                     onStatusFilterChange={setStatusFilter}
                     onCheckFilterChange={setCheckFilter}
                     onOpen={onOpen}

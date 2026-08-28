@@ -13,7 +13,7 @@ export function ConfigChangeTable({ changes }: ConfigChangeTableProps) {
         <table className="table-flush w-full min-w-sm table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
-                <tr className="border-border h-9 border-b">
+                <tr className="bg-background sticky top-0 z-10 h-9 shadow-[inset_0_-1px_0_var(--color-border)]">
                     <th scope="col" className="micro-label text-left">
                         Setting
                     </th>

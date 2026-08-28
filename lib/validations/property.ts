@@ -4,6 +4,10 @@ import {
     PROPERTY_TYPES,
     PROPERTY_SORTS,
 } from "@/lib/enums/enums";
+import {
+    MAX_PROMOTION_DAYS,
+    MIN_PROMOTION_DAYS,
+} from "@/lib/config/listing-promotion";
 
 export const propertyImageSchema = z.object({
     id: z.string(),
@@ -43,6 +47,7 @@ export const propertySchema = z.object({
     yearBuilt: z.number().int().nullable(),
     walkScore: z.number().int().nullable(),
     viewsCount: z.number().int(),
+    featuredUntil: z.iso.datetime().nullable().optional(),
     amenities: z.array(z.string()),
     features: z.array(z.string()),
     type: z.enum(PROPERTY_TYPES),
@@ -97,6 +102,10 @@ export const updatePropertySchema = createPropertySchema.partial().extend({
     status: z.enum(PROPERTY_STATUSES).optional(),
 });
 
+export const promotePropertySchema = z.object({
+    days: z.number().int().min(MIN_PROMOTION_DAYS).max(MAX_PROMOTION_DAYS),
+});
+
 export const propertyQuerySchema = z.object({
     status: z.enum(PROPERTY_STATUSES).optional(),
     types: z.array(z.enum(PROPERTY_TYPES)).optional(),
@@ -124,5 +133,6 @@ export type Property = z.infer<typeof propertySchema>;
 export type PropertyPage = z.infer<typeof propertyPageSchema>;
 export type CreatePropertyInput = z.infer<typeof createPropertySchema>;
 export type UpdatePropertyInput = z.infer<typeof updatePropertySchema>;
+export type PromotePropertyInput = z.infer<typeof promotePropertySchema>;
 export type PropertyQuery = z.infer<typeof propertyQuerySchema>;
 export type FacetCounts = z.infer<typeof facetCountsSchema>;

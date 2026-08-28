@@ -39,7 +39,11 @@ export function TransactionStageTable({ stages }: TransactionStageTableProps) {
             </thead>
             <tbody className="divide-border divide-y">
                 {stages.map((stage) => (
-                    <TransactionStageRow key={stage.id} stage={stage} />
+                    <TransactionStageRow
+                        key={stage.id}
+                        stage={stage}
+                        stages={stages}
+                    />
                 ))}
             </tbody>
         </table>

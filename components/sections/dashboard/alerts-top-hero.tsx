@@ -5,22 +5,21 @@ import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { MoveChip } from "@/components/patterns/move-chip";
 import { AlertChannelMark } from "@/components/features/dashboard/alert-channel-mark";
 import { ALERT_TYPES, RECENCY_BANDS } from "@/lib/config/alert-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
-import { movePercent, recencyBandOf } from "@/lib/data/alerts";
+import { recencyBandOf } from "@/lib/data/alerts";
 import type { Alert } from "@/lib/types";
 import { cn, formatAge, formatMillions } from "@/lib/utils";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const HERO_EYEBROW = "Needs attention";
-const NOW_LABEL = "Now";
 const ASKING_LABEL = "Asking";
-const MOVE_LABEL = "Movement";
-const PREVIOUS_LABEL = "Previous ask";
+const SIGNAL_LABEL = "Signal";
+const LOCALITY_LABEL = "Locality";
 const CHANNEL_LABEL = "Delivered by";
 const AGE_LABEL = "Age";
-const NO_PREVIOUS = "—";
+const NO_VALUE = "—";
 const VIEW_ACTION = "View Listing";
 const MARK_ACTION = "Mark Read";
 
@@ -32,7 +31,6 @@ export interface AlertsTopHeroProps {
 export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
     const type = ALERT_TYPES[alert.type];
     const band = RECENCY_BANDS[recencyBandOf(alert)];
-    const percent = movePercent(alert);
 
     return (
         <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
@@ -50,17 +48,15 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
                         </p>
                         <div className="mt-1 flex items-baseline gap-2">
                             <p className="text-h4 font-display text-text font-light tabular-nums">
-                                {formatMillions(alert.price, 2)}
+                                {alert.price === null
+                                    ? NO_VALUE
+                                    : formatMillions(alert.price, 2)}
                             </p>
-                            <span className="micro-label">
-                                {alert.previousPrice === undefined
-                                    ? ASKING_LABEL
-                                    : NOW_LABEL}
-                            </span>
+                            <span className="micro-label">{ASKING_LABEL}</span>
                         </div>
                         <p className="mt-0.5 flex min-w-0 items-center gap-1.5">
                             <span className="text-text truncate text-xs font-semibold">
-                                {alert.address}, {alert.locality}
+                                {alert.address}
                             </span>
                             <StatusDot tone={type.tone} />
                             <span className="text-text-secondary shrink-0 text-xs">
@@ -74,10 +70,12 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
                 </div>
 
                 <div className="flex shrink-0 items-center gap-2">
-                    <PanelLink
-                        href={`/listing/${alert.listingId}`}
-                        label={VIEW_ACTION}
-                    />
+                    {alert.listingId && (
+                        <PanelLink
+                            href={PUBLIC_ROUTES.listing(alert.listingId)}
+                            label={VIEW_ACTION}
+                        />
+                    )}
                     <Button
                         type="button"
                         variant="secondary"
@@ -91,14 +89,12 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
             </div>
 
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
-                <MetricCell label={MOVE_LABEL}>
-                    <MoveChip percent={percent} />
+                <MetricCell label={SIGNAL_LABEL}>
+                    <span>{type.label}</span>
                 </MetricCell>
-                <MetricCell label={PREVIOUS_LABEL}>
-                    <span className="tabular-nums">
-                        {alert.previousPrice === undefined
-                            ? NO_PREVIOUS
-                            : formatMillions(alert.previousPrice, 2)}
+                <MetricCell label={LOCALITY_LABEL}>
+                    <span className="truncate">
+                        {alert.locality || NO_VALUE}
                     </span>
                 </MetricCell>
                 <MetricCell label={CHANNEL_LABEL}>
