@@ -386,7 +386,8 @@
 .desk-only,
 .desk-only-flex,
 .desk-only-grid,
-.reading-only {
+.reading-only,
+.reading-only-inline {
     display: none;
 }
 
@@ -482,6 +483,10 @@
 
     .reading-only {
         display: block;
+    }
+
+    .reading-only-inline {
+        display: inline;
     }
 
     .reading-hidden {
