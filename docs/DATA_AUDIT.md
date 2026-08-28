@@ -6,7 +6,7 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 
 **Verdict:** the schema itself is in good order — indexed, related, eagerly loaded. What was missing sat around it: no migration history, no transaction anywhere in the codebase, and no backup story. The guide's line for this stage is _"code is disposable; data is not"_, and all three findings are about the data outliving the code.
 
-**04.1 and 04.2 are now fixed. 04.3 is partly closed and stays open** — the scripts and the procedure exist, but no restore has been run, and an untested restore is the thing the finding is about.
+**04.1 and 04.2 are now fixed. 04.3 is partly closed and stays open** — and the part that came back is not what the finding predicted. The host was backing the database up daily all along; what was missing was anyone knowing it, and the export scripts written to close the gap were pointed at the wrong endpoint.
 
 ---
 
@@ -21,6 +21,8 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 | **ORM discipline**    | Every Prisma call now goes through a repository (see stage 03), each wrapping errors as `RepoError`. One place to change when a query goes wrong.             |
 | **Blob storage**      | Images and documents go to Cloudinary; only the URL is stored. Databases stay out of the megabytes business.                                                  |
 | **Seeding**           | `pnpm db:setup` fills a fresh database in one command, with the data split into `prisma/seed-data/` and the steps into `prisma/seed-steps/`.                  |
+
+**Host-managed backups** were not looked for. The audit searched the repository and found nothing, which was correct, and inferred that nothing existed, which was not. Prisma Postgres's daily snapshots were never in the repository to find. Recorded here because the same reasoning would miss any other guarantee the platform makes on this project's behalf.
 
 **Caching** is absent server-side — no Redis, no cache-manager. At this scale that is a defensible choice, and the guide's own warning is that the permanent cost of a cache is invalidation. TanStack Query owns the client half ([ADR 0005](adr/0005-query-owns-server-state.md)). Recorded here as a deliberate-looking absence with no record behind it, not as a defect.
 
@@ -88,11 +90,25 @@ The guide's formulation is the one that matters: _"The number that matters is no
 
 The deployment gap belongs to stage 10 and is only noted here. The backup gap belongs to this stage, because it is about the data, and it is the one item in this audit where the cost of being wrong is unbounded.
 
-**Partly closed; still open.** `docs/BACKUP.md` now records what holds the data, the backup cadence, the retention window and a restore procedure. `pnpm db:backup` and `pnpm db:restore` wrap `pg_dump` and `pg_restore` over `DATABASE_URL`: the backup refuses to leave an empty dump behind, prunes past the retention window, and the restore runs under `--single-transaction` and refuses to touch a production database without an explicit acknowledgement variable. The retention logic has tests. `backups/` is git-ignored.
+**The finding's premise was half wrong.** It reads _"There is nothing about backup or restore anywhere in the repository"_ and concludes the answer to a lost database is unknown. The first half is true. The conclusion was not: **Prisma Postgres has been snapshotting this database daily the whole time**, restorable from the Console's Backups tab, retained 7 days on Starter and Pro or 30 on Business. The gap was never that no backups existed. It was that nobody had written down that they did, so nobody could reason about them.
 
-**What is still missing is the only part that mattered.** The finding asks for "a restore procedure someone has actually run once against a scratch database", and nobody has run one. That needs a scratch database and a host decision, neither of which exists yet — the repository still contains no Dockerfile, no compose file, no CI workflow and no deployment manifest, which the audit files under stage 10.
+What that mechanism actually promises is worth stating, because it is weaker than "we have daily backups" sounds:
 
-`BACKUP.md` ends with an empty drill table for exactly this reason. Filling one row in it closes this finding; until then the restore time is still unknown, and a written procedure is not evidence.
+- **RPO up to 24 hours, and not even reliably that** — snapshots happen only on days with database activity.
+- **No point-in-time recovery.** Prisma lists it as a future feature. Recovery lands on a snapshot boundary, not the moment before the mistake.
+- **RTO unpublished.** There is no documented recovery-time figure, which is the exact number the guide says is the one that matters.
+- **The retention window is unknown in practice**, because the plan this project is on has not been recorded anywhere.
+
+**And the scripts written to close this finding would not have worked.** `db:backup` and `db:restore` read `DATABASE_URL`, which points at `pooled.db.prisma.io` — a connection pooler. `pg_dump` needs a session it can hold a consistent snapshot on, and Prisma's own documentation gives a _direct_ host, `db.prisma.io`, for manual backups. Both endpoints were probed and both accept the same credentials, so the fix is a host rewrite in `backup-config.ts` with a `DIRECT_DATABASE_URL` override, now covered by tests.
+
+That defect deserves recording rather than quietly correcting. This finding exists because an untested backup is a rumour, and the first artifact written to answer it was itself a rumour — a script that had never been run, pointed at an endpoint that would not have served it. It was caught by reading the provider's documentation, not by running anything.
+
+**Still open, and now with two paths to drill, not one.** `docs/BACKUP.md` records both. Neither has been run:
+
+- **The host's snapshot restore** is the path that will actually be used in an incident, and it is the one most worth timing. It needs Console access and a scratch database to restore into.
+- **The `pg_dump` path** is the portable second copy — what you have when the answer is "we are leaving this provider" or "the snapshot is older than the mistake". It cannot be run here at all: no machine in this environment has the PostgreSQL client tools, and the server is 17.2, so they must be 17 or newer.
+
+The drill table in `BACKUP.md` is still empty. One row in it closes this finding.
 
 ---
 
