@@ -1,3 +1,4 @@
+import { formatCount } from "@/lib/utils/format";
 interface LedgerEntry {
     label: string;
     value: string;
@@ -19,7 +20,7 @@ export function SearchResultLedger({
     const entries: LedgerEntry[] = [
         { label: "Bd", value: String(beds) },
         { label: "Ba", value: String(baths) },
-        { label: "Sq ft", value: sqft.toLocaleString() },
+        { label: "Sq ft", value: formatCount(sqft) },
         { label: "Built", value: String(yearBuilt) },
     ];
 

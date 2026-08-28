@@ -1,12 +1,6 @@
 import type { Message } from "@/lib/types/message";
 import type { Message as ApiMessage } from "@/lib/validations/message";
-import { initialsOf } from "@/lib/utils/format";
-
-const TIME_FORMAT: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-};
+import { formatClock, initialsOf } from "@/lib/utils/format";
 
 export const toThread = (
     messages: ApiMessage[],
@@ -20,10 +14,7 @@ export const toThread = (
             id: message.id,
             senderRole: mine ? "user" : "agent",
             content: message.content,
-            timestamp: new Date(message.createdAt).toLocaleTimeString(
-                "en-US",
-                TIME_FORMAT,
-            ),
+            timestamp: formatClock(new Date(message.createdAt)),
             initials: initialsOf(
                 mine ? (message.sender?.fullName ?? "") : agentName,
             ),

@@ -14,6 +14,7 @@ import {
     chartToneVar as toneVar,
     type ChartTone,
 } from "@/lib/config/chart-tones";
+import { formatCount } from "@/lib/utils/format";
 
 export interface BarDatum {
     label: string;
@@ -50,7 +51,7 @@ export function BarChart({
         ...datum,
         display:
             datum.display ??
-            `${valuePrefix}${datum.value.toLocaleString()}${valueSuffix}`,
+            `${valuePrefix}${formatCount(datum.value)}${valueSuffix}`,
         fill: toneVar[
             datum.tone ??
                 (index === 0 && highlightFirstTone ? highlightFirstTone : tone)

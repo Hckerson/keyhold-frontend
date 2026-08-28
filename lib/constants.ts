@@ -12,6 +12,8 @@ export const config = {
         users: {
             list: "/users",
             me: "/users/me",
+            export: "/users/me/export",
+            eraseMe: "/users/me",
             detail: (id: string) => `/users/${id}`,
             tierDistribution: "/users/tiers/distribution",
             tier: (id: string) => `/users/${id}/tier`,
@@ -203,6 +205,8 @@ export const oauthStartUrl = (provider: string, redirectTo?: string) => {
         ? `${url}?${REDIRECT_PARAM}=${encodeURIComponent(redirectTo)}`
         : url;
 };
+
+export const LOCALE = "en-US";
 
 export const NEW_LISTING_DAYS = 7;
 export const DEBOUNCE_DELAY = 300;
