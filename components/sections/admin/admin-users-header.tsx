@@ -8,16 +8,22 @@ const ADD_ACTION = "Add User";
 
 export interface AdminUsersHeaderProps {
     summary: string;
+    onAdd: () => void;
 }
 
-export function AdminUsersHeader({ summary }: AdminUsersHeaderProps) {
+export function AdminUsersHeader({ summary, onAdd }: AdminUsersHeaderProps) {
     return (
         <PortalHeader
             title={USERS_TITLE}
             lede={USERS_LEDE}
             summary={summary}
             action={
-                <Button type="button" variant="primary" size="sm">
+                <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={onAdd}
+                >
                     {ADD_ACTION}
                 </Button>
             }

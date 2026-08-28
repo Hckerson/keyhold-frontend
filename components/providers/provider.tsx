@@ -27,7 +27,12 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={queryClient}>
             <MotionProvider>{children}</MotionProvider>
-            {config.isDev && <ReactQueryDevtools initialIsOpen={false} />}
+            {config.isDev && (
+                <ReactQueryDevtools
+                    initialIsOpen={false}
+                    buttonPosition="bottom-right"
+                />
+            )}
         </QueryClientProvider>
     );
 }

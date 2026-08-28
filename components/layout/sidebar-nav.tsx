@@ -1,29 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
-import type { JourneyStationState } from "@/lib/types";
+import type {
+    JourneyStationState,
+    SidebarNavItem,
+    SidebarSection,
+} from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export interface SidebarNavItem {
-    label: string;
-    icon: LucideIcon;
-    href?: string;
-    badge?: number | string;
-    count?: number;
-    state?: JourneyStationState;
-}
-
-export interface SidebarSection {
-    label?: string;
-    spine?: boolean;
-    items: SidebarNavItem[];
-}
-
 export const rowBase =
-    "group relative flex h-9 items-center gap-2 rounded-md text-xs transition-colors duration-200 ease-smooth";
+    "group relative flex h-9 items-center gap-2 rounded-md px-2 text-xs transition-colors duration-200 ease-smooth";
 export const rowIdle =
     "text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active";
+export const rowCollapsed = "w-9 justify-center px-0";
 export const rowIconSlot =
     "relative flex h-9 w-6 shrink-0 items-center justify-center";
 
@@ -84,7 +73,7 @@ function NavRow({
 
     const className = cn(
         rowBase,
-        collapsed ? "justify-center pr-0" : "pr-2",
+        collapsed && rowCollapsed,
         active && "bg-sidebar-active text-sidebar-text-active",
         !active && (item.href ? rowIdle : "text-sidebar-text-muted"),
     );
@@ -182,7 +171,7 @@ function SectionHeader({
         : 0;
 
     return (
-        <div className="flex h-6 items-center justify-between gap-2 pr-2 pl-1">
+        <div className="flex h-6 items-center justify-between gap-2 px-2">
             <span className="rail-label">{section.label}</span>
             {stage > 0 && (
                 <span className="text-highlight font-mono text-[10px] tabular-nums">
@@ -203,7 +192,12 @@ export function SidebarNav({
     collapsed: boolean;
 }) {
     return (
-        <nav className="scroll-y scroll-invert flex flex-1 flex-col gap-2 px-2 py-2">
+        <nav
+            className={cn(
+                "scroll-y scroll-invert flex flex-1 flex-col gap-2 py-2",
+                collapsed ? "scroll-hidden px-1.5" : "px-2",
+            )}
+        >
             {sections.map((section, sectionIndex) => (
                 <div
                     key={section.label ?? sectionIndex}

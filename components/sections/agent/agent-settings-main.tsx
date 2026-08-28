@@ -3,7 +3,7 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { ConfigPanel } from "@/components/features/settings/config-panel";
+import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { NotificationRuleTable } from "@/components/features/agent/notification-rule-table";
 import { AgentSettingsProfileHero } from "@/components/sections/agent/agent-settings-profile-hero";
 import {

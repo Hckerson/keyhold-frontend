@@ -4,6 +4,7 @@ import { m } from "motion/react";
 import { ListingRow } from "@/components/features/listings/listing-row";
 import { SEARCH_RESULT_MOTION } from "@/lib/config/public-motion";
 import type { Listing } from "@/lib/types";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 interface SearchResultsListProps {
     listings: Listing[];
@@ -23,7 +24,7 @@ export function SearchResultsList({ listings }: SearchResultsListProps) {
                             baths: listing.baths,
                             sqft: listing.sqft,
                         }}
-                        href={`/listing/${listing.id}`}
+                        href={PUBLIC_ROUTES.listing(listing.id)}
                         meta={`${listing.agent.name} · listed ${listing.listedDaysAgo} days ago`}
                     />
                 </m.div>

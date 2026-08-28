@@ -114,6 +114,11 @@ The window is the pivot. Before it closes the money is the buyer's to hold; afte
 | 8.1 | An escrow id that matches nothing is refused as not found.                                      |
 | 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
 | 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
+| #   | Criterion                                                                                       |
+| --- | ----------------------------------------------------------------------------------------------- |
+| 8.1 | An escrow id that matches nothing is refused as not found.                                      |
+| 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
+| 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
 | 8.4 | A refusal of any of the above writes nothing — the hold survives every rejected release intact. |
 
 ## 09 · What a release does

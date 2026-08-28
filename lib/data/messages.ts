@@ -22,6 +22,15 @@ export const CONVERSATION_FILTERS: {
     { id: "awaiting-you", label: "Waiting" },
 ];
 
+export const COMPOSE_COPY = {
+    title: "Start a message",
+    hint: "Pick the enquiry you want to write to. Every thread belongs to a property you have registered interest in.",
+    emptyTitle: "No enquiries yet",
+    emptyLede:
+        "Register interest in a listing and the thread with its agent opens here.",
+    emptyAction: "Browse listings",
+} as const;
+
 export const USER_INITIALS = "JD";
 export const DEFAULT_AGENT_INITIALS = "SC";
 export const AGENT_REPLY_DELAY = 1500;

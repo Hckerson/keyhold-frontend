@@ -91,6 +91,16 @@ export function useDeleteProperty() {
     });
 }
 
+export function usePromoteProperty() {
+    const client = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, days }: { id: string; days: number }) =>
+            propertiesAPI.promote(id, days),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
+    });
+}
+
 export function useMarkPropertySold() {
     const client = useQueryClient();
     return useMutation({

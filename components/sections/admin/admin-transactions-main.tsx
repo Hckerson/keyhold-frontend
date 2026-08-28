@@ -59,7 +59,7 @@ export function AdminTransactionsMain({
                     swapKey={transactions.length > 0 ? "rows" : "empty"}
                 >
                     {transactions.length > 0 ? (
-                        <PanelInset scroll className="mt-0">
+                        <PanelInset scroll>
                             <TransactionLedgerTable
                                 transactions={transactions}
                                 onOpen={onOpen}

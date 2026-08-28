@@ -5,6 +5,7 @@ export interface PanelProps {
     title?: string;
     description?: string;
     count?: number | string;
+    countQuiet?: boolean;
     action?: ReactNode;
     toolbar?: ReactNode;
     children: ReactNode;
@@ -16,6 +17,7 @@ export function Panel({
     title,
     description,
     count,
+    countQuiet,
     action,
     toolbar,
     children,
@@ -43,7 +45,14 @@ export function Panel({
                                         </h3>
                                     )}
                                     {count !== undefined && (
-                                        <span className="border-border-light bg-background text-text-secondary shrink-0 rounded-md border px-1.5 py-px font-mono text-[10px] tabular-nums">
+                                        <span
+                                            className={cn(
+                                                "border-border-light bg-background shrink-0 rounded-md border px-1.5 py-px font-mono text-[10px] tabular-nums",
+                                                countQuiet
+                                                    ? "text-text-muted"
+                                                    : "text-text-secondary",
+                                            )}
+                                        >
                                             {count}
                                         </span>
                                     )}
@@ -66,7 +75,11 @@ export function Panel({
                     )}
                 </header>
             )}
-            <div className={bodyClassName}>{children}</div>
+            <div
+                className={cn(hasHeader && "space-y-2.5 pt-2.5", bodyClassName)}
+            >
+                {children}
+            </div>
         </section>
     );
 }

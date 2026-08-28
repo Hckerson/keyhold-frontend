@@ -34,6 +34,7 @@ export const toConversation = (
             UNKNOWN_TITLE,
         initials: initialsOf(connection.seller.fullName),
         portrait: connection.seller.avatar ?? null,
+        phone: connection.seller.phoneNumber ?? null,
         listingId: connection.propertyId,
         property: connection.property.address,
         locality: connection.property.locality,

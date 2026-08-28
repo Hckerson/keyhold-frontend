@@ -64,7 +64,7 @@ export function AdminSettingsRail({
                         visibleCount={changes.length}
                         totalCount={total}
                         onPageChange={onPageChange}
-                        className="border-border-light -mx-4 mt-2.5 border-t px-4 pt-2"
+                        className="border-border-light -mx-4 border-t px-4 pt-2"
                     />
                 )}
             </Panel>

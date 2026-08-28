@@ -3,7 +3,7 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { ConfigPanel } from "@/components/features/settings/config-panel";
+import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { PolicySwitchTable } from "@/components/features/admin/policy-switch-table";
 import { AdminSettingsPostureHero } from "@/components/sections/admin/admin-settings-posture-hero";
 import {

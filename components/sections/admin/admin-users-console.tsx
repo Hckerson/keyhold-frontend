@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { UserCreateModal } from "@/components/features/admin/user-create-modal";
 import { UserDetailModal } from "@/components/features/admin/user-detail-modal";
 import { UserSuspendModal } from "@/components/features/admin/user-suspend-modal";
 import { AdminUsersHeader } from "@/components/sections/admin/admin-users-header";
@@ -20,7 +21,7 @@ import {
     userStats,
     userSummary,
 } from "@/lib/data/admin-users";
-import { useUsers } from "@/lib/hooks/use-users";
+import { useCreateUser, useUsers } from "@/lib/hooks/use-users";
 import {
     useLiftSuspension,
     useSuspendUser,
@@ -30,6 +31,12 @@ import {
     EMPTY_SUSPENSION_DRAFT,
     isSuspensionReady,
 } from "@/lib/config/suspension";
+import {
+    EMPTY_USER_INVITE_DRAFT,
+    type UserInviteDraft,
+} from "@/lib/config/user-invite";
+import { createUserSchema } from "@/lib/validations/user";
+import { toFieldErrors, type FieldErrors } from "@/lib/validations/auth";
 import { toManagedUser } from "@/lib/utils/to-managed-user";
 import type {
     SuspensionDraft,
@@ -45,6 +52,7 @@ const FIRST_PAGE = 1;
 
 export function AdminUsersConsole() {
     const { data, isPending, isError, refetch } = useUsers();
+    const createUser = useCreateUser();
     const activeSuspensions = useSuspensions({ active: true });
     const suspendUser = useSuspendUser();
     const liftSuspension = useLiftSuspension();
@@ -57,6 +65,11 @@ export function AdminUsersConsole() {
     const [suspendId, setSuspendId] = useState<string | null>(null);
     const [draft, setDraft] = useState<SuspensionDraft>(EMPTY_SUSPENSION_DRAFT);
     const [page, setPage] = useState(FIRST_PAGE);
+    const [inviting, setInviting] = useState(false);
+    const [invite, setInvite] = useState<UserInviteDraft>(
+        EMPTY_USER_INVITE_DRAFT,
+    );
+    const [inviteErrors, setInviteErrors] = useState<FieldErrors>({});
 
     const users = useMemo(() => (data ?? []).map(toManagedUser), [data]);
 
@@ -125,6 +138,30 @@ export function AdminUsersConsole() {
 
     const onOpen = useCallback((id: string) => setDetailId(id), []);
 
+    const onOpenInvite = useCallback(() => {
+        createUser.reset();
+        setInvite(EMPTY_USER_INVITE_DRAFT);
+        setInviteErrors({});
+        setInviting(true);
+    }, [createUser]);
+
+    const onCloseInvite = useCallback(() => setInviting(false), []);
+
+    const onSubmitInvite = () => {
+        const parsed = createUserSchema.safeParse({
+            ...invite,
+            phoneNumber: invite.phoneNumber.trim() || undefined,
+        });
+
+        if (!parsed.success) {
+            setInviteErrors(toFieldErrors(parsed.error));
+            return;
+        }
+
+        setInviteErrors({});
+        void createUser.mutateAsync(parsed.data).then(() => setInviting(false));
+    };
+
     const onCloseDetail = useCallback(() => setDetailId(null), []);
 
     const onReactivate = useCallback(
@@ -168,7 +205,10 @@ export function AdminUsersConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AdminUsersHeader summary={userSummary(users)} />
+            <AdminUsersHeader
+                summary={userSummary(users)}
+                onAdd={onOpenInvite}
+            />
 
             <AdminUsersStatBand stats={stats} />
 
@@ -205,6 +245,17 @@ export function AdminUsersConsole() {
                 onClose={onCloseDetail}
                 onSuspend={onSuspend}
                 onReactivate={onReactivate}
+            />
+
+            <UserCreateModal
+                open={inviting}
+                draft={invite}
+                errors={inviteErrors}
+                pending={createUser.isPending}
+                failed={createUser.isError}
+                onDraftChange={setInvite}
+                onClose={onCloseInvite}
+                onSubmit={onSubmitInvite}
             />
 
             <UserSuspendModal

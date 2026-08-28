@@ -4,10 +4,16 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { AlertTable } from "@/components/features/dashboard/alert-table";
+import { AlertsDelivery } from "@/components/sections/dashboard/alerts-delivery";
 import { AlertsToolbar } from "@/components/sections/dashboard/alerts-toolbar";
 import { AlertsTopHero } from "@/components/sections/dashboard/alerts-top-hero";
-import type { ReadFilter, TypeFilter } from "@/lib/data/alerts";
-import type { Alert } from "@/lib/types";
+import type { AlertVolume, ReadFilter, TypeFilter } from "@/lib/data/alerts";
+import type {
+    Alert,
+    AlertChannel,
+    AlertPreference,
+    AlertType,
+} from "@/lib/types";
 
 const STREAM_TITLE = "Alert Stream";
 const STREAM_LEDE = "Every signal behind the one that needs you most";
@@ -20,6 +26,9 @@ const LOADING_LEDE = "Fetching the signals across your saved book.";
 export interface AlertsMainProps {
     top?: Alert;
     alerts: Alert[];
+    preferences: Record<AlertType, AlertPreference>;
+    volumes: Record<AlertType, AlertVolume>;
+    deliverySummary: string;
     readFilter: ReadFilter;
     typeFilter: TypeFilter;
     counts: Record<ReadFilter, number>;
@@ -27,11 +36,16 @@ export interface AlertsMainProps {
     onReadFilterChange: (filter: ReadFilter) => void;
     onTypeFilterChange: (filter: TypeFilter) => void;
     onMarkRead: (id: string) => void;
+    onToggleEnabled: (type: AlertType) => void;
+    onToggleChannel: (type: AlertType, channel: AlertChannel) => void;
 }
 
 export function AlertsMain({
     top,
     alerts,
+    preferences,
+    volumes,
+    deliverySummary,
     readFilter,
     typeFilter,
     counts,
@@ -39,6 +53,8 @@ export function AlertsMain({
     onReadFilterChange,
     onTypeFilterChange,
     onMarkRead,
+    onToggleEnabled,
+    onToggleChannel,
 }: AlertsMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
@@ -61,7 +77,7 @@ export function AlertsMain({
                 />
 
                 {alerts.length > 0 ? (
-                    <PanelInset scroll className="mt-0">
+                    <PanelInset scroll>
                         <AlertTable alerts={alerts} onMarkRead={onMarkRead} />
                     </PanelInset>
                 ) : (
@@ -72,6 +88,14 @@ export function AlertsMain({
                     />
                 )}
             </Panel>
+
+            <AlertsDelivery
+                preferences={preferences}
+                volumes={volumes}
+                deliverySummary={deliverySummary}
+                onToggleEnabled={onToggleEnabled}
+                onToggleChannel={onToggleChannel}
+            />
         </div>
     );
 }

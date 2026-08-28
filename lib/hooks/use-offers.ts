@@ -33,8 +33,14 @@ export function useCreateOffer() {
     const client = useQueryClient();
     return useMutation({
         mutationFn: (input: CreateOfferInput) => offersAPI.create(input),
-        onSuccess: () =>
-            client.invalidateQueries({ queryKey: queryKeys.offers.all }),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.offers.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
     });
 }
 
@@ -43,8 +49,14 @@ export function useRespondToOffer() {
     return useMutation({
         mutationFn: ({ id, ...input }: RespondOfferInput & { id: string }) =>
             offersAPI.respond(id, input),
-        onSuccess: () =>
-            client.invalidateQueries({ queryKey: queryKeys.offers.all }),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.offers.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
     });
 }
 

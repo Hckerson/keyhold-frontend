@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { ComposeThreadModal } from "@/components/features/messaging/compose-thread-modal";
 import { ConversationRail } from "@/components/sections/dashboard/conversation-rail";
 import { MessagesHeader } from "@/components/sections/dashboard/messages-header";
 import { MessagesStatBand } from "@/components/sections/dashboard/messages-stat-band";
@@ -28,6 +29,7 @@ export function MessagesConsole() {
     const sendMessage = useSendMessage();
 
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [composing, setComposing] = useState(false);
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState<ConversationFilter>("all");
 
@@ -88,7 +90,10 @@ export function MessagesConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <MessagesHeader summary={messagesSummary(conversations)} />
+            <MessagesHeader
+                summary={messagesSummary(conversations)}
+                onCompose={() => setComposing(true)}
+            />
 
             <MessagesStatBand stats={stats} />
 
@@ -115,6 +120,13 @@ export function MessagesConsole() {
                     replyMinutes={replyMinutes}
                 />
             </div>
+
+            <ComposeThreadModal
+                open={composing}
+                conversations={ranked}
+                onClose={() => setComposing(false)}
+                onSelect={onSelect}
+            />
         </div>
     );
 }

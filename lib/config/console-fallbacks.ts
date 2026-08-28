@@ -11,6 +11,12 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The listing service is unreachable right now. Try again in a moment.",
     },
+    agentRequests: {
+        panel: "Requests",
+        title: "We couldn't load what's waiting on you",
+        description:
+            "The enquiry service is unreachable right now. Try again in a moment.",
+    },
     agentLeads: {
         panel: "Lead Desk",
         title: "We couldn't load your enquiries",
@@ -52,6 +58,12 @@ export const CONSOLE_FALLBACKS = {
         title: "We couldn't load your saved homes",
         description:
             "The saved-homes service is unreachable right now. Try again in a moment.",
+    },
+    buyerInterests: {
+        panel: "Introductions",
+        title: "We couldn't load your enquiries",
+        description:
+            "The connection service is unreachable right now. Try again in a moment.",
     },
     buyerAlerts: {
         panel: "Alerts",

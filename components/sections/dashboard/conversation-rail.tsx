@@ -62,7 +62,7 @@ export function ConversationRail({
                 />
             </div>
 
-            <div className="scroll-y min-h-0 flex-1">
+            <div className="scroll-y flex-1">
                 {conversations.length > 0 ? (
                     <ConversationList
                         conversations={conversations}
