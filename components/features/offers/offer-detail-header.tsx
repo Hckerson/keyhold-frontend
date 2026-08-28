@@ -41,8 +41,11 @@ export function OfferDetailHeader({
                     status={status}
                     canAccept={canAccept}
                     canCounter={canCounter}
+                    canPurchase={canPurchase}
+                    purchasePending={purchasePending}
                     onAccept={onAccept}
                     onCounter={onCounter}
+                    onPurchase={onPurchase}
                 />
             }
         />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
 import {
@@ -35,6 +36,7 @@ import {
 } from "@/lib/hooks/use-notifications";
 import { verifiedDocumentCount } from "@/lib/data/buyer-account";
 import { downloadJson } from "@/lib/utils/download";
+import { usersAPI } from "@/lib/api/users";
 import type { AlertChannel, AlertType } from "@/lib/types";
 
 export function useDashboardSettings() {
@@ -138,11 +140,12 @@ export function useDashboardSettings() {
         (searchProfileStrength(signals) + profileStrength(form)) / 2,
     );
 
-    const exportData = () =>
-        downloadJson(
-            { profile: form, alertPreferences: preferences },
-            DATA_EXPORT_FILENAME,
-        );
+    const exportMine = useMutation({
+        mutationFn: () => usersAPI.exportMine(),
+        onSuccess: (data) => downloadJson(data, DATA_EXPORT_FILENAME),
+    });
+
+    const exportData = () => void exportMine.mutateAsync().catch(() => null);
 
     return {
         form,
@@ -175,5 +178,7 @@ export function useDashboardSettings() {
         reset,
         runSecurityAction,
         exportData,
+        exporting: exportMine.isPending,
+        exportFailed: exportMine.isError,
     };
 }
