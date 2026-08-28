@@ -17,8 +17,10 @@ import {
     platformSignals,
     platformStatBand,
     revenueMetrics,
+    integrationSummary,
     serviceSummary,
     signalExposureLabel,
+    toIntegrationRows,
     toServiceRows,
 } from "@/lib/data/admin-overview";
 import { useDisputeCounts } from "@/lib/hooks/use-disputes";
@@ -67,6 +69,11 @@ export function AdminOverviewConsole() {
 
     const services = useMemo(() => toServiceRows(health.data), [health.data]);
 
+    const integrations = useMemo(
+        () => toIntegrationRows(health.data),
+        [health.data],
+    );
+
     if (platform.isError || users.isError)
         return (
             <ConsoleUnavailable
@@ -97,6 +104,8 @@ export function AdminOverviewConsole() {
                     exposureLabel={signalExposureLabel(platform.data)}
                     services={services}
                     serviceSummary={serviceSummary(health.data)}
+                    integrations={integrations}
+                    integrationSummary={integrationSummary(health.data)}
                 />
                 <AdminOverviewRail
                     roles={roles}

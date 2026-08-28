@@ -301,6 +301,14 @@ export const SERVICE_STATES = [
     "unknown",
 ] as const;
 
+export const INTEGRATION_IDS = [
+    "stripe",
+    "stripeWebhook",
+    "sendgrid",
+    "cloudinary",
+    "twilio",
+] as const;
+
 export type UserTier = (typeof USER_TIERS)[number];
 export type ConciergeTier = (typeof CONCIERGE_TIERS)[number];
 export type ConciergeStatus = (typeof CONCIERGE_STATUSES)[number];
@@ -308,3 +316,4 @@ export type ConciergeRequestStatus =
     (typeof CONCIERGE_REQUEST_STATUSES)[number];
 export type ServiceComponent = (typeof SERVICE_COMPONENTS)[number];
 export type ServiceState = (typeof SERVICE_STATES)[number];
+export type IntegrationId = (typeof INTEGRATION_IDS)[number];
