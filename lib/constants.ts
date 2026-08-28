@@ -190,9 +190,7 @@ export const isSafeRedirect = (target: string | undefined): target is string =>
     target.startsWith("/") &&
     !target.startsWith("//");
 
-export const AUTH_PROVIDERS = (
-    process.env.NEXT_PUBLIC_AUTH_PROVIDERS ?? "google,apple"
-)
+export const AUTH_PROVIDERS = (process.env.NEXT_PUBLIC_AUTH_PROVIDERS ?? "")
     .split(",")
     .map((provider) => provider.trim())
     .filter(Boolean);
