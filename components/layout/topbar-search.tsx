@@ -22,10 +22,10 @@ export function TopbarSearch({ isAppleDevice, onOpen }: TopbarSearchProps) {
                 strokeWidth={1.5}
                 className="text-text-muted shrink-0"
             />
-            <span className="text-text-muted hidden truncate text-xs md:inline">
+            <span className="text-text-muted reading-only-inline truncate text-xs">
                 {TOPBAR_SEARCH.placeholder}
             </span>
-            <kbd className="text-text-muted ml-6 hidden shrink-0 font-mono text-[10px] tracking-wide select-none md:inline">
+            <kbd className="text-text-muted reading-only-inline ml-6 shrink-0 font-mono text-[10px] tracking-wide select-none">
                 {isAppleDevice ? "⌘" : "Ctrl "}K
             </kbd>
         </button>
