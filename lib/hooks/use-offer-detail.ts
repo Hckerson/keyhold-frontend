@@ -10,6 +10,7 @@ import {
     useCreateOffer,
     useOffer,
 } from "@/lib/hooks/use-offers";
+import { useCheckout } from "@/lib/hooks/use-checkout";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
 
@@ -24,6 +25,7 @@ export function useOfferDetail(id: string) {
     const connectionQuery = useConnection(offer?.connectionId);
     const conversation = useConversation(offer?.connectionId);
 
+    const checkout = useCheckout();
     const acceptCounter = useAcceptCounter();
     const createOffer = useCreateOffer();
     const sendMessage = useSendMessage();
@@ -48,6 +50,10 @@ export function useOfferDetail(id: string) {
         status === "accepted" ||
         status === "rejected" ||
         status === "withdrawn";
+
+    const isBuyer =
+        Boolean(user?.id) && connectionQuery.data?.buyerId === user?.id;
+    const canPurchase = status === "accepted" && isBuyer;
 
     const counterValue = Number(toDigits(counterAmount));
     const canCounter = Boolean(offer) && !closed && counterValue > 0;
@@ -79,6 +85,15 @@ export function useOfferDetail(id: string) {
         setConfirming(null);
     };
 
+    const startPurchase = () => {
+        if (!offer || !canPurchase) return;
+        void checkout.open({
+            offerId: offer.id,
+            finalPrice: offer.offeredPrice,
+            terms: offer.offeredTerms,
+        });
+    };
+
     const confirmAccept = () => {
         if (!offer || !canAccept) return;
         void acceptCounter.mutateAsync(offer.id);
@@ -98,6 +113,8 @@ export function useOfferDetail(id: string) {
         counterValue,
         canCounter,
         canAccept,
+        canPurchase,
+        checkout,
         isPending: offerQuery.isPending,
         isError: offerQuery.isError,
         refetch: offerQuery.refetch,
@@ -107,5 +124,6 @@ export function useOfferDetail(id: string) {
         addUserMessage,
         confirmCounter,
         confirmAccept,
+        startPurchase,
     };
 }

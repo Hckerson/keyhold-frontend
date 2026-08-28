@@ -5,6 +5,7 @@ import { OFFER_STATUSES } from "@/lib/config/offer-tones";
 import { OfferDetailHeader } from "@/components/features/offers/offer-detail-header";
 import { OfferDetailPanels } from "@/components/features/offers/offer-detail-panels";
 import { OfferConfirmModal } from "@/components/features/offers/offer-confirm-modal";
+import { CheckoutModal } from "@/components/features/offers/checkout-modal";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useOfferDetail } from "@/lib/hooks/use-offer-detail";
@@ -34,8 +35,11 @@ export default function OfferDetailPage({
                 status={offer.status}
                 canAccept={offer.canAccept}
                 canCounter={offer.canCounter}
+                canPurchase={offer.canPurchase}
+                purchasePending={offer.checkout.preparing}
                 onAccept={() => offer.setConfirming("accept")}
                 onCounter={() => offer.setConfirming("counter")}
+                onPurchase={offer.startPurchase}
             />
 
             <OfferDetailPanels
@@ -62,6 +66,24 @@ export default function OfferDetailPage({
                 onClose={() => offer.setConfirming(null)}
                 onAccept={offer.confirmAccept}
                 onCounter={offer.confirmCounter}
+            />
+
+            <CheckoutModal
+                open={offer.checkout.active}
+                address={offer.detail.address}
+                amount={offer.detail.offerPrice}
+                clientSecret={
+                    offer.checkout.session?.paymentIntent.clientSecret
+                }
+                preparing={offer.checkout.preparing}
+                settling={offer.checkout.settling}
+                settled={offer.checkout.settled}
+                error={offer.checkout.error}
+                onClose={offer.checkout.close}
+                onPaid={(paymentIntentId) =>
+                    void offer.checkout.settle(paymentIntentId)
+                }
+                onFail={offer.checkout.fail}
             />
         </div>
     );
