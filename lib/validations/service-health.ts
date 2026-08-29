@@ -12,6 +12,8 @@ export const serviceComponentHealthSchema = z.object({
     uptime: z.number(),
     errorRate: z.number(),
     latencyMs: z.number(),
+    latencyP95: z.number(),
+    latencyP99: z.number(),
     samples: z.number().int(),
 });
 

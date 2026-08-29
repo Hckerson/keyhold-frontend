@@ -27,7 +27,7 @@ export function ServiceHealthRow({ service }: ServiceHealthRowProps) {
                 />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
-                {service.latencyMs}
+                {service.latencyP95}
                 {LATENCY_SUFFIX}
             </td>
             <td
