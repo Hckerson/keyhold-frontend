@@ -83,3 +83,14 @@ export const initialsOf = (name: string) =>
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
 export const mailHref = (email: string) => `mailto:${email}`;
+
+const ELLIPSIS = "…";
+
+export const clamp = (value: string, limit: number) => {
+    const text = value.trim();
+    if (text.length <= limit) return text;
+
+    const cut = text.slice(0, limit - 1);
+    const lastSpace = cut.lastIndexOf(" ");
+    return `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trimEnd()}${ELLIPSIS}`;
+};

@@ -57,7 +57,9 @@ Deploy with `NEXT_PUBLIC_API_BASE_URL` unset and the build succeeds, the site lo
 
 The guide's line is exact: _"validated at startup so a missing one fails immediately rather than at 3am."_
 
-**To close:** a `.env.example` listing all seven, and a validated config module that throws at build time when a required variable is missing. The backend's `env.validation.ts` is the pattern; it already exists in this codebase.
+**Partly closed by 12.4.** The frontend now has a `.env.example` documenting all eight variables, including the `NEXT_PUBLIC_SITE_URL` that work introduced. The silent fallbacks remain.
+
+**To close the rest:** a validated config module that throws at build time when a required variable is missing. The backend's `env.validation.ts` is the pattern; it already exists in this codebase.
 
 ## 10.3 · `db:push` sits next to the migrations that replaced it
 
