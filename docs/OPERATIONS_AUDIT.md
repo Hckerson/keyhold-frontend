@@ -4,7 +4,9 @@ Operations, audited against `docs/from-idea-to-click.md` stage 11. Eleven concep
 
 Each finding carries its own **Status** — `Open` or `Fixed`. The status line on each finding is the record; this header makes no claim about the set.
 
-**Verdict:** the measuring is better than expected and the answering is absent. Every request already records its route, status, latency and component to a table, and a service computes uptime and error rate from that live traffic — genuinely more than most projects have at this age. But nothing outside the system can ask whether it is up, nothing tells a human when it is not, and the latency figure being watched is the median. Six findings.
+**Verdict (revised):** the measuring is better than expected and the answering was absent. **11.1 and 11.2 are now fixed** — there is a liveness probe, and the latency bands are real. The four that remain all need either a dependency or a deployment target.
+
+Originally: the measuring is better than expected and the answering is absent. Every request already records its route, status, latency and component to a table, and a service computes uptime and error rate from that live traffic — genuinely more than most projects have at this age. But nothing outside the system can ask whether it is up, nothing tells a human when it is not, and the latency figure being watched is the median. Six findings.
 
 ---
 
@@ -23,7 +25,7 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 
 ## 11.1 · Nothing outside the system can ask whether it is up
 
-> **Concept:** uptime monitoring & health checks · **Severity:** the stage's opening question is unanswerable · **Status:** Open
+> **Concept:** uptime monitoring & health checks · **Severity:** the stage's opening question is unanswerable · **Status:** Fixed
 
 The stage asks: _"is it up right now, and how would we know before the users tell us?"_ Today, you would not.
 
@@ -39,11 +41,11 @@ An uptime monitor cannot poll an endpoint that needs an admin bearer token. Neit
 
 The second half matters as much. What the endpoint returns is a _historical aggregate_ — uptime and error rate over the last `windowHours`. The guide asks for something different and simpler: _"an endpoint saying 'I am alive and my database answers'."_ There is no such probe. A process that is up but has lost its database connection reports nothing unusual until requests have already failed and been recorded.
 
-**To close:** an unauthenticated `GET /health` that runs one trivial query and returns 200 or 503. Keep `/service-health` exactly as it is — it is the operator's dashboard, and it should stay behind the admin gate.
+**Fixed.** `GET /health` is unauthenticated, exempt from throttling via `@SkipThrottle()` so a monitor polling every thirty seconds cannot exhaust the rate limit, and returns 503 when the database does not answer. `PrismaService.ping()` runs the `SELECT 1` — it lives in the database layer rather than a repository because a liveness probe is not domain data access. `/service-health` is untouched and stays behind the admin gate.
 
 ## 11.2 · The latency figure being watched is the median
 
-> **Concept:** metrics · **Severity:** the number reported hides the problem it exists to reveal · **Status:** Open
+> **Concept:** metrics · **Severity:** the number reported hides the problem it exists to reveal · **Status:** Fixed
 
 `service-health.service.ts` reduces the collected latencies with a median:
 
@@ -60,7 +62,11 @@ A median is weaker still. It is the point at which half of requests are faster, 
 
 The fix is arithmetic, not architecture. Every `latencyMs` is already stored per request, so p95 and p99 are a different index into the same sorted array the code already builds.
 
-**To close:** report p95 and p99 alongside the median, and let the console show all three. Percentiles need no new data and no new dependency.
+**Fixed, and it was worse than this finding described.** `latencyOf` now sorts once and returns the median plus nearest-rank p95 and p99, and both new bands are carried through the Zod schema, the domain type and the admin console.
+
+The part the audit missed: the table header already read **p95**, and its caption already said _"p95 latency"_. The column was not merely showing a weak statistic — it was labelling a median as a p95 and had been since the console was built. Wiring the real number into the column labelled for it is the actual fix.
+
+Five tests cover the bands, including the case that motivated the finding: ninety requests at 100ms and ten at 8s leaves the median at 100 and puts p95 and p99 at 8000. Two of those tests failed on first run because the expectations were wrong, not the code — nearest-rank p95 over ninety-five fast samples is correctly the fast value.
 
 ## 11.3 · Exceptions are logged and nowhere else
 

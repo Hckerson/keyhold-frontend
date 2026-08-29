@@ -142,6 +142,8 @@ export const toServiceRows = (
                       uptime: service.uptime,
                       errorRate: service.errorRate,
                       latencyMs: service.latencyMs,
+                      latencyP95: service.latencyP95,
+                      latencyP99: service.latencyP99,
                   },
               ],
     );

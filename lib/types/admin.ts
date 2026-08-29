@@ -40,6 +40,8 @@ export interface ServiceHealth {
     uptime: number;
     errorRate: number;
     latencyMs: number;
+    latencyP95: number;
+    latencyP99: number;
 }
 
 export type PayoutState = "HELD" | "RELEASED" | "REFUNDED" | "DISPUTED";
