@@ -4,7 +4,7 @@ Usage, growth and the loop back, audited against `docs/from-idea-to-click.md` st
 
 Each finding carries its own **Status** — `Open` or `Fixed`. The status line on each finding is the record; this header makes no claim about the set.
 
-**Verdict:** this is the stage the guide predicted would be emptiest, and it is. Five findings. But the shape of the emptiness is worth naming precisely: the product measures its users' businesses in detail and measures its own usage not at all. Every number on the agent analytics console describes a property's performance; no number anywhere describes whether anyone found the site, completed a flow, or came back.
+**Verdict:** this is the stage the guide predicted would be emptiest, and it is. Five findings, **three of them now fixed** — the SEO set, 12.2 through 12.4. The two that remain, 12.1 and 12.5, both need a dependency and both are blocked behind 10.4: analytics on a product nobody can reach measures zero of everything. But the shape of the emptiness is worth naming precisely: the product measures its users' businesses in detail and measures its own usage not at all. Every number on the agent analytics console describes a property's performance; no number anywhere describes whether anyone found the site, completed a flow, or came back.
 
 The stage's own summary in the guide says it plainly — _"stage 12 is the one that tells you which of the other eleven to work on next."_ With 23 findings open across the other eleven stages, that is not an abstract loss.
 
@@ -42,17 +42,19 @@ For this product those are close to obvious: signups, first saved listing or fir
 
 ## 12.2 · A listing page a search engine cannot read properly
 
-> **Concept:** structured data · **Severity:** the highest-leverage SEO gap for this product · **Status:** Open
+> **Concept:** structured data · **Severity:** the highest-leverage SEO gap for this product · **Status:** Fixed
 
 No JSON-LD anywhere — zero occurrences of `application/ld+json` or `schema.org`.
 
 For a general site that is a minor omission. For a property marketplace it is the central one. `schema.org/RealEstateListing` and `Offer` exist precisely so a search result can carry a price, an address and a photo, and every one of those fields is already loaded on `/listing/[id]` and already passed to `generateMetadata`. The data is in hand and thrown away at the point it would matter most.
 
-**To close:** a JSON-LD block on the listing page built from the property already fetched. No new data, no dependency, one script tag.
+**Fixed.** `lib/utils/to-listing-schema.ts` maps a `Property` to a typed `RealEstateListing` document — address split into postal parts, price as a schema.org `Offer` whose availability follows the property status, and optional blocks for images, floor size, year built and coordinates that are omitted rather than emitted as nulls. The listing page renders it.
+
+This introduced the codebase's first `dangerouslySetInnerHTML`, which is unavoidable for JSON-LD in Next. `JSON.stringify` alone does not neutralise a `</script>` sequence in seller-supplied text, so `serialiseSchema` escapes `<` to `<`. Eight tests cover the mapper, two of them the escaping specifically.
 
 ## 12.3 · No sitemap and no robots file
 
-> **Concept:** SEO · **Severity:** discovery depends entirely on external links · **Status:** Open
+> **Concept:** SEO · **Severity:** discovery depends entirely on external links · **Status:** Fixed
 
 Neither `app/sitemap.ts` nor `app/robots.ts` exists. Nothing tells a crawler which listings exist or which portals to stay out of.
 
@@ -60,11 +62,11 @@ The second half is the part worth caring about. With no `robots.ts`, `/admin`, `
 
 Next generates both from a file, and the listing sitemap can be produced from the same server API the public pages already call.
 
-**To close:** `app/robots.ts` disallowing the three portals, and `app/sitemap.ts` enumerating the public routes plus every published listing.
+**Fixed.** `app/robots.ts` allows the public site, disallows the three portals and the auth routes, and points at the sitemap. `app/sitemap.ts` emits the public routes plus every available listing, paging through `propertiesServerAPI.list` via `pageCount` and capped at twenty pages so a large catalogue cannot stall a build. A failed fetch degrades to the static routes rather than throwing. The build now emits `/robots.txt` and `/sitemap.xml`.
 
 ## 12.4 · The metadata stops at title and description
 
-> **Concept:** SEO · **Severity:** every share of a listing is a bare link · **Status:** Open
+> **Concept:** SEO · **Severity:** every share of a listing is a bare link · **Status:** Fixed
 
 `generateMetadata` on the listing page returns exactly two fields:
 
@@ -79,7 +81,9 @@ No `openGraph`, no `twitter`, no canonical URL, no image. A listing shared into 
 
 `description` also passes the property's full description through unbounded; search engines truncate around 160 characters, so most listings will render mid-sentence.
 
-**To close:** `openGraph` with the primary property image, a canonical URL, and a description clamped to a sensible length. The image is already in `property.images[0]`.
+**Fixed.** The listing metadata now carries `openGraph` with the primary property image, a canonical URL, and a description clamped to 160 characters on a word boundary by a new `clamp` helper in `lib/utils/format.ts`. The root layout gained `metadataBase`, without which a relative image URL resolves to nothing.
+
+This needed a public origin, which nothing in the frontend knew. `config.site.url` reads `NEXT_PUBLIC_SITE_URL`, and the frontend gained the `.env.example` it never had — documenting all eight variables. That is half of 10.2; the validation half is still open.
 
 ## 12.5 · Nothing measures what real visitors experience
 

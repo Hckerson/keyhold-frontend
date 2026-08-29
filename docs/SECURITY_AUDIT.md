@@ -6,20 +6,20 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 
 **Verdict:** the habits the stage opens with are mostly in place — input is validated at the boundary, queries go through an ORM, passwords are hashed with the boring library, no secret is in the repo. What is missing is the item the guide puts in a caution box, and it is missing on exactly three routes. Six findings, and two more inherited from stage 07.
 
-**08.1, 08.4, 08.5 and 08.6 are now fixed. 08.2 is triaged but not closed, and 08.3 is blocked on a dependency.**
+**08.1, 08.4, 08.5 and 08.6 are fixed. 08.3 is half closed. 08.2 is triaged but not remediated.**
 
 ---
 
 ## What came back clean
 
-| Concept                    | Evidence                                                                                                                                                               |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Injection**              | Every query goes through Prisma. No raw SQL, no string-concatenated query anywhere in `backend/src`.                                                                   |
-| **XSS**                    | Zero `dangerouslySetInnerHTML` in the entire frontend. React's default escaping is never opted out of.                                                                 |
-| **Secrets management**     | Only `.env.example` is tracked. `.env`, `.env.development`, `.env.test` and `.env.production` are all ignored, and no key is baked into client code.                   |
-| **Cryptographic failures** | `bcrypt` with a generated salt per password. No home-made crypto, no reversible storage.                                                                               |
-| **CSRF**                   | The API is called with a bearer token rather than an ambient cookie, and the cookie that does exist is `SameSite=Lax`. Cross-site submission does not carry authority. |
-| **Mishandled exceptions**  | `AllExceptionsFilter` now catches everything, logs the cause, and returns a non-leaky 500 — closed under 05.7. No bare `catch` swallows a permission check.            |
+| Concept                    | Evidence                                                                                                                                                                                                                                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Injection**              | Every query goes through Prisma. No raw SQL, no string-concatenated query anywhere in `backend/src`.                                                                                                                                                                                                                      |
+| **XSS**                    | One `dangerouslySetInnerHTML`, added by 12.2 for the listing JSON-LD, where Next offers no alternative. Its input is a serialised object, not markup, and `serialiseSchema` escapes `<` to `<` so seller-supplied text cannot close the script tag — covered by two tests. Nowhere else is React's escaping opted out of. |
+| **Secrets management**     | Only `.env.example` is tracked. `.env`, `.env.development`, `.env.test` and `.env.production` are all ignored, and no key is baked into client code.                                                                                                                                                                      |
+| **Cryptographic failures** | `bcrypt` with a generated salt per password. No home-made crypto, no reversible storage.                                                                                                                                                                                                                                  |
+| **CSRF**                   | The API is called with a bearer token rather than an ambient cookie, and the cookie that does exist is `SameSite=Lax`. Cross-site submission does not carry authority.                                                                                                                                                    |
+| **Mishandled exceptions**  | `AllExceptionsFilter` now catches everything, logs the cause, and returns a non-leaky 500 — closed under 05.7. No bare `catch` swallows a permission check.                                                                                                                                                               |
 
 ---
 
@@ -90,17 +90,45 @@ So **five of the eight are genuinely reachable** — the two outbound HTTP SDKs,
 
 ## 08.3 · No security headers, no CSP
 
-> **Concept:** security misconfiguration · Content Security Policy · **Severity:** defence-in-depth, absent · **Status:** Open — blocked on a dependency
+> **Concept:** security misconfiguration · Content Security Policy · **Severity:** defence-in-depth, absent · **Status:** Fixed, with the CSP deliberately still report-only
 
 `helmet` is not installed and no headers are set. The API sends no `X-Content-Type-Options`, no `X-Frame-Options`, no `Referrer-Policy`, no `Strict-Transport-Security`. The frontend defines no Content Security Policy — `next.config.ts` sets `devIndicators` and `images` and nothing else.
 
 The guide calls CSP _"real defence-in-depth against XSS."_ That matters more here than it would elsewhere, because of 07.1: the access token sits in `localStorage` and a JS-readable cookie, so a single successful injection is a session theft. CSP is the layer that makes injected script fail to execute in the first place.
 
-**Blocked, in half.** `helmet` is not installed and adding it is not this pass's call, so the API still sends no security headers.
+**Both halves are now done.**
 
-The frontend half needs no package — a CSP is a `headers()` entry in `next.config.ts` — and it was still not done, deliberately. A CSP written without loading a single page is a CSP that either breaks the app or is so loose it protects nothing. Next injects inline bootstrap script, the app loads Google Fonts and remote images from six hosts, and Recharts and motion both write inline styles. Getting from that to a policy means starting in `Content-Security-Policy-Report-Only`, opening the routes, and reading what it complains about. That is a browser exercise, and this pass had no browser.
+`lib/config/security-headers.ts` now backs a `headers()` entry in `next.config.ts` covering every route: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, a `Permissions-Policy` that switches off camera, microphone and geolocation, `Strict-Transport-Security`, and a Content Security Policy.
 
-Both halves stay open together, because a CSP on the frontend and no headers on the API is a half-answer that reads as a whole one.
+The CSP ships as **`Content-Security-Policy-Report-Only`**, deliberately. A policy written without loading a page either breaks the app or is loose enough to protect nothing, and this one was written by reading the code rather than by watching a browser: Next injects inline bootstrap script, `motion` and Recharts write inline styles, Stripe needs `js.stripe.com` in both `script-src` and `frame-src`, fonts come from Google, and images come from the seven hosts in `remotePatterns`. Report-only means every one of those assumptions announces itself instead of breaking a page. The directives that cost nothing to enforce — `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'` — are in the same policy and become real the moment the header is renamed.
+
+**Promoting it to enforcing is a deliberate second step**, and it needs someone to open the routes and read the violation reports first. `script-src` currently carries `'unsafe-inline'` and `'unsafe-eval'`, which is most of what a CSP exists to remove; tightening that to a nonce is the work that follows.
+
+**The API half is done.** `helmet` 8.3.0 is installed — what the [official NestJS security documentation](https://docs.nestjs.com/security/helmet) recommends by name, zero dependencies, no alternative offered for Express — and registered in `main.ts` immediately after `setGlobalPrefix`, before the validation pipe, the interceptors and CORS. Order is not cosmetic: helmet registered after route setup does not protect routes defined earlier.
+
+Two options are set against helmet's defaults, both because this process serves an API rather than pages:
+
+- `contentSecurityPolicy: false` — a CSP on a JSON endpoint protects nothing, and helmet's default policy would apply to the Swagger UI too. The CSP that matters is the frontend's.
+- `crossOriginResourcePolicy: { policy: 'cross-origin' }` — helmet defaults to `same-origin`, which would block the frontend on a different origin from reading API responses.
+
+**Verified on a running API**, not inferred from the config. `GET /api/properties` returns:
+
+```
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: cross-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+```
+
+`X-Powered-By` is gone — helmet removes it, so the API no longer advertises Express. `POST /api/auth/login` with bad credentials still answers `401` rather than failing to boot, which also confirms the RS256 signing path initialises: had the key loader thrown, the process would not have started at all.
+
+**Note the two `Strict-Transport-Security` values differ.** The frontend sets `max-age=63072000; includeSubDomains; preload`; helmet's API default is `max-age=31536000; includeSubDomains` with no `preload`. That is not a bug — they are different hosts — but `preload` on the frontend is a commitment that is slow to reverse and should be a deliberate decision on a settled domain, not a default that ships.
 
 ## 08.4 · Auth events and permission denials are never logged
 
