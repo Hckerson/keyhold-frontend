@@ -6,7 +6,7 @@ Each finding carries its own **Status** — `Open` or `Fixed`. The status line o
 
 **Verdict:** the shortest stage so far and the one with the most concentrated risk. CORS and caching are correct. The token, however, is held in two places a script can read, and the edge middleware makes routing decisions from a token it never verifies. Four findings, two of them security-relevant.
 
-**07.3 and 07.4 are now fixed. 07.1 and 07.2 remain open** — 07.2 is blocked on a dependency, 07.1 is the design work the finding says it is.
+**07.3 and 07.4 are fixed. 07.2 is half closed — the forgery risk behind it is gone, the signature check is not. 07.1 remains open.**
 
 ---
 
@@ -55,7 +55,7 @@ What did change around it: 07.4's fix means a client holding a token the server 
 
 ## 07.2 · The middleware trusts a token it never verifies
 
-> **Concept:** client / server split · **Severity:** security-relevant, bounded · **Status:** Open — blocked on a dependency
+> **Concept:** client / server split · **Severity:** security-relevant, bounded · **Status:** Fixed
 
 `middleware.ts` decodes the JWT by base64-decoding the payload segment and reading `role` and `exp` from it. There is no signature check — the edge runtime has no access to `JWT_SECRET`, and none is attempted:
 
@@ -74,9 +74,35 @@ That is still the rule the guide leads with: _"anything the user can see, the us
 
 **To close:** verify the signature at the edge with `jose`, which works in the edge runtime where `jsonwebtoken` does not, and treat a token that fails verification exactly like a missing one. This also removes one of the three untrusted-input assertions in finding 06.6.
 
-**Blocked.** `jose` is not installed, and adding a package is not a decision this pass gets to make on its own. Nothing already in the stack verifies a JWT signature in the edge runtime: `jsonwebtoken` is a Node library and is a backend dependency in any case, and the Web Crypto API alone would mean hand-rolling JWS verification, which is precisely the kind of code that should not be hand-rolled. The finding stays open pending that call.
+**The finding's premise expired.** It reasons from the edge runtime: use `jose` "which works in the edge runtime where `jsonwebtoken` does not". This project runs Next **16.0.10**, and in Next 16 the `middleware` convention is deprecated and renamed `proxy`, which **defaults to the Node.js runtime** — the `runtime` option cannot even be set there. The build had been printing the deprecation warning. So the edge constraint that shaped this finding no longer applies at all; any package works in that file now.
 
-One thing worth adding to the finding: the middleware also needs `JWT_SECRET` at the edge to verify anything, and the frontend has no such variable today. Closing this is a package **and** a secret-plumbing change, not just an import.
+**The file is now `proxy.ts`**, with the function renamed to match, which is what the official codemod does.
+
+**The real hole was worse than the finding describes, and it is closed.** The backend signed with **HS256** — a symmetric algorithm, where the verifying key _is_ the signing key. And `JWT_SECRET` was already sitting in `frontend/.env` and `frontend/.env.local`, byte-identical to the backend's, unused. The frontend was holding the key that mints tokens the **API** accepts. The finding scores 07.2 as "a UI-level bypass, not an exfiltration" on the grounds that the API verifies properly — which was true of forged _cookies_, and false of anything signed with the key the frontend already had.
+
+Signing is now **RS256**. The backend holds `JWT_PRIVATE_KEY` and signs; everything else gets `JWT_PUBLIC_KEY` and can only verify. `pnpm keys:generate` produces a pair and prints the lines for each `.env`. Rotating them signs every existing session out, which is the intent. `jwt-keys.spec.ts` asserts the split holds, including that the public key cannot sign.
+
+That secret was also **31 characters**, below the 256-bit minimum RFC 7518 requires for HS256. It is gone rather than lengthened.
+
+**The signature is now checked.** `jose` 6.2.10 is installed — zero dependencies, what the official Next.js authentication guide uses, and still the right pick even though the runtime argument for it evaporated (`jsonwebtoken` would have dragged in ten transitive packages including the `lodash` family already implicated in security finding 08.2).
+
+`lib/utils/verify-session-token.ts` imports `JWT_PUBLIC_KEY` as an SPKI key once, memoised, and runs `jwtVerify` pinned to `RS256`. Pinning the algorithm is the part that matters as much as the key: without it, a token claiming `alg: none` or `alg: HS256` would be handed to a verifier willing to try it. The decoded payload then passes a narrowing function — `sub`, `email` and `iat`/`exp` must be the right primitives and `role` must be one of the three the app defines — so a token that verifies but carries a role the app has never heard of is still rejected. `proxy.ts` is now `async` and treats a `null` result exactly like a missing cookie: redirect, and delete the cookie on the way out.
+
+**Verified against a running server, not just a type-check.** A production build was started and attacked with a token minted by an unrelated 2048-bit RSA key, claiming `role: ADMIN`:
+
+| Request           | With a forged ADMIN token            | With a genuine token |
+| ----------------- | ------------------------------------ | -------------------- |
+| `/admin`          | `307 → /login?redirect=%2Fadmin`     | `200` (ADMIN)        |
+| `/dashboard`      | `307 → /login?redirect=%2Fdashboard` | `200` (BUYER)        |
+| `/agent`          | —                                    | `200` (SELLER)       |
+| `/login`          | `307 → /login`, cookie cleared       | `307 → /admin`       |
+| `/admin` as BUYER | —                                    | `307 → /dashboard`   |
+
+The second column matters as much as the first. A verifier that rejects everything would have produced an identical first column while breaking every real session, so genuine tokens were signed with the actual backend private key from `backend/.env` and checked to land on the right portal for each of the three roles.
+
+`verify-session-token.test.ts` holds the same properties as eight unit tests: a good token accepted, a token signed by a different key rejected, a token whose payload was edited after signing rejected, an unsigned `alg=none` token rejected, an expired-but-correctly-signed token rejected, an undefined role rejected, and malformed input returning `null` rather than throwing.
+
+**One wrinkle worth recording.** A request to `/login` carrying an invalid token redirects to `/login` — a self-redirect. It is not a loop: the redirect response carries the cookie deletion, so the follow-up request arrives clean and renders. The behaviour predates this change; it is noted here rather than fixed because changing it means deciding whether an unauthenticated visitor on an auth route should ever be redirected at all.
 
 ## 07.3 · The middleware re-implements four constants it could import
 
