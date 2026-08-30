@@ -90,7 +90,7 @@ So **five of the eight are genuinely reachable** — the two outbound HTTP SDKs,
 
 ## 08.3 · No security headers, no CSP
 
-> **Concept:** security misconfiguration · Content Security Policy · **Severity:** defence-in-depth, absent · **Status:** Fixed, with the CSP deliberately still report-only
+> **Concept:** security misconfiguration · Content Security Policy · **Severity:** defence-in-depth, absent · **Status:** Fixed — CSP now enforcing; nonce-strict `script-src` needs a rendering decision
 
 `helmet` is not installed and no headers are set. The API sends no `X-Content-Type-Options`, no `X-Frame-Options`, no `Referrer-Policy`, no `Strict-Transport-Security`. The frontend defines no Content Security Policy — `next.config.ts` sets `devIndicators` and `images` and nothing else.
 
@@ -100,9 +100,26 @@ The guide calls CSP _"real defence-in-depth against XSS."_ That matters more her
 
 `lib/config/security-headers.ts` now backs a `headers()` entry in `next.config.ts` covering every route: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, a `Permissions-Policy` that switches off camera, microphone and geolocation, `Strict-Transport-Security`, and a Content Security Policy.
 
-The CSP ships as **`Content-Security-Policy-Report-Only`**, deliberately. A policy written without loading a page either breaks the app or is loose enough to protect nothing, and this one was written by reading the code rather than by watching a browser: Next injects inline bootstrap script, `motion` and Recharts write inline styles, Stripe needs `js.stripe.com` in both `script-src` and `frame-src`, fonts come from Google, and images come from the seven hosts in `remotePatterns`. Report-only means every one of those assumptions announces itself instead of breaking a page. The directives that cost nothing to enforce — `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'` — are in the same policy and become real the moment the header is renamed.
+**The CSP is now enforcing**, not report-only. `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'` and `form-action 'self'` are live, and `upgrade-insecure-requests` is added in production builds only — on `http://localhost` it would be worse than useless. `'unsafe-eval'` is now stripped in production and kept only in development, where Next's React Refresh needs it; a production build was checked and the string is absent from the header.
 
-**Promoting it to enforcing is a deliberate second step**, and it needs someone to open the routes and read the violation reports first. `script-src` currently carries `'unsafe-inline'` and `'unsafe-eval'`, which is most of what a CSP exists to remove; tightening that to a nonce is the work that follows.
+### The nonce attempt, and why it was reverted
+
+The obvious next step — and what the Next.js documentation recommends — is `script-src 'self' 'nonce-<per-request>' 'strict-dynamic'`, with the nonce minted in `proxy.ts`. That was built and measured, and it is **incompatible with this application as it renders today**.
+
+Per-request nonces require per-request rendering. Next injects the nonce into its own `<script>` tags only when a page is rendered dynamically; a page prerendered at build time has fixed HTML that cannot carry one. Measured against a production build:
+
+| Page     | Rendering   | `<script>` tags | Carrying a nonce |
+| -------- | ----------- | --------------: | ---------------: |
+| `/login` | `ƒ` dynamic |              42 |          **all** |
+| `/`      | `○` static  |              50 |         **none** |
+
+`'strict-dynamic'` makes the `'self'` source expression **ignored**, so under that policy every one of the 50 scripts on the home page is blocked and the page renders blank. Roughly thirty prerendered routes were in that state. It passed type-check, lint, all 195 tests and a clean production build — the failure is only visible by fetching a page and counting `nonce=` attributes, which is how it was caught.
+
+Nor is there a policy that satisfies both: a `script-src` containing a nonce causes browsers to **ignore `'unsafe-inline'`**, so the two cannot be combined as a fallback for prerendered pages. The choice is genuine — nonce-strict scripts, or static generation. Not both.
+
+**So `script-src` keeps `'unsafe-inline'`, and that is the honest weak point of this policy.** It blocks script from unlisted origins and blocks `eval` in production, but it does not stop injected inline script, which is most of what a CSP exists to prevent.
+
+**Closing it properly is a rendering decision, not a header decision**, and it belongs to [ADR 0002](adr/0002-per-route-rendering-split.md) — whose whole subject is that rendering strategy is chosen per route. Forcing every route dynamic would buy a strict `script-src` at the cost of CDN-cacheable marketing pages on a product where public-page speed and SEO are the business. That trade is the user's to make, and it was not made here.
 
 **The API half is done.** `helmet` 8.3.0 is installed — what the [official NestJS security documentation](https://docs.nestjs.com/security/helmet) recommends by name, zero dependencies, no alternative offered for Express — and registered in `main.ts` immediately after `setGlobalPrefix`, before the validation pipe, the interceptors and CORS. Order is not cosmetic: helmet registered after route setup does not protect routes defined earlier.
 
@@ -128,7 +145,9 @@ X-Permitted-Cross-Domain-Policies: none
 
 `X-Powered-By` is gone — helmet removes it, so the API no longer advertises Express. `POST /api/auth/login` with bad credentials still answers `401` rather than failing to boot, which also confirms the RS256 signing path initialises: had the key loader thrown, the process would not have started at all.
 
-**Note the two `Strict-Transport-Security` values differ.** The frontend sets `max-age=63072000; includeSubDomains; preload`; helmet's API default is `max-age=31536000; includeSubDomains` with no `preload`. That is not a bug — they are different hosts — but `preload` on the frontend is a commitment that is slow to reverse and should be a deliberate decision on a settled domain, not a default that ships.
+**`preload` has been removed from the frontend's HSTS.** It previously sent `max-age=63072000; includeSubDomains; preload`; it now sends `max-age=31536000; includeSubDomains`, matching helmet's API default.
+
+`preload` is the one part of HSTS that is genuinely hard to undo: submission to the browser preload list ships inside browser binaries, so removal takes months to reach users and applies to every subdomain for the whole `max-age`. This project has no settled production domain yet, which makes that commitment premature by definition. The standard ramp is short `max-age` → long `max-age` → `preload` last, once HTTPS is proven across every subdomain. Everything before the last step is reversible; the last step is not. It should be added deliberately, on a chosen domain, not inherited from a config written during development.
 
 ## 08.4 · Auth events and permission denials are never logged
 

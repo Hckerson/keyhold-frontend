@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
     verify:
-        name: type-check · lint · format · test
+        name: type-check · lint · format · build · test
         runs-on: ubuntu-latest
 
         steps:
@@ -37,6 +37,11 @@ jobs:
 
             - name: Format
               run: npx prettier --check .
+
+            - name: Build
+              run: pnpm build
+              env:
+                  NEXT_PUBLIC_SITE_URL: https://example.com
 
             - name: Test
               run: pnpm test

@@ -23,7 +23,7 @@ The money path deserves specific credit. `MONEY_PATH.md` numbered its criteria b
 
 ## 09.1 · Nothing runs outside a laptop
 
-> **Concept:** the whole stage · **Severity:** the finding that makes the other five matter · **Status:** Open
+> **Concept:** the whole stage · **Severity:** the finding that makes the other five matter · **Status:** Fixed
 
 There is no CI. No `.github/workflows` in either repository or at the workspace root, no GitLab, Circle, Travis or Azure configuration, no pipeline of any kind.
 
@@ -35,11 +35,11 @@ The guide opens the stage with the reason this matters:
 
 Fear is only removed by a gate that runs without being asked. A suite that runs when you remember protects you exactly on the days you are not worried — which are not the days you break things.
 
-**To close:** one workflow, both halves, on push and pull request: install, `type-check`, `lint`, `test`. That single file converts every other finding in this document from theoretical to enforced.
+**Fixed.** `.github/workflows/ci.yml` exists in both repositories and runs install, type-check, lint, format and test on every push to `master` or `development` and on every pull request. The frontend workflow now builds before testing, which both catches a broken build and gives 09.6 something to measure.
 
 ## 09.2 · The one gate that exists is switched off
 
-> **Concept:** static analysis · **Severity:** a deliberate disabling nobody reversed · **Status:** Open
+> **Concept:** static analysis · **Severity:** a deliberate disabling nobody reversed · **Status:** Fixed
 
 The guide names this itself, in its own "in your repo" note, and it is still true:
 
@@ -55,7 +55,9 @@ Two things make it worse than the guide implies. First, the hook is **frontend-o
 
 Type-check, lint, format. The suite is not in it. Restoring the file gets back a static-analysis gate, not a correctness one.
 
-**To close:** rename it back, add `pnpm test`, and give the backend the same hook. Then let CI (09.1) be the authority and keep the hook fast.
+**Fixed, with one deliberate deviation.** `.husky/pre-commit.disabled` is `.husky/pre-commit` again, running type-check, lint and lint-staged.
+
+I did **not** add `pnpm test` to it. That instruction and "keep the hook fast" were in tension, and now that CI runs the suite on every push the hook should stay a fast local filter rather than a second slow gate. The backend has no hook because it has no `husky` — installing one is a dependency decision that belongs to you, not to this fix.
 
 ## 09.3 · The pyramid has no middle, and the guards are never tested
 
@@ -79,7 +81,7 @@ There is a second, milder version of the guide's warning here: _"Mock the paymen
 
 ## 09.4 · `pnpm test:e2e` cannot resolve its own imports
 
-> **Concept:** integration tests · **Severity:** a script that has never worked · **Status:** Open
+> **Concept:** integration tests · **Severity:** a script that has never worked · **Status:** Partially closed
 
 The script exists and is broken:
 
@@ -93,7 +95,9 @@ Tests:       0 total
 
 The test it would run is the untouched Nest scaffold asserting that `GET /` returns `Hello World!`.
 
-**To close:** copy the `moduleNameMapper` from the unit config into `jest-e2e.json`, then replace the scaffold with the integration tests 09.3 asks for. A broken script is worse than no script — it reads as coverage that is not there.
+**Partially closed — the stated cause is fixed, the script still cannot pass.** `jest-e2e.json` now carries the unit config's `moduleNameMapper`, plus two entries the unit config needed as well: a stripper for Prisma 7's ESM `.js` specifiers, and a mapping for bare `src/...` imports.
+
+With resolution fixed the suite reaches a real failure rather than a resolution error. `validateEnv` rejects the developer's partially configured SendGrid block, and past that, booting `AppModule` calls `PrismaService.$connect` — which today points at production. **A full-app e2e suite cannot honestly run until 10.1 provides a non-production database**, so the remainder is blocked behind that finding and 09.3, not behind this one.
 
 ## 09.5 · No end-to-end tests and no automated accessibility checks
 
@@ -107,7 +111,7 @@ The accessibility half connects back to stage 02, which audited a11y by grep and
 
 ## 09.6 · No performance budget, though the pattern is already understood
 
-> **Concept:** performance budgets · **Severity:** the one concept with a working example and no application · **Status:** Open
+> **Concept:** performance budgets · **Severity:** the one concept with a working example and no application · **Status:** Fixed
 
 There is no bundle-size ceiling, no load-time budget, nothing enforced anywhere.
 
@@ -119,7 +123,7 @@ AssertionError: expected 118 to be less than or equal to 115
 
 That is a performance budget in every respect except its subject. The same shape applied to `.next` bundle output would make page weight degrade visibly instead of quietly — which is the guide's entire argument for budgets.
 
-**To close:** one budget test over the production build's route bundles, seeded at today's numbers, in the same shape as the responsive one.
+**Fixed.** `styles/bundle-budget.test.ts` totals every `.js` file under `.next/static/chunks` and holds it under 4200 KB, seeded against today's 3713 KB. It follows the responsive-budget shape, and skips rather than fails when no build is present, so a bare `pnpm test` locally stays green. CI builds before testing, so the budget is enforced there.
 
 ---
 

@@ -7,7 +7,7 @@ import {
     loginWithRedirect,
     portalForRole,
 } from "@/lib/constants";
-import type { JwtPayload } from "@/lib/types/auth";
+import { verifySessionToken } from "@/lib/utils/verify-session-token";
 
 type PortalRole = keyof typeof PORTAL_BY_ROLE;
 
@@ -15,62 +15,40 @@ const PORTAL_ENTRIES = Object.entries(PORTAL_BY_ROLE) as [PortalRole, string][];
 
 const AUTH_PATHS: string[] = [AUTH_ROUTES.login, AUTH_ROUTES.signup];
 
-const decodeJwt = (token: string): JwtPayload | null => {
-    try {
-        const parts = token.split(".");
-        if (parts.length !== 3) return null;
-
-        const decoded = JSON.parse(
-            Buffer.from(parts[1], "base64url").toString("utf-8"),
-        );
-        return decoded as JwtPayload;
-    } catch {
-        return null;
-    }
-};
-
-const isTokenExpired = (exp: number): boolean =>
-    Math.floor(Date.now() / 1000) > exp;
-
 const portalFor = (pathname: string) =>
     PORTAL_ENTRIES.find(([, prefix]) => pathname.startsWith(prefix));
 
-export function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
+
+    const redirect = (to: string) =>
+        NextResponse.redirect(new URL(to, request.url));
 
     const token = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
     const portal = portalFor(pathname);
     const isAuthRoute = AUTH_PATHS.includes(pathname);
 
-    const toLogin = () =>
-        NextResponse.redirect(
-            new URL(loginWithRedirect(pathname), request.url),
-        );
-
     if (!token) {
-        if (portal) return toLogin();
-        return NextResponse.next();
+        return portal
+            ? redirect(loginWithRedirect(pathname))
+            : NextResponse.next();
     }
 
-    const decoded = decodeJwt(token);
+    const session = await verifySessionToken(token);
 
-    if (!decoded || isTokenExpired(decoded.exp)) {
+    if (!session) {
         const response = portal
-            ? toLogin()
-            : NextResponse.redirect(new URL(AUTH_ROUTES.login, request.url));
+            ? redirect(loginWithRedirect(pathname))
+            : NextResponse.next();
         response.cookies.delete(ACCESS_TOKEN_COOKIE);
         return response;
     }
 
-    const home = portalForRole(decoded.role as PortalRole);
+    const home = portalForRole(session.role);
 
-    if (isAuthRoute) {
-        return NextResponse.redirect(new URL(home, request.url));
-    }
+    if (isAuthRoute) return redirect(home);
 
-    if (portal && portal[0] !== decoded.role) {
-        return NextResponse.redirect(new URL(home, request.url));
-    }
+    if (portal && portal[0] !== session.role) return redirect(home);
 
     return NextResponse.next();
 }

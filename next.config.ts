@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
+import { SECURITY_HEADERS } from "./lib/config/security-headers";
 
 const nextConfig: NextConfig = {
     devIndicators: {
         position: "bottom-right",
     },
+    headers: () =>
+        Promise.resolve([{ source: "/:path*", headers: SECURITY_HEADERS }]),
     images: {
         remotePatterns: [
             {
