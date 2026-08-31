@@ -182,6 +182,7 @@ export const AUTH_ROUTES = {
 } as const;
 
 export const REDIRECT_PARAM = "redirect";
+export const EXPIRED_PARAM = "expired";
 
 export const PORTAL_BY_ROLE = {
     ADMIN: "/admin",
@@ -252,6 +253,11 @@ export const withRedirect = (route: string, target?: string) =>
 
 export const loginWithRedirect = (target: string) =>
     withRedirect(AUTH_ROUTES.login, target);
+
+export const loginExpired = (target?: string) => {
+    const base = withRedirect(AUTH_ROUTES.login, target);
+    return `${base}${base.includes("?") ? "&" : "?"}${EXPIRED_PARAM}=1`;
+};
 
 export const AGENT_ROUTES = {
     overview: "/agent",
