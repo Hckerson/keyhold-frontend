@@ -6,10 +6,10 @@ import { authAPI } from "@/lib/api/auth";
 import type { ResetPasswordInput } from "@/lib/validations/auth";
 import { useCurrentUser } from "@/lib/hooks/use-users";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useSession() {
     const user = useAuthStore((state) => state.user);
-    const accessToken = useAuthStore((state) => state.accessToken);
     const setUser = useAuthStore((state) => state.setUser);
     const logout = useAuthStore((state) => state.logout);
 
@@ -27,8 +27,8 @@ export function useSession() {
 
     return {
         user,
-        isAuthenticated: Boolean(accessToken),
-        isLoading: Boolean(accessToken) && isLoading,
+        isAuthenticated: Boolean(user),
+        isLoading: isLoading && !isError,
         isError,
         logout,
     };
@@ -36,6 +36,7 @@ export function useSession() {
 
 export function useRequestPasswordReset() {
     return useMutation({
+        meta: FEEDBACK.sendPasswordReset,
         mutationFn: (input: ResetPasswordInput) =>
             authAPI.forgotPassword(input),
     });
