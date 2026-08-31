@@ -82,7 +82,7 @@ The frontend has no error boundary reporting either. A React render error reache
 
 ## 11.4 · No request id threads a user's journey
 
-> **Concept:** logging · **Severity:** debugging is guesswork under load · **Status:** Open
+> **Concept:** logging · **Severity:** debugging is guesswork under load · **Status:** Fixed
 
 The guide's definition of structured logging names the missing piece: _"with a request ID threading one user's journey across services."_ There is no request id anywhere — no `x-request-id` header read or issued, no correlation id in any log line, no field on `ServiceMetric` or `AuditLog` tying them to each other.
 
@@ -90,7 +90,9 @@ Under one user at a time this costs nothing. Under concurrent traffic, a failed 
 
 The interceptor chain is the natural place, and it already exists for two other cross-cutting concerns.
 
-**To close:** accept or generate an id per request, put it on the log context, and add it as a column to `ServiceMetric` and `AuditLog` so the three can be joined.
+**Fixed.** `RequestIdMiddleware` adopts an inbound `x-request-id` or generates a UUID, puts it on the request and echoes it on the response. `ServiceMetric` and `AuditLog` each gained a nullable `requestId`, and unhandled exceptions log it, so the metric for a slow request, the record of who made it and the line for what went wrong can be joined.
+
+One thing the finding did not anticipate: an inbound header written straight into a log line is a log-injection vector. A supplied id is validated against `[A-Za-z0-9._-]` and a 128-character bound before it is trusted; anything else is replaced with a generated one. Eight tests cover that, four of them hostile input.
 
 ## 11.5 · Nothing tells a human anything
 
