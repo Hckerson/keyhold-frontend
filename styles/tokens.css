@@ -241,6 +241,7 @@
     --z-indices-modal: 50;
     --z-indices-popover: 60;
     --z-indices-tooltip: 70;
+    --z-indices-toast: 80;
 
     /* ============================================
      OPACITY SCALE
