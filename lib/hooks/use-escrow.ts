@@ -5,6 +5,7 @@ import { escrowAPI } from "@/lib/api/escrow";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type { EscrowQuery, RefundEscrowInput } from "@/lib/validations/escrow";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useEscrowHolds(input: EscrowQuery = {}, enabled = true) {
     return useQuery({
@@ -45,6 +46,7 @@ const settlementKeys = [
 export function useReleaseEscrow() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.releaseEscrow,
         mutationFn: (id: string) => escrowAPI.release(id),
         onSuccess: async () => {
             await Promise.all(
@@ -59,6 +61,7 @@ export function useReleaseEscrow() {
 export function useRefundEscrow() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.refundEscrow,
         mutationFn: ({ id, reason }: { id: string } & RefundEscrowInput) =>
             escrowAPI.refund(id, { reason }),
         onSuccess: async () => {

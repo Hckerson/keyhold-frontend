@@ -61,28 +61,28 @@ export function useOfferDetail(id: string) {
 
     const addUserMessage = (content: string) => {
         if (!offer) return;
-        void sendMessage.mutateAsync({
-            connectionId: offer.connectionId,
-            content,
-        });
+        sendMessage.mutate({ connectionId: offer.connectionId, content });
     };
 
     const confirmCounter = () => {
         if (!offer || !canCounter) return;
-        void createOffer
-            .mutateAsync({
+        createOffer.mutate(
+            {
                 connectionId: offer.connectionId,
                 offeredPrice: counterValue,
                 offeredTerms: counterNote || offer.offeredTerms,
                 expiresAt: new Date(
                     Date.now() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
                 ).toISOString(),
-            })
-            .then(() => {
-                setCounterAmount("");
-                setCounterNote("");
-            });
-        setConfirming(null);
+            },
+            {
+                onSuccess: () => {
+                    setCounterAmount("");
+                    setCounterNote("");
+                    setConfirming(null);
+                },
+            },
+        );
     };
 
     const startPurchase = () => {
@@ -96,8 +96,9 @@ export function useOfferDetail(id: string) {
 
     const confirmAccept = () => {
         if (!offer || !canAccept) return;
-        void acceptCounter.mutateAsync(offer.id);
-        setConfirming(null);
+        acceptCounter.mutate(offer.id, {
+            onSuccess: () => setConfirming(null),
+        });
     };
 
     return {

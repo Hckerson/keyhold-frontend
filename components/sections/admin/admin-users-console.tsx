@@ -159,7 +159,9 @@ export function AdminUsersConsole() {
         }
 
         setInviteErrors({});
-        void createUser.mutateAsync(parsed.data).then(() => setInviting(false));
+        createUser.mutate(parsed.data, {
+            onSuccess: () => setInviting(false),
+        });
     };
 
     const onCloseDetail = useCallback(() => setDetailId(null), []);
@@ -168,7 +170,7 @@ export function AdminUsersConsole() {
         (id: string) => {
             setDetailId(null);
             const suspensionId = suspensionByUser.get(id);
-            if (suspensionId) void liftSuspension.mutateAsync(suspensionId);
+            if (suspensionId) liftSuspension.mutate(suspensionId);
         },
         [liftSuspension, suspensionByUser],
     );
@@ -186,13 +188,15 @@ export function AdminUsersConsole() {
 
     const onSubmitSuspend = () => {
         if (!suspendId || !isSuspensionReady(draft)) return;
-        void suspendUser.mutateAsync({
-            userId: suspendId,
-            reason: draft.reason.trim(),
-            duration: draft.duration ? Number(draft.duration) : undefined,
-            notes: draft.notes.trim() || undefined,
-        });
-        onCloseSuspend();
+        suspendUser.mutate(
+            {
+                userId: suspendId,
+                reason: draft.reason.trim(),
+                duration: draft.duration ? Number(draft.duration) : undefined,
+                notes: draft.notes.trim() || undefined,
+            },
+            { onSuccess: onCloseSuspend },
+        );
     };
 
     if (isError)

@@ -69,13 +69,10 @@ export function ModerationConsole() {
             const listing = listings.find((item) => item.id === flagId);
             if (!listing) return;
 
-            void moderate
-                .mutateAsync({
-                    id: listing.listingId,
-                    decision: mode,
-                    note: reviewNote,
-                })
-                .then(() => settleFlag.mutateAsync({ id: flagId }));
+            moderate.mutate(
+                { id: listing.listingId, decision: mode, note: reviewNote },
+                { onSuccess: () => settleFlag.mutate({ id: flagId }) },
+            );
         },
         [listings, moderate, settleFlag],
     );

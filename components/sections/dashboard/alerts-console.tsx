@@ -76,17 +76,15 @@ export function AlertsConsole() {
     );
 
     const onMarkRead = useCallback(
-        (id: string) => void markRead.mutateAsync(id),
+        (id: string) => markRead.mutate(id),
         [markRead],
     );
 
-    const onMarkAllRead = () => void markAllRead.mutateAsync();
+    const onMarkAllRead = () => markAllRead.mutate();
 
     const savePreferences = useCallback(
         (next: Record<AlertType, AlertPreference>) =>
-            void updatePreferences.mutateAsync({
-                preferences: toPreferenceList(next),
-            }),
+            updatePreferences.mutate({ preferences: toPreferenceList(next) }),
         [updatePreferences],
     );
 

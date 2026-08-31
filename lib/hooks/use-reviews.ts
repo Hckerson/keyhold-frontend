@@ -5,6 +5,7 @@ import { reviewsAPI } from "@/lib/api/reviews";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type { CreateReviewInput } from "@/lib/validations/review";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useUserReviews(userId: string | undefined) {
     return useQuery({
@@ -39,6 +40,7 @@ export function useTransactionReviews(transactionId: string | undefined) {
 export function useCreateReview(transactionId: string) {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createReview,
         mutationFn: (input: CreateReviewInput) =>
             reviewsAPI.create(transactionId, input),
         onSuccess: () =>

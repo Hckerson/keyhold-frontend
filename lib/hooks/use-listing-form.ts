@@ -53,14 +53,19 @@ export function useListingForm(property?: Property) {
         }
 
         setErrors({});
-        const saving = property
-            ? updateProperty.mutateAsync(changedFields(parsed.data, baseline))
-            : createProperty.mutateAsync(parsed.data);
-
-        void saving.then(() => {
+        const onSuccess = () => {
             setSaved(true);
             router.push(LISTINGS_ROUTE);
-        });
+        };
+
+        if (property) {
+            updateProperty.mutate(changedFields(parsed.data, baseline), {
+                onSuccess,
+            });
+            return;
+        }
+
+        createProperty.mutate(parsed.data, { onSuccess });
     };
 
     return {

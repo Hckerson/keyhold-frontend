@@ -8,9 +8,11 @@ import type {
     NewPasswordInput,
     ResetPasswordInput,
 } from "@/lib/validations/auth";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useRequestPasswordReset() {
     const mutation = useMutation({
+        meta: FEEDBACK.requestPasswordReset,
         mutationFn: (input: ResetPasswordInput) =>
             authAPI.forgotPassword(input),
     });
@@ -27,6 +29,7 @@ export function useRequestPasswordReset() {
 
 export function useResetPassword(token: string) {
     const mutation = useMutation({
+        meta: FEEDBACK.resetPassword,
         mutationFn: (input: NewPasswordInput) =>
             authAPI.resetPassword({ ...input, token }),
     });
