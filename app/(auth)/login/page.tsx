@@ -8,9 +8,9 @@ export const metadata = {
 export default async function LoginPage({
     searchParams,
 }: {
-    searchParams: Promise<{ redirect?: string }>;
+    searchParams: Promise<{ redirect?: string; expired?: string }>;
 }) {
-    const { redirect } = await searchParams;
+    const { redirect, expired } = await searchParams;
 
-    return <LoginForm redirectTo={redirect} />;
+    return <LoginForm redirectTo={redirect} expired={Boolean(expired)} />;
 }

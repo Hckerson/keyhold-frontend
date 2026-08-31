@@ -8,6 +8,7 @@ import {
     AuthField,
     AuthFormError,
     AuthFormHeader,
+    AuthNotice,
     AuthPlane,
     AuthSubmit,
     AuthTitleBlock,
@@ -22,6 +23,7 @@ import {
     portalForRole,
     withRedirect,
 } from "@/lib/constants";
+import { SESSION_EXPIRED } from "@/lib/config/feedback";
 import { useSignIn } from "@/lib/hooks/use-sign-in";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
@@ -46,9 +48,10 @@ const footerEntries = (redirectTo?: string) => [
 
 export interface LoginFormProps {
     redirectTo?: string;
+    expired?: boolean;
 }
 
-export function LoginForm({ redirectTo }: LoginFormProps) {
+export function LoginForm({ redirectTo, expired }: LoginFormProps) {
     const router = useRouter();
     const signIn = useSignIn();
 
@@ -107,6 +110,14 @@ export function LoginForm({ redirectTo }: LoginFormProps) {
                 title="Sign in to your account"
                 description="Access saved residences, private viewings and your advisor's notes."
             />
+
+            {expired && !formError && (
+                <AuthNotice
+                    tone="info"
+                    title={SESSION_EXPIRED.title}
+                    description={SESSION_EXPIRED.description}
+                />
+            )}
 
             <AuthFormError title="Sign in failed" message={formError} />
 
