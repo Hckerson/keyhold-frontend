@@ -146,6 +146,7 @@
     --z-index-modal: var(--z-indices-modal);
     --z-index-popover: var(--z-indices-popover);
     --z-index-tooltip: var(--z-indices-tooltip);
+    --z-index-toast: var(--z-indices-toast);
 }
 
 *,
@@ -235,6 +236,26 @@
 
 .console-canvas {
     container: console / inline-size;
+}
+
+.toast-rail {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: var(--z-index-toast);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3);
+    pointer-events: none;
+}
+
+@media (min-width: 40rem) {
+    .toast-rail {
+        inset-inline: auto 0;
+        width: 22.5rem;
+    }
 }
 
 .console-split,

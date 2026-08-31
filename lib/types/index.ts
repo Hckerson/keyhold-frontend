@@ -3,6 +3,7 @@ export * from "./admin";
 export * from "./alert";
 export * from "./auth";
 export * from "./deal";
+export * from "./feedback";
 export * from "./interest";
 export * from "./journey";
 export * from "./lead";
