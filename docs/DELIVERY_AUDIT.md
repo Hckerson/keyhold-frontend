@@ -63,7 +63,7 @@ The guide's line is exact: _"validated at startup so a missing one fails immedia
 
 ## 10.3 · `db:push` sits next to the migrations that replaced it
 
-> **Concept:** migrations in production · **Severity:** proven, not theoretical · **Status:** Open
+> **Concept:** migrations in production · **Severity:** proven, not theoretical · **Status:** Fixed
 
 `package.json` offers both:
 
@@ -77,7 +77,7 @@ db:deploy  prisma migrate deploy
 
 It has already fired. `tokensValidFrom` reached production through a push, which is why `0002_token_revocation` failed with `column already exists` and blocked every later migration until the history was repaired by hand.
 
-**To close:** delete `db:push`, or rename it to something that reads as dangerous. With migrations in place it has no remaining legitimate use against a shared database.
+**Fixed.** `db:push` is gone. `db:migrate`, `db:deploy` and `db:status` remain, so every route to a schema change now leaves a record in `_prisma_migrations`.
 
 ## 10.4 · Nothing describes where any of this is deployed
 

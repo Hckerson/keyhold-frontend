@@ -59,13 +59,15 @@ The consequence is concrete. A stolen token works for seven days. A user who sus
 
 ## 05.3 · Nothing is rate limited
 
-> **Concept:** rate limiting · **Severity:** security-relevant · **Status:** Fixed
+> **Concept:** rate limiting · **Severity:** security-relevant · **Status:** REOPENED
 
 `@nestjs/throttler` is not installed, and no throttling exists anywhere. The guide lists rate limiting as one of sixteen backend concepts; the API implements zero of it.
 
 `POST /auth/login` and `POST /auth/forgot-password` accept unlimited attempts from one source. The first is credential stuffing; the second is an email-flood amplifier pointed at any address an attacker knows.
 
-**To close:** `pnpm add @nestjs/throttler`, a conservative global default, and a much tighter limit on the auth routes specifically.
+**Fixed, then lost.** This was closed with `@nestjs/throttler`, a 120/min global default and 5/min on the auth routes. A hard reset of the backend branch to `origin/development` discarded twenty commits including that one, and the package is absent again. `POST /auth/login` accepts unlimited attempts today.
+
+Rebuilding needs the dependency approved again, so it is the one item in this document still waiting on a decision rather than on work.
 
 ## 05.4 · No idempotency anywhere, and mail sent inside the request
 

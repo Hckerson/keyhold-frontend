@@ -86,6 +86,8 @@ So **five of the eight are genuinely reachable** — the two outbound HTTP SDKs,
 
 **The audit measured only the backend.** The frontend was never run. It reports **76 production advisories — 4 low, 37 moderate, 35 high** — which is more highs than the backend has. That belongs in this finding and was missing from it.
 
+**One package is pure dead weight.** `nodemailer` is a **direct** backend dependency carrying a high-severity advisory, and `grep -rln nodemailer src/` returns nothing — SendGrid is the mailer and nodemailer is imported nowhere. It is the cheapest item on the board: a removal rather than an upgrade, with no reachable code to regress.
+
 **Not closed, and the gate is not wired yet.** Every remediation here is a version bump, and adding, upgrading or swapping a package is not a decision this pass gets to make. `pnpm audit:prod` now exists as a script on the backend so the number is one command away, but it is deliberately **not** in the pre-push gate: a gate that fails on the day it lands is a gate that gets commented out in the same week. It goes in once the reachable five are upgraded.
 
 ## 08.3 · No security headers, no CSP

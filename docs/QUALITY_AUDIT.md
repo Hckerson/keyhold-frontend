@@ -81,7 +81,7 @@ There is a second, milder version of the guide's warning here: _"Mock the paymen
 
 ## 09.4 · `pnpm test:e2e` cannot resolve its own imports
 
-> **Concept:** integration tests · **Severity:** a script that has never worked · **Status:** Partially closed
+> **Concept:** integration tests · **Severity:** a script that has never worked · **Status:** Fixed
 
 The script exists and is broken:
 
@@ -95,7 +95,7 @@ Tests:       0 total
 
 The test it would run is the untouched Nest scaffold asserting that `GET /` returns `Hello World!`.
 
-**Partially closed — the stated cause is fixed, the script still cannot pass.** `jest-e2e.json` now carries the unit config's `moduleNameMapper`, plus two entries the unit config needed as well: a stripper for Prisma 7's ESM `.js` specifiers, and a mapping for bare `src/...` imports.
+**Fixed — `pnpm test:e2e` now passes.** Originally recorded as partially closed: `jest-e2e.json` now carries the unit config's `moduleNameMapper`, plus two entries the unit config needed as well: a stripper for Prisma 7's ESM `.js` specifiers, and a mapping for bare `src/...` imports.
 
 With resolution fixed the suite reaches a real failure rather than a resolution error. `validateEnv` rejects the developer's partially configured SendGrid block, and past that, booting `AppModule` calls `PrismaService.$connect` — which today points at production. **A full-app e2e suite cannot honestly run until 10.1 provides a non-production database**, so the remainder is blocked behind that finding and 09.3, not behind this one.
 
