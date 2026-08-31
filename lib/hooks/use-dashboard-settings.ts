@@ -37,6 +37,7 @@ import {
 import { verifiedDocumentCount } from "@/lib/data/buyer-account";
 import { downloadJson } from "@/lib/utils/download";
 import { usersAPI } from "@/lib/api/users";
+import { FEEDBACK } from "@/lib/config/feedback";
 import type { AlertChannel, AlertType } from "@/lib/types";
 
 export function useDashboardSettings() {
@@ -99,17 +100,21 @@ export function useDashboardSettings() {
     const submit = (event: FormEvent) => {
         event.preventDefault();
         if (!user) return;
-        void Promise.all([
-            updateUser.mutateAsync({
+        updateUser.mutate(
+            {
                 fullName: form.fullName,
                 email: form.email,
                 phoneNumber: form.phone,
                 bio: form.bio,
-            }),
-            updatePreferences.mutateAsync({
-                preferences: toPreferenceList(preferences),
-            }),
-        ]).then(() => setSaved(true));
+            },
+            {
+                onSuccess: () =>
+                    updatePreferences.mutate(
+                        { preferences: toPreferenceList(preferences) },
+                        { onSuccess: () => setSaved(true) },
+                    ),
+            },
+        );
     };
 
     const reset = () => {
@@ -125,9 +130,10 @@ export function useDashboardSettings() {
 
     const sendPasswordReset = () => {
         if (!user?.email) return;
-        void requestReset
-            .mutateAsync({ email: user.email })
-            .then(() => setResetSent(true));
+        requestReset.mutate(
+            { email: user.email },
+            { onSuccess: () => setResetSent(true) },
+        );
     };
 
     const documents = buyerDocuments(user);
@@ -141,11 +147,12 @@ export function useDashboardSettings() {
     );
 
     const exportMine = useMutation({
+        meta: FEEDBACK.exportPersonalData,
         mutationFn: () => usersAPI.exportMine(),
         onSuccess: (data) => downloadJson(data, DATA_EXPORT_FILENAME),
     });
 
-    const exportData = () => void exportMine.mutateAsync().catch(() => null);
+    const exportData = () => exportMine.mutate();
 
     return {
         form,

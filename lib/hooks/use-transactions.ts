@@ -8,6 +8,7 @@ import type {
     CreateTransactionInput,
     TransactionQuery,
 } from "@/lib/validations/transaction";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useTransactionLedger(
     input: TransactionQuery = {},
@@ -65,6 +66,7 @@ export function useTransaction(id: string | undefined) {
 export function useCreateTransaction() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createTransaction,
         mutationFn: (input: CreateTransactionInput) =>
             transactionsAPI.create(input),
         onSuccess: () =>
@@ -75,6 +77,7 @@ export function useCreateTransaction() {
 export function useConfirmPayment() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.confirmPayment,
         mutationFn: ({
             id,
             paymentIntentId,

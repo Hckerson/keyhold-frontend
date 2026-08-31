@@ -9,6 +9,7 @@ import type {
     FlagQuery,
     ResolveFlagInput,
 } from "@/lib/validations/flag";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useFlags(input: FlagQuery = {}, enabled = true) {
     return useQuery({
@@ -43,6 +44,7 @@ export function useFlag(id: string | undefined) {
 export function useCreateFlag() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createFlag,
         mutationFn: (input: CreateFlagInput) => flagsAPI.create(input),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.flags.all }),
@@ -52,6 +54,7 @@ export function useCreateFlag() {
 export function useSettleFlag() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.settleFlag,
         mutationFn: ({
             id,
             dismiss,
