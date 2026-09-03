@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { savedPropertiesAPI } from "@/lib/api/saved-properties";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useSavedProperties(enabled = true) {
     return useQuery({
@@ -28,6 +29,7 @@ export function useSavedPropertyIds(enabled = true) {
 export function useToggleSavedProperty() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.toggleSavedProperty,
         mutationFn: async ({
             propertyId,
             saved,

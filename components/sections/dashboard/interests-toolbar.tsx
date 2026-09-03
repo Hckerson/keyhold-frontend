@@ -43,7 +43,7 @@ export function InterestsToolbar({
                 icon={Filter}
                 align="end"
                 size="sm"
-                className="w-full sm:w-44"
+                className="toolbar-field"
             />
         </div>
     );

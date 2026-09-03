@@ -9,7 +9,7 @@ import type { PropertyQuery } from "@/lib/validations/property";
 
 export const SEARCH_PAGE_SIZE = 20;
 
-const TOOLBAR_SORTS: PropertySort[] = [
+export const TOOLBAR_SORTS: PropertySort[] = [
     "newest",
     "price-asc",
     "price-desc",

@@ -59,7 +59,7 @@ export function HeroSearch() {
                 </div>
             </div>
 
-            <span className="bg-border my-2 hidden w-px sm:block" />
+            <span className="wide-only bg-border my-2 w-px" />
             <div className="flex flex-col gap-0.5 px-3 py-1.5 sm:w-30">
                 <label htmlFor="hero-type" className={fieldLabel}>
                     Type

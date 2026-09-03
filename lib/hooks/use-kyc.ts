@@ -9,6 +9,7 @@ import type {
     RejectKycInput,
     SubmitKycInput,
 } from "@/lib/validations/kyc";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useKycQueue(input: KycQuery = {}, enabled = true) {
     return useQuery({
@@ -53,6 +54,7 @@ export function useIdentityDocument(id: string | undefined) {
 export function useSubmitKyc() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.submitKyc,
         mutationFn: ({
             input,
             document,
@@ -70,6 +72,7 @@ export function useSubmitKyc() {
 export function useReviewKyc() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.reviewKyc,
         mutationFn: ({
             id,
             rejectionReason,

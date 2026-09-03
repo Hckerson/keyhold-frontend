@@ -1,4 +1,5 @@
 import { Pencil } from "lucide-react";
+import { IconButton } from "@/components/ui/icon-button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
@@ -33,17 +34,17 @@ export function AppointmentRow({
                 {appointment.title}
             </span>
 
-            <span className="text-text-secondary hidden w-28 shrink-0 truncate text-xs md:block">
+            <span className="reading-only text-text-secondary w-28 shrink-0 truncate text-xs">
                 {appointment.property}
             </span>
 
-            <span className="text-text-secondary hidden w-24 shrink-0 truncate text-xs lg:block">
+            <span className="desk-only text-text-secondary w-24 shrink-0 truncate text-xs">
                 {appointment.client}
             </span>
 
             <ProgressBar
                 value={durationShare(appointment.durationMinutes)}
-                className="hidden w-10 shrink-0 sm:block"
+                className="wide-only w-10 shrink-0"
             />
 
             <span className="micro-label w-12 shrink-0 text-right">
@@ -55,14 +56,12 @@ export function AppointmentRow({
                 <span className="micro-label">{status.label}</span>
             </span>
 
-            <button
-                type="button"
+            <IconButton
+                tone="accent"
+                icon={Pencil}
+                label={`Reschedule ${appointment.title}`}
                 onClick={() => onReschedule(appointment.id)}
-                aria-label={`Reschedule ${appointment.title}`}
-                className="text-text-muted hover:text-accent hover:bg-background-alt focus-visible:ring-accent ease-smooth grid size-5 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-            >
-                <Pencil className="size-3" strokeWidth={1.5} />
-            </button>
+            />
         </li>
     );
 }

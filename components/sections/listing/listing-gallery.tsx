@@ -10,6 +10,7 @@ import {
 } from "@/lib/config/listing-gallery";
 import { GALLERY_FRAME_MOTION } from "@/lib/config/public-motion";
 import { cn } from "@/lib/utils";
+import { Image } from "@/components/ui/image";
 
 interface ListingGalleryProps {
     images: string[];
@@ -117,7 +118,11 @@ export function ListingGallery({ images, title, badge }: ListingGalleryProps) {
                                     : "ring-border opacity-60 hover:opacity-100",
                             )}
                         >
-                            <img
+                            <Image
+                                variant="bare"
+                                width={96}
+                                height={64}
+                                sizes="96px"
                                 src={image}
                                 alt=""
                                 aria-hidden="true"

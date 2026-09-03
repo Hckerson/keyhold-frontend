@@ -3,6 +3,7 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { PropertyAction } from "@/lib/types";
+import { formatUsd } from "@/lib/utils/format";
 
 const ENQUIRY_ANCHOR = "#agent";
 
@@ -26,10 +27,10 @@ export function ListingActionBar({
     const href = action.kind === "track" ? action.href : ENQUIRY_ANCHOR;
 
     return (
-        <div className="border-border-dark bg-background/90 fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur-md lg:hidden">
+        <div className="desk-hidden border-border-dark bg-background/90 fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur-md">
             <div className="min-w-0 flex-1">
                 <p className="text-text text-xs font-semibold tabular-nums">
-                    ${price.toLocaleString()}
+                    {formatUsd(price)}
                 </p>
                 <p className="text-text-muted truncate text-xs">{address}</p>
             </div>

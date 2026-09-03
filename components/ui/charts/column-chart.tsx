@@ -15,6 +15,7 @@ import {
     type ChartTone,
 } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
+import { formatScaled } from "@/lib/utils/format";
 
 export interface ColumnSeries {
     key: string;
@@ -48,10 +49,7 @@ export function ColumnChart({
     const mounted = useMounted();
 
     const format = (value: number) =>
-        `${valuePrefix}${(value / divideBy).toLocaleString(undefined, {
-            minimumFractionDigits: fractionDigits,
-            maximumFractionDigits: fractionDigits,
-        })}${valueSuffix}`;
+        `${valuePrefix}${formatScaled(value, { divideBy, fractionDigits })}${valueSuffix}`;
 
     return (
         <div className={cn("flex flex-col gap-3", className)}>

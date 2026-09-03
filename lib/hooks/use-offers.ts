@@ -8,6 +8,7 @@ import type {
     CreateOfferInput,
     RespondOfferInput,
 } from "@/lib/validations/offer";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useConnectionOffers(connectionId: string | undefined) {
     return useQuery({
@@ -32,6 +33,7 @@ export function useOffer(id: string | undefined) {
 export function useCreateOffer() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createOffer,
         mutationFn: (input: CreateOfferInput) => offersAPI.create(input),
         onSuccess: async () => {
             await Promise.all([
@@ -47,6 +49,7 @@ export function useCreateOffer() {
 export function useRespondToOffer() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.respondToOffer,
         mutationFn: ({ id, ...input }: RespondOfferInput & { id: string }) =>
             offersAPI.respond(id, input),
         onSuccess: async () => {
@@ -63,6 +66,7 @@ export function useRespondToOffer() {
 export function useAcceptCounter() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.acceptCounter,
         mutationFn: (id: string) => offersAPI.acceptCounter(id),
         onSuccess: async (offer) => {
             await Promise.all([

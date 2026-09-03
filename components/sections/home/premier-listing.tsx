@@ -15,6 +15,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { formatUsd } from "@/lib/utils";
 import type { Listing } from "@/lib/types";
 import { PUBLIC_ROUTES } from "@/lib/constants";
+import { formatCount } from "@/lib/utils/format";
+import { Image } from "@/components/ui/image";
 
 interface Spec {
     icon: LucideIcon;
@@ -53,7 +55,7 @@ const toView = (listing: Listing): ListingView => ({
 const toSpecs = (listing: Listing): Spec[] => [
     { icon: BedDouble, value: String(listing.beds), label: "Bedrooms" },
     { icon: Bath, value: String(listing.baths), label: "Bathrooms" },
-    { icon: Ruler, value: listing.sqft.toLocaleString(), label: "Sq Ft" },
+    { icon: Ruler, value: formatCount(listing.sqft), label: "Sq Ft" },
 ];
 
 function ListingMedia({ listing }: { listing: ListingView }) {
@@ -63,7 +65,11 @@ function ListingMedia({ listing }: { listing: ListingView }) {
                 <Star size={12} strokeWidth={1.5} className="text-highlight" />
                 Premier listing
             </span>
-            <img
+            <Image
+                variant="bare"
+                width={1200}
+                height={560}
+                sizes="(min-width: 64rem) 58vw, 100vw"
                 src={listing.image}
                 alt={listing.name}
                 className="h-100 w-full rounded-xl object-cover shadow-md md:h-140"
@@ -99,7 +105,7 @@ export function PremierListing({ listing }: PremierListingProps) {
     const specs = toSpecs(listing);
 
     return (
-        <section className="bg-background py-16 md:py-20">
+        <section className="section-pady bg-background">
             <SectionShell>
                 <div className="grid items-center gap-10 lg:grid-cols-[58%_1fr] lg:gap-14">
                     <ListingMedia listing={view} />

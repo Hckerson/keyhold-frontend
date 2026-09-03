@@ -6,6 +6,7 @@ import { HeroSearch } from "@/components/sections/home/hero-search";
 import { CityChips } from "@/components/sections/home/city-chips";
 import { Button } from "@/components/ui/button";
 import { propertyImage } from "@/lib/data/sample-images";
+import { Image } from "@/components/ui/image";
 
 const HERO_IMAGE = propertyImage(0);
 
@@ -16,7 +17,7 @@ const HERO_CAPTION = {
 
 export function HeroSection() {
     return (
-        <section className="bg-background-alt relative isolate -mt-[88px] flex min-h-[70vh] items-center overflow-hidden pt-[112px] pb-16 md:pb-20">
+        <section className="section-padb bg-background-alt relative isolate -mt-[88px] flex min-h-[70vh] items-center overflow-hidden pt-[112px]">
             <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(var(--color-text)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_at_center,#000,transparent)] bg-[size:32px_32px] opacity-[0.04]"
@@ -61,12 +62,17 @@ export function HeroSection() {
                         <CityChips />
                     </div>
 
-                    <div className="relative hidden justify-self-end lg:block">
+                    <div className="desk-only relative justify-self-end">
                         <div
                             aria-hidden="true"
                             className="bg-highlight/15 pointer-events-none absolute -right-8 -bottom-8 h-3/5 w-3/4 rounded-full blur-[70px]"
                         />
-                        <img
+                        <Image
+                            variant="bare"
+                            priority
+                            width={408}
+                            height={520}
+                            sizes="(min-width: 64rem) 408px, 100vw"
                             src={HERO_IMAGE}
                             alt=""
                             aria-hidden="true"

@@ -10,10 +10,10 @@ export interface StatGridProps {
 }
 
 const columnClass = {
-    2: "grid-cols-1 sm:grid-cols-2",
-    3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-    4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
-    5: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5",
+    2: "stat-grid--2",
+    3: "stat-grid--3",
+    4: "stat-grid--4",
+    5: "stat-grid--5",
 } as const;
 
 const gapClass = {
@@ -30,7 +30,7 @@ export function StatGrid({
     return (
         <div
             className={cn(
-                "grid",
+                "stat-grid",
                 gapClass[gap],
                 columnClass[columns],
                 className,

@@ -18,8 +18,8 @@ export default function ListingLoading() {
 
                 <Skeleton className="h-24 w-full rounded-xl" />
 
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-                    <div className="flex flex-col gap-6 lg:col-span-2">
+                <div className="detail-split gap-8">
+                    <div className="detail-main flex flex-col gap-6">
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                             {[0, 1, 2, 3, 4, 5].map((fact) => (
                                 <Skeleton
@@ -35,7 +35,7 @@ export default function ListingLoading() {
                         <Skeleton className="h-48 w-full rounded-xl" />
                     </div>
 
-                    <div className="flex flex-col gap-4 lg:col-span-1">
+                    <div className="flex flex-col gap-4">
                         <Skeleton className="h-56 w-full rounded-xl" />
                         <Skeleton className="h-56 w-full rounded-xl" />
                     </div>

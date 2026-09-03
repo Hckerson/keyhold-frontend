@@ -73,6 +73,13 @@ export const COLLAPSE_MOTION: MotionPresence = {
     transition: FAST,
 };
 
+export const TOAST_MOTION: MotionPresence = {
+    initial: { opacity: 0, scale: 0.96, y: 8 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    exit: { opacity: 0, scale: 0.96 },
+    transition: FAST,
+};
+
 export const ENTRY_MOTION: MotionPresence = {
     initial: { opacity: 0, y: 8 },
     animate: { opacity: 1, y: 0 },

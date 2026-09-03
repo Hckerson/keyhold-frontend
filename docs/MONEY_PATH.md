@@ -114,6 +114,11 @@ The window is the pivot. Before it closes the money is the buyer's to hold; afte
 | 8.1 | An escrow id that matches nothing is refused as not found.                                      |
 | 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
 | 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
+| #   | Criterion                                                                                       |
+| --- | ----------------------------------------------------------------------------------------------- |
+| 8.1 | An escrow id that matches nothing is refused as not found.                                      |
+| 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
+| 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
 | 8.4 | A refusal of any of the above writes nothing — the hold survives every rejected release intact. |
 
 ## 09 · What a release does
@@ -126,6 +131,17 @@ The window is the pivot. Before it closes the money is the buyer's to hold; afte
 | 9.4 | The agreement is generated and stored **before** any of those three writes, so a failure to produce it leaves the hold untouched. |
 | 9.5 | The agreement names the parties, the property and the agreed price — `finalPrice`, not the asking price.                          |
 | 9.6 | Settlement email that fails does not fail the release. The money is settled; the notification is not the record.                  |
+
+## 10 · Settlement is atomic
+
+The three writes that settle a hold describe one event. A partial settlement is not a degraded outcome — it is a false record of where the money is.
+
+| #    | Criterion                                                                                                              |
+| ---- | ---------------------------------------------------------------------------------------------------------------------- |
+| 10.1 | The hold, the transaction and the property are written inside one database transaction, opened exactly once.           |
+| 10.2 | The agreement is generated and uploaded **before** the transaction opens — no third-party call is held open inside it. |
+| 10.3 | A failure on any of the three writes fails the whole release. No subset of them survives.                              |
+| 10.4 | A release that is refused never opens a transaction at all.                                                            |
 
 ---
 
@@ -140,6 +156,18 @@ Writing the checklist first, then the tests, turned up three defects. All three 
 Both are fixed by deriving the in-flight id from the mutation itself — `release.isPending ? release.variables : null` — so dismissal cannot clear it and no second piece of state has to be kept in step.
 
 **5.3 — a failed release said nothing.** `release.isError` was never rendered anywhere. A buyer who pressed the money button and hit a failing gateway saw the modal close and the row unchanged, with no way to tell whether the release had gone through. The modal now stays open on failure and states that the funds were not released and the escrow is still held.
+
+## What the server criteria caught
+
+Sections 07–10 are green: `EscrowService.release` grants and refuses exactly as written, and a refused release leaves no trace — no agreement, no upload, no email, no write. `EscrowController.release` decides on the authenticated caller and nothing else.
+
+Three things the checklist surfaced were **not** written as criteria at the time, because each needed a decision before it could be a test rather than a wish. One of the three — atomicity — has since been decided and is now section 10.
+
+**The seller is never paid.** `release` moves the hold to `RELEASED`, completes the transaction and marks the property `SOLD` — and transfers nothing. `StripeService` exposes `createPaymentIntent`, `confirmPayment`, `refundPayment` and `getPaymentIntent`; there is no transfer or payout method. `Escrow.stripeTransferId` and `Escrow.stripeAccountId` exist on the model and are never written. The sentence at the top of this document — "transfers the held amount to the seller" — is not true of the code. Closing this needs Stripe Connect and a decision about onboarding sellers as connected accounts.
+
+**Settlement was not atomic — it is now.** The three writes ran in a `Promise.all`, so a failure between them could leave a released hold against an in-progress transaction, or a sold property against an unreleased hold. Stage 04 of the field guide names this exact case: _"Accepting an offer while marking a property sold must not half-succeed."_ It is closed. `PrismaContext` ([ADR 0011](adr/0011-transactions-via-ambient-client.md)) gives the repository layer a transaction boundary it did not have, and `release` and `refund` now open one around their three writes. The agreement is still generated and uploaded first, outside the transaction, so no Cloudinary round-trip is held open inside it. Section 10 above is the checklist this closed against.
+
+**A refusal tells a stranger too much.** `requireHeld` runs before the authorisation check, so an unauthorised caller learns whether a hold exists and whether it has settled — 404 and 400 separate from 403. Moving the ownership check ahead of the state check closes it, at the cost of one extra branch.
 
 ## Note on placement
 

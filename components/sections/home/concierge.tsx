@@ -4,7 +4,7 @@ import { ConciergeProcess } from "@/components/sections/home/concierge-process";
 
 export function ConciergeSection() {
     return (
-        <section className="bg-background-muted py-16 md:py-20">
+        <section className="section-pady bg-background-muted">
             <SectionShell>
                 <ConciergeProcess>
                     <div className="flex flex-col gap-4">

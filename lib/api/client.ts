@@ -2,7 +2,12 @@ import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { deleteCookie } from "@/lib/utils/cookies";
-import { ACCESS_TOKEN_COOKIE, AUTH_ROUTES, config } from "@/lib/constants";
+import {
+    ACCESS_TOKEN_COOKIE,
+    AUTH_ROUTES,
+    config,
+    loginExpired,
+} from "@/lib/constants";
 
 type ParamValue = string | number | boolean;
 
@@ -35,6 +40,7 @@ const defaultConfig: AxiosRequestConfig = {
         "Content-Type": "application/json",
     },
     paramsSerializer: serializeParams,
+    withCredentials: true,
 };
 
 export interface ApiEnvelope<T> {
@@ -64,14 +70,6 @@ export const query = {
         request<T>({ method: "DELETE", url, ...config }),
 };
 
-apiClient.interceptors.request.use((config) => {
-    const token = useAuthStore.getState().accessToken;
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-});
-
 apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
@@ -82,7 +80,7 @@ apiClient.interceptors.response.use(
                 typeof window !== "undefined" &&
                 !window.location.pathname.startsWith(AUTH_ROUTES.login)
             ) {
-                window.location.href = AUTH_ROUTES.login;
+                window.location.href = loginExpired(window.location.pathname);
             }
         }
         return Promise.reject(error);

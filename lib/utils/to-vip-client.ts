@@ -4,14 +4,10 @@ import {
     CONCIERGE_STATUS_BY_API,
     CONCIERGE_TIER_BY_API,
 } from "@/lib/utils/status-maps";
+import { formatDayAndMonth } from "@/lib/utils/format";
 
 const NO_CONTACT = "No contact logged";
 const NO_ACTION = "No action set";
-
-const DATE_FORMAT: Intl.DateTimeFormatOptions = {
-    month: "short",
-    day: "numeric",
-};
 
 export const toVipClient = (client: ConciergeClient): VIPClient => ({
     id: client.id,
@@ -24,7 +20,7 @@ export const toVipClient = (client: ConciergeClient): VIPClient => ({
     clientSince: client.clientSince,
     openRequests: client.openRequests,
     lastContact: client.lastContact
-        ? new Date(client.lastContact).toLocaleDateString("en-US", DATE_FORMAT)
+        ? formatDayAndMonth(new Date(client.lastContact))
         : NO_CONTACT,
     nextAction: client.nextAction ?? NO_ACTION,
 });

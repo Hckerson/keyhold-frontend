@@ -11,9 +11,9 @@ export function AuthShell({ children }: AuthShellProps) {
     return (
         <div className="grid min-h-screen lg:grid-cols-2">
             <BrandPanel />
-            <main className="bg-background flex flex-col justify-center px-6 py-12 sm:px-14">
+            <main className="gutter-x gutter-x--flush bg-background flex flex-col justify-center py-12">
                 <div className="mx-auto w-full max-w-85">
-                    <div className="mb-10 lg:hidden">
+                    <div className="desk-hidden mb-10">
                         <Wordmark />
                     </div>
                     <AuthMotionFrame>{children}</AuthMotionFrame>

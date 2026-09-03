@@ -90,8 +90,8 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                     onToggleSave={toggleSave}
                 />
 
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <div className="flex flex-col gap-6 lg:col-span-2">
+                <div className="detail-split gap-6">
+                    <div className="detail-main flex flex-col gap-6">
                         <ListingKeyFacts listing={listing} />
 
                         <ListingDescription
@@ -126,10 +126,7 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                         </section>
                     </div>
 
-                    <aside
-                        id="agent"
-                        className="flex flex-col gap-4 lg:col-span-1"
-                    >
+                    <aside id="agent" className="flex flex-col gap-4">
                         <ListingEnquiryCard
                             propertyId={listing.id}
                             address={listing.address}

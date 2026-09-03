@@ -1,6 +1,8 @@
 "use client";
 
 import { PasswordModal } from "@/components/features/settings/password-modal";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { DashboardSettingsHeader } from "@/components/sections/dashboard/dashboard-settings-header";
 import { DashboardSettingsMain } from "@/components/sections/dashboard/dashboard-settings-main";
 import { DashboardSettingsNotices } from "@/components/sections/dashboard/dashboard-settings-notices";
@@ -10,6 +12,14 @@ import { useDashboardSettings } from "@/lib/hooks/use-dashboard-settings";
 
 export function DashboardSettingsConsole() {
     const settings = useDashboardSettings();
+
+    if (settings.failed)
+        return (
+            <ConsoleUnavailable
+                fallback={CONSOLE_FALLBACKS.buyerSettings}
+                onRetry={settings.retry}
+            />
+        );
 
     return (
         <div className="flex flex-col gap-4">

@@ -12,6 +12,8 @@ export const config = {
         users: {
             list: "/users",
             me: "/users/me",
+            export: "/users/me/export",
+            eraseMe: "/users/me",
             detail: (id: string) => `/users/${id}`,
             tierDistribution: "/users/tiers/distribution",
             tier: (id: string) => `/users/${id}/tier`,
@@ -161,6 +163,9 @@ export const config = {
             agent: "/stats/agent",
         },
     },
+    site: {
+        url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+    },
     isDev: process.env.NODE_ENV === "development",
 };
 
@@ -177,6 +182,7 @@ export const AUTH_ROUTES = {
 } as const;
 
 export const REDIRECT_PARAM = "redirect";
+export const EXPIRED_PARAM = "expired";
 
 export const PORTAL_BY_ROLE = {
     ADMIN: "/admin",
@@ -192,9 +198,7 @@ export const isSafeRedirect = (target: string | undefined): target is string =>
     target.startsWith("/") &&
     !target.startsWith("//");
 
-export const AUTH_PROVIDERS = (
-    process.env.NEXT_PUBLIC_AUTH_PROVIDERS ?? "google,apple"
-)
+export const AUTH_PROVIDERS = (process.env.NEXT_PUBLIC_AUTH_PROVIDERS ?? "")
     .split(",")
     .map((provider) => provider.trim())
     .filter(Boolean);
@@ -205,6 +209,8 @@ export const oauthStartUrl = (provider: string, redirectTo?: string) => {
         ? `${url}?${REDIRECT_PARAM}=${encodeURIComponent(redirectTo)}`
         : url;
 };
+
+export const LOCALE = "en-US";
 
 export const NEW_LISTING_DAYS = 7;
 export const DEBOUNCE_DELAY = 300;
@@ -222,6 +228,10 @@ export const RAIL_QUERY = "(min-width: 64rem)";
 
 export const STALE_TIME = 5 * 60 * 1000;
 export const CACHE_TIME = 10 * 60 * 1000;
+
+export const TOAST_DURATION = 5 * 1000;
+export const TOAST_ERROR_DURATION = 8 * 1000;
+export const TOAST_STACK_LIMIT = 3;
 
 export const PUBLIC_ROUTES = {
     listing: (id: string) => `/listing/${id}`,
@@ -247,6 +257,11 @@ export const withRedirect = (route: string, target?: string) =>
 
 export const loginWithRedirect = (target: string) =>
     withRedirect(AUTH_ROUTES.login, target);
+
+export const loginExpired = (target?: string) => {
+    const base = withRedirect(AUTH_ROUTES.login, target);
+    return `${base}${base.includes("?") ? "&" : "?"}${EXPIRED_PARAM}=1`;
+};
 
 export const AGENT_ROUTES = {
     overview: "/agent",

@@ -31,7 +31,7 @@ export function SearchResultsSkeleton() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
-                <div className="border-border bg-background hidden flex-col overflow-hidden rounded-xl border shadow-sm lg:flex">
+                <div className="desk-only-flex border-border bg-background flex-col overflow-hidden rounded-xl border shadow-sm">
                     <div className="border-border-dark flex items-center justify-between gap-2 border-b px-3 py-2">
                         <Skeleton className="h-3 w-16" />
                         <Skeleton className="h-3 w-10" />

@@ -43,7 +43,7 @@ export function AlertsToolbar({
                 icon={Filter}
                 align="end"
                 size="sm"
-                className="w-full sm:w-40"
+                className="toolbar-field"
             />
         </div>
     );

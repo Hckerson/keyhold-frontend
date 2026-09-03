@@ -35,12 +35,12 @@ export function ThreadHeader({ conversation }: ThreadHeaderProps) {
                 </span>
                 <ConversationStatusMark
                     status={conversation.status}
-                    className="hidden shrink-0 sm:flex"
+                    className="wide-only-flex shrink-0"
                 />
             </div>
 
             <div className="flex shrink-0 items-center gap-2">
-                <p className="micro-label hidden md:block">
+                <p className="micro-label reading-only">
                     {formatAge(conversation.minutesAgo)} {LAST_SUFFIX}
                 </p>
                 {conversation.phone && (

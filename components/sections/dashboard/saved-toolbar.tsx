@@ -43,7 +43,7 @@ export function SavedToolbar({
                 icon={ArrowUpDown}
                 align="end"
                 size="sm"
-                className="w-full sm:w-40"
+                className="toolbar-field"
             />
         </div>
     );

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 export function CtaBanner() {
     return (
-        <section className="bg-background-muted border-border relative isolate overflow-hidden border-y py-16 md:py-20">
+        <section className="section-pady bg-background-muted border-border relative isolate overflow-hidden border-y">
             <div
                 aria-hidden="true"
                 className="bg-highlight/15 pointer-events-none absolute -top-24 left-1/4 -z-10 h-72 w-96 rounded-full blur-[90px]"

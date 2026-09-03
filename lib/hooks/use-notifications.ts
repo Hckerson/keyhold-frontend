@@ -9,6 +9,7 @@ import type {
     NotificationQuery,
     UpdatePreferencesInput,
 } from "@/lib/validations/notification";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useNotifications(
     input: NotificationQuery = {},
@@ -24,11 +25,11 @@ export function useNotifications(
 }
 
 export function useUnreadNotificationCount() {
-    const accessToken = useAuthStore((state) => state.accessToken);
+    const user = useAuthStore((state) => state.user);
     return useQuery({
         queryKey: queryKeys.notifications.unreadCount,
         queryFn: () => notificationsAPI.unreadCount(),
-        enabled: Boolean(accessToken),
+        enabled: Boolean(user),
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
     });
@@ -47,6 +48,7 @@ export function useNotificationPreferences(enabled = true) {
 export function useUpdateNotificationPreferences() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.updateNotificationPreferences,
         mutationFn: (input: UpdatePreferencesInput) =>
             notificationsAPI.updatePreferences(input),
         onSuccess: (preferences) =>
@@ -60,6 +62,7 @@ export function useUpdateNotificationPreferences() {
 export function useMarkNotificationRead() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.markNotificationRead,
         mutationFn: (id: string) => notificationsAPI.markRead(id),
         onSuccess: () =>
             client.invalidateQueries({
@@ -71,6 +74,7 @@ export function useMarkNotificationRead() {
 export function useMarkAllNotificationsRead() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.markAllNotificationsRead,
         mutationFn: () => notificationsAPI.markAllRead(),
         onSuccess: () =>
             client.invalidateQueries({
@@ -82,6 +86,7 @@ export function useMarkAllNotificationsRead() {
 export function useRemoveNotification() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.removeNotification,
         mutationFn: (id: string) => notificationsAPI.remove(id),
         onSuccess: () =>
             client.invalidateQueries({

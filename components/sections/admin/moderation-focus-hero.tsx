@@ -62,7 +62,7 @@ export function ModerationFocusHero({
                         alt={listing.address}
                         className="h-14 w-20 rounded-lg"
                     />
-                    <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                    <div className="stack-to-row stack-to-row--split min-w-0 flex-1 gap-1">
                         <p className="text-text min-w-0 truncate text-xs font-semibold">
                             {listing.address}, {listing.locality}
                         </p>
@@ -103,7 +103,7 @@ export function ModerationFocusHero({
                 </MetricCell>
             </div>
 
-            <footer className="border-border-light flex flex-col gap-2 border-t p-3 sm:flex-row sm:items-center sm:justify-between">
+            <footer className="stack-to-row stack-to-row--split border-border-light gap-2 border-t p-3">
                 <div className="grid grid-cols-2 gap-2 sm:flex">
                     <Button
                         type="button"

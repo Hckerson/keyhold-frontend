@@ -89,19 +89,14 @@ export function ListingConsole() {
 
     const clearSelection = useCallback(() => setSelectedIds([]), []);
 
-    const runBulkAction = async (action: BulkAction) => {
+    const runBulkAction = (action: BulkAction) => {
         const targets = [...selectedIds];
         setSelectedIds([]);
 
-        await Promise.all(
-            targets.map((id) =>
-                action === "delete"
-                    ? removeProperty.mutateAsync(id)
-                    : updateStatus.mutateAsync({
-                          id,
-                          status: BULK_STATUS[action],
-                      }),
-            ),
+        targets.forEach((id) =>
+            action === "delete"
+                ? removeProperty.mutate(id)
+                : updateStatus.mutate({ id, status: BULK_STATUS[action] }),
         );
     };
 
@@ -109,9 +104,10 @@ export function ListingConsole() {
 
     const confirmPromotion = (days: number) => {
         if (!promoteId) return;
-        void promoteProperty
-            .mutateAsync({ id: promoteId, days })
-            .then(() => setPromoteId(null));
+        promoteProperty.mutate(
+            { id: promoteId, days },
+            { onSuccess: () => setPromoteId(null) },
+        );
     };
 
     if (isError)

@@ -15,18 +15,13 @@ import {
     SignupFields,
     type SignupFieldValues,
 } from "@/components/features/auth/signup-fields";
-import { authAPI } from "@/lib/api/auth";
+import { useRegister } from "@/lib/hooks/use-register";
 import {
-    ACCESS_TOKEN_COOKIE,
     AUTH_ROUTES,
-    SESSION_DAYS,
     isSafeRedirect,
     portalForRole,
     withRedirect,
 } from "@/lib/constants";
-import { useAuthStore } from "@/lib/stores/auth-store";
-import { setCookie } from "@/lib/utils/cookies";
-import { errorMessage } from "@/lib/utils/api-error";
 import {
     fieldErrorFor,
     signupSchema,
@@ -40,9 +35,6 @@ const INITIAL_VALUES: SignupFieldValues = {
     password: "",
     confirmPassword: "",
 };
-
-const SIGN_UP_FAILED =
-    "We couldn't create your account. Review your details and try again.";
 
 const footerEntries = (redirectTo?: string) => [
     {
@@ -63,14 +55,14 @@ export interface SignupFormProps {
 
 export function SignupForm({ redirectTo }: SignupFormProps) {
     const router = useRouter();
-    const setAuth = useAuthStore((state) => state.setAuth);
+    const register = useRegister();
 
     const [values, setValues] = useState(INITIAL_VALUES);
     const [role, setRole] = useState<SignupRole | null>(null);
     const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [errors, setErrors] = useState<FieldErrors>({});
-    const [formError, setFormError] = useState<string | null>(null);
-    const [pending, setPending] = useState(false);
+
+    const { pending, error: formError } = register;
 
     const submission = { ...values, role, acceptedTerms };
     const parsed = signupSchema.safeParse(submission);
@@ -81,7 +73,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             const { value } = event.target;
             setValues((current) => ({ ...current, [field]: value }));
             setErrors((current) => ({ ...current, [field]: undefined }));
-            setFormError(null);
+            register.clearError();
         };
 
     const handleBlur = (field: keyof SignupFieldValues) => () =>
@@ -93,7 +85,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
     const handleRoleChange = (next: SignupRole) => {
         setRole(next);
         setErrors((current) => ({ ...current, role: undefined }));
-        setFormError(null);
+        register.clearError();
     };
 
     const handleTermsChange = (accepted: boolean) => {
@@ -119,27 +111,21 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             return;
         }
 
-        setPending(true);
-        setFormError(null);
-
         try {
-            const { user, accessToken } = await authAPI.register({
+            const user = await register.submit({
                 fullName: parsed.data.fullName,
                 email: parsed.data.email,
                 password: parsed.data.password,
                 role: parsed.data.role,
             });
 
-            setAuth(user, accessToken);
-            setCookie(ACCESS_TOKEN_COOKIE, accessToken, SESSION_DAYS);
             router.replace(
                 isSafeRedirect(redirectTo)
                     ? redirectTo
                     : portalForRole(user.role),
             );
-        } catch (error) {
-            setFormError(errorMessage(error, SIGN_UP_FAILED));
-            setPending(false);
+        } catch {
+            return;
         }
     };
 

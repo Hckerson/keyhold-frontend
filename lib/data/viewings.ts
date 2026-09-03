@@ -17,6 +17,7 @@ import {
 } from "@/lib/config/viewing-tones";
 import type { Viewing, ViewingMode } from "@/lib/types";
 import { formatCompactUsd, parseLocalDate, percentOf, sum } from "@/lib/utils";
+import { formatDayAndMonth } from "@/lib/utils/format";
 
 const MS_PER_DAY = 86_400_000;
 const MINUTES_PER_HOUR = 60;
@@ -88,8 +89,7 @@ export const countdownLabel = (days: number) => {
     return days < 0 ? `${-days}${PAST_SUFFIX}` : `${days}${DAYS_SUFFIX}`;
 };
 
-const formatDayLabel = (date: Date) =>
-    date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+const formatDayLabel = (date: Date) => formatDayAndMonth(date);
 
 export const formatViewingDate = (date: string) =>
     formatDayLabel(parseLocalDate(date));

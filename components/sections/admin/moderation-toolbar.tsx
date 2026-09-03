@@ -43,7 +43,7 @@ export function ModerationToolbar({
                 icon={Filter}
                 align="end"
                 size="sm"
-                className="w-full sm:w-48"
+                className="toolbar-field toolbar-field--wide"
             />
         </>
     );

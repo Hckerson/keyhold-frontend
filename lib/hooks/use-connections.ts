@@ -8,6 +8,7 @@ import type {
     CreateConnectionInput,
     CreateLeadInput,
 } from "@/lib/validations/connection";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useMyInterests(enabled = true) {
     return useQuery({
@@ -42,6 +43,7 @@ export function useConnection(id: string | undefined) {
 export function useCreateConnection() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createConnection,
         mutationFn: (input: CreateConnectionInput) =>
             connectionsAPI.create(input),
         onSuccess: () =>
@@ -52,6 +54,7 @@ export function useCreateConnection() {
 export function useRecordLead() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.recordLead,
         mutationFn: (input: CreateLeadInput) =>
             connectionsAPI.recordLead(input),
         onSuccess: () =>
@@ -62,6 +65,7 @@ export function useRecordLead() {
 export function useRespondToConnection() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.respondToConnection,
         mutationFn: ({ id, accept }: { id: string; accept: boolean }) =>
             accept ? connectionsAPI.accept(id) : connectionsAPI.reject(id),
         onSuccess: () =>

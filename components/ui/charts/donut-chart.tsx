@@ -7,6 +7,7 @@ import {
     type ChartTone,
 } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
+import { formatCount } from "@/lib/utils/format";
 
 export interface DonutSegment {
     name: string;
@@ -98,7 +99,7 @@ export function DonutChart({
                                 </span>
                                 <span className="text-text ml-auto font-medium tabular-nums">
                                     {valuePrefix}
-                                    {d.value.toLocaleString()}
+                                    {formatCount(d.value)}
                                     {valueSuffix}
                                     <span className="text-text-muted ml-1.5 font-normal">
                                         {pct}%

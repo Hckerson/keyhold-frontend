@@ -75,7 +75,7 @@ export function MessagesConsole() {
     const onSend = useCallback(
         (content: string) => {
             if (!activeId) return;
-            void sendMessage.mutateAsync({ connectionId: activeId, content });
+            sendMessage.mutate({ connectionId: activeId, content });
         },
         [activeId, sendMessage],
     );

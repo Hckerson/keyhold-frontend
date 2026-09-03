@@ -56,7 +56,7 @@ export function ListingRow({
                 )}
             </div>
 
-            <div className="flex flex-1 flex-col gap-3 p-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="stack-to-row stack-to-row--split flex-1 gap-3 p-3">
                 <div className="min-w-0 space-y-2">
                     <div className="min-w-0 space-y-1">
                         <p className="text-h5 font-display text-accent leading-none font-light">

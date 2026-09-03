@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Image } from "@/components/ui/image";
 
 const VISIBLE_FRAMES = 4;
 
@@ -37,11 +38,13 @@ export function SearchResultFrames({
                         index === activeFrame ? "flex-7" : "flex-1 opacity-60",
                     )}
                 >
-                    <img
+                    <Image
+                        variant="bare"
+                        fill
+                        sizes="(min-width: 64rem) 33vw, 100vw"
                         src={image}
                         alt=""
-                        loading="lazy"
-                        className="size-full object-cover"
+                        className="object-cover"
                     />
                 </span>
             ))}

@@ -2,6 +2,8 @@ import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
     CreateTransactionInput,
+    CreateTransactionResult,
+    SettledTransaction,
     Transaction,
     TransactionPage,
     TransactionQuery,
@@ -25,10 +27,14 @@ export const transactionsAPI = {
         query.get<Transaction>(config.api.transactions.detail(id)),
 
     create: (input: CreateTransactionInput) =>
-        query.post<Transaction>(config.api.transactions.create, input),
+        query.post<CreateTransactionResult>(
+            config.api.transactions.create,
+            input,
+        ),
 
     confirmPayment: (id: string, paymentIntentId: string) =>
-        query.post<Transaction>(config.api.transactions.confirmPayment(id), {
-            paymentIntentId,
-        }),
+        query.post<SettledTransaction>(
+            config.api.transactions.confirmPayment(id),
+            { paymentIntentId },
+        ),
 };
