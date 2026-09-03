@@ -94,11 +94,12 @@ export function AdminSettingsConsole() {
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
-        void update
-            .mutateAsync(
-                toSettingsPayload(settings.data ?? [], config, policies),
-            )
-            .then(() => setSaved(true));
+        update.mutate(
+            toSettingsPayload(settings.data ?? [], config, policies),
+            {
+                onSuccess: () => setSaved(true),
+            },
+        );
     };
 
     const handleReset = () => {

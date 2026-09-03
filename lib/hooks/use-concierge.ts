@@ -10,6 +10,7 @@ import type {
     CreateConciergeServiceInput,
     UpdateConciergeClientInput,
 } from "@/lib/validations/concierge";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useConciergeOverview(enabled = true) {
     return useQuery({
@@ -54,6 +55,7 @@ export function useConciergePractices(enabled = true) {
 export function useCreateConciergeClient() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createConciergeClient,
         mutationFn: (input: CreateConciergeClientInput) =>
             conciergeAPI.createClient(input),
         onSuccess: () =>
@@ -64,6 +66,7 @@ export function useCreateConciergeClient() {
 export function useUpdateConciergeClient() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.updateConciergeClient,
         mutationFn: ({
             id,
             input,
@@ -79,6 +82,7 @@ export function useUpdateConciergeClient() {
 export function useRemoveConciergeClient() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.removeConciergeClient,
         mutationFn: (id: string) => conciergeAPI.removeClient(id),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.concierge.all }),
@@ -88,6 +92,7 @@ export function useRemoveConciergeClient() {
 export function useSaveConciergeService() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.saveConciergeService,
         mutationFn: (input: CreateConciergeServiceInput) =>
             conciergeAPI.createService(input),
         onSuccess: () =>
@@ -98,6 +103,7 @@ export function useSaveConciergeService() {
 export function useSaveConciergePractice() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.saveConciergePractice,
         mutationFn: (input: CreateConciergePracticeInput) =>
             conciergeAPI.createPractice(input),
         onSuccess: () =>
@@ -108,6 +114,7 @@ export function useSaveConciergePractice() {
 export function useCoverConciergeClient() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.coverConciergeClient,
         mutationFn: ({
             practiceId,
             clientId,

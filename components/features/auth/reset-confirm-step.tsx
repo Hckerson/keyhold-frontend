@@ -11,12 +11,11 @@ import {
     AuthTitleBlock,
 } from "@/components/features/auth/parts";
 import { ResetDonePanel } from "@/components/features/auth/reset-done-panel";
-import { authAPI } from "@/lib/api/auth";
+import { useResetPassword } from "@/lib/hooks/use-auth-recovery";
 import {
     RECOVERY_PENDING_ENTRIES,
     RECOVERY_STEP,
 } from "@/lib/config/auth-recovery";
-import { errorMessage } from "@/lib/utils/api-error";
 import {
     MIN_PASSWORD_LENGTH,
     fieldErrorFor,
@@ -25,9 +24,6 @@ import {
     type FieldErrors,
 } from "@/lib/validations/auth";
 
-const RESET_FAILED =
-    "We couldn't reset your password. The link may have expired — request a new one.";
-
 const NEW_PASSWORD_VALUES = { password: "", confirmPassword: "" };
 
 export interface ResetConfirmStepProps {
@@ -35,11 +31,13 @@ export interface ResetConfirmStepProps {
 }
 
 export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
+    const reset = useResetPassword(token);
+
     const [values, setValues] = useState(NEW_PASSWORD_VALUES);
     const [errors, setErrors] = useState<FieldErrors>({});
-    const [formError, setFormError] = useState<string | null>(null);
-    const [pending, setPending] = useState(false);
     const [done, setDone] = useState(false);
+
+    const { pending, error: formError } = reset;
 
     const parsed = newPasswordSchema.safeParse(values);
 
@@ -49,7 +47,7 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
             const { value } = event.target;
             setValues((current) => ({ ...current, [field]: value }));
             setErrors((current) => ({ ...current, [field]: undefined }));
-            setFormError(null);
+            reset.clearError();
         };
 
     const handleBlur = (field: keyof typeof NEW_PASSWORD_VALUES) => () =>
@@ -66,16 +64,11 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
             return;
         }
 
-        setPending(true);
-        setFormError(null);
-
         try {
-            await authAPI.resetPassword({ ...parsed.data, token });
+            await reset.submit(parsed.data);
             setDone(true);
-        } catch (error) {
-            setFormError(errorMessage(error, RESET_FAILED));
-        } finally {
-            setPending(false);
+        } catch {
+            return;
         }
     };
 

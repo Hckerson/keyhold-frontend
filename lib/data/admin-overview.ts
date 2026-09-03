@@ -19,7 +19,10 @@ import type {
 import type { DisputeCounts } from "@/lib/validations/dispute";
 import type { FlagCounts } from "@/lib/validations/flag";
 import type { KycCounts } from "@/lib/validations/kyc";
-import type { ServiceHealth } from "@/lib/validations/service-health";
+import type {
+    IntegrationStatus,
+    ServiceHealth,
+} from "@/lib/validations/service-health";
 import type {
     PlatformStats,
     TrendStats,
@@ -139,9 +142,34 @@ export const toServiceRows = (
                       uptime: service.uptime,
                       errorRate: service.errorRate,
                       latencyMs: service.latencyMs,
+                      latencyP95: service.latencyP95,
+                      latencyP99: service.latencyP99,
                   },
               ],
     );
+
+const integrationRank = (integration: IntegrationStatus) => {
+    if (integration.configured) return 2;
+    return integration.required ? 0 : 1;
+};
+
+export const toIntegrationRows = (
+    health: ServiceHealth | undefined,
+): IntegrationStatus[] =>
+    [...(health?.integrations ?? [])].sort(
+        (a, b) => integrationRank(a) - integrationRank(b),
+    );
+
+export const integrationSummary = (health: ServiceHealth | undefined) => {
+    const rows = health?.integrations ?? [];
+    const missing = rows.filter(
+        (integration) => integration.required && !integration.configured,
+    );
+
+    if (rows.length === 0) return "Credential state unavailable";
+    if (missing.length === 0) return "Every required credential is in place";
+    return `${missing.length} required credential${missing.length === 1 ? "" : "s"} missing`;
+};
 
 export const serviceSummary = (health: ServiceHealth | undefined) => {
     const rows = health?.services ?? [];

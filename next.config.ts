@@ -1,11 +1,20 @@
 import type { NextConfig } from "next";
+import { SECURITY_HEADERS } from "./lib/config/security-headers";
 
 const nextConfig: NextConfig = {
+    output: process.env.DOCKER_BUILD ? "standalone" : undefined,
     devIndicators: {
         position: "bottom-right",
     },
+    headers: () =>
+        Promise.resolve([{ source: "/:path*", headers: SECURITY_HEADERS }]),
     images: {
         remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+                pathname: "/**",
+            },
             {
                 protocol: "https",
                 hostname: "images.unsplash.com",

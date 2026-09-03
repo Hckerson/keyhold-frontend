@@ -1,13 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { SearchHeader } from "@/components/sections/search/search-header";
 import { SearchFilterAside } from "@/components/sections/search/search-filter-aside";
-import {
-    SearchToolbar,
-    type ViewMode,
-} from "@/components/sections/search/search-toolbar";
+import { SearchToolbar } from "@/components/sections/search/search-toolbar";
 import { SearchResultsPanel } from "@/components/sections/search/search-results-panel";
 import { SearchResultsGrid } from "@/components/sections/search/search-results-grid";
 import { SearchResultsList } from "@/components/sections/search/search-results-list";
@@ -23,6 +20,8 @@ import {
     type FilterGroupKey,
     type SearchFilters,
 } from "@/lib/config/search-filters";
+import { useUrlState } from "@/lib/hooks/use-url-state";
+import { SEARCH_URL_CODEC, type SearchViewMode } from "@/lib/utils/search-url";
 import { useProperties, usePropertyFacets } from "@/lib/hooks/use-properties";
 import { toListing } from "@/lib/utils/to-listing";
 import {
@@ -57,19 +56,18 @@ const EMPTY_COUNTS: Record<FilterGroupKey, Record<string, number>> = {
 
 const CATALOGUE_QUERY = { status: "AVAILABLE", limit: 1 } as const;
 
-interface SearchExperienceProps {
-    initialFilters: SearchFilters;
-}
+export function SearchExperience() {
+    const [urlState, setUrlState] = useUrlState(SEARCH_URL_CODEC);
+    const { filters: applied, sort, view, page } = urlState;
 
-export function SearchExperience({ initialFilters }: SearchExperienceProps) {
-    const [draft, setDraft] = useState<SearchFilters>(initialFilters);
-    const [applied, setApplied] = useState<SearchFilters>(initialFilters);
-    const [sort, setSort] = useState<SortValue>("newest");
-    const [view, setView] = useState<ViewMode>("grid");
-    const [page, setPage] = useState(1);
     const [panelOpen, setPanelOpen] = useState(false);
 
     const appliedKey = JSON.stringify(applied);
+    const [draft, setDraft] = useState<SearchFilters>(applied);
+
+    useEffect(() => {
+        setDraft(JSON.parse(appliedKey) as SearchFilters);
+    }, [appliedKey]);
 
     const query = useMemo(
         () => toPropertyQuery(applied, sort, page),
@@ -99,33 +97,30 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
     const activeFilters = useMemo(() => buildActiveFilters(applied), [applied]);
     const resultsKey = `${view}|${sort}|${currentPage}|${appliedKey}`;
 
+    const applyFilters = (next: SearchFilters) =>
+        setUrlState({ ...urlState, filters: next, page: 1 });
+
     const apply = () => {
-        setApplied(draft);
-        setPage(1);
+        applyFilters(draft);
         setPanelOpen(false);
     };
 
-    const removeFilter = (filter: ActiveFilter) => {
-        const next = removeActiveFilter(applied, filter);
-        setDraft(next);
-        setApplied(next);
-        setPage(1);
-    };
+    const removeFilter = (filter: ActiveFilter) =>
+        applyFilters(removeActiveFilter(applied, filter));
 
-    const reset = () => {
-        setDraft(EMPTY_FILTERS);
-        setApplied(EMPTY_FILTERS);
-        setPage(1);
-    };
+    const reset = () => applyFilters(EMPTY_FILTERS);
 
-    const changeSort = (next: SortValue) => {
-        setSort(next);
-        setPage(1);
-    };
+    const changeSort = (next: SortValue) =>
+        setUrlState({ ...urlState, sort: next, page: 1 });
 
-    const goToPage = (next: number) => {
-        setPage(Math.min(Math.max(next, 1), pageCount));
-    };
+    const changeView = (next: SearchViewMode) =>
+        setUrlState({ ...urlState, view: next });
+
+    const goToPage = (next: number) =>
+        setUrlState({
+            ...urlState,
+            page: Math.min(Math.max(next, 1), pageCount),
+        });
 
     return (
         <div className="flex w-full flex-col gap-4">
@@ -149,7 +144,7 @@ export function SearchExperience({ initialFilters }: SearchExperienceProps) {
                             resultCount={resultCount}
                             totalCount={catalogue?.total ?? resultCount}
                             view={view}
-                            onViewChange={setView}
+                            onViewChange={changeView}
                             sort={sort}
                             onSortChange={changeSort}
                         />

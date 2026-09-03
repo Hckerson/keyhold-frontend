@@ -9,7 +9,7 @@ import type {
 } from "@/lib/validations/auth";
 
 export const authAPI = {
-    login: (input: LoginInput) =>
+    login: (input: LoginInput & { remember?: boolean }) =>
         query.post<AuthResponse>(config.api.auth.login, input),
 
     register: (input: Omit<SignupInput, "confirmPassword" | "acceptedTerms">) =>

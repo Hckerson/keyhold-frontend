@@ -118,7 +118,7 @@ export function useViewingsConsole() {
     );
 
     const cancel = useCallback(
-        (id: string) => void cancelViewing.mutateAsync(id),
+        (id: string) => cancelViewing.mutate(id),
         [cancelViewing],
     );
 
@@ -127,11 +127,10 @@ export function useViewingsConsole() {
     const confirmReschedule = () => {
         const proposed = draftToIso(draft);
         if (!rescheduleId || !proposed) return;
-        void rescheduleViewing.mutateAsync({
-            id: rescheduleId,
-            proposedTimes: [proposed],
-        });
-        setRescheduleId(null);
+        rescheduleViewing.mutate(
+            { id: rescheduleId, proposedTimes: [proposed] },
+            { onSuccess: () => setRescheduleId(null) },
+        );
     };
 
     return {

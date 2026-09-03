@@ -4,6 +4,7 @@ import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 const NOTICE_TONES = {
     error: { rule: "bg-error", title: "text-error" },
     success: { rule: "bg-success", title: "text-success" },
+    info: { rule: "bg-info", title: "text-info" },
 } as const;
 
 export type AuthNoticeTone = keyof typeof NOTICE_TONES;

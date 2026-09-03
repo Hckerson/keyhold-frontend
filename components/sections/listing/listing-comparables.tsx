@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 
 import type { Listing } from "@/lib/types";
 import { PUBLIC_ROUTES } from "@/lib/constants";
+import { formatCount, formatUsd } from "@/lib/utils/format";
+import { Image } from "@/components/ui/image";
 interface ListingComparablesProps {
     listing: Listing;
     comparables: Listing[];
@@ -65,7 +67,11 @@ export function ListingComparables({
                         className="group border-border hover:bg-background/70 focus-visible:ring-accent ease-smooth flex items-center gap-2.5 border-b px-2.5 py-2 transition-colors duration-200 last:border-b-0 focus-visible:ring-2 focus-visible:outline-none sm:gap-3 sm:px-3 sm:py-2.5"
                     >
                         {comparable.images[0] ? (
-                            <img
+                            <Image
+                                variant="bare"
+                                width={64}
+                                height={48}
+                                sizes="64px"
                                 src={comparable.images[0]}
                                 alt=""
                                 aria-hidden="true"
@@ -112,14 +118,14 @@ export function ListingComparables({
                                     {comparable.baths}
                                 </span>
                                 <span className="text-text-muted text-xs whitespace-nowrap tabular-nums">
-                                    {comparable.sqft.toLocaleString()} sq ft
+                                    {formatCount(comparable.sqft)} sq ft
                                 </span>
                             </div>
                         </div>
 
                         <div className="flex shrink-0 flex-col items-end gap-1">
                             <p className="text-text text-xs font-semibold tabular-nums">
-                                ${comparable.price.toLocaleString()}
+                                {formatUsd(comparable.price)}
                             </p>
                             {delta !== 0 && <DeltaChip percent={delta} />}
                         </div>

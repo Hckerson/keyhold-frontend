@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionEyebrow } from "@/components/patterns/section-heading";
 import { cn } from "@/lib/utils";
+import { formatUsd } from "@/lib/utils/format";
 
 interface ListingPriceBarProps {
     price: number;
@@ -57,7 +58,7 @@ export function ListingPriceBar({
                     <SectionEyebrow tone="muted">{typeLabel}</SectionEyebrow>
                 </div>
                 <p className="text-h4 font-display text-text leading-none font-light tabular-nums">
-                    ${price.toLocaleString()}
+                    {formatUsd(price)}
                 </p>
                 <p className="text-text-secondary flex items-center gap-1.5 text-xs">
                     <MapPin

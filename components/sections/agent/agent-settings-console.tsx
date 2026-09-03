@@ -97,8 +97,8 @@ export function AgentSettingsConsole() {
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
         if (!user) return;
-        void Promise.all([
-            updateUser.mutateAsync({
+        updateUser.mutate(
+            {
                 fullName: form.fullName,
                 email: form.email,
                 phoneNumber: form.phone,
@@ -106,21 +106,28 @@ export function AgentSettingsConsole() {
                 agencyName: form.brokerage,
                 licenseNumber: form.license,
                 bio: form.bio,
-            }),
-            updatePreferences.mutateAsync({
-                preferences: toNotificationPayload(
-                    storedPreferences.data ?? [],
-                    notifications,
-                ),
-            }),
-        ]).then(() => setSaved(true));
+            },
+            {
+                onSuccess: () =>
+                    updatePreferences.mutate(
+                        {
+                            preferences: toNotificationPayload(
+                                storedPreferences.data ?? [],
+                                notifications,
+                            ),
+                        },
+                        { onSuccess: () => setSaved(true) },
+                    ),
+            },
+        );
     };
 
     const sendPasswordReset = () => {
         if (!user?.email) return;
-        void requestReset
-            .mutateAsync({ email: user.email })
-            .then(() => setResetSent(true));
+        requestReset.mutate(
+            { email: user.email },
+            { onSuccess: () => setResetSent(true) },
+        );
     };
 
     const handleReset = () => {

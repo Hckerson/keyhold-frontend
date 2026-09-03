@@ -1,5 +1,6 @@
 "use client";
 
+import { useMutation } from "@tanstack/react-query";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
 import {
@@ -35,16 +36,21 @@ import {
 } from "@/lib/hooks/use-notifications";
 import { verifiedDocumentCount } from "@/lib/data/buyer-account";
 import { downloadJson } from "@/lib/utils/download";
+import { usersAPI } from "@/lib/api/users";
+import { FEEDBACK } from "@/lib/config/feedback";
 import type { AlertChannel, AlertType } from "@/lib/types";
 
 export function useDashboardSettings() {
-    const { data: user } = useCurrentUser();
+    const currentUser = useCurrentUser();
+    const user = currentUser.data;
     const saved_ = useSavedProperties();
     const connections = useMyInterests();
     const updateUser = useUpdateUser(user?.id ?? "");
     const storedPreferences = useNotificationPreferences();
     const updatePreferences = useUpdateNotificationPreferences();
     const requestReset = useRequestPasswordReset();
+
+    const queries = [currentUser, saved_, connections, storedPreferences];
 
     const baseline = toProfileForm(user);
     const [form, setForm] = useState<ProfileForm>(EMPTY_PROFILE);
@@ -94,17 +100,21 @@ export function useDashboardSettings() {
     const submit = (event: FormEvent) => {
         event.preventDefault();
         if (!user) return;
-        void Promise.all([
-            updateUser.mutateAsync({
+        updateUser.mutate(
+            {
                 fullName: form.fullName,
                 email: form.email,
                 phoneNumber: form.phone,
                 bio: form.bio,
-            }),
-            updatePreferences.mutateAsync({
-                preferences: toPreferenceList(preferences),
-            }),
-        ]).then(() => setSaved(true));
+            },
+            {
+                onSuccess: () =>
+                    updatePreferences.mutate(
+                        { preferences: toPreferenceList(preferences) },
+                        { onSuccess: () => setSaved(true) },
+                    ),
+            },
+        );
     };
 
     const reset = () => {
@@ -120,9 +130,10 @@ export function useDashboardSettings() {
 
     const sendPasswordReset = () => {
         if (!user?.email) return;
-        void requestReset
-            .mutateAsync({ email: user.email })
-            .then(() => setResetSent(true));
+        requestReset.mutate(
+            { email: user.email },
+            { onSuccess: () => setResetSent(true) },
+        );
     };
 
     const documents = buyerDocuments(user);
@@ -135,17 +146,21 @@ export function useDashboardSettings() {
         (searchProfileStrength(signals) + profileStrength(form)) / 2,
     );
 
-    const exportData = () =>
-        downloadJson(
-            { profile: form, alertPreferences: preferences },
-            DATA_EXPORT_FILENAME,
-        );
+    const exportMine = useMutation({
+        meta: FEEDBACK.exportPersonalData,
+        mutationFn: () => usersAPI.exportMine(),
+        onSuccess: (data) => downloadJson(data, DATA_EXPORT_FILENAME),
+    });
+
+    const exportData = () => exportMine.mutate();
 
     return {
         form,
         preferences,
         dialog,
         resetSent,
+        failed: queries.some((query) => query.isError),
+        retry: () => queries.forEach((query) => void query.refetch()),
         resettingPassword: requestReset.isPending,
         saved,
         dirty,
@@ -170,5 +185,7 @@ export function useDashboardSettings() {
         reset,
         runSecurityAction,
         exportData,
+        exporting: exportMine.isPending,
+        exportFailed: exportMine.isError,
     };
 }

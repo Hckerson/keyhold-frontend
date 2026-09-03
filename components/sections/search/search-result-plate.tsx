@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { SearchResultLedger } from "@/components/sections/search/search-result-ledger";
-import { formatUsd } from "@/lib/utils";
 import { PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
 import { PROPERTY_STATUS_LABELS } from "@/lib/enums/enums";
 import type { Listing } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { formatCount, formatUsd } from "@/lib/utils/format";
 
 const FRESH_DAYS = 7;
 const STALE_DAYS = 45;
@@ -76,7 +76,7 @@ export function SearchResultPlate({
                     {formatUsd(listing.price)}
                 </p>
                 <p className="text-text-muted shrink-0 font-mono text-[10px] tabular-nums">
-                    ${listing.pricePerSqft.toLocaleString()}/sq ft
+                    {formatUsd(listing.pricePerSqft)}/sq ft
                 </p>
             </div>
 
@@ -110,7 +110,7 @@ export function SearchResultPlate({
                             saved && "fill-highlight text-highlight-dark",
                         )}
                     />
-                    {(listing.saves + (saved ? 1 : 0)).toLocaleString()}
+                    {formatCount(listing.saves + (saved ? 1 : 0))}
                 </button>
             </div>
         </div>

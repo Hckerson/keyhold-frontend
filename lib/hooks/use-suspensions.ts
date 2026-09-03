@@ -13,6 +13,7 @@ import type {
     CreateSuspensionInput,
     SuspensionQuery,
 } from "@/lib/validations/suspension";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useSuspensions(input: SuspensionQuery = {}, enabled = true) {
     return useQuery({
@@ -50,6 +51,7 @@ const refreshDirectory = (client: QueryClient) =>
 export function useSuspendUser() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.suspendUser,
         mutationFn: (input: CreateSuspensionInput) =>
             suspensionsAPI.create(input),
         onSuccess: () => refreshDirectory(client),
@@ -59,6 +61,7 @@ export function useSuspendUser() {
 export function useLiftSuspension() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.liftSuspension,
         mutationFn: (id: string) => suspensionsAPI.lift(id),
         onSuccess: () => refreshDirectory(client),
     });

@@ -9,6 +9,7 @@ import type {
     CreateViewingInput,
     RescheduleViewingInput,
 } from "@/lib/validations/viewing";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useConnectionViewings(connectionId: string | undefined) {
     return useQuery({
@@ -33,6 +34,7 @@ export function useViewing(id: string | undefined) {
 export function useRequestViewing() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.requestViewing,
         mutationFn: (input: CreateViewingInput) => viewingsAPI.create(input),
         onSuccess: async () => {
             await Promise.all([
@@ -48,6 +50,7 @@ export function useRequestViewing() {
 export function useConfirmViewing() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.confirmViewing,
         mutationFn: ({ id, ...input }: ConfirmViewingInput & { id: string }) =>
             viewingsAPI.confirm(id, input),
         onSuccess: async () => {
@@ -64,6 +67,7 @@ export function useConfirmViewing() {
 export function useRescheduleViewing() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.rescheduleViewing,
         mutationFn: ({
             id,
             ...input
@@ -83,6 +87,7 @@ export function useRescheduleViewing() {
 export function useCancelViewing() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.cancelViewing,
         mutationFn: (id: string) => viewingsAPI.cancel(id),
         onSuccess: async () => {
             await Promise.all([

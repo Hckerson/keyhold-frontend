@@ -11,6 +11,7 @@ import type {
     UpdatePropertyInput,
 } from "@/lib/validations/property";
 import type { PropertyStatus } from "@/lib/enums/enums";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useProperties(input: PropertyQuery = {}) {
     return useQuery({
@@ -56,6 +57,7 @@ export function useProperty(id: string | undefined) {
 export function useCreateProperty() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createProperty,
         mutationFn: (input: CreatePropertyInput) => propertiesAPI.create(input),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
@@ -65,6 +67,7 @@ export function useCreateProperty() {
 export function useUpdateProperty(id: string) {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.updateProperty,
         mutationFn: (input: UpdatePropertyInput) =>
             propertiesAPI.update(id, input),
         onSuccess: () =>
@@ -75,6 +78,7 @@ export function useUpdateProperty(id: string) {
 export function useUpdatePropertyStatus() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.updatePropertyStatus,
         mutationFn: ({ id, status }: { id: string; status: PropertyStatus }) =>
             propertiesAPI.update(id, { status }),
         onSuccess: () =>
@@ -85,6 +89,7 @@ export function useUpdatePropertyStatus() {
 export function useDeleteProperty() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.deleteProperty,
         mutationFn: (id: string) => propertiesAPI.remove(id),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
@@ -94,6 +99,7 @@ export function useDeleteProperty() {
 export function usePromoteProperty() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.promoteProperty,
         mutationFn: ({ id, days }: { id: string; days: number }) =>
             propertiesAPI.promote(id, days),
         onSuccess: () =>
@@ -104,6 +110,7 @@ export function usePromoteProperty() {
 export function useMarkPropertySold() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.markPropertySold,
         mutationFn: (id: string) => propertiesAPI.markSold(id),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
@@ -113,6 +120,7 @@ export function useMarkPropertySold() {
 export function useUploadPropertyImages(id: string) {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.uploadPropertyImages,
         mutationFn: (files: File[]) => propertiesAPI.uploadImages(id, files),
         onSuccess: () =>
             client.invalidateQueries({
@@ -124,6 +132,7 @@ export function useUploadPropertyImages(id: string) {
 export function useModerateProperty() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.moderateProperty,
         mutationFn: ({
             id,
             decision,

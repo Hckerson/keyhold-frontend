@@ -13,7 +13,7 @@ interface FeaturedGalleryProps {
 
 export function FeaturedGallery({ tiles }: FeaturedGalleryProps) {
     return (
-        <section className="bg-background py-16 md:py-20">
+        <section className="section-pady bg-background">
             <SectionShell>
                 <div className="mb-8 flex items-end justify-between gap-6">
                     <SectionHeading

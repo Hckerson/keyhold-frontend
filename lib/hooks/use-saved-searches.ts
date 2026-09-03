@@ -8,6 +8,7 @@ import type {
     CreateSavedSearchInput,
     UpdateSavedSearchInput,
 } from "@/lib/validations/saved-search";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useSavedSearches(enabled = true) {
     return useQuery({
@@ -32,6 +33,7 @@ export function useSavedSearchMatches(id: string | undefined) {
 export function useCreateSavedSearch() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createSavedSearch,
         mutationFn: (input: CreateSavedSearchInput) =>
             savedSearchesAPI.create(input),
         onSuccess: () =>
@@ -42,6 +44,7 @@ export function useCreateSavedSearch() {
 export function useUpdateSavedSearch() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.updateSavedSearch,
         mutationFn: ({
             id,
             input,
@@ -57,6 +60,7 @@ export function useUpdateSavedSearch() {
 export function useRemoveSavedSearch() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.removeSavedSearch,
         mutationFn: (id: string) => savedSearchesAPI.remove(id),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.savedSearches.all }),

@@ -80,12 +80,11 @@ export function LeadConsole() {
         }
 
         setErrors({});
-        void recordLead.mutateAsync(parsed.data).then(() => setAdding(false));
+        recordLead.mutate(parsed.data, { onSuccess: () => setAdding(false) });
     };
 
     const onRespond = useCallback(
-        (id: string, accept: boolean) =>
-            void respond.mutateAsync({ id, accept }),
+        (id: string, accept: boolean) => respond.mutate({ id, accept }),
         [respond],
     );
 

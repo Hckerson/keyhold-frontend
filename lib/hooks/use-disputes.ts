@@ -10,6 +10,7 @@ import type {
     DisputeQuery,
     ResolveDisputeInput,
 } from "@/lib/validations/dispute";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useDisputes(input: DisputeQuery = {}, enabled = true) {
     return useQuery({
@@ -54,6 +55,7 @@ export function useDispute(id: string | undefined) {
 export function useCreateDispute() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.createDispute,
         mutationFn: (input: CreateDisputeInput) => disputesAPI.create(input),
         onSuccess: async () => {
             await Promise.all([
@@ -69,6 +71,7 @@ export function useCreateDispute() {
 export function useAddDisputeEvidence(id: string) {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.addDisputeEvidence,
         mutationFn: (input: AddEvidenceInput) =>
             disputesAPI.addEvidence(id, input),
         onSuccess: () =>
@@ -81,6 +84,7 @@ export function useAddDisputeEvidence(id: string) {
 export function useSettleDispute() {
     const client = useQueryClient();
     return useMutation({
+        meta: FEEDBACK.settleDispute,
         mutationFn: ({
             id,
             dismiss,

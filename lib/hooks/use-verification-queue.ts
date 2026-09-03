@@ -50,7 +50,7 @@ export function useVerificationQueue() {
 
     const runAction = (mode: VerificationActionMode, id: string) => {
         if (mode === "approve") {
-            void review.mutateAsync({ id });
+            review.mutate({ id });
             return;
         }
         setDecision({ mode, id });
@@ -65,11 +65,10 @@ export function useVerificationQueue() {
     const submitDecision = () => {
         const trimmed = note.trim();
         if (!decision || !trimmed) return;
-        void review.mutateAsync({
-            id: decision.id,
-            rejectionReason: trimmed,
-        });
-        closeDecision();
+        review.mutate(
+            { id: decision.id, rejectionReason: trimmed },
+            { onSuccess: closeDecision },
+        );
     };
 
     const changeFilter = (key: VerificationFilterKey) => {

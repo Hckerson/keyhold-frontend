@@ -2,6 +2,7 @@
 
 import { CalendarClock, X } from "lucide-react";
 import { m } from "motion/react";
+import { IconButton } from "@/components/ui/icon-button";
 import { ViewingAgentMark } from "@/components/features/dashboard/viewing-agent-mark";
 import { ViewingCountdown } from "@/components/features/dashboard/viewing-countdown";
 import { ViewingModeMark } from "@/components/features/dashboard/viewing-mode-mark";
@@ -14,9 +15,6 @@ import { TABLE_ROW_MOTION } from "@/lib/config/motion";
 
 const RESCHEDULE_LABEL = "Reschedule";
 const CANCEL_LABEL = "Cancel";
-
-const ICON_BUTTON =
-    "ease-smooth focus-visible:ring-accent grid size-5 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
 export interface ViewingRowProps {
     viewing: Viewing;
@@ -64,36 +62,18 @@ export function ViewingRow({
             <td className="py-0 pl-3">
                 {active && (
                     <span className="flex items-center justify-end gap-1">
-                        <button
-                            type="button"
-                            aria-label={`${RESCHEDULE_LABEL} ${viewing.address}`}
+                        <IconButton
+                            tone="accent"
+                            icon={CalendarClock}
+                            label={`${RESCHEDULE_LABEL} ${viewing.address}`}
                             onClick={() => onReschedule(viewing.id)}
-                            className={cn(
-                                ICON_BUTTON,
-                                "text-text-muted hover:bg-accent-light hover:text-accent",
-                            )}
-                        >
-                            <CalendarClock
-                                className="size-3"
-                                strokeWidth={1.5}
-                                aria-hidden="true"
-                            />
-                        </button>
-                        <button
-                            type="button"
-                            aria-label={`${CANCEL_LABEL} ${viewing.address}`}
+                        />
+                        <IconButton
+                            tone="danger"
+                            icon={X}
+                            label={`${CANCEL_LABEL} ${viewing.address}`}
                             onClick={() => onCancel(viewing.id)}
-                            className={cn(
-                                ICON_BUTTON,
-                                "text-text-muted hover:bg-error-light hover:text-error",
-                            )}
-                        >
-                            <X
-                                className="size-3"
-                                strokeWidth={1.5}
-                                aria-hidden="true"
-                            />
-                        </button>
+                        />
                     </span>
                 )}
             </td>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Heart, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Image } from "@/components/ui/image";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export interface GalleryTileData {
@@ -88,10 +89,13 @@ export function GalleryTile({
                     : "shadow-sm hover:shadow-md",
             )}
         >
-            <img
+            <Image
+                variant="bare"
+                fill
+                sizes="(min-width: 40rem) 33vw, 50vw"
                 src={tile.imageUrl}
                 alt={tile.address}
-                className="ease-smooth size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="ease-smooth object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div
                 aria-hidden="true"

@@ -1,6 +1,11 @@
 import type { EscrowRelease } from "@/lib/validations/escrow";
 import type { Purchase } from "@/lib/types";
-import type { EscrowHold, Transaction } from "@/lib/validations/transaction";
+import type {
+    CreateTransactionResult,
+    EscrowHold,
+    SettledTransaction,
+    Transaction,
+} from "@/lib/validations/transaction";
 
 const ISO = "2026-08-01T00:00:00.000Z";
 
@@ -59,6 +64,27 @@ export const aTransaction = (
     completedAt: null,
     createdAt: ISO,
     updatedAt: ISO,
+    ...overrides,
+});
+
+export const aCheckoutSession = (
+    overrides: Partial<CreateTransactionResult> = {},
+): CreateTransactionResult => ({
+    transaction: aTransaction({ status: "PENDING", escrowHoldId: null }),
+    paymentIntent: {
+        id: "pi_1",
+        clientSecret: "pi_1_secret_test",
+        amount: 115_000_000,
+    },
+    ...overrides,
+});
+
+export const aSettlement = (
+    overrides: Partial<SettledTransaction> = {},
+): SettledTransaction => ({
+    transaction: aTransaction(),
+    escrow: anEscrowHold(),
+    inspectionEndDate: "2026-09-01T00:00:00.000Z",
     ...overrides,
 });
 

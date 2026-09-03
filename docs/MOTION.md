@@ -32,14 +32,15 @@ empty-state→populated swaps.
 
 **Applied here** — this is the workhorse category:
 
-| Surface        | What animates                                                                                            |
-| -------------- | -------------------------------------------------------------------------------------------------------- |
-| `ui/modal.tsx` | Backdrop fade + plate scale. Covers every modal in all four portals.                                     |
-| `(auth)`       | Form errors, field errors, reset step swaps                                                              |
-| `(public)`     | Listing lightbox, gallery frame crossfade, search result set, filter chips                               |
-| `admin`        | Table rows, table↔empty swaps, focus hero swaps, verification queue rail                                 |
-| `agent`        | Listing table rows, pipeline column empty states, deal notes disclosure                                  |
-| `dashboard`    | Viewing / offer / saved / alert rows, settings notices, offer timeline, message thread, typing indicator |
+| Surface                 | What animates                                                                                            |
+| ----------------------- | -------------------------------------------------------------------------------------------------------- |
+| `ui/modal.tsx`          | Backdrop fade + plate scale. Covers every modal in all four portals.                                     |
+| `ui/toast-viewport.tsx` | Notice enter/exit plus `layout`, so the stack closes the gap when one retires. App-wide.                 |
+| `(auth)`                | Form errors, field errors, reset step swaps                                                              |
+| `(public)`              | Listing lightbox, gallery frame crossfade, search result set, filter chips                               |
+| `admin`                 | Table rows, table↔empty swaps, focus hero swaps, verification queue rail                                 |
+| `agent`                 | Listing table rows, pipeline column empty states, deal notes disclosure                                  |
+| `dashboard`             | Viewing / offer / saved / alert rows, settings notices, offer timeline, message thread, typing indicator |
 
 ### 2 — Layout & shared element (`layout`, `layoutId`)
 
@@ -101,6 +102,9 @@ as lag, not polish.
 - Auth submit button crossfades arrow↔spinner
 - Row exits double as action confirmation — suspending a user or cancelling a viewing
   visibly removes the row
+- Everything a row exit does **not** already show is reported by the toast rail, which every
+  mutation feeds through the `MutationCache` — see [FEEDBACK.md](FEEDBACK.md) and
+  [ADR 0013](adr/0013-mutation-feedback-is-global-by-default.md)
 - Offer timeline entries animate in; countering an offer makes its own receipt appear
 - Settings notices collapse in rather than jolting the page
 - No shake on error: wrong register for this design language

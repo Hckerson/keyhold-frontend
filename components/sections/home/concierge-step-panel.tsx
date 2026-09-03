@@ -44,7 +44,7 @@ export function ConciergeStepPanel({
                     >
                         {step.title}
                     </h3>
-                    <span className="text-text-muted ml-auto font-mono text-[10px] tracking-[0.18em] tabular-nums lg:hidden">
+                    <span className="desk-hidden text-text-muted ml-auto font-mono text-[10px] tracking-[0.18em] tabular-nums">
                         {step.idx}
                     </span>
                 </div>
@@ -75,7 +75,7 @@ export function ConciergeStepPanel({
                 <span
                     aria-hidden="true"
                     className={cn(
-                        "bg-accent ease-smooth hidden h-px w-16 origin-left transition-transform duration-500 lg:block",
+                        "desk-only bg-accent ease-smooth h-px w-16 origin-left transition-transform duration-500",
                         active ? "scale-x-100" : "scale-x-0",
                     )}
                 />

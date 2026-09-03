@@ -13,8 +13,11 @@ export interface OfferDetailHeaderProps {
     status: OfferStatus;
     canAccept: boolean;
     canCounter: boolean;
+    canPurchase: boolean;
+    purchasePending: boolean;
     onAccept: () => void;
     onCounter: () => void;
+    onPurchase: () => void;
 }
 
 export function OfferDetailHeader({
@@ -22,8 +25,11 @@ export function OfferDetailHeader({
     status,
     canAccept,
     canCounter,
+    canPurchase,
+    purchasePending,
     onAccept,
     onCounter,
+    onPurchase,
 }: OfferDetailHeaderProps) {
     return (
         <PortalHeader
@@ -35,8 +41,11 @@ export function OfferDetailHeader({
                     status={status}
                     canAccept={canAccept}
                     canCounter={canCounter}
+                    canPurchase={canPurchase}
+                    purchasePending={purchasePending}
                     onAccept={onAccept}
                     onCounter={onCounter}
+                    onPurchase={onPurchase}
                 />
             }
         />

@@ -10,9 +10,16 @@ import {
 import { ListingDetail } from "@/components/sections/listing/listing-detail";
 import { ListingUnavailable } from "@/components/sections/listing/listing-unavailable";
 import { propertiesServerAPI } from "@/lib/api/server";
+import { config } from "@/lib/constants";
+import { clamp } from "@/lib/utils/format";
 import { toListing } from "@/lib/utils/to-listing";
+import {
+    serialiseSchema,
+    toListingSchema,
+} from "@/lib/utils/to-listing-schema";
 
 const COMPARABLE_COUNT = 3;
+const DESCRIPTION_LIMIT = 160;
 
 interface ListingDetailPageProps {
     params: Promise<{ id: string }>;
@@ -31,9 +38,22 @@ export async function generateMetadata({
         };
     }
 
+    const title = `${property.title}, ${property.locality} | Luxury Real Estate`;
+    const description = clamp(property.description, DESCRIPTION_LIMIT);
+    const path = `/listing/${property.id}`;
+    const photo = property.images[0]?.url;
+
     return {
-        title: `${property.title}, ${property.locality} | Luxury Real Estate`,
-        description: property.description,
+        title,
+        description,
+        alternates: { canonical: path },
+        openGraph: {
+            title,
+            description,
+            url: `${config.site.url}${path}`,
+            type: "article",
+            images: photo ? [{ url: photo, alt: property.title }] : undefined,
+        },
     };
 }
 
@@ -59,6 +79,13 @@ export default async function ListingDetailPage({
 
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: serialiseSchema(toListingSchema(property)),
+                }}
+            />
+
             <Container className="pt-6">
                 <Breadcrumb aria-label="Breadcrumb">
                     <BreadcrumbList>

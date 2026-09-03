@@ -3,6 +3,7 @@ import { FactCell } from "@/components/sections/listing/fact-cell";
 import { SectionEyebrow } from "@/components/patterns/section-heading";
 
 import type { Listing } from "@/lib/types";
+import { formatCount } from "@/lib/utils/format";
 interface AreaStat {
     label: string;
     value: string;
@@ -12,7 +13,7 @@ function buildAreaStats(listing: Listing): AreaStat[] {
     return [
         { label: "Walk score", value: String(listing.walkScore) },
         { label: "Days on market", value: String(listing.listedDaysAgo) },
-        { label: "Saves", value: listing.saves.toLocaleString() },
+        { label: "Saves", value: formatCount(listing.saves) },
     ];
 }
 

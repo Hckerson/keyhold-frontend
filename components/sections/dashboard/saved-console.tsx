@@ -47,8 +47,7 @@ export function SavedConsole() {
     );
 
     const onRemove = useCallback(
-        (id: string) =>
-            void toggleSaved.mutateAsync({ propertyId: id, saved: true }),
+        (id: string) => toggleSaved.mutate({ propertyId: id, saved: true }),
         [toggleSaved],
     );
 

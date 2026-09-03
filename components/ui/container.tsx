@@ -19,7 +19,7 @@ const Container = forwardRef<HTMLDivElement, ContainerProps>(
             <div
                 ref={ref}
                 className={cn(
-                    "relative mx-auto flex w-full px-6 md:px-12",
+                    "gutter-x relative mx-auto flex w-full",
                     sizes[size],
                     className,
                 )}

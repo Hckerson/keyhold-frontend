@@ -5,12 +5,7 @@ import {
     VIEWING_MODE_BY_API,
     VIEWING_STATUS_BY_API,
 } from "@/lib/utils/status-maps";
-
-const TIME_FORMAT: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-};
+import { formatClock } from "@/lib/utils/format";
 
 const ISO_DATE_LENGTH = 10;
 
@@ -34,7 +29,7 @@ export const toViewings = (connection: ConnectionListItem): Viewing[] =>
                 photo: connection.property.images[0]?.url ?? null,
                 price: connection.property.price,
                 date: when.toISOString().slice(0, ISO_DATE_LENGTH),
-                time: when.toLocaleTimeString("en-US", TIME_FORMAT),
+                time: formatClock(when),
                 durationMinutes: viewing.durationMinutes,
                 mode: VIEWING_MODE_BY_API[viewing.mode],
                 status: VIEWING_STATUS_BY_API[viewing.status],
