@@ -22,7 +22,8 @@ export function DashboardOverviewHeader({
                 <Link
                     href={BROWSE_HREF}
                     className={buttonVariants({
-                        variant: "primary",
+                        emphasis: "solid",
+                        tone: "accent",
                         size: "sm",
                     })}
                 >

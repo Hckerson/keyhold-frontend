@@ -80,7 +80,6 @@ export function SavedMain({
                             <Link
                                 href="/search"
                                 className={buttonVariants({
-                                    variant: "secondary",
                                     size: "sm",
                                 })}
                             >

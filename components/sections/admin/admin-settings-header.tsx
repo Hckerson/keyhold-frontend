@@ -31,7 +31,6 @@ export function AdminSettingsHeader({
                 <>
                     <Button
                         type="button"
-                        variant="secondary"
                         size="sm"
                         disabled={!dirty}
                         onClick={onReset}
@@ -40,7 +39,8 @@ export function AdminSettingsHeader({
                     </Button>
                     <Button
                         type="submit"
-                        variant="primary"
+                        emphasis="solid"
+                        tone="accent"
                         size="sm"
                         form={SETTINGS_FORM_ID}
                         disabled={!dirty}

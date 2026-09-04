@@ -21,7 +21,8 @@ export function AdminOverviewHeader({ summary }: AdminOverviewHeaderProps) {
                 <Link
                     href="/admin/reports"
                     className={buttonVariants({
-                        variant: "primary",
+                        emphasis: "solid",
+                        tone: "accent",
                         size: "sm",
                     })}
                 >

@@ -21,7 +21,8 @@ export function MessagesHeader({ summary, onCompose }: MessagesHeaderProps) {
             action={
                 <Button
                     type="button"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     onClick={onCompose}
                 >

@@ -61,7 +61,8 @@ export function ComposeThreadModal({
                             <Link
                                 href="/search"
                                 className={buttonVariants({
-                                    variant: "primary",
+                                    emphasis: "solid",
+                                    tone: "accent",
                                     size: "sm",
                                 })}
                             >

@@ -41,7 +41,6 @@ export function AgentSettingsHeader({
                 <>
                     <Button
                         type="button"
-                        variant="secondary"
                         size="sm"
                         disabled={!dirty}
                         onClick={onReset}
@@ -50,7 +49,8 @@ export function AgentSettingsHeader({
                     </Button>
                     <Button
                         type="submit"
-                        variant="primary"
+                        emphasis="solid"
+                        tone="accent"
                         size="sm"
                         form={AGENT_SETTINGS_FORM_ID}
                         disabled={!dirty}

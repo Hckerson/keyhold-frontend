@@ -97,7 +97,8 @@ export function HeroSearch() {
 
             <Button
                 type="submit"
-                variant="primary"
+                emphasis="solid"
+                tone="accent"
                 size="md"
                 className="sm:ml-1.5"
             >

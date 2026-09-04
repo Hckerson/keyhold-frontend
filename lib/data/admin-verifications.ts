@@ -36,7 +36,7 @@ export interface VerificationRequest {
 
 export interface VerificationAction {
     label: string;
-    variant: "primary" | "secondary" | "ghost" | "outline-danger";
+    destructive?: boolean;
     mode: VerificationActionMode;
 }
 
@@ -83,8 +83,8 @@ export const VERIFICATION_FILTERS: {
 export const actionsByStatus: Record<VerificationStatus, VerificationAction[]> =
     {
         PENDING: [
-            { label: "Approve identity", variant: "primary", mode: "approve" },
-            { label: "Reject", variant: "outline-danger", mode: "reject" },
+            { label: "Approve identity", mode: "approve" },
+            { label: "Reject", destructive: true, mode: "reject" },
         ],
         VERIFIED: [],
         REJECTED: [],

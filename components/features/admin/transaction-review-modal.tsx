@@ -51,7 +51,7 @@ export function TransactionReviewModal({
                     <ModalFooter className="gap-2 p-4">
                         <Button
                             type="button"
-                            variant="ghost"
+                            emphasis="quiet"
                             size="sm"
                             onClick={onClose}
                         >
@@ -60,7 +60,8 @@ export function TransactionReviewModal({
                         <Link
                             href="/admin/payments"
                             className={buttonVariants({
-                                variant: "primary",
+                                emphasis: "solid",
+                                tone: "accent",
                                 size: "sm",
                             })}
                         >

@@ -109,7 +109,7 @@ export function UserDetailModal({
                     <ModalFooter className="gap-2 p-4">
                         <Button
                             type="button"
-                            variant="ghost"
+                            emphasis="quiet"
                             size="sm"
                             onClick={onClose}
                         >
@@ -118,7 +118,6 @@ export function UserDetailModal({
                         <Link
                             href={`/admin/users/${user.id}`}
                             className={buttonVariants({
-                                variant: "secondary",
                                 size: "sm",
                             })}
                         >
@@ -127,7 +126,8 @@ export function UserDetailModal({
                         {user.status === "suspended" ? (
                             <Button
                                 type="button"
-                                variant="primary"
+                                emphasis="solid"
+                                tone="accent"
                                 size="sm"
                                 onClick={() => onReactivate(user.id)}
                             >
@@ -136,7 +136,7 @@ export function UserDetailModal({
                         ) : (
                             <Button
                                 type="button"
-                                variant="outline-danger"
+                                tone="error"
                                 size="sm"
                                 onClick={() => onSuspend(user.id)}
                             >

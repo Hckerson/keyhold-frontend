@@ -23,7 +23,6 @@ export function OffersHeader({ summary }: OffersHeaderProps) {
                 <Link
                     href={NEW_OFFER_HREF}
                     className={buttonVariants({
-                        variant: "secondary",
                         size: "sm",
                     })}
                 >

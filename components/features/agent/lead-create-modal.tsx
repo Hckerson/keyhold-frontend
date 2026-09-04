@@ -101,17 +101,13 @@ export function LeadCreateModal({
             </ModalBody>
 
             <ModalFooter className="gap-2 p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onClose}
-                >
+                <Button type="button" size="sm" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button
                     type="button"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     isLoading={pending}
                     disabled={listings.length === 0}

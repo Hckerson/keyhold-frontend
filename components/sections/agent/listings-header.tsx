@@ -21,7 +21,8 @@ export function ListingsHeader({ summary }: ListingsHeaderProps) {
                 <Link
                     href={ADD_HREF}
                     className={buttonVariants({
-                        variant: "primary",
+                        emphasis: "solid",
+                        tone: "accent",
                         size: "sm",
                     })}
                 >

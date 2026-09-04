@@ -74,16 +74,9 @@ export function DashboardSettingsRail({
                 action={
                     <Button
                         type="button"
-                        variant="secondary"
                         size="sm"
                         onClick={onDownloadData}
-                        icon={
-                            <Download
-                                className="size-3"
-                                strokeWidth={1.5}
-                                aria-hidden="true"
-                            />
-                        }
+                        icon={Download}
                     >
                         {DOWNLOAD_ACTION}
                     </Button>

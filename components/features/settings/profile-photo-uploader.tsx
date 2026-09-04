@@ -55,7 +55,6 @@ export function ProfilePhotoUploader({ name, src }: ProfilePhotoUploaderProps) {
                         tabIndex={-1}
                     />
                     <Button
-                        variant="secondary"
                         size="sm"
                         type="button"
                         onClick={() => photoInputRef.current?.click()}
@@ -68,7 +67,7 @@ export function ProfilePhotoUploader({ name, src }: ProfilePhotoUploaderProps) {
                         {photo ? "Replace" : "Upload"}
                     </Button>
                     <Button
-                        variant="ghost"
+                        emphasis="quiet"
                         size="sm"
                         type="button"
                         className="text-error hover:text-error"

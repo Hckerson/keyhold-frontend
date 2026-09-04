@@ -4,9 +4,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { PropertyAction } from "@/lib/types";
 
+const ACTION_RANK = {
+    primary: { emphasis: "solid", tone: "accent" },
+    secondary: { emphasis: "outline", tone: "neutral" },
+} as const;
+
 export interface ListingJourneyActionProps {
     action: PropertyAction;
-    variant: "primary" | "secondary";
+    variant: keyof typeof ACTION_RANK;
     pending?: boolean;
     onRun: () => void;
 }
@@ -17,19 +22,19 @@ export function ListingJourneyAction({
     pending = false,
     onRun,
 }: ListingJourneyActionProps) {
+    const rank = ACTION_RANK[variant];
+
     if (action.kind === "track" && action.href)
         return (
-            <Link href={action.href} className="block">
-                <Button variant={variant} size="sm" className="w-full">
-                    {action.label}
-                </Button>
-            </Link>
+            <Button asChild {...rank} size="sm" className="w-full">
+                <Link href={action.href}>{action.label}</Link>
+            </Button>
         );
 
     return (
         <Button
             type="button"
-            variant={variant}
+            {...rank}
             size="sm"
             className="w-full"
             isLoading={pending}

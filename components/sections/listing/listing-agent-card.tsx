@@ -50,31 +50,18 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
             </div>
 
             <div className="border-border mt-3 flex flex-col gap-2 border-t pt-3">
-                <a href={`tel:${agent.phone}`} className="block">
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        className="w-full"
-                        icon={<Phone className="size-3" strokeWidth={1.5} />}
-                    >
+                <Button asChild size="sm" className="w-full">
+                    <a href={`tel:${agent.phone}`}>
+                        <Phone className="size-3" strokeWidth={1.5} />
                         Call {formatPhone(agent.phone)}
-                    </Button>
-                </a>
-                <a href={`mailto:${agent.email}`} className="block">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full"
-                        icon={
-                            <MessageSquare
-                                className="size-3"
-                                strokeWidth={1.5}
-                            />
-                        }
-                    >
+                    </a>
+                </Button>
+                <Button asChild emphasis="quiet" size="sm" className="w-full">
+                    <a href={`mailto:${agent.email}`}>
+                        <MessageSquare className="size-3" strokeWidth={1.5} />
                         Message
-                    </Button>
-                </a>
+                    </a>
+                </Button>
                 <Link
                     href={`/search?q=${encodeURIComponent(agent.name)}`}
                     className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth inline-flex items-center gap-1 rounded text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"

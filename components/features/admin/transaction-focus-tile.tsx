@@ -82,7 +82,6 @@ export function TransactionFocusTile({
                 </p>
                 <Button
                     type="button"
-                    variant="secondary"
                     size="sm"
                     onClick={() => onOpen(transaction.id)}
                 >

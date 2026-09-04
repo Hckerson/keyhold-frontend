@@ -57,7 +57,7 @@ export function SearchEmpty({
             )}
 
             <div>
-                <Button variant="secondary" size="sm" onClick={onReset}>
+                <Button size="sm" onClick={onReset}>
                     Clear all filters
                 </Button>
             </div>

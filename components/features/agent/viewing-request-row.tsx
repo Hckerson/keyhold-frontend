@@ -100,7 +100,6 @@ export function ViewingRequestRow({
             <div className="flex items-center justify-end gap-2">
                 <Button
                     type="button"
-                    variant="secondary"
                     size="sm"
                     isLoading={declining}
                     onClick={() => onDecline(request.id)}
@@ -110,7 +109,8 @@ export function ViewingRequestRow({
                 {!stale && (
                     <Button
                         type="button"
-                        variant="primary"
+                        emphasis="solid"
+                        tone="accent"
                         size="sm"
                         isLoading={confirming}
                         disabled={!picked}

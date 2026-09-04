@@ -28,7 +28,6 @@ export function AlertsHeader({
             action={
                 <Button
                     type="button"
-                    variant="secondary"
                     size="sm"
                     disabled={unread === 0}
                     onClick={onMarkAllRead}

@@ -16,14 +16,17 @@ export default function ListingError({ reset }: { reset: () => void }) {
                     description="The dossier failed to load. Try again, or speak to an advisor who can send the details across directly."
                     action={
                         <div className="flex flex-wrap items-center justify-center gap-2">
-                            <Button variant="primary" size="sm" onClick={reset}>
+                            <Button
+                                emphasis="solid"
+                                tone="accent"
+                                size="sm"
+                                onClick={reset}
+                            >
                                 Try again
                             </Button>
-                            <Link href="/search">
-                                <Button variant="secondary" size="sm">
-                                    Back to search
-                                </Button>
-                            </Link>
+                            <Button asChild size="sm">
+                                <Link href="/search">Back to search</Link>
+                            </Button>
                         </div>
                     }
                 />

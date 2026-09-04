@@ -45,7 +45,8 @@ export function MessageComposer({
 
     const sendButton = (
         <Button
-            variant="primary"
+            emphasis="solid"
+            tone="accent"
             size="sm"
             iconOnly
             type="submit"

@@ -80,7 +80,6 @@ export function ListingsTopHero({
                     <Link
                         href={`/agent/listings/${listing.id}/edit`}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >
@@ -88,7 +87,6 @@ export function ListingsTopHero({
                     </Link>
                     <Button
                         type="button"
-                        variant="secondary"
                         size="sm"
                         onClick={() => onPromote(listing.id)}
                     >
@@ -97,7 +95,7 @@ export function ListingsTopHero({
                     <Link
                         href={ANALYTICS_HREF}
                         className={buttonVariants({
-                            variant: "ghost",
+                            emphasis: "quiet",
                             size: "sm",
                         })}
                     >

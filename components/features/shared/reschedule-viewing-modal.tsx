@@ -76,17 +76,13 @@ export function RescheduleViewingModal({
                 />
             </ModalBody>
             <ModalFooter className="p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onClose}
-                >
+                <Button type="button" size="sm" onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>
                 <Button
                     type="button"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     isLoading={pending}
                     onClick={onConfirm}

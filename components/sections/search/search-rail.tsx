@@ -147,7 +147,8 @@ export function SearchRail({
                 )}
                 <Button
                     type="submit"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     className="w-full"
                 >
