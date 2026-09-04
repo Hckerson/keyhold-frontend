@@ -34,6 +34,10 @@ const LISTABLE_TYPES: PropertyType[] = PROPERTY_TYPES.filter(
     (type) => type !== "LAND" && type !== "OTHER",
 );
 
+export const LISTABLE_TYPE_OPTIONS: FilterOption[] = LISTABLE_TYPES.map(
+    (type) => ({ id: type, label: PROPERTY_TYPE_LABELS[type] }),
+);
+
 export const PRICE_BANDS: FilterOption[] = [
     { id: "0-1000000", label: "Under $1M" },
     { id: "1000000-2000000", label: "$1M – $2M" },
@@ -61,14 +65,7 @@ export const FILTER_GROUPS: FilterGroup[] = [
         label: "Bathrooms",
         options: countOptions(["1", "2", "3", "4plus"], "bathroom"),
     },
-    {
-        key: "type",
-        label: "Property type",
-        options: LISTABLE_TYPES.map((type) => ({
-            id: type,
-            label: PROPERTY_TYPE_LABELS[type],
-        })),
-    },
+    { key: "type", label: "Property type", options: LISTABLE_TYPE_OPTIONS },
 ];
 
 export const FILTER_OPTION_LABELS: Record<string, string> = Object.fromEntries(
