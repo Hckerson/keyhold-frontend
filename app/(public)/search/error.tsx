@@ -19,12 +19,11 @@ export default function SearchError({ reset }: { reset: () => void }) {
                             <Button
                                 emphasis="solid"
                                 tone="accent"
-                                size="sm"
                                 onClick={reset}
                             >
                                 Try again
                             </Button>
-                            <Button asChild size="sm">
+                            <Button asChild>
                                 <Link href="/">Back to home</Link>
                             </Button>
                         </div>

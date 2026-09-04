@@ -126,14 +126,13 @@ export function RequestViewingModal({
             </ModalBody>
 
             <ModalFooter className="p-4">
-                <Button type="button" size="sm" onClick={onClose}>
+                <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button
                     type="button"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     isLoading={pending}
                     disabled={proposedTimes.length === 0}
                     onClick={() =>

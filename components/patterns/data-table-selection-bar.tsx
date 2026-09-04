@@ -24,7 +24,7 @@ export function DataTableSelectionBar({
             </p>
             <div className="flex flex-wrap items-center gap-2">
                 {actions}
-                <Button emphasis="quiet" size="sm" onClick={onClear}>
+                <Button emphasis="quiet" onClick={onClear}>
                     Clear
                 </Button>
             </div>

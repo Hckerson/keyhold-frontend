@@ -22,7 +22,7 @@ export function SearchResultsError({ onRetry }: SearchResultsErrorProps) {
                 The collection service is unreachable right now. Try again in a
                 moment.
             </p>
-            <Button type="button" size="sm" onClick={onRetry}>
+            <Button type="button" onClick={onRetry}>
                 Retry
             </Button>
         </div>

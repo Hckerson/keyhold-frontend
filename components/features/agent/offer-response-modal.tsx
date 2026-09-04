@@ -108,14 +108,13 @@ export function OfferResponseModal({
             </ModalBody>
 
             <ModalFooter className="p-4">
-                <Button type="button" size="sm" onClick={close}>
+                <Button type="button" onClick={close}>
                     {FIELDS.cancel}
                 </Button>
                 <Button
                     type="button"
                     emphasis="solid"
                     tone={action === "decline" ? "error" : "accent"}
-                    size="sm"
                     isLoading={pending}
                     disabled={!ready}
                     onClick={() =>

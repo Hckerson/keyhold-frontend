@@ -88,7 +88,6 @@ export function ViewingsNextHero({
                     </Link>
                     <Button
                         type="button"
-                        size="sm"
                         onClick={() => onReschedule(viewing.id)}
                     >
                         {RESCHEDULE_ACTION}
@@ -96,7 +95,6 @@ export function ViewingsNextHero({
                     <Button
                         type="button"
                         emphasis="quiet"
-                        size="sm"
                         onClick={() => onCancel(viewing.id)}
                     >
                         {CANCEL_ACTION}

@@ -44,7 +44,7 @@ export function HeroSection() {
                         <HeroSearch />
 
                         <div className="flex flex-wrap items-center gap-3">
-                            <Button asChild size="sm">
+                            <Button asChild>
                                 <Link href="/signup">
                                     Sign Up
                                     <ArrowUpRight

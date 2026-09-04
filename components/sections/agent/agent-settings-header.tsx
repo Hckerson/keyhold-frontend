@@ -39,19 +39,13 @@ export function AgentSettingsHeader({
             }
             action={
                 <>
-                    <Button
-                        type="button"
-                        size="sm"
-                        disabled={!dirty}
-                        onClick={onReset}
-                    >
+                    <Button type="button" disabled={!dirty} onClick={onReset}>
                         {RESET_ACTION}
                     </Button>
                     <Button
                         type="submit"
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         form={AGENT_SETTINGS_FORM_ID}
                         disabled={!dirty}
                     >

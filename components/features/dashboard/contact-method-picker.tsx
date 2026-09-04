@@ -31,7 +31,6 @@ export function ContactMethodPicker({
                         <Button
                             key={method.value}
                             type="button"
-                            size="sm"
                             emphasis={selected ? "solid" : "outline"}
                             tone={selected ? "accent" : "neutral"}
                             aria-pressed={selected}

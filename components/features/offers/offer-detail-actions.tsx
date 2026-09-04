@@ -37,7 +37,6 @@ export function OfferDetailActions({
                 <Button
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     disabled={purchasePending}
                     onClick={onPurchase}
                 >
@@ -48,17 +47,12 @@ export function OfferDetailActions({
                     <Button
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         disabled={!canAccept}
                         onClick={onAccept}
                     >
                         Accept
                     </Button>
-                    <Button
-                        size="sm"
-                        disabled={!canCounter}
-                        onClick={onCounter}
-                    >
+                    <Button disabled={!canCounter} onClick={onCounter}>
                         Counter
                     </Button>
                 </>

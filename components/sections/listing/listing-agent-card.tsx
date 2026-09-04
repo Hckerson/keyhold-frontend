@@ -50,13 +50,13 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
             </div>
 
             <div className="border-border mt-3 flex flex-col gap-2 border-t pt-3">
-                <Button asChild size="sm" className="w-full">
+                <Button asChild className="w-full">
                     <a href={`tel:${agent.phone}`}>
                         <Phone className="size-3" strokeWidth={1.5} />
                         Call {formatPhone(agent.phone)}
                     </a>
                 </Button>
-                <Button asChild emphasis="quiet" size="sm" className="w-full">
+                <Button asChild emphasis="quiet" className="w-full">
                     <a href={`mailto:${agent.email}`}>
                         <MessageSquare className="size-3" strokeWidth={1.5} />
                         Message

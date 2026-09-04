@@ -14,15 +14,10 @@ export function ListingUnavailable() {
                     description="It may have sold, been withdrawn, or the link may be out of date. The rest of the collection is still open to you."
                     action={
                         <div className="flex flex-wrap items-center justify-center gap-2">
-                            <Button
-                                asChild
-                                emphasis="solid"
-                                tone="accent"
-                                size="sm"
-                            >
+                            <Button asChild emphasis="solid" tone="accent">
                                 <Link href="/search">Browse listings</Link>
                             </Button>
-                            <Button asChild size="sm">
+                            <Button asChild>
                                 <Link href="/contact">Speak to an advisor</Link>
                             </Button>
                         </div>

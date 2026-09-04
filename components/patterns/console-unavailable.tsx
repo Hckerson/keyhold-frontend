@@ -24,7 +24,7 @@ export function ConsoleUnavailable({
                 title={fallback.title}
                 description={fallback.description}
                 action={
-                    <Button type="button" size="sm" onClick={onRetry}>
+                    <Button type="button" onClick={onRetry}>
                         {RETRY_LABEL}
                     </Button>
                 }

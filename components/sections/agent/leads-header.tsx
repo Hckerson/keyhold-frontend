@@ -21,7 +21,6 @@ export function LeadsHeader({ summary, onAdd }: LeadsHeaderProps) {
                     type="button"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     onClick={onAdd}
                 >
                     {ADD_ACTION}

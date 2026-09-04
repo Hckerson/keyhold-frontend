@@ -58,7 +58,6 @@ export function ModerationReviewModal({
                         <Button
                             type="button"
                             emphasis="quiet"
-                            size="sm"
                             onClick={onClose}
                         >
                             {CLOSE_ACTION}
@@ -67,7 +66,6 @@ export function ModerationReviewModal({
                             <Button
                                 type="button"
                                 tone="error"
-                                size="sm"
                                 onClick={() => onDecide("reject", listing.id)}
                             >
                                 {REJECT_ACTION}
@@ -75,7 +73,6 @@ export function ModerationReviewModal({
                         )}
                         <Button
                             type="button"
-                            size="sm"
                             onClick={() => onDecide("changes", listing.id)}
                         >
                             {CHANGES_ACTION}
@@ -85,7 +82,6 @@ export function ModerationReviewModal({
                                 type="button"
                                 emphasis="solid"
                                 tone="accent"
-                                size="sm"
                                 onClick={() => onApprove(listing.id)}
                             >
                                 {APPROVE_ACTION}

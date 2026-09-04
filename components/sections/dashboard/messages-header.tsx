@@ -23,7 +23,6 @@ export function MessagesHeader({ summary, onCompose }: MessagesHeaderProps) {
                     type="button"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     onClick={onCompose}
                 >
                     <PenSquare

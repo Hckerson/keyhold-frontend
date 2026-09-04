@@ -102,7 +102,6 @@ export function UserCreateModal({
 
                 <LabelledBlock label={COPY.role}>
                     <Select
-                        size="sm"
                         label={COPY.role}
                         options={USER_ROLE_OPTIONS}
                         value={draft.role}
@@ -120,14 +119,13 @@ export function UserCreateModal({
             </ModalBody>
 
             <ModalFooter className="gap-2 p-4">
-                <Button type="button" size="sm" onClick={onClose}>
+                <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button
                     type="button"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     isLoading={pending}
                     onClick={onSubmit}
                 >

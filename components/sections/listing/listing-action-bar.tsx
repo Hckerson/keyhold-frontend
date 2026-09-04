@@ -27,7 +27,7 @@ export function ListingActionBar({
     const href = action.kind === "track" ? action.href : ENQUIRY_ANCHOR;
 
     return (
-        <div className="desk-hidden border-border-dark bg-background/90 fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur-md">
+        <div className="desk-hidden border-border-dark bg-background/90 z-fixed fixed inset-x-0 bottom-0 flex items-center gap-3 border-t px-4 py-2.5 pb-[calc(0.625rem+env(safe-area-inset-bottom))] backdrop-blur-md">
             <div className="min-w-0 flex-1">
                 <p className="text-text text-xs font-semibold tabular-nums">
                     {formatUsd(price)}
@@ -53,7 +53,7 @@ export function ListingActionBar({
             </button>
 
             {href && (
-                <Button asChild emphasis="solid" tone="accent" size="sm">
+                <Button asChild emphasis="solid" tone="accent">
                     <Link href={href}>{action.label}</Link>
                 </Button>
             )}

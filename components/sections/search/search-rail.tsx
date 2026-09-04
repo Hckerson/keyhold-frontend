@@ -149,7 +149,6 @@ export function SearchRail({
                     type="submit"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     className="w-full"
                 >
                     Apply filters

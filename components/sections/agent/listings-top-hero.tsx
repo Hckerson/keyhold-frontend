@@ -85,11 +85,7 @@ export function ListingsTopHero({
                     >
                         {EDIT_ACTION}
                     </Link>
-                    <Button
-                        type="button"
-                        size="sm"
-                        onClick={() => onPromote(listing.id)}
-                    >
+                    <Button type="button" onClick={() => onPromote(listing.id)}>
                         {PROMOTE_ACTION}
                     </Button>
                     <Link

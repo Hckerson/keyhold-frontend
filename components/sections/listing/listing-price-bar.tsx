@@ -48,7 +48,7 @@ export function ListingPriceBar({
     return (
         <section
             aria-label="Price and status"
-            className="border-border bg-background/90 sticky top-22 z-30 flex flex-wrap items-center justify-between gap-4 rounded-xl border px-4 py-3 shadow-sm backdrop-blur-md"
+            className="border-border bg-background/90 z-sticky sticky top-22 flex flex-wrap items-center justify-between gap-4 rounded-xl border px-4 py-3 shadow-sm backdrop-blur-md"
         >
             <div className="flex min-w-0 flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -74,7 +74,6 @@ export function ListingPriceBar({
             <div className="flex flex-wrap items-center gap-2">
                 <Button
                     type="button"
-                    size="sm"
                     onClick={onToggleSave}
                     disabled={savePending}
                     aria-pressed={saved}
@@ -90,13 +89,12 @@ export function ListingPriceBar({
                 </Button>
                 <Button
                     type="button"
-                    size="sm"
                     onClick={share}
                     icon={copied ? Check : Share2}
                 >
                     {copied ? "Link copied" : "Share"}
                 </Button>
-                <Button asChild emphasis="solid" tone="accent" size="sm">
+                <Button asChild emphasis="solid" tone="accent">
                     <a href="#agent">
                         <MessageSquare className="size-3" strokeWidth={1.5} />
                         Message agent

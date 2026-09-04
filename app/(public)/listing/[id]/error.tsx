@@ -19,12 +19,11 @@ export default function ListingError({ reset }: { reset: () => void }) {
                             <Button
                                 emphasis="solid"
                                 tone="accent"
-                                size="sm"
                                 onClick={reset}
                             >
                                 Try again
                             </Button>
-                            <Button asChild size="sm">
+                            <Button asChild>
                                 <Link href="/search">Back to search</Link>
                             </Button>
                         </div>
