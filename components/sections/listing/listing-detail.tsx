@@ -126,7 +126,10 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                         </section>
                     </div>
 
-                    <aside id="agent" className="flex flex-col gap-4">
+                    <aside
+                        id="agent"
+                        className="detail-rail flex flex-col gap-4"
+                    >
                         <ListingEnquiryCard
                             propertyId={listing.id}
                             address={listing.address}
