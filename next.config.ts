@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
-import { SECURITY_HEADERS } from "./lib/config/security-headers";
+import { config } from "./lib/constants";
+import { securityHeaders } from "./lib/config/security-headers";
 
 const nextConfig: NextConfig = {
     output: process.env.DOCKER_BUILD ? "standalone" : undefined,
@@ -7,7 +8,12 @@ const nextConfig: NextConfig = {
         position: "bottom-right",
     },
     headers: () =>
-        Promise.resolve([{ source: "/:path*", headers: SECURITY_HEADERS }]),
+        Promise.resolve([
+            {
+                source: "/:path*",
+                headers: securityHeaders(config.api.base),
+            },
+        ]),
     images: {
         remotePatterns: [
             {
