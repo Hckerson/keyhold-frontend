@@ -89,7 +89,6 @@ export function UserSuspendModal({
                                 {DURATION_FIELD}
                             </span>
                             <Select
-                                size="sm"
                                 label={DURATION_FIELD}
                                 options={SUSPENSION_DURATIONS}
                                 value={draft.duration}
@@ -110,14 +109,13 @@ export function UserSuspendModal({
                     </ModalBody>
 
                     <ModalFooter className="gap-2 p-4">
-                        <Button type="button" size="sm" onClick={onClose}>
+                        <Button type="button" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>
                         <Button
                             type="button"
                             emphasis="solid"
                             tone="error"
-                            size="sm"
                             disabled={pending || !isSuspensionReady(draft)}
                             onClick={onSubmit}
                         >

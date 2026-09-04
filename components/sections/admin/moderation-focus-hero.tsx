@@ -107,7 +107,6 @@ export function ModerationFocusHero({
                 <div className="grid grid-cols-2 gap-2 sm:flex">
                     <Button
                         type="button"
-                        size="sm"
                         onClick={() => onDecide("changes", listing.id)}
                     >
                         {CHANGES_ACTION}
@@ -115,25 +114,19 @@ export function ModerationFocusHero({
                     <Button
                         type="button"
                         tone="error"
-                        size="sm"
                         onClick={() => onDecide("reject", listing.id)}
                     >
                         {REJECT_ACTION}
                     </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-2 sm:flex">
-                    <Button
-                        type="button"
-                        size="sm"
-                        onClick={() => onOpen(listing.id)}
-                    >
+                    <Button type="button" onClick={() => onOpen(listing.id)}>
                         {REVIEW_ACTION}
                     </Button>
                     <Button
                         type="button"
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         onClick={() => onApprove(listing.id)}
                     >
                         {APPROVE_ACTION}

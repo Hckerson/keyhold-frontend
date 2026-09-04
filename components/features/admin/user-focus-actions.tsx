@@ -22,7 +22,7 @@ export function UserFocusActions({
 }: UserFocusActionsProps) {
     return (
         <div className="flex shrink-0 items-center gap-2">
-            <Button type="button" size="sm" onClick={() => onOpen(user.id)}>
+            <Button type="button" onClick={() => onOpen(user.id)}>
                 {REVIEW_ACTION}
             </Button>
             {user.status === "suspended" ? (
@@ -30,7 +30,6 @@ export function UserFocusActions({
                     type="button"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     onClick={() => onReactivate(user.id)}
                 >
                     {REACTIVATE_ACTION}
@@ -39,7 +38,6 @@ export function UserFocusActions({
                 <Button
                     type="button"
                     tone="error"
-                    size="sm"
                     onClick={() => onSuspend(user.id)}
                 >
                     {SUSPEND_ACTION}

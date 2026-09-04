@@ -26,7 +26,7 @@ export function ListingJourneyAction({
 
     if (action.kind === "track" && action.href)
         return (
-            <Button asChild {...rank} size="sm" className="w-full">
+            <Button asChild {...rank} className="w-full">
                 <Link href={action.href}>{action.label}</Link>
             </Button>
         );
@@ -35,7 +35,6 @@ export function ListingJourneyAction({
         <Button
             type="button"
             {...rank}
-            size="sm"
             className="w-full"
             isLoading={pending}
             disabled={action.kind === "none"}

@@ -78,7 +78,6 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
                     )}
                     <Button
                         type="button"
-                        size="sm"
                         disabled={alert.read}
                         onClick={() => onMarkRead(alert.id)}
                     >

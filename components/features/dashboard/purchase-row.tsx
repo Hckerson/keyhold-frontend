@@ -87,7 +87,6 @@ export function PurchaseRow({
                         type="button"
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         disabled={releasing}
                         onClick={() =>
                             purchase.escrowId && onRelease(purchase.escrowId)

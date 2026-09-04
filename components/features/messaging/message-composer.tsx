@@ -47,7 +47,6 @@ export function MessageComposer({
         <Button
             emphasis="solid"
             tone="accent"
-            size="sm"
             iconOnly
             type="submit"
             aria-label="Send message"

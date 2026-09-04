@@ -91,7 +91,6 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
                     <Button
                         type="button"
                         emphasis="quiet"
-                        size="sm"
                         onClick={() => onRemove(listing.id)}
                     >
                         {REMOVE_ACTION}

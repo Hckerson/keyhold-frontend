@@ -54,26 +54,14 @@ export function OfferConfirmModal({
                 </p>
             </ModalBody>
             <ModalFooter>
-                <Button size="sm" onClick={onClose}>
-                    Cancel
-                </Button>
+                <Button onClick={onClose}>Cancel</Button>
                 {action === "accept" && (
-                    <Button
-                        emphasis="solid"
-                        tone="accent"
-                        size="sm"
-                        onClick={onAccept}
-                    >
+                    <Button emphasis="solid" tone="accent" onClick={onAccept}>
                         Accept Counter
                     </Button>
                 )}
                 {action === "counter" && (
-                    <Button
-                        emphasis="solid"
-                        tone="accent"
-                        size="sm"
-                        onClick={onCounter}
-                    >
+                    <Button emphasis="solid" tone="accent" onClick={onCounter}>
                         Send Counter
                     </Button>
                 )}

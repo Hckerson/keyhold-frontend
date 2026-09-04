@@ -24,7 +24,7 @@ export function AdminTransactionsHeader({
             summary={summary}
             action={
                 <>
-                    <Button type="button" size="sm" onClick={onExport}>
+                    <Button type="button" onClick={onExport}>
                         {EXPORT_ACTION}
                     </Button>
                     <Link

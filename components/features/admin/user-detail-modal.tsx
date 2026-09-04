@@ -110,7 +110,6 @@ export function UserDetailModal({
                         <Button
                             type="button"
                             emphasis="quiet"
-                            size="sm"
                             onClick={onClose}
                         >
                             {CLOSE_ACTION}
@@ -128,7 +127,6 @@ export function UserDetailModal({
                                 type="button"
                                 emphasis="solid"
                                 tone="accent"
-                                size="sm"
                                 onClick={() => onReactivate(user.id)}
                             >
                                 {REACTIVATE_ACTION}
@@ -137,7 +135,6 @@ export function UserDetailModal({
                             <Button
                                 type="button"
                                 tone="error"
-                                size="sm"
                                 onClick={() => onSuspend(user.id)}
                             >
                                 {SUSPEND_ACTION}

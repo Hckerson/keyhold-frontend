@@ -82,14 +82,13 @@ export function ReleaseEscrowModal({
                     </ModalBody>
 
                     <ModalFooter className="gap-2 p-4">
-                        <Button type="button" size="sm" onClick={onClose}>
+                        <Button type="button" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>
                         <Button
                             type="button"
                             emphasis="solid"
                             tone="accent"
-                            size="sm"
                             disabled={pending}
                             onClick={onConfirm}
                         >

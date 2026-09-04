@@ -59,7 +59,6 @@ export function ListingFormFields({
                     />
                     <LabelledBlock label={COPY.type}>
                         <Select
-                            size="sm"
                             label={COPY.type}
                             options={LISTING_TYPE_OPTIONS}
                             value={draft.type}

@@ -93,7 +93,6 @@ export function LeadsTopProspectHero({
                         <>
                             <Button
                                 type="button"
-                                size="sm"
                                 onClick={() => onRespond(lead.id, false)}
                             >
                                 {DECLINE_ACTION}
@@ -102,7 +101,6 @@ export function LeadsTopProspectHero({
                                 type="button"
                                 emphasis="solid"
                                 tone="accent"
-                                size="sm"
                                 onClick={() => onRespond(lead.id, true)}
                             >
                                 {ACCEPT_ACTION}

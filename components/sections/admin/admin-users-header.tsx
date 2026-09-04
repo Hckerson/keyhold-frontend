@@ -22,7 +22,6 @@ export function AdminUsersHeader({ summary, onAdd }: AdminUsersHeaderProps) {
                     type="button"
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     onClick={onAdd}
                 >
                     {ADD_ACTION}

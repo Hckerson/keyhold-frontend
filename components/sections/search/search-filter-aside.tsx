@@ -25,7 +25,6 @@ export function SearchFilterAside({
         <aside className="lg:col-span-1">
             <Button
                 type="button"
-                size="sm"
                 onClick={onToggle}
                 className="desk-hidden w-full"
                 icon={SlidersHorizontal}

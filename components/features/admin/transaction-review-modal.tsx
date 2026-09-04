@@ -52,7 +52,6 @@ export function TransactionReviewModal({
                         <Button
                             type="button"
                             emphasis="quiet"
-                            size="sm"
                             onClick={onClose}
                         >
                             {CLOSE_ACTION}

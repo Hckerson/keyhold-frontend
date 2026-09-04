@@ -63,7 +63,7 @@ export function PasswordModal({
             </ModalBody>
 
             <ModalFooter className="gap-2 p-4">
-                <Button type="button" size="sm" onClick={onClose}>
+                <Button type="button" onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>
                 {!sent && (
@@ -71,7 +71,6 @@ export function PasswordModal({
                         type="button"
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         disabled={pending || !email}
                         onClick={onSend}
                     >

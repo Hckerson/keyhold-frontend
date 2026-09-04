@@ -92,7 +92,6 @@ export function CounterOfferPanel({
                 <Button
                     emphasis="solid"
                     tone="accent"
-                    size="sm"
                     disabled={!canSubmit}
                     onClick={onSubmit}
                 >

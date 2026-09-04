@@ -91,7 +91,6 @@ export function AlertRow({ alert, onMarkRead }: AlertRowProps) {
                     <Button
                         type="button"
                         emphasis="quiet"
-                        size="sm"
                         onClick={() => onMarkRead(alert.id)}
                     >
                         {MARK_LABEL}

@@ -65,13 +65,10 @@ export function DeleteAccountModal({
                 />
             </ModalBody>
             <ModalFooter>
-                <Button size="sm" onClick={close}>
-                    Cancel
-                </Button>
+                <Button onClick={close}>Cancel</Button>
                 <Button
                     emphasis="solid"
                     tone="error"
-                    size="sm"
                     disabled={!confirmed}
                     onClick={submit}
                 >

@@ -53,7 +53,6 @@ export function ListingsToolbar({
                     <Button
                         key={action}
                         type="button"
-                        size="sm"
                         tone={action === "delete" ? "error" : "neutral"}
                         onClick={() => onBulkAction(action)}
                     >
@@ -62,7 +61,6 @@ export function ListingsToolbar({
                 ))}
                 <Button
                     type="button"
-                    size="sm"
                     emphasis="quiet"
                     onClick={onClearSelection}
                 >

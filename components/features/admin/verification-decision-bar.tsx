@@ -23,7 +23,6 @@ export function VerificationDecisionBar({
                     key={action.mode}
                     emphasis={action.destructive ? "outline" : "solid"}
                     tone={action.destructive ? "error" : "accent"}
-                    size="sm"
                     onClick={() => onAction(action.mode)}
                 >
                     {action.label}

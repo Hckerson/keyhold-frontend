@@ -55,7 +55,6 @@ export function ProfilePhotoUploader({ name, src }: ProfilePhotoUploaderProps) {
                         tabIndex={-1}
                     />
                     <Button
-                        size="sm"
                         type="button"
                         onClick={() => photoInputRef.current?.click()}
                     >
@@ -68,7 +67,6 @@ export function ProfilePhotoUploader({ name, src }: ProfilePhotoUploaderProps) {
                     </Button>
                     <Button
                         emphasis="quiet"
-                        size="sm"
                         type="button"
                         className="text-error hover:text-error"
                         disabled={!photo}

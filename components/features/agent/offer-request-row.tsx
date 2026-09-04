@@ -94,7 +94,6 @@ export function OfferRequestRow({
                 <span className="flex items-center gap-2">
                     <Button
                         type="button"
-                        size="sm"
                         disabled={answering}
                         onClick={() => onDecline(request)}
                     >
@@ -102,7 +101,6 @@ export function OfferRequestRow({
                     </Button>
                     <Button
                         type="button"
-                        size="sm"
                         disabled={answering || expired}
                         onClick={() => onCounter(request)}
                     >
@@ -112,7 +110,6 @@ export function OfferRequestRow({
                         type="button"
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         isLoading={answering}
                         disabled={expired}
                         onClick={() => onAccept(request)}

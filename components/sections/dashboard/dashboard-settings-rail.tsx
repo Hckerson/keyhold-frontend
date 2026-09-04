@@ -74,7 +74,6 @@ export function DashboardSettingsRail({
                 action={
                     <Button
                         type="button"
-                        size="sm"
                         onClick={onDownloadData}
                         icon={Download}
                     >

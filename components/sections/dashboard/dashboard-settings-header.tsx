@@ -34,19 +34,13 @@ export function DashboardSettingsHeader({
             summary={`${UPDATED_PREFIX} ${formatAge(PROFILE_UPDATED.ageMinutes)} ago by ${PROFILE_UPDATED.actor}`}
             action={
                 <>
-                    <Button
-                        type="button"
-                        size="sm"
-                        disabled={!dirty}
-                        onClick={onReset}
-                    >
+                    <Button type="button" disabled={!dirty} onClick={onReset}>
                         {RESET_ACTION}
                     </Button>
                     <Button
                         type="submit"
                         emphasis="solid"
                         tone="accent"
-                        size="sm"
                         form={DASHBOARD_SETTINGS_FORM_ID}
                         disabled={!dirty}
                     >
