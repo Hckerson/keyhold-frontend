@@ -228,6 +228,7 @@ export const RAIL_QUERY = "(min-width: 64rem)";
 
 export const STALE_TIME = 5 * 60 * 1000;
 export const CACHE_TIME = 10 * 60 * 1000;
+export const REQUEST_TIMEOUT = 20 * 1000;
 
 export const TOAST_DURATION = 5 * 1000;
 export const TOAST_ERROR_DURATION = 8 * 1000;
