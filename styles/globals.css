@@ -550,6 +550,17 @@
     .detail-split > .detail-main {
         grid-column: span 2 / span 2;
     }
+
+    .detail-split > .detail-rail {
+        --rail-top: 14rem;
+        position: sticky;
+        top: var(--rail-top);
+        align-self: start;
+        max-height: calc(100dvh - var(--rail-top) - var(--spacing-3));
+        overflow-y: auto;
+        padding: var(--spacing-2);
+        margin: calc(var(--spacing-2) * -1);
+    }
 }
 
 @media (width >= 80rem) {
