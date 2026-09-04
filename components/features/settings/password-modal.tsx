@@ -63,18 +63,14 @@ export function PasswordModal({
             </ModalBody>
 
             <ModalFooter className="gap-2 p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onClose}
-                >
+                <Button type="button" size="sm" onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>
                 {!sent && (
                     <Button
                         type="button"
-                        variant="primary"
+                        emphasis="solid"
+                        tone="accent"
                         size="sm"
                         disabled={pending || !email}
                         onClick={onSend}

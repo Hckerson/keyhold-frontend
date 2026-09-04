@@ -20,16 +20,17 @@ export default function NotFound() {
                         description={DESCRIPTION}
                         action={
                             <div className="flex flex-wrap items-center justify-center gap-2">
-                                <Link href="/search">
-                                    <Button variant="primary" size="sm">
-                                        Browse listings
-                                    </Button>
-                                </Link>
-                                <Link href="/">
-                                    <Button variant="secondary" size="sm">
-                                        Back to home
-                                    </Button>
-                                </Link>
+                                <Button
+                                    asChild
+                                    emphasis="solid"
+                                    tone="accent"
+                                    size="sm"
+                                >
+                                    <Link href="/search">Browse listings</Link>
+                                </Button>
+                                <Button asChild size="sm">
+                                    <Link href="/">Back to home</Link>
+                                </Button>
                             </div>
                         }
                     />

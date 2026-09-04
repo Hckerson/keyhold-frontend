@@ -24,18 +24,14 @@ export function AdminTransactionsHeader({
             summary={summary}
             action={
                 <>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={onExport}
-                    >
+                    <Button type="button" size="sm" onClick={onExport}>
                         {EXPORT_ACTION}
                     </Button>
                     <Link
                         href="/admin/payments"
                         className={buttonVariants({
-                            variant: "primary",
+                            emphasis: "solid",
+                            tone: "accent",
                             size: "sm",
                         })}
                     >

@@ -23,7 +23,6 @@ export function InterestsHeader({ summary }: InterestsHeaderProps) {
                 <Link
                     href={NEW_INTEREST_HREF}
                     className={buttonVariants({
-                        variant: "secondary",
                         size: "sm",
                     })}
                 >

@@ -73,7 +73,6 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
                     <Link
                         href={PUBLIC_ROUTES.listing(listing.id)}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >
@@ -83,7 +82,6 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
                         <Link
                             href={`/dashboard/offers/${listing.offerId}`}
                             className={buttonVariants({
-                                variant: "secondary",
                                 size: "sm",
                             })}
                         >
@@ -92,7 +90,7 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
                     )}
                     <Button
                         type="button"
-                        variant="ghost"
+                        emphasis="quiet"
                         size="sm"
                         onClick={() => onRemove(listing.id)}
                     >

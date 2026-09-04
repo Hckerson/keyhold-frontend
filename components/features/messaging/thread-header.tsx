@@ -48,7 +48,6 @@ export function ThreadHeader({ conversation }: ThreadHeaderProps) {
                         href={telHref(conversation.phone)}
                         aria-label={`${CALL_ACTION} ${conversation.agent}`}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >

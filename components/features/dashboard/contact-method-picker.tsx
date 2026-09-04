@@ -25,20 +25,22 @@ export function ContactMethodPicker({
                 aria-label={GROUP_LABEL}
                 className="mt-2 flex flex-wrap gap-2"
             >
-                {CONTACT_METHODS.map((method) => (
-                    <Button
-                        key={method.value}
-                        type="button"
-                        size="sm"
-                        variant={
-                            value === method.value ? "primary" : "secondary"
-                        }
-                        aria-pressed={value === method.value}
-                        onClick={() => onChange(method.value)}
-                    >
-                        {method.label}
-                    </Button>
-                ))}
+                {CONTACT_METHODS.map((method) => {
+                    const selected = value === method.value;
+                    return (
+                        <Button
+                            key={method.value}
+                            type="button"
+                            size="sm"
+                            emphasis={selected ? "solid" : "outline"}
+                            tone={selected ? "accent" : "neutral"}
+                            aria-pressed={selected}
+                            onClick={() => onChange(method.value)}
+                        >
+                            {method.label}
+                        </Button>
+                    );
+                })}
             </div>
         </div>
     );

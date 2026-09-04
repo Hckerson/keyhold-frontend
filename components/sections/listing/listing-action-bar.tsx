@@ -53,11 +53,9 @@ export function ListingActionBar({
             </button>
 
             {href && (
-                <Link href={href} className="shrink-0">
-                    <Button variant="primary" size="sm">
-                        {action.label}
-                    </Button>
-                </Link>
+                <Button asChild emphasis="solid" tone="accent" size="sm">
+                    <Link href={href}>{action.label}</Link>
+                </Button>
             )}
         </div>
     );

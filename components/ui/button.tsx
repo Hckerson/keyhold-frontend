@@ -1,26 +1,28 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import type { LucideIcon } from "lucide-react";
+import { Slot } from "@/components/ui/slot";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "ease-smooth focus-visible:ring-accent focus-visible:ring-offset-background inline-flex shrink-0 items-center justify-center font-medium whitespace-nowrap transition-all duration-200 select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-45 disabled:shadow-none",
+    "ease-smooth focus-visible:ring-accent focus-visible:ring-offset-background relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md border font-medium whitespace-nowrap transition-colors duration-200 select-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-45",
     {
         variants: {
-            variant: {
-                primary:
-                    "bg-accent text-text-inverse shadow-sm hover:bg-accent-dark hover:shadow-md active:shadow-sm",
-                secondary:
-                    "bg-background text-text border-border border shadow-sm hover:border-border-dark hover:bg-background-muted active:bg-background-muted",
-                ghost: "text-text-secondary hover:bg-background-muted hover:text-text active:bg-background-muted",
-                "outline-danger":
-                    "bg-background text-error border-error/35 border hover:border-error hover:bg-error-light active:bg-error-light",
-                danger: "bg-error text-text-inverse shadow-sm hover:bg-error-dark hover:shadow-md active:shadow-sm",
+            emphasis: {
+                solid: "text-text-inverse",
+                outline: "bg-background",
+                quiet: "border-transparent bg-transparent",
+            },
+            tone: {
+                accent: "",
+                neutral: "",
+                error: "",
+                success: "",
             },
             size: {
-                sm: "h-8 gap-1.5 rounded-md px-3 text-xs",
-                md: "h-9 gap-1.5 rounded-md px-3.5 text-xs",
-                lg: "h-11 gap-2 rounded-lg px-5 text-sm",
+                sm: "h-8 px-3 text-xs",
+                lg: "h-11 gap-2 px-5 text-sm",
             },
             iconOnly: {
                 true: "px-0",
@@ -28,61 +30,176 @@ const buttonVariants = cva(
             },
         },
         compoundVariants: [
+            {
+                emphasis: "solid",
+                tone: "accent",
+                class: "bg-accent border-accent-dark hover:bg-accent-dark",
+            },
+            {
+                emphasis: "solid",
+                tone: "neutral",
+                class: "bg-text border-text hover:bg-text-secondary",
+            },
+            {
+                emphasis: "solid",
+                tone: "error",
+                class: "bg-error border-error-dark hover:bg-error-dark",
+            },
+            {
+                emphasis: "solid",
+                tone: "success",
+                class: "bg-success border-success-dark hover:bg-success-dark",
+            },
+            {
+                emphasis: "outline",
+                tone: "accent",
+                class: "text-accent border-accent/35 hover:border-accent hover:bg-accent-light",
+            },
+            {
+                emphasis: "outline",
+                tone: "neutral",
+                class: "text-text border-border hover:border-border-dark hover:bg-background-muted",
+            },
+            {
+                emphasis: "outline",
+                tone: "error",
+                class: "text-error border-error/35 hover:border-error hover:bg-error-light",
+            },
+            {
+                emphasis: "outline",
+                tone: "success",
+                class: "text-success border-success/35 hover:border-success hover:bg-success-light",
+            },
+            {
+                emphasis: "quiet",
+                tone: "accent",
+                class: "text-accent hover:bg-accent-light",
+            },
+            {
+                emphasis: "quiet",
+                tone: "neutral",
+                class: "text-text-secondary hover:text-text hover:bg-background-muted",
+            },
+            {
+                emphasis: "quiet",
+                tone: "error",
+                class: "text-error hover:bg-error-light",
+            },
+            {
+                emphasis: "quiet",
+                tone: "success",
+                class: "text-success hover:bg-success-light",
+            },
             { size: "sm", iconOnly: true, class: "w-8" },
-            { size: "md", iconOnly: true, class: "w-9" },
             { size: "lg", iconOnly: true, class: "w-11" },
         ],
         defaultVariants: {
-            variant: "primary",
-            size: "md",
+            emphasis: "outline",
+            tone: "neutral",
+            size: "sm",
             iconOnly: false,
         },
     },
 );
 
-export interface ButtonProps
-    extends
-        React.ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof buttonVariants> {
-    isLoading?: boolean;
-    icon?: React.ReactNode;
-    iconRight?: React.ReactNode;
-}
+const CONTENT_GAP = {
+    sm: "gap-1.5",
+    lg: "gap-2",
+} as const;
+
+const GLYPH_SIZE = {
+    sm: "size-3",
+    lg: "size-4",
+} as const;
+
+type ButtonBaseProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+    VariantProps<typeof buttonVariants>;
+
+export type ButtonProps = ButtonBaseProps &
+    (
+        | { asChild: true; icon?: never; iconRight?: never; isLoading?: never }
+        | {
+              asChild?: false;
+              icon?: LucideIcon;
+              iconRight?: LucideIcon;
+              isLoading?: boolean;
+          }
+    );
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     (
         {
             className,
-            variant,
+            emphasis,
+            tone,
             size,
             iconOnly,
+            asChild,
             isLoading,
             disabled,
-            icon,
-            iconRight,
+            icon: Icon,
+            iconRight: IconRight,
             children,
             ...props
         },
         ref,
-    ) => (
-        <button
-            ref={ref}
-            className={cn(
-                buttonVariants({ variant, size, iconOnly, className }),
-            )}
-            disabled={disabled || isLoading}
-            aria-busy={isLoading}
-            {...props}
-        >
-            {isLoading ? (
-                <Spinner size="sm" tone="current" className="size-3.5" />
-            ) : (
-                icon
-            )}
-            {children}
-            {iconRight}
-        </button>
-    ),
+    ) => {
+        const step = size ?? "sm";
+        const classes = cn(
+            buttonVariants({ emphasis, tone, size, iconOnly, className }),
+        );
+
+        if (asChild) {
+            return (
+                <Slot className={classes} {...props}>
+                    {children}
+                </Slot>
+            );
+        }
+
+        return (
+            <button
+                ref={ref}
+                className={classes}
+                disabled={disabled || isLoading}
+                aria-busy={isLoading}
+                {...props}
+            >
+                <span
+                    className={cn(
+                        "inline-flex items-center",
+                        CONTENT_GAP[step],
+                        isLoading && "opacity-0",
+                    )}
+                >
+                    {Icon && (
+                        <Icon
+                            className={GLYPH_SIZE[step]}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                    )}
+                    {children}
+                    {IconRight && (
+                        <IconRight
+                            className={GLYPH_SIZE[step]}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                    )}
+                </span>
+                {isLoading && (
+                    <span className="absolute inset-0 grid place-items-center">
+                        <Spinner
+                            size="sm"
+                            tone="current"
+                            className={GLYPH_SIZE[step]}
+                        />
+                    </span>
+                )}
+            </button>
+        );
+    },
 );
 
 Button.displayName = "Button";

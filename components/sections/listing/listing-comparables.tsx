@@ -43,7 +43,6 @@ export function ListingComparables({
                     <Link
                         href={`/search?q=${encodeURIComponent(listing.locality)}`}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >

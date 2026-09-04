@@ -110,17 +110,13 @@ export function UserSuspendModal({
                     </ModalBody>
 
                     <ModalFooter className="gap-2 p-4">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={onClose}
-                        >
+                        <Button type="button" size="sm" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>
                         <Button
                             type="button"
-                            variant="danger"
+                            emphasis="solid"
+                            tone="error"
                             size="sm"
                             disabled={pending || !isSuspensionReady(draft)}
                             onClick={onSubmit}

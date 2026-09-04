@@ -54,9 +54,7 @@ export function ListingsToolbar({
                         key={action}
                         type="button"
                         size="sm"
-                        variant={
-                            action === "delete" ? "outline-danger" : "secondary"
-                        }
+                        tone={action === "delete" ? "error" : "neutral"}
                         onClick={() => onBulkAction(action)}
                     >
                         {BULK_LABELS[action]}
@@ -65,7 +63,7 @@ export function ListingsToolbar({
                 <Button
                     type="button"
                     size="sm"
-                    variant="ghost"
+                    emphasis="quiet"
                     onClick={onClearSelection}
                 >
                     {CLEAR_LABEL}

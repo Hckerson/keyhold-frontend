@@ -21,7 +21,8 @@ export function ViewingsHeader({ summary }: ViewingsHeaderProps) {
                 <Link
                     href="/search"
                     className={buttonVariants({
-                        variant: "primary",
+                        emphasis: "solid",
+                        tone: "accent",
                         size: "sm",
                     })}
                 >

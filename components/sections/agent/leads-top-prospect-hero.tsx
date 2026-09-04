@@ -75,7 +75,6 @@ export function LeadsTopProspectHero({
                         <a
                             href={telHref(lead.phone)}
                             className={buttonVariants({
-                                variant: "secondary",
                                 size: "sm",
                             })}
                         >
@@ -85,7 +84,6 @@ export function LeadsTopProspectHero({
                     <a
                         href={mailHref(lead.email)}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >
@@ -95,7 +93,6 @@ export function LeadsTopProspectHero({
                         <>
                             <Button
                                 type="button"
-                                variant="secondary"
                                 size="sm"
                                 onClick={() => onRespond(lead.id, false)}
                             >
@@ -103,7 +100,8 @@ export function LeadsTopProspectHero({
                             </Button>
                             <Button
                                 type="button"
-                                variant="primary"
+                                emphasis="solid"
+                                tone="accent"
                                 size="sm"
                                 onClick={() => onRespond(lead.id, true)}
                             >

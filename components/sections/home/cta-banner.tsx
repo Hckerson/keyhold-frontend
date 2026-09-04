@@ -26,21 +26,23 @@ export function CtaBanner() {
                     </p>
 
                     <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
-                        <Link href="/signup">
-                            <Button variant="primary" size="md">
+                        <Button
+                            asChild
+                            emphasis="solid"
+                            tone="accent"
+                            size="md"
+                        >
+                            <Link href="/signup">
                                 Sign Up
                                 <ArrowUpRight
-                                    size={15}
+                                    className="size-3"
                                     strokeWidth={1.5}
-                                    className="ml-1.5"
                                 />
-                            </Button>
-                        </Link>
-                        <Link href="/about">
-                            <Button variant="secondary" size="md">
-                                Learn More
-                            </Button>
-                        </Link>
+                            </Link>
+                        </Button>
+                        <Button asChild size="md">
+                            <Link href="/about">Learn More</Link>
+                        </Button>
                     </div>
                 </div>
             </SectionShell>

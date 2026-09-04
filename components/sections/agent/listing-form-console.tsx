@@ -24,17 +24,13 @@ export function ListingFormConsole({ property }: ListingFormConsoleProps) {
                 back={COPY.back}
                 action={
                     <>
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={form.cancel}
-                        >
+                        <Button type="button" size="sm" onClick={form.cancel}>
                             {COPY.cancel}
                         </Button>
                         <Button
                             type="button"
-                            variant="primary"
+                            emphasis="solid"
+                            tone="accent"
                             size="sm"
                             isLoading={form.pending}
                             disabled={editing && !form.dirty}

@@ -19,7 +19,8 @@ export function LeadsHeader({ summary, onAdd }: LeadsHeaderProps) {
             action={
                 <Button
                     type="button"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     onClick={onAdd}
                 >

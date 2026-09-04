@@ -70,17 +70,13 @@ export function ModerationDecisionModal({
                         </p>
                     </ModalBody>
                     <ModalFooter className="gap-2 p-4">
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            size="sm"
-                            onClick={onClose}
-                        >
+                        <Button type="button" size="sm" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>
                         <Button
                             type="button"
-                            variant={meta.destructive ? "danger" : "primary"}
+                            emphasis="solid"
+                            tone={meta.destructive ? "error" : "accent"}
                             size="sm"
                             disabled={note.trim().length === 0}
                             onClick={onSubmit}

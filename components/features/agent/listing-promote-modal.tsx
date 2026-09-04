@@ -82,17 +82,13 @@ export function ListingPromoteModal({
             </ModalBody>
 
             <ModalFooter className="p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onClose}
-                >
+                <Button type="button" size="sm" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button
                     type="button"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     isLoading={pending}
                     onClick={() => onConfirm(Number(span))}

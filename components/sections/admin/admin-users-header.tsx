@@ -20,7 +20,8 @@ export function AdminUsersHeader({ summary, onAdd }: AdminUsersHeaderProps) {
             action={
                 <Button
                     type="button"
-                    variant="primary"
+                    emphasis="solid"
+                    tone="accent"
                     size="sm"
                     onClick={onAdd}
                 >

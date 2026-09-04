@@ -108,17 +108,13 @@ export function OfferResponseModal({
             </ModalBody>
 
             <ModalFooter className="p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={close}
-                >
+                <Button type="button" size="sm" onClick={close}>
                     {FIELDS.cancel}
                 </Button>
                 <Button
                     type="button"
-                    variant={action === "decline" ? "danger" : "primary"}
+                    emphasis="solid"
+                    tone={action === "decline" ? "error" : "accent"}
                     size="sm"
                     isLoading={pending}
                     disabled={!ready}

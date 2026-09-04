@@ -36,7 +36,6 @@ export function DashboardSettingsHeader({
                 <>
                     <Button
                         type="button"
-                        variant="secondary"
                         size="sm"
                         disabled={!dirty}
                         onClick={onReset}
@@ -45,7 +44,8 @@ export function DashboardSettingsHeader({
                     </Button>
                     <Button
                         type="submit"
-                        variant="primary"
+                        emphasis="solid"
+                        tone="accent"
                         size="sm"
                         form={DASHBOARD_SETTINGS_FORM_ID}
                         disabled={!dirty}
