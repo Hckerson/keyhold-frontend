@@ -8,11 +8,10 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 2. **No hardcoding.** API routes, durations, enums, and copy that appears twice live in `lib/constants.ts` or feature-scoped `lib/config/<feature>.ts`. Endpoints come from `config.api.*`, shapes from Zod schemas. Sample and placeholder content lives in `lib/data/`, never inline in a page.
 3. **No `any` in TypeScript.** Use `unknown` + narrowing or a precise type. Derive types from Zod with `z.infer`.
 4. **Match the existing architecture.** Do not invent patterns, and do not invent locations — when you are unsure where something goes, re-read this file. State the reason before deviating.
-5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
-6. **Never install a dependency without approval.** Adding, upgrading, or swapping a package is the user's call. Name the package, what it is for, and why the existing stack (Next / Query / Zustand / Zod / motion) does not already cover it — then stop and wait for a yes. No `pnpm add`, no `npm`/`yarn`/`bun` install, no `npx` of something not already installed, no hand-edited `package.json` or lockfile. This holds even when the package is obviously the right tool, even mid-task, and even when an approved plan implied it. If you are blocked without it, finish everything that does not depend on it and ask. Nothing enforces this mechanically — the `permissions.deny` block that used to has been removed — so the rule holds on trust: ask first, every time.
-7. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
-8. **Minimize LOC.** Ship the shortest solution that stays maintainable.
-9. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
+5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion / CSS `clamp()`) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
+6. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
+7. **Minimize LOC.** Ship the shortest solution that stays maintainable.
+8. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
 
 ## Required patterns
 
@@ -46,14 +45,14 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 | `/design-os`            | _(flat)_                                                                                               | Design-system seed prompt. Not application code.                                                                                                                                                                                              |
 | `/public`               | `fonts`                                                                                                | Static assets.                                                                                                                                                                                                                                |
 | `/styles`               | _(flat)_                                                                                               | Global styles and token exports.                                                                                                                                                                                                              |
-| `/docs`                 | `adr` • _(flat prose)_                                                                                 | Prose documentation. Not application code. Only `README.md` stays at the repo root. A decision that is expensive to reverse gets a record in `docs/adr/` before the code that assumes it.                                                     |
+| `/docs`                 | `adr` • `archive` • `storage` • _(flat prose)_                                                         | Prose documentation. Not application code. Only `README.md` stays at the repo root. A decision that is expensive to reverse gets a record in `docs/adr/` before the code that assumes it.                                                     |
 
 ## File rules
 
 - **One component per file.** Kebab-case filename matching the export (`stat-grid.tsx` → `StatGrid`).
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Derivation logic moves to `lib/data/`, JSX to `components/`. The rule targets complexity, not length: `lib/enums/enums.ts` is exempt, because a flat list of enum literals and their label maps has no seam to split on and dividing it by domain would scatter one lookup across five files. Any other exemption gets written here before it is taken.
-- **Add packages with `pnpm add` — only once rule 6 has been satisfied.** Never hand-edit `package.json`.
+- **Add packages with `pnpm add` — only once rule 5 has been satisfied.** Never hand-edit `package.json`.
 - **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
 
 ## Before you commit or push
@@ -64,5 +63,7 @@ These commands run at the commit or push boundary only — not after every edit.
 2. `pnpm format` — Prettier owns formatting. Never override it by hand.
 3. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
 4. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
+
+Husky's **pre-commit** hook enforces the last three in its own order and blocks on failure: `pnpm type-check`, then `pnpm lint`, then `pnpm lint-staged` (eslint --fix + prettier on staged files). It does not run the tests — that one is on you. The hook is a backstop; satisfy all four commands before you reach it.
 
 The rules above are not restated here. They bind every edit, not the gate.
