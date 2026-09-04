@@ -7,6 +7,7 @@ import {
     AUTH_ROUTES,
     config,
     loginExpired,
+    REQUEST_TIMEOUT,
 } from "@/lib/constants";
 
 type ParamValue = string | number | boolean;
@@ -41,6 +42,7 @@ const defaultConfig: AxiosRequestConfig = {
     },
     paramsSerializer: serializeParams,
     withCredentials: true,
+    timeout: REQUEST_TIMEOUT,
 };
 
 export interface ApiEnvelope<T> {

@@ -6,6 +6,9 @@ export type MutationFeedback = {
 
 export const GENERIC_FAILURE = "That didn't go through. Try again in a moment.";
 
+export const NETWORK_FAILURE =
+    "We can't reach the server. Check your connection and try again.";
+
 export const SESSION_EXPIRED = {
     title: "Your session expired",
     description: "Sign in again to pick up where you left off.",
