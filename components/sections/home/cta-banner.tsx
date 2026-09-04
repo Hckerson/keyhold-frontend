@@ -30,17 +30,17 @@ export function CtaBanner() {
                             asChild
                             emphasis="solid"
                             tone="accent"
-                            size="md"
+                            size="lg"
                         >
                             <Link href="/signup">
                                 Sign Up
                                 <ArrowUpRight
-                                    className="size-3"
+                                    className="size-4"
                                     strokeWidth={1.5}
                                 />
                             </Link>
                         </Button>
-                        <Button asChild size="md">
+                        <Button asChild size="lg">
                             <Link href="/about">Learn More</Link>
                         </Button>
                     </div>
