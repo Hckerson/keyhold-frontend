@@ -57,13 +57,12 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 
 ## Before you commit or push
 
-These commands run at the commit or push boundary only — not after every edit.
+Formatting and linting are automated. They are not chores you run by hand.
 
-1. `pnpm test` — all green. A failing test is never left for later.
-2. `pnpm format` — Prettier owns formatting. Never override it by hand.
-3. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
-4. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
+- **Commit** — Husky's `pre-commit` hook runs `pnpm lint-staged` and nothing else: `eslint --fix` then `prettier --write`, over staged files only. It is fast by design.
+- **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, and blocks on failure. This is the real gate.
+- **Tests** — `pnpm test` is on you. A failing test is never left for later.
 
-Husky's **pre-commit** hook enforces the last three in its own order and blocks on failure: `pnpm type-check`, then `pnpm lint`, then `pnpm lint-staged` (eslint --fix + prettier on staged files). It does not run the tests — that one is on you. The hook is a backstop; satisfy all four commands before you reach it.
+`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep, but no workflow requires you to run them.
 
 The rules above are not restated here. They bind every edit, not the gate.
