@@ -56,7 +56,7 @@ export function useCommandPalette(routes: NavRoute[]) {
 
         return [
             ...matchRoutes(routes, query).map((route) => ({
-                id: route.href,
+                id: COMMAND_PALETTE.routeId(route.href),
                 label: route.label,
                 icon: route.icon,
                 badge: route.badge,
@@ -64,7 +64,7 @@ export function useCommandPalette(routes: NavRoute[]) {
                 run: () => go(route.href),
             })),
             {
-                id: TOPBAR_SEARCH.route,
+                id: COMMAND_PALETTE.searchId,
                 label: trimmed
                     ? `${COMMAND_SEARCH_PREFIX} “${trimmed}”`
                     : COMMAND_PALETTE.placeholder,

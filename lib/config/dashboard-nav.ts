@@ -6,6 +6,7 @@ import {
     Settings,
     type LucideIcon,
 } from "lucide-react";
+import { BUYER_ROUTES } from "@/lib/constants";
 import type { JourneyStation, JourneyStationState } from "@/lib/types";
 
 export interface DashboardNavItem {
@@ -35,7 +36,7 @@ export const dashboardNav = (
         items: [
             {
                 label: "Overview",
-                href: "/dashboard",
+                href: BUYER_ROUTES.overview,
                 icon: LayoutDashboard,
                 description: "Your property journey at a glance",
             },
@@ -51,14 +52,14 @@ export const dashboardNav = (
         items: [
             {
                 label: "Messages",
-                href: "/dashboard/messages",
+                href: BUYER_ROUTES.messages,
                 icon: MessageSquare,
                 description: "Chat with your agents",
                 badge: unreadMessages || undefined,
             },
             {
                 label: "Alerts",
-                href: "/dashboard/alerts",
+                href: BUYER_ROUTES.alerts,
                 icon: Bell,
                 description: "Price drops and new matches",
                 badge: unreadAlerts || undefined,
@@ -70,7 +71,7 @@ export const dashboardNav = (
         items: [
             {
                 label: "Transactions",
-                href: "/dashboard/transactions",
+                href: BUYER_ROUTES.transactions,
                 icon: Receipt,
                 description: "Escrow holds and settlements",
             },
@@ -81,7 +82,7 @@ export const dashboardNav = (
         items: [
             {
                 label: "Settings",
-                href: "/dashboard/settings",
+                href: BUYER_ROUTES.settings,
                 icon: Settings,
                 description: "Profile and preferences",
             },

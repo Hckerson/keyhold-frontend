@@ -96,7 +96,6 @@ export const buildJourneyStations = (
     },
     {
         label: "Closing",
-        href: BUYER_ROUTES.transactions,
         icon: KeyRound,
         description: "Escrow, title and handover",
         state: stateFor(counts.closings, []),

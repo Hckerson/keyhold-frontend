@@ -277,6 +277,18 @@ export const AGENT_ROUTES = {
     settings: "/agent/settings",
 } as const;
 
+export const ADMIN_ROUTES = {
+    overview: "/admin",
+    listings: "/admin/listings",
+    users: "/admin/users",
+    user: (id: string) => `/admin/users/${id}`,
+    transactions: "/admin/transactions",
+    payments: "/admin/payments",
+    reports: "/admin/reports",
+    verifications: "/admin/verifications",
+    settings: "/admin/settings",
+} as const;
+
 export const OFFER_WINDOW_DAYS = 14;
 export const VIEWING_SLOT_COUNT = 3;
 export const VIEWING_LEAD_DAYS = 2;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Bell, CalendarDays, LayoutDashboard } from "lucide-react";
+import { Bell, CalendarDays, LayoutDashboard, Receipt } from "lucide-react";
 import type { SidebarSection } from "@/lib/types";
 import { matchRoutes, routesFrom, trailFor } from "@/lib/utils/nav";
 
@@ -19,7 +19,13 @@ const SECTIONS: SidebarSection[] = [
                 icon: CalendarDays,
                 count: 3,
             },
-            { label: "Closing", icon: CalendarDays, state: "pending" },
+            {
+                label: "Closing",
+                href: "/dashboard/transactions",
+                icon: CalendarDays,
+                state: "pending",
+            },
+            { label: "Handover", icon: CalendarDays, state: "pending" },
         ],
     },
     {
@@ -30,6 +36,16 @@ const SECTIONS: SidebarSection[] = [
                 href: "/dashboard/alerts",
                 icon: Bell,
                 badge: 4,
+            },
+        ],
+    },
+    {
+        label: "Money",
+        items: [
+            {
+                label: "Transactions",
+                href: "/dashboard/transactions",
+                icon: Receipt,
             },
         ],
     },
@@ -56,6 +72,22 @@ describe("routesFrom", () => {
             undefined,
         );
     });
+
+    it("emits one destination per href when two sections share a route", () => {
+        expect(
+            routesFrom(SECTIONS).filter(
+                (route) => route.href === "/dashboard/transactions",
+            ),
+        ).toHaveLength(1);
+    });
+
+    it("names a shared destination by its plain nav label, not its journey stage", () => {
+        expect(
+            routesFrom(SECTIONS).find(
+                (route) => route.href === "/dashboard/transactions",
+            )?.label,
+        ).toBe("Transactions");
+    });
 });
 
 describe("trailFor", () => {
@@ -68,6 +100,13 @@ describe("trailFor", () => {
 
     it("shows the portal root alone when the root is the current page", () => {
         expect(labels("/dashboard")).toEqual(["Dashboard"]);
+    });
+
+    it("names a shared destination by its plain nav label", () => {
+        expect(labels("/dashboard/transactions")).toEqual([
+            "Dashboard",
+            "Transactions",
+        ]);
     });
 
     it("leaves the nearest nav route linkable on a deeper detail route", () => {
@@ -97,7 +136,7 @@ describe("trailFor", () => {
 
 describe("matchRoutes", () => {
     it("returns every destination when the palette query is empty", () => {
-        expect(matchRoutes(routesFrom(SECTIONS), "  ")).toHaveLength(3);
+        expect(matchRoutes(routesFrom(SECTIONS), "  ")).toHaveLength(4);
     });
 
     it("ignores case when matching a destination label", () => {

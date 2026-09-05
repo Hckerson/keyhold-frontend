@@ -1,23 +1,21 @@
 import type { NavRoute, SidebarSection, TrailCrumb } from "@/lib/types";
 
-export const routesFrom = (sections: SidebarSection[]): NavRoute[] =>
-    sections
-        .flatMap((section) => section.items)
-        .flatMap((item) =>
-            item.href === undefined
-                ? []
-                : [
-                      {
-                          label: item.label,
-                          href: item.href,
-                          icon: item.icon,
-                          badge:
-                              typeof item.badge === "number"
-                                  ? item.badge
-                                  : undefined,
-                      },
-                  ],
-        );
+export const routesFrom = (sections: SidebarSection[]): NavRoute[] => {
+    const byHref = new Map<string, NavRoute>();
+
+    for (const item of sections.flatMap((section) => section.items)) {
+        if (item.href === undefined) continue;
+
+        byHref.set(item.href, {
+            label: item.label,
+            href: item.href,
+            icon: item.icon,
+            badge: typeof item.badge === "number" ? item.badge : undefined,
+        });
+    }
+
+    return [...byHref.values()];
+};
 
 const holds = (href: string, pathname: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
