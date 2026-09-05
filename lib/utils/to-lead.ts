@@ -13,6 +13,8 @@ export const LEAD_STAGE_BY_CONNECTION: Record<ConnectionStatus, LeadStage> = {
 
 export const toLead = (connection: ConnectionListItem): Lead => {
     const stage = LEAD_STAGE_BY_CONNECTION[connection.status];
+    const lastTouch =
+        connection.contactActivities[0]?.occurredAt ?? connection.updatedAt;
 
     return {
         id: connection.id,
@@ -23,7 +25,7 @@ export const toLead = (connection: ConnectionListItem): Lead => {
         budget: connection.property.price,
         interests: [connection.property.title],
         stage,
-        lastContact: formatAge(minutesSince(connection.updatedAt)),
+        lastContact: formatAge(minutesSince(lastTouch)),
         nextAction: LEAD_STAGES[stage].nextAction,
         unread: connection._count.messages,
         offers: connection._count.offers,

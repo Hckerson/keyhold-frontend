@@ -51,6 +51,11 @@ export const config = {
                 `/messages/connection/${connectionId}`,
             unreadCount: "/messages/unread/count",
         },
+        contact: {
+            history: (connectionId: string) => `/contact/${connectionId}`,
+            email: (connectionId: string) => `/contact/${connectionId}/email`,
+            call: (connectionId: string) => `/contact/${connectionId}/call`,
+        },
         viewings: {
             create: "/viewings",
             detail: (id: string) => `/viewings/${id}`,

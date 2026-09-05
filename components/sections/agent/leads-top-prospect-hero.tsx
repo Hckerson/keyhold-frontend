@@ -1,10 +1,10 @@
 import { Avatar } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 import type { Lead } from "@/lib/types/lead";
-import { formatCompactUsd, initialsOf, mailHref, telHref } from "@/lib/utils";
+import { formatCompactUsd, initialsOf } from "@/lib/utils";
 
 const HERO_EYEBROW = "Top enquiry";
 const VALUE_LABEL = "Listing value";
@@ -19,12 +19,18 @@ const DECLINE_ACTION = "Decline";
 
 export interface LeadsTopProspectHeroProps {
     lead: Lead;
+    calling: boolean;
     onRespond: (id: string, accept: boolean) => void;
+    onCall: () => void;
+    onEmail: () => void;
 }
 
 export function LeadsTopProspectHero({
     lead,
+    calling,
     onRespond,
+    onCall,
+    onEmail,
 }: LeadsTopProspectHeroProps) {
     const stage = LEAD_STAGES[lead.stage];
 
@@ -72,23 +78,18 @@ export function LeadsTopProspectHero({
 
                 <div className="flex shrink-0 gap-2">
                     {lead.phone && (
-                        <a
-                            href={telHref(lead.phone)}
-                            className={buttonVariants({
-                                size: "sm",
-                            })}
+                        <Button
+                            type="button"
+                            size="sm"
+                            isLoading={calling}
+                            onClick={onCall}
                         >
                             {CALL_ACTION}
-                        </a>
+                        </Button>
                     )}
-                    <a
-                        href={mailHref(lead.email)}
-                        className={buttonVariants({
-                            size: "sm",
-                        })}
-                    >
+                    <Button type="button" size="sm" onClick={onEmail}>
                         {EMAIL_ACTION}
-                    </a>
+                    </Button>
                     {lead.stage === "pending" && (
                         <>
                             <Button

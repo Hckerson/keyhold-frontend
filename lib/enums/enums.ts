@@ -29,6 +29,19 @@ export const PROPERTY_SORTS = [
 
 export const CONNECTION_STATUSES = ["PENDING", "ACCEPTED", "REJECTED"] as const;
 
+export const CONTACT_CHANNELS = ["EMAIL", "SMS", "CALL"] as const;
+
+export const CONTACT_DIRECTIONS = ["OUTBOUND", "INBOUND"] as const;
+
+export const CONTACT_STATUSES = [
+    "QUEUED",
+    "SENT",
+    "RINGING",
+    "COMPLETED",
+    "NO_ANSWER",
+    "FAILED",
+] as const;
+
 export const VIEWING_MODES = ["IN_PERSON", "VIRTUAL", "OPEN_HOUSE"] as const;
 
 export const VIEWING_STATUSES = [
@@ -67,6 +80,9 @@ export type PropertyType = (typeof PROPERTY_TYPES)[number];
 export type PropertyStatus = (typeof PROPERTY_STATUSES)[number];
 export type PropertySort = (typeof PROPERTY_SORTS)[number];
 export type ConnectionStatus = (typeof CONNECTION_STATUSES)[number];
+export type ContactChannel = (typeof CONTACT_CHANNELS)[number];
+export type ContactDirection = (typeof CONTACT_DIRECTIONS)[number];
+export type ContactStatus = (typeof CONTACT_STATUSES)[number];
 export type ViewingStatus = (typeof VIEWING_STATUSES)[number];
 export type ViewingMode = (typeof VIEWING_MODES)[number];
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
