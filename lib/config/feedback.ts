@@ -51,6 +51,15 @@ export const FEEDBACK = {
 
     sendMessage: { error: "Your message wasn't sent." },
 
+    sendLeadEmail: {
+        success: "Email sent",
+        error: "We couldn't send that email.",
+    },
+    startLeadCall: {
+        success: "Calling you now — pick up to be connected",
+        error: "We couldn't place that call.",
+    },
+
     toggleSavedProperty: { error: "We couldn't update your saved list." },
     createSavedSearch: {
         success: "Search saved",

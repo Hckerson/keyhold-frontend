@@ -1,4 +1,5 @@
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
+import type { ContactActivity } from "@/lib/validations/contact";
 import type { Offer } from "@/lib/validations/offer";
 import type { Transaction } from "@/lib/validations/transaction";
 import type { Viewing } from "@/lib/validations/viewing";
@@ -43,6 +44,25 @@ export const aViewingRecord = (overrides: Partial<Viewing> = {}): Viewing => ({
     ...overrides,
 });
 
+export const aContactActivity = (
+    overrides: Partial<ContactActivity> = {},
+): ContactActivity => ({
+    id: "cta_1",
+    connectionId: "con_1",
+    actorId: "usr_seller",
+    channel: "EMAIL",
+    direction: "OUTBOUND",
+    status: "SENT",
+    subject: "About Shore House",
+    body: "Following up on your enquiry.",
+    providerRef: null,
+    durationSeconds: null,
+    occurredAt: AT,
+    createdAt: AT,
+    updatedAt: AT,
+    ...overrides,
+});
+
 export const aConnection = (
     overrides: Partial<ConnectionListItem> = {},
 ): ConnectionListItem => ({
@@ -65,6 +85,7 @@ export const aConnection = (
     messages: [],
     offers: [],
     viewings: [],
+    contactActivities: [],
     _count: { messages: 0, viewings: 0, offers: 0 },
     createdAt: AT,
     updatedAt: AT,

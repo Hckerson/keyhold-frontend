@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CONNECTION_STATUSES, PROPERTY_STATUSES } from "@/lib/enums/enums";
+import { contactActivitySchema } from "@/lib/validations/contact";
 import { messageSchema } from "@/lib/validations/message";
 import { offerSchema } from "@/lib/validations/offer";
 import { propertyImageSchema } from "@/lib/validations/property";
@@ -39,6 +40,7 @@ export const connectionListItemSchema = z.object({
     messages: z.array(messageSchema).default([]),
     offers: z.array(offerSchema).default([]),
     viewings: z.array(viewingSchema).default([]),
+    contactActivities: z.array(contactActivitySchema).default([]),
     _count: connectionCountsSchema,
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),

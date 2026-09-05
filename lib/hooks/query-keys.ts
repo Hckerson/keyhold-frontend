@@ -34,6 +34,11 @@ export const queryKeys = {
             ["messages", "connection", connectionId] as const,
         unreadCount: ["messages", "unread-count"] as const,
     },
+    contact: {
+        all: ["contact"] as const,
+        byConnection: (connectionId: string) =>
+            ["contact", "connection", connectionId] as const,
+    },
     viewings: {
         all: ["viewings"] as const,
         byConnection: (connectionId: string) =>
