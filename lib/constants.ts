@@ -8,6 +8,7 @@ export const config = {
             forgotPassword: "/auth/forgot-password",
             resetPassword: "/auth/reset-password",
             onboarding: "/auth/onboarding",
+            logout: "/auth/logout",
         },
         users: {
             list: "/users",

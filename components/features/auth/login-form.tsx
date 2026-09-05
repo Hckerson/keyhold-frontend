@@ -56,7 +56,7 @@ export function LoginForm({ redirectTo, expired }: LoginFormProps) {
     const signIn = useSignIn();
 
     const [values, setValues] = useState(INITIAL_VALUES);
-    const [remember, setRemember] = useState(true);
+    const [remember, setRemember] = useState(false);
     const [errors, setErrors] = useState<FieldErrors>({});
     const [formError, setFormError] = useState<string | null>(null);
     const [pending, setPending] = useState(false);

@@ -23,4 +23,6 @@ export const authAPI = {
             token: input.token,
             password: input.password,
         }),
+
+    logout: () => query.post<{ success: boolean }>(config.api.auth.logout),
 };

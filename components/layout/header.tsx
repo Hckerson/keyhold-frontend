@@ -1,19 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { HeaderMenu } from "@/components/layout/header-menu";
 import { useSession } from "@/lib/hooks/use-session";
+import { useSignOut } from "@/lib/hooks/use-sign-out";
 import { siteNavFor } from "@/lib/config/site-nav";
 import { portalForRole } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import styles from "@/components/layout/header.module.css";
 
 export function Header() {
-    const router = useRouter();
-    const { user, logout } = useSession();
+    const { user } = useSession();
+    const signOut = useSignOut();
     const [contracted, setContracted] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,10 +44,7 @@ export function Header() {
               .slice(0, 2)
         : "";
 
-    const handleLogout = () => {
-        logout();
-        router.push("/");
-    };
+    const handleLogout = () => void signOut();
 
     return (
         <div className={cn(styles.wrap, menuOpen && styles.recessed)}>

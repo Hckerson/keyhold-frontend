@@ -11,7 +11,6 @@ import { FEEDBACK } from "@/lib/config/feedback";
 export function useSession() {
     const user = useAuthStore((state) => state.user);
     const setUser = useAuthStore((state) => state.setUser);
-    const logout = useAuthStore((state) => state.logout);
 
     const { data, isLoading, isError } = useCurrentUser();
 
@@ -30,7 +29,6 @@ export function useSession() {
         isAuthenticated: Boolean(user),
         isLoading: isLoading && !isError,
         isError,
-        logout,
     };
 }
 
