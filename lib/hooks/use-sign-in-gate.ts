@@ -10,14 +10,16 @@ export function useSignInGate() {
     const router = useRouter();
     const pathname = usePathname();
     const mounted = useMounted();
-    const { isAuthenticated } = useSession();
+    const { isAuthenticated, isLoading } = useSession();
     const signedIn = mounted && isAuthenticated;
+    const resolving = !mounted || isLoading;
 
     const requireSignIn = useCallback(() => {
         if (signedIn) return true;
+        if (resolving) return false;
         router.push(loginWithRedirect(pathname));
         return false;
-    }, [signedIn, router, pathname]);
+    }, [signedIn, resolving, router, pathname]);
 
-    return { mounted, signedIn, requireSignIn };
+    return { mounted, signedIn, resolving, requireSignIn };
 }

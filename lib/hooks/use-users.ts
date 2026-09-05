@@ -4,17 +4,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usersAPI } from "@/lib/api/users";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
-import { useAuthStore } from "@/lib/stores/auth-store";
 import type { CreateUserInput, UpdateUserInput } from "@/lib/validations/user";
 import type { UserTier } from "@/lib/enums/enums";
 import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useCurrentUser() {
-    const user = useAuthStore((state) => state.user);
     return useQuery({
         queryKey: queryKeys.users.me,
         queryFn: () => usersAPI.me(),
-        enabled: Boolean(user),
+        retry: false,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
     });

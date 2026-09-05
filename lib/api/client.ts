@@ -1,9 +1,7 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { deleteCookie } from "@/lib/utils/cookies";
 import {
-    ACCESS_TOKEN_COOKIE,
     AUTH_ROUTES,
     config,
     loginExpired,
@@ -76,9 +74,10 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
+            const wasSignedIn = Boolean(useAuthStore.getState().user);
             useAuthStore.getState().clearAuth();
-            deleteCookie(ACCESS_TOKEN_COOKIE);
             if (
+                wasSignedIn &&
                 typeof window !== "undefined" &&
                 !window.location.pathname.startsWith(AUTH_ROUTES.login)
             ) {
