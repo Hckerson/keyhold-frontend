@@ -6,10 +6,10 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "lint": "eslint .",
         "format": "prettier --write .",
         "type-check": "npx tsc --noEmit",
-        "prepare": "husky install",
+        "prepare": "husky",
         "test": "vitest run",
         "test:watch": "vitest"
     },
