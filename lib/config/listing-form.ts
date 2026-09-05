@@ -1,7 +1,8 @@
-import type { ConfigField } from "@/components/patterns/config-field-grid";
 import {
+    PROPERTY_STATUS_LABELS,
     PROPERTY_TYPES,
     PROPERTY_TYPE_LABELS,
+    type PropertyStatus,
     type PropertyType,
 } from "@/lib/enums/enums";
 
@@ -12,21 +13,23 @@ export interface ListingDraft {
     locality: string;
     region: string;
     postalCode: string;
+    country: string;
+    latitude: string;
+    longitude: string;
     price: string;
     bedrooms: string;
     bathrooms: string;
     sqFt: string;
     lotSqFt: string;
     yearBuilt: string;
+    walkScore: string;
     type: PropertyType;
-    amenities: string;
-    features: string;
+    status: PropertyStatus;
+    amenities: string[];
+    features: string[];
 }
 
-export const LISTING_TYPE_OPTIONS = PROPERTY_TYPES.map((value) => ({
-    value,
-    label: PROPERTY_TYPE_LABELS[value],
-}));
+export const DEFAULT_COUNTRY = "US";
 
 export const EMPTY_LISTING_DRAFT: ListingDraft = {
     title: "",
@@ -35,150 +38,93 @@ export const EMPTY_LISTING_DRAFT: ListingDraft = {
     locality: "",
     region: "",
     postalCode: "",
+    country: DEFAULT_COUNTRY,
+    latitude: "",
+    longitude: "",
     price: "",
     bedrooms: "",
     bathrooms: "",
     sqFt: "",
     lotSqFt: "",
     yearBuilt: "",
+    walkScore: "",
     type: "HOUSE",
-    amenities: "",
-    features: "",
+    status: "AVAILABLE",
+    amenities: [],
+    features: [],
 };
 
-export const LISTING_TAG_SEPARATOR = ",";
+export const CLEARABLE_LISTING_FIELDS = [
+    "latitude",
+    "longitude",
+    "sqFt",
+    "lotSqFt",
+    "yearBuilt",
+    "walkScore",
+] as const satisfies readonly (keyof ListingDraft)[];
+
+export const SELLER_STATUSES = [
+    "DRAFT",
+    "AVAILABLE",
+    "PENDING",
+] as const satisfies readonly PropertyStatus[];
+
+export type SellerStatus = (typeof SELLER_STATUSES)[number];
+
+export const isSellerStatus = (status: PropertyStatus) =>
+    SELLER_STATUSES.some((settable) => settable === status);
+
+export const LISTING_STATUS_OPTIONS = SELLER_STATUSES.map((value) => ({
+    value,
+    label: PROPERTY_STATUS_LABELS[value],
+}));
+
+export const LISTING_TYPE_OPTIONS = PROPERTY_TYPES.map((value) => ({
+    value,
+    label: PROPERTY_TYPE_LABELS[value],
+}));
+
+export const LISTING_STATUS_HINTS: Record<PropertyStatus, string> = {
+    DRAFT: "Only you can see this listing",
+    AVAILABLE: "Live in search and open to enquiries",
+    PENDING: "Shown as under offer, still visible",
+    SOLD: "Closed — set it back to for sale to reopen",
+    EXPIRED: "Off market — set it back to for sale to relist",
+};
+
+export const LISTING_AMENITY_SUGGESTIONS = [
+    "Pool",
+    "Wine cellar",
+    "Gym",
+    "Spa",
+    "Elevator",
+    "Garage",
+    "Guest house",
+    "Home cinema",
+    "Tennis court",
+    "Concierge",
+];
+
+export const LISTING_FEATURE_SUGGESTIONS = [
+    "Sea view",
+    "Smart home",
+    "Chef's kitchen",
+    "Fireplace",
+    "Heated floors",
+    "Private garden",
+    "Roof terrace",
+    "Gated entry",
+    "Walk-in closet",
+    "Solar power",
+];
 
 export const DESCRIPTION_ROWS = 5;
 
-export const LISTING_FORM_COPY = {
-    createTitle: "List a new property",
-    createLede: "Everything a buyer needs to decide it is worth a viewing",
-    createSubmit: "Publish listing",
-    editTitle: "Edit listing",
-    editLede: "Update what buyers see on this listing",
-    editSubmit: "Save changes",
-    back: { label: "Back to listings", href: "/agent/listings" },
-    identity: "The property",
-    identityLede: "How the listing introduces itself",
-    place: "Where it is",
-    placeLede: "Used for search, mapping and regional reporting",
-    specs: "What it offers",
-    specsLede: "The measures buyers filter on",
-    extras: "Amenities and features",
-    extrasLede: "Separate each entry with a comma",
-    title: "Listing title",
-    description: "Description",
-    address: "Street address",
-    locality: "Locality",
-    region: "Region",
-    postalCode: "Postal code",
-    price: "Asking price",
-    bedrooms: "Bedrooms",
-    bathrooms: "Bathrooms",
-    sqFt: "Interior sq ft",
-    lotSqFt: "Lot sq ft",
-    yearBuilt: "Year built",
-    type: "Property type",
-    amenities: "Amenities",
-    features: "Features",
-    optional: "Optional",
-    cancel: "Cancel",
-    failed: "That listing could not be saved.",
-    retry: "Check the highlighted fields and try again.",
-} as const;
+export const MAX_LISTING_IMAGES = 10;
 
-type PlaceField = "address" | "locality" | "region" | "postalCode";
-type SpecField =
-    | "price"
-    | "bedrooms"
-    | "bathrooms"
-    | "sqFt"
-    | "lotSqFt"
-    | "yearBuilt";
-type ExtraField = "amenities" | "features";
-
-const OPTIONAL = LISTING_FORM_COPY.optional;
-
-export const LISTING_PLACE_FIELDS: readonly ConfigField<PlaceField>[] = [
-    {
-        name: "address",
-        label: LISTING_FORM_COPY.address,
-        placeholder: "1 Beacon Hill Drive",
-    },
-    {
-        name: "locality",
-        label: LISTING_FORM_COPY.locality,
-        placeholder: "Beacon Hill",
-    },
-    {
-        name: "region",
-        label: LISTING_FORM_COPY.region,
-        placeholder: "Massachusetts",
-    },
-    {
-        name: "postalCode",
-        label: LISTING_FORM_COPY.postalCode,
-        placeholder: "02108",
-        variant: "numeric",
-    },
-];
-
-export const LISTING_SPEC_FIELDS: readonly ConfigField<SpecField>[] = [
-    {
-        name: "price",
-        label: LISTING_FORM_COPY.price,
-        placeholder: "4750000",
-        prefix: "$",
-        variant: "numeric",
-    },
-    {
-        name: "bedrooms",
-        label: LISTING_FORM_COPY.bedrooms,
-        placeholder: "4",
-        variant: "numeric",
-    },
-    {
-        name: "bathrooms",
-        label: LISTING_FORM_COPY.bathrooms,
-        placeholder: "3",
-        variant: "numeric",
-    },
-    {
-        name: "sqFt",
-        label: LISTING_FORM_COPY.sqFt,
-        placeholder: "3200",
-        suffix: "sq ft",
-        variant: "numeric",
-        hint: OPTIONAL,
-    },
-    {
-        name: "lotSqFt",
-        label: LISTING_FORM_COPY.lotSqFt,
-        placeholder: "8000",
-        suffix: "sq ft",
-        variant: "numeric",
-        hint: OPTIONAL,
-    },
-    {
-        name: "yearBuilt",
-        label: LISTING_FORM_COPY.yearBuilt,
-        placeholder: "1998",
-        variant: "numeric",
-        hint: OPTIONAL,
-    },
-];
-
-export const LISTING_EXTRA_FIELDS: readonly ConfigField<ExtraField>[] = [
-    {
-        name: "amenities",
-        label: LISTING_FORM_COPY.amenities,
-        placeholder: "Pool, Wine cellar, Gym",
-        hint: OPTIONAL,
-    },
-    {
-        name: "features",
-        label: LISTING_FORM_COPY.features,
-        placeholder: "Sea view, Smart home",
-        hint: OPTIONAL,
-    },
-];
+export const LISTING_IMAGE_ACCEPT = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/avif",
+].join(",");

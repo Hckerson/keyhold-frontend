@@ -129,6 +129,30 @@ export function useUploadPropertyImages(id: string) {
     });
 }
 
+export function useDeletePropertyImage(id: string) {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.deletePropertyImage,
+        mutationFn: (imageId: string) => propertiesAPI.removeImage(id, imageId),
+        onSuccess: () =>
+            client.invalidateQueries({
+                queryKey: queryKeys.properties.detail(id),
+            }),
+    });
+}
+
+export function useReorderPropertyImages(id: string) {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.reorderPropertyImages,
+        mutationFn: (ids: string[]) => propertiesAPI.reorderImages(id, ids),
+        onSuccess: () =>
+            client.invalidateQueries({
+                queryKey: queryKeys.properties.detail(id),
+            }),
+    });
+}
+
 export function useModerateProperty() {
     const client = useQueryClient();
     return useMutation({

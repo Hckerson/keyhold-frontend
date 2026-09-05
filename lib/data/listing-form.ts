@@ -1,24 +1,33 @@
 import {
-    EMPTY_LISTING_DRAFT,
-    LISTING_TAG_SEPARATOR,
+    DEFAULT_COUNTRY,
+    LISTING_STATUS_OPTIONS,
+    isSellerStatus,
     type ListingDraft,
 } from "@/lib/config/listing-form";
-import type { CreatePropertyInput, Property } from "@/lib/validations/property";
+import { LISTING_FORM_COPY } from "@/lib/config/listing-form-copy";
+import { FEATURED_DATE_FORMAT } from "@/lib/data/agent-listings";
+import { PROPERTY_STATUS_LABELS, type PropertyStatus } from "@/lib/enums/enums";
+import { dateFormatter } from "@/lib/utils";
+import type {
+    ListingFormInput,
+    Property,
+    PropertyImage,
+    UpdatePropertyInput,
+} from "@/lib/validations/property";
 
-const numberOr = (value: string) => {
+const asRecord = (draft: ListingDraft): Record<string, unknown> => ({
+    ...draft,
+});
+
+const numberOrNull = (value: string) => {
     const trimmed = value.trim();
-    if (!trimmed) return undefined;
+    if (!trimmed) return null;
     const parsed = Number(trimmed);
-    return Number.isFinite(parsed) ? parsed : undefined;
+    return Number.isFinite(parsed) ? parsed : null;
 };
 
-const tagList = (value: string) =>
-    value
-        .split(LISTING_TAG_SEPARATOR)
-        .map((entry) => entry.trim())
-        .filter(Boolean);
-
-const tagText = (values: string[]) => values.join(`${LISTING_TAG_SEPARATOR} `);
+const textOf = (value: number | null | undefined) =>
+    value === null || value === undefined ? "" : String(value);
 
 export const toListingDraft = (property: Property): ListingDraft => ({
     title: property.title,
@@ -27,15 +36,20 @@ export const toListingDraft = (property: Property): ListingDraft => ({
     locality: property.locality,
     region: property.region,
     postalCode: property.postalCode,
+    country: property.country,
+    latitude: textOf(property.latitude),
+    longitude: textOf(property.longitude),
     price: String(property.price),
     bedrooms: String(property.bedrooms),
     bathrooms: String(property.bathrooms),
-    sqFt: property.sqFt === null ? "" : String(property.sqFt),
-    lotSqFt: property.lotSqFt === null ? "" : String(property.lotSqFt),
-    yearBuilt: property.yearBuilt === null ? "" : String(property.yearBuilt),
+    sqFt: textOf(property.sqFt),
+    lotSqFt: textOf(property.lotSqFt),
+    yearBuilt: textOf(property.yearBuilt),
+    walkScore: textOf(property.walkScore),
     type: property.type,
-    amenities: tagText(property.amenities),
-    features: tagText(property.features),
+    status: property.status,
+    amenities: property.amenities,
+    features: property.features,
 });
 
 export const toPropertyInput = (
@@ -47,31 +61,72 @@ export const toPropertyInput = (
     locality: draft.locality.trim(),
     region: draft.region.trim(),
     postalCode: draft.postalCode.trim(),
-    price: numberOr(draft.price),
-    bedrooms: numberOr(draft.bedrooms),
-    bathrooms: numberOr(draft.bathrooms),
-    sqFt: numberOr(draft.sqFt),
-    lotSqFt: numberOr(draft.lotSqFt),
-    yearBuilt: numberOr(draft.yearBuilt),
+    country: draft.country.trim() || DEFAULT_COUNTRY,
+    latitude: numberOrNull(draft.latitude),
+    longitude: numberOrNull(draft.longitude),
+    price: numberOrNull(draft.price),
+    bedrooms: numberOrNull(draft.bedrooms),
+    bathrooms: numberOrNull(draft.bathrooms),
+    sqFt: numberOrNull(draft.sqFt),
+    lotSqFt: numberOrNull(draft.lotSqFt),
+    yearBuilt: numberOrNull(draft.yearBuilt),
+    walkScore: numberOrNull(draft.walkScore),
     type: draft.type,
-    amenities: tagList(draft.amenities),
-    features: tagList(draft.features),
+    status: draft.status,
+    amenities: draft.amenities,
+    features: draft.features,
 });
 
 export const changedFields = (
-    input: CreatePropertyInput,
+    input: ListingFormInput,
     baseline: ListingDraft,
-): Partial<CreatePropertyInput> => {
-    const original = toPropertyInput(baseline);
+): UpdatePropertyInput => {
+    const previous = toPropertyInput(baseline);
     return Object.fromEntries(
         Object.entries(input).filter(
             ([key, value]) =>
-                JSON.stringify(value) !== JSON.stringify(original[key]),
+                JSON.stringify(value) !== JSON.stringify(previous[key]),
         ),
     );
 };
 
-export const isListingDraftDirty = (
-    draft: ListingDraft,
-    baseline: ListingDraft = EMPTY_LISTING_DRAFT,
-) => JSON.stringify(draft) !== JSON.stringify(baseline);
+export const changedKeys = (draft: ListingDraft, baseline: ListingDraft) => {
+    const previous = asRecord(baseline);
+    return Object.entries(asRecord(draft))
+        .filter(
+            ([key, value]) =>
+                JSON.stringify(value) !== JSON.stringify(previous[key]),
+        )
+        .map(([key]) => key);
+};
+
+export const featuredLabel = (property: Property) =>
+    property.featuredUntil && new Date(property.featuredUntil) > new Date()
+        ? dateFormatter(property.featuredUntil, FEATURED_DATE_FORMAT)
+        : undefined;
+
+export const dirtySummary = (count: number) => {
+    if (count === 0) return LISTING_FORM_COPY.clean;
+    if (count === 1) return LISTING_FORM_COPY.dirtyOne;
+    return `${count} ${LISTING_FORM_COPY.dirtyMany}`;
+};
+
+export const movedImageIds = (
+    images: readonly PropertyImage[],
+    from: number,
+    to: number,
+) => {
+    const ids = images.map((image) => image.id);
+    const moving = ids[from];
+    if (moving === undefined || to < 0 || to >= ids.length) return ids;
+    const without = ids.filter((_, index) => index !== from);
+    return [...without.slice(0, to), moving, ...without.slice(to)];
+};
+
+export const listingStatusOptions = (status: PropertyStatus) =>
+    isSellerStatus(status)
+        ? LISTING_STATUS_OPTIONS
+        : [
+              { value: status, label: PROPERTY_STATUS_LABELS[status] },
+              ...LISTING_STATUS_OPTIONS,
+          ];

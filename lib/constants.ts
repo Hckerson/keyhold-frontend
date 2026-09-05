@@ -26,6 +26,9 @@ export const config = {
             detail: (id: string) => `/properties/${id}`,
             bySeller: (sellerId: string) => `/properties/seller/${sellerId}`,
             images: (id: string) => `/properties/${id}/images`,
+            imageOrder: (id: string) => `/properties/${id}/images/order`,
+            image: (id: string, imageId: string) =>
+                `/properties/${id}/images/${imageId}`,
             markSold: (id: string) => `/properties/${id}/mark-sold`,
             moderate: (id: string) => `/properties/${id}/moderate`,
             view: (id: string) => `/properties/${id}/view`,
