@@ -83,16 +83,18 @@ export const createPropertySchema = z.object({
     locality: z.string().min(2, "Locality is required"),
     region: z.string().min(2, "Region is required"),
     postalCode: z.string().min(3, "Postal code is required"),
-    country: z.string().optional(),
-    latitude: z.number().min(-90).max(90).optional(),
-    longitude: z.number().min(-180).max(180).optional(),
-    price: z.number().positive("Price must be positive"),
-    bedrooms: z.number().int().min(0),
-    bathrooms: z.number().int().min(0),
-    sqFt: z.number().positive().optional(),
-    lotSqFt: z.number().positive().optional(),
-    yearBuilt: z.number().int().min(1600).optional(),
-    walkScore: z.number().int().min(0).max(100).optional(),
+    country: z.string().min(2, "Country is required"),
+    latitude: z.number().min(-90).max(90).nullable(),
+    longitude: z.number().min(-180).max(180).nullable(),
+    price: z
+        .number({ error: "Asking price is required" })
+        .positive("Price must be positive"),
+    bedrooms: z.number({ error: "Bedrooms is required" }).int().min(0),
+    bathrooms: z.number({ error: "Bathrooms is required" }).int().min(0),
+    sqFt: z.number().positive().nullable(),
+    lotSqFt: z.number().positive().nullable(),
+    yearBuilt: z.number().int().min(1600).nullable(),
+    walkScore: z.number().int().min(0).max(100).nullable(),
     type: z.enum(PROPERTY_TYPES),
     amenities: z.array(z.string()).optional(),
     features: z.array(z.string()).optional(),
@@ -100,6 +102,10 @@ export const createPropertySchema = z.object({
 
 export const updatePropertySchema = createPropertySchema.partial().extend({
     status: z.enum(PROPERTY_STATUSES).optional(),
+});
+
+export const listingFormSchema = createPropertySchema.extend({
+    status: z.enum(PROPERTY_STATUSES),
 });
 
 export const promotePropertySchema = z.object({
@@ -133,6 +139,7 @@ export type Property = z.infer<typeof propertySchema>;
 export type PropertyPage = z.infer<typeof propertyPageSchema>;
 export type CreatePropertyInput = z.infer<typeof createPropertySchema>;
 export type UpdatePropertyInput = z.infer<typeof updatePropertySchema>;
+export type ListingFormInput = z.infer<typeof listingFormSchema>;
 export type PromotePropertyInput = z.infer<typeof promotePropertySchema>;
 export type PropertyQuery = z.infer<typeof propertyQuerySchema>;
 export type FacetCounts = z.infer<typeof facetCountsSchema>;

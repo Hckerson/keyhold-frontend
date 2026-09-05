@@ -103,6 +103,11 @@ export const FEEDBACK = {
         success: "Images uploaded",
         error: "We couldn't upload those images.",
     },
+    deletePropertyImage: {
+        success: "Photo removed",
+        error: "We couldn't remove that photo.",
+    },
+    reorderPropertyImages: { error: "We couldn't reorder those photos." },
     moderateProperty: {
         success: "Decision recorded",
         error: "We couldn't record your decision.",

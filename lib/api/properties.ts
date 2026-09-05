@@ -72,6 +72,14 @@ export const propertiesAPI = {
     recordView: (id: string) =>
         query.post<{ recorded: boolean }>(config.api.properties.view(id)),
 
+    removeImage: (id: string, imageId: string) =>
+        query.delete<PropertyImage>(config.api.properties.image(id, imageId)),
+
+    reorderImages: (id: string, ids: string[]) =>
+        query.patch<PropertyImage[]>(config.api.properties.imageOrder(id), {
+            ids,
+        }),
+
     uploadImages: (id: string, files: File[]) => {
         const body = new FormData();
         files.forEach((file) => body.append("files", file));

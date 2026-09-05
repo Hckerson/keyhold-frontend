@@ -20,7 +20,7 @@ import {
     sum,
 } from "@/lib/utils";
 
-const FEATURED_DATE_FORMAT = "MMM d, yyyy";
+export const FEATURED_DATE_FORMAT = "MMM d, yyyy";
 
 export type StatusFilter = ManagedListingStatus | "all";
 
