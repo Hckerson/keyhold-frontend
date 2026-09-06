@@ -87,9 +87,11 @@ export function LeadsTopProspectHero({
                             {CALL_ACTION}
                         </Button>
                     )}
-                    <Button type="button" size="sm" onClick={onEmail}>
-                        {EMAIL_ACTION}
-                    </Button>
+                    {lead.email && (
+                        <Button type="button" size="sm" onClick={onEmail}>
+                            {EMAIL_ACTION}
+                        </Button>
+                    )}
                     {lead.stage === "pending" && (
                         <>
                             <Button
