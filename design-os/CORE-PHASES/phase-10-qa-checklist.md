@@ -123,8 +123,8 @@ Production-ready QA checklist ensuring:
 ### Lighthouse Audit
 
 ```bash
-npm run lighthouse:audit
-# Or: Chrome DevTools → Lighthouse tab
+pnpm build && pnpm start
+# Then: Chrome DevTools → Lighthouse tab
 ```
 
 **Targets:**
@@ -156,7 +156,7 @@ npm run lighthouse:audit
 ### Bundle Size
 
 ```bash
-npm run build
+pnpm build
 # Check: .next/static size
 ```
 
@@ -182,38 +182,37 @@ npm run build
 
 - [ ] Strict mode enabled (`"strict": true`)
 - [ ] No `any` types
-- [ ] Build passes (`tsc --noEmit`)
+- [ ] Type check passes (`pnpm type-check`)
 
 ### ESLint & Prettier
 
-- [ ] No lint errors (`npm run lint` passes)
-- [ ] Code formatted (`npm run format`)
+- [ ] No lint errors (`pnpm lint` passes)
+- [ ] Code formatted (`pnpm format`)
 - [ ] Pre-commit hook runs linter
 
 ### Security
 
-- [ ] `npm audit` passes (no high/critical CVEs)
+- [ ] `pnpm audit` passes (no high/critical CVEs)
 - [ ] Secrets not in code (.env.local not committed)
 - [ ] No API keys in client code
 - [ ] XSS prevention (no innerHTML)
 - [ ] CSRF tokens on POST/PATCH/DELETE
-- [ ] Rate limiting on API routes
+- [ ] Rate limiting enforced by the NestJS backend
 
 ### Testing
 
-- [ ] Unit tests >80% (lib/, hooks/)
+- [ ] Unit tests >80% (lib/ — utils, mappers, validations, hooks)
 - [ ] Integration tests >60% (components/)
-- [ ] E2E tests cover critical paths
-- [ ] All tests passing
+- [ ] All tests passing (`pnpm test`)
 
 ---
 
 ## Design System Compliance
 
-- [ ] No hardcoded colors (use CSS variables `var(--color-*)`)
-- [ ] No hardcoded spacing (use CSS variables `var(--spacing-*)`)
-- [ ] No hardcoded typography (use CSS variables `var(--text-*)`)
-- [ ] No hardcoded motion (use CSS variables `var(--motion-*)`)
+- [ ] No hardcoded colors (use CSS variables `var(--colors-*)` or Tailwind theme names)
+- [ ] No hardcoded spacing (use the named scale classes `.pad` / `.gap`, or `var(--spacing-*)`)
+- [ ] No hardcoded typography (use CSS variables `var(--font-sizes-*)`)
+- [ ] No hardcoded motion (use `var(--durations-*)` / `var(--timing-functions-*)`, or `lib/config/motion.ts`)
 - [ ] Component reuse verified (no duplicate patterns)
 
 ---
