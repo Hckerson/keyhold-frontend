@@ -53,7 +53,7 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Derivation logic moves to `lib/data/`, JSX to `components/`. The rule targets complexity, not length: `lib/enums/enums.ts` is exempt, because a flat list of enum literals and their label maps has no seam to split on and dividing it by domain would scatter one lookup across five files. Any other exemption gets written here before it is taken.
 - **Add packages with `pnpm add` — only once rule 5 has been satisfied.** Never hand-edit `package.json`.
-- **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
+- **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/archive/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
 
 ## Before you commit or push
 
