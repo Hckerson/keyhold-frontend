@@ -4,6 +4,12 @@
 
 ---
 
+## Authority
+
+`.claude/CLAUDE.md` at the repo root is the binding specification for folder placement, data flow, naming, and file rules. This phase describes the shape of the codebase and the reasoning behind it. Where the two disagree, `.claude/CLAUDE.md` wins.
+
+---
+
 ## Overview
 
 Frontend architecture transforms Phases 1-7 (design vision, pages, components, tokens) into a production-ready Next.js codebase. This phase specifies:
@@ -11,10 +17,9 @@ Frontend architecture transforms Phases 1-7 (design vision, pages, components, t
 - Folder structure
 - Route organization (App Router)
 - Layouts and providers
-- Hook system (API + UI)
+- Hook system
 - API client organization
 - State management strategy
-- Code splitting and lazy loading
 - Type safety enforcement
 - Environment configuration
 
@@ -22,248 +27,233 @@ Frontend architecture transforms Phases 1-7 (design vision, pages, components, t
 
 ---
 
+## Backend Boundary
+
+The frontend has **no App Router API routes**. All data comes from the NestJS backend in `../backend`, reached through `lib/api/client.ts`. Endpoints are named once in `lib/constants.ts` under `config.api.*` and never inlined.
+
+`proxy.ts` at the repo root handles request forwarding to the backend in development.
+
+---
+
 ## Folder Structure
 
 ```
-real-estate-platform/
-├── app/                          # Next.js App Router
-│   ├── (auth)/                   # Auth routes group
-│   │   ├── signup/
-│   │   │   └── page.tsx
+frontend/
+├── app/                          # Next.js App Router — pages compose, nothing else
+│   ├── (auth)/                   # Auth route group
 │   │   ├── login/
-│   │   │   └── page.tsx
+│   │   ├── signup/
 │   │   ├── reset-password/
-│   │   │   └── page.tsx
-│   │   └── layout.tsx            # AuthLayout
+│   │   └── layout.tsx            # Auth layout
 │   │
-│   ├── (browse)/                 # Buyer routes group
+│   ├── (public)/                 # Public marketing + discovery
 │   │   ├── page.tsx              # Home /
-│   │   ├── search/
-│   │   │   └── page.tsx          # /search
-│   │   ├── listing/
-│   │   │   └── [id]/
-│   │   │       └── page.tsx      # /listing/:id
-│   │   ├── map/
-│   │   │   └── page.tsx          # /map
-│   │   └── layout.tsx            # AppLayout (header, footer, nav)
+│   │   ├── search/               # /search
+│   │   ├── listing/[id]/         # /listing/:id
+│   │   └── layout.tsx            # App layout (header, footer)
 │   │
-│   ├── dashboard/                # Authenticated user routes
-│   │   ├── layout.tsx            # DashboardLayout (sidebar)
-│   │   ├── page.tsx              # /dashboard (overview)
+│   ├── dashboard/                # Buyer portal
+│   │   ├── layout.tsx            # Portal shell (sidebar + topbar)
+│   │   ├── page.tsx              # /dashboard
 │   │   ├── saved/
-│   │   │   └── page.tsx          # /dashboard/saved
+│   │   ├── interests/
 │   │   ├── offers/
-│   │   │   └── page.tsx          # /dashboard/offers
+│   │   │   └── [id]/
 │   │   ├── viewings/
-│   │   │   └── page.tsx          # /dashboard/viewings
 │   │   ├── messages/
-│   │   │   └── page.tsx          # /dashboard/messages
-│   │   ├── alerts/
-│   │   │   └── page.tsx          # /dashboard/alerts
-│   │   └── settings/
-│   │       └── page.tsx          # /dashboard/settings
-│   │
-│   ├── agent/                    # Agent routes
-│   │   ├── layout.tsx            # AgentDashboardLayout
-│   │   ├── dashboard/
-│   │   │   └── page.tsx          # /agent/dashboard
-│   │   ├── listings/
-│   │   │   └── page.tsx          # /agent/listings
-│   │   ├── leads/
-│   │   │   └── page.tsx          # /agent/leads
-│   │   ├── pipeline/
-│   │   │   └── page.tsx          # /agent/pipeline
-│   │   ├── calendar/
-│   │   │   └── page.tsx          # /agent/calendar
-│   │   ├── analytics/
-│   │   │   └── page.tsx          # /agent/analytics
-│   │   └── settings/
-│   │       └── page.tsx          # /agent/settings
-│   │
-│   ├── admin/                    # Admin routes
-│   │   ├── layout.tsx            # AdminLayout
-│   │   ├── page.tsx              # /admin (overview)
-│   │   ├── listings/
-│   │   │   └── page.tsx          # /admin/listings (moderation)
-│   │   ├── users/
-│   │   │   └── page.tsx          # /admin/users
 │   │   ├── transactions/
-│   │   │   └── page.tsx          # /admin/transactions
-│   │   ├── payments/
-│   │   │   └── page.tsx          # /admin/payments
-│   │   ├── reports/
-│   │   │   └── page.tsx          # /admin/reports
-│   │   ├── verifications/
-│   │   │   └── page.tsx          # /admin/verifications
+│   │   ├── alerts/
 │   │   └── settings/
-│   │       └── page.tsx          # /admin/settings
 │   │
-│   ├── api/                      # API routes (server endpoints)
+│   ├── agent/                    # Agent portal
+│   │   ├── layout.tsx
+│   │   ├── page.tsx              # /agent
 │   │   ├── listings/
-│   │   │   ├── route.ts          # GET /listings, POST /listings (search)
+│   │   │   ├── new/
+│   │   │   └── [id]/edit/
+│   │   ├── leads/
+│   │   ├── requests/
+│   │   ├── pipeline/
+│   │   ├── calendar/
+│   │   ├── concierge/
+│   │   ├── analytics/
+│   │   └── settings/
+│   │
+│   ├── admin/                    # Admin portal
+│   │   ├── layout.tsx
+│   │   ├── page.tsx              # /admin
+│   │   ├── listings/             # moderation
+│   │   ├── users/
 │   │   │   └── [id]/
-│   │   │       └── route.ts      # GET /listings/:id
-│   │   ├── offers/
-│   │   │   ├── route.ts          # POST /offers (create)
-│   │   │   └── [id]/
-│   │   │       └── route.ts      # PATCH /offers/:id (update)
-│   │   ├── messages/
-│   │   │   └── route.ts          # GET /messages, POST /messages
-│   │   ├── auth/
-│   │   │   ├── signup/
-│   │   │   │   └── route.ts
-│   │   │   ├── login/
-│   │   │   │   └── route.ts
-│   │   │   └── logout/
-│   │   │       └── route.ts
-│   │   └── webhooks/
-│   │       └── [provider]/
-│   │           └── route.ts      # Payment webhooks, etc.
+│   │   ├── transactions/
+│   │   ├── payments/
+│   │   ├── reports/
+│   │   ├── verifications/
+│   │   └── settings/
 │   │
 │   ├── layout.tsx                # Root layout (providers, fonts, globals)
-│   ├── page.tsx                  # Will be handled by (browse)/page.tsx
-│   ├── not-found.tsx             # 404 page
-│   └── error.tsx                 # Error boundary
+│   ├── not-found.tsx             # 404
+│   ├── icon.svg / apple-icon.tsx # Favicons
+│   ├── robots.ts
+│   └── sitemap.ts
 │
-├── components/                   # React components (Phase 6 output)
-│   ├── ui/                       # Primitives (Button, Input, etc.)
-│   │   ├── button.tsx
-│   │   ├── input.tsx
-│   │   ├── select.tsx
-│   │   ├── checkbox.tsx
-│   │   ├── badge.tsx
-│   │   ├── icon.tsx
-│   │   ├── image.tsx
-│   │   ├── modal.tsx
-│   │   ├── toast.tsx
-│   │   └── skeleton.tsx
+├── components/
+│   ├── ui/                       # Domain-free primitives, reusable in any app
+│   │   ├── charts/
+│   │   ├── forms/
+│   │   └── …                     # button, input, badge, skeleton, …
 │   │
-│   ├── patterns/                 # Patterns (Filter Panel, Table, etc.)
-│   │   ├── filter-panel.tsx
-│   │   ├── data-table.tsx
-│   │   ├── dropdown-menu.tsx
-│   │   ├── tabs.tsx
-│   │   ├── accordion.tsx
-│   │   ├── pagination.tsx
-│   │   ├── date-picker.tsx
-│   │   └── multi-step-form.tsx
+│   ├── patterns/                 # Generic compositions over primitives
+│   │   └── …                     # data-table*, filter-pills, stat-grid,
+│   │                             #   section-shell, console-unavailable, …
 │   │
-│   ├── sections/                 # Sections (composed from patterns + primitives)
-│   │   ├── hero-search.tsx       # Phase 5 section
-│   │   ├── listing-card.tsx
-│   │   ├── filter-panel-search.tsx
-│   │   ├── results-grid.tsx
-│   │   ├── photo-gallery.tsx
-│   │   ├── listing-details.tsx
-│   │   ├── agent-card.tsx
-│   │   ├── offer-form.tsx
-│   │   ├── message-thread.tsx
-│   │   └── quick-stats.tsx
+│   ├── features/                 # Reusable domain leaves — rows, tables, marks, modals
+│   │   ├── admin/  agent/  auth/  dashboard/
+│   │   ├── listings/  messaging/  offers/  settings/
+│   │   └── shared/               # used by two or more portals
 │   │
-│   ├── layout/                   # Layout components
-│   │   ├── app-layout.tsx        # Main layout (header, footer, main)
-│   │   ├── dashboard-layout.tsx  # Dashboard layout (sidebar + main)
-│   │   ├── agent-layout.tsx      # Agent dashboard layout
-│   │   ├── admin-layout.tsx      # Admin dashboard layout
-│   │   ├── auth-layout.tsx       # Auth pages layout
-│   │   ├── header.tsx
-│   │   ├── footer.tsx
-│   │   ├── sidebar.tsx
-│   │   └── mobile-menu.tsx
+│   ├── sections/                 # Route-level composition, one set per route
+│   │   ├── home/  search/  listing/
+│   │   ├── dashboard/  agent/  admin/
+│   │   └── …                     # *-console, *-header, *-main, *-rail, *-stat-band
 │   │
-│   └── providers/                # Context/Provider wrappers
-│       ├── auth-provider.tsx
-│       ├── query-provider.tsx
-│       ├── theme-provider.tsx
-│       └── motion-provider.tsx
+│   ├── layout/                   # App chrome
+│   │   └── …                     # header, footer, sidebar*, topbar*,
+│   │                             #   app-layout, portal-shell, command-palette
+│   │
+│   ├── brand/                    # Wordmark, logo mark, logo chip
+│   └── providers/                # provider, session-provider, motion-provider
 │
-├── hooks/                        # Custom hooks
-│   ├── api/                      # API hooks (consume lib/api/*)
-│   │   ├── use-listings.ts       # Search, filter, fetch listings
-│   │   ├── use-offers.ts         # Create, update, fetch offers
-│   │   ├── use-messages.ts       # Fetch, send messages
-│   │   ├── use-auth.ts           # Login, signup, logout
-│   │   ├── use-user.ts           # Fetch current user
-│   │   └── use-viewings.ts       # Schedule, cancel viewings
+├── lib/                          # Core logic layer — no JSX
+│   ├── api/                      # Transport + resource calls (no hooks)
+│   │   ├── client.ts             # The only place fetch/axios is configured
+│   │   ├── server.ts             # Server-side calls
+│   │   ├── query-client.ts       # TanStack Query client
+│   │   └── <resource>.ts         # properties, offers, messages, users, …
 │   │
-│   ├── ui/                       # UI-specific hooks
-│   │   ├── use-modal.ts          # Modal open/close state
-│   │   ├── use-toast.ts          # Toast notifications
-│   │   ├── use-filter.ts         # Filter state management
-│   │   ├── use-pagination.ts     # Pagination state
-│   │   └── use-form.ts           # Form state (wrap React Hook Form)
+│   ├── hooks/                    # use-<resource>.ts wrapping lib/api/*
+│   │   ├── query-keys.ts         # Central query key factory
+│   │   └── use-*.ts
 │   │
-│   └── utils/                    # Utility hooks
-│       ├── use-local-storage.ts  # Persist to localStorage
-│       ├── use-debounce.ts       # Debounce hook
-│       ├── use-media-query.ts    # Responsive breakpoints
-│       └── use-async.ts          # Async data fetching
+│   ├── data/                     # Route-scoped selectors, filter/sort options, copy
+│   │   └── __fixtures__/         # Test-only fixtures
+│   │
+│   ├── utils/                    # Pure helpers + to-<entity>.ts mappers
+│   ├── types/                    # Shared domain types, re-exported by index.ts
+│   ├── validations/              # Zod schemas — types derive with z.infer
+│   ├── enums/                    # enums.ts — literals and label maps
+│   ├── config/                   # Feature-scoped config (nav, tones, motion, copy)
+│   ├── stores/                   # Zustand stores — auth-store, toast-store
+│   └── constants.ts              # config.api.* endpoints, durations, limits
 │
-├── lib/                          # Core logic layer
-│   ├── api/                      # API client functions (no hooks)
-│   │   ├── listings.ts           # Fetch, search listings
-│   │   ├── offers.ts             # CRUD offers
-│   │   ├── messages.ts           # CRUD messages
-│   │   ├── auth.ts               # Auth endpoints
-│   │   ├── users.ts              # User profile endpoints
-│   │   └── admin.ts              # Admin endpoints
-│   │
-│   ├── types/                    # Shared TypeScript types
-│   │   ├── listing.ts            # Listing type + validation schema
-│   │   ├── offer.ts              # Offer type
-│   │   ├── message.ts            # Message type
-│   │   ├── user.ts               # User type
-│   │   └── index.ts              # Export all types
-│   │
-│   ├── validations/              # Zod schemas for runtime validation
-│   │   ├── listing.ts            # ListingSchema, etc.
-│   │   ├── offer.ts              # OfferSchema
-│   │   ├── message.ts            # MessageSchema
-│   │   ├── auth.ts               # SignupSchema, LoginSchema
-│   │   └── index.ts              # Export all schemas
-│   │
-│   ├── utils/                    # Utility functions
-│   │   ├── format.ts             # formatPrice, formatDate, etc.
-│   │   ├── validators.ts         # Email, phone validation
-│   │   ├── storage.ts            # localStorage helpers
-│   │   ├── string.ts             # slugify, truncate, etc.
-│   │   └── index.ts              # Export all utils
-│   │
-│   ├── constants.ts              # Global constants (no hardcoding!)
-│   │   # API endpoints, durations, limits, enums
-│   │   # export const API_BASE = process.env.NEXT_PUBLIC_API_URL
-│   │   # export const DEBOUNCE_DELAY = 300
-│   │   # export const LISTINGS_PER_PAGE = 20
-│   │
-│   ├── config.ts                 # Environment-based config
-│   │   # export const config = { apiUrl, isDev, maxFileSize, ... }
-│   │
-│   ├── tokens.ts                 # Design tokens (Phase 7) exported for code
-│   │   # export const tokens = { colors, spacing, typography, ... }
-│   │
-│   └── motion.ts                 # Motion/animation constants
-│       # export const motion = { fast: 150, normal: 300, slow: 500 }
+├── styles/
+│   ├── tokens.css                # Design tokens as CSS custom properties (Phase 7)
+│   └── globals.css               # @theme mapping + named scale classes
 │
-├── styles/                       # Global styles
-│   ├── globals.css               # Reset, root variables, utility classes
-│   ├── tokens.css                # Design tokens (CSS variables, Phase 7)
-│   └── animations.css            # Keyframe animations, transitions
+├── public/
+│   ├── fonts/
+│   └── brand/
 │
-├── public/                       # Static assets
-│   ├── fonts/                    # Custom fonts (Merriweather, Inter, JetBrains Mono)
-│   ├── images/                   # Placeholder images
-│   └── icons/                    # SVG icons (if not using Lucide)
+├── design-os/                    # This design system. Not application code.
+├── docs/                         # Prose docs, ADRs. Not application code.
 │
-├── middleware.ts                 # Next.js middleware (auth, redirects)
-├── next.config.js                # Next.js config
+├── proxy.ts                      # Dev request forwarding to the NestJS backend
+├── next.config.ts                # Next.js config (no @/ aliases — they resolve wrong here)
 ├── tsconfig.json                 # TypeScript strict mode
-├── tailwind.config.js            # Tailwind (if using)
-├── .env.local                    # Local environment variables
-├── .env.example                  # Template for env vars
-├── package.json                  # Dependencies
-└── README.md                     # Project documentation
+├── vitest.config.mts             # Vitest config
+├── eslint.config.mjs
+├── postcss.config.mjs            # Tailwind v4 via @tailwindcss/postcss
+├── .env.example
+└── package.json
 ```
 
-See IMPLEMENTATION_PROMPT.md for the complete guide on implementing this architecture.
+**No `tailwind.config.ts`.** Tailwind v4 is configured entirely in `styles/globals.css` through the `@theme` block, which maps the `--colors-*` / `--fonts-*` / `--font-sizes-*` custom properties from `tokens.css` onto Tailwind's theme names.
 
-**Phase 8 Complete.**
+---
+
+## Portal Data Flow
+
+Each portal route follows one shape:
+
+- **`*-console`** is the only section that calls hooks. It derives shapes with `useMemo` plus `lib/utils/to-*` mappers, renders `ConsoleUnavailable` with a `CONSOLE_FALLBACKS` entry on error, and passes data down as props.
+- **`*-main` / `*-rail` / `*-stat-band`** never fetch. They receive rows as props and may import `lib/data/` selectors and types to shape what they were given.
+
+This keeps every route to a single fetch boundary and makes the presentational sections trivially testable.
+
+---
+
+## API Layer
+
+Three layers, each with one job:
+
+```typescript
+// lib/constants.ts — endpoints named once
+export const config = {
+    api: {
+        base:
+            process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api",
+        properties: {
+            list: "/properties",
+            detail: (id: string) => `/properties/${id}`,
+        },
+    },
+};
+
+// lib/api/properties.ts — resource calls, no hooks
+import { query } from "@/lib/api/client";
+import { config } from "@/lib/constants";
+
+export const propertiesAPI = {
+    list: (input: PropertyQuery = {}) =>
+        query.get<PropertyPage>(config.api.properties.list, {
+            params: toParams(input),
+        }),
+};
+
+// lib/hooks/use-properties.ts — caching, keys, feedback
+export function useProperties(input: PropertyQuery = {}) {
+    return useQuery({
+        queryKey: queryKeys.properties.list(input),
+        queryFn: () => propertiesAPI.list(input),
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+```
+
+Components consume hooks. They never call `lib/api/*` and never touch `fetch` directly.
+
+---
+
+## State Management
+
+| State                | Tool                                           |
+| -------------------- | ---------------------------------------------- |
+| Server state         | TanStack Query                                 |
+| Local component      | `useState` / `useReducer`                      |
+| Shareable UI state   | URL search params                              |
+| Persistence          | `useSyncExternalStore` + `localStorage`        |
+| Cross-tree singleton | Zustand — `lib/stores/` (auth session, toasts) |
+
+Zustand is reserved for state that genuinely spans the tree and outlives a route. A new store requires a stated reason.
+
+---
+
+## Type Safety
+
+- TypeScript strict mode. No `any` — use `unknown` with narrowing, or a precise type.
+- Types derive from the source of truth: `z.infer` on Zod schemas in `lib/validations/`.
+- Shared domain types live in `lib/types/<domain>.ts` and are re-exported by `lib/types/index.ts`. Components import types; they never declare shared ones.
+- API responses are validated at the boundary, never loosely typed.
+
+---
+
+## File Rules
+
+- One component per file. Kebab-case filename matching the export.
+- Absolute imports via `@/`. Never deep-relative.
+- Any file over ~150 lines gets split — `page.tsx` included. Derivation moves to `lib/data/`, JSX to `components/`.
+
+---
+
+**Phase 8 Complete.** See `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md` for the sprint-level guide.

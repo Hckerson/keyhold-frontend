@@ -1,60 +1,57 @@
 # Real Estate Platform — Master Implementation Prompt
 
-**Use this prompt in a new Claude Code session to implement the entire design system.**
+**The engineering synthesis of Phases 8-10, written for this codebase.**
+
+---
+
+## Read This Before Using It
+
+Three things about this document:
+
+1. **It is project-specific.** It names this product's routes, portals, APIs, sprint plan and staffing. It is not a reusable seed prompt for another project.
+2. **It is a plan, not a mirror of the tree.** Much of the roadmap below is already built — the four route groups, the component library, and the API layer all exist. Check the working tree before acting on a sprint.
+3. **`.claude/CLAUDE.md` overrides it.** That file is the binding specification for folder placement, data flow, naming, styling, dependency policy and testing. Where this document and `.claude/CLAUDE.md` disagree, `.claude/CLAUDE.md` wins.
 
 ---
 
 ## Context
 
-You are implementing **Phase 8-10 of the Real Estate Platform Design Operating System**. All strategic work (Phases 1-7) is complete. Your job is to build the Next.js codebase from specification.
-
-**Design OS Location:** `/design-os/` folder in project root.
+**Design OS Location:** `design-os/` in the frontend root.
 
 **Read These First (In Order):**
 
-1. `design-os/DESIGN-OS-COMPLETE.md` – Master index, overview, how to use
-2. `design-os/phase-8-frontend-architecture.md` – Codebase structure (you are here)
-3. `design-os/phase-4-page-blueprints.html` – Page specifications (what to build)
-4. `design-os/phase-9-implementation-roadmap.md` – Sprint breakdown, timelines
-5. `design-os/phase-10-qa-checklist.md` – QA requirements before shipping
-
----
-
-## Your Mission
-
-**Build the complete Next.js frontend from the design OS specification. No ambiguity. Production-ready.**
-
-### Phases to Execute
-
-- **Phase 8:** ✅ (Read architecture spec)
-- **Phase 9:** 🏗️ (Execute 16-week roadmap, starting with Sprint 1-2)
-- **Phase 10:** ✓ (Verify QA checklist before shipping)
+1. `.claude/CLAUDE.md` — binding rules and required patterns
+2. `design-os/INDEX/DESIGN-OS-COMPLETE.md` — master index, overview, how to use
+3. `design-os/CORE-PHASES/phase-8-frontend-architecture.md` — codebase structure
+4. `design-os/CORE-PHASES/phase-4-page-blueprints.md` — page specifications
+5. `design-os/CORE-PHASES/phase-9-implementation-roadmap.md` — sprint breakdown
+6. `design-os/CORE-PHASES/phase-10-qa-checklist.md` — QA requirements before shipping
 
 ---
 
 ## Phase 8: Frontend Architecture (READ FIRST)
 
-**File:** `design-os/phase-8-frontend-architecture.md`
+**File:** `design-os/CORE-PHASES/phase-8-frontend-architecture.md`
 
 This specifies:
 
 - Folder structure (where every file goes)
-- Route organization (App Router)
-- Layouts (RootLayout, AppLayout, DashboardLayout, etc.)
-- Providers (Auth, Query, Theme, Motion)
-- Hooks (API hooks, UI hooks, utils)
-- API organization (lib/api/\*)
-- State management (TanStack Query + Context, no unnecessary Zustand)
+- Route organization (App Router, four groups: `(auth)`, `(public)`, `dashboard`, `agent`, `admin`)
+- Layouts and portal shells
+- Providers (`components/providers/`)
+- Hooks (`lib/hooks/use-<resource>.ts`)
+- API organization (`lib/api/client.ts` transport, `lib/api/<resource>.ts` calls)
+- State management (TanStack Query for server state; Zustand in `lib/stores/` for session and toasts)
 - Type safety (TypeScript strict, Zod validation)
 - Environment variables
 
-**Action:** Read Phase 8 in full. It's the architecture blueprint for everything you build.
+**Note:** the frontend has **no App Router API routes**. All data comes from the NestJS backend in `../backend` via `lib/api/client.ts`, with endpoints named in `lib/constants.ts` under `config.api.*`.
 
 ---
 
-## Phase 9: Implementation Roadmap (YOUR PLAN)
+## Phase 9: Implementation Roadmap (THE PLAN)
 
-**File:** `design-os/phase-9-implementation-roadmap.md`
+**File:** `design-os/CORE-PHASES/phase-9-implementation-roadmap.md`
 
 **16-Week Sprints:**
 
@@ -71,15 +68,15 @@ This specifies:
 
 **Total:** ~1120 hours, 4-5 engineers, 16 weeks.
 
-**Your Task This Sprint:** Execute Sprints 1-2 (foundation). Then move to 3-4 (components), etc.
+The foundation, component library and all four portals exist in the tree today. Treat the sprint table as the original plan and the delivery order it implies — not as a to-do list to start from zero.
 
 ---
 
 ## Phase 4: Page Blueprints (SPEC REFERENCE)
 
-**File:** `design-os/phase-4-page-blueprints.html` (open in browser)
+**File:** `design-os/CORE-PHASES/phase-4-page-blueprints.md`
 
-For each page you build, this spec defines:
+For each page, this spec defines:
 
 - Purpose & objectives
 - Primary tasks
@@ -93,7 +90,7 @@ For each page you build, this spec defines:
 
 - Purpose: Find properties matching criteria
 - Modules: Filter Panel, Results Grid, Pagination, Map Toggle
-- Data: Listings API (search with filters)
+- Data: Properties API (search with filters)
 - Responsive: Sidebar left (desktop) → Filters modal (mobile)
 - States: Loading (skeletons), No Results, Error handling
 
@@ -103,7 +100,7 @@ For each page you build, this spec defines:
 
 ## Phase 10: QA Checklist (VERIFY BEFORE SHIPPING)
 
-**File:** `design-os/phase-10-qa-checklist.md`
+**File:** `design-os/CORE-PHASES/phase-10-qa-checklist.md`
 
 Before launching, verify:
 
@@ -113,254 +110,190 @@ Before launching, verify:
 - ✓ Performance (Lighthouse >90, LCP <2.5s, bundle <250kb)
 - ✓ Security (TypeScript strict, Zod validation, no secrets)
 - ✓ Code quality (ESLint passes, no console errors)
-- ✓ Testing (unit >80%, E2E critical paths)
+- ✓ Testing (unit coverage on `lib/`, critical paths)
 - ✓ Design system (tokens only, no hardcoded values)
 
-**Run this checklist at sprint 8 (week 15-16).**
-
 ---
 
-## Getting Started (Sprint 1-2: Weeks 1-2)
+## The Installed Stack
 
-### Week 1: Setup
+**Do not install anything new without explicit approval.** Adding, upgrading or swapping a package is the user's call — name the package, say why the existing stack does not cover it, and wait for a yes. Once approved, install with `pnpm add`; never hand-edit `package.json`.
 
-**Tasks:**
+**Runtime:**
 
-- [ ] Read `phase-8-frontend-architecture.md` in full
-- [ ] Review existing folder structure (`app/`, `components/`, `lib/`, `hooks/`)
-- [ ] Create missing folders per Phase 8 spec
-- [ ] Set up TypeScript strict mode (tsconfig.json)
-- [ ] Install dependencies: TanStack Query, React Hook Form, Zod, Framer Motion, Lucide
+| Need         | Package                                                                |
+| ------------ | ---------------------------------------------------------------------- |
+| Framework    | `next` (App Router), `react`, `react-dom`                              |
+| Server state | `@tanstack/react-query` + devtools                                     |
+| Client state | `zustand`                                                              |
+| Transport    | `axios` (wrapped in `lib/api/client.ts`)                               |
+| Validation   | `zod`                                                                  |
+| Motion       | `motion` (**not** `framer-motion`)                                     |
+| Icons        | `lucide-react`                                                         |
+| Styling      | `tailwindcss` v4, `class-variance-authority`, `clsx`, `tailwind-merge` |
+| Charts       | `recharts`                                                             |
+| Dates        | `date-fns`, `react-day-picker`                                         |
+| IDs          | `nanoid`                                                               |
+| Payments     | `@stripe/stripe-js`, `@stripe/react-stripe-js`                         |
+| Auth tokens  | `jose`                                                                 |
 
-**Dependencies to Add:**
+**Dev:**
 
-```bash
-pnpm add @tanstack/react-query @tanstack/react-query-devtools
-pnpm add react-hook-form @hookform/resolvers
-pnpm add zod
-pnpm add framer-motion lucide-react next-themes
-pnpm add clsx
-```
+`typescript`, `eslint` + `typescript-eslint`, `prettier` (+ tailwind plugin), `vitest`, `@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`, `vitest-axe`, `jsdom`, `husky`, `lint-staged`.
 
-**Dev Dependencies:**
-
-```bash
-pnpm add -D @types/node @types/react @types/react-dom
-pnpm add -D vitest @testing-library/react @testing-library/jest-dom
-pnpm add -D @playwright/test
-pnpm add -D eslint prettier
-```
-
-- [ ] Create `.env.example` with required vars
-- [ ] Update `middleware.ts` for auth redirects
-- [ ] Set up design tokens (`lib/tokens.ts`, `styles/tokens.css`)
-- [ ] Create root layout (`app/layout.tsx`) with providers
-
-### Week 2: Architecture
-
-**Tasks:**
-
-- [ ] Create all providers (`components/providers/`: AuthProvider, QueryProvider, ThemeProvider, MotionProvider)
-- [ ] Create layout components (`components/layout/`: Header, Footer, Sidebar, AppLayout, DashboardLayout, AuthLayout)
-- [ ] Create all API client functions (`lib/api/`: listings.ts, offers.ts, messages.ts, auth.ts, users.ts)
-- [ ] Create all Zod schemas (`lib/validations/`: listing.ts, offer.ts, message.ts, auth.ts, user.ts)
-- [ ] Create utility functions (`lib/utils/`: format.ts, validators.ts, storage.ts, string.ts)
-- [ ] Create constants (`lib/constants.ts`: API endpoints, durations, limits, enums)
-
-**No UI components yet. Just infrastructure.**
-
-**Output by end of week 2:**
-
-- ✓ Boilerplate ready for pages
-- ✓ Type-safe API layer
-- ✓ Environment config
-- ✓ Providers working
-- ✓ Build passes
-
----
-
-## Building Pages (Starting Week 3)
-
-### Sprint 2-3: Component Library (Weeks 3-4)
-
-**Reference:** `design-os/phase-6-component-library.html`
-
-Build all primitives + patterns:
-
-- **Primitives:** Button, Input, Select, Checkbox, Badge, Icon, Image, Skeleton
-- **Patterns:** Modal, Toast, Banner, Tabs, Date Picker, Multi-Step Form
-- **Composed:** Listing Card, Filter Panel, Data Table (if needed week 5+)
-
-**Each component:**
-
-- TypeScript strict types
-- All variants per spec
-- Accessibility (keyboard, ARIA, focus)
-- Responsive (all breakpoints)
-- Examples with real data
-
-### Sprint 3-4: Search & Discovery (Weeks 5-6)
-
-**Reference:** `design-os/phase-4-page-blueprints.html` (pages 1-3)
-
-Build:
-
-- [ ] Home page (/ route)
-- [ ] Search Results (/search route)
-- [ ] Listing Details (/listing/:id route)
-- [ ] Map View (/map route, optional week 6)
-
-Each page uses sections from Phase 5:
-
-- Listing Card (grid, lazy-load, save action)
-- Filter Panel (sticky, collapsible, real-time)
-- Hero Search (autocomplete, property type)
-- Photo Gallery (hero + thumbnails, swipeable)
-
-**API Integration:**
-
-- [ ] listingsAPI.search() with filters
-- [ ] listingsAPI.getById() with full details
-- [ ] Save listing (authenticated)
-- [ ] Google Maps integration (geolocation, embed)
+**Not installed, and not to be assumed:** `react-hook-form`, `@hookform/resolvers`, `next-themes`, `@playwright/test`, `framer-motion`. Forms are built on the project's own `components/ui/forms/` primitives and Zod schemas.
 
 ---
 
 ## Code Standards (NON-NEGOTIABLE)
 
-### From CLAUDE.md (Project Instructions)
+### From `.claude/CLAUDE.md`
 
 1. **No comments.** Code reads clearly on its own. If it doesn't, the abstraction is wrong.
-2. **No hardcoding.** All constants in `lib/constants.ts` or feature-scoped constants.
-3. **No `any`.** Use `unknown` + narrowing or precise types. Derive from Zod.
-4. **Match architecture.** Don't invent patterns. Follow Phase 8 spec exactly.
-5. **Use framework natively.** Next.js features, TanStack Query, Zod already in stack.
-6. **Single source of truth.** Name decisions once as token and reference everywhere (Phase 7).
-7. **Minimize LOC.** Shorter solution when equally maintainable.
+2. **No hardcoding.** Endpoints in `config.api.*`, shapes from Zod, recurring copy in `lib/constants.ts` or `lib/config/<feature>.ts`, sample content in `lib/data/`.
+3. **No `any`.** Use `unknown` + narrowing or precise types. Derive from Zod with `z.infer`.
+4. **Match the existing architecture.** Don't invent patterns or locations. State the reason before deviating.
+5. **Use the framework natively.** Don't add a dependency that duplicates one already installed.
+6. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere.
+7. **Minimize LOC.** Shortest solution that stays maintainable.
+8. **No `console.log` / `console.error`** in committed code.
 
-### From Design OS Phase 8
+### Styling
 
-- All colors → CSS variables (`var(--color-*)`), never hardcoded
-- All spacing → CSS variables (`var(--spacing-*)`), never hardcoded
-- All typography → CSS variables (`var(--text-*)`), never hardcoded
-- All motion → CSS variables (`var(--motion-*)`), never hardcoded
-- API functions in `lib/api/`, never called directly from components
-- Hooks in `hooks/`, wrapping API functions or UI state
-- Zod schemas for validation at boundaries (API responses, form submissions)
-- TypeScript strict mode on (no implicit any)
+- Token-first: named scale classes in `styles/globals.css` (`.pad`, `.pad-x`, `.pad-y`, `.gap`, `.gap-x`, `.gap-y`, `.smooth`, `.micro-label`, `.rail-label`) over tokens in `styles/tokens.css`.
+- Inline responsive utility chains are forbidden.
+- Colors, typography, spacing and motion are theme tokens — never hardcoded values.
+- Tailwind v4 has no config file; the `@theme` block in `globals.css` maps `--colors-*` / `--fonts-*` / `--font-sizes-*` onto Tailwind names.
 
 ### API Pattern (Critical)
 
 ```typescript
-// lib/api/listings.ts - Pure async functions, no hooks
-export const listingsAPI = {
-  search: async (query: SearchQuery) => {
-    const res = await fetch(`${API_BASE}/listings?${...}`)
-    if (!res.ok) throw new Error('Search failed')
-    return res.json()
-  }
-}
+// lib/constants.ts — endpoints named once
+export const config = {
+    api: {
+        base:
+            process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api",
+        properties: {
+            list: "/properties",
+            detail: (id: string) => `/properties/${id}`,
+        },
+    },
+};
 
-// hooks/api/use-listings.ts - Wraps API in hook with caching
-export function useListings(query: SearchQuery) {
-  return useQuery({
-    queryKey: ['listings', query],
-    queryFn: () => listingsAPI.search(query),
-    staleTime: 5 * 60 * 1000,
-  })
-}
+// lib/api/properties.ts — resource calls over the shared transport, no hooks
+import { query } from "@/lib/api/client";
+import { config } from "@/lib/constants";
+import type { PropertyPage, PropertyQuery } from "@/lib/validations/property";
 
-// Component consumes hook, never calls API directly
-export function SearchResults() {
-  const { data } = useListings(searchParams)
-  return <div>{data?.listings.map(...)}</div>
+export const propertiesAPI = {
+    list: (input: PropertyQuery = {}) =>
+        query.get<PropertyPage>(config.api.properties.list, {
+            params: toParams(input),
+        }),
+};
+
+// lib/hooks/use-properties.ts — caching, keys, feedback
+import { useQuery } from "@tanstack/react-query";
+import { propertiesAPI } from "@/lib/api/properties";
+import { queryKeys } from "@/lib/hooks/query-keys";
+import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
+
+export function useProperties(input: PropertyQuery = {}) {
+    return useQuery({
+        queryKey: queryKeys.properties.list(input),
+        queryFn: () => propertiesAPI.list(input),
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
 }
 ```
+
+The `*-console` section consumes the hook, derives shapes with `useMemo` and `lib/utils/to-*` mappers, renders `ConsoleUnavailable` with a `CONSOLE_FALLBACKS` entry on error, and passes rows down as props. `*-main` / `*-rail` / `*-stat-band` never fetch.
 
 ---
 
 ## Testing Strategy (Phase 10)
 
-### Unit Tests (Vitest)
+**Runner:** Vitest, configured in `vitest.config.mts`. Tests are colocated as `<unit>.test.ts(x)` beside the unit they cover.
 
-- All `lib/` functions (utilities, validators, formatters)
+### Unit & Component Tests
+
+- All `lib/` functions (utilities, validators, formatters, mappers)
 - All Zod schemas (validation logic)
-- Component logic (not snapshots, behavior-focused)
-- Target: >80% coverage on lib/, hooks/
+- Component behavior via `@testing-library/react` — behavior, not snapshots
+- Accessibility assertions via `vitest-axe`
+- Mock at the `lib/api/<resource>.ts` boundary, never the hook
+- Test-only fixtures live in `lib/data/__fixtures__/`
+- A test name states the criterion it proves, not the function it calls
 
-### E2E Tests (Playwright)
+### Budget Tests
 
-- Signup flow
-- Search flow (filter, sort, pagination)
-- Listing details navigation
-- Save listing
-- Make offer (if built)
+`styles/bundle-budget.test.ts` and `styles/responsive-budget.test.ts` guard bundle size and responsive behavior as part of the normal suite.
 
-### Accessibility Tests
+### End-to-End
 
-- axe DevTools (automated)
-- Manual keyboard navigation
-- Screen reader testing (NVDA/JAWS/VoiceOver)
-- WCAG 2.2 AA compliance
+No E2E runner is installed. Adding one is a dependency decision that needs approval first — do not assume Playwright.
 
-### Performance Testing (Lighthouse CI)
+### Manual Accessibility
 
-- Every page >90 score
-- LCP <2.5s, FID <100ms, CLS <0.1
-- Bundle size <250kb (gzipped)
+- Keyboard navigation
+- Screen reader pass (NVDA / JAWS / VoiceOver)
+- WCAG 2.2 AA compliance per Phase 10
 
 ---
 
-## Deployment Checklist (Week 16)
+## Gates
 
-Before deploying:
+Formatting and linting are automated. They are not chores you run by hand.
 
-- [ ] All tests pass (unit + integration + E2E)
-- [ ] Type check passes (`tsc --noEmit`)
-- [ ] Lint passes (`npm run lint`)
-- [ ] Build succeeds (`npm run build`)
+- **Commit** — Husky's `pre-commit` runs `pnpm lint-staged`: `eslint --fix` then `prettier --write`, over staged files only.
+- **Push** — Husky's `pre-push` runs `pnpm type-check`, then `pnpm lint`, and blocks on failure. This is the real gate.
+- **Tests** — `pnpm test` is on you. A failing test is never left for later.
+
+`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep.
+
+### Before shipping
+
+- [ ] `pnpm test` passes
+- [ ] `pnpm type-check` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm build` succeeds
 - [ ] No console errors/warnings
-- [ ] Accessibility audit passes (axe)
-- [ ] Performance budget not exceeded (Lighthouse)
+- [ ] Accessibility audit passes
+- [ ] Performance budget not exceeded
 - [ ] Code review approved
-- [ ] QA sign-off (Phase 10 checklist complete)
+- [ ] Phase 10 checklist complete
 
 ---
 
 ## Key References
 
-| Phase | File                                    | Use For                                           |
-| ----- | --------------------------------------- | ------------------------------------------------- |
-| 1     | `phase-1-product-vision.html`           | Strategy, personas, KPIs (team alignment)         |
-| 2     | `phase-2-experience-maps.html`          | User flows, decision points (when building flows) |
-| 3     | `phase-3-information-architecture.html` | Navigation, IA, permissions (routing, auth)       |
-| 4     | `phase-4-page-blueprints.html`          | Page specs (REFERENCE FOR EVERY PAGE)             |
-| 5     | `phase-5-section-blueprints.html`       | Section specs (what sections compose pages)       |
-| 6     | `phase-6-component-library.html`        | Component specs (what components are in sections) |
-| 7     | `phase-7-design-tokens.html`            | Token system (colors, spacing, typography)        |
-| 8     | `phase-8-frontend-architecture.md`      | Codebase structure (REFERENCE CONSTANTLY)         |
-| 9     | `phase-9-implementation-roadmap.md`     | Sprint breakdown, timelines (project planning)    |
-| 10    | `phase-10-qa-checklist.md`              | QA requirements (pre-launch verification)         |
+All paths relative to `design-os/`.
+
+| Phase | File                                              | Use For                                           |
+| ----- | ------------------------------------------------- | ------------------------------------------------- |
+| —     | `../.claude/CLAUDE.md`                            | **Binding rules — overrides this document**       |
+| 1     | `CORE-PHASES/phase-1-product-vision.md`           | Strategy, personas, KPIs (team alignment)         |
+| 2     | `CORE-PHASES/phase-2-experience-maps.md`          | User flows, decision points (when building flows) |
+| 3     | `CORE-PHASES/phase-3-information-architecture.md` | Navigation, IA, permissions (routing, auth)       |
+| 4     | `CORE-PHASES/phase-4-page-blueprints.md`          | Page specs (REFERENCE FOR EVERY PAGE)             |
+| 5     | `CORE-PHASES/phase-5-section-blueprints.md`       | Section specs (what sections compose pages)       |
+| 6     | `CORE-PHASES/phase-6-component-library.md`        | Component specs (what components are in sections) |
+| 7     | `CORE-PHASES/phase-7-design-tokens.md`            | Token system (colors, spacing, typography)        |
+| 8     | `CORE-PHASES/phase-8-frontend-architecture.md`    | Codebase structure (REFERENCE CONSTANTLY)         |
+| 9     | `CORE-PHASES/phase-9-implementation-roadmap.md`   | Sprint breakdown, timelines (project planning)    |
+| 10    | `CORE-PHASES/phase-10-qa-checklist.md`            | QA requirements (pre-launch verification)         |
 
 ---
 
 ## Success Metrics
 
-**Sprint Completion:**
+**Per change:**
 
-- [ ] All tasks complete
-- [ ] Tests passing (>80% unit, critical E2E)
+- [ ] Tests passing
 - [ ] Zero TypeScript errors
 - [ ] Zero ESLint errors
 - [ ] Code review approved
-- [ ] QA sign-off
-
-**Phase Completion:**
-
-- [ ] Architecture: Boilerplate ready, types correct, providers working
-- [ ] Components: All primitives + patterns built, accessible, tested
-- [ ] Pages: Implemented per Phase 4 spec, responsive, performant
-- [ ] QA: WCAG AA, performance, security, all passing
 
 **MVP 1.5 Launch:**
 
@@ -375,44 +308,32 @@ Before deploying:
 
 ## Questions?
 
-1. **Architecture unclear?** → Read `phase-8-frontend-architecture.md` again
-2. **What to build?** → Check `phase-4-page-blueprints.html`
-3. **Design token?** → See `phase-7-design-tokens.html`
-4. **QA requirements?** → Review `phase-10-qa-checklist.md`
-5. **Timeline?** → Follow `phase-9-implementation-roadmap.md` sprints
+1. **Where does this file go?** → `.claude/CLAUDE.md`, then `CORE-PHASES/phase-8-frontend-architecture.md`
+2. **What to build?** → `CORE-PHASES/phase-4-page-blueprints.md`
+3. **Design token?** → `CORE-PHASES/phase-7-design-tokens.md`
+4. **QA requirements?** → `CORE-PHASES/phase-10-qa-checklist.md`
+5. **Timeline?** → `CORE-PHASES/phase-9-implementation-roadmap.md`
 
 ---
 
 ## Start Here
 
 ```bash
-# 1. Read architecture
-cat design-os/phase-8-frontend-architecture.md
+# 1. Read the binding rules
+cat .claude/CLAUDE.md
 
-# 2. Review existing structure
-ls -la app/ components/ lib/ hooks/ styles/
+# 2. Read the architecture
+cat design-os/CORE-PHASES/phase-8-frontend-architecture.md
 
-# 3. Install dependencies
+# 3. Review the existing tree
+ls app/ components/ lib/ styles/
+
+# 4. Install (nothing new — the lockfile is the contract)
 pnpm install
 
-# 4. Set up TypeScript strict mode
-# (see Phase 8 tsconfig.json section)
+# 5. Run it
+pnpm dev
 
-# 5. Create layout.tsx with providers
-# (see Phase 8 RootLayout section)
-
-# 6. Build component library (Week 3-4)
-# (see Phase 6 component specs)
-
-# 7. Build pages (Week 5+)
-# (see Phase 4 page blueprints)
-
-# 8. Test and ship (Week 15-16)
-# (see Phase 10 QA checklist)
+# 6. Verify before pushing
+pnpm test && pnpm type-check && pnpm lint
 ```
-
----
-
-**You have everything you need. Build with confidence. The design is bulletproof.**
-
-**Phase 8-10 Implementation Starts Now. Good luck! 🚀**
