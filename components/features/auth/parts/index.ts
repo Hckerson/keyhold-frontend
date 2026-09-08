@@ -35,7 +35,15 @@ export type {
 } from "./auth-title-block";
 
 export { AuthSubmit } from "./auth-submit";
+
+export { PasswordStrength } from "./password-strength";
+export type { PasswordStrengthProps } from "./password-strength";
 export type { AuthSubmitProps } from "./auth-submit";
 
-export { GoogleMark, AppleMark, PROVIDER_MARKS } from "./provider-marks";
+export {
+    GoogleMark,
+    AppleMark,
+    FacebookMark,
+    PROVIDER_MARKS,
+} from "./provider-marks";
 export type { ProviderMarkProps } from "./provider-marks";
