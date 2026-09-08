@@ -37,6 +37,8 @@ export const toListing = (property: Property): Listing => {
         address: property.address,
         locality: property.locality,
         zipcode: property.postalCode,
+        latitude: property.latitude,
+        longitude: property.longitude,
         listedDaysAgo: daysSince(property.createdAt),
         saves: property._count?.savedBy ?? 0,
         walkScore: property.walkScore ?? 0,

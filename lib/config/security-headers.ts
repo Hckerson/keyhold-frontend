@@ -1,3 +1,5 @@
+export const MAP_TILE_ORIGIN = "https://tiles.openfreemap.org";
+
 const IMAGE_HOSTS = [
     "https://res.cloudinary.com",
     "https://images.unsplash.com",
@@ -6,6 +8,7 @@ const IMAGE_HOSTS = [
     "https://avatars.githubusercontent.com",
     "https://cdn.jsdelivr.net",
     "https://loremflickr.com",
+    MAP_TILE_ORIGIN,
 ];
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -34,7 +37,9 @@ const directivesFor = (apiBase: string): Record<string, string[]> => ({
         originOf(apiBase),
         "https://api.stripe.com",
         "https://*.stripe.com",
+        MAP_TILE_ORIGIN,
     ].filter(Boolean),
+    "worker-src": ["'self'", "blob:"],
     "frame-src": ["https://js.stripe.com", "https://hooks.stripe.com"],
     "frame-ancestors": ["'none'"],
     "base-uri": ["'self'"],

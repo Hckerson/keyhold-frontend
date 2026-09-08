@@ -1,6 +1,9 @@
 import { GraduationCap } from "lucide-react";
 import { FactCell } from "@/components/sections/listing/fact-cell";
 import { SectionEyebrow } from "@/components/patterns/section-heading";
+import { MapView } from "@/components/ui/map-view";
+import { MAP_DETAIL_ZOOM } from "@/lib/config/map";
+import { hasCoordinates, toListingPins } from "@/lib/data/listing-map";
 
 import type { Listing } from "@/lib/types";
 import { formatCount } from "@/lib/utils/format";
@@ -17,9 +20,26 @@ function buildAreaStats(listing: Listing): AreaStat[] {
     ];
 }
 
+const MAP_LABEL = "Where this residence sits";
+
 export function ListingNeighborhood({ listing }: { listing: Listing }) {
+    const placed = hasCoordinates(listing);
+
     return (
         <div className="flex flex-col gap-4">
+            {placed && (
+                <div className="h-64">
+                    <MapView
+                        pins={toListingPins([listing])}
+                        selectedId={listing.id}
+                        centre={[listing.longitude, listing.latitude]}
+                        zoom={MAP_DETAIL_ZOOM}
+                        fit={false}
+                        label={MAP_LABEL}
+                    />
+                </div>
+            )}
+
             <p className="text-text-secondary max-w-[54ch] text-xs leading-relaxed">
                 {listing.locality} at a glance. Your agent can walk the
                 immediate area with you and open any property on the street by

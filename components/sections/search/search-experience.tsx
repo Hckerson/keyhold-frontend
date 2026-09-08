@@ -7,6 +7,7 @@ import { SearchFilterAside } from "@/components/sections/search/search-filter-as
 import { SearchToolbar } from "@/components/sections/search/search-toolbar";
 import { SearchResultsPanel } from "@/components/sections/search/search-results-panel";
 import { SearchResultsGrid } from "@/components/sections/search/search-results-grid";
+import { SearchResultsMap } from "@/components/sections/search/search-results-map";
 import { SearchResultsList } from "@/components/sections/search/search-results-list";
 import { SearchResultsGridSkeleton } from "@/components/sections/search/search-skeleton";
 import { SearchResultsError } from "@/components/sections/search/search-results-error";
@@ -192,6 +193,8 @@ export function SearchExperience() {
                                 />
                             ) : view === "grid" ? (
                                 <SearchResultsGrid listings={listings} />
+                            ) : view === "map" ? (
+                                <SearchResultsMap listings={listings} />
                             ) : (
                                 <SearchResultsList listings={listings} />
                             )}

@@ -1,17 +1,20 @@
 "use client";
 
-import { LayoutGrid, List, type LucideIcon } from "lucide-react";
+import { LayoutGrid, List, MapIcon, type LucideIcon } from "lucide-react";
 import { m } from "motion/react";
 import { FAST } from "@/lib/config/motion";
 import { cn } from "@/lib/utils";
 
-export type ViewMode = "grid" | "list";
+import type { SearchViewMode } from "@/lib/utils/search-url";
+
+export type ViewMode = SearchViewMode;
 
 const VIEW_INDICATOR_ID = "search-view-indicator";
 
 const VIEW_OPTIONS: { id: ViewMode; label: string; icon: LucideIcon }[] = [
     { id: "grid", label: "Grid", icon: LayoutGrid },
     { id: "list", label: "List", icon: List },
+    { id: "map", label: "Map", icon: MapIcon },
 ];
 
 export interface SearchViewToggleProps {
