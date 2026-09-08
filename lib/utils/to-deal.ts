@@ -4,6 +4,7 @@ import type { Transaction } from "@/lib/validations/transaction";
 import { daysSince } from "@/lib/utils/elapsed";
 
 const OPEN_OFFER_STATUSES = ["PENDING", "COUNTERED"];
+const REJECTED = "REJECTED";
 
 const NO_ACTIVITY = "No activity yet";
 
@@ -13,7 +14,8 @@ const stageOf = (
 ): DealStage => {
     if (transaction?.status === "COMPLETED") return "closed";
     if (transaction) return "pending";
-    if (connection.offers.length > 0) return "offers";
+    if (connection.offers.some((offer) => offer.status !== REJECTED))
+        return "offers";
     return "leads";
 };
 
@@ -70,6 +72,10 @@ export const toDeal = (
         daysInStage: daysSince(stageStartedAt(connection, transaction, stage)),
         lastActivity: lastActivityOf(connection),
         notes: offer?.responseFeedback ?? offer?.offeredTerms ?? "",
+        openOfferId:
+            connection.offers.find((candidate) =>
+                OPEN_OFFER_STATUSES.includes(candidate.status),
+            )?.id ?? null,
     };
 };
 

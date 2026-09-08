@@ -9,4 +9,5 @@ export interface Deal {
     daysInStage: number;
     lastActivity: string;
     notes: string;
+    openOfferId: string | null;
 }
