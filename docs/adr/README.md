@@ -20,6 +20,8 @@ Records are immutable once merged. A decision that changes gets a new record tha
 | [0012](0012-tokens-are-the-design-source-of-truth.md)      | `styles/tokens.css` is the design source of truth                             | Accepted                                                 |
 | [0013](0013-mutation-feedback-is-global-by-default.md)     | Mutation feedback is global by default, inline by exception                   | Accepted                                                 |
 | [0014](0014-outbound-contact-runs-through-the-platform.md) | Outbound contact runs through the platform, and calls bridge rather than dial | Accepted                                                 |
+| [0015](0015-map-surfaces-wait-on-coordinates.md)           | Map surfaces wait on coordinates, not on a provider                           | Accepted                                                 |
+| [0016](0016-lead-temperature-is-derived.md)                | Lead temperature is derived; the connection taxonomy stays                    | Accepted                                                 |
 
 ## Template
 

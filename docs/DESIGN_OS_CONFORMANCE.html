@@ -1140,11 +1140,96 @@ footer span { font-family: var(--mono); }
         </div>
     </section>
 
+    <section>
+        <h2>Remediation · 8 September 2026</h2>
+        <p class="lede">
+            The findings above stand as recorded on 5 September. This section reports what changed three days later,
+            when the &ldquo;built, modules short&rdquo; bucket was worked through. Nothing above has been edited.
+        </p>
+
+        <div class="tally">
+            <div class="t-full"><b>10</b><span>Routes closed</span></div>
+            <div class="t-part"><b>3</b><span>Still short</span></div>
+            <div class="t-plus"><b>4</b><span>Sections closed</span></div>
+            <div><b>2</b><span>Ratified, not built</span></div>
+        </div>
+
+        <h3>Closed</h3>
+        <p>
+            <code>/dashboard</code> gained modules&nbsp;4 and&nbsp;5 &mdash; New Alerts, banded from PRICE_DROP and
+            NEW_LISTING notifications, and Quick Links. <code>/agent</code> and <code>/admin</code> gained their quick-link
+            panels; the orphaned <code>quick-actions.tsx</code> was replaced by a shared
+            <code>quick-action-list</code> consumed by all three, so the dead-code defect above is closed with one
+            component rather than three.
+        </p>
+        <p>
+            <code>/admin/settings</code> gained the Reporting Timezone field, the remaining six policy toggles across the
+            spec&rsquo;s two groups &mdash; Moderation Policy and Operations, eight in total &mdash; and the Section&nbsp;70
+            Maintenance Panel, whose two actions are backed by new endpoints rather than stubs. The Reach column, whose
+            header had no cell and whose <code>PolicyReachMeter</code> was a second orphan, now renders.
+        </p>
+        <p>
+            <code>/agent/calendar</code> can write: Create event proposes viewing times against an existing connection
+            through the endpoint that already existed. <code>/agent/pipeline</code> is no longer read-only &mdash; cards
+            drag, and a per-deal detail modal opens. <code>/agent/leads</code> gained the missing scoring dimension.
+            <code>/signup</code> gained the password strength meter and the Facebook mark.
+        </p>
+        <p>
+            Files now move between people. Section&nbsp;38 shipped as a real <code>FileUpload</code> primitive with a
+            drop zone, keyboard operation, stated type and size limits and a progress bar fed by actual upload progress;
+            both former <code>&lt;input type="file"&gt;</code> controls were retrofitted onto it. Section&nbsp;23 put an
+            attach control on the composer, and Section&nbsp;25 shipped as document cards in the thread, a Shared
+            Documents panel in the context rail, and attachments on offer detail. A <code>MessageAttachment</code> model
+            and a <code>POST /messages/:id/attachments</code> route carry it, over the Cloudinary document upload that
+            was already built and unreachable.
+        </p>
+
+        <h3>The map column, closed</h3>
+        <p>
+            Note&nbsp;02 above needs one correction: a provider was never the only blocker.
+            <code>Property.latitude</code> and <code>longitude</code> were nullable, never seeded and never mapped onto
+            <code>Listing</code>, so picking a provider first would have rendered an empty basemap. Coordinates came
+            first &mdash; a locality centre table with deterministic per-property placement, a scoped backfill,
+            <code>Listing</code> widened, and a bounding-box filter on property search &mdash; and only then the
+            library.
+        </p>
+        <p>
+            MapLibre GL with keyless OpenFreeMap tiles now renders <code>/map</code> (Page&nbsp;4, with the filter rail,
+            pin peek card and legend), the Map option on the search view toggle, a placed map on listing detail, and a
+            sales map on the home page beside the existing card row. <b>ADR&nbsp;0015</b> records the ordering and the
+            provider choice.
+        </p>
+
+        <h3>Still short</h3>
+        <p>
+            Section&nbsp;10&rsquo;s school, transit, park and restaurant markers and their toggleable legend are the one
+            piece of the map work still owed. They need a POI dataset the platform does not have, and placing invented
+            school pins on a listing would be the same fabrication the coordinate work was careful to avoid.
+        </p>
+        <p>
+            Signup OTP, <code>/verify-email</code>, working OAuth for any provider, and Google Calendar sync remain
+            outstanding and are listed with their blockers in
+            <code>design-os/INDEX/RATIFIED_DIVERGENCES.md</code>.
+        </p>
+
+        <h3>Ratified rather than built</h3>
+        <p>
+            Note&nbsp;05 proposed amending Phase&nbsp;4 and&nbsp;5 to record the considered divergences. That was done
+            the other way round: the phase documents were left untouched, and
+            <code>design-os/INDEX/RATIFIED_DIVERGENCES.md</code> now reconciles spec against code in one place. The lead
+            status taxonomy joined that list &mdash; <code>pending/accepted/declined</code> stays, because the spec&rsquo;s
+            four states cannot be populated from any existing signal and the enum is load-bearing in
+            <code>common/access.ts</code>. The hot/warm/cold dimension the same row asked for was added instead, derived
+            on read from offers, viewings, unread messages and contact recency. <b>ADR&nbsp;0016</b> records it.
+        </p>
+    </section>
+
     <footer>
         <span>30 specified routes · 36 built</span>
         <span>15 conform · 13 short · 2 unbuilt</span>
         <span>8 beyond spec · 7 dead links</span>
         <span>Sources: phase-3 · phase-4 · phase-5</span>
+        <span>Remediated 8 Sep 2026 · see RATIFIED_DIVERGENCES.md</span>
     </footer>
 
 </div>

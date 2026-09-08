@@ -7,7 +7,7 @@
 ## What You Have
 
 ✅ **Complete 10-Phase Design Operating System**
-✅ **17 documents in `design-os/`, all markdown**
+✅ **18 documents in `design-os/`, all markdown**
 ✅ **Phases 1-7:** design and strategy · **Phases 8-10:** architecture, roadmap, QA
 
 ---
@@ -20,25 +20,26 @@
 
 ## All Files
 
-| File                                                | Phase | Purpose                                |
-| --------------------------------------------------- | ----- | -------------------------------------- |
-| **INDEX/START_HERE.md**                             | Intro | Read this first (2 min)                |
-| **INDEX/README.md**                                 | Intro | Quick start guide (5 min)              |
-| **INDEX/DESIGN-OS-COMPLETE.md**                     | Intro | This file — master index               |
-| **INDEX/ARTIFACT_INDEX.md**                         | All   | Deep description of each phase         |
-| **INDEX/\_FOLDER_STRUCTURE.md**                     | All   | Folder layout, per-role reading order  |
-| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md**         | 8-10  | ⭐ Engineering synthesis, sprint guide |
-| **IMPLEMENTATION/SETUP-CHECKLIST.md**               | 7-8   | Token and styling foundation           |
-| **CORE-PHASES/phase-1-product-vision.md**           | 1     | Strategy, personas, KPIs               |
-| **CORE-PHASES/phase-2-experience-maps.md**          | 2     | User journeys, decision points         |
-| **CORE-PHASES/phase-3-information-architecture.md** | 3     | Sitemap, navigation, permissions       |
-| **CORE-PHASES/phase-4-page-blueprints.md**          | 4     | 27 page specs                          |
-| **CORE-PHASES/phase-5-section-blueprints.md**       | 5     | 70 reusable sections                   |
-| **CORE-PHASES/phase-6-component-library.md**        | 6     | 80 components                          |
-| **CORE-PHASES/phase-7-design-tokens.md**            | 7     | Colors, typography, spacing, motion    |
-| **CORE-PHASES/phase-8-frontend-architecture.md**    | 8     | Codebase structure                     |
-| **CORE-PHASES/phase-9-implementation-roadmap.md**   | 9     | 16-week sprint breakdown               |
-| **CORE-PHASES/phase-10-qa-checklist.md**            | 10    | Pre-launch verification                |
+| File                                                | Phase | Purpose                                  |
+| --------------------------------------------------- | ----- | ---------------------------------------- |
+| **INDEX/START_HERE.md**                             | Intro | Read this first (2 min)                  |
+| **INDEX/README.md**                                 | Intro | Quick start guide (5 min)                |
+| **INDEX/DESIGN-OS-COMPLETE.md**                     | Intro | This file — master index                 |
+| **INDEX/ARTIFACT_INDEX.md**                         | All   | Deep description of each phase           |
+| **INDEX/\_FOLDER_STRUCTURE.md**                     | All   | Folder layout, per-role reading order    |
+| **INDEX/RATIFIED_DIVERGENCES.md**                   | All   | Where the code and the spec part company |
+| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md**         | 8-10  | ⭐ Engineering synthesis, sprint guide   |
+| **IMPLEMENTATION/SETUP-CHECKLIST.md**               | 7-8   | Token and styling foundation             |
+| **CORE-PHASES/phase-1-product-vision.md**           | 1     | Strategy, personas, KPIs                 |
+| **CORE-PHASES/phase-2-experience-maps.md**          | 2     | User journeys, decision points           |
+| **CORE-PHASES/phase-3-information-architecture.md** | 3     | Sitemap, navigation, permissions         |
+| **CORE-PHASES/phase-4-page-blueprints.md**          | 4     | 27 page specs                            |
+| **CORE-PHASES/phase-5-section-blueprints.md**       | 5     | 70 reusable sections                     |
+| **CORE-PHASES/phase-6-component-library.md**        | 6     | 80 components                            |
+| **CORE-PHASES/phase-7-design-tokens.md**            | 7     | Colors, typography, spacing, motion      |
+| **CORE-PHASES/phase-8-frontend-architecture.md**    | 8     | Codebase structure                       |
+| **CORE-PHASES/phase-9-implementation-roadmap.md**   | 9     | 16-week sprint breakdown                 |
+| **CORE-PHASES/phase-10-qa-checklist.md**            | 10    | Pre-launch verification                  |
 
 ---
 
@@ -122,6 +123,7 @@ Two things to know before you use it:
 | I want to...              | Go to...                                        |
 | ------------------------- | ----------------------------------------------- |
 | Know the binding rules    | `.claude/CLAUDE.md`                             |
+| See where code differs    | `INDEX/RATIFIED_DIVERGENCES.md`                 |
 | Understand the strategy   | `CORE-PHASES/phase-1-product-vision.md`         |
 | See user flows            | `CORE-PHASES/phase-2-experience-maps.md`        |
 | See page specifications   | `CORE-PHASES/phase-4-page-blueprints.md`        |
@@ -164,6 +166,7 @@ design-os/
 │   ├── README.md                            (5-minute overview)
 │   ├── DESIGN-OS-COMPLETE.md                (this file)
 │   ├── ARTIFACT_INDEX.md                    (per-phase descriptions)
+│   ├── RATIFIED_DIVERGENCES.md              (spec-vs-code reconciliation)
 │   └── _FOLDER_STRUCTURE.md                 (layout + reading orders)
 │
 ├── CORE-PHASES/
