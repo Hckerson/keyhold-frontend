@@ -33,6 +33,8 @@ export interface Listing {
     address: string;
     locality: string;
     zipcode: string;
+    latitude: number | null;
+    longitude: number | null;
     listedDaysAgo: number;
     saves: number;
     walkScore: number;

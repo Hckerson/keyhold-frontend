@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { securityHeaders } from "@/lib/config/security-headers";
+import {
+    MAP_TILE_ORIGIN,
+    securityHeaders,
+} from "@/lib/config/security-headers";
 
 const connectSourcesFor = (apiBase: string) =>
     securityHeaders(apiBase)
@@ -28,6 +31,7 @@ describe("connect-src", () => {
             "'self'",
             "https://api.stripe.com",
             "https://*.stripe.com",
+            MAP_TILE_ORIGIN,
         ]);
     });
 });

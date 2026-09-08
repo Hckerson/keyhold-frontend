@@ -41,3 +41,13 @@ export const chartToneSoft: Record<ChartTone, string> = {
     warning: "bg-warning-light text-warning",
     error: "bg-error-light text-error",
 };
+
+export const chartToneFill: Record<ChartTone, string> = {
+    accent: "bg-accent",
+    info: "bg-info",
+    highlight: "bg-highlight",
+    neutral: "bg-text-muted",
+    success: "bg-success",
+    warning: "bg-warning",
+    error: "bg-error",
+};
