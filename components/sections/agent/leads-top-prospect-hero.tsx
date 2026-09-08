@@ -2,11 +2,13 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { MetricCell } from "@/components/patterns/metric-cell";
+import { LeadTemperatureChip } from "@/components/features/agent/lead-temperature-chip";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 import type { Lead } from "@/lib/types/lead";
 import { formatCompactUsd, initialsOf } from "@/lib/utils";
 
 const HERO_EYEBROW = "Top enquiry";
+const TEMPERATURE_LABEL = "Temperature";
 const VALUE_LABEL = "Listing value";
 const MESSAGES_LABEL = "Unread";
 const VIEWINGS_LABEL = "Viewings";
@@ -114,6 +116,9 @@ export function LeadsTopProspectHero({
             </div>
 
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
+                <MetricCell label={TEMPERATURE_LABEL}>
+                    <LeadTemperatureChip lead={lead} />
+                </MetricCell>
                 <MetricCell label={MESSAGES_LABEL}>
                     <span className="tabular-nums">{lead.unread}</span>
                 </MetricCell>

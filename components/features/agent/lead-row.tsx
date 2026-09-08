@@ -1,6 +1,7 @@
 import { Check, X } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusDot } from "@/components/patterns/status-dot";
+import { LeadTemperatureChip } from "@/components/features/agent/lead-temperature-chip";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 import type { Lead } from "@/lib/types/lead";
 import { formatCompactUsd, initialsOf } from "@/lib/utils";
@@ -35,6 +36,9 @@ export function LeadRow({ lead, onRespond }: LeadRowProps) {
                         {lead.name}
                     </span>
                 </div>
+            </td>
+            <td className="py-0 pl-3">
+                <LeadTemperatureChip lead={lead} />
             </td>
             <td className="py-0 pl-3">
                 <span className="flex min-w-0 items-center gap-1.5">

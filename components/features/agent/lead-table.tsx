@@ -1,7 +1,8 @@
 import { LeadRow } from "@/components/features/agent/lead-row";
 import type { Lead } from "@/lib/types/lead";
 
-const TABLE_CAPTION = "Enquiries by stage, property, value and activity";
+const TABLE_CAPTION =
+    "Enquiries by temperature, stage, property, value and activity";
 const RESPOND_HEADING = "Respond";
 
 export interface LeadTableProps {
@@ -17,6 +18,9 @@ export function LeadTable({ leads, onRespond }: LeadTableProps) {
                 <tr className="border-border h-9 border-b">
                     <th scope="col" className="micro-label text-left">
                         Prospect
+                    </th>
+                    <th scope="col" className="micro-label w-24 pl-3 text-left">
+                        Temp
                     </th>
                     <th scope="col" className="micro-label w-28 pl-3 text-left">
                         Stage
