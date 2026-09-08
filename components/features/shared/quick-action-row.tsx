@@ -2,13 +2,13 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { chartToneSoft } from "@/lib/config/chart-tones";
-import type { AgentQuickAction } from "@/lib/data/agent-overview";
+import type { QuickAction } from "@/lib/types";
 
-export interface OverviewActionRowProps {
-    action: AgentQuickAction;
+export interface QuickActionRowProps {
+    action: QuickAction;
 }
 
-export function OverviewActionRow({ action }: OverviewActionRowProps) {
+export function QuickActionRow({ action }: QuickActionRowProps) {
     const Icon = action.icon;
 
     return (
@@ -42,4 +42,4 @@ export function OverviewActionRow({ action }: OverviewActionRowProps) {
     );
 }
 
-OverviewActionRow.displayName = "OverviewActionRow";
+QuickActionRow.displayName = "QuickActionRow";

@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import type { JourneyStationState } from "./journey";
+import type { ChartTone } from "@/lib/config/chart-tones";
 
 export type Trend = "up" | "down";
 
@@ -60,10 +61,11 @@ export interface MetricItem {
 }
 
 export interface QuickAction {
+    id: string;
     label: string;
     href: string;
     icon: LucideIcon;
-    description?: string;
+    tone: ChartTone;
 }
 
 export type ActivityType =
