@@ -16,6 +16,7 @@ export interface ConfigPanelProps<K extends string> {
     values: Record<K, string>;
     errors?: FieldErrors;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onSelect?: (name: K, value: string) => void;
     lead?: ReactNode;
 }
 
@@ -27,6 +28,7 @@ export function ConfigPanel<K extends string>({
     values,
     errors,
     onChange,
+    onSelect,
     lead,
 }: ConfigPanelProps<K>) {
     return (
@@ -38,6 +40,7 @@ export function ConfigPanel<K extends string>({
                     values={values}
                     errors={errors}
                     onChange={onChange}
+                    onSelect={onSelect}
                 />
             </div>
         </Panel>

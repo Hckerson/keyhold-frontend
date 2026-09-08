@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { PolicyDomain, PolicyEnforcement } from "@/lib/types";
+import type { PolicyDomain, PolicyEnforcement, PolicyGroup } from "@/lib/types";
 
 export interface PolicyDomainMeta {
     label: string;
@@ -39,6 +39,22 @@ export const POLICY_ENFORCEMENTS: Record<
 };
 
 export const POLICY_OFF_LABEL = "Off";
+
+export interface PolicyGroupMeta {
+    title: string;
+    lede: string;
+}
+
+export const POLICY_GROUPS: Record<PolicyGroup, PolicyGroupMeta> = {
+    moderation: {
+        title: "Moderation Policy",
+        lede: "What is screened before a listing or an agent reaches the market",
+    },
+    operations: {
+        title: "Operations",
+        lede: "Availability, signups, reporting and payout automation",
+    },
+};
 
 const REACH_CEILINGS: { ceiling: number; tone: ChartTone }[] = [
     { ceiling: 25, tone: "info" },

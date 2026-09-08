@@ -1,6 +1,7 @@
 import { Power, Server, ShieldCheck, UserPlus } from "lucide-react";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import type { ConfigField } from "@/components/patterns/config-field-grid";
+import type { SelectOption } from "@/components/ui/forms/select";
 import {
     POLICY_COUNT,
     POLICY_SETTING_KEY,
@@ -20,10 +21,26 @@ export const ENVIRONMENT_LABEL = "Live";
 
 const TRUE = "true";
 
+export const DEFAULT_REPORTING_TIMEZONE = "America/New_York";
+
+export const REPORTING_TIMEZONES: readonly SelectOption<string>[] = [
+    { value: "UTC", label: "UTC" },
+    { value: "America/New_York", label: "New York (ET)" },
+    { value: "America/Chicago", label: "Chicago (CT)" },
+    { value: "America/Denver", label: "Denver (MT)" },
+    { value: "America/Los_Angeles", label: "Los Angeles (PT)" },
+    { value: "Europe/London", label: "London (GMT)" },
+    { value: "Europe/Paris", label: "Paris (CET)" },
+    { value: "Asia/Dubai", label: "Dubai (GST)" },
+    { value: "Asia/Singapore", label: "Singapore (SGT)" },
+    { value: "Australia/Sydney", label: "Sydney (AET)" },
+];
+
 export const ADMIN_CONFIG_KEYS = [
     "platformName",
     "supportEmail",
     "baseCurrency",
+    "reportingTimezone",
     "commissionRate",
     "platformFee",
     "listingExpiryDays",
@@ -118,6 +135,12 @@ export const PLATFORM_FIELDS: readonly ConfigField<AdminConfigKey>[] = [
         type: "email",
     },
     { name: "baseCurrency", label: "Base Currency", placeholder: "USD" },
+    {
+        name: "reportingTimezone",
+        label: "Reporting Timezone",
+        placeholder: DEFAULT_REPORTING_TIMEZONE,
+        options: REPORTING_TIMEZONES,
+    },
 ];
 
 export const MARKETPLACE_FIELDS: readonly ConfigField<AdminConfigKey>[] = [
@@ -215,3 +238,40 @@ export const buildSettingsStats = (
         },
     ];
 };
+
+export type MaintenanceActionId = "purge-verifications" | "restore-defaults";
+
+export interface MaintenanceAction {
+    id: MaintenanceActionId;
+    title: string;
+    caption: string;
+    label: string;
+    confirmTitle: string;
+    confirmLede: string;
+    danger: boolean;
+}
+
+export const MAINTENANCE_ACTIONS: readonly MaintenanceAction[] = [
+    {
+        id: "purge-verifications",
+        title: "Purge expired verifications",
+        caption:
+            "Delete every email and phone verification whose window has closed",
+        label: "Purge",
+        confirmTitle: "Purge expired verifications?",
+        confirmLede:
+            "Expired email and phone verification records are deleted permanently. Active verifications and user accounts are untouched.",
+        danger: false,
+    },
+    {
+        id: "restore-defaults",
+        title: "Restore default settings",
+        caption:
+            "Reset every platform, marketplace and policy value to its shipped default",
+        label: "Restore defaults",
+        confirmTitle: "Restore default settings?",
+        confirmLede:
+            "Every configured value on this page is overwritten with its shipped default, including all eight policy toggles. The change is recorded against your account in the change log.",
+        danger: true,
+    },
+];

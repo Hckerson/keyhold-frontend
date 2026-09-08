@@ -25,6 +25,11 @@ export const updateSettingsSchema = z.object({
     ),
 });
 
+export const purgeResultSchema = z.object({
+    purged: z.number().int().nonnegative(),
+});
+
 export type SettingEditor = z.infer<typeof settingEditorSchema>;
+export type PurgeResult = z.infer<typeof purgeResultSchema>;
 export type PlatformSetting = z.infer<typeof platformSettingSchema>;
 export type UpdateSettingsInput = z.infer<typeof updateSettingsSchema>;

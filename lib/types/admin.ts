@@ -73,16 +73,28 @@ export type PolicyDomain =
 
 export type PolicyEnforcement = "blocking" | "advisory";
 
-export type PolicySwitchId = "maintenance-mode" | "open-signups";
+export type PolicyGroup = "moderation" | "operations";
+
+export type PolicySwitchId =
+    | "photo-scanning"
+    | "agent-license-verification"
+    | "manual-review-threshold"
+    | "auto-suspend-repeat-rejections"
+    | "maintenance-mode"
+    | "open-signups"
+    | "daily-health-digest"
+    | "payout-automation";
 
 export type PolicyState = Record<PolicySwitchId, boolean>;
 
 export interface PolicySwitch {
     id: PolicySwitchId;
+    group: PolicyGroup;
     domain: PolicyDomain;
     title: string;
     caption: string;
     enforcement: PolicyEnforcement;
+    reach: number;
 }
 
 export interface ConfigChange {

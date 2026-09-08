@@ -171,6 +171,14 @@ export const FEEDBACK = {
         success: "Settings saved",
         error: "We couldn't save the platform settings.",
     },
+    restorePlatformDefaults: {
+        success: "Settings restored to defaults",
+        error: "We couldn't restore the default settings.",
+    },
+    purgeExpiredVerifications: {
+        success: "Expired verifications purged",
+        error: "We couldn't purge the expired verifications.",
+    },
 
     createConciergeClient: {
         success: "Client added",
