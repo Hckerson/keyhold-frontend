@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef, type ChangeEvent } from "react";
-import { ImagePlus, Upload } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { ImagePlus } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
+import { EmptyState } from "@/components/ui/empty-state";
+import { FileUpload } from "@/components/ui/forms/file-upload";
 import { ListingImageCard } from "@/components/features/agent/listing-image-card";
 import {
     LISTING_IMAGE_ACCEPT,
     MAX_LISTING_IMAGES,
+    MAX_LISTING_IMAGE_BYTES,
 } from "@/lib/config/listing-form";
 import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
 import { movedImageIds } from "@/lib/data/listing-form";
@@ -19,6 +19,7 @@ export interface ListingMediaPanelProps {
     images: readonly PropertyImage[];
     busy: boolean;
     uploading: boolean;
+    uploadProgress?: number;
     onUpload: (files: File[]) => void;
     onReorder: (ids: string[]) => void;
     onRemove: (imageId: string) => void;
@@ -29,18 +30,12 @@ export function ListingMediaPanel({
     images,
     busy,
     uploading,
+    uploadProgress,
     onUpload,
     onReorder,
     onRemove,
 }: ListingMediaPanelProps) {
-    const fileRef = useRef<HTMLInputElement>(null);
     const full = images.length >= MAX_LISTING_IMAGES;
-
-    const onFiles = (event: ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files ?? []);
-        event.target.value = "";
-        if (files.length > 0) onUpload(files);
-    };
 
     return (
         <Panel
@@ -49,29 +44,6 @@ export function ListingMediaPanel({
             description={COPY.mediaLede}
             count={`${images.length}/${MAX_LISTING_IMAGES}`}
             countQuiet
-            action={
-                <>
-                    <input
-                        ref={fileRef}
-                        type="file"
-                        multiple
-                        accept={LISTING_IMAGE_ACCEPT}
-                        className="hidden"
-                        tabIndex={-1}
-                        aria-hidden="true"
-                        onChange={onFiles}
-                    />
-                    <Button
-                        type="button"
-                        icon={Upload}
-                        isLoading={uploading}
-                        disabled={busy || full}
-                        onClick={() => fileRef.current?.click()}
-                    >
-                        {uploading ? COPY.uploading : COPY.upload}
-                    </Button>
-                </>
-            }
         >
             {images.length > 0 ? (
                 <div className="card-grid gap-2">
@@ -97,9 +69,16 @@ export function ListingMediaPanel({
                 />
             )}
 
-            <p className="text-text-muted text-xs">
-                {full ? COPY.uploadFull : COPY.uploadHint}
-            </p>
+            <FileUpload
+                label={uploading ? COPY.uploading : COPY.upload}
+                accept={LISTING_IMAGE_ACCEPT}
+                maxSize={MAX_LISTING_IMAGE_BYTES}
+                multiple
+                disabled={busy || full}
+                progress={uploading ? (uploadProgress ?? 0) : undefined}
+                hint={full ? COPY.uploadFull : COPY.uploadHint}
+                onFiles={onUpload}
+            />
         </Panel>
     );
 }

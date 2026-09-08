@@ -13,6 +13,7 @@ export function useListingImages(propertyId: string) {
 
     return {
         uploading: upload.isPending,
+        uploadProgress: upload.progress,
         busy: upload.isPending || remove.isPending || reorder.isPending,
         upload: (files: File[]) => upload.mutate(files),
         remove: (imageId: string) => remove.mutate(imageId),
