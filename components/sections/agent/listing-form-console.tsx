@@ -74,6 +74,7 @@ export function ListingFormConsole({ property }: ListingFormConsoleProps) {
                             images={property.images}
                             busy={images.busy}
                             uploading={images.uploading}
+                            uploadProgress={images.uploadProgress}
                             onUpload={images.upload}
                             onReorder={images.reorder}
                             onRemove={images.remove}

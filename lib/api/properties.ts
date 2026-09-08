@@ -1,4 +1,6 @@
 import { query } from "@/lib/api/client";
+
+const PERCENT = 100;
 import { config } from "@/lib/constants";
 import type {
     CreatePropertyInput,
@@ -80,13 +82,25 @@ export const propertiesAPI = {
             ids,
         }),
 
-    uploadImages: (id: string, files: File[]) => {
+    uploadImages: (
+        id: string,
+        files: File[],
+        onProgress?: (percent: number) => void,
+    ) => {
         const body = new FormData();
         files.forEach((file) => body.append("files", file));
         return query.post<PropertyImage[]>(
             config.api.properties.images(id),
             body,
-            { headers: { "Content-Type": "multipart/form-data" } },
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+                onUploadProgress: (event) => {
+                    if (!onProgress || !event.total) return;
+                    onProgress(
+                        Math.round((event.loaded / event.total) * PERCENT),
+                    );
+                },
+            },
         );
     },
 };
