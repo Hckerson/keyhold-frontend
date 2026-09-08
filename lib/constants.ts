@@ -142,6 +142,8 @@ export const config = {
         },
         settings: {
             list: "/settings",
+            restoreDefaults: "/settings/restore-defaults",
+            purgeVerifications: "/settings/purge-expired-verifications",
         },
         concierge: {
             overview: "/concierge/overview",

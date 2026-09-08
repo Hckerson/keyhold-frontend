@@ -8,6 +8,7 @@ import { AdminSettingsMain } from "@/components/sections/admin/admin-settings-ma
 import { AdminSettingsRail } from "@/components/sections/admin/admin-settings-rail";
 import { AdminSettingsStatBand } from "@/components/sections/admin/admin-settings-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { MaintenanceConfirmModal } from "@/components/features/admin/maintenance-confirm-modal";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { TABLE_PAGE_SIZE } from "@/lib/constants";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
@@ -17,13 +18,18 @@ import {
     changedFieldCount,
     EMPTY_ADMIN_CONFIG,
     EMPTY_POLICY_STATE,
+    MAINTENANCE_ACTIONS,
     toAdminConfig,
     toPolicyState,
     toSettingsPayload,
+    type AdminConfigKey,
+    type MaintenanceActionId,
 } from "@/lib/data/admin-settings";
 import { useAuditLogs } from "@/lib/hooks/use-audit-logs";
 import {
     usePlatformSettings,
+    usePurgeExpiredVerifications,
+    useRestorePlatformDefaults,
     useUpdatePlatformSettings,
 } from "@/lib/hooks/use-platform-settings";
 import { toConfigChanges } from "@/lib/utils/to-config-change";
@@ -38,6 +44,8 @@ const LATEST_LIMIT = 1;
 export function AdminSettingsConsole() {
     const settings = usePlatformSettings();
     const update = useUpdatePlatformSettings();
+    const restoreDefaults = useRestorePlatformDefaults();
+    const purgeVerifications = usePurgeExpiredVerifications();
     const [logPage, setLogPage] = useState(FIRST_PAGE);
     const logs = useAuditLogs({ page: logPage, limit: TABLE_PAGE_SIZE });
     const latestLog = useAuditLogs({
@@ -49,6 +57,7 @@ export function AdminSettingsConsole() {
     const [policies, setPolicies] = useState(EMPTY_POLICY_STATE);
     const [hydrated, setHydrated] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [maintenanceId, setMaintenanceId] = useState<MaintenanceActionId>();
 
     const baselineConfig = useMemo(
         () => toAdminConfig(settings.data ?? []),
@@ -87,6 +96,11 @@ export function AdminSettingsConsole() {
         setSaved(false);
     };
 
+    const handleFieldSelect = (name: AdminConfigKey, value: string) => {
+        setConfig((current) => ({ ...current, [name]: value }));
+        setSaved(false);
+    };
+
     const handlePolicyToggle = (id: PolicySwitchId) => {
         setPolicies((current) => ({ ...current, [id]: !current[id] }));
         setSaved(false);
@@ -106,6 +120,30 @@ export function AdminSettingsConsole() {
         setConfig(baselineConfig);
         setPolicies(baselinePolicies);
         setSaved(false);
+    };
+
+    const maintenanceAction =
+        MAINTENANCE_ACTIONS.find((action) => action.id === maintenanceId) ??
+        null;
+
+    const maintenanceRunning =
+        restoreDefaults.isPending || purgeVerifications.isPending;
+
+    const closeMaintenance = () => setMaintenanceId(undefined);
+
+    const handleMaintenanceConfirm = () => {
+        if (maintenanceId === "restore-defaults") {
+            restoreDefaults.mutate(undefined, {
+                onSuccess: () => {
+                    setHydrated(false);
+                    setSaved(false);
+                    closeMaintenance();
+                },
+            });
+            return;
+        }
+
+        purgeVerifications.mutate(undefined, { onSuccess: closeMaintenance });
     };
 
     if (settings.isError)
@@ -141,9 +179,14 @@ export function AdminSettingsConsole() {
                     config={config}
                     policies={policies}
                     pending={pending}
+                    maintenancePending={
+                        maintenanceRunning ? maintenanceId : undefined
+                    }
                     onFieldChange={handleFieldChange}
+                    onFieldSelect={handleFieldSelect}
                     onPolicyToggle={handlePolicyToggle}
                     onSubmit={handleSubmit}
+                    onMaintenanceRun={setMaintenanceId}
                     lastChange={lastChange}
                 />
                 <AdminSettingsRail
@@ -154,6 +197,13 @@ export function AdminSettingsConsole() {
                     onPageChange={setLogPage}
                 />
             </div>
+
+            <MaintenanceConfirmModal
+                action={maintenanceAction}
+                pending={maintenanceRunning}
+                onClose={closeMaintenance}
+                onConfirm={handleMaintenanceConfirm}
+            />
         </div>
     );
 }
