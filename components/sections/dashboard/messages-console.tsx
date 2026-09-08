@@ -21,7 +21,11 @@ import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
 import { useSession } from "@/lib/hooks/use-session";
 import { toConversationList } from "@/lib/utils/to-conversation";
-import { medianReplyMinutes, toThread } from "@/lib/utils/to-thread";
+import {
+    medianReplyMinutes,
+    threadDocuments,
+    toThread,
+} from "@/lib/utils/to-thread";
 
 export function MessagesConsole() {
     const { user } = useSession();
@@ -65,6 +69,8 @@ export function MessagesConsole() {
         [thread.data, user?.id, selected?.agent],
     );
 
+    const documents = useMemo(() => threadDocuments(messages), [messages]);
+
     const replyMinutes = useMemo(
         () => medianReplyMinutes(thread.data ?? [], user?.id),
         [thread.data, user?.id],
@@ -73,9 +79,9 @@ export function MessagesConsole() {
     const onSelect = useCallback((id: string) => setSelectedId(id), []);
 
     const onSend = useCallback(
-        (content: string) => {
+        (content: string, files: File[]) => {
             if (!activeId) return;
-            sendMessage.mutate({ connectionId: activeId, content });
+            sendMessage.mutate({ connectionId: activeId, content, files });
         },
         [activeId, sendMessage],
     );
@@ -117,6 +123,7 @@ export function MessagesConsole() {
                 <ThreadContextRail
                     conversation={selected}
                     conversations={conversations}
+                    documents={documents}
                     replyMinutes={replyMinutes}
                 />
             </div>

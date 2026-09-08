@@ -24,10 +24,21 @@ export interface Conversation {
     status: ConversationStatus;
 }
 
+export interface ThreadDocument {
+    id: string;
+    filename: string;
+    url: string;
+    mimeType: string;
+    sizeBytes: number;
+    sharedBy: string;
+    sharedAt: string;
+}
+
 export interface Message {
     id: string;
     senderRole: MessageSender;
     content: string;
     timestamp: string;
     initials: string;
+    documents: ThreadDocument[];
 }
