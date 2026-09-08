@@ -3,13 +3,22 @@ import {
     FileText,
     Heart,
     MessageSquare,
+    Search,
     Users,
 } from "lucide-react";
 import { format, isToday, isTomorrow } from "date-fns";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { ActivityEntry, OfferStatus, ViewingStatus } from "@/lib/types";
+import type {
+    ActivityEntry,
+    Alert,
+    AlertType,
+    OfferStatus,
+    QuickAction,
+    ViewingStatus,
+} from "@/lib/types";
 import { formatAge, formatCompactUsd } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
+import { BUYER_ROUTES } from "@/lib/constants";
 import {
     OFFER_STATUS_BY_API,
     VIEWING_STATUS_BY_API,
@@ -23,6 +32,9 @@ export const OFFER_FAIR_RATIO = 0.93;
 const VIEWING_TIME_FORMAT = "EEE H:mm";
 const VIEWING_LIMIT = 3;
 const ACTIVITY_LIMIT = 5;
+const TRIGGERED_LIMIT = 4;
+
+export const TRIGGERED_ALERT_TYPES: AlertType[] = ["PRICE_DROP", "NEW_LISTING"];
 
 export interface OfferBook {
     label: string;
@@ -285,3 +297,44 @@ export const journeyTasksFrom = (
         state: taskState(done, index === firstOpen),
     }));
 };
+
+export const triggeredAlertsFrom = (alerts: Alert[]): Alert[] =>
+    alerts
+        .filter((alert) => TRIGGERED_ALERT_TYPES.includes(alert.type))
+        .sort(
+            (a, b) =>
+                Number(!b.read) - Number(!a.read) ||
+                a.minutesAgo - b.minutesAgo,
+        )
+        .slice(0, TRIGGERED_LIMIT);
+
+export const buyerQuickActions: QuickAction[] = [
+    {
+        id: "browse",
+        label: "Browse properties",
+        href: "/search",
+        icon: Search,
+        tone: "accent",
+    },
+    {
+        id: "offers",
+        label: "Manage offers",
+        href: BUYER_ROUTES.offers,
+        icon: FileText,
+        tone: "highlight",
+    },
+    {
+        id: "viewings",
+        label: "View all viewings",
+        href: BUYER_ROUTES.viewings,
+        icon: CalendarDays,
+        tone: "info",
+    },
+    {
+        id: "messages",
+        label: "Messages",
+        href: BUYER_ROUTES.messages,
+        icon: MessageSquare,
+        tone: "neutral",
+    },
+];

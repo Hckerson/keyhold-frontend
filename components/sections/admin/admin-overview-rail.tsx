@@ -3,7 +3,8 @@ import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { AudienceMix } from "@/components/features/admin/audience-mix";
 import { ModerationQueueTable } from "@/components/features/admin/moderation-queue-table";
-import { openBacklog } from "@/lib/data/admin-overview";
+import { QuickActionList } from "@/components/features/shared/quick-action-list";
+import { adminQuickActions, openBacklog } from "@/lib/data/admin-overview";
 import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import type { ModerationQueueLoad } from "@/lib/types";
 import { formatCount } from "@/lib/utils";
@@ -14,6 +15,7 @@ const QUEUE_ACTION = "Listings";
 const AUDIENCE_TITLE = "Audience";
 const AUDIENCE_ACTION = "Users";
 const STATUS_LABEL = "By account status";
+const ACTIONS_TITLE = "Quick Actions";
 
 export interface AdminOverviewRailProps {
     roles: DonutSegment[];
@@ -55,6 +57,12 @@ export function AdminOverviewRail({
                     total={formatCount(total)}
                     tierLabel={STATUS_LABEL}
                 />
+            </Panel>
+
+            <Panel title={ACTIONS_TITLE}>
+                <PanelInset>
+                    <QuickActionList actions={adminQuickActions} />
+                </PanelInset>
             </Panel>
         </div>
     );
