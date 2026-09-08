@@ -26,6 +26,7 @@ export const toLead = (connection: ConnectionListItem): Lead => {
         interests: [connection.property.title],
         stage,
         lastContact: formatAge(minutesSince(lastTouch)),
+        lastContactMinutes: minutesSince(lastTouch),
         nextAction: LEAD_STAGES[stage].nextAction,
         unread: connection._count.messages,
         offers: connection._count.offers,

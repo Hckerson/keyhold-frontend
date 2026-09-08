@@ -1,12 +1,15 @@
 import {
     BadgeCheck,
     CircleSlash,
+    Flame,
+    Snowflake,
     Sparkles,
+    Thermometer,
     type LucideIcon,
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { LeadStage } from "@/lib/types/lead";
+import type { LeadStage, LeadTemperature } from "@/lib/types/lead";
 
 export const LEAD_STAGE_KEYS: LeadStage[] = ["pending", "accepted", "declined"];
 
@@ -43,5 +46,39 @@ export const LEAD_STAGES: Record<LeadStage, LeadStageMeta> = {
         chartTone: "neutral",
         rank: 1,
         nextAction: "No action outstanding",
+    },
+};
+
+export interface LeadTemperatureMeta {
+    label: string;
+    icon: LucideIcon;
+    tone: DotTone;
+    chartTone: ChartTone;
+    floor: number;
+}
+
+export const LEAD_TEMPERATURE_KEYS: LeadTemperature[] = ["hot", "warm", "cold"];
+
+export const LEAD_TEMPERATURES: Record<LeadTemperature, LeadTemperatureMeta> = {
+    hot: {
+        label: "Hot",
+        icon: Flame,
+        tone: "error",
+        chartTone: "error",
+        floor: 60,
+    },
+    warm: {
+        label: "Warm",
+        icon: Thermometer,
+        tone: "warning",
+        chartTone: "warning",
+        floor: 30,
+    },
+    cold: {
+        label: "Cold",
+        icon: Snowflake,
+        tone: "neutral",
+        chartTone: "neutral",
+        floor: 0,
     },
 };
