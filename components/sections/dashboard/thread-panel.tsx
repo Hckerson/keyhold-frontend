@@ -16,7 +16,7 @@ export interface ThreadPanelProps {
     conversation?: Conversation;
     messages: Message[];
     typing: boolean;
-    onSend: (content: string) => void;
+    onSend: (content: string, files: File[]) => void;
 }
 
 export function ThreadPanel({
@@ -40,6 +40,7 @@ export function ThreadPanel({
                         inputLabel={COMPOSER_LABEL}
                         placeholder={COMPOSER_PLACEHOLDER}
                         onSend={onSend}
+                        attachable
                     />
                 </>
             ) : (

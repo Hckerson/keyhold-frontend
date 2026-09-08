@@ -1,4 +1,4 @@
-import type { Message } from "@/lib/types/message";
+import type { Message, ThreadDocument } from "@/lib/types/message";
 import type { Message as ApiMessage } from "@/lib/validations/message";
 import { formatClock, initialsOf } from "@/lib/utils/format";
 
@@ -18,6 +18,17 @@ export const toThread = (
             initials: initialsOf(
                 mine ? (message.sender?.fullName ?? "") : agentName,
             ),
+            documents: (message.attachments ?? []).map((attachment) => ({
+                id: attachment.id,
+                filename: attachment.filename,
+                url: attachment.url,
+                mimeType: attachment.mimeType,
+                sizeBytes: attachment.sizeBytes,
+                sharedBy: mine
+                    ? (message.sender?.fullName ?? "You")
+                    : agentName,
+                sharedAt: formatClock(new Date(attachment.createdAt)),
+            })),
         };
     });
 
@@ -43,3 +54,6 @@ export const medianReplyMinutes = (
     const sorted = [...gaps].sort((a, b) => a - b);
     return sorted[Math.floor(sorted.length / 2)];
 };
+
+export const threadDocuments = (messages: Message[]): ThreadDocument[] =>
+    messages.flatMap((message) => message.documents);

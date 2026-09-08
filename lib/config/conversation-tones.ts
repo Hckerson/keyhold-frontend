@@ -2,6 +2,9 @@ import {
     CalendarCheck,
     CheckCheck,
     Clock,
+    File,
+    FileImage,
+    FileText,
     Hourglass,
     Reply,
     Timer,
@@ -102,3 +105,30 @@ export const responsePercent = (minutes: number) =>
             100 - (Math.min(minutes, RESPONSE_CAP) / RESPONSE_CAP) * 100,
         ),
     );
+
+export interface DocumentKindMeta {
+    label: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+}
+
+const DOCUMENT_KINDS: { prefix: string; meta: DocumentKindMeta }[] = [
+    {
+        prefix: "image/",
+        meta: { label: "Image", icon: FileImage, tone: "info" },
+    },
+    {
+        prefix: "application/pdf",
+        meta: { label: "PDF", icon: FileText, tone: "error" },
+    },
+];
+
+const FALLBACK_DOCUMENT: DocumentKindMeta = {
+    label: "File",
+    icon: File,
+    tone: "neutral",
+};
+
+export const documentKindOf = (mimeType: string): DocumentKindMeta =>
+    DOCUMENT_KINDS.find((kind) => mimeType.startsWith(kind.prefix))?.meta ??
+    FALLBACK_DOCUMENT;

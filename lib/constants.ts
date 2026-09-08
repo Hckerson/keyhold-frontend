@@ -50,6 +50,7 @@ export const config = {
         },
         messages: {
             create: "/messages",
+            attachments: (id: string) => `/messages/${id}/attachments`,
             byConnection: (connectionId: string) =>
                 `/messages/connection/${connectionId}`,
             unreadCount: "/messages/unread/count",

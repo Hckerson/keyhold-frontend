@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import type { OfferStatus } from "@/lib/types";
+import type { ThreadDocument } from "@/lib/types/message";
 import { formatUsd } from "@/lib/utils";
 import { OFFER_STATUS_BY_API } from "@/lib/utils/status-maps";
 import type { Connection } from "@/lib/validations/connection";
@@ -36,6 +37,7 @@ export interface ThreadMessage {
     author: string;
     content: string;
     timestamp: string;
+    documents: ThreadDocument[];
 }
 
 export interface OfferDetail {
@@ -157,6 +159,18 @@ export const threadFrom = (
             author: message.sender?.fullName ?? "",
             content: message.content,
             timestamp: format(new Date(message.createdAt), ENTRY_TIME_FORMAT),
+            documents: (message.attachments ?? []).map((attachment) => ({
+                id: attachment.id,
+                filename: attachment.filename,
+                url: attachment.url,
+                mimeType: attachment.mimeType,
+                sizeBytes: attachment.sizeBytes,
+                sharedBy: message.sender?.fullName ?? "",
+                sharedAt: format(
+                    new Date(attachment.createdAt),
+                    ENTRY_TIME_FORMAT,
+                ),
+            })),
         }));
 
 export const toOfferDetail = (

@@ -7,7 +7,7 @@ import type { ThreadMessage } from "@/lib/data/offer-details";
 
 export interface OfferMessagesPanelProps {
     messages: ThreadMessage[];
-    onSend: (content: string) => void;
+    onSend: (content: string, files: File[]) => void;
 }
 
 export function OfferMessagesPanel({
@@ -25,6 +25,7 @@ export function OfferMessagesPanel({
                             content={message.content}
                             caption={`${message.author} · ${message.timestamp}`}
                             isUser={message.senderRole === "user"}
+                            documents={message.documents}
                         />
                     ))}
                 </ul>
@@ -33,6 +34,7 @@ export function OfferMessagesPanel({
                     inputLabel="Message to agent"
                     placeholder="Message your agent…"
                     onSend={onSend}
+                    attachable
                 />
             </div>
         </Panel>
