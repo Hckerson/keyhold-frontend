@@ -17,7 +17,7 @@ export const routesFrom = (sections: SidebarSection[]): NavRoute[] => {
     return [...byHref.values()];
 };
 
-const holds = (href: string, pathname: string) =>
+export const holdsRoute = (href: string, pathname: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
 export interface TrailInput {
@@ -35,7 +35,8 @@ export const trailFor = ({
 }: TrailInput): TrailCrumb[] => {
     const branch = routes
         .filter(
-            (route) => route.href !== rootHref && holds(route.href, pathname),
+            (route) =>
+                route.href !== rootHref && holdsRoute(route.href, pathname),
         )
         .sort((a, b) => b.href.length - a.href.length)[0];
 
