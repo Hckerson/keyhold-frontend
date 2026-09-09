@@ -1,9 +1,12 @@
 import { Download } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
+import { ReportTrigger } from "@/components/features/shared/report-trigger";
 import { documentKindOf } from "@/lib/config/conversation-tones";
 import { formatBytes } from "@/lib/data/file-upload";
 import { cn } from "@/lib/utils";
 import type { ThreadDocument } from "@/lib/types/message";
+
+const REPORTED_MESSAGE_LABEL = "This message";
 
 export interface MessageBubbleProps {
     content: string;
@@ -12,6 +15,7 @@ export interface MessageBubbleProps {
     variant?: "thread" | "panel";
     avatarInitials?: string;
     documents?: ThreadDocument[];
+    reportTargetId?: string;
 }
 
 export function MessageBubble({
@@ -21,6 +25,7 @@ export function MessageBubble({
     variant = "thread",
     avatarInitials,
     documents,
+    reportTargetId,
 }: MessageBubbleProps) {
     const isThread = variant === "thread";
     const Wrapper = isThread ? "div" : "li";
@@ -102,7 +107,20 @@ export function MessageBubble({
                         </ul>
                     )}
                 </div>
-                <span className="micro-label">{caption}</span>
+                <div className="flex items-center gap-1.5">
+                    <span className="micro-label">{caption}</span>
+                    {!isUser && reportTargetId && (
+                        <ReportTrigger
+                            targets={[
+                                {
+                                    type: "MESSAGE",
+                                    id: reportTargetId,
+                                    label: REPORTED_MESSAGE_LABEL,
+                                },
+                            ]}
+                        />
+                    )}
+                </div>
             </div>
         </Wrapper>
     );
