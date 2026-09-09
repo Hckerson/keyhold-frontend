@@ -5,6 +5,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { NotificationRuleTable } from "@/components/features/agent/notification-rule-table";
+import { IdentityVerificationPanel } from "@/components/features/settings/identity-verification-panel";
 import { AgentSettingsProfileHero } from "@/components/sections/agent/agent-settings-profile-hero";
 import {
     enabledNotificationCount,
@@ -89,6 +90,8 @@ export function AgentSettingsMain({
                     />
                 </PanelInset>
             </Panel>
+
+            <IdentityVerificationPanel />
         </div>
     );
 }
