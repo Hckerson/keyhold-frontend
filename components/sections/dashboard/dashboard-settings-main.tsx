@@ -5,6 +5,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { ProfilePhotoUploader } from "@/components/features/settings/profile-photo-uploader";
+import { IdentityVerificationPanel } from "@/components/features/settings/identity-verification-panel";
 import { AlertPreferenceList } from "@/components/features/dashboard/alert-preference-list";
 import { DashboardSettingsProfileHero } from "@/components/sections/dashboard/dashboard-settings-profile-hero";
 import { deliverySummary, enabledAlertCount } from "@/lib/data/alerts";
@@ -94,6 +95,8 @@ export function DashboardSettingsMain({
                     />
                 </PanelInset>
             </Panel>
+
+            <IdentityVerificationPanel />
         </div>
     );
 }
