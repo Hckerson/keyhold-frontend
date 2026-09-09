@@ -22,6 +22,8 @@ Records are immutable once merged. A decision that changes gets a new record tha
 | [0014](0014-outbound-contact-runs-through-the-platform.md) | Outbound contact runs through the platform, and calls bridge rather than dial | Accepted                                                 |
 | [0015](0015-map-surfaces-wait-on-coordinates.md)           | Map surfaces wait on coordinates, not on a provider                           | Accepted                                                 |
 | [0016](0016-lead-temperature-is-derived.md)                | Lead temperature is derived; the connection taxonomy stays                    | Accepted                                                 |
+| [0017](0017-screen-classes-are-named-by-state-source.md)   | Screen classes are named by what drives their state                           | Accepted                                                 |
+| [0018](0018-the-seller-is-the-agent.md)                    | The seller is the agent; there is no representation model                     | Accepted                                                 |
 
 ## Template
 
