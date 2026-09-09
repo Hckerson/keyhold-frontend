@@ -69,3 +69,7 @@ export const REVEAL_MOTION: Variants = {
 };
 
 export const REVEAL_VIEWPORT = { once: true, amount: 0.15 } as const;
+
+export const SCROLL_NARRATIVE_BAND = "-45% 0px -45% 0px";
+
+export const SCROLL_HEADING_TRAIL = "-96px 0px -70% 0px";

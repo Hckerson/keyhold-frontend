@@ -12,6 +12,7 @@ export * from "./message";
 export * from "./moderation";
 export * from "./offer";
 export * from "./personal-data";
+export * from "./prose";
 export * from "./purchase";
 export * from "./report";
 export * from "./request";
