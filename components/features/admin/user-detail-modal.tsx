@@ -122,24 +122,25 @@ export function UserDetailModal({
                         >
                             {PROFILE_ACTION}
                         </Link>
-                        {user.status === "suspended" ? (
-                            <Button
-                                type="button"
-                                emphasis="solid"
-                                tone="accent"
-                                onClick={() => onReactivate(user.id)}
-                            >
-                                {REACTIVATE_ACTION}
-                            </Button>
-                        ) : (
-                            <Button
-                                type="button"
-                                tone="error"
-                                onClick={() => onSuspend(user.id)}
-                            >
-                                {SUSPEND_ACTION}
-                            </Button>
-                        )}
+                        {user.status !== "deleted" &&
+                            (user.status === "suspended" ? (
+                                <Button
+                                    type="button"
+                                    emphasis="solid"
+                                    tone="accent"
+                                    onClick={() => onReactivate(user.id)}
+                                >
+                                    {REACTIVATE_ACTION}
+                                </Button>
+                            ) : (
+                                <Button
+                                    type="button"
+                                    tone="error"
+                                    onClick={() => onSuspend(user.id)}
+                                >
+                                    {SUSPEND_ACTION}
+                                </Button>
+                            ))}
                     </ModalFooter>
                 </>
             )}
