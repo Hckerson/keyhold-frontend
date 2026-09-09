@@ -76,6 +76,11 @@ export const config = {
                 `/offers/connection/${connectionId}`,
             respond: (id: string) => `/offers/${id}/respond`,
             acceptCounter: (id: string) => `/offers/${id}/accept-counter`,
+            milestones: (id: string) => `/offers/${id}/milestones`,
+            milestone: (id: string, kind: string) =>
+                `/offers/${id}/milestones/${kind}`,
+            milestoneDocument: (id: string, kind: string) =>
+                `/offers/${id}/milestones/${kind}/document`,
         },
         transactions: {
             list: "/transactions",
@@ -297,6 +302,8 @@ export const ADMIN_ROUTES = {
     payments: "/admin/payments",
     reports: "/admin/reports",
     verifications: "/admin/verifications",
+    disputes: "/admin/disputes",
+    flags: "/admin/flags",
     settings: "/admin/settings",
 } as const;
 
