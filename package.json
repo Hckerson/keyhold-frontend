@@ -2,6 +2,10 @@
     "name": "keyhold-frontend",
     "version": "0.1.0",
     "private": true,
+    "packageManager": "pnpm@10.17.0",
+    "engines": {
+        "node": "22.x"
+    },
     "scripts": {
         "dev": "next dev",
         "build": "next build",
@@ -10,6 +14,7 @@
         "format": "prettier --write .",
         "type-check": "npx tsc --noEmit",
         "prepare": "husky",
+        "enums:check": "node --experimental-strip-types --no-warnings=ExperimentalWarning tools/run-enum-parity.mts",
         "test": "vitest run",
         "test:watch": "vitest"
     },

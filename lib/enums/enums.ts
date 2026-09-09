@@ -74,6 +74,7 @@ export const USER_ACCOUNT_STATUSES = [
     "ACTIVE",
     "PENDING",
     "SUSPENDED",
+    "DELETED",
 ] as const;
 
 export type PropertyType = (typeof PROPERTY_TYPES)[number];
@@ -174,6 +175,22 @@ export const ESCROW_STATUSES = [
     "DISPUTED",
 ] as const;
 
+export const CONTINGENCIES = ["INSPECTION", "APPRAISAL", "FINANCING"] as const;
+
+export const MILESTONE_KINDS = [
+    "INSPECTION",
+    "APPRAISAL",
+    "FINANCING",
+    "CLOSING",
+] as const;
+
+export const MILESTONE_STATUSES = [
+    "PENDING",
+    "SCHEDULED",
+    "COMPLETED",
+    "WAIVED",
+] as const;
+
 export const NOTIFICATION_TYPES = [
     "PRICE_DROP",
     "NEW_LISTING",
@@ -212,6 +229,9 @@ export const AUDIT_ACTION_TYPES = [
     "DISPUTE_RESOLVED",
     "LOGIN",
     "LOGOUT",
+    "LOGIN_SUCCEEDED",
+    "LOGIN_FAILED",
+    "PERMISSION_DENIED",
 ] as const;
 
 export const MODERATION_DECISIONS = ["approve", "changes", "reject"] as const;
@@ -222,6 +242,9 @@ export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
 export type DisputeStatus = (typeof DISPUTE_STATUSES)[number];
 export type DisputeEvidenceType = (typeof DISPUTE_EVIDENCE_TYPES)[number];
 export type EscrowStatus = (typeof ESCROW_STATUSES)[number];
+export type Contingency = (typeof CONTINGENCIES)[number];
+export type MilestoneKind = (typeof MILESTONE_KINDS)[number];
+export type MilestoneStatus = (typeof MILESTONE_STATUSES)[number];
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number];
 export type SettingCategory = (typeof SETTING_CATEGORIES)[number];
