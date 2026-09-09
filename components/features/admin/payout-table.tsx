@@ -10,9 +10,10 @@ const ACTION_HEADING = "Open the payout";
 
 export interface PayoutTableProps {
     payouts: Payout[];
+    onSettle?: (payout: Payout) => void;
 }
 
-export function PayoutTable({ payouts }: PayoutTableProps) {
+export function PayoutTable({ payouts, onSettle }: PayoutTableProps) {
     return (
         <table className="table-flush w-full min-w-3xl table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
@@ -42,7 +43,7 @@ export function PayoutTable({ payouts }: PayoutTableProps) {
                     >
                         Age
                     </th>
-                    <th scope="col" className="w-10 pl-3">
+                    <th scope="col" className="w-24 pl-3">
                         <span className="sr-only">{ACTION_HEADING}</span>
                     </th>
                 </tr>
@@ -50,7 +51,11 @@ export function PayoutTable({ payouts }: PayoutTableProps) {
             <tbody className="divide-border divide-y">
                 <AnimatePresence initial={false}>
                     {payouts.map((payout) => (
-                        <PayoutRow key={payout.id} payout={payout} />
+                        <PayoutRow
+                            key={payout.id}
+                            payout={payout}
+                            onSettle={onSettle}
+                        />
                     ))}
                 </AnimatePresence>
             </tbody>

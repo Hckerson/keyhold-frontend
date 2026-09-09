@@ -6,6 +6,7 @@ import { AdminPaymentsMain } from "@/components/sections/admin/admin-payments-ma
 import { AdminPaymentsRail } from "@/components/sections/admin/admin-payments-rail";
 import { AdminPaymentsStatBand } from "@/components/sections/admin/admin-payments-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { EscrowSettleModal } from "@/components/features/admin/escrow-settle-modal";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     heldPayouts,
@@ -20,6 +21,7 @@ import {
     type PayoutStateFilter,
 } from "@/lib/data/admin-payments";
 import { useEscrowHolds, useEscrowStages } from "@/lib/hooks/use-escrow";
+import { useEscrowSettle } from "@/lib/hooks/use-escrow-settle";
 import { toPayouts } from "@/lib/utils/to-payout";
 
 const HOLD_PAGE_SIZE = 100;
@@ -27,6 +29,7 @@ const HOLD_PAGE_SIZE = 100;
 export function AdminPaymentsConsole() {
     const holds = useEscrowHolds({ limit: HOLD_PAGE_SIZE });
     const stages = useEscrowStages();
+    const settle = useEscrowSettle();
 
     const [stateFilter, setStateFilter] = useState<PayoutStateFilter>("all");
 
@@ -74,6 +77,7 @@ export function AdminPaymentsConsole() {
                     metrics={settlementMetrics(payouts)}
                     pending={holds.isPending}
                     onStateFilterChange={setStateFilter}
+                    onSettle={settle.open}
                 />
                 <AdminPaymentsRail
                     stages={pipeline}
@@ -81,6 +85,17 @@ export function AdminPaymentsConsole() {
                     metrics={settlementMetrics(payouts)}
                 />
             </div>
+
+            <EscrowSettleModal
+                payout={settle.payout}
+                mode={settle.mode}
+                reason={settle.reason}
+                pending={settle.pending}
+                onModeChange={settle.changeMode}
+                onReasonChange={settle.changeReason}
+                onClose={settle.close}
+                onSubmit={settle.submit}
+            />
         </div>
     );
 }
