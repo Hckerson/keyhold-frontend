@@ -8,6 +8,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ListingDetail } from "@/components/sections/listing/listing-detail";
+import { ListingViewRecorder } from "@/components/features/listings/listing-view-recorder";
 import { ListingUnavailable } from "@/components/sections/listing/listing-unavailable";
 import { propertiesServerAPI } from "@/lib/api/server";
 import { config } from "@/lib/constants";
@@ -85,6 +86,8 @@ export default async function ListingDetailPage({
                     __html: serialiseSchema(toListingSchema(property)),
                 }}
             />
+
+            <ListingViewRecorder propertyId={property.id} />
 
             <Container className="pt-6">
                 <Breadcrumb aria-label="Breadcrumb">
