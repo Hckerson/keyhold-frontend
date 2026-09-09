@@ -10,12 +10,15 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 import type { SiteNavLink } from "@/lib/config/site-nav";
+import { holdsRoute } from "@/lib/utils/nav";
+import { cn } from "@/lib/utils";
 import styles from "@/components/layout/header.module.css";
 
 interface HeaderMenuProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     links: SiteNavLink[];
+    pathname: string;
     signedIn: boolean;
     onLogout: () => void;
 }
@@ -24,6 +27,7 @@ export function HeaderMenu({
     open,
     onOpenChange,
     links,
+    pathname,
     signedIn,
     onLogout,
 }: HeaderMenuProps) {
@@ -52,21 +56,36 @@ export function HeaderMenu({
                 </DrawerHeader>
 
                 <DrawerBody className="flex flex-col gap-1 px-2">
-                    {links.map((link) => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            onClick={close}
-                            className="text-text hover:bg-background-alt hover:text-accent focus-visible:ring-accent ease-smooth flex items-center justify-between gap-3 rounded-md px-2.5 py-2.5 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-                        >
-                            {link.label}
-                            <ArrowUpRight
-                                size={13}
-                                strokeWidth={1.5}
-                                className="text-text-muted shrink-0"
-                            />
-                        </Link>
-                    ))}
+                    {links.map((link) => {
+                        const current = holdsRoute(link.href, pathname);
+
+                        return (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={close}
+                                aria-current={current ? "page" : undefined}
+                                className={cn(
+                                    "hover:bg-background-alt hover:text-accent focus-visible:ring-accent ease-smooth flex h-9 items-center justify-between gap-3 rounded-md px-2.5 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                                    current
+                                        ? "bg-accent-light text-accent"
+                                        : "text-text",
+                                )}
+                            >
+                                {link.label}
+                                <ArrowUpRight
+                                    size={12}
+                                    strokeWidth={1.5}
+                                    className={cn(
+                                        "shrink-0",
+                                        current
+                                            ? "text-accent"
+                                            : "text-text-muted",
+                                    )}
+                                />
+                            </Link>
+                        );
+                    })}
                 </DrawerBody>
 
                 <DrawerFooter className="flex-col items-stretch gap-2">
