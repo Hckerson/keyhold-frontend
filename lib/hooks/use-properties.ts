@@ -183,3 +183,10 @@ export function useModerateProperty() {
         },
     });
 }
+
+export function useRecordPropertyView() {
+    return useMutation({
+        meta: FEEDBACK.recordPropertyView,
+        mutationFn: (id: string) => propertiesAPI.recordView(id),
+    });
+}
