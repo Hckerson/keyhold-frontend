@@ -1,3 +1,5 @@
+import { SENTRY_DSN } from "./sentry";
+
 export const MAP_TILE_ORIGIN = "https://tiles.openfreemap.org";
 
 const IMAGE_HOSTS = [
@@ -35,6 +37,7 @@ const directivesFor = (apiBase: string): Record<string, string[]> => ({
     "connect-src": [
         "'self'",
         originOf(apiBase),
+        originOf(SENTRY_DSN),
         "https://api.stripe.com",
         "https://*.stripe.com",
         MAP_TILE_ORIGIN,
