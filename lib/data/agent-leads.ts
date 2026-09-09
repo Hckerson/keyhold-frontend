@@ -91,7 +91,7 @@ export const rankLeads = (leads: Lead[]) =>
             leadScore(b) - leadScore(a) ||
             LEAD_STAGES[b.stage].rank - LEAD_STAGES[a.stage].rank ||
             b.unread - a.unread ||
-            b.budget - a.budget,
+            b.listingPrice - a.listingPrice,
     );
 
 export const countByStage = (leads: Lead[]) => {
@@ -109,7 +109,7 @@ const openLeads = (leads: Lead[]) =>
     leads.filter((lead) => lead.stage !== "declined");
 
 export const openValue = (leads: Lead[]) =>
-    sum(openLeads(leads).map((lead) => lead.budget));
+    sum(openLeads(leads).map((lead) => lead.listingPrice));
 
 export const leadStats = (leads: Lead[]): StatDatum[] => {
     const counts = countByStage(leads);

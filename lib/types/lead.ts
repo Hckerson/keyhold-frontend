@@ -9,7 +9,7 @@ export interface Lead {
     portrait: string;
     email: string;
     phone: string;
-    budget: number;
+    listingPrice: number;
     interests: string[];
     stage: LeadStage;
     lastContact: string;

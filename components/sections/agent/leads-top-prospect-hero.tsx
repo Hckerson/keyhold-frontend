@@ -52,7 +52,7 @@ export function LeadsTopProspectHero({
                         </p>
                         <div className="mt-1 flex items-baseline gap-2">
                             <p className="text-h4 font-display text-text font-light tabular-nums">
-                                {formatCompactUsd(lead.budget)}
+                                {formatCompactUsd(lead.listingPrice)}
                             </p>
                             <span className="micro-label">{VALUE_LABEL}</span>
                         </div>
