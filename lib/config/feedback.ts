@@ -33,6 +33,14 @@ export const FEEDBACK = {
 
     createOffer: { success: "Offer submitted", silentError: true },
     respondToOffer: { success: "Response sent", silentError: true },
+    updateMilestone: {
+        success: "Milestone updated",
+        error: "We couldn't update that milestone.",
+    },
+    attachMilestoneDocument: {
+        success: "Document attached",
+        error: "We couldn't attach that document.",
+    },
     acceptCounter: {
         success: "Counter accepted",
         error: "We couldn't accept the counter-offer.",
@@ -94,6 +102,7 @@ export const FEEDBACK = {
         error: "We couldn't update the listing status.",
     },
     deleteProperty: { error: "We couldn't delete the listing." },
+    recordPropertyView: { silentError: true },
     promoteProperty: { success: "Listing promoted", silentError: true },
     markPropertySold: {
         success: "Listing marked sold",

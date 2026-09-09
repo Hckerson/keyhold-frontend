@@ -56,6 +56,11 @@ export default function OfferDetailPage({
                 onCounterNoteChange={offer.setCounterNote}
                 onSubmitCounter={() => offer.setConfirming("counter")}
                 onSendMessage={offer.addUserMessage}
+                milestones={offer.milestones}
+                milestonesBusy={offer.milestonesBusy}
+                onMilestoneDate={offer.onMilestoneDate}
+                onMilestoneToggle={offer.onMilestoneToggle}
+                onMilestoneAttach={offer.onMilestoneAttach}
             />
 
             <OfferConfirmModal

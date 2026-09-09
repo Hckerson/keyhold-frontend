@@ -50,6 +50,7 @@ export const queryKeys = {
         byConnection: (connectionId: string) =>
             ["offers", "connection", connectionId] as const,
         detail: (id: string) => ["offers", "detail", id] as const,
+        milestones: (id: string) => ["offers", "milestones", id] as const,
     },
     transactions: {
         all: ["transactions"] as const,

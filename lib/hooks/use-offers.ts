@@ -7,7 +7,9 @@ import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type {
     CreateOfferInput,
     RespondOfferInput,
+    UpdateMilestoneInput,
 } from "@/lib/validations/offer";
+import type { MilestoneKind } from "@/lib/enums/enums";
 import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useConnectionOffers(connectionId: string | undefined) {
@@ -78,5 +80,44 @@ export function useAcceptCounter() {
                 }),
             ]);
         },
+    });
+}
+
+export function useOfferMilestones(offerId: string, enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.offers.milestones(offerId),
+        queryFn: () => offersAPI.milestones(offerId),
+        enabled: enabled && Boolean(offerId),
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
+export function useUpdateMilestone(offerId: string) {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.updateMilestone,
+        mutationFn: ({
+            kind,
+            ...input
+        }: UpdateMilestoneInput & { kind: MilestoneKind }) =>
+            offersAPI.updateMilestone(offerId, kind, input),
+        onSuccess: () =>
+            client.invalidateQueries({
+                queryKey: queryKeys.offers.milestones(offerId),
+            }),
+    });
+}
+
+export function useAttachMilestoneDocument(offerId: string) {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.attachMilestoneDocument,
+        mutationFn: ({ kind, file }: { kind: MilestoneKind; file: File }) =>
+            offersAPI.attachMilestoneDocument(offerId, kind, file),
+        onSuccess: () =>
+            client.invalidateQueries({
+                queryKey: queryKeys.offers.milestones(offerId),
+            }),
     });
 }
