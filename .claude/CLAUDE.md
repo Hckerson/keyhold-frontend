@@ -45,7 +45,18 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 | `/design-os`            | _(flat)_                                                                                               | Design-system seed prompt. Not application code.                                                                                                                                                                                              |
 | `/public`               | `fonts`                                                                                                | Static assets.                                                                                                                                                                                                                                |
 | `/styles`               | _(flat)_                                                                                               | Global styles and token exports.                                                                                                                                                                                                              |
+| `/tools`                | _(flat)_                                                                                               | Repo tooling that runs outside the app: the enum parity gate. Not application code. Node runs these with `--experimental-strip-types`, so they are `.mts` and import each other with an explicit extension.                                   |
 | `/docs`                 | `adr` • `archive` • `storage` • _(flat prose)_                                                         | Prose documentation. Not application code. Only `README.md` stays at the repo root. A decision that is expensive to reverse gets a record in `docs/adr/` before the code that assumes it.                                                     |
+
+## The enum mirror
+
+`lib/enums/enums.ts` mirrors the backend by hand. Thirty of its `as const` arrays name an `enum` block in `../backend/prisma/schema.prisma`, and `lib/validations/` feeds those arrays straight into `z.enum`, so a member the backend has and the mirror lacks is not a cosmetic gap — the response fails to parse. The other arrays (`PROPERTY_SORTS`, `TIME_FILTERS`, `MODERATION_DECISIONS`, `SERVICE_STATES`, `INTEGRATION_IDS`) are UI vocabulary with no backend counterpart and are deliberately unmapped.
+
+Parity is not left to memory: `pnpm enums:check` reads both files, compares members for every mapped pair, and fails the pre-push hook when they disagree. The pairing is the explicit table in `tools/enum-parity.mts` — never a naming heuristic, because `CONTINGENCIES`/`Contingency` and friends do not survive one. Adding an array that mirrors a new Prisma enum means adding it to that table; a member the UI genuinely should not carry means dropping the pair from it, with the reason stated here.
+
+A missing schema skips the check rather than failing it, so the gate never blocks a frontend cloned without its sibling backend.
+
+**Any script that maintains a committed artifact from a source outside it gets this treatment** — a check twin that re-derives, diffs, and exits non-zero, wired into pre-push. Regeneration and hand-mirroring are never left to memory.
 
 ## File rules
 
@@ -60,7 +71,7 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 Formatting and linting are automated. They are not chores you run by hand.
 
 - **Commit** — Husky's `pre-commit` hook runs `pnpm lint-staged` and nothing else: `eslint --fix` then `prettier --write`, over staged files only. It is fast by design.
-- **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, and blocks on failure. This is the real gate.
+- **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, then `pnpm enums:check`, and blocks on failure. This is the real gate.
 - **Tests** — `pnpm test` is on you. A failing test is never left for later.
 
 `pnpm format` and `pnpm lint` stay available for a manual full-repo sweep, but no workflow requires you to run them.
