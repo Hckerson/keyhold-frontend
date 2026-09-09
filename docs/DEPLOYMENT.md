@@ -49,6 +49,37 @@ upload at build time; without the token the build skips it and still succeeds.
 
 Keep `NEXT_PUBLIC_DEV_QUICK_LOGIN` unset in every deployed environment.
 
+## DNS
+
+The domain is `keyhold.studio`, registered through the GitHub Student Developer
+Pack at Name.com. Redemption only applies the promotion if you are logged out of
+Name.com and enter through `education.github.com/pack/offers`; going to the site
+directly charges full price. The registration is free for the first year and
+renews at the standard rate.
+
+Nameservers point at Cloudflare on the free plan (Domains → Onboard a domain).
+Disable DNSSEC at the registrar before switching, or the domain stops resolving
+rather than failing over.
+
+Every record stays **grey-cloud (DNS only)**. Vercel does not support a reverse
+proxy in front of it — orange-cloud proxying produces Error 526 and Error 524,
+stacks a second CDN in front of Vercel's own, and hides client IPs from Vercel's
+traffic analysis. Cloudflare here is a DNS host, not an edge.
+
+| Record | Points at                  | Proxy |
+| ------ | -------------------------- | ----- |
+| `@`    | the target Vercel displays | Grey  |
+| `www`  | the target Vercel displays | Grey  |
+| `api`  | the Heroku DNS target      | Grey  |
+| TXT    | Resend DKIM, SPF, DMARC    | Grey  |
+
+Use the exact record values each dashboard gives you. Vercel's apex address has
+changed before, so an IP copied from a blog post is a slow failure.
+
+Proxying `api` later is supportable — enable Heroku ACM and set Cloudflare SSL to
+Full (strict). That combination only began working in 2025; older guides tell you
+to upload a Cloudflare Origin CA certificate, which is no longer needed.
+
 ## Cutover order
 
 The two hosts reference each other, so the first deploy needs two passes:
