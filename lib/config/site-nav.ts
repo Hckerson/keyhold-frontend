@@ -23,3 +23,35 @@ export const siteNavFor = (
               { label: "Dashboard", href: portalForRole(role) },
           ]
         : PUBLIC_NAV;
+
+export interface SiteLinkColumn {
+    heading: string;
+    links: SiteNavLink[];
+}
+
+export const FOOTER_COLUMNS: readonly SiteLinkColumn[] = [
+    {
+        heading: "Company",
+        links: [
+            { label: "About", href: "/about" },
+            { label: "Journal", href: "/blog" },
+            { label: "Contact", href: "/contact" },
+        ],
+    },
+    {
+        heading: "Support",
+        links: [
+            { label: "Help", href: "/help" },
+            { label: "Search listings", href: "/search" },
+            { label: "Create an account", href: "/signup" },
+        ],
+    },
+    {
+        heading: "Legal",
+        links: [
+            { label: "Privacy", href: "/privacy" },
+            { label: "Terms", href: "/terms" },
+            { label: "Accessibility", href: "/accessibility" },
+        ],
+    },
+];
