@@ -1200,6 +1200,45 @@ footer span { font-family: var(--mono); }
             provider choice.
         </p>
 
+        <h3>Section-level gaps, closed</h3>
+        <p>
+            <b>Section&nbsp;16 · Offer Form</b> now captures the four things it was short of. Move-in date,
+            earnest money and the three contingencies are structured columns on <code>Offer</code> rather than
+            sentences inside the terms field, and submitting routes through a review step that shows the buyer
+            exactly what the listing office will see. The free-text field remains as &ldquo;Additional notes&rdquo;,
+            which is what it had really been all along.
+        </p>
+        <p>
+            <b>Section&nbsp;21 · Inspection / Appraisal Tracker</b> exists. Four <code>DealMilestone</code> rows —
+            inspection, appraisal, financing, closing — are seeded automatically when an offer is accepted, and the
+            checklist on offer detail carries a date control, a status badge, a completion toggle and a document
+            attachment per row. A contingency the buyer declined is seeded as waived rather than hidden, so the list
+            always reads as four deliberate decisions. Overdue is derived from a passed due date, so nothing has to
+            run on a schedule for it to stay accurate.
+        </p>
+        <p>
+            That leaves Section&nbsp;10&rsquo;s POI markers as the only entry in the section-level table still open,
+            for want of a dataset rather than a decision.
+        </p>
+
+        <h3>Ship-blockers, closed</h3>
+        <p>
+            Both defects at the head of this ledger are resolved. The Quick Actions panel is no longer dead code &mdash;
+            it was replaced by a shared list that all three overview rails consume. And the seven linked-but-nonexistent
+            routes now exist: <code>/about</code>, <code>/blog</code>, <code>/contact</code>, <code>/help</code>,
+            <code>/privacy</code>, <code>/terms</code> and <code>/accessibility</code>. Nothing in the public header or
+            the footer resolves to a 404.
+        </p>
+        <p>
+            The audit was right that design-os is complicit here: Section&nbsp;48 names these as footer link text and
+            Phase&nbsp;4 never blueprints them, so there was no spec to build against. The pages are written from what
+            the platform actually does &mdash; the privacy page names the real processors and the real retention
+            behaviour, the accessibility page states the pipeline drag&rsquo;s keyboard gap instead of claiming
+            conformance it does not have, and <code>/blog</code> ships as a real index with no entries rather than
+            invented ones. <b>The two legal pages describe system behaviour accurately but have not had legal
+            review.</b>
+        </p>
+
         <h3>Still short</h3>
         <p>
             Section&nbsp;10&rsquo;s school, transit, park and restaurant markers and their toggleable legend are the one
@@ -1229,7 +1268,7 @@ footer span { font-family: var(--mono); }
         <span>15 conform · 13 short · 2 unbuilt</span>
         <span>8 beyond spec · 7 dead links</span>
         <span>Sources: phase-3 · phase-4 · phase-5</span>
-        <span>Remediated 8 Sep 2026 · see RATIFIED_DIVERGENCES.md</span>
+        <span>Remediated 8–9 Sep 2026 · 7 of 8 section gaps closed</span>
     </footer>
 
 </div>

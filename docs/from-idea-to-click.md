@@ -85,7 +85,7 @@ The stage everyone skips and everyone regrets skipping. Code is expensive to wri
 > **Where first-timers lose months**
 > Building the admin panel first. It feels productive because it is unambiguous — but nobody is waiting for it. Build the one flow that a real user would pay for, all the way through to production, before building anything else. That single vertical slice teaches you more than six horizontal ones.
 
-**In your repo** — `design-os/CORE-PHASES/phase-1-product-vision.md` is this stage's artifact: the problem statement, four personas, the jobs each one hires the product for, and a KPI table with a target and a rationale per row — all written before the code existed. (`docs/archive/horizon-grove-real-estate.md` is often mistaken for it; that one is a design-system definition, and belongs to stage 02.)
+**In your repo** — `design-os/CORE-PHASES/phase-1-product-vision.md` is this stage's artifact: the problem statement, four personas, the jobs each one hires the product for, and a KPI table with a target and a rationale per row — all written before the code existed. (`docs/archive/horizon-grove-real-estate.md` is often mistaken for it; that one is a design-system definition, and belongs to stage 02.) It was audited against the shipped code on 9 September 2026, the last of the twelve stages to be: the four personas map to three roles ([ADR 0018](adr/0018-the-seller-is-the-agent.md)), five of the fourteen jobs-to-be-done are fully served and two are unserved, and three of the nine KPIs can be computed from the database today — one of them already is. The findings live in `design-os/INDEX/RATIFIED_DIVERGENCES.md`.
 
 ---
 
