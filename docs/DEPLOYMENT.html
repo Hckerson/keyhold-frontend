@@ -945,7 +945,8 @@
                             </div>
                             <div class="cost nil">$0.00</div>
                             <div class="delta">
-                                Proxy, TLS, WAF. Not a Pack offer — simply free.
+                                DNS only — Vercel forbids a proxy in front of
+                                it. Not a Pack offer, simply free.
                             </div>
                         </div>
                         <div class="row r-full">
@@ -1137,15 +1138,21 @@
                             <ul>
                                 <li>
                                     <strong>Name.com</strong> is the pick — 25+
-                                    extensions including <code>.dev</code> and
-                                    <code>.studio</code>, against Namecheap's
-                                    <code>.me</code> only.
+                                    extensions including <code>.studio</code>,
+                                    against Namecheap's <code>.me</code> only.
+                                    Log out of Name.com first, then enter
+                                    through the Pack offers page, or the promo
+                                    silently fails to apply.
                                 </li>
                                 <li>
                                     Move nameservers to
-                                    <strong>Cloudflare</strong> immediately:
-                                    free TLS, proxying, WAF, and records you
-                                    will edit repeatedly.
+                                    <strong>Cloudflare</strong> (Domains →
+                                    Onboard a domain), and keep every record
+                                    <strong>grey-cloud</strong>. Vercel does not
+                                    support a reverse proxy in front of it —
+                                    orange cloud produces Error 526 and stacks a
+                                    second CDN on its own. Disable DNSSEC at the
+                                    registrar before switching nameservers.
                                 </li>
                                 <li>
                                     Add Resend's DKIM and SPF records now, so
