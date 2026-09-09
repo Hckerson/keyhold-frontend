@@ -52,7 +52,7 @@ export function LeadRow({ lead, onRespond }: LeadRowProps) {
                 {lead.interests[0]}
             </td>
             <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
-                {formatCompactUsd(lead.budget)}
+                {formatCompactUsd(lead.listingPrice)}
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
                 {lead.unread > 0 ? `${lead.unread} ${UNREAD_SUFFIX}` : "—"}

@@ -22,7 +22,7 @@ export const toLead = (connection: ConnectionListItem): Lead => {
         portrait: connection.buyer.avatar ?? "",
         email: connection.buyer.email ?? "",
         phone: connection.buyer.phoneNumber ?? "",
-        budget: connection.property.price,
+        listingPrice: connection.property.price,
         interests: [connection.property.title],
         stage,
         lastContact: formatAge(minutesSince(lastTouch)),

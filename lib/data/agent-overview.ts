@@ -64,7 +64,7 @@ export interface UpcomingShowing {
 export interface RecentLead {
     id: string;
     name: string;
-    budget: number;
+    listingPrice: number;
     stage: LeadStage;
     received: string;
 }
@@ -264,7 +264,7 @@ export const recentLeadsFrom = (leads: Lead[]): RecentLead[] =>
     leads.slice(0, RECENT_LIMIT).map((lead) => ({
         id: lead.id,
         name: lead.name,
-        budget: lead.budget,
+        listingPrice: lead.listingPrice,
         stage: lead.stage,
         received: lead.lastContact,
     }));
