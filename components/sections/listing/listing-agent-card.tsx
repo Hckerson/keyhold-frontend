@@ -24,7 +24,7 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
                         {agent.name}
                     </p>
                     <p className="text-text-secondary truncate text-xs">
-                        {agent.title} Â· {agent.agency}
+                        {agent.title} · {agent.agency}
                     </p>
                     <p className="text-text-muted font-mono text-[10px] tracking-[0.12em] uppercase">
                         {agent.license}
