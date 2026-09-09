@@ -1,15 +1,13 @@
-export interface VerificationSignal {
+export interface Signal {
     label: string;
     value: string;
 }
 
-export interface VerificationSignalGridProps {
-    signals: VerificationSignal[];
+export interface SignalGridProps {
+    signals: Signal[];
 }
 
-export function VerificationSignalGrid({
-    signals,
-}: VerificationSignalGridProps) {
+export function SignalGrid({ signals }: SignalGridProps) {
     return (
         <dl className="metric-strip border-border-light gap-x-3 gap-y-2.5 rounded-lg border px-3 py-2.5">
             {signals.map((signal) => (
@@ -24,4 +22,4 @@ export function VerificationSignalGrid({
     );
 }
 
-VerificationSignalGrid.displayName = "VerificationSignalGrid";
+SignalGrid.displayName = "SignalGrid";

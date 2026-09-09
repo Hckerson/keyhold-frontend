@@ -6,10 +6,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { VerificationContactLinks } from "@/components/features/admin/verification-contact-links";
 import { VerificationDecisionBar } from "@/components/features/admin/verification-decision-bar";
 import { VerificationDocumentList } from "@/components/features/admin/verification-document-list";
-import {
-    VerificationSignalGrid,
-    type VerificationSignal,
-} from "@/components/features/admin/verification-signal-grid";
+import { SignalGrid, type Signal } from "@/components/patterns/signal-grid";
 import {
     noteMeta,
     statusMeta,
@@ -30,7 +27,7 @@ export function VerificationReviewPane({
     const meta = statusMeta[request.status];
     const note = request.noteKind ? noteMeta[request.noteKind] : null;
 
-    const signals: VerificationSignal[] = [
+    const signals: Signal[] = [
         { label: "Document", value: request.documentType },
         { label: "Number", value: request.documentNumber },
         { label: "Issuer", value: request.issuerCountry },
@@ -62,7 +59,7 @@ export function VerificationReviewPane({
             </div>
 
             <div className="flex flex-col gap-4 px-4 py-3">
-                <VerificationSignalGrid signals={signals} />
+                <SignalGrid signals={signals} />
 
                 {note && request.note && (
                     <Callout
