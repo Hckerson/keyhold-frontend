@@ -119,10 +119,12 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 role: parsed.data.role,
             });
 
+            const destination = isSafeRedirect(redirectTo)
+                ? redirectTo
+                : portalForRole(user.role);
+
             router.replace(
-                isSafeRedirect(redirectTo)
-                    ? redirectTo
-                    : portalForRole(user.role),
+                `${withRedirect(AUTH_ROUTES.verifyEmail, destination)}&email=${encodeURIComponent(parsed.data.email)}`,
             );
         } catch {
             return;

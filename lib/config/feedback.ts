@@ -176,6 +176,15 @@ export const FEEDBACK = {
         error: "We couldn't lift the suspension.",
     },
 
+    verifyEmail: {
+        success: "Email confirmed",
+        error: "That code was not accepted.",
+    },
+    resendVerification: {
+        success: "A new code is on its way",
+        error: "We couldn't send a new code.",
+    },
+
     updatePlatformSettings: {
         success: "Settings saved",
         error: "We couldn't save the platform settings.",
