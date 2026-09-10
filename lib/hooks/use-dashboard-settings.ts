@@ -28,7 +28,11 @@ import {
 } from "@/lib/data/dashboard-settings";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useSavedProperties } from "@/lib/hooks/use-saved-properties";
-import { useCurrentUser, useUpdateUser } from "@/lib/hooks/use-users";
+import {
+    useCurrentUser,
+    useUpdateUser,
+    useUploadAvatar,
+} from "@/lib/hooks/use-users";
 import { useRequestPasswordReset } from "@/lib/hooks/use-session";
 import {
     useNotificationPreferences,
@@ -49,6 +53,7 @@ export function useDashboardSettings() {
     const storedPreferences = useNotificationPreferences();
     const updatePreferences = useUpdateNotificationPreferences();
     const requestReset = useRequestPasswordReset();
+    const uploadAvatar = useUploadAvatar();
 
     const queries = [currentUser, saved_, connections, storedPreferences];
 
@@ -187,5 +192,8 @@ export function useDashboardSettings() {
         exportData,
         exporting: exportMine.isPending,
         exportFailed: exportMine.isError,
+        uploadPhoto: (file: File) => uploadAvatar.mutate(file),
+        photoUploading: uploadAvatar.isPending,
+        photoProgress: uploadAvatar.progress,
     };
 }

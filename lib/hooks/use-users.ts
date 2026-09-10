@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usersAPI } from "@/lib/api/users";
 import { queryKeys } from "@/lib/hooks/query-keys";
@@ -95,4 +97,19 @@ export function useSetUserTier() {
             ]);
         },
     });
+}
+
+export function useUploadAvatar() {
+    const client = useQueryClient();
+    const [progress, setProgress] = useState<number>();
+
+    const mutation = useMutation({
+        meta: FEEDBACK.uploadAvatar,
+        mutationFn: (file: File) => usersAPI.uploadAvatar(file, setProgress),
+        onSettled: () => setProgress(undefined),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.users.me }),
+    });
+
+    return { ...mutation, progress };
 }

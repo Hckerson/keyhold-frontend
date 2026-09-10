@@ -31,6 +31,9 @@ export interface DashboardSettingsMainProps {
     documents: number;
     updatedAt?: string;
     avatar?: string;
+    photoUploading?: boolean;
+    photoProgress?: number;
+    onPhotoUpload: (file: File) => void;
     onFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onToggleEnabled: (type: AlertType) => void;
     onToggleChannel: (type: AlertType, channel: AlertChannel) => void;
@@ -46,6 +49,9 @@ export function DashboardSettingsMain({
     documents,
     updatedAt,
     avatar,
+    photoUploading,
+    photoProgress,
+    onPhotoUpload,
     onFieldChange,
     onToggleEnabled,
     onToggleChannel,
@@ -77,6 +83,9 @@ export function DashboardSettingsMain({
                         <ProfilePhotoUploader
                             name={form.fullName}
                             src={avatar}
+                            uploading={photoUploading}
+                            progress={photoProgress}
+                            onUpload={onPhotoUpload}
                         />
                     }
                 />
