@@ -24,5 +24,11 @@ export const authAPI = {
             password: input.password,
         }),
 
+    verifyEmail: (code: string) =>
+        query.post<{ verified: true }>(config.api.auth.verifyEmail, { code }),
+
+    resendVerification: () =>
+        query.post<{ message: string }>(config.api.auth.resendVerification),
+
     logout: () => query.post<{ success: boolean }>(config.api.auth.logout),
 };

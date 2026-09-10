@@ -9,6 +9,8 @@ export const config = {
             resetPassword: "/auth/reset-password",
             onboarding: "/auth/onboarding",
             logout: "/auth/logout",
+            verifyEmail: "/auth/verify-email",
+            resendVerification: "/auth/resend-verification",
         },
         users: {
             list: "/users",
@@ -193,6 +195,7 @@ export const AUTH_ROUTES = {
     login: "/login",
     signup: "/signup",
     resetPassword: "/reset-password",
+    verifyEmail: "/verify-email",
     terms: "/terms",
     privacy: "/privacy",
     home: "/",

@@ -8,6 +8,26 @@ export const AUTH_FAILURES = {
     request:
         "We couldn't send the reset link. Check the address and try again.",
     reset: "We couldn't reset your password. The link may have expired — request a new one.",
+    verify: "We couldn't confirm that code. Check it and try again.",
+} as const;
+
+export const VERIFY_STEP: Record<"details" | "confirm", AuthStep> = {
+    details: { current: 1, total: 2 },
+    confirm: { current: 2, total: 2 },
+};
+
+export const VERIFY_COPY = {
+    kicker: "One last step",
+    title: "Confirm your email",
+    description:
+        "We sent a six-digit code to your inbox. It expires in fifteen minutes.",
+    label: "Verification code",
+    submit: "Confirm email",
+    resend: "Send a new code",
+    skipLabel: "Not now",
+    skip: "Do this later",
+    done: "Email confirmed",
+    doneLede: "Your address is verified. Nothing else is outstanding.",
 } as const;
 
 export const RECOVERY_STEP: Record<"request" | "confirm", AuthStep> = {
