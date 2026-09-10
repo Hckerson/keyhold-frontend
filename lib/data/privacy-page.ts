@@ -36,7 +36,7 @@ export const PRIVACY_PAGE: ProsePage = {
             bullets: [
                 "Stripe — card payments and escrow. Card details go to Stripe directly; we never hold them.",
                 "Cloudinary — storage for listing photography, verification documents, message attachments and generated agreements.",
-                "SendGrid — transactional email, including password resets and advisor correspondence.",
+                "Our SMTP email provider — transactional email, including password resets, verification codes and advisor correspondence.",
                 "Twilio — SMS notifications, and call bridging so neither party learns the other's number.",
                 "OpenFreeMap — map tiles. Your viewport is requested from their servers when a map renders.",
             ],
