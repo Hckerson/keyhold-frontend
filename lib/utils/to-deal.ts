@@ -4,6 +4,7 @@ import type { Transaction } from "@/lib/validations/transaction";
 import { daysSince } from "@/lib/utils/elapsed";
 
 const OPEN_OFFER_STATUSES = ["PENDING", "COUNTERED"];
+const ACCEPTED = "ACCEPTED";
 const REJECTED = "REJECTED";
 
 const NO_ACTIVITY = "No activity yet";
@@ -76,6 +77,9 @@ export const toDeal = (
             connection.offers.find((candidate) =>
                 OPEN_OFFER_STATUSES.includes(candidate.status),
             )?.id ?? null,
+        acceptedOfferId:
+            connection.offers.find((candidate) => candidate.status === ACCEPTED)
+                ?.id ?? null,
     };
 };
 

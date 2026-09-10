@@ -10,4 +10,5 @@ export interface Deal {
     lastActivity: string;
     notes: string;
     openOfferId: string | null;
+    acceptedOfferId: string | null;
 }

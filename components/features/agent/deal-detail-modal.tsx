@@ -12,11 +12,11 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import { MetricCell } from "@/components/patterns/metric-cell";
+import { DealDetailMetrics } from "@/components/features/agent/deal-detail-metrics";
+import { DealMilestoneSection } from "@/components/features/agent/deal-milestone-section";
 import { DealProgress } from "@/components/features/agent/deal-progress";
 import { DEAL_STAGES } from "@/lib/config/deal-stages";
 import { AGENT_ROUTES } from "@/lib/constants";
-import { formatMillions } from "@/lib/utils";
 import type { Deal } from "@/lib/types/deal";
 
 const CLOSE_LABEL = "Close";
@@ -45,6 +45,7 @@ export function DealDetailModal({
 }: DealDetailModalProps) {
     const stage = deal && DEAL_STAGES.find((item) => item.id === deal.stage);
     const offerId = deal?.openOfferId ?? null;
+    const acceptedOfferId = deal?.acceptedOfferId ?? null;
 
     return (
         <Modal
@@ -74,17 +75,7 @@ export function DealDetailModal({
                     </ModalHeader>
 
                     <ModalBody className="space-y-3 p-4">
-                        <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
-                            <MetricCell label="Value">
-                                {formatMillions(deal.price, 2)}
-                            </MetricCell>
-                            <MetricCell label="Days in stage">
-                                {deal.daysInStage}
-                            </MetricCell>
-                            <MetricCell label="Last activity">
-                                {deal.lastActivity}
-                            </MetricCell>
-                        </div>
+                        <DealDetailMetrics deal={deal} />
 
                         <DealProgress
                             stage={deal.stage}
@@ -98,6 +89,10 @@ export function DealDetailModal({
                                     {deal.notes}
                                 </p>
                             </div>
+                        )}
+
+                        {acceptedOfferId && (
+                            <DealMilestoneSection offerId={acceptedOfferId} />
                         )}
 
                         {offerId === null && (

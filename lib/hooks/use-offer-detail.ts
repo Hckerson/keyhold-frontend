@@ -7,14 +7,10 @@ import { useConnection } from "@/lib/hooks/use-connections";
 import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
 import {
     useAcceptCounter,
-    useAttachMilestoneDocument,
     useCreateOffer,
     useOffer,
-    useOfferMilestones,
-    useUpdateMilestone,
 } from "@/lib/hooks/use-offers";
-import type { MilestoneKind } from "@/lib/enums/enums";
-import type { DealMilestone } from "@/lib/validations/offer";
+import { useDealMilestones } from "@/lib/hooks/use-deal-milestones";
 import { useCheckout } from "@/lib/hooks/use-checkout";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
@@ -30,9 +26,7 @@ export function useOfferDetail(id: string) {
     const connectionQuery = useConnection(offer?.connectionId);
 
     const accepted = offer?.status === "ACCEPTED";
-    const milestonesQuery = useOfferMilestones(id, accepted);
-    const updateMilestone = useUpdateMilestone(id);
-    const attachMilestone = useAttachMilestoneDocument(id);
+    const milestones = useDealMilestones(id, accepted);
     const conversation = useConversation(offer?.connectionId);
 
     const checkout = useCheckout();
@@ -111,33 +105,14 @@ export function useOfferDetail(id: string) {
         });
     };
 
-    const onMilestoneDate = (kind: MilestoneKind, date: string) => {
-        if (!date) return;
-        updateMilestone.mutate({
-            kind,
-            status: "SCHEDULED",
-            dueAt: new Date(`${date}T00:00:00`).toISOString(),
-        });
-    };
-
-    const onMilestoneToggle = (milestone: DealMilestone) =>
-        updateMilestone.mutate({
-            kind: milestone.kind,
-            status:
-                milestone.status === "COMPLETED" ? "SCHEDULED" : "COMPLETED",
-        });
-
-    const onMilestoneAttach = (kind: MilestoneKind, file: File) =>
-        attachMilestone.mutate({ kind, file });
-
     return {
         detail,
         status,
-        milestones: milestonesQuery.data ?? [],
-        milestonesBusy: updateMilestone.isPending || attachMilestone.isPending,
-        onMilestoneDate,
-        onMilestoneToggle,
-        onMilestoneAttach,
+        milestones: milestones.milestones,
+        milestonesBusy: milestones.busy,
+        onMilestoneDate: milestones.onDateChange,
+        onMilestoneToggle: milestones.onToggleComplete,
+        onMilestoneAttach: milestones.onAttach,
         offerPrice: offer?.offeredPrice ?? 0,
         timeline: detail?.timeline ?? [],
         messages: detail?.messages ?? [],
