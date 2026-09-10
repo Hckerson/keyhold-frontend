@@ -51,15 +51,27 @@ Keep `NEXT_PUBLIC_DEV_QUICK_LOGIN` unset in every deployed environment.
 
 ## DNS
 
-The domain is `keyhold.studio`, registered through the GitHub Student Developer
-Pack at Name.com. Redemption only applies the promotion if you are logged out of
-Name.com and enter through `education.github.com/pack/offers`; going to the site
-directly charges full price. The registration is free for the first year and
-renews at the standard rate.
+The domain is `keyhold.me`, registered through the GitHub Student Developer Pack
+at Namecheap. The Pack's other domain offer, Name.com, is one per student and was
+already spent on a different project. Namecheap's offer covers the `.me` TLD only,
+is free for the first year, and renews at the standard `.me` rate — currently
+under $10/year, so the month-12 cost is small. Domain privacy is included.
+
+Redemption runs through `nc.me`, reached from the Pack offers page with your
+GitHub account connected. The bundled SSL certificate in the same offer is not
+useful here and can be left unclaimed or spent elsewhere: Vercel and Heroku ACM
+each provision and renew their own Let's Encrypt certificates, and neither takes
+an uploaded third-party certificate on these tiers.
 
 Nameservers point at Cloudflare on the free plan (Domains → Onboard a domain).
-Disable DNSSEC at the registrar before switching, or the domain stops resolving
-rather than failing over.
+At Namecheap the switch is Domain List → Manage → Nameservers → change the
+dropdown to **Custom DNS**, paste Cloudflare's two, and save with the green
+checkmark. Disable DNSSEC first if it is on, or the domain stops resolving rather
+than failing over.
+
+Once the domain is on Custom DNS, Namecheap's own DNS editor is disabled. Every
+record after that point is created in Cloudflare — editing at the registrar has
+no effect, which is an easy hour to lose.
 
 Every record stays **grey-cloud (DNS only)**. Vercel does not support a reverse
 proxy in front of it — orange-cloud proxying produces Error 526 and Error 524,

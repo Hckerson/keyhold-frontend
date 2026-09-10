@@ -930,7 +930,7 @@
                         <div class="row r-full">
                             <div class="mark">◆</div>
                             <div class="route">
-                                Name.com domain<small>Domain</small>
+                                Namecheap .me<small>Domain</small>
                             </div>
                             <div class="cost nil">$0.00</div>
                             <div class="delta">
@@ -1137,12 +1137,12 @@
                             </p>
                             <ul>
                                 <li>
-                                    <strong>Name.com</strong> is the pick — 25+
-                                    extensions including <code>.studio</code>,
-                                    against Namecheap's <code>.me</code> only.
-                                    Log out of Name.com first, then enter
-                                    through the Pack offers page, or the promo
-                                    silently fails to apply.
+                                    <strong>Namecheap</strong> supplies
+                                    <code>keyhold.me</code>. The Pack's other
+                                    registrar, Name.com, is one per student and
+                                    was already spent elsewhere. Redeem through
+                                    <code>nc.me</code> from the Pack offers page
+                                    with GitHub connected.
                                 </li>
                                 <li>
                                     Move nameservers to
@@ -1438,11 +1438,13 @@ heroku pg:backups:download --app keyhold-api</pre
                             </p>
                         </div>
                         <div class="claim">
-                            <span class="who">Name.com</span>
+                            <span class="who">Namecheap</span>
                             <h4>The domain itself</h4>
                             <p>
-                                Free first year across 25+ extensions.
-                                Everything in Phase 01 depends on it.
+                                <code>.me</code>, free for the first year, then
+                                under $10. Everything in Phase 01 depends on it.
+                                The bundled SSL certificate is not usable on
+                                Vercel or Heroku — both issue their own.
                             </p>
                         </div>
                         <div class="claim">
@@ -1585,11 +1587,12 @@ heroku pg:backups:download --app keyhold-api</pre
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="who">Namecheap .me</td>
+                                    <td class="who">Namecheap SSL</td>
                                     <td>
-                                        Only if you skip Name.com. One free
-                                        domain is enough; a second is a renewal
-                                        bill in twelve months.
+                                        Bundled with the domain, but neither
+                                        Vercel nor Heroku ACM accepts an
+                                        uploaded certificate on these tiers.
+                                        Both provision Let's Encrypt themselves.
                                     </td>
                                 </tr>
                             </tbody>
