@@ -9,6 +9,7 @@ export * from "./journey";
 export * from "./lead";
 export * from "./listing";
 export * from "./message";
+export * from "./nearby";
 export * from "./moderation";
 export * from "./offer";
 export * from "./personal-data";
