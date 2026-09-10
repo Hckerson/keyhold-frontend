@@ -4,6 +4,8 @@ Working notes that are no longer maintained, kept because decision records cite 
 
 Records 0004, 0008 and 0013 name four of these files by their old path, `docs/<NAME>.md`. An ADR is immutable once merged, so those paths stay as written and resolve here instead.
 
+Three of the four are prose references — `docs/REMAINING_WORK.md` in 0004, `docs/MONEY_PATH.md` in 0008, `MOTION.md` in 0013 — and read as plain text. The fourth is not: line 6 of 0013 is a live markdown link, `[FEEDBACK.md](../FEEDBACK.md)`, and it returns nothing when clicked. **That broken link is deliberate and it is not to be repaired.** Immutability is worth more than the click, the `Cited by` column below is the route back, and an edit that quietly repoints it has been made and reverted before.
+
 | File                                                         | What it holds                                                      | Cited by                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------- |
 | [BACKUP.md](BACKUP.md)                                       | Backup and restore paths, and the restore drill that was never run | —                                                             |
