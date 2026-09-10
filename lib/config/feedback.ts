@@ -184,6 +184,10 @@ export const FEEDBACK = {
         success: "A new code is on its way",
         error: "We couldn't send a new code.",
     },
+    uploadAvatar: {
+        success: "Profile photo updated",
+        error: "We couldn't upload that photo.",
+    },
 
     updatePlatformSettings: {
         success: "Settings saved",

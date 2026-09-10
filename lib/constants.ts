@@ -20,6 +20,7 @@ export const config = {
             detail: (id: string) => `/users/${id}`,
             tierDistribution: "/users/tiers/distribution",
             tier: (id: string) => `/users/${id}/tier`,
+            avatar: "/users/me/avatar",
         },
         properties: {
             list: "/properties",
