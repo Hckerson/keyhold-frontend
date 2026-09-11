@@ -1,6 +1,6 @@
 # Ratified Divergences
 
-**Real Estate Platform | Companion to Phases 1–10 | Last reviewed 9 September 2026**
+**Real Estate Platform | Companion to Phases 1–10 | Last reviewed 12 September 2026**
 
 ---
 
@@ -67,17 +67,16 @@ The spec has fallen behind these. Each is a considered decision that predates or
 
 These are **not** ratified. The blueprint stands, and each is blocked on a stated precondition rather than a disagreement.
 
-| Phase reference              | Owed                                                                | Blocked on                                                                                                 | Recorded in                                                |
-| ---------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Page 5 · Sign Up             | Facebook OAuth **working**                                          | No OAuth strategy exists on the backend for _any_ provider                                                 | —                                                          |
-| Page 19 · Calendar           | Google Calendar sync                                                | No calendar integration                                                                                    | —                                                          |
-| Page 3 module 5 · Section 10 | School / transit / park / restaurant pins                           | No POI dataset — the map and the listing pin now render                                                    | ADR 0015                                                   |
-| Phase 1 · Buyer JTBD 1       | "Understand the market" — comparable prices, trends, neighbourhoods | No sold-price history is modelled; `/stats/trend` and `/stats/regions` exist but are admin-only            | —                                                          |
-| Phase 1 · Competitive table  | Real-time collaboration                                             | No socket, SSE or polling transport — threads are `useQuery` with a five-minute `STALE_TIME`               | —                                                          |
-| Phase 1 · Agent JTBD 2       | Qualify leads on buyer budget and readiness                         | No buyer financial field exists; the view model now says `Lead.listingPrice`, which is what it always held | —                                                          |
-| Phase 1 · Agent JTBD 4       | Collaborate with other agents                                       | No representation model                                                                                    | [ADR 0018](../../docs/adr/0018-the-seller-is-the-agent.md) |
-| Phase 1 · Seller JTBD 1      | Price guidance when listing                                         | No valuation source; sold comparables are not modelled                                                     | —                                                          |
-| Phase 1 · KPI table          | Signup completion, search → offer, NPS                              | No product analytics; the funnel is unrecorded (stage 12 of the field guide)                               | —                                                          |
+| Phase reference              | Owed                                                                | Blocked on                                                                                                 | Recorded in                                                         |
+| ---------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Page 5 · Sign Up             | Apple sign-in                                                       | Paid Apple developer account and a `.p8` signing key                                                       | [ADR 0019](../../docs/adr/0019-external-sign-in-is-native-oauth.md) |
+| Page 3 module 5 · Section 10 | School / transit / park / restaurant pins                           | No POI dataset — the map and the listing pin now render                                                    | ADR 0015                                                            |
+| Phase 1 · Buyer JTBD 1       | "Understand the market" — comparable prices, trends, neighbourhoods | No sold-price history is modelled; `/stats/trend` and `/stats/regions` exist but are admin-only            | —                                                                   |
+| Phase 1 · Competitive table  | Real-time collaboration                                             | No socket, SSE or polling transport — threads are `useQuery` with a five-minute `STALE_TIME`               | —                                                                   |
+| Phase 1 · Agent JTBD 2       | Qualify leads on buyer budget and readiness                         | No buyer financial field exists; the view model now says `Lead.listingPrice`, which is what it always held | —                                                                   |
+| Phase 1 · Agent JTBD 4       | Collaborate with other agents                                       | No representation model                                                                                    | [ADR 0018](../../docs/adr/0018-the-seller-is-the-agent.md)          |
+| Phase 1 · Seller JTBD 1      | Price guidance when listing                                         | No valuation source; sold comparables are not modelled                                                     | —                                                                   |
+| Phase 1 · KPI table          | Signup completion, search → offer, NPS                              | No product analytics; the funnel is unrecorded (stage 12 of the field guide)                               | —                                                                   |
 
 ### Notes
 
@@ -91,7 +90,11 @@ One part of Section 10 is still owed and is listed above: the school / transit /
 
 That is deliberate. `EmailService` degrades to a logged warning when SMTP is unconfigured (`email.service.ts:76-81`), so a hard gate would lock every user out of any environment without mail credentials — including local and CI. Gating is a product decision to take once delivery is provably reliable; the flag it would read is now real.
 
-\*\*Facebook. The mark, the label and the row layout are now built, so adding `facebook` to `NEXT_PUBLIC_AUTH_PROVIDERS` renders it correctly. It will then point at `/auth/facebook`, which does not exist — and neither does `/auth/google` or `/auth/apple`. `strategies/` contains only `jwt.strategy.ts`. The frontend is ready for all three; the backend is ready for none.
+**External sign-in works for Google and Facebook.** Both are implemented natively against each provider's HTTP API — no Passport strategy and no new dependency — with PKCE, an HMAC-sealed state cookie, and Google's `id_token` verified against its JWKS by `node:crypto`. [ADR 0019](../../docs/adr/0019-external-sign-in-is-native-oauth.md) records why, and what it refused.
+
+Listing a provider in `NEXT_PUBLIC_AUTH_PROVIDERS` is what renders its button, and credentials are what make it work: each provider needs its client ID and secret plus its redirect URI registered against `API_PUBLIC_URL`. Unconfigured, the client logs a warning and the route redirects to `/login?oauth=unavailable` rather than failing silently.
+
+**Apple stays deferred**, and is listed above. The mark still renders if `apple` is listed, so it must stay out of that variable until the developer account and `.p8` key exist.
 
 **Five rows were the same shape — the backend built and nothing rendering it — and all five are now closed.** `Dispute` had models, admin endpoints, an API client and four hooks that no component imported; it now has `/admin/disputes`. `POST /flags` accepted `USER`, `PROPERTY` and `MESSAGE` reports while the moderation queue hard-filtered to `PROPERTY` and no surface created a flag at all; member and message reports now triage at `/admin/flags`, and a report control on the listing page and on every received message finally feeds the queue. Escrow release and refund were exposed with no admin control; the escrow queue now settles a hold under ADR 0008's authorisation. `useSubmitKyc` had no non-admin consumer, so admins reviewed an identity queue no user could feed; buyer and agent settings now submit one. `DealMilestone` carried inspection, appraisal and financing state that only admin components read; the buyer's offer detail and the agent's deal drawer now both read it, through one hook.
 
@@ -100,6 +103,21 @@ None of the five was a schema problem, which is the pattern worth keeping: the e
 **Real-time.** There is no transport for it. No `WebSocketGateway`, no `@nestjs/websockets`, no SSE, and no `refetchInterval` anywhere in `lib/hooks/`. Message threads are `useQuery` with `STALE_TIME` of five minutes plus invalidation after sending, so the sender sees their own message immediately and the recipient may not see it for five minutes. The competitive table's "Real-time Collaboration ✅" is the one positioning claim the code contradicts outright.
 
 **Market understanding.** The listing page's "comparables" are currently-active listings in the same locality, not sold comps — `soldMonthsAgo` is declared on the listing type and never populated by the mapper, so the "sold N months ago" branch is unreachable. Trend and region analytics do exist and are computed well; they are gated to `ADMIN`. Giving buyers market context is mostly a question of which audience the existing endpoints serve, plus a sold-price history the schema does not yet keep.
+
+---
+
+## Closed on 12 September 2026
+
+The last two rows that were blocked on an integration nobody had built.
+
+| Phase reference    | Module                                                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Page 5 · Sign Up   | Google and Facebook sign-in, native — `AuthIdentity` links a provider account to a member, and only a mutually verified email links |
+| Page 19 · Calendar | One-way Google Calendar push — a confirmed viewing writes an event, a cancellation or reschedule removes it                         |
+
+Both sit on one foundation, since a calendar grant is the same authorization-code flow as a Google sign-in with one more scope. The security-relevant half is the linking rule: an identity attaches to an existing account only when the provider says the email is verified **and** the account confirmed that same address, which closes the pre-account-takeover where someone registers a victim's address, never confirms it, and waits to be merged into. A deleted account is never signed back in.
+
+Calendar push is fire-and-log by construction: Google failing can never fail a viewing, and a grant revoked on Google's side is detected on the next refresh and the connection dropped, so the screen offers to reconnect instead of claiming a connection that no longer works.
 
 ---
 
