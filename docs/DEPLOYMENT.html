@@ -1138,9 +1138,12 @@
                             <ul>
                                 <li>
                                     <strong>Namecheap</strong> supplies
-                                    <code>keyhold.me</code>. The Pack's other
-                                    registrar, Name.com, is one per student and
-                                    was already spent elsewhere. Redeem through
+                                    <code>keyhol.me</code> — one letter short of
+                                    the product name, because
+                                    <code>keyhold.me</code> belongs to someone
+                                    else. The Pack's other registrar, Name.com,
+                                    is one per student and was already spent
+                                    elsewhere. Redeem through
                                     <code>nc.me</code> from the Pack offers page
                                     with GitHub connected.
                                 </li>
@@ -1200,7 +1203,7 @@ pnpm keys:generate</pre>
                                 bill.
                             </p>
                             <pre>
-heroku create keyhold-api --stack heroku-24
+heroku create keyhold-api --region eu --stack heroku-24
 heroku addons:create heroku-postgresql:essential-0 --app keyhold-api
 heroku ps:type web=basic --app keyhold-api</pre
                             >
@@ -1255,7 +1258,10 @@ heroku logs --tail --app keyhold-api</pre
                             <span class="phase-when">Web · 10 min</span>
                             <h3>Deploy the frontend to Vercel</h3>
                             <p>
-                                Import the repo, confirm the install command is
+                                Import the repo — <code>vercel.json</code>
+                                already pins functions to Dublin
+                                (<code>dub1</code>), beside the API — confirm
+                                the install command is
                                 <code>pnpm install --frozen-lockfile</code>, and
                                 set every variable from
                                 <code>.env.example</code> for Production and

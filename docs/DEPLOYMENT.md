@@ -13,16 +13,22 @@ repository.
 
 Vercel infers the framework. Confirm only these:
 
-| Setting           | Value                            |
-| ----------------- | -------------------------------- |
-| Framework         | Next.js                          |
-| Install command   | `pnpm install --frozen-lockfile` |
-| Build command     | `pnpm build`                     |
-| Node version      | 22.x — pinned by `engines`       |
-| Production branch | `master`                         |
+| Setting           | Value                                     |
+| ----------------- | ----------------------------------------- |
+| Framework         | Next.js                                   |
+| Install command   | `pnpm install --frozen-lockfile`          |
+| Build command     | `pnpm build`                              |
+| Node version      | 22.x — pinned by `engines`                |
+| Production branch | `master`                                  |
+| Function region   | Dublin (`dub1`) — pinned by `vercel.json` |
 
 `next.config.ts` only switches on `output: "standalone"` when `DOCKER_BUILD` is
 set, so the Vercel build takes the default path. Leave `DOCKER_BUILD` unset.
+
+Leave the dashboard's function region alone too. `vercel.json` pins functions to
+Dublin, beside the Heroku API in `eu`; Vercel's own default is Washington
+(`iad1`), which would put every server-rendered page an Atlantic round-trip from
+its data. See ADR 0019.
 
 ## Environment variables
 
@@ -51,8 +57,11 @@ Keep `NEXT_PUBLIC_DEV_QUICK_LOGIN` unset in every deployed environment.
 
 ## DNS
 
-The domain is `keyhold.me`, registered through the GitHub Student Developer Pack
-at Namecheap. The Pack's other domain offer, Name.com, is one per student and was
+The domain is `keyhol.me`, registered through the GitHub Student Developer Pack
+at Namecheap. The product is still Keyhold everywhere in the UI — `keyhold.me` is
+registered to someone else, so the URL is one letter short of the name. Swapping
+to a different domain later touches only env vars and DNS records, never code.
+The Pack's other domain offer, Name.com, is one per student and was
 already spent on a different project. Namecheap's offer covers the `.me` TLD only,
 is free for the first year, and renews at the standard `.me` rate — currently
 under $10/year, so the month-12 cost is small. Domain privacy is included.
@@ -62,6 +71,11 @@ GitHub account connected. The bundled SSL certificate in the same offer is not
 useful here and can be left unclaimed or spent elsewhere: Vercel and Heroku ACM
 each provision and renew their own Let's Encrypt certificates, and neither takes
 an uploaded third-party certificate on these tiers.
+
+Confirm the exact spelling in Namecheap's Domain List before onboarding it
+anywhere. Cloudflare will create a zone for any domain, owned or not, and scan in
+the owner's live records — it only refuses at activation, which for a domain you
+do not control never comes.
 
 Nameservers point at Cloudflare on the free plan (Domains → Onboard a domain).
 At Namecheap the switch is Domain List → Manage → Nameservers → change the
