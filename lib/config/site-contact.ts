@@ -1,3 +1,3 @@
-export const SUPPORT_EMAIL = "support@luxuryre.example";
+export const SUPPORT_EMAIL = "support@keyhol.me";
 
 export const RESPONSE_WINDOW = "one business day";
