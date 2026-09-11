@@ -1,4 +1,4 @@
-import { portalForRole } from "@/lib/constants";
+import { portalForRole, PUBLIC_ROUTES } from "@/lib/constants";
 import type { AuthUser } from "@/lib/types";
 
 export interface SiteNavLink {
@@ -7,7 +7,7 @@ export interface SiteNavLink {
 }
 
 const PUBLIC_NAV: SiteNavLink[] = [
-    { label: "Search", href: "/search" },
+    { label: "Search", href: PUBLIC_ROUTES.search },
     { label: "Map", href: "/map" },
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
@@ -18,7 +18,7 @@ export const siteNavFor = (
 ): SiteNavLink[] =>
     role
         ? [
-              { label: "Search", href: "/search" },
+              { label: "Search", href: PUBLIC_ROUTES.search },
               { label: "Map", href: "/map" },
               { label: "Dashboard", href: portalForRole(role) },
           ]
@@ -42,7 +42,7 @@ export const FOOTER_COLUMNS: readonly SiteLinkColumn[] = [
         heading: "Support",
         links: [
             { label: "Help", href: "/help" },
-            { label: "Search listings", href: "/search" },
+            { label: "Search listings", href: PUBLIC_ROUTES.search },
             { label: "Create an account", href: "/signup" },
         ],
     },

@@ -3,6 +3,7 @@ import { HousePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export function ListingUnavailable() {
     return (
@@ -15,7 +16,9 @@ export function ListingUnavailable() {
                     action={
                         <div className="flex flex-wrap items-center justify-center gap-2">
                             <Button asChild emphasis="solid" tone="accent">
-                                <Link href="/search">Browse listings</Link>
+                                <Link href={PUBLIC_ROUTES.search}>
+                                    Browse listings
+                                </Link>
                             </Button>
                             <Button asChild>
                                 <Link href="/contact">Speak to an advisor</Link>

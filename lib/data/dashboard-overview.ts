@@ -18,7 +18,7 @@ import type {
 } from "@/lib/types";
 import { formatAge, formatCompactUsd } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
-import { BUYER_ROUTES } from "@/lib/constants";
+import { BUYER_ROUTES, PUBLIC_ROUTES } from "@/lib/constants";
 import {
     OFFER_STATUS_BY_API,
     VIEWING_STATUS_BY_API,
@@ -102,7 +102,7 @@ export const offerBookFrom = (positions: OfferPosition[]): OfferBook => ({
     awaitingCount: positions.filter(
         (position) => position.status === "countered",
     ).length,
-    href: "/dashboard/offers",
+    href: BUYER_ROUTES.offers,
 });
 
 export const buyerStats = (
@@ -115,7 +115,7 @@ export const buyerStats = (
         label: "Saved",
         value: `${savedCount}`,
         icon: Heart,
-        href: "/dashboard/saved",
+        href: BUYER_ROUTES.saved,
         tone: "neutral",
     },
     {
@@ -123,7 +123,7 @@ export const buyerStats = (
         label: "Live offers",
         value: `${liveOffers(connections).length}`,
         icon: FileText,
-        href: "/dashboard/offers",
+        href: BUYER_ROUTES.offers,
         tone: "highlight",
     },
     {
@@ -134,7 +134,7 @@ export const buyerStats = (
             0,
         )}`,
         icon: CalendarDays,
-        href: "/dashboard/viewings",
+        href: BUYER_ROUTES.viewings,
         tone: "info",
     },
     {
@@ -142,7 +142,7 @@ export const buyerStats = (
         label: "Enquiries",
         value: `${connections.length}`,
         icon: Users,
-        href: "/dashboard/messages",
+        href: BUYER_ROUTES.messages,
         tone: "warning",
     },
     {
@@ -150,7 +150,7 @@ export const buyerStats = (
         label: "Unread",
         value: `${unreadCount}`,
         icon: MessageSquare,
-        href: "/dashboard/messages",
+        href: BUYER_ROUTES.messages,
         tone: "accent",
     },
 ];
@@ -279,13 +279,13 @@ export const journeyTasksFrom = (
         [
             "shortlist",
             "Save homes you like",
-            "/dashboard/saved",
+            BUYER_ROUTES.saved,
             savedCount > 0,
         ],
-        ["enquire", "Reach out to an agent", "/search", hasEnquiry],
-        ["viewing", "Book a viewing", "/dashboard/viewings", hasViewing],
-        ["offer", "Submit an offer", "/dashboard/offers", hasOffer],
-        ["escrow", "Open the transaction", "/dashboard/offers", hasPurchase],
+        ["enquire", "Reach out to an agent", PUBLIC_ROUTES.search, hasEnquiry],
+        ["viewing", "Book a viewing", BUYER_ROUTES.viewings, hasViewing],
+        ["offer", "Submit an offer", BUYER_ROUTES.offers, hasOffer],
+        ["escrow", "Open the transaction", BUYER_ROUTES.offers, hasPurchase],
     ];
 
     const firstOpen = steps.findIndex(([, , , done]) => !done);
@@ -312,7 +312,7 @@ export const buyerQuickActions: QuickAction[] = [
     {
         id: "browse",
         label: "Browse properties",
-        href: "/search",
+        href: PUBLIC_ROUTES.search,
         icon: Search,
         tone: "accent",
     },

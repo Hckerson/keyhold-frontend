@@ -99,7 +99,7 @@ export function LatestSales({ sales }: LatestSalesProps) {
                         title="Recently closed"
                     />
                     <Link
-                        href="/search"
+                        href={PUBLIC_ROUTES.search}
                         className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth group inline-flex shrink-0 items-center gap-1.5 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                     >
                         Browse the market

@@ -5,6 +5,7 @@ import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export default function ListingError({ reset }: { reset: () => void }) {
     return (
@@ -24,7 +25,9 @@ export default function ListingError({ reset }: { reset: () => void }) {
                                 Try again
                             </Button>
                             <Button asChild>
-                                <Link href="/search">Back to search</Link>
+                                <Link href={PUBLIC_ROUTES.search}>
+                                    Back to search
+                                </Link>
                             </Button>
                         </div>
                     }

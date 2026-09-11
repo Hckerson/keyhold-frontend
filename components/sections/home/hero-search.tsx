@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/forms/select";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 import {
     HERO_ANY_VALUE,
     HERO_PRICE_OPTIONS,
@@ -27,7 +28,9 @@ export function HeroSearch() {
         if (type) params.set("type", type);
         if (price) params.set("price", price);
         const qs = params.toString();
-        router.push(qs ? `/search?${qs}` : "/search");
+        router.push(
+            qs ? `${PUBLIC_ROUTES.search}?${qs}` : PUBLIC_ROUTES.search,
+        );
     };
 
     return (

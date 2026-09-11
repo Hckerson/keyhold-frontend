@@ -11,7 +11,7 @@ import { ListingDetail } from "@/components/sections/listing/listing-detail";
 import { ListingViewRecorder } from "@/components/features/listings/listing-view-recorder";
 import { ListingUnavailable } from "@/components/sections/listing/listing-unavailable";
 import { propertiesServerAPI } from "@/lib/api/server";
-import { config } from "@/lib/constants";
+import { config, PUBLIC_ROUTES } from "@/lib/constants";
 import { clamp } from "@/lib/utils/format";
 import { toListing } from "@/lib/utils/to-listing";
 import {
@@ -97,7 +97,7 @@ export default async function ListingDetailPage({
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/search">
+                            <BreadcrumbLink href={PUBLIC_ROUTES.search}>
                                 Search
                             </BreadcrumbLink>
                         </BreadcrumbItem>
