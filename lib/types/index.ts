@@ -2,6 +2,7 @@ export * from "./account";
 export * from "./admin";
 export * from "./alert";
 export * from "./auth";
+export * from "./contact";
 export * from "./deal";
 export * from "./feedback";
 export * from "./interest";

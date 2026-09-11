@@ -82,7 +82,10 @@ export const initialsOf = (name: string) =>
 
 export const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
-export const mailHref = (email: string) => `mailto:${email}`;
+export const mailHref = (email: string, subject?: string) =>
+    subject
+        ? `mailto:${email}?subject=${encodeURIComponent(subject)}`
+        : `mailto:${email}`;
 
 const ELLIPSIS = "…";
 
