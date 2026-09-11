@@ -149,6 +149,10 @@ export const config = {
             read: (id: string) => `/notifications/${id}/read`,
             entry: (id: string) => `/notifications/${id}`,
         },
+        calendar: {
+            google: "/calendar/google",
+            connect: "/calendar/google/connect",
+        },
         settings: {
             list: "/settings",
             restoreDefaults: "/settings/restore-defaults",
@@ -205,6 +209,7 @@ export const AUTH_ROUTES = {
 
 export const REDIRECT_PARAM = "redirect";
 export const EXPIRED_PARAM = "expired";
+export const ROLE_PARAM = "role";
 
 export const PORTAL_BY_ROLE = {
     ADMIN: "/admin",
@@ -225,16 +230,24 @@ export const AUTH_PROVIDERS = (process.env.NEXT_PUBLIC_AUTH_PROVIDERS ?? "")
     .map((provider) => provider.trim())
     .filter(Boolean);
 
-export const oauthStartUrl = (provider: string, redirectTo?: string) => {
-    const url = `${config.api.base}/auth/${provider}`;
-    return isSafeRedirect(redirectTo)
-        ? `${url}?${REDIRECT_PARAM}=${encodeURIComponent(redirectTo)}`
-        : url;
+export const oauthStartUrl = (
+    provider: string,
+    redirectTo?: string,
+    role?: string,
+) => {
+    const params = new URLSearchParams();
+    if (isSafeRedirect(redirectTo)) params.set(REDIRECT_PARAM, redirectTo);
+    if (role) params.set(ROLE_PARAM, role);
+    const search = params.toString();
+    return `${config.api.base}/auth/${provider}${search ? `?${search}` : ""}`;
 };
+
+export const calendarConnectUrl = `${config.api.base}${config.api.calendar.connect}`;
 
 export const LOCALE = "en-US";
 
 export const NEW_LISTING_DAYS = 7;
+export const STALE_LISTING_DAYS = 45;
 export const DEBOUNCE_DELAY = 300;
 export const DEFAULT_COMMISSION_RATE = 0.025;
 export const PLATFORM_PAYOUT_FEE_RATE = 0.05;
@@ -257,6 +270,7 @@ export const TOAST_ERROR_DURATION = 8 * 1000;
 export const TOAST_STACK_LIMIT = 3;
 
 export const PUBLIC_ROUTES = {
+    search: "/search",
     listing: (id: string) => `/listing/${id}`,
 } as const;
 

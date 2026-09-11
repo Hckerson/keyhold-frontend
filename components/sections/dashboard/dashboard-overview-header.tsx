@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const OVERVIEW_LEDE = "Your offers, viewings and saved-search activity";
-const BROWSE_HREF = "/search";
 const BROWSE_LABEL = "Browse properties";
 const FALLBACK_NAME = "there";
 
@@ -20,7 +20,7 @@ export function DashboardOverviewHeader({
             lede={OVERVIEW_LEDE}
             action={
                 <Link
-                    href={BROWSE_HREF}
+                    href={PUBLIC_ROUTES.search}
                     className={buttonVariants({
                         emphasis: "solid",
                         tone: "accent",

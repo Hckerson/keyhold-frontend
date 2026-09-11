@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { propertiesServerAPI } from "@/lib/api/server";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 import { toLocalityIndex } from "@/lib/data/localities";
 
 const LOCALITY_SAMPLE = 200;
@@ -36,7 +37,7 @@ export async function FooterLocalityIndex() {
                 {localities.map((locality) => (
                     <li key={`${locality.name}-${locality.region}`}>
                         <Link
-                            href={`/search?q=${encodeURIComponent(locality.name)}`}
+                            href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(locality.name)}`}
                             className="group border-sidebar-border focus-visible:ring-highlight flex items-baseline justify-between gap-3 border-b py-2.5 focus-visible:ring-2 focus-visible:outline-none"
                         >
                             <span className="text-sidebar-text group-hover:text-sidebar-text-active ease-smooth truncate text-xs transition-colors duration-200">

@@ -8,6 +8,7 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { SavedTable } from "@/components/features/dashboard/saved-table";
 import { SavedToolbar } from "@/components/sections/dashboard/saved-toolbar";
 import { SavedTopHero } from "@/components/sections/dashboard/saved-top-hero";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 import type {
     SavedSortKey,
     SavedStatusFilter,
@@ -78,7 +79,7 @@ export function SavedMain({
                         description={pending ? LOADING_LEDE : EMPTY_LEDE}
                         action={
                             <Link
-                                href="/search"
+                                href={PUBLIC_ROUTES.search}
                                 className={buttonVariants({
                                     size: "sm",
                                 })}

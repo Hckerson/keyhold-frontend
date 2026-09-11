@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const VIEWINGS_TITLE = "Viewings";
 const VIEWINGS_LEDE =
@@ -19,7 +20,7 @@ export function ViewingsHeader({ summary }: ViewingsHeaderProps) {
             summary={summary}
             action={
                 <Link
-                    href="/search"
+                    href={PUBLIC_ROUTES.search}
                     className={buttonVariants({
                         emphasis: "solid",
                         tone: "accent",

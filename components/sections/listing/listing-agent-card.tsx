@@ -3,6 +3,7 @@ import { ArrowUpRight, MessageSquare, Phone, Star } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 import type { ListingAgent } from "@/lib/types";
 function formatPhone(phone: string): string {
     const digits = phone.replace(/\D/g, "").slice(-10);
@@ -63,7 +64,7 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
                     </a>
                 </Button>
                 <Link
-                    href={`/search?q=${encodeURIComponent(agent.name)}`}
+                    href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(agent.name)}`}
                     className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth inline-flex items-center gap-1 rounded text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                 >
                     View other listings ({agent.activeListings})
