@@ -1,22 +1,21 @@
 import Link from "next/link";
-import { Newspaper } from "lucide-react";
-import { EmptyState } from "@/components/ui/empty-state";
+import { PageIntro } from "@/components/patterns/page-intro";
 import { SectionShell } from "@/components/patterns/section-shell";
-import { buttonVariants } from "@/components/ui/button";
-import { JOURNAL_COPY as COPY, JOURNAL_ENTRIES } from "@/lib/data/journal";
+import { JournalEmpty } from "@/components/sections/site/journal-empty";
+import {
+    JOURNAL_COPY as COPY,
+    JOURNAL_ENTRIES,
+    type JournalLatest,
+} from "@/lib/data/journal";
 
-export function JournalIndex() {
+export function JournalIndex({ latest }: { latest: JournalLatest }) {
     return (
         <SectionShell className="section-pady">
-            <header className="max-w-[60ch]">
-                <p className="micro-label">{COPY.eyebrow}</p>
-                <h1 className="text-h3 font-display text-text mt-3 font-light">
-                    {COPY.title}
-                </h1>
-                <p className="text-text-secondary mt-4 text-lg leading-relaxed">
-                    {COPY.lede}
-                </p>
-            </header>
+            <PageIntro
+                eyebrow={COPY.eyebrow}
+                title={COPY.title}
+                lede={COPY.lede}
+            />
 
             {JOURNAL_ENTRIES.length > 0 ? (
                 <ul className="mt-10 flex max-w-[68ch] flex-col">
@@ -32,7 +31,7 @@ export function JournalIndex() {
                                 <h2 className="text-h6 font-display text-text group-hover:text-accent ease-smooth mt-2 font-light transition-colors duration-200">
                                     {entry.title}
                                 </h2>
-                                <p className="text-text-secondary mt-2 text-sm leading-relaxed">
+                                <p className="text-text-secondary mt-2 text-xs leading-relaxed">
                                     {entry.lede}
                                 </p>
                             </Link>
@@ -40,19 +39,7 @@ export function JournalIndex() {
                     ))}
                 </ul>
             ) : (
-                <div className="mt-10 flex max-w-[68ch] flex-col items-start gap-4">
-                    <EmptyState
-                        icon={Newspaper}
-                        title={COPY.emptyTitle}
-                        description={COPY.emptyLede}
-                    />
-                    <Link
-                        href={COPY.emptyHref}
-                        className={buttonVariants({ size: "sm" })}
-                    >
-                        {COPY.emptyAction}
-                    </Link>
-                </div>
+                <JournalEmpty latest={latest} />
             )}
         </SectionShell>
     );
