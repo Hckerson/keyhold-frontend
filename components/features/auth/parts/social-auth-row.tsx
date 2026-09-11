@@ -16,6 +16,7 @@ export interface SocialAuthRowProps {
     action?: string;
     label?: string;
     redirectTo?: string;
+    role?: string;
     disabled?: boolean;
 }
 
@@ -23,6 +24,7 @@ export function SocialAuthRow({
     action = "Continue",
     label = "Or continue with",
     redirectTo,
+    role,
     disabled = false,
 }: SocialAuthRowProps) {
     const providers = AUTH_PROVIDERS.filter(
@@ -55,7 +57,7 @@ export function SocialAuthRow({
                     return (
                         <a
                             key={provider}
-                            href={oauthStartUrl(provider, redirectTo)}
+                            href={oauthStartUrl(provider, redirectTo, role)}
                             aria-label={`${action} with ${name}`}
                             aria-disabled={disabled || undefined}
                             tabIndex={disabled ? -1 : undefined}
