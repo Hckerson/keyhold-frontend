@@ -168,6 +168,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
             </form>
 
             <SocialAuthRow
+                role={role ?? undefined}
                 action="Sign up"
                 label="Or apply with"
                 redirectTo={redirectTo}

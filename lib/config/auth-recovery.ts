@@ -59,3 +59,57 @@ export const RECOVERY_PENDING_ENTRIES: AuthTitleBlockEntry[] = [
     },
     BACK_TO_SIGN_IN,
 ];
+
+export const OAUTH_FAILURES = [
+    "denied",
+    "unverified",
+    "closed",
+    "blocked",
+    "maintenance",
+    "unavailable",
+    "failed",
+] as const;
+
+export type OAuthFailure = (typeof OAUTH_FAILURES)[number];
+
+export const OAUTH_NOTICES: Record<
+    OAuthFailure,
+    { title: string; description: string }
+> = {
+    denied: {
+        title: "Sign-in cancelled",
+        description: "Nothing was shared. Choose a method below to try again.",
+    },
+    unverified: {
+        title: "Confirm the email first",
+        description:
+            "That address belongs to an account that hasn't been confirmed. Sign in with your password to continue.",
+    },
+    closed: {
+        title: "Registration is closed",
+        description:
+            "New accounts can't be opened right now. Existing members can still sign in.",
+    },
+    blocked: {
+        title: "This account can't sign in",
+        description: "Contact support if you think this is a mistake.",
+    },
+    maintenance: {
+        title: "Down for maintenance",
+        description:
+            "Sign-in is paused while the platform is updated. Try again shortly.",
+    },
+    unavailable: {
+        title: "That sign-in isn't available",
+        description: "Use your email and password instead.",
+    },
+    failed: {
+        title: "That sign-in didn't complete",
+        description: "Try again, or use your email and password.",
+    },
+};
+
+export const oauthFailureFrom = (
+    value: string | undefined,
+): OAuthFailure | undefined =>
+    OAUTH_FAILURES.find((failure) => failure === value);

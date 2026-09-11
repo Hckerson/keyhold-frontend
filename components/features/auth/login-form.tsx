@@ -24,6 +24,7 @@ import {
     withRedirect,
 } from "@/lib/constants";
 import { SESSION_EXPIRED } from "@/lib/config/feedback";
+import { OAUTH_NOTICES, type OAuthFailure } from "@/lib/config/auth-recovery";
 import { useSignIn } from "@/lib/hooks/use-sign-in";
 import { errorMessage } from "@/lib/utils/api-error";
 import {
@@ -49,9 +50,14 @@ const footerEntries = (redirectTo?: string) => [
 export interface LoginFormProps {
     redirectTo?: string;
     expired?: boolean;
+    oauthFailure?: OAuthFailure;
 }
 
-export function LoginForm({ redirectTo, expired }: LoginFormProps) {
+export function LoginForm({
+    redirectTo,
+    expired,
+    oauthFailure,
+}: LoginFormProps) {
     const router = useRouter();
     const signIn = useSignIn();
 
@@ -116,6 +122,14 @@ export function LoginForm({ redirectTo, expired }: LoginFormProps) {
                     tone="info"
                     title={SESSION_EXPIRED.title}
                     description={SESSION_EXPIRED.description}
+                />
+            )}
+
+            {oauthFailure && !formError && (
+                <AuthNotice
+                    tone="error"
+                    title={OAUTH_NOTICES[oauthFailure].title}
+                    description={OAUTH_NOTICES[oauthFailure].description}
                 />
             )}
 
