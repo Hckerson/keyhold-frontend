@@ -9,10 +9,21 @@ import { AppointmentCreateModal } from "@/components/features/agent/appointment-
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useAgentCalendar } from "@/lib/hooks/use-agent-calendar";
+import {
+    useDisconnectGoogleCalendar,
+    useGoogleCalendarStatus,
+} from "@/lib/hooks/use-google-calendar";
+import type { CalendarOutcome } from "@/lib/config/calendar-sync";
 import { RESCHEDULE_HINT } from "@/lib/data/agent-calendar";
 
-export function CalendarConsole() {
+export interface CalendarConsoleProps {
+    calendarOutcome?: CalendarOutcome;
+}
+
+export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
     const calendar = useAgentCalendar();
+    const calendarStatus = useGoogleCalendarStatus();
+    const disconnectCalendar = useDisconnectGoogleCalendar();
 
     if (calendar.failed)
         return (
@@ -42,6 +53,10 @@ export function CalendarConsole() {
                     rangeLabel={calendar.rangeLabel}
                     onSelect={calendar.setSelected}
                     onMonthChange={calendar.changeMonth}
+                    calendarStatus={calendarStatus.data}
+                    calendarOutcome={calendarOutcome}
+                    disconnectingCalendar={disconnectCalendar.isPending}
+                    onDisconnectCalendar={() => disconnectCalendar.mutate()}
                 />
 
                 <CalendarSchedule

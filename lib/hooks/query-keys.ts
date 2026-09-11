@@ -147,4 +147,7 @@ export const queryKeys = {
         trend: (filter: string) => ["stats", "trend", filter] as const,
         agent: ["stats", "agent"] as const,
     },
+    calendar: {
+        google: ["calendar", "google"] as const,
+    },
 };
