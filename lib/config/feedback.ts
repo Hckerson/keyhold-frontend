@@ -15,6 +15,10 @@ export const SESSION_EXPIRED = {
 } as const;
 
 export const FEEDBACK = {
+    disconnectGoogleCalendar: {
+        success: "Google Calendar disconnected",
+        error: "We couldn't disconnect Google Calendar.",
+    },
     requestPasswordReset: { silentError: true },
     resetPassword: { silentError: true },
     register: { silentError: true },

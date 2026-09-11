@@ -9,6 +9,9 @@ import {
     shiftMonth,
 } from "@/components/features/shared/mini-calendar";
 import { CalendarTypeMix } from "@/components/features/agent/calendar-type-mix";
+import { CalendarSyncPanel } from "@/components/features/agent/calendar-sync-panel";
+import type { CalendarOutcome } from "@/lib/config/calendar-sync";
+import type { CalendarStatus } from "@/lib/validations/calendar";
 import { cn } from "@/lib/utils";
 import type { AppointmentTypeShare } from "@/lib/data/agent-calendar";
 
@@ -24,6 +27,10 @@ export interface CalendarRailProps {
     rangeLabel: string;
     onSelect: (day: number) => void;
     onMonthChange: (year: number, month: number) => void;
+    calendarStatus?: CalendarStatus;
+    calendarOutcome?: CalendarOutcome;
+    disconnectingCalendar: boolean;
+    onDisconnectCalendar: () => void;
     className?: string;
 }
 
@@ -37,6 +44,10 @@ export function CalendarRail({
     rangeLabel,
     onSelect,
     onMonthChange,
+    calendarStatus,
+    calendarOutcome,
+    disconnectingCalendar,
+    onDisconnectCalendar,
     className,
 }: CalendarRailProps) {
     const total = shares.reduce((sum, share) => sum + share.count, 0);
@@ -67,6 +78,13 @@ export function CalendarRail({
                     <CalendarTypeMix shares={shares} />
                 </PanelInset>
             </Panel>
+
+            <CalendarSyncPanel
+                status={calendarStatus}
+                outcome={calendarOutcome}
+                disconnecting={disconnectingCalendar}
+                onDisconnect={onDisconnectCalendar}
+            />
         </div>
     );
 }
