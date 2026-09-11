@@ -24,6 +24,8 @@ Records are immutable once merged. A decision that changes gets a new record tha
 | [0016](0016-lead-temperature-is-derived.md)                | Lead temperature is derived; the connection taxonomy stays                    | Accepted                                                 |
 | [0017](0017-screen-classes-are-named-by-state-source.md)   | Screen classes are named by what drives their state                           | Accepted                                                 |
 | [0018](0018-the-seller-is-the-agent.md)                    | The seller is the agent; there is no representation model                     | Accepted                                                 |
+| [0019](0019-external-sign-in-is-native-oauth.md)           | External sign-in is native OAuth, not Passport strategies                     | Accepted                                                 |
+| [0019](0019-production-runs-in-europe.md)                  | Production runs in one region, and it is Europe                               | Accepted                                                 |
 
 ## Template
 
