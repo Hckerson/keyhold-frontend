@@ -80,12 +80,7 @@ export function TransactionFocusTile({
                         DATE_FORMAT,
                     )}
                 </p>
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => onOpen(transaction.id)}
-                >
+                <Button type="button" onClick={() => onOpen(transaction.id)}>
                     {REVIEW_ACTION}
                 </Button>
             </div>

@@ -8,11 +8,10 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 2. **No hardcoding.** API routes, durations, enums, and copy that appears twice live in `lib/constants.ts` or feature-scoped `lib/config/<feature>.ts`. Endpoints come from `config.api.*`, shapes from Zod schemas. Sample and placeholder content lives in `lib/data/`, never inline in a page.
 3. **No `any` in TypeScript.** Use `unknown` + narrowing or a precise type. Derive types from Zod with `z.infer`.
 4. **Match the existing architecture.** Do not invent patterns, and do not invent locations — when you are unsure where something goes, re-read this file. State the reason before deviating.
-5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
-6. **Never install a dependency without approval.** Adding, upgrading, or swapping a package is the user's call. Name the package, what it is for, and why the existing stack (Next / Query / Zustand / Zod / motion) does not already cover it — then stop and wait for a yes. No `pnpm add`, no `npm`/`yarn`/`bun` install, no `npx` of something not already installed, no hand-edited `package.json` or lockfile. This holds even when the package is obviously the right tool, even mid-task, and even when an approved plan implied it. If you are blocked without it, finish everything that does not depend on it and ask. Nothing enforces this mechanically — the `permissions.deny` block that used to has been removed — so the rule holds on trust: ask first, every time.
-7. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
-8. **Minimize LOC.** Ship the shortest solution that stays maintainable.
-9. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
+5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion / CSS `clamp()`) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
+6. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
+7. **Minimize LOC.** Ship the shortest solution that stays maintainable.
+8. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
 
 ## Required patterns
 
@@ -46,23 +45,35 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 | `/design-os`            | _(flat)_                                                                                               | Design-system seed prompt. Not application code.                                                                                                                                                                                              |
 | `/public`               | `fonts`                                                                                                | Static assets.                                                                                                                                                                                                                                |
 | `/styles`               | _(flat)_                                                                                               | Global styles and token exports.                                                                                                                                                                                                              |
-| `/docs`                 | `adr` • _(flat prose)_                                                                                 | Prose documentation. Not application code. Only `README.md` stays at the repo root. A decision that is expensive to reverse gets a record in `docs/adr/` before the code that assumes it.                                                     |
+| `/tools`                | _(flat)_                                                                                               | Repo tooling that runs outside the app: the enum parity gate. Not application code. Node runs these with `--experimental-strip-types`, so they are `.mts` and import each other with an explicit extension.                                   |
+| `/docs`                 | `adr` • `archive` • `storage` • _(flat prose)_                                                         | Prose documentation. Not application code. Only `README.md` stays at the repo root. A decision that is expensive to reverse gets a record in `docs/adr/` before the code that assumes it.                                                     |
+
+## The enum mirror
+
+`lib/enums/enums.ts` mirrors the backend by hand. Thirty of its `as const` arrays name an `enum` block in `../backend/prisma/schema.prisma`, and `lib/validations/` feeds those arrays straight into `z.enum`, so a member the backend has and the mirror lacks is not a cosmetic gap — the response fails to parse. The other arrays (`PROPERTY_SORTS`, `TIME_FILTERS`, `MODERATION_DECISIONS`, `SERVICE_STATES`, `INTEGRATION_IDS`) are UI vocabulary with no backend counterpart and are deliberately unmapped.
+
+Parity is not left to memory: `pnpm enums:check` reads both files, compares members for every mapped pair, and fails the pre-push hook when they disagree. The pairing is the explicit table in `tools/enum-parity.mts` — never a naming heuristic, because `CONTINGENCIES`/`Contingency` and friends do not survive one. Adding an array that mirrors a new Prisma enum means adding it to that table; a member the UI genuinely should not carry means dropping the pair from it, with the reason stated here.
+
+A missing schema skips the check rather than failing it, so the gate never blocks a frontend cloned without its sibling backend.
+
+**Any script that maintains a committed artifact from a source outside it gets this treatment** — a check twin that re-derives, diffs, and exits non-zero, wired into pre-push. Regeneration and hand-mirroring are never left to memory.
 
 ## File rules
 
 - **One component per file.** Kebab-case filename matching the export (`stat-grid.tsx` → `StatGrid`).
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Derivation logic moves to `lib/data/`, JSX to `components/`. The rule targets complexity, not length: `lib/enums/enums.ts` is exempt, because a flat list of enum literals and their label maps has no seam to split on and dividing it by domain would scatter one lookup across five files. Any other exemption gets written here before it is taken.
-- **Add packages with `pnpm add` — only once rule 6 has been satisfied.** Never hand-edit `package.json`.
-- **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
+- **Add packages with `pnpm add` — only once rule 5 has been satisfied.** Never hand-edit `package.json`.
+- **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/archive/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
 
 ## Before you commit or push
 
-These commands run at the commit or push boundary only — not after every edit.
+Formatting and linting are automated. They are not chores you run by hand.
 
-1. `pnpm test` — all green. A failing test is never left for later.
-2. `pnpm format` — Prettier owns formatting. Never override it by hand.
-3. `pnpm lint` — zero warnings. Fix every violation; never suppress one.
-4. `pnpm type-check` — strict, zero errors. No `as` assertions, no `// @ts-ignore`.
+- **Commit** — Husky's `pre-commit` hook runs `pnpm lint-staged` and nothing else: `eslint --fix` then `prettier --write`, over staged files only. It is fast by design.
+- **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, then `pnpm enums:check`, and blocks on failure. This is the real gate.
+- **Tests** — `pnpm test` is on you. A failing test is never left for later.
+
+`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep, but no workflow requires you to run them.
 
 The rules above are not restated here. They bind every edit, not the gate.

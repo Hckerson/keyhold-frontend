@@ -109,8 +109,7 @@ export function UserDetailModal({
                     <ModalFooter className="gap-2 p-4">
                         <Button
                             type="button"
-                            variant="ghost"
-                            size="sm"
+                            emphasis="quiet"
                             onClick={onClose}
                         >
                             {CLOSE_ACTION}
@@ -118,31 +117,30 @@ export function UserDetailModal({
                         <Link
                             href={`/admin/users/${user.id}`}
                             className={buttonVariants({
-                                variant: "secondary",
                                 size: "sm",
                             })}
                         >
                             {PROFILE_ACTION}
                         </Link>
-                        {user.status === "suspended" ? (
-                            <Button
-                                type="button"
-                                variant="primary"
-                                size="sm"
-                                onClick={() => onReactivate(user.id)}
-                            >
-                                {REACTIVATE_ACTION}
-                            </Button>
-                        ) : (
-                            <Button
-                                type="button"
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => onSuspend(user.id)}
-                            >
-                                {SUSPEND_ACTION}
-                            </Button>
-                        )}
+                        {user.status !== "deleted" &&
+                            (user.status === "suspended" ? (
+                                <Button
+                                    type="button"
+                                    emphasis="solid"
+                                    tone="accent"
+                                    onClick={() => onReactivate(user.id)}
+                                >
+                                    {REACTIVATE_ACTION}
+                                </Button>
+                            ) : (
+                                <Button
+                                    type="button"
+                                    tone="error"
+                                    onClick={() => onSuspend(user.id)}
+                                >
+                                    {SUSPEND_ACTION}
+                                </Button>
+                            ))}
                     </ModalFooter>
                 </>
             )}

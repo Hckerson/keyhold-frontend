@@ -26,3 +26,20 @@ export function useUpdatePlatformSettings() {
             client.setQueryData(queryKeys.settings.all, settings),
     });
 }
+
+export function useRestorePlatformDefaults() {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.restorePlatformDefaults,
+        mutationFn: () => settingsAPI.restoreDefaults(),
+        onSuccess: (settings) =>
+            client.setQueryData(queryKeys.settings.all, settings),
+    });
+}
+
+export function usePurgeExpiredVerifications() {
+    return useMutation({
+        meta: FEEDBACK.purgeExpiredVerifications,
+        mutationFn: () => settingsAPI.purgeVerifications(),
+    });
+}

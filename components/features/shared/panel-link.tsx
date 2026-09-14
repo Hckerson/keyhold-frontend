@@ -13,7 +13,7 @@ export function PanelLink({ href, label }: PanelLinkProps) {
         <Link
             href={href}
             className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
+                buttonVariants({ emphasis: "quiet", size: "sm" }),
                 "group px-2",
             )}
         >

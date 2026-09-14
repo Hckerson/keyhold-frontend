@@ -1,5 +1,7 @@
+import { PUBLIC_ROUTES } from "@/lib/constants";
+
 export const TOPBAR_SEARCH = {
-    route: "/search",
+    route: PUBLIC_ROUTES.search,
     shortcutKey: "k",
     placeholder: "Search…",
     label: "Search properties",

@@ -9,26 +9,30 @@ import {
 import type { FieldErrors } from "@/lib/validations/auth";
 
 export interface ConfigPanelProps<K extends string> {
+    id?: string;
     title: string;
     description: string;
     fields: readonly ConfigField<K>[];
     values: Record<K, string>;
     errors?: FieldErrors;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onSelect?: (name: K, value: string) => void;
     lead?: ReactNode;
 }
 
 export function ConfigPanel<K extends string>({
+    id,
     title,
     description,
     fields,
     values,
     errors,
     onChange,
+    onSelect,
     lead,
 }: ConfigPanelProps<K>) {
     return (
-        <Panel title={title} description={description}>
+        <Panel id={id} title={title} description={description}>
             {lead}
             <div className="card-grid gap-3">
                 <ConfigFieldGrid
@@ -36,6 +40,7 @@ export function ConfigPanel<K extends string>({
                     values={values}
                     errors={errors}
                     onChange={onChange}
+                    onSelect={onSelect}
                 />
             </div>
         </Panel>

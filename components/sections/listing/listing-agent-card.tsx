@@ -3,6 +3,7 @@ import { ArrowUpRight, MessageSquare, Phone, Star } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 import type { ListingAgent } from "@/lib/types";
 function formatPhone(phone: string): string {
     const digits = phone.replace(/\D/g, "").slice(-10);
@@ -24,7 +25,7 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
                         {agent.name}
                     </p>
                     <p className="text-text-secondary truncate text-xs">
-                        {agent.title} Â· {agent.agency}
+                        {agent.title} · {agent.agency}
                     </p>
                     <p className="text-text-muted font-mono text-[10px] tracking-[0.12em] uppercase">
                         {agent.license}
@@ -50,33 +51,20 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
             </div>
 
             <div className="border-border mt-3 flex flex-col gap-2 border-t pt-3">
-                <a href={`tel:${agent.phone}`} className="block">
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        className="w-full"
-                        icon={<Phone className="size-3" strokeWidth={1.5} />}
-                    >
+                <Button asChild className="w-full">
+                    <a href={`tel:${agent.phone}`}>
+                        <Phone className="size-3" strokeWidth={1.5} />
                         Call {formatPhone(agent.phone)}
-                    </Button>
-                </a>
-                <a href={`mailto:${agent.email}`} className="block">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="w-full"
-                        icon={
-                            <MessageSquare
-                                className="size-3"
-                                strokeWidth={1.5}
-                            />
-                        }
-                    >
+                    </a>
+                </Button>
+                <Button asChild emphasis="quiet" className="w-full">
+                    <a href={`mailto:${agent.email}`}>
+                        <MessageSquare className="size-3" strokeWidth={1.5} />
                         Message
-                    </Button>
-                </a>
+                    </a>
+                </Button>
                 <Link
-                    href={`/search?q=${encodeURIComponent(agent.name)}`}
+                    href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(agent.name)}`}
                     className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth inline-flex items-center gap-1 rounded text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                 >
                     View other listings ({agent.activeListings})

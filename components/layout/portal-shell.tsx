@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Sidebar, type SidebarProps } from "@/components/layout/sidebar";
 import { Topbar, type TopbarProps } from "@/components/layout/topbar";
 import { useSession } from "@/lib/hooks/use-session";
+import { useSignOut } from "@/lib/hooks/use-sign-out";
 import { routesFrom } from "@/lib/utils/nav";
 
 export interface PortalShellProps
@@ -23,19 +24,16 @@ export function PortalShell({
     rootHref,
     children,
 }: PortalShellProps) {
-    const router = useRouter();
     const pathname = usePathname();
-    const { user, logout } = useSession();
+    const { user } = useSession();
+    const signOut = useSignOut();
     const [navOpen, setNavOpen] = useState(false);
 
     const routes = useMemo(() => routesFrom(sections), [sections]);
 
     useEffect(() => setNavOpen(false), [pathname]);
 
-    const handleLogout = () => {
-        logout();
-        router.push("/");
-    };
+    const handleLogout = () => void signOut();
 
     return (
         <div className="bg-background-alt flex h-screen">

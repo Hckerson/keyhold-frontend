@@ -10,6 +10,7 @@ import {
     useCreateOffer,
     useOffer,
 } from "@/lib/hooks/use-offers";
+import { useDealMilestones } from "@/lib/hooks/use-deal-milestones";
 import { useCheckout } from "@/lib/hooks/use-checkout";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
@@ -23,6 +24,9 @@ export function useOfferDetail(id: string) {
     const offer = offerQuery.data;
 
     const connectionQuery = useConnection(offer?.connectionId);
+
+    const accepted = offer?.status === "ACCEPTED";
+    const milestones = useDealMilestones(id, accepted);
     const conversation = useConversation(offer?.connectionId);
 
     const checkout = useCheckout();
@@ -104,6 +108,11 @@ export function useOfferDetail(id: string) {
     return {
         detail,
         status,
+        milestones: milestones.milestones,
+        milestonesBusy: milestones.busy,
+        onMilestoneDate: milestones.onDateChange,
+        onMilestoneToggle: milestones.onToggleComplete,
+        onMilestoneAttach: milestones.onAttach,
         offerPrice: offer?.offeredPrice ?? 0,
         timeline: detail?.timeline ?? [],
         messages: detail?.messages ?? [],

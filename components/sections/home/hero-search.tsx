@@ -4,34 +4,33 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const TYPES = ["Any type", "Estate", "Villa", "Penthouse"];
-const PRICES = [
-    { label: "Any price", value: "" },
-    { label: "$1M – $5M", value: "1000000" },
-    { label: "$5M – $10M", value: "5000000" },
-    { label: "$10M+", value: "10000000" },
-];
+import { Select } from "@/components/ui/forms/select";
+import { PUBLIC_ROUTES } from "@/lib/constants";
+import {
+    HERO_ANY_VALUE,
+    HERO_PRICE_OPTIONS,
+    HERO_TYPE_OPTIONS,
+} from "@/lib/data/home-search";
 
 const fieldLabel =
     "block font-mono text-[10px] tracking-[0.14em] uppercase text-text-muted";
-const fieldControl =
-    "w-full bg-transparent text-xs text-text outline-none placeholder:text-text-muted";
 
 export function HeroSearch() {
     const router = useRouter();
     const [location, setLocation] = useState("");
-    const [type, setType] = useState(TYPES[0]);
-    const [price, setPrice] = useState("");
+    const [type, setType] = useState(HERO_ANY_VALUE);
+    const [price, setPrice] = useState(HERO_ANY_VALUE);
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
         const params = new URLSearchParams();
         if (location) params.set("q", location);
-        if (type !== TYPES[0]) params.set("type", type.toLowerCase());
-        if (price) params.set("min", price);
+        if (type) params.set("type", type);
+        if (price) params.set("price", price);
         const qs = params.toString();
-        router.push(qs ? `/search?${qs}` : "/search");
+        router.push(
+            qs ? `${PUBLIC_ROUTES.search}?${qs}` : PUBLIC_ROUTES.search,
+        );
     };
 
     return (
@@ -54,54 +53,43 @@ export function HeroSearch() {
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                         placeholder="City, neighborhood, or address"
-                        className={fieldControl}
+                        className="text-text placeholder:text-text-muted w-full bg-transparent text-xs outline-none"
                     />
                 </div>
             </div>
 
             <span className="wide-only bg-border my-2 w-px" />
             <div className="flex flex-col gap-0.5 px-3 py-1.5 sm:w-30">
-                <label htmlFor="hero-type" className={fieldLabel}>
-                    Type
-                </label>
-                <select
-                    id="hero-type"
+                <span className={fieldLabel}>Type</span>
+                <Select
+                    label="Property type"
+                    options={HERO_TYPE_OPTIONS}
                     value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className={`${fieldControl} text-text-secondary cursor-pointer`}
-                >
-                    {TYPES.map((t) => (
-                        <option key={t}>{t}</option>
-                    ))}
-                </select>
+                    onChange={setType}
+                    variant="bare"
+                />
             </div>
 
             <span className="bg-border my-2 hidden w-px sm:block" />
             <div className="flex flex-col gap-0.5 px-3 py-1.5 sm:w-30">
-                <label htmlFor="hero-price" className={fieldLabel}>
-                    Price
-                </label>
-                <select
-                    id="hero-price"
+                <span className={fieldLabel}>Price</span>
+                <Select
+                    label="Price range"
+                    options={HERO_PRICE_OPTIONS}
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className={`${fieldControl} text-text-secondary cursor-pointer`}
-                >
-                    {PRICES.map((p) => (
-                        <option key={p.label} value={p.value}>
-                            {p.label}
-                        </option>
-                    ))}
-                </select>
+                    onChange={setPrice}
+                    variant="bare"
+                />
             </div>
 
             <Button
                 type="submit"
-                variant="primary"
-                size="md"
+                emphasis="solid"
+                tone="accent"
+                size="lg"
+                icon={Search}
                 className="sm:ml-1.5"
             >
-                <Search size={15} strokeWidth={1.5} className="mr-1.5" />
                 Search
             </Button>
         </form>

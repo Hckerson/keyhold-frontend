@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     EMPTY_LISTING_DRAFT,
-    LISTING_FORM_COPY,
     type ListingDraft,
 } from "@/lib/config/listing-form";
+import { LISTING_FORM_COPY } from "@/lib/config/listing-form-copy";
 import {
     changedFields,
+    changedKeys,
     toListingDraft,
     toPropertyInput,
 } from "@/lib/data/listing-form";
@@ -18,7 +19,10 @@ import {
 } from "@/lib/hooks/use-properties";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
 import { toFieldErrors, type FieldErrors } from "@/lib/validations/auth";
-import { createPropertySchema } from "@/lib/validations/property";
+import {
+    createPropertySchema,
+    listingFormSchema,
+} from "@/lib/validations/property";
 import type { Property } from "@/lib/validations/property";
 
 const LISTINGS_ROUTE = LISTING_FORM_COPY.back.href;
@@ -40,12 +44,16 @@ export function useListingForm(property?: Property) {
         setBaseline(next);
     }, [property]);
 
-    const dirty = JSON.stringify(draft) !== JSON.stringify(baseline);
+    const changed = useMemo(
+        () => changedKeys(draft, baseline),
+        [draft, baseline],
+    );
 
-    useUnsavedChangesWarning(dirty && !saved);
+    useUnsavedChangesWarning(changed.length > 0 && !saved);
 
     const submit = () => {
-        const parsed = createPropertySchema.safeParse(toPropertyInput(draft));
+        const input = toPropertyInput(draft);
+        const parsed = listingFormSchema.safeParse(input);
 
         if (!parsed.success) {
             setErrors(toFieldErrors(parsed.error));
@@ -65,13 +73,14 @@ export function useListingForm(property?: Property) {
             return;
         }
 
-        createProperty.mutate(parsed.data, { onSuccess });
+        createProperty.mutate(createPropertySchema.parse(input), { onSuccess });
     };
 
     return {
         draft,
         errors,
-        dirty,
+        changed,
+        dirty: changed.length > 0,
         pending: createProperty.isPending || updateProperty.isPending,
         failed: createProperty.isError || updateProperty.isError,
         setDraft,

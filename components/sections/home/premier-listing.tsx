@@ -145,8 +145,8 @@ export function PremierListing({ listing }: PremierListingProps) {
                             <Link
                                 href={`${PUBLIC_ROUTES.listing(view.id)}#agent`}
                                 className={buttonVariants({
-                                    variant: "primary",
-                                    size: "md",
+                                    emphasis: "solid",
+                                    tone: "accent",
                                 })}
                             >
                                 {VIEWING_ACTION}

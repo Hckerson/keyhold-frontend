@@ -162,9 +162,9 @@ Pre-launch verification:
 
 ## Testing Strategy
 
-**Unit Testing (Vitest):** >80% coverage on lib/, hooks/  
-**Integration Testing:** >60% coverage on components/  
-**E2E Testing (Playwright):** Critical paths 100% covered  
+**Unit Testing (Vitest):** >80% coverage on lib/ (utils, mappers, validations, hooks)  
+**Component Testing:** >60% coverage on components/ via @testing-library/react + vitest-axe  
+**E2E Testing:** no runner installed — adding one is a dependency decision needing approval  
 **Accessibility:** WCAG 2.2 AA on all pages  
 **Performance:** Lighthouse CI every PR (LCP <2.5s, FID <100ms, CLS <0.1)
 

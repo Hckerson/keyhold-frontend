@@ -2,16 +2,18 @@ import {
     ArrowLeftRight,
     ClipboardCheck,
     Home,
+    TrendingUp,
     Users,
     Wallet,
 } from "lucide-react";
 import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import { MODERATION_QUEUES } from "@/lib/config/admin-tones";
-import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import { ADMIN_ROUTES, DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import type {
     MetricItem,
     ModerationQueueLoad,
+    QuickAction,
     ModerationQueueId,
     PlatformSignal,
     ServiceHealth as ServiceHealthRow,
@@ -293,3 +295,34 @@ export const overviewSummary = (
     `${formatCount(users?.active ?? 0)} active · ${formatCount(
         platform?.connections ?? 0,
     )} connections · ${formatMillions(platform?.volume ?? 0, 0)} settled`;
+
+export const adminQuickActions: QuickAction[] = [
+    {
+        id: "manage-users",
+        label: "Manage users",
+        href: ADMIN_ROUTES.users,
+        icon: Users,
+        tone: "accent",
+    },
+    {
+        id: "review-listings",
+        label: "Review listings",
+        href: ADMIN_ROUTES.listings,
+        icon: Home,
+        tone: "warning",
+    },
+    {
+        id: "process-verifications",
+        label: "Process verifications",
+        href: ADMIN_ROUTES.verifications,
+        icon: ClipboardCheck,
+        tone: "info",
+    },
+    {
+        id: "view-reports",
+        label: "View reports",
+        href: ADMIN_ROUTES.reports,
+        icon: TrendingUp,
+        tone: "highlight",
+    },
+];

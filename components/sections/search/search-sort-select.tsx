@@ -17,7 +17,6 @@ export function SearchSortSelect({ value, onChange }: SearchSortSelectProps) {
             value={value}
             onChange={onChange}
             icon={ArrowUpDown}
-            size="sm"
             align="end"
             className="w-44"
         />

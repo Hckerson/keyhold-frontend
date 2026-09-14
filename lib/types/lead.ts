@@ -1,4 +1,5 @@
 export type LeadStage = "pending" | "accepted" | "declined";
+export type LeadTemperature = "hot" | "warm" | "cold";
 
 export type LeadStageFilter = LeadStage | "all";
 
@@ -8,10 +9,11 @@ export interface Lead {
     portrait: string;
     email: string;
     phone: string;
-    budget: number;
+    listingPrice: number;
     interests: string[];
     stage: LeadStage;
     lastContact: string;
+    lastContactMinutes: number;
     nextAction: string;
     unread: number;
     offers: number;

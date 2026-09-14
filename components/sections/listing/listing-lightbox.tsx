@@ -36,7 +36,7 @@ export function ListingLightbox({
                     role="dialog"
                     aria-modal="true"
                     aria-label={`${title} gallery`}
-                    className="bg-sidebar/95 fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm"
+                    className="bg-sidebar/95 z-modal fixed inset-0 flex flex-col items-center justify-center gap-4 p-4 backdrop-blur-sm"
                 >
                     <button
                         type="button"

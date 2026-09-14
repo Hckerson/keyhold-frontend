@@ -1,0 +1,125 @@
+# Deployment — web
+
+The Next.js app deploys to Vercel on the free Hobby tier. The GitHub Student
+Developer Pack has no Next.js host, and putting the web app on a second Heroku
+dyno would cost $7/month against a $13 credit already spent on the API and
+database. Hobby covers this app at no cost; its terms exclude commercial use, so
+a launch that takes revenue needs Pro.
+
+The API and database deploy separately — see `docs/DEPLOYMENT.md` in the backend
+repository.
+
+## Project settings
+
+Vercel infers the framework. Confirm only these:
+
+| Setting           | Value                                     |
+| ----------------- | ----------------------------------------- |
+| Framework         | Next.js                                   |
+| Install command   | `pnpm install --frozen-lockfile`          |
+| Build command     | `pnpm build`                              |
+| Node version      | 22.x — pinned by `engines`                |
+| Production branch | `master`                                  |
+| Function region   | Dublin (`dub1`) — pinned by `vercel.json` |
+
+`next.config.ts` only switches on `output: "standalone"` when `DOCKER_BUILD` is
+set, so the Vercel build takes the default path. Leave `DOCKER_BUILD` unset.
+
+Leave the dashboard's function region alone too. `vercel.json` pins functions to
+Dublin, beside the Heroku API in `eu`; Vercel's own default is Washington
+(`iad1`), which would put every server-rendered page an Atlantic round-trip from
+its data. See ADR 0019.
+
+## Environment variables
+
+Every variable in `.env.example` must exist in Vercel for the Production and
+Preview environments. Three of them decide whether the app works at all:
+
+- `NEXT_PUBLIC_API_BASE_URL` — the Heroku origin **including the `/api` prefix**.
+  It also feeds the `connect-src` directive built by `lib/config/security-headers.ts`,
+  so a wrong value fails as a blocked request in the browser rather than a build error.
+- `NEXT_PUBLIC_SITE_URL` — the public origin. Canonical URLs, Open Graph tags,
+  `sitemap.ts` and `robots.txt` all read it.
+- `JWT_PUBLIC_KEY` — base64-encoded RS256 public PEM, the same value the backend
+  holds. `proxy.ts` verifies the session cookie with it. Without it
+  `verify-session-token.ts` rejects every token and all three portals bounce to
+  `/login` while the public site keeps working — which makes it an easy failure to
+  misread. This is the only non-`NEXT_PUBLIC_` variable here; it is a public key
+  and safe to hold, but the private half must never be set on Vercel.
+
+`NEXT_PUBLIC_SENTRY_DSN` is optional and reporting stays off while it is empty.
+Setting it needs no CSP edit — `lib/config/sentry.ts` feeds the DSN origin into
+the `connect-src` directive, so a hardcoded ingest host is never required.
+`SENTRY_ORG`, `SENTRY_PROJECT` and `SENTRY_AUTH_TOKEN` only affect source-map
+upload at build time; without the token the build skips it and still succeeds.
+
+Keep `NEXT_PUBLIC_DEV_QUICK_LOGIN` unset in every deployed environment.
+
+## DNS
+
+The domain is `keyhol.me`, registered through the GitHub Student Developer Pack
+at Namecheap. The product is still Keyhold everywhere in the UI — `keyhold.me` is
+registered to someone else, so the URL is one letter short of the name. Swapping
+to a different domain later touches only env vars and DNS records, never code.
+The Pack's other domain offer, Name.com, is one per student and was
+already spent on a different project. Namecheap's offer covers the `.me` TLD only,
+is free for the first year, and renews at the standard `.me` rate — currently
+under $10/year, so the month-12 cost is small. Domain privacy is included.
+
+Redemption runs through `nc.me`, reached from the Pack offers page with your
+GitHub account connected. The bundled SSL certificate in the same offer is not
+useful here and can be left unclaimed or spent elsewhere: Vercel and Heroku ACM
+each provision and renew their own Let's Encrypt certificates, and neither takes
+an uploaded third-party certificate on these tiers.
+
+Confirm the exact spelling in Namecheap's Domain List before onboarding it
+anywhere. Cloudflare will create a zone for any domain, owned or not, and scan in
+the owner's live records — it only refuses at activation, which for a domain you
+do not control never comes.
+
+Nameservers point at Cloudflare on the free plan (Domains → Onboard a domain).
+At Namecheap the switch is Domain List → Manage → Nameservers → change the
+dropdown to **Custom DNS**, paste Cloudflare's two, and save with the green
+checkmark. Disable DNSSEC first if it is on, or the domain stops resolving rather
+than failing over.
+
+Once the domain is on Custom DNS, Namecheap's own DNS editor is disabled. Every
+record after that point is created in Cloudflare — editing at the registrar has
+no effect, which is an easy hour to lose.
+
+Every record stays **grey-cloud (DNS only)**. Vercel does not support a reverse
+proxy in front of it — orange-cloud proxying produces Error 526 and Error 524,
+stacks a second CDN in front of Vercel's own, and hides client IPs from Vercel's
+traffic analysis. Cloudflare here is a DNS host, not an edge.
+
+| Record | Points at                  | Proxy |
+| ------ | -------------------------- | ----- |
+| `@`    | the target Vercel displays | Grey  |
+| `www`  | the target Vercel displays | Grey  |
+| `api`  | the Heroku DNS target      | Grey  |
+| TXT    | Resend DKIM, SPF, DMARC    | Grey  |
+
+Use the exact record values each dashboard gives you. Vercel's apex address has
+changed before, so an IP copied from a blog post is a slow failure.
+
+Proxying `api` later is supportable — enable Heroku ACM and set Cloudflare SSL to
+Full (strict). That combination only began working in 2025; older guides tell you
+to upload a Cloudflare Origin CA certificate, which is no longer needed.
+
+## Cutover order
+
+The two hosts reference each other, so the first deploy needs two passes:
+
+1. Deploy the API to Heroku and note its origin.
+2. Deploy the web app with `NEXT_PUBLIC_API_BASE_URL` pointing at it.
+3. Set `FRONTEND_URL` on Heroku to the web origin — this is the CORS allow-list
+   in `main.ts`, and requests fail until it matches exactly, scheme included.
+4. Attach the custom domain to both, then repeat steps 2 and 3 with the final
+   hostnames. Changing `NEXT_PUBLIC_*` values requires a rebuild; they are inlined
+   at build time, not read at runtime.
+
+## Preview deployments
+
+Every pull request gets its own URL. Those origins are not in the backend's CORS
+allow-list, so a preview build authenticates only if you point it at a
+separately deployed API. Treat previews as a check on public and visual work.

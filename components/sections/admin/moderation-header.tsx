@@ -21,7 +21,8 @@ export function ModerationHeader({ summary }: ModerationHeaderProps) {
                 <Link
                     href="/admin/verifications"
                     className={buttonVariants({
-                        variant: "primary",
+                        emphasis: "solid",
+                        tone: "accent",
                         size: "sm",
                     })}
                 >

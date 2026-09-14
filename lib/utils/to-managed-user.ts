@@ -8,6 +8,7 @@ export const MANAGED_STATUS_BY_ACCOUNT: Record<UserAccountStatus, UserStatus> =
         ACTIVE: "active",
         PENDING: "pending",
         SUSPENDED: "suspended",
+        DELETED: "deleted",
     };
 
 export const toManagedUser = (user: User): ManagedUser => ({

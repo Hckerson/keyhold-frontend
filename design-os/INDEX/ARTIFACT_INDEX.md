@@ -1,91 +1,100 @@
-# Design OS Artifact Index
+# Design OS Phase Index
 
-**All 10 phases are published as interactive HTML artifacts (Claude.ai) + local markdown files.**
+**All 10 phases are local markdown files in `design-os/CORE-PHASES/`.**
+
+Phases 1-7 were also published as browser-viewable artifacts. Those URLs are listed at the bottom as historical mirrors — **the markdown is canonical**.
 
 ---
 
-## Published Artifacts (View in Browser)
+## The 10 Phases
 
 ### Phase 1: Product Vision
 
-**URL:** https://claude.ai/code/artifact/257167b4-d827-4556-8bb7-21b664726b71  
+**File:** `CORE-PHASES/phase-1-product-vision.md`  
 **Contains:** Business vision, personas, JTBD, KPIs, competitive positioning  
 **Read When:** Strategy alignment, understanding platform goals
 
 ### Phase 2: Experience Maps
 
-**URL:** https://claude.ai/code/artifact/73797095-b2c6-42c8-a29c-e89363470caa  
-**Contains:** 7 core user journeys, decision points, emotional states, failure paths  
+**File:** `CORE-PHASES/phase-2-experience-maps.md`  
+**Contains:** Core user journeys, decision points, emotional states, failure paths  
 **Read When:** Designing new flows, understanding user intent
 
 ### Phase 3: Information Architecture
 
-**URL:** https://claude.ai/code/artifact/63ef5a57-d3fe-44b1-bdce-67e4fd3ad2e3  
+**File:** `CORE-PHASES/phase-3-information-architecture.md`  
 **Contains:** Sitemap, navigation hierarchy, permissions matrix, taxonomy, labeling  
 **Read When:** Setting up routing, auth, permissions
 
 ### Phase 4: Page Blueprints
 
-**URL:** https://claude.ai/code/artifact/06e9a4b4-a818-4e47-aa64-b95002c9bbb9  
+**File:** `CORE-PHASES/phase-4-page-blueprints.md`  
 **Contains:** 27 page specs with modules, data, responsive behavior, states  
 **Read When:** Building a page ⭐ (PRIMARY REFERENCE)
 
 ### Phase 5: Section Blueprints
 
-**URL:** https://claude.ai/code/artifact/140f03aa-ebb5-419b-b998-75ed29e537db  
-**Contains:** 55 reusable sections (Hero Search, Listing Card, Filter Panel, etc.)  
+**File:** `CORE-PHASES/phase-5-section-blueprints.md`  
+**Contains:** 70 reusable sections (Hero Search, Listing Card, Filter Panel, etc.)  
 **Read When:** Composing pages into sections
 
 ### Phase 6: Component Library
 
-**URL:** https://claude.ai/code/artifact/5c74a0c4-da0f-4258-8b89-4d76231ac53e  
-**Contains:** 78 components (primitives, patterns, composed) with specs  
+**File:** `CORE-PHASES/phase-6-component-library.md`  
+**Contains:** 80 components (12 primitives, 20 patterns, 48 composed) with specs  
 **Read When:** Implementing components
 
 ### Phase 7: Design Tokens
 
-**URL:** https://claude.ai/code/artifact/bebd6aa0-7e77-4308-88b8-8874708d4106  
+**File:** `CORE-PHASES/phase-7-design-tokens.md`  
 **Contains:** Colors, typography, spacing, motion, shadows, radius, breakpoints  
 **Read When:** Styling, choosing token values
 
----
-
-## Local Markdown Files (In This Folder)
-
 ### Phase 8: Frontend Architecture
 
-**File:** `phase-8-frontend-architecture.md`  
+**File:** `CORE-PHASES/phase-8-frontend-architecture.md`  
 **Contains:** Folder structure, routes, layouts, providers, hooks, API org, state management  
-**Read When:** Setting up Next.js codebase ⭐ (FIRST READ)
+**Read When:** Placing a new file, understanding data flow
 
 ### Phase 9: Implementation Roadmap
 
-**File:** `phase-9-implementation-roadmap.md`  
+**File:** `CORE-PHASES/phase-9-implementation-roadmap.md`  
 **Contains:** 16-week sprint breakdown, milestones, testing strategy, risk assessment  
 **Read When:** Planning sprints, understanding timeline
 
 ### Phase 10: QA & Accessibility Checklist
 
-**File:** `phase-10-qa-checklist.md`  
+**File:** `CORE-PHASES/phase-10-qa-checklist.md`  
 **Contains:** WCAG AA compliance, performance, security, code quality verification  
 **Read When:** Pre-launch QA, verifying production readiness
 
 ---
 
-## Master Documents
+## Index & Implementation Documents
 
-### DESIGN-OS-COMPLETE.md
+### INDEX/START_HERE.md
+
+Two-minute orientation. Where to begin, what binds, what each folder is for.
+
+### INDEX/DESIGN-OS-COMPLETE.md
 
 Complete index of all 10 phases. References, usage guide, key decisions, file manifest.
 
-### IMPLEMENTATION_PROMPT.md
+### INDEX/README.md
 
-**COPY THIS INTO YOUR NEXT SESSION.**  
-Self-contained prompt for implementing Phases 8-10. Includes sprint breakdown, code patterns, testing strategy, deployment checklist.
+Quick start guide. How to use each phase, file formats, getting started.
 
-### README.md
+### INDEX/\_FOLDER_STRUCTURE.md
 
-Quick start guide. How to use each phase, file formats, getting started in 5 minutes.
+Folder layout and per-role reading orders (PM, designer, engineer, QA).
+
+### IMPLEMENTATION/IMPLEMENTATION_PROMPT.md
+
+Engineering synthesis of Phases 8-10: sprint breakdown, code patterns, testing strategy, deployment checklist. Project-specific to this codebase, and a _plan_ rather than a mirror of the current tree — check the working tree before acting on a sprint.
+
+### IMPLEMENTATION/SETUP-CHECKLIST.md
+
+Token and styling foundation: how `styles/tokens.css` and `styles/globals.css` are organized, and the component authoring pattern.
 
 ---
 
@@ -93,91 +102,75 @@ Quick start guide. How to use each phase, file formats, getting started in 5 min
 
 ### If You Have 5 Minutes
 
-1. README.md (this folder)
-2. DESIGN-OS-COMPLETE.md (master index)
+1. `INDEX/START_HERE.md`
+2. `INDEX/DESIGN-OS-COMPLETE.md`
 
 ### If You're Building Code (Most Important)
 
-1. IMPLEMENTATION_PROMPT.md (copy to next session) ⭐⭐⭐
-2. phase-8-frontend-architecture.md (codebase structure)
-3. phase-4-page-blueprints.html (page specs, reference constantly)
-4. phase-9-implementation-roadmap.md (sprint timeline)
+1. `.claude/CLAUDE.md` ⭐⭐⭐ (binding rules — overrides everything here)
+2. `CORE-PHASES/phase-8-frontend-architecture.md` (codebase structure)
+3. `CORE-PHASES/phase-4-page-blueprints.md` (page specs, reference constantly)
+4. `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md` (sprint guide)
 
 ### If You're Designing
 
-1. phase-4-page-blueprints.html (page layouts)
-2. phase-5-section-blueprints.html (sections in pages)
-3. phase-6-component-library.html (components in sections)
-4. phase-7-design-tokens.html (token values)
+1. `CORE-PHASES/phase-4-page-blueprints.md` (page layouts)
+2. `CORE-PHASES/phase-5-section-blueprints.md` (sections in pages)
+3. `CORE-PHASES/phase-6-component-library.md` (components in sections)
+4. `CORE-PHASES/phase-7-design-tokens.md` (token values)
 
 ### If You're Managing/Leading
 
-1. phase-1-product-vision.html (strategy)
-2. phase-2-experience-maps.html (user flows)
-3. phase-9-implementation-roadmap.md (timeline)
-4. phase-10-qa-checklist.md (quality standards)
+1. `CORE-PHASES/phase-1-product-vision.md` (strategy)
+2. `CORE-PHASES/phase-2-experience-maps.md` (user flows)
+3. `CORE-PHASES/phase-9-implementation-roadmap.md` (timeline)
+4. `CORE-PHASES/phase-10-qa-checklist.md` (quality standards)
 
 ---
 
 ## How to Access
 
-### HTML Artifacts
-
-Open each URL in browser. They're polished, interactive, formatted for reading.
-
-### Markdown Files
-
-Located in `/design-os/` folder of project:
+Everything is markdown in the repo:
 
 ```bash
-cat design-os/phase-8-frontend-architecture.md
-cat design-os/phase-9-implementation-roadmap.md
-cat design-os/phase-10-qa-checklist.md
+cat design-os/CORE-PHASES/phase-8-frontend-architecture.md
+cat design-os/CORE-PHASES/phase-9-implementation-roadmap.md
+cat design-os/CORE-PHASES/phase-10-qa-checklist.md
 ```
-
----
-
-## Next Session: Copy This
-
-**To implement in next Claude Code session:**
-
-1. Open IMPLEMENTATION_PROMPT.md (this folder)
-2. Copy entire contents
-3. Paste into new Claude Code session
-4. Follow the prompt (it's self-contained and complete)
-
-The prompt contains:
-
-- What to build
-- How to build it
-- Code patterns
-- Sprint breakdown
-- Testing strategy
-- QA requirements
-- References to other phases
-
-**That one prompt is your north star for implementation.**
 
 ---
 
 ## Quick Reference
 
-| Need                      | Document     | URL/File                                                                 |
-| ------------------------- | ------------ | ------------------------------------------------------------------------ |
-| Business Strategy         | Phase 1      | https://claude.ai/code/artifact/257167b4-d827-4556-8bb7-21b664726b71     |
-| User Flows                | Phase 2      | https://claude.ai/code/artifact/73797095-b2c6-42c8-a29c-e89363470caa     |
-| Navigation/Routes         | Phase 3      | https://claude.ai/code/artifact/63ef5a57-d3fe-44b1-bdce-67e4fd3ad2e3     |
-| **Page Specs**            | **Phase 4**  | **https://claude.ai/code/artifact/06e9a4b4-a818-4e47-aa64-b95002c9bbb9** |
-| Section Patterns          | Phase 5      | https://claude.ai/code/artifact/140f03aa-ebb5-419b-b998-75ed29e537db     |
-| Components                | Phase 6      | https://claude.ai/code/artifact/5c74a0c4-da0f-4258-8b89-4d76231ac53e     |
-| Token Values              | Phase 7      | https://claude.ai/code/artifact/bebd6aa0-7e77-4308-88b8-8874708d4106     |
-| **Codebase Setup**        | **Phase 8**  | **phase-8-frontend-architecture.md**                                     |
-| **Implementation Plan**   | **Phase 9**  | **phase-9-implementation-roadmap.md**                                    |
-| **QA Checklist**          | **Phase 10** | **phase-10-qa-checklist.md**                                             |
-| **Implementation Prompt** | **Master**   | **IMPLEMENTATION_PROMPT.md**                                             |
+| Need                    | Document     | File                                                |
+| ----------------------- | ------------ | --------------------------------------------------- |
+| **Binding code rules**  | **—**        | **`.claude/CLAUDE.md`**                             |
+| Business Strategy       | Phase 1      | `CORE-PHASES/phase-1-product-vision.md`             |
+| User Flows              | Phase 2      | `CORE-PHASES/phase-2-experience-maps.md`            |
+| Navigation/Routes       | Phase 3      | `CORE-PHASES/phase-3-information-architecture.md`   |
+| **Page Specs**          | **Phase 4**  | **`CORE-PHASES/phase-4-page-blueprints.md`**        |
+| Section Patterns        | Phase 5      | `CORE-PHASES/phase-5-section-blueprints.md`         |
+| Components              | Phase 6      | `CORE-PHASES/phase-6-component-library.md`          |
+| Token Values            | Phase 7      | `CORE-PHASES/phase-7-design-tokens.md`              |
+| **Codebase Structure**  | **Phase 8**  | **`CORE-PHASES/phase-8-frontend-architecture.md`**  |
+| **Implementation Plan** | **Phase 9**  | **`CORE-PHASES/phase-9-implementation-roadmap.md`** |
+| **QA Checklist**        | **Phase 10** | **`CORE-PHASES/phase-10-qa-checklist.md`**          |
+| Sprint Guide            | Master       | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`           |
 
 **Bold = Most important for engineering**
 
 ---
 
-**All 10 phases complete. Ready to implement. Everything you need is here.** 🚀
+## Appendix: Published Artifact Mirrors
+
+Historical, may not reflect later edits to the markdown.
+
+| Phase | URL                                                                  |
+| ----- | -------------------------------------------------------------------- |
+| 1     | https://claude.ai/code/artifact/257167b4-d827-4556-8bb7-21b664726b71 |
+| 2     | https://claude.ai/code/artifact/73797095-b2c6-42c8-a29c-e89363470caa |
+| 3     | https://claude.ai/code/artifact/63ef5a57-d3fe-44b1-bdce-67e4fd3ad2e3 |
+| 4     | https://claude.ai/code/artifact/06e9a4b4-a818-4e47-aa64-b95002c9bbb9 |
+| 5     | https://claude.ai/code/artifact/140f03aa-ebb5-419b-b998-75ed29e537db |
+| 6     | https://claude.ai/code/artifact/5c74a0c4-da0f-4258-8b89-4d76231ac53e |
+| 7     | https://claude.ai/code/artifact/bebd6aa0-7e77-4308-88b8-8874708d4106 |

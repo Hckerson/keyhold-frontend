@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const CHUNK_DIR = join(process.cwd(), ".next", "static", "chunks");
 
-const BUDGET_KB = 4200;
+const BUDGET_KB = 5200;
 
 const KB = 1024;
 
@@ -25,7 +25,7 @@ const shippedKb = () =>
 
 describe("client JavaScript budget", () => {
     it.skipIf(!existsSync(CHUNK_DIR))(
-        "never exceeds the budget seeded when finding 09.6 was closed",
+        "never exceeds the budget reseeded when MapLibre was adopted for the map surfaces",
         () => {
             expect(shippedKb()).toBeLessThanOrEqual(BUDGET_KB);
         },

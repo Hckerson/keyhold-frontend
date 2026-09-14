@@ -8,7 +8,7 @@ import {
 import { useSignInGate } from "@/lib/hooks/use-sign-in-gate";
 
 export function useSavedToggle() {
-    const { mounted, signedIn, requireSignIn } = useSignInGate();
+    const { signedIn, resolving, requireSignIn } = useSignInGate();
     const { data, isPending } = useSavedPropertyIds(signedIn);
     const toggleSaved = useToggleSavedProperty();
 
@@ -32,7 +32,7 @@ export function useSavedToggle() {
         isSaved,
         toggle,
         pending: toggleSaved.isPending,
-        settling: !mounted || (signedIn && isPending),
+        settling: resolving || (signedIn && isPending),
         signedIn,
         requireSignIn,
     };

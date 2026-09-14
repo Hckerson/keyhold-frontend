@@ -1,22 +1,15 @@
 "use client";
 
 import type { ChangeEvent } from "react";
-import { FormField } from "@/components/ui/forms/form-field";
-import { Select } from "@/components/ui/forms/select";
-import { TextareaField } from "@/components/ui/forms/textarea-field";
-import { Panel } from "@/components/ui/panel";
-import { LabelledBlock } from "@/components/patterns/labelled-block";
 import { ConfigPanel } from "@/components/features/shared/config-panel";
+import { ListingIdentityPanel } from "@/components/features/agent/listing-identity-panel";
+import { ListingExtrasPanel } from "@/components/features/agent/listing-extras-panel";
+import type { ListingDraft } from "@/lib/config/listing-form";
+import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
 import {
-    DESCRIPTION_ROWS,
-    LISTING_EXTRA_FIELDS,
-    LISTING_FORM_COPY as COPY,
     LISTING_PLACE_FIELDS,
     LISTING_SPEC_FIELDS,
-    LISTING_TYPE_OPTIONS,
-    type ListingDraft,
-} from "@/lib/config/listing-form";
-import type { PropertyType } from "@/lib/enums/enums";
+} from "@/lib/config/listing-form-fields";
 import type { FieldErrors } from "@/lib/validations/auth";
 
 export interface ListingFormFieldsProps {
@@ -37,39 +30,16 @@ export function ListingFormFields({
         patch({ [event.target.name]: event.target.value });
 
     return (
-        <div className="flex flex-col gap-3">
-            <Panel title={COPY.identity} description={COPY.identityLede}>
-                <div className="flex flex-col gap-3">
-                    <FormField
-                        name="title"
-                        label={COPY.title}
-                        value={draft.title}
-                        error={errors.title}
-                        onChange={onFieldChange}
-                    />
-                    <TextareaField
-                        name="description"
-                        label={COPY.description}
-                        rows={DESCRIPTION_ROWS}
-                        value={draft.description}
-                        error={errors.description}
-                        onChange={(event) =>
-                            patch({ description: event.target.value })
-                        }
-                    />
-                    <LabelledBlock label={COPY.type}>
-                        <Select
-                            size="sm"
-                            label={COPY.type}
-                            options={LISTING_TYPE_OPTIONS}
-                            value={draft.type}
-                            onChange={(type: PropertyType) => patch({ type })}
-                        />
-                    </LabelledBlock>
-                </div>
-            </Panel>
+        <>
+            <ListingIdentityPanel
+                id="identity"
+                draft={draft}
+                errors={errors}
+                onPatch={patch}
+            />
 
             <ConfigPanel
+                id="place"
                 title={COPY.place}
                 description={COPY.placeLede}
                 fields={LISTING_PLACE_FIELDS}
@@ -79,6 +49,7 @@ export function ListingFormFields({
             />
 
             <ConfigPanel
+                id="specs"
                 title={COPY.specs}
                 description={COPY.specsLede}
                 fields={LISTING_SPEC_FIELDS}
@@ -87,15 +58,13 @@ export function ListingFormFields({
                 onChange={onFieldChange}
             />
 
-            <ConfigPanel
-                title={COPY.extras}
-                description={COPY.extrasLede}
-                fields={LISTING_EXTRA_FIELDS}
-                values={draft}
+            <ListingExtrasPanel
+                id="extras"
+                draft={draft}
                 errors={errors}
-                onChange={onFieldChange}
+                onPatch={patch}
             />
-        </div>
+        </>
     );
 }
 

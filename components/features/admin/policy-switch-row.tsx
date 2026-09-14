@@ -3,6 +3,7 @@
 import { Switch } from "@/components/ui/forms/switch";
 import { PolicyDomainMark } from "@/components/features/admin/policy-domain-mark";
 import { PolicyEnforcementMark } from "@/components/features/admin/policy-enforcement-mark";
+import { PolicyReachMeter } from "@/components/features/admin/policy-reach-meter";
 import type { PolicySwitch, PolicySwitchId } from "@/lib/types";
 
 export interface PolicySwitchRowProps {
@@ -16,6 +17,8 @@ export function PolicySwitchRow({
     enabled,
     onToggle,
 }: PolicySwitchRowProps) {
+    const captionId = `policy-caption-${policy.id}`;
+
     return (
         <tr className="ease-smooth hover:bg-background-muted h-12 transition-colors">
             <td className="py-0">
@@ -23,7 +26,10 @@ export function PolicySwitchRow({
                     <span className="text-text block truncate text-xs font-semibold">
                         {policy.title}
                     </span>
-                    <span className="text-text-secondary block truncate text-xs">
+                    <span
+                        id={captionId}
+                        className="text-text-secondary block truncate text-xs"
+                    >
                         {policy.caption}
                     </span>
                 </span>
@@ -38,11 +44,19 @@ export function PolicySwitchRow({
                 />
             </td>
             <td className="py-0 pl-3">
+                <PolicyReachMeter
+                    reach={policy.reach}
+                    enabled={enabled}
+                    label={policy.title}
+                />
+            </td>
+            <td className="py-0 pl-3">
                 <span className="flex justify-end">
                     <Switch
                         checked={enabled}
                         onChange={() => onToggle(policy.id)}
                         aria-label={policy.title}
+                        aria-describedby={captionId}
                     />
                 </span>
             </td>

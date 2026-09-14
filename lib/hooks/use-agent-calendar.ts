@@ -10,15 +10,20 @@ import {
     appointmentsOn,
     isoOf,
     shortDate,
+    toClientOptions,
     toRescheduleDraft,
     weekBounds,
     type CalendarViewMode,
 } from "@/lib/data/agent-calendar";
 import { useIncomingConnections } from "@/lib/hooks/use-connections";
-import { useRescheduleViewing } from "@/lib/hooks/use-viewings";
+import {
+    useRequestViewing,
+    useRescheduleViewing,
+} from "@/lib/hooks/use-viewings";
 import { toAppointmentBook } from "@/lib/utils/to-appointment";
 import { draftToIso } from "@/lib/utils/to-viewing";
 import type { RescheduleDraft } from "@/lib/types";
+import type { CreateViewingInput } from "@/lib/validations/viewing";
 
 const DEFAULT_VIEW: CalendarViewMode = "month";
 const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
@@ -26,6 +31,7 @@ const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
 export function useAgentCalendar() {
     const connections = useIncomingConnections();
     const rescheduleViewing = useRescheduleViewing();
+    const requestViewing = useRequestViewing();
 
     const [year, setYear] = useState(ANCHOR.year);
     const [month, setMonth] = useState(ANCHOR.month);
@@ -33,6 +39,7 @@ export function useAgentCalendar() {
     const [view, setView] = useState<CalendarViewMode>(DEFAULT_VIEW);
     const [rescheduleId, setRescheduleId] = useState<string | null>(null);
     const [draft, setDraft] = useState<RescheduleDraft>(EMPTY_DRAFT);
+    const [creating, setCreating] = useState(false);
 
     const book = useMemo(
         () => toAppointmentBook(connections.data ?? []),
@@ -90,6 +97,18 @@ export function useAgentCalendar() {
         );
     };
 
+    const clients = useMemo(
+        () => toClientOptions(connections.data ?? []),
+        [connections.data],
+    );
+
+    const openCreate = useCallback(() => setCreating(true), []);
+    const closeCreate = useCallback(() => setCreating(false), []);
+
+    const submitCreate = (input: CreateViewingInput) => {
+        requestViewing.mutate(input, { onSuccess: closeCreate });
+    };
+
     const isAnchorMonth = year === ANCHOR.year && month === ANCHOR.month;
 
     return {
@@ -107,6 +126,10 @@ export function useAgentCalendar() {
         draft,
         pending: connections.isPending,
         rescheduling: rescheduleViewing.isPending,
+        clients,
+        creating,
+        createPending: requestViewing.isPending,
+        createFailed: requestViewing.isError,
         rescheduleAddress: book.find(
             (appointment) => appointment.id === rescheduleId,
         )?.property,
@@ -121,5 +144,8 @@ export function useAgentCalendar() {
         startReschedule,
         closeReschedule,
         confirmReschedule,
+        openCreate,
+        closeCreate,
+        submitCreate,
     };
 }

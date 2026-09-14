@@ -79,18 +79,13 @@ export function ReportExportModal({
             </ModalBody>
 
             <ModalFooter className="p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onClose}
-                >
+                <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button
                     type="button"
-                    variant="primary"
-                    size="sm"
+                    emphasis="solid"
+                    tone="accent"
                     disabled={sections.length === 0}
                     onClick={() => onGenerate(chosenPeriod, sections)}
                 >

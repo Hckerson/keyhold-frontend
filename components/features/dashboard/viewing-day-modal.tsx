@@ -94,12 +94,7 @@ export function ViewingDayModal({
                 ))}
             </ModalBody>
             <ModalFooter className="p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => onOpenChange(false)}
-                >
+                <Button type="button" onClick={() => onOpenChange(false)}>
                     {CLOSE_ACTION}
                 </Button>
             </ModalFooter>

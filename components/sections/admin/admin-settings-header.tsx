@@ -29,19 +29,13 @@ export function AdminSettingsHeader({
             summary={ENVIRONMENT_LABEL}
             action={
                 <>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        disabled={!dirty}
-                        onClick={onReset}
-                    >
+                    <Button type="button" disabled={!dirty} onClick={onReset}>
                         {RESET_ACTION}
                     </Button>
                     <Button
                         type="submit"
-                        variant="primary"
-                        size="sm"
+                        emphasis="solid"
+                        tone="accent"
                         form={SETTINGS_FORM_ID}
                         disabled={!dirty}
                     >

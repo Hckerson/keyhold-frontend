@@ -59,7 +59,7 @@ describe("reading search state from the URL", () => {
     });
 
     it("falls back rather than trusting an unknown sort, view or page", () => {
-        const state = read("sort=cheapest&view=map&page=-4");
+        const state = read("sort=cheapest&view=globe&page=-4");
         expect(state.sort).toBe("newest");
         expect(state.view).toBe("grid");
         expect(state.page).toBe(1);

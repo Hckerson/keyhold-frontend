@@ -81,7 +81,6 @@ export function ViewingsNextHero({
                     <Link
                         href={PUBLIC_ROUTES.listing(viewing.listingId)}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >
@@ -89,16 +88,13 @@ export function ViewingsNextHero({
                     </Link>
                     <Button
                         type="button"
-                        variant="secondary"
-                        size="sm"
                         onClick={() => onReschedule(viewing.id)}
                     >
                         {RESCHEDULE_ACTION}
                     </Button>
                     <Button
                         type="button"
-                        variant="ghost"
-                        size="sm"
+                        emphasis="quiet"
                         onClick={() => onCancel(viewing.id)}
                     >
                         {CANCEL_ACTION}

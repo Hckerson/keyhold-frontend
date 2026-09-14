@@ -16,14 +16,16 @@ export default function SearchError({ reset }: { reset: () => void }) {
                     description="The search index did not respond. Your filters are still saved — try again, or browse the featured collection instead."
                     action={
                         <div className="flex flex-wrap items-center justify-center gap-2">
-                            <Button variant="primary" size="sm" onClick={reset}>
+                            <Button
+                                emphasis="solid"
+                                tone="accent"
+                                onClick={reset}
+                            >
                                 Try again
                             </Button>
-                            <Link href="/">
-                                <Button variant="secondary" size="sm">
-                                    Back to home
-                                </Button>
-                            </Link>
+                            <Button asChild>
+                                <Link href="/">Back to home</Link>
+                            </Button>
                         </div>
                     }
                 />

@@ -8,6 +8,8 @@ export const COMMAND_PALETTE = {
     dismiss: "Esc",
     here: "Here",
     listId: "command-palette-list",
+    searchId: "command-palette-search",
+    routeId: (href: string) => `command-palette-route:${href}`,
 } as const;
 
 export const COMMAND_SEARCH_PREFIX = "Search properties for";

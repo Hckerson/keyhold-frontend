@@ -32,7 +32,7 @@ export function OverviewLeadRow({ lead }: OverviewLeadRowProps) {
                 {lead.name}
             </span>
             <span className="text-text shrink-0 text-xs font-semibold tabular-nums">
-                {formatCompactUsd(lead.budget)}
+                {formatCompactUsd(lead.listingPrice)}
             </span>
             <StatusBadge tone={stageTone[lead.stage]}>
                 {LEAD_STAGES[lead.stage].label}

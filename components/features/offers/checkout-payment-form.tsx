@@ -57,18 +57,13 @@ export function CheckoutPaymentForm({
             <PaymentElement options={{ layout: "tabs" }} />
 
             <div className="flex items-center justify-end gap-2">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onCancel}
-                >
+                <Button type="button" onClick={onCancel}>
                     {STRIPE_COPY.cancel}
                 </Button>
                 <Button
                     type="submit"
-                    variant="primary"
-                    size="sm"
+                    emphasis="solid"
+                    tone="accent"
                     disabled={!stripe || pending}
                 >
                     {pending && (

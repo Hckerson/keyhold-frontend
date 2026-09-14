@@ -5,10 +5,13 @@ import {
     ArrowLeftRight,
     CreditCard,
     ShieldCheck,
+    Scale,
+    Flag,
     BarChart3,
     Settings,
     type LucideIcon,
 } from "lucide-react";
+import { ADMIN_ROUTES } from "@/lib/constants";
 
 export interface AdminNavItem {
     label: string;
@@ -29,7 +32,7 @@ export const ADMIN_NAV: AdminNavSection[] = [
         items: [
             {
                 label: "Dashboard",
-                href: "/admin",
+                href: ADMIN_ROUTES.overview,
                 icon: LayoutDashboard,
                 description: "Platform health at a glance",
             },
@@ -40,13 +43,13 @@ export const ADMIN_NAV: AdminNavSection[] = [
         items: [
             {
                 label: "Listings",
-                href: "/admin/listings",
+                href: ADMIN_ROUTES.listings,
                 icon: Home,
                 description: "Moderate all property listings",
             },
             {
                 label: "Users",
-                href: "/admin/users",
+                href: ADMIN_ROUTES.users,
                 icon: Users,
                 description: "Members, agents & roles",
             },
@@ -57,13 +60,13 @@ export const ADMIN_NAV: AdminNavSection[] = [
         items: [
             {
                 label: "Transactions",
-                href: "/admin/transactions",
+                href: ADMIN_ROUTES.transactions,
                 icon: ArrowLeftRight,
                 description: "Deal transactions",
             },
             {
                 label: "Payments",
-                href: "/admin/payments",
+                href: ADMIN_ROUTES.payments,
                 icon: CreditCard,
                 description: "Payments & payouts",
             },
@@ -74,7 +77,7 @@ export const ADMIN_NAV: AdminNavSection[] = [
         items: [
             {
                 label: "Reports",
-                href: "/admin/reports",
+                href: ADMIN_ROUTES.reports,
                 icon: BarChart3,
                 description: "Analytics & reports",
             },
@@ -85,9 +88,21 @@ export const ADMIN_NAV: AdminNavSection[] = [
         items: [
             {
                 label: "Verifications",
-                href: "/admin/verifications",
+                href: ADMIN_ROUTES.verifications,
                 icon: ShieldCheck,
                 description: "Identity & listing checks",
+            },
+            {
+                label: "Reports",
+                href: ADMIN_ROUTES.flags,
+                icon: Flag,
+                description: "Reported members & messages",
+            },
+            {
+                label: "Disputes",
+                href: ADMIN_ROUTES.disputes,
+                icon: Scale,
+                description: "Contested deals & outcomes",
             },
         ],
     },
@@ -96,7 +111,7 @@ export const ADMIN_NAV: AdminNavSection[] = [
         items: [
             {
                 label: "Settings",
-                href: "/admin/settings",
+                href: ADMIN_ROUTES.settings,
                 icon: Settings,
                 description: "Platform configuration",
             },
@@ -108,7 +123,7 @@ export const adminNav = (pendingVerifications: number): AdminNavSection[] =>
     ADMIN_NAV.map((section) => ({
         ...section,
         items: section.items.map((item) =>
-            item.href === "/admin/verifications"
+            item.href === ADMIN_ROUTES.verifications
                 ? { ...item, badge: pendingVerifications || undefined }
                 : item,
         ),

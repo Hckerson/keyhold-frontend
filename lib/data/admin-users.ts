@@ -24,6 +24,7 @@ import type {
     UserDirectoryFilters,
     UserRoleFilter,
     UserSortKey,
+    UserStatus,
     UserStatusFilter,
 } from "@/lib/types";
 
@@ -104,15 +105,22 @@ export const matchesUserFilters = (
     );
 };
 
+const ZERO_STATUS_COUNTS: Record<UserStatus, number> = {
+    active: 0,
+    pending: 0,
+    suspended: 0,
+    deleted: 0,
+};
+
 export const countUsersByStatus = (
     users: ManagedUser[],
 ): Record<UserStatusFilter, number> =>
-    USER_STATUS_KEYS.reduce<Record<UserStatusFilter, number>>(
-        (counts, id) => ({
+    users.reduce<Record<UserStatusFilter, number>>(
+        (counts, user) => ({
             ...counts,
-            [id]: users.filter((user) => user.status === id).length,
+            [user.status]: counts[user.status] + 1,
         }),
-        { all: users.length, active: 0, pending: 0, suspended: 0 },
+        { all: users.length, ...ZERO_STATUS_COUNTS },
     );
 
 export const countUsersByRole = (users: ManagedUser[], role: ManagedUserRole) =>

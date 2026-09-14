@@ -6,12 +6,19 @@ export type MutationFeedback = {
 
 export const GENERIC_FAILURE = "That didn't go through. Try again in a moment.";
 
+export const NETWORK_FAILURE =
+    "We can't reach the server. Check your connection and try again.";
+
 export const SESSION_EXPIRED = {
     title: "Your session expired",
     description: "Sign in again to pick up where you left off.",
 } as const;
 
 export const FEEDBACK = {
+    disconnectGoogleCalendar: {
+        success: "Google Calendar disconnected",
+        error: "We couldn't disconnect Google Calendar.",
+    },
     requestPasswordReset: { silentError: true },
     resetPassword: { silentError: true },
     register: { silentError: true },
@@ -30,6 +37,14 @@ export const FEEDBACK = {
 
     createOffer: { success: "Offer submitted", silentError: true },
     respondToOffer: { success: "Response sent", silentError: true },
+    updateMilestone: {
+        success: "Milestone updated",
+        error: "We couldn't update that milestone.",
+    },
+    attachMilestoneDocument: {
+        success: "Document attached",
+        error: "We couldn't attach that document.",
+    },
     acceptCounter: {
         success: "Counter accepted",
         error: "We couldn't accept the counter-offer.",
@@ -47,6 +62,15 @@ export const FEEDBACK = {
     cancelViewing: { error: "We couldn't cancel the viewing." },
 
     sendMessage: { error: "Your message wasn't sent." },
+
+    sendLeadEmail: {
+        success: "Email sent",
+        error: "We couldn't send that email.",
+    },
+    startLeadCall: {
+        success: "Calling you now — pick up to be connected",
+        error: "We couldn't place that call.",
+    },
 
     toggleSavedProperty: { error: "We couldn't update your saved list." },
     createSavedSearch: {
@@ -82,6 +106,7 @@ export const FEEDBACK = {
         error: "We couldn't update the listing status.",
     },
     deleteProperty: { error: "We couldn't delete the listing." },
+    recordPropertyView: { silentError: true },
     promoteProperty: { success: "Listing promoted", silentError: true },
     markPropertySold: {
         success: "Listing marked sold",
@@ -91,6 +116,11 @@ export const FEEDBACK = {
         success: "Images uploaded",
         error: "We couldn't upload those images.",
     },
+    deletePropertyImage: {
+        success: "Photo removed",
+        error: "We couldn't remove that photo.",
+    },
+    reorderPropertyImages: { error: "We couldn't reorder those photos." },
     moderateProperty: {
         success: "Decision recorded",
         error: "We couldn't record your decision.",
@@ -150,9 +180,30 @@ export const FEEDBACK = {
         error: "We couldn't lift the suspension.",
     },
 
+    verifyEmail: {
+        success: "Email confirmed",
+        error: "That code was not accepted.",
+    },
+    resendVerification: {
+        success: "A new code is on its way",
+        error: "We couldn't send a new code.",
+    },
+    uploadAvatar: {
+        success: "Profile photo updated",
+        error: "We couldn't upload that photo.",
+    },
+
     updatePlatformSettings: {
         success: "Settings saved",
         error: "We couldn't save the platform settings.",
+    },
+    restorePlatformDefaults: {
+        success: "Settings restored to defaults",
+        error: "We couldn't restore the default settings.",
+    },
+    purgeExpiredVerifications: {
+        success: "Expired verifications purged",
+        error: "We couldn't purge the expired verifications.",
     },
 
     createConciergeClient: {

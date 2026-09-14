@@ -1,13 +1,23 @@
 import type { NextConfig } from "next";
-import { SECURITY_HEADERS } from "./lib/config/security-headers";
+import { config } from "./lib/constants";
+import { securityHeaders } from "./lib/config/security-headers";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
     output: process.env.DOCKER_BUILD ? "standalone" : undefined,
     devIndicators: {
         position: "bottom-right",
     },
+    experimental: {
+        clientTraceMetadata: ["sentry-trace", "baggage"],
+    },
     headers: () =>
-        Promise.resolve([{ source: "/:path*", headers: SECURITY_HEADERS }]),
+        Promise.resolve([
+            {
+                source: "/:path*",
+                headers: securityHeaders(config.api.base),
+            },
+        ]),
     images: {
         remotePatterns: [
             {
@@ -43,4 +53,10 @@ const nextConfig: NextConfig = {
     },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    silent: true,
+    widenClientFileUpload: true,
+    disableLogger: true,
+});

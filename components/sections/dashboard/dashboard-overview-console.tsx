@@ -13,13 +13,18 @@ import {
     journeyTasksFrom,
     offerBookFrom,
     offerPositionsFrom,
+    triggeredAlertsFrom,
     upcomingViewingsFrom,
 } from "@/lib/data/dashboard-overview";
 import { useMyInterests } from "@/lib/hooks/use-connections";
+import { useNotifications } from "@/lib/hooks/use-notifications";
 import { useUnreadMessageCount } from "@/lib/hooks/use-messages";
 import { useSavedProperties } from "@/lib/hooks/use-saved-properties";
 import { useSession } from "@/lib/hooks/use-session";
 import { usePurchases } from "@/lib/hooks/use-transactions";
+import { toAlert } from "@/lib/utils/to-alert";
+
+const ALERT_FEED_SIZE = 40;
 
 export function DashboardOverviewConsole() {
     const { user } = useSession();
@@ -27,11 +32,18 @@ export function DashboardOverviewConsole() {
     const saved = useSavedProperties();
     const unread = useUnreadMessageCount();
     const purchases = usePurchases();
+    const notifications = useNotifications({ limit: ALERT_FEED_SIZE });
 
     const items = useMemo(() => connections.data ?? [], [connections.data]);
     const savedCount = saved.data?.length ?? 0;
 
     const positions = useMemo(() => offerPositionsFrom(items), [items]);
+
+    const alerts = useMemo(
+        () =>
+            triggeredAlertsFrom((notifications.data?.items ?? []).map(toAlert)),
+        [notifications.data?.items],
+    );
 
     if (connections.isError)
         return (
@@ -66,6 +78,7 @@ export function DashboardOverviewConsole() {
                         savedCount,
                         purchases.data ?? [],
                     )}
+                    alerts={alerts}
                 />
             </div>
         </div>

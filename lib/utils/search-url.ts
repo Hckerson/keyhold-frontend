@@ -11,7 +11,7 @@ import {
 } from "@/lib/hooks/use-url-state";
 import { TOOLBAR_SORTS, type SortValue } from "@/lib/utils/search";
 
-export const VIEW_MODES = ["grid", "list"] as const;
+export const VIEW_MODES = ["grid", "list", "map"] as const;
 
 export type SearchViewMode = (typeof VIEW_MODES)[number];
 

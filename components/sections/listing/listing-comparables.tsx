@@ -41,9 +41,8 @@ export function ListingComparables({
                 description={EMPTY_LEDE}
                 action={
                     <Link
-                        href={`/search?q=${encodeURIComponent(listing.locality)}`}
+                        href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(listing.locality)}`}
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >

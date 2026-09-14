@@ -85,8 +85,8 @@ export function PurchaseRow({
                 {canRelease(purchase) ? (
                     <Button
                         type="button"
-                        variant="primary"
-                        size="sm"
+                        emphasis="solid"
+                        tone="accent"
                         disabled={releasing}
                         onClick={() =>
                             purchase.escrowId && onRelease(purchase.escrowId)

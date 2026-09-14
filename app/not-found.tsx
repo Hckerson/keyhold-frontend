@@ -4,6 +4,7 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const TITLE = "We couldn't find that page";
 const DESCRIPTION =
@@ -20,16 +21,14 @@ export default function NotFound() {
                         description={DESCRIPTION}
                         action={
                             <div className="flex flex-wrap items-center justify-center gap-2">
-                                <Link href="/search">
-                                    <Button variant="primary" size="sm">
+                                <Button asChild emphasis="solid" tone="accent">
+                                    <Link href={PUBLIC_ROUTES.search}>
                                         Browse listings
-                                    </Button>
-                                </Link>
-                                <Link href="/">
-                                    <Button variant="secondary" size="sm">
-                                        Back to home
-                                    </Button>
-                                </Link>
+                                    </Link>
+                                </Button>
+                                <Button asChild>
+                                    <Link href="/">Back to home</Link>
+                                </Button>
                             </div>
                         }
                     />

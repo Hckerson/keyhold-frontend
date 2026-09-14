@@ -8,15 +8,19 @@ import { cn } from "@/lib/utils";
 const OPEN_KEYS = ["ArrowDown", "ArrowUp", "Enter", " "];
 
 const triggerVariants = cva(
-    "border-border bg-background-alt text-text hover:border-border-dark focus-visible:border-accent focus-visible:ring-accent/40 ease-smooth flex w-full items-center gap-2 rounded-lg border text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+    "text-text focus-visible:ring-accent/40 ease-smooth flex w-full items-center gap-2 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
     {
         variants: {
             size: {
-                sm: "h-8 px-2.5 text-xs",
-                md: "h-9 px-3 text-sm",
+                sm: "h-8 px-2.5 text-sm",
+                lg: "h-11 px-3 text-sm",
+            },
+            variant: {
+                boxed: "border-border bg-background-alt hover:border-border-dark focus-visible:border-accent rounded-md border",
+                bare: "text-text-secondary hover:text-text h-auto rounded-sm bg-transparent px-0 text-xs",
             },
         },
-        defaultVariants: { size: "md" },
+        defaultVariants: { size: "sm", variant: "boxed" },
     },
 );
 
@@ -25,11 +29,11 @@ const optionVariants = cva(
     {
         variants: {
             size: {
-                sm: "h-7 px-2 text-xs",
-                md: "h-8 px-2.5 text-sm",
+                sm: "h-8 px-2 text-sm",
+                lg: "h-9 px-2.5 text-sm",
             },
         },
-        defaultVariants: { size: "md" },
+        defaultVariants: { size: "sm" },
     },
 );
 
@@ -60,6 +64,7 @@ export function Select<T extends string>({
     align = "start",
     disabled,
     size,
+    variant = "boxed",
     className,
 }: SelectProps<T>) {
     const listId = useId();
@@ -168,8 +173,8 @@ export function Select<T extends string>({
                 onClick={() => (open ? setOpen(false) : openList())}
                 onKeyDown={onKeyDown}
                 className={cn(
-                    triggerVariants({ size }),
-                    open && "border-accent",
+                    triggerVariants({ size, variant }),
+                    open && variant === "boxed" && "border-accent",
                 )}
             >
                 {Icon && (
@@ -197,7 +202,7 @@ export function Select<T extends string>({
                     role="listbox"
                     aria-label={label}
                     className={cn(
-                        "border-border bg-background-alt ease-smooth absolute top-full z-30 mt-1 max-h-64 min-w-full overflow-y-auto rounded-lg border p-1 shadow-lg transition duration-200",
+                        "border-border bg-background-alt ease-smooth absolute top-full z-30 mt-1 max-h-64 w-max max-w-64 min-w-full overflow-y-auto rounded-lg border p-1 shadow-lg transition duration-200",
                         align === "end" ? "right-0" : "left-0",
                         shown
                             ? "translate-y-0 opacity-100"

@@ -1,4 +1,6 @@
 import { query } from "@/lib/api/client";
+
+const PERCENT = 100;
 import { config } from "@/lib/constants";
 import type {
     CreatePropertyInput,
@@ -72,13 +74,33 @@ export const propertiesAPI = {
     recordView: (id: string) =>
         query.post<{ recorded: boolean }>(config.api.properties.view(id)),
 
-    uploadImages: (id: string, files: File[]) => {
+    removeImage: (id: string, imageId: string) =>
+        query.delete<PropertyImage>(config.api.properties.image(id, imageId)),
+
+    reorderImages: (id: string, ids: string[]) =>
+        query.patch<PropertyImage[]>(config.api.properties.imageOrder(id), {
+            ids,
+        }),
+
+    uploadImages: (
+        id: string,
+        files: File[],
+        onProgress?: (percent: number) => void,
+    ) => {
         const body = new FormData();
         files.forEach((file) => body.append("files", file));
         return query.post<PropertyImage[]>(
             config.api.properties.images(id),
             body,
-            { headers: { "Content-Type": "multipart/form-data" } },
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+                onUploadProgress: (event) => {
+                    if (!onProgress || !event.total) return;
+                    onProgress(
+                        Math.round((event.loaded / event.total) * PERCENT),
+                    );
+                },
+            },
         );
     },
 };

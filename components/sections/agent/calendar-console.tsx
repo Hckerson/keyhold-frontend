@@ -5,13 +5,25 @@ import { CalendarStatBand } from "@/components/sections/agent/calendar-stat-band
 import { CalendarRail } from "@/components/sections/agent/calendar-rail";
 import { CalendarSchedule } from "@/components/sections/agent/calendar-schedule";
 import { RescheduleViewingModal } from "@/components/features/shared/reschedule-viewing-modal";
+import { AppointmentCreateModal } from "@/components/features/agent/appointment-create-modal";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useAgentCalendar } from "@/lib/hooks/use-agent-calendar";
+import {
+    useDisconnectGoogleCalendar,
+    useGoogleCalendarStatus,
+} from "@/lib/hooks/use-google-calendar";
+import type { CalendarOutcome } from "@/lib/config/calendar-sync";
 import { RESCHEDULE_HINT } from "@/lib/data/agent-calendar";
 
-export function CalendarConsole() {
+export interface CalendarConsoleProps {
+    calendarOutcome?: CalendarOutcome;
+}
+
+export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
     const calendar = useAgentCalendar();
+    const calendarStatus = useGoogleCalendarStatus();
+    const disconnectCalendar = useDisconnectGoogleCalendar();
 
     if (calendar.failed)
         return (
@@ -25,6 +37,7 @@ export function CalendarConsole() {
         <div className="flex flex-col gap-4">
             <CalendarHeader
                 summary={`${calendar.visible.length} in view · ${calendar.rangeLabel}`}
+                onCreate={calendar.openCreate}
             />
 
             <CalendarStatBand appointments={calendar.weekItems} />
@@ -40,6 +53,10 @@ export function CalendarConsole() {
                     rangeLabel={calendar.rangeLabel}
                     onSelect={calendar.setSelected}
                     onMonthChange={calendar.changeMonth}
+                    calendarStatus={calendarStatus.data}
+                    calendarOutcome={calendarOutcome}
+                    disconnectingCalendar={disconnectCalendar.isPending}
+                    onDisconnectCalendar={() => disconnectCalendar.mutate()}
                 />
 
                 <CalendarSchedule
@@ -63,6 +80,15 @@ export function CalendarConsole() {
                 onDraftChange={calendar.setDraft}
                 onClose={calendar.closeReschedule}
                 onConfirm={calendar.confirmReschedule}
+            />
+
+            <AppointmentCreateModal
+                open={calendar.creating}
+                clients={calendar.clients}
+                pending={calendar.createPending}
+                failed={calendar.createFailed}
+                onClose={calendar.closeCreate}
+                onSubmit={calendar.submitCreate}
             />
         </div>
     );

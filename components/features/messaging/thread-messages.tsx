@@ -39,6 +39,8 @@ export function ThreadMessages({
                             caption={message.timestamp}
                             isUser={message.senderRole === "user"}
                             avatarInitials={message.initials}
+                            documents={message.documents}
+                            reportTargetId={message.id}
                         />
                     </m.div>
                 ))}

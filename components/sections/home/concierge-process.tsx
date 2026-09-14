@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { SCROLL_NARRATIVE_BAND } from "@/lib/config/public-motion";
 import { CONCIERGE_STEPS } from "@/lib/data/home-concierge";
 import { ConciergeProgress } from "@/components/sections/home/concierge-progress";
 import { ConciergeStepPanel } from "@/components/sections/home/concierge-step-panel";
-
-const ACTIVE_BAND_MARGIN = "-45% 0px -45% 0px";
 
 export function ConciergeProcess({ children }: { children: ReactNode }) {
     const [activeIdx, setActiveIdx] = useState(0);
@@ -23,7 +22,7 @@ export function ConciergeProcess({ children }: { children: ReactNode }) {
                     if (index !== -1) setActiveIdx(index);
                 }
             },
-            { rootMargin: ACTIVE_BAND_MARGIN },
+            { rootMargin: SCROLL_NARRATIVE_BAND },
         );
         panels.forEach((panel) => observer.observe(panel));
         return () => observer.disconnect();

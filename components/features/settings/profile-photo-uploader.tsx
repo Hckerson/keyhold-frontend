@@ -1,92 +1,69 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { ChangeEvent } from "react";
-import { Trash2, Upload } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { FileUpload } from "@/components/ui/forms/file-upload";
 import { initialsOf } from "@/lib/utils";
+
+const PHOTO_LABEL = "Profile Photo";
+const PHOTO_ACCEPT = "image/jpeg,image/png,image/webp,image/avif";
+const PHOTO_MAX_BYTES = 10 * 1024 * 1024;
+const PHOTO_HINT = "At least 400 × 400 pixels";
+const REMOVE_LABEL = "Remove";
+const PHOTO_ALT = "Profile photo";
 
 export interface ProfilePhotoUploaderProps {
     name: string;
     src?: string;
+    uploading?: boolean;
+    progress?: number;
+    onUpload: (file: File) => void;
+    onRemove?: () => void;
 }
 
-export function ProfilePhotoUploader({ name, src }: ProfilePhotoUploaderProps) {
-    const [photo, setPhoto] = useState<string | null>(null);
-    const photoInputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(
-        () => () => {
-            if (photo) URL.revokeObjectURL(photo);
-        },
-        [photo],
-    );
-
-    const handlePhoto = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-        setPhoto(URL.createObjectURL(file));
-    };
-
-    const removePhoto = () => {
-        setPhoto(null);
-        if (photoInputRef.current) photoInputRef.current.value = "";
-    };
-
+export function ProfilePhotoUploader({
+    name,
+    src,
+    uploading,
+    progress,
+    onUpload,
+    onRemove,
+}: ProfilePhotoUploaderProps) {
     return (
-        <div className="border-border-light mb-3 flex flex-wrap items-center gap-3 border-b pb-3">
+        <div className="border-border-light mb-3 flex flex-wrap items-start gap-3 border-b pb-3">
             <Avatar
                 size="xl"
-                src={photo ?? src}
+                src={src}
                 initials={initialsOf(name)}
-                alt="Profile photo"
+                alt={PHOTO_ALT}
             />
-            <div className="space-y-1.5">
-                <p className="micro-label">Profile Photo</p>
-                <div className="flex flex-wrap gap-2">
-                    <input
-                        ref={photoInputRef}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handlePhoto}
-                        aria-hidden="true"
-                        tabIndex={-1}
-                    />
+            <div className="flex min-w-56 flex-1 flex-col gap-1.5">
+                <FileUpload
+                    label={PHOTO_LABEL}
+                    accept={PHOTO_ACCEPT}
+                    maxSize={PHOTO_MAX_BYTES}
+                    hint={PHOTO_HINT}
+                    disabled={uploading}
+                    progress={uploading ? (progress ?? 0) : undefined}
+                    onFiles={(files) => onUpload(files[0])}
+                />
+                {onRemove && (
                     <Button
-                        variant="secondary"
-                        size="sm"
+                        emphasis="quiet"
+                        tone="error"
                         type="button"
-                        onClick={() => photoInputRef.current?.click()}
+                        icon={Trash2}
+                        disabled={!src || uploading}
+                        className="self-start"
+                        onClick={onRemove}
                     >
-                        <Upload
-                            size={12}
-                            strokeWidth={1.5}
-                            className="mr-1.5"
-                        />
-                        {photo ? "Replace" : "Upload"}
+                        {REMOVE_LABEL}
                     </Button>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        type="button"
-                        className="text-error hover:text-error"
-                        disabled={!photo}
-                        onClick={removePhoto}
-                    >
-                        <Trash2
-                            size={12}
-                            strokeWidth={1.5}
-                            className="mr-1.5"
-                        />
-                        Remove
-                    </Button>
-                </div>
-                <p className="text-text-muted text-xs">
-                    JPG or PNG, at least 400 × 400 pixels.
-                </p>
+                )}
             </div>
         </div>
     );
 }
+
+ProfilePhotoUploader.displayName = "ProfilePhotoUploader";

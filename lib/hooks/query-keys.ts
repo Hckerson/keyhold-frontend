@@ -34,6 +34,11 @@ export const queryKeys = {
             ["messages", "connection", connectionId] as const,
         unreadCount: ["messages", "unread-count"] as const,
     },
+    contact: {
+        all: ["contact"] as const,
+        byConnection: (connectionId: string) =>
+            ["contact", "connection", connectionId] as const,
+    },
     viewings: {
         all: ["viewings"] as const,
         byConnection: (connectionId: string) =>
@@ -45,6 +50,7 @@ export const queryKeys = {
         byConnection: (connectionId: string) =>
             ["offers", "connection", connectionId] as const,
         detail: (id: string) => ["offers", "detail", id] as const,
+        milestones: (id: string) => ["offers", "milestones", id] as const,
     },
     transactions: {
         all: ["transactions"] as const,
@@ -140,5 +146,8 @@ export const queryKeys = {
         regions: ["stats", "regions"] as const,
         trend: (filter: string) => ["stats", "trend", filter] as const,
         agent: ["stats", "agent"] as const,
+    },
+    calendar: {
+        google: ["calendar", "google"] as const,
     },
 };

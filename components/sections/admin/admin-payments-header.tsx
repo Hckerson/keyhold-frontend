@@ -21,7 +21,8 @@ export function AdminPaymentsHeader({ summary }: AdminPaymentsHeaderProps) {
                 <Link
                     href="/admin/transactions"
                     className={buttonVariants({
-                        variant: "primary",
+                        emphasis: "solid",
+                        tone: "accent",
                         size: "sm",
                     })}
                 >

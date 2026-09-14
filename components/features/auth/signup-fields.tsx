@@ -6,6 +6,7 @@ import {
     AuthCheck,
     AuthField,
     AuthRoleChoice,
+    PasswordStrength,
     type SignupRole,
 } from "@/components/features/auth/parts";
 import { AUTH_ROUTES } from "@/lib/constants";
@@ -90,6 +91,7 @@ export function SignupFields({
                     label="Password"
                     name="password"
                     type="password"
+                    hint={<PasswordStrength password={values.password} />}
                     autoComplete="new-password"
                     placeholder={`At least ${MIN_PASSWORD_LENGTH} characters`}
                     value={values.password}

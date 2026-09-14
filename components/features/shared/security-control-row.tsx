@@ -61,8 +61,7 @@ export function SecurityControlRow<K extends string>({
             </div>
             <Button
                 type="button"
-                size="sm"
-                variant={danger ? "outline-danger" : "secondary"}
+                tone={danger ? "error" : "neutral"}
                 onClick={onAction ? () => onAction(control.id) : undefined}
             >
                 {control.action}
