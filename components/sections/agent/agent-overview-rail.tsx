@@ -3,9 +3,9 @@ import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { OverviewShowingList } from "@/components/features/agent/overview-showing-list";
 import { OverviewLeadList } from "@/components/features/agent/overview-lead-list";
-import { OverviewActionList } from "@/components/features/agent/overview-action-list";
+import { QuickActionList } from "@/components/features/shared/quick-action-list";
 import {
-    quickActions,
+    agentQuickActions,
     type RecentLead,
     type UpcomingShowing,
 } from "@/lib/data/agent-overview";
@@ -48,7 +48,7 @@ export function AgentOverviewRail({ showings, leads }: AgentOverviewRailProps) {
 
             <Panel title={ACTIONS_TITLE}>
                 <PanelInset>
-                    <OverviewActionList actions={quickActions} />
+                    <QuickActionList actions={agentQuickActions} />
                 </PanelInset>
             </Panel>
         </div>

@@ -3,6 +3,7 @@ import {
     CheckCircle2,
     CircleSlash,
     PauseCircle,
+    UserRoundX,
     ShieldCheck,
     UserRound,
     type LucideIcon,
@@ -72,6 +73,7 @@ export const USER_STATUS_KEYS: UserStatus[] = [
     "active",
     "pending",
     "suspended",
+    "deleted",
 ];
 
 export interface UserStatusMeta {
@@ -116,6 +118,16 @@ export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
         note: "This account cannot list, bid or transact until it is reactivated.",
         noteTitle: "Why this account is suspended",
         noteTone: "error",
+    },
+    deleted: {
+        label: "Deleted",
+        icon: UserRoundX,
+        tone: "neutral",
+        chartTone: "neutral",
+        risk: 3,
+        note: "This account has been deleted. It is retained for audit only and cannot be reactivated.",
+        noteTitle: "Why this account is deleted",
+        noteTone: "neutral",
     },
 };
 

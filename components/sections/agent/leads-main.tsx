@@ -23,8 +23,11 @@ export interface LeadsMainProps {
     stageFilter: LeadStageFilter;
     counts: Record<LeadStageFilter, number>;
     pending?: boolean;
+    calling: boolean;
     onFilterChange: (stage: LeadStageFilter) => void;
     onRespond: (id: string, accept: boolean) => void;
+    onCall: () => void;
+    onEmail: () => void;
 }
 
 export function LeadsMain({
@@ -33,12 +36,23 @@ export function LeadsMain({
     stageFilter,
     counts,
     pending = false,
+    calling,
     onFilterChange,
     onRespond,
+    onCall,
+    onEmail,
 }: LeadsMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
-            {top && <LeadsTopProspectHero lead={top} onRespond={onRespond} />}
+            {top && (
+                <LeadsTopProspectHero
+                    lead={top}
+                    calling={calling}
+                    onRespond={onRespond}
+                    onCall={onCall}
+                    onEmail={onEmail}
+                />
+            )}
 
             <Panel
                 title={PIPELINE_TITLE}

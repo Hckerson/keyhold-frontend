@@ -5,36 +5,46 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { PolicySwitchTable } from "@/components/features/admin/policy-switch-table";
+import { MaintenancePanel } from "@/components/features/admin/maintenance-panel";
 import { AdminSettingsPostureHero } from "@/components/sections/admin/admin-settings-posture-hero";
+import { POLICY_GROUPS } from "@/lib/config/settings-tones";
 import {
     blockingPolicyCount,
+    enabledInGroup,
     enabledPolicyCount,
-    POLICY_COUNT,
-    POLICY_SWITCHES,
+    policiesInGroup,
 } from "@/lib/data/admin-policies";
 import {
     MARKETPLACE_FIELDS,
     PLATFORM_FIELDS,
     SETTINGS_FORM_ID,
     type AdminConfig,
+    type AdminConfigKey,
+    type MaintenanceActionId,
 } from "@/lib/data/admin-settings";
-import type { ConfigChange, PolicyState, PolicySwitchId } from "@/lib/types";
+import type {
+    ConfigChange,
+    PolicyGroup,
+    PolicyState,
+    PolicySwitchId,
+} from "@/lib/types";
 
 const PLATFORM_TITLE = "Platform";
 const PLATFORM_LEDE = "Identity and defaults used across every surface";
 const MARKETPLACE_TITLE = "Marketplace Rules";
 const MARKETPLACE_LEDE = "Fees, limits, and thresholds applied to new listings";
-const POLICY_TITLE = "Policy Enforcement";
-const POLICY_LEDE =
-    "What each rule blocks and how much of the market it covers";
+const POLICY_GROUP_ORDER: PolicyGroup[] = ["moderation", "operations"];
 
 export interface AdminSettingsMainProps {
     config: AdminConfig;
     policies: PolicyState;
     pending: number;
+    maintenancePending?: MaintenanceActionId;
     onFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onFieldSelect: (name: AdminConfigKey, value: string) => void;
     onPolicyToggle: (id: PolicySwitchId) => void;
     onSubmit: (event: FormEvent) => void;
+    onMaintenanceRun: (id: MaintenanceActionId) => void;
     lastChange?: ConfigChange;
 }
 
@@ -42,9 +52,12 @@ export function AdminSettingsMain({
     config,
     policies,
     pending,
+    maintenancePending,
     onFieldChange,
+    onFieldSelect,
     onPolicyToggle,
     onSubmit,
+    onMaintenanceRun,
     lastChange,
 }: AdminSettingsMainProps) {
     return (
@@ -67,6 +80,7 @@ export function AdminSettingsMain({
                     fields={PLATFORM_FIELDS}
                     values={config}
                     onChange={onFieldChange}
+                    onSelect={onFieldSelect}
                 />
 
                 <ConfigPanel
@@ -78,19 +92,31 @@ export function AdminSettingsMain({
                 />
             </form>
 
-            <Panel
-                title={POLICY_TITLE}
-                description={POLICY_LEDE}
-                count={`${enabledPolicyCount(policies)}/${POLICY_COUNT}`}
-            >
-                <PanelInset scroll>
-                    <PolicySwitchTable
-                        policies={POLICY_SWITCHES}
-                        state={policies}
-                        onToggle={onPolicyToggle}
-                    />
-                </PanelInset>
-            </Panel>
+            {POLICY_GROUP_ORDER.map((group) => {
+                const members = policiesInGroup(group);
+
+                return (
+                    <Panel
+                        key={group}
+                        title={POLICY_GROUPS[group].title}
+                        description={POLICY_GROUPS[group].lede}
+                        count={`${enabledInGroup(policies, group)}/${members.length}`}
+                    >
+                        <PanelInset scroll>
+                            <PolicySwitchTable
+                                policies={members}
+                                state={policies}
+                                onToggle={onPolicyToggle}
+                            />
+                        </PanelInset>
+                    </Panel>
+                );
+            })}
+
+            <MaintenancePanel
+                pending={maintenancePending}
+                onRun={onMaintenanceRun}
+            />
         </div>
     );
 }

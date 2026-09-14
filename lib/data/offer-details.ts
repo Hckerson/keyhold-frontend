@@ -1,10 +1,22 @@
 import { format } from "date-fns";
-import type { OfferStatus } from "@/lib/types";
+import type { MetricItem, OfferStatus } from "@/lib/types";
+import { CONTINGENCIES_META } from "@/lib/config/contingency-tones";
+import type { ThreadDocument } from "@/lib/types/message";
 import { formatUsd } from "@/lib/utils";
 import { OFFER_STATUS_BY_API } from "@/lib/utils/status-maps";
 import type { Connection } from "@/lib/validations/connection";
 import type { Message } from "@/lib/validations/message";
 import type { Offer } from "@/lib/validations/offer";
+
+export const OFFER_TERMS_COPY = {
+    title: "Offer Terms",
+    lede: "What the buyer committed to alongside the number",
+    moveIn: "Preferred move-in",
+    earnest: "Earnest money",
+    contingencies: "Contingencies",
+    none: "Not specified",
+    unconditional: "Unconditional",
+} as const;
 
 export type TimelineTone = "neutral" | "success" | "warning" | "info" | "error";
 
@@ -36,6 +48,7 @@ export interface ThreadMessage {
     author: string;
     content: string;
     timestamp: string;
+    documents: ThreadDocument[];
 }
 
 export interface OfferDetail {
@@ -50,6 +63,7 @@ export interface OfferDetail {
     timeline: TimelineEntry[];
     comparison: ComparisonRow[];
     messages: ThreadMessage[];
+    terms: MetricItem[];
 }
 
 const RESPONSE_TONE: Record<OfferStatus, TimelineTone> = {
@@ -157,7 +171,43 @@ export const threadFrom = (
             author: message.sender?.fullName ?? "",
             content: message.content,
             timestamp: format(new Date(message.createdAt), ENTRY_TIME_FORMAT),
+            documents: (message.attachments ?? []).map((attachment) => ({
+                id: attachment.id,
+                filename: attachment.filename,
+                url: attachment.url,
+                mimeType: attachment.mimeType,
+                sizeBytes: attachment.sizeBytes,
+                sharedBy: message.sender?.fullName ?? "",
+                sharedAt: format(
+                    new Date(attachment.createdAt),
+                    ENTRY_TIME_FORMAT,
+                ),
+            })),
         }));
+
+export const termsFrom = (offer: Offer): MetricItem[] => [
+    {
+        label: OFFER_TERMS_COPY.moveIn,
+        value: offer.moveInDate
+            ? format(new Date(offer.moveInDate), ENTRY_DATE_FORMAT)
+            : OFFER_TERMS_COPY.none,
+    },
+    {
+        label: OFFER_TERMS_COPY.earnest,
+        value: offer.earnestMoney
+            ? formatUsd(offer.earnestMoney)
+            : OFFER_TERMS_COPY.none,
+    },
+    {
+        label: OFFER_TERMS_COPY.contingencies,
+        value:
+            offer.contingencies && offer.contingencies.length > 0
+                ? offer.contingencies
+                      .map((id) => CONTINGENCIES_META[id].label)
+                      .join(" · ")
+                : OFFER_TERMS_COPY.unconditional,
+    },
+];
 
 export const toOfferDetail = (
     offer: Offer,
@@ -183,5 +233,6 @@ export const toOfferDetail = (
         timeline: timelineFrom(offer),
         comparison: comparisonFrom(offer, listPrice),
         messages: threadFrom(messages, viewerId),
+        terms: termsFrom(offer),
     };
 };

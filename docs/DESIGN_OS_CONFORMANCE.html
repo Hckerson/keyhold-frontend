@@ -1,0 +1,1276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Design-OS Conformance Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<style>
+:root {
+    --ink: #1c1a17;
+    --ink-2: #4a453d;
+    --ink-3: #7d766a;
+    --ground: #f7f4ee;
+    --surface: #fffefb;
+    --surface-2: #f1ece3;
+    --rule: #e2dbcf;
+    --rule-soft: #ece6dc;
+
+    --forest: #1f4e3d;
+    --forest-tint: #e6efea;
+    --brass: #8a6a35;
+    --brass-tint: #f5ecdb;
+    --rust: #9a3b30;
+    --rust-tint: #f6e6e2;
+    --slate: #3f5b76;
+    --slate-tint: #e6ecf2;
+
+    --shadow: 0 1px 2px rgba(28, 26, 23, .05), 0 8px 24px -18px rgba(28, 26, 23, .3);
+
+    --display: "Newsreader", Georgia, "Times New Roman", serif;
+    --body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --ink: #f2ede4;
+        --ink-2: #b6ad9e;
+        --ink-3: #857d70;
+        --ground: #16150f;
+        --surface: #1e1c16;
+        --surface-2: #262319;
+        --rule: #3a352a;
+        --rule-soft: #2c2820;
+
+        --forest: #6fb094;
+        --forest-tint: #1c2c25;
+        --brass: #cfa869;
+        --brass-tint: #2e2517;
+        --rust: #d9887c;
+        --rust-tint: #331f1b;
+        --slate: #8fb0cd;
+        --slate-tint: #1b242e;
+
+        --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -18px rgba(0, 0, 0, .8);
+    }
+}
+
+:root[data-theme="dark"] {
+    --ink: #f2ede4;
+    --ink-2: #b6ad9e;
+    --ink-3: #857d70;
+    --ground: #16150f;
+    --surface: #1e1c16;
+    --surface-2: #262319;
+    --rule: #3a352a;
+    --rule-soft: #2c2820;
+
+    --forest: #6fb094;
+    --forest-tint: #1c2c25;
+    --brass: #cfa869;
+    --brass-tint: #2e2517;
+    --rust: #d9887c;
+    --rust-tint: #331f1b;
+    --slate: #8fb0cd;
+    --slate-tint: #1b242e;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -18px rgba(0, 0, 0, .8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+}
+
+.page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead { display: flex; flex-direction: column; gap: 18px; }
+
+.eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.06;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+}
+
+h1 em { font-style: italic; color: var(--forest); }
+
+.standfirst {
+    max-width: 66ch;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 0;
+}
+
+.tally {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.tally div {
+    background: var(--surface);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tally b {
+    font-family: var(--mono);
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+}
+
+.tally span {
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: .01em;
+}
+
+.t-full b { color: var(--forest); }
+.t-part b { color: var(--brass); }
+.t-gone b { color: var(--rust); }
+.t-plus b { color: var(--slate); }
+
+/* ---------- key ---------- */
+
+.key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    padding-top: 2px;
+}
+
+.key span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    color: var(--ink-2);
+}
+
+.swatch {
+    width: 9px; height: 9px;
+    border-radius: 2px;
+    flex: none;
+}
+
+.sw-full { background: var(--forest); }
+.sw-part { background: var(--brass); }
+.sw-gone { background: var(--rust); }
+.sw-plus { background: var(--slate); }
+
+/* ---------- sections ---------- */
+
+section { display: flex; flex-direction: column; gap: 14px; }
+
+h2 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: -.01em;
+    margin: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+h2 .count {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+}
+
+.lede {
+    margin: -4px 0 0;
+    max-width: 68ch;
+    color: var(--ink-2);
+    font-size: 13px;
+}
+
+/* ---------- ledger ---------- */
+
+.group { display: flex; flex-direction: column; gap: 9px; }
+
+.group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.group-head h3 {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.group-head p {
+    margin: 0;
+    font-size: 11px;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+.rows { display: flex; flex-direction: column; }
+
+.row {
+    display: grid;
+    grid-template-columns: 15px 210px 1fr;
+    gap: 0 14px;
+    align-items: start;
+    padding: 10px 12px 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.row:last-child { border-bottom: 0; }
+
+.mark {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.r-full .mark { color: var(--forest); }
+.r-part .mark { color: var(--brass); }
+.r-gone .mark { color: var(--rust); }
+.r-plus .mark { color: var(--slate); }
+
+.route {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink);
+    word-break: break-word;
+}
+
+.r-gone .route { color: var(--rust); }
+.r-gone .route s { text-decoration-thickness: 1px; }
+
+.route small {
+    display: block;
+    font-family: var(--body);
+    font-size: 10.5px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-top: 1px;
+}
+
+.delta { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
+.delta strong { color: var(--ink); font-weight: 600; }
+
+.delta code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface-2);
+    padding: 1px 4px;
+    border-radius: 2px;
+    color: var(--ink);
+}
+
+.ok { color: var(--ink-3); }
+
+/* ---------- defects ---------- */
+
+.defect {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--rust);
+    border-radius: 3px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow);
+}
+
+.defect h3 {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: -.005em;
+}
+
+.defect p { margin: 0; font-size: 12.5px; color: var(--ink-2); max-width: 70ch; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+.chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 2px;
+    background: var(--rust-tint);
+    color: var(--rust);
+    border: 1px solid transparent;
+}
+
+.chip.src {
+    background: transparent;
+    border-color: var(--rule);
+    color: var(--ink-3);
+}
+
+/* ---------- section gaps table ---------- */
+
+.wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 3px; background: var(--surface); }
+
+table { border-collapse: collapse; width: 100%; min-width: 620px; }
+
+thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface-2);
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule-soft);
+    vertical-align: top;
+    font-size: 12.5px;
+    color: var(--ink-2);
+}
+
+tbody tr:last-child td { border-bottom: 0; }
+
+td.sec {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    white-space: nowrap;
+}
+
+td.name { color: var(--ink); font-weight: 500; white-space: nowrap; }
+
+.pill {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.p-gone { background: var(--rust-tint); color: var(--rust); }
+.p-part { background: var(--brass-tint); color: var(--brass); }
+
+/* ---------- notes ---------- */
+
+.notes { display: flex; flex-direction: column; gap: 12px; }
+
+.note {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.note:last-child { border-bottom: 0; padding-bottom: 0; }
+
+.note-n {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--ink-3);
+    padding-top: 2px;
+}
+
+.note p { margin: 0; font-size: 12.5px; color: var(--ink-2); max-width: 72ch; }
+.note p b { color: var(--ink); font-weight: 600; }
+
+.note code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface-2);
+    padding: 1px 4px;
+    border-radius: 2px;
+    color: var(--ink);
+}
+
+footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    font-size: 11.5px;
+    color: var(--ink-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+}
+
+footer span { font-family: var(--mono); }
+
+@media (max-width: 720px) {
+    .row { grid-template-columns: 15px 1fr; }
+    .row .delta { grid-column: 2; padding-top: 6px; }
+}
+
+@page {
+    size: A4;
+    margin: 13mm 11mm 15mm;
+}
+
+@media print {
+    :root:root:root, :root:root[data-theme="dark"] {
+        --ink: #1c1a17;
+        --ink-2: #45403a;
+        --ink-3: #6f6961;
+        --ground: #ffffff;
+        --surface: #ffffff;
+        --surface-2: #f1ece3;
+        --rule: #d8d0c2;
+        --rule-soft: #e7e1d6;
+        --forest: #1f4e3d;
+        --forest-tint: #e6efea;
+        --brass: #7d5f2d;
+        --brass-tint: #f5ecdb;
+        --rust: #8e352b;
+        --rust-tint: #f6e6e2;
+        --slate: #35506b;
+        --slate-tint: #e6ecf2;
+        --shadow: none;
+        color-scheme: light;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    body {
+        background: #fff;
+        font-size: 10.5pt;
+    }
+
+    .page {
+        max-width: none;
+        padding: 0;
+        gap: 26px;
+    }
+
+    h1 { font-size: 30pt; }
+    h2 { font-size: 16pt; }
+    .standfirst { font-size: 10.5pt; }
+
+    h2, .group-head { break-after: avoid; }
+    .row, .note, .defect, .group, .tally, .wrap, tr { break-inside: avoid; }
+    section { break-inside: auto; }
+    thead { display: table-header-group; }
+
+    .defect { box-shadow: none; }
+    footer { break-inside: avoid; }
+}
+</style>
+
+<div class="page">
+
+    <header class="masthead">
+        <p class="eyebrow">Frontend audit · 5 September 2026</p>
+        <h1>What <em>design-os</em> specified,<br>and what the app actually ships</h1>
+        <p class="standfirst">
+            The <code style="font-family:var(--mono);font-size:12px">design-os/</code> folder names 30 routes across
+            Phase&nbsp;3's sitemap and blueprints 27 of them in Phase&nbsp;4, composed from Phase&nbsp;5's 70 reusable
+            sections. Every one of those routes was checked against the App Router tree and the section components that
+            render it. The headline: the portals overshoot the spec considerably, and the gaps concentrate in three
+            places — anything geographic, anything that moves a file, and the depth of the offer workflow.
+        </p>
+
+        <div class="tally">
+            <div class="t-full"><b>15</b><span>Built to spec</span></div>
+            <div class="t-part"><b>13</b><span>Built, modules short</span></div>
+            <div class="t-gone"><b>2</b><span>Never built</span></div>
+            <div class="t-plus"><b>8</b><span>Beyond spec</span></div>
+            <div><b>7</b><span>Linked, nonexistent</span></div>
+        </div>
+
+        <div class="key">
+            <span><i class="swatch sw-full"></i> Matches the blueprint</span>
+            <span><i class="swatch sw-part"></i> Route exists, named modules missing</span>
+            <span><i class="swatch sw-gone"></i> Specified, not implemented</span>
+            <span><i class="swatch sw-plus"></i> Implemented, not in design-os</span>
+        </div>
+    </header>
+
+    <section>
+        <h2>Ship-blocking first <span class="count">Two defects, not spec drift</span></h2>
+        <p class="lede">
+            These are not disagreements with the blueprint. They are links the app renders today that resolve to the 404
+            page.
+        </p>
+
+        <div class="defect">
+            <h3>Seven routes are linked from the site chrome but do not exist</h3>
+            <p>
+                The footer renders three link columns and the public header renders a primary nav; between them they
+                point at seven paths with no <code style="font-family:var(--mono);font-size:11px">page.tsx</code>.
+                <strong>/about</strong> and <strong>/contact</strong> sit in the primary navigation on every public
+                page. <strong>/privacy</strong> and <strong>/terms</strong> are additionally referenced from
+                <code style="font-family:var(--mono);font-size:11px">AUTH_ROUTES</code> in
+                <code style="font-family:var(--mono);font-size:11px">lib/constants.ts</code>, so the signup consent copy
+                links to them too. design-os names About, Help, Blog, Privacy and Terms as footer content in Section 48
+                but never blueprints them as pages — so the spec is complicit here, and the fix is a decision about
+                scope, not just a missing file.
+            </p>
+            <div class="chips">
+                <span class="chip">/about</span>
+                <span class="chip">/blog</span>
+                <span class="chip">/contact</span>
+                <span class="chip">/help</span>
+                <span class="chip">/privacy</span>
+                <span class="chip">/terms</span>
+                <span class="chip">/accessibility</span>
+                <span class="chip src">components/layout/footer.tsx</span>
+                <span class="chip src">lib/config/site-nav.ts</span>
+            </div>
+        </div>
+
+        <div class="defect" style="border-left-color: var(--brass)">
+            <h3>The Quick Actions panel is written, exported, and imported nowhere</h3>
+            <p>
+                <code style="font-family:var(--mono);font-size:11px">components/features/shared/quick-actions.tsx</code>
+                is dead code — no file imports it. It is also precisely the module design-os asks for three times: Page
+                8 module 5 (buyer dashboard "Quick Links"), Page 15 (agent dashboard "Quick links") and Page 20 module 7
+                (admin overview "Manage Users · Review Listings · Process Verifications · View Reports"). All three
+                pages currently render without it. One component, three unfilled slots.
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Route ledger <span class="count">30 specified · 36 page routes built</span></h2>
+        <p class="lede">
+            Grouped as the Phase&nbsp;3 sitemap groups them. The delta column names the specific Phase&nbsp;4 modules or
+            Phase&nbsp;5 sections that are absent — not a general impression.
+        </p>
+
+        <div class="group">
+            <div class="group-head">
+                <h3>Public browse</h3>
+                <p>0 to spec · 3 short · 1 missing</p>
+            </div>
+            <div class="rows">
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/<small>Page 1 · Home</small></div>
+                    <div class="delta">
+                        Hero search, featured grid, trust signals, latest sales and CTA banner all present. The
+                        spec's <strong>"How It Works — 4 steps: Search → View → Offer → Close"</strong> is answered by
+                        the Concierge scroll-narrative instead, which is a different idea rather than a missing one.
+                        Genuinely absent: the <strong>newsletter signup in the footer</strong> exists as a component
+                        but the "Latest Sales" module is specified as a <strong>map of recent closed listings</strong>
+                        and ships as a card row.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/search<small>Page 2 · Search Results</small></div>
+                    <div class="delta">
+                        Filters, result count, sort, grid, pagination and empty state all conform. Two deltas:
+                        module&nbsp;5 <strong>Map View toggle</strong> is not built — the view toggle switches Grid /
+                        List, not Grid / Map; and Section&nbsp;35 <strong>Price Slider</strong> ships as discrete
+                        option chips with facet counts.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/listing/[id]<small>Page 3 · Listing Detail</small></div>
+                    <div class="delta">
+                        Gallery, sticky price bar, key facts, description, comparables, agent card and sticky mobile CTA
+                        bar all conform, and the page adds JSON-LD and a lightbox beyond spec. Module&nbsp;5
+                        <strong>Neighborhood Section</strong> is the gap: Section&nbsp;10 asks for a map with
+                        school / transit / park / restaurant markers and a toggleable legend;
+                        <code>listing-neighborhood.tsx</code> renders a walk-score stat trio and a "detail released with
+                        the dossier" note.
+                    </div>
+                </div>
+
+                <div class="row r-gone">
+                    <div class="mark">✕</div>
+                    <div class="route"><s>/map</s><small>Page 4 · Map View</small></div>
+                    <div class="delta">
+                        <strong>Not implemented at any level.</strong> There is no route, and no mapping library of any
+                        kind in the dependency tree — no Google Maps, Mapbox, Leaflet or react-map-gl. This is the
+                        single largest spec-to-code gap, and it is why <code>/search</code> and the listing
+                        neighborhood section are also short: all three depend on the same unmade decision about a map
+                        provider.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group">
+            <div class="group-head">
+                <h3>Authentication</h3>
+                <p>1 to spec · 2 short · 1 missing</p>
+            </div>
+            <div class="rows">
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/signup<small>Page 5 · Sign Up</small></div>
+                    <div class="delta">
+                        Email, password, persona selection (Buyer / Agent / Seller) and social OAuth are all in place.
+                        Missing from the blueprint: the <strong>OTP verification step</strong> (six-digit code), the
+                        <strong>password strength meter</strong>, and <strong>Facebook</strong> — only Google and Apple
+                        marks are wired in <code>provider-marks.tsx</code>.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/login<small>Page 6 · Sign In</small></div>
+                    <div class="delta ok">
+                        Email, password, forgot-password link, social OAuth and the sign-up link all present.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/reset-password<small>Page 7 · Reset Password</small></div>
+                    <div class="delta">
+                        Implemented as a <strong>tokenised email-link flow</strong> (request → emailed link → set new
+                        password). The blueprint specifies <strong>OTP verification</strong> as the middle step. This is
+                        a defensible modern substitution rather than an omission, but it is a divergence the spec has
+                        not been updated to record.
+                    </div>
+                </div>
+
+                <div class="row r-gone">
+                    <div class="mark">✕</div>
+                    <div class="route"><s>/verify-email</s><small>Phase 3 sitemap</small></div>
+                    <div class="delta">
+                        Listed in the Phase&nbsp;3 sitemap under (AUTH) but never blueprinted in Phase&nbsp;4 and never
+                        built. No route, and no <code>verifyEmail</code> reference anywhere in the codebase. Consistent
+                        with signup having no OTP step — the whole email-verification path is unbuilt.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group">
+            <div class="group-head">
+                <h3>Buyer portal · /dashboard</h3>
+                <p>5 to spec · 2 short · 2 beyond</p>
+            </div>
+            <div class="rows">
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/dashboard<small>Page 8 · Overview</small></div>
+                    <div class="delta">
+                        Quick stats, recent activity feed and upcoming viewings conform, plus a Next Steps rail and an
+                        offer hero beyond spec. Modules&nbsp;4 and&nbsp;5 are absent from the page:
+                        <strong>New Alerts</strong> (triggered price alerts, new matches) and <strong>Quick
+                        Links</strong>. Alerts live on their own route instead of surfacing here.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/dashboard/saved<small>Page 9 · Saved Listings</small></div>
+                    <div class="delta">
+                        Filter bar, sort, remove-save and empty state all present. Rendered as a dense table rather than
+                        the spec's card grid — a deliberate call under the project's application-register density rule,
+                        not a shortfall.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/dashboard/offers<small>Page 10 · My Offers</small></div>
+                    <div class="delta ok">
+                        Status filter, offers table and a full detail route with timeline, counter panel, comparison
+                        columns and an agent message thread.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/dashboard/viewings<small>Page 11 · Viewings</small></div>
+                    <div class="delta ok">
+                        Month calendar in the rail, upcoming table, past ("walked") viewings, reschedule and cancel.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/dashboard/messages<small>Page 12 · Messages</small></div>
+                    <div class="delta">
+                        Conversation list, thread, typing indicator and composer all present. The composer is
+                        <strong>text-only</strong> — Section&nbsp;23's attach control and Section&nbsp;25's Document
+                        Share are both unbuilt, so no file ever moves through a conversation.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/dashboard/alerts<small>Page 13 · Alerts</small></div>
+                    <div class="delta ok">
+                        Per-type alert preferences with channel toggles, plus alert history.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/dashboard/settings<small>Page 14 · Settings</small></div>
+                    <div class="delta ok">
+                        Profile with photo upload, communication preferences, privacy controls, change password,
+                        download data and delete account.
+                    </div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/dashboard/interests<small>Not in design-os</small></div>
+                    <div class="delta">Enquiry / connection tracking between saving a listing and making an offer.</div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/dashboard/transactions<small>Not in design-os</small></div>
+                    <div class="delta">
+                        Escrow holds and settlements for the buyer, with a Stripe checkout and release-escrow flow. The
+                        spec gives transactions to admin only.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group">
+            <div class="group-head">
+                <h3>Agent portal · /agent</h3>
+                <p>3 to spec · 4 short · 4 beyond</p>
+            </div>
+            <div class="rows">
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/agent<small>Page 15 · Agent Dashboard</small></div>
+                    <div class="delta">
+                        Route renamed from the spec's <code>/agent/dashboard</code>. Pipeline overview, recent leads,
+                        upcoming showings, stage list and recent sales all present; the <strong>Quick links</strong>
+                        module is not.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/agent/listings<small>Page 16 · Listings</small></div>
+                    <div class="delta ok">
+                        Status filters, sortable table with views / saves / offers, bulk actions and selection, plus
+                        create and edit routes beyond spec.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/agent/leads<small>Page 17 · Leads</small></div>
+                    <div class="delta">
+                        Built, but on a <strong>different taxonomy</strong>. The spec calls for status New / Contacted /
+                        Qualified / Lost with hot / warm / cold scoring; <code>lib/config/lead-tones.ts</code> defines
+                        pending / accepted / declined with no scoring dimension. The message and call affordances the
+                        spec asks for are present.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/agent/pipeline<small>Page 18 · Pipeline</small></div>
+                    <div class="delta">
+                        The four CRM columns match the spec exactly (Leads → Offers → Pending → Closed) and a health
+                        panel is added. But the board is <strong>read-only</strong>: Section&nbsp;42's
+                        <strong>drag-to-change-status</strong> and the per-deal detail modal are not implemented, so a
+                        deal's stage cannot be advanced from this screen.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/agent/calendar<small>Page 19 · Calendar</small></div>
+                    <div class="delta">
+                        Month, week and day views, a mini-calendar and appointment type mix are all present. Missing:
+                        the <strong>Create event</strong> action and <strong>Google Calendar sync</strong>. The agent
+                        can read the schedule but not write to it here.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/agent/analytics<small>Phase 3 sitemap</small></div>
+                    <div class="delta ok">
+                        Named in the sitemap and the agent nav model; never blueprinted in Phase 4. Built with
+                        production hero, monthly table, quarter list and benchmark comparison.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/agent/settings<small>Phase 3 sitemap</small></div>
+                    <div class="delta ok">
+                        Named in the sitemap; never blueprinted. Built with profile strength, credentials, notification
+                        rules and security controls.
+                    </div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/agent/requests<small>Not in design-os</small></div>
+                    <div class="delta">Inbound viewing and offer requests awaiting the agent's response.</div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/agent/concierge<small>Not in design-os</small></div>
+                    <div class="delta">
+                        VIP client servicing — allocation, practice list, service rows. Its own nav group in
+                        <code>agent-nav.ts</code>; entirely absent from the spec's agent navigation model.
+                    </div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/agent/listings/new<small>Not in design-os</small></div>
+                    <div class="delta">
+                        Multi-panel listing composer (identity, media, lifecycle, extras). The spec names an "Upload
+                        Listing" button and a "Create Listing" dialog but never blueprints the form.
+                    </div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/agent/listings/[id]/edit<small>Not in design-os</small></div>
+                    <div class="delta">Same composer in edit mode, with a delete-confirmation modal.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group">
+            <div class="group-head">
+                <h3>Admin console · /admin</h3>
+                <p>6 to spec · 2 short · 1 beyond</p>
+            </div>
+            <div class="rows">
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/admin<small>Page 20 · Admin Overview</small></div>
+                    <div class="delta">
+                        Seven of eight modules present and several exceeded — volume stat grid, revenue panel, system
+                        alerts, revenue breakdown, moderation queue and system health, plus integration health and an
+                        audience mix beyond spec. Module&nbsp;7 <strong>Quick Actions</strong> is the one omission
+                        (see the defect above).
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/admin/listings<small>Page 21 · Moderation</small></div>
+                    <div class="delta ok">
+                        Filter pills with counts, sortable selectable table with totals footer, row-reveal detail panel,
+                        bulk action bar, and the Section 64 decision modal with its required-note gate.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/admin/users<small>Page 22 · User Management</small></div>
+                    <div class="delta ok">
+                        Full Section 65 table with role chips, tier colour, suspend / reactivate, bulk bar, plus a
+                        create-user modal and a per-user profile route beyond spec.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/admin/transactions<small>Page 23 · Transactions</small></div>
+                    <div class="delta ok">
+                        Summary stats, Section 66 ledger with commission chips and totals footer, milestone list and a
+                        deal review modal.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/admin/payments<small>Page 24 · Payments &amp; Revenue</small></div>
+                    <div class="delta ok">
+                        Revenue stats, monthly chart, breakdown, and payout processing with a stage table.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/admin/reports<small>Page 25 · Analytics &amp; Reports</small></div>
+                    <div class="delta ok">
+                        Headline stats, region performance with rank and share meters, user and tier breakdowns, and an
+                        export modal.
+                    </div>
+                </div>
+
+                <div class="row r-full">
+                    <div class="mark">●</div>
+                    <div class="route">/admin/verifications<small>Page 26 · Tier Verifications</small></div>
+                    <div class="delta ok">
+                        Section 67 queue with status-dependent actions, document list, review pane and decision modal.
+                    </div>
+                </div>
+
+                <div class="row r-part">
+                    <div class="mark">◐</div>
+                    <div class="route">/admin/settings<small>Page 27 · System Settings</small></div>
+                    <div class="delta">
+                        Platform and Marketplace panels carry nine of ten specified fields, the saved callout and reset
+                        both work, and an audit-log table is added beyond spec. Three gaps:
+                        <strong>Reporting Timezone</strong> is missing from the platform fields;
+                        <code>PolicySwitchId</code> defines only <strong>two of the eight</strong> specified toggles
+                        (<code>maintenance-mode</code>, <code>open-signups</code>) — the whole Moderation Policy group
+                        and half of Operations are unbuilt; and Section&nbsp;70's <strong>Maintenance Panel</strong> of
+                        destructive actions does not exist.
+                    </div>
+                </div>
+
+                <div class="row r-plus">
+                    <div class="mark">+</div>
+                    <div class="route">/admin/users/[id]<small>Not in design-os</small></div>
+                    <div class="delta">Per-user profile console with account list, suspension history and focus metrics.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Section-level gaps <span class="count">Phase 5 · 70 patterns</span></h2>
+        <p class="lede">
+            Patterns the blueprint specifies that no component in the tree fulfils, or fulfils only partly. These are
+            the reusable causes behind several of the route deltas above.
+        </p>
+
+        <div class="wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>§</th>
+                        <th>Pattern</th>
+                        <th>State</th>
+                        <th>What is there instead</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="sec">10</td>
+                        <td class="name">Neighborhood Map</td>
+                        <td><span class="pill p-gone">Absent</span></td>
+                        <td>A walk-score / days-on-market / saves stat trio and a schools note. No map, markers or legend.</td>
+                    </tr>
+                    <tr>
+                        <td class="sec">16</td>
+                        <td class="name">Offer Form</td>
+                        <td><span class="pill p-part">Partial</span></td>
+                        <td>
+                            Amount and free-text terms only. No move-in date picker, no contingency checkboxes
+                            (inspection / appraisal / financing), no earnest-money field, no review-summary step before
+                            submit.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sec">21</td>
+                        <td class="name">Inspection / Appraisal Tracker</td>
+                        <td><span class="pill p-gone">Absent</span></td>
+                        <td>
+                            An inspection window exists inside the escrow model, but the post-acceptance checklist of
+                            dated milestones with document upload never appears on offer detail.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sec">25</td>
+                        <td class="name">Document Share</td>
+                        <td><span class="pill p-gone">Absent</span></td>
+                        <td>No document card, viewer, download or share anywhere in messaging or offers.</td>
+                    </tr>
+                    <tr>
+                        <td class="sec">35</td>
+                        <td class="name">Price Slider</td>
+                        <td><span class="pill p-part">Substituted</span></td>
+                        <td>Discrete price-band chips with live facet counts. Arguably better for this catalogue; the spec has not been updated to say so.</td>
+                    </tr>
+                    <tr>
+                        <td class="sec">38</td>
+                        <td class="name">File Upload</td>
+                        <td><span class="pill p-part">Partial</span></td>
+                        <td>
+                            Two plain <code>&lt;input type="file"&gt;</code> controls (profile photo, listing media).
+                            No drag-drop zone, no upload progress bar, no stated type or size limits.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sec">42</td>
+                        <td class="name">Pipeline Card (drag)</td>
+                        <td><span class="pill p-part">Partial</span></td>
+                        <td>Cards render in stage columns but carry no drag handle and no drop targets.</td>
+                    </tr>
+                    <tr>
+                        <td class="sec">70</td>
+                        <td class="name">Maintenance Panel</td>
+                        <td><span class="pill p-gone">Absent</span></td>
+                        <td>Admin settings ends at the policy table; no separated destructive-action panel.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>Reading the ledger</h2>
+        <div class="notes">
+            <div class="note">
+                <div class="note-n">01</div>
+                <p>
+                    <b>The spec is now the smaller document.</b> design-os blueprints 27 pages from 70 sections; the app
+                    ships 36 page routes composed from 206 section components, 269 feature components, 47 primitives and
+                    33 patterns. In the admin console especially, the built screens exceed their blueprints in almost
+                    every module. Treating design-os as the authority would mean deleting good work — the honest read is
+                    that it has fallen behind the code and needs a Phase 4 revision, not that the code has drifted.
+                </p>
+            </div>
+            <div class="note">
+                <div class="note-n">02</div>
+                <p>
+                    <b>One unmade decision explains three gaps.</b> <code>/map</code>, the search Map toggle and the
+                    listing Neighborhood section are all blocked on the same thing: no map provider has been chosen or
+                    installed. Picking one closes a whole column of this ledger; leaving it open keeps the public
+                    surface permanently short of its blueprint.
+                </p>
+            </div>
+            <div class="note">
+                <div class="note-n">03</div>
+                <p>
+                    <b>Nothing in the app moves a file between two people.</b> No message attachment, no document share,
+                    no drag-drop upload, no document step on an accepted offer. For a marketplace whose spec has buyers
+                    and agents exchanging inspection reports and appraisals, this is a coherent functional hole rather
+                    than four unrelated misses.
+                </p>
+            </div>
+            <div class="note">
+                <div class="note-n">04</div>
+                <p>
+                    <b>Two screens read but cannot write.</b> The agent pipeline shows stages without letting an agent
+                    change one; the agent calendar shows a schedule without letting an agent add to it. Both are
+                    presentation-complete and interaction-incomplete, which is the failure mode most likely to be
+                    mistaken for "done".
+                </p>
+            </div>
+            <div class="note">
+                <div class="note-n">05</div>
+                <p>
+                    <b>Divergences worth ratifying, not fixing.</b> The saved-listings table over a card grid, price
+                    chips over a slider, token-link password reset over OTP, and the Concierge narrative over a
+                    four-step "How It Works" all look like considered decisions. They are only problems because the spec
+                    still says otherwise. Amending Phase 4 and 5 to record them would shrink this ledger by four rows
+                    without touching a line of code.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Remediation · 8 September 2026</h2>
+        <p class="lede">
+            The findings above stand as recorded on 5 September. This section reports what changed three days later,
+            when the &ldquo;built, modules short&rdquo; bucket was worked through. Nothing above has been edited.
+        </p>
+
+        <div class="tally">
+            <div class="t-full"><b>10</b><span>Routes closed</span></div>
+            <div class="t-part"><b>3</b><span>Still short</span></div>
+            <div class="t-plus"><b>4</b><span>Sections closed</span></div>
+            <div><b>2</b><span>Ratified, not built</span></div>
+        </div>
+
+        <h3>Closed</h3>
+        <p>
+            <code>/dashboard</code> gained modules&nbsp;4 and&nbsp;5 &mdash; New Alerts, banded from PRICE_DROP and
+            NEW_LISTING notifications, and Quick Links. <code>/agent</code> and <code>/admin</code> gained their quick-link
+            panels; the orphaned <code>quick-actions.tsx</code> was replaced by a shared
+            <code>quick-action-list</code> consumed by all three, so the dead-code defect above is closed with one
+            component rather than three.
+        </p>
+        <p>
+            <code>/admin/settings</code> gained the Reporting Timezone field, the remaining six policy toggles across the
+            spec&rsquo;s two groups &mdash; Moderation Policy and Operations, eight in total &mdash; and the Section&nbsp;70
+            Maintenance Panel, whose two actions are backed by new endpoints rather than stubs. The Reach column, whose
+            header had no cell and whose <code>PolicyReachMeter</code> was a second orphan, now renders.
+        </p>
+        <p>
+            <code>/agent/calendar</code> can write: Create event proposes viewing times against an existing connection
+            through the endpoint that already existed. <code>/agent/pipeline</code> is no longer read-only &mdash; cards
+            drag, and a per-deal detail modal opens. <code>/agent/leads</code> gained the missing scoring dimension.
+            <code>/signup</code> gained the password strength meter and the Facebook mark.
+        </p>
+        <p>
+            Files now move between people. Section&nbsp;38 shipped as a real <code>FileUpload</code> primitive with a
+            drop zone, keyboard operation, stated type and size limits and a progress bar fed by actual upload progress;
+            both former <code>&lt;input type="file"&gt;</code> controls were retrofitted onto it. Section&nbsp;23 put an
+            attach control on the composer, and Section&nbsp;25 shipped as document cards in the thread, a Shared
+            Documents panel in the context rail, and attachments on offer detail. A <code>MessageAttachment</code> model
+            and a <code>POST /messages/:id/attachments</code> route carry it, over the Cloudinary document upload that
+            was already built and unreachable.
+        </p>
+
+        <h3>The map column, closed</h3>
+        <p>
+            Note&nbsp;02 above needs one correction: a provider was never the only blocker.
+            <code>Property.latitude</code> and <code>longitude</code> were nullable, never seeded and never mapped onto
+            <code>Listing</code>, so picking a provider first would have rendered an empty basemap. Coordinates came
+            first &mdash; a locality centre table with deterministic per-property placement, a scoped backfill,
+            <code>Listing</code> widened, and a bounding-box filter on property search &mdash; and only then the
+            library.
+        </p>
+        <p>
+            MapLibre GL with keyless OpenFreeMap tiles now renders <code>/map</code> (Page&nbsp;4, with the filter rail,
+            pin peek card and legend), the Map option on the search view toggle, a placed map on listing detail, and a
+            sales map on the home page beside the existing card row. <b>ADR&nbsp;0015</b> records the ordering and the
+            provider choice.
+        </p>
+
+        <h3>Section-level gaps, closed</h3>
+        <p>
+            <b>Section&nbsp;16 · Offer Form</b> now captures the four things it was short of. Move-in date,
+            earnest money and the three contingencies are structured columns on <code>Offer</code> rather than
+            sentences inside the terms field, and submitting routes through a review step that shows the buyer
+            exactly what the listing office will see. The free-text field remains as &ldquo;Additional notes&rdquo;,
+            which is what it had really been all along.
+        </p>
+        <p>
+            <b>Section&nbsp;21 · Inspection / Appraisal Tracker</b> exists. Four <code>DealMilestone</code> rows —
+            inspection, appraisal, financing, closing — are seeded automatically when an offer is accepted, and the
+            checklist on offer detail carries a date control, a status badge, a completion toggle and a document
+            attachment per row. A contingency the buyer declined is seeded as waived rather than hidden, so the list
+            always reads as four deliberate decisions. Overdue is derived from a passed due date, so nothing has to
+            run on a schedule for it to stay accurate.
+        </p>
+        <p>
+            That leaves Section&nbsp;10&rsquo;s POI markers as the only entry in the section-level table still open,
+            for want of a dataset rather than a decision.
+        </p>
+
+        <h3>Ship-blockers, closed</h3>
+        <p>
+            Both defects at the head of this ledger are resolved. The Quick Actions panel is no longer dead code &mdash;
+            it was replaced by a shared list that all three overview rails consume. And the seven linked-but-nonexistent
+            routes now exist: <code>/about</code>, <code>/blog</code>, <code>/contact</code>, <code>/help</code>,
+            <code>/privacy</code>, <code>/terms</code> and <code>/accessibility</code>. Nothing in the public header or
+            the footer resolves to a 404.
+        </p>
+        <p>
+            The audit was right that design-os is complicit here: Section&nbsp;48 names these as footer link text and
+            Phase&nbsp;4 never blueprints them, so there was no spec to build against. The pages are written from what
+            the platform actually does &mdash; the privacy page names the real processors and the real retention
+            behaviour, the accessibility page states the pipeline drag&rsquo;s keyboard gap instead of claiming
+            conformance it does not have, and <code>/blog</code> ships as a real index with no entries rather than
+            invented ones. <b>The two legal pages describe system behaviour accurately but have not had legal
+            review.</b>
+        </p>
+
+        <h3>Still short</h3>
+        <p>
+            Section&nbsp;10&rsquo;s school, transit, park and restaurant markers and their toggleable legend are the one
+            piece of the map work still owed. They need a POI dataset the platform does not have, and placing invented
+            school pins on a listing would be the same fabrication the coordinate work was careful to avoid.
+        </p>
+        <p>
+            Signup OTP, <code>/verify-email</code>, working OAuth for any provider, and Google Calendar sync remain
+            outstanding and are listed with their blockers in
+            <code>design-os/INDEX/RATIFIED_DIVERGENCES.md</code>.
+        </p>
+
+        <h3>Ratified rather than built</h3>
+        <p>
+            Note&nbsp;05 proposed amending Phase&nbsp;4 and&nbsp;5 to record the considered divergences. That was done
+            the other way round: the phase documents were left untouched, and
+            <code>design-os/INDEX/RATIFIED_DIVERGENCES.md</code> now reconciles spec against code in one place. The lead
+            status taxonomy joined that list &mdash; <code>pending/accepted/declined</code> stays, because the spec&rsquo;s
+            four states cannot be populated from any existing signal and the enum is load-bearing in
+            <code>common/access.ts</code>. The hot/warm/cold dimension the same row asked for was added instead, derived
+            on read from offers, viewings, unread messages and contact recency. <b>ADR&nbsp;0016</b> records it.
+        </p>
+    </section>
+
+    <footer>
+        <span>30 specified routes · 36 built</span>
+        <span>15 conform · 13 short · 2 unbuilt</span>
+        <span>8 beyond spec · 7 dead links</span>
+        <span>Sources: phase-3 · phase-4 · phase-5</span>
+        <span>Remediated 8–9 Sep 2026 · 7 of 8 section gaps closed</span>
+    </footer>
+
+</div>
+</body>
+</html>

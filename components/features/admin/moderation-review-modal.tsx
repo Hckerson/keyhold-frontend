@@ -57,8 +57,7 @@ export function ModerationReviewModal({
                     <ModalFooter className="gap-2 p-4">
                         <Button
                             type="button"
-                            variant="ghost"
-                            size="sm"
+                            emphasis="quiet"
                             onClick={onClose}
                         >
                             {CLOSE_ACTION}
@@ -66,8 +65,7 @@ export function ModerationReviewModal({
                         {listing.status !== "rejected" && (
                             <Button
                                 type="button"
-                                variant="outline-danger"
-                                size="sm"
+                                tone="error"
                                 onClick={() => onDecide("reject", listing.id)}
                             >
                                 {REJECT_ACTION}
@@ -75,8 +73,6 @@ export function ModerationReviewModal({
                         )}
                         <Button
                             type="button"
-                            variant="secondary"
-                            size="sm"
                             onClick={() => onDecide("changes", listing.id)}
                         >
                             {CHANGES_ACTION}
@@ -84,8 +80,8 @@ export function ModerationReviewModal({
                         {listing.status !== "approved" && (
                             <Button
                                 type="button"
-                                variant="primary"
-                                size="sm"
+                                emphasis="solid"
+                                tone="accent"
                                 onClick={() => onApprove(listing.id)}
                             >
                                 {APPROVE_ACTION}

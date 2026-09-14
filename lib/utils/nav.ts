@@ -1,25 +1,23 @@
 import type { NavRoute, SidebarSection, TrailCrumb } from "@/lib/types";
 
-export const routesFrom = (sections: SidebarSection[]): NavRoute[] =>
-    sections
-        .flatMap((section) => section.items)
-        .flatMap((item) =>
-            item.href === undefined
-                ? []
-                : [
-                      {
-                          label: item.label,
-                          href: item.href,
-                          icon: item.icon,
-                          badge:
-                              typeof item.badge === "number"
-                                  ? item.badge
-                                  : undefined,
-                      },
-                  ],
-        );
+export const routesFrom = (sections: SidebarSection[]): NavRoute[] => {
+    const byHref = new Map<string, NavRoute>();
 
-const holds = (href: string, pathname: string) =>
+    for (const item of sections.flatMap((section) => section.items)) {
+        if (item.href === undefined) continue;
+
+        byHref.set(item.href, {
+            label: item.label,
+            href: item.href,
+            icon: item.icon,
+            badge: typeof item.badge === "number" ? item.badge : undefined,
+        });
+    }
+
+    return [...byHref.values()];
+};
+
+export const holdsRoute = (href: string, pathname: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
 export interface TrailInput {
@@ -37,7 +35,8 @@ export const trailFor = ({
 }: TrailInput): TrailCrumb[] => {
     const branch = routes
         .filter(
-            (route) => route.href !== rootHref && holds(route.href, pathname),
+            (route) =>
+                route.href !== rootHref && holdsRoute(route.href, pathname),
         )
         .sort((a, b) => b.href.length - a.href.length)[0];
 

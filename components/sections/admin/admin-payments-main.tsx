@@ -25,6 +25,7 @@ export interface AdminPaymentsMainProps {
     metrics: MetricItem[];
     pending?: boolean;
     onStateFilterChange: (filter: PayoutStateFilter) => void;
+    onSettle: (payout: Payout) => void;
 }
 
 export function AdminPaymentsMain({
@@ -36,6 +37,7 @@ export function AdminPaymentsMain({
     metrics,
     pending,
     onStateFilterChange,
+    onSettle,
 }: AdminPaymentsMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
@@ -59,7 +61,10 @@ export function AdminPaymentsMain({
                 <PresenceSwap swapKey={payouts.length > 0 ? "rows" : "empty"}>
                     {payouts.length > 0 ? (
                         <PanelInset scroll>
-                            <PayoutTable payouts={payouts} />
+                            <PayoutTable
+                                payouts={payouts}
+                                onSettle={onSettle}
+                            />
                         </PanelInset>
                     ) : (
                         <EmptyState

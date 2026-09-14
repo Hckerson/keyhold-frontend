@@ -125,6 +125,18 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The moderation service is unreachable right now. Try again in a moment.",
     },
+    adminFlags: {
+        panel: "Reports",
+        title: "We could not load the reports queue",
+        description:
+            "The moderation service is unreachable right now. Try again in a moment.",
+    },
+    adminDisputes: {
+        panel: "Disputes",
+        title: "We could not load the dispute queue",
+        description:
+            "The dispute service is unreachable right now. Try again in a moment.",
+    },
     adminVerifications: {
         panel: "Verifications",
         title: "We could not load the verification queue",

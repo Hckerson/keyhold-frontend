@@ -3,6 +3,7 @@ import { HousePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export function ListingUnavailable() {
     return (
@@ -14,16 +15,14 @@ export function ListingUnavailable() {
                     description="It may have sold, been withdrawn, or the link may be out of date. The rest of the collection is still open to you."
                     action={
                         <div className="flex flex-wrap items-center justify-center gap-2">
-                            <Link href="/search">
-                                <Button variant="primary" size="sm">
+                            <Button asChild emphasis="solid" tone="accent">
+                                <Link href={PUBLIC_ROUTES.search}>
                                     Browse listings
-                                </Button>
-                            </Link>
-                            <Link href="/contact">
-                                <Button variant="secondary" size="sm">
-                                    Speak to an advisor
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
+                            <Button asChild>
+                                <Link href="/contact">Speak to an advisor</Link>
+                            </Button>
                         </div>
                     }
                 />

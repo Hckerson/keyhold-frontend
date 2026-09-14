@@ -46,6 +46,9 @@ export function DashboardSettingsConsole() {
                     documents={settings.documents.length}
                     updatedAt={settings.user?.updatedAt}
                     avatar={settings.user?.avatar ?? undefined}
+                    photoUploading={settings.photoUploading}
+                    photoProgress={settings.photoProgress}
+                    onPhotoUpload={settings.uploadPhoto}
                     onFieldChange={settings.changeField}
                     onToggleEnabled={settings.switchEnabled}
                     onToggleChannel={settings.switchChannel}

@@ -14,6 +14,6 @@ export const DEV_PASSWORD =
 
 export const DEV_ACCOUNTS: readonly DevAccount[] = [
     { label: "Admin", role: "ADMIN", email: "admin@example.com" },
-    { label: "Agent", role: "SELLER", email: "sarah@luxuryre.com" },
+    { label: "Agent", role: "SELLER", email: "sarah@keyhol.me" },
     { label: "Buyer", role: "BUYER", email: "buyer@example.com" },
 ];

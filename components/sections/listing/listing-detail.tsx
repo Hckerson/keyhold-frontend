@@ -12,6 +12,7 @@ import { ListingNeighborhood } from "@/components/sections/listing/listing-neigh
 import { ListingComparables } from "@/components/sections/listing/listing-comparables";
 import { ListingEnquiryCard } from "@/components/sections/listing/listing-enquiry-card";
 import { ListingAgentCard } from "@/components/sections/listing/listing-agent-card";
+import { ReportTrigger } from "@/components/features/shared/report-trigger";
 import { ListingActionBar } from "@/components/sections/listing/listing-action-bar";
 import {
     PROPERTY_STATUS_LABELS,
@@ -126,7 +127,10 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                         </section>
                     </div>
 
-                    <aside id="agent" className="flex flex-col gap-4">
+                    <aside
+                        id="agent"
+                        className="detail-rail flex flex-col gap-4"
+                    >
                         <ListingEnquiryCard
                             propertyId={listing.id}
                             address={listing.address}
@@ -134,6 +138,22 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                             responseTime={listing.agent.responseTime}
                         />
                         <ListingAgentCard agent={listing.agent} />
+
+                        <ReportTrigger
+                            className="self-start"
+                            targets={[
+                                {
+                                    type: "PROPERTY",
+                                    id: listing.id,
+                                    label: `This listing — ${listing.title}`,
+                                },
+                                {
+                                    type: "USER",
+                                    id: listing.agent.id,
+                                    label: `The agent — ${listing.agent.name}`,
+                                },
+                            ]}
+                        />
                     </aside>
                 </div>
             </Container>

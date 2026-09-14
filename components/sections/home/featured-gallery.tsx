@@ -6,6 +6,7 @@ import {
     GalleryTile,
     type GalleryTileData,
 } from "@/components/sections/home/gallery-tile";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 interface FeaturedGalleryProps {
     tiles: GalleryTileData[];
@@ -21,7 +22,7 @@ export function FeaturedGallery({ tiles }: FeaturedGalleryProps) {
                         title="Curated selections"
                     />
                     <Link
-                        href="/search"
+                        href={PUBLIC_ROUTES.search}
                         className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth group inline-flex shrink-0 items-center gap-1.5 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                     >
                         View all

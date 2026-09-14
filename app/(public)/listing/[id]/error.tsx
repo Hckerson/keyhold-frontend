@@ -5,6 +5,7 @@ import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 
 export default function ListingError({ reset }: { reset: () => void }) {
     return (
@@ -16,14 +17,18 @@ export default function ListingError({ reset }: { reset: () => void }) {
                     description="The dossier failed to load. Try again, or speak to an advisor who can send the details across directly."
                     action={
                         <div className="flex flex-wrap items-center justify-center gap-2">
-                            <Button variant="primary" size="sm" onClick={reset}>
+                            <Button
+                                emphasis="solid"
+                                tone="accent"
+                                onClick={reset}
+                            >
                                 Try again
                             </Button>
-                            <Link href="/search">
-                                <Button variant="secondary" size="sm">
+                            <Button asChild>
+                                <Link href={PUBLIC_ROUTES.search}>
                                     Back to search
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                         </div>
                     }
                 />

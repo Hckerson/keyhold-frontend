@@ -2,6 +2,8 @@ import { CalendarDays, CheckCircle2, Clock, Flame, Users } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { parseLocalDate } from "@/lib/utils";
 import type { RescheduleDraft } from "@/lib/types";
+import type { SelectOption } from "@/components/ui/forms/select";
+import type { ConnectionListItem } from "@/lib/validations/connection-list";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     APPOINTMENT_TYPES,
@@ -239,3 +241,25 @@ export const calendarLoadStats = (items: Appointment[]): StatDatum[] => {
         },
     ];
 };
+
+export const toClientOptions = (
+    connections: ConnectionListItem[],
+): SelectOption<string>[] =>
+    connections.map((connection) => ({
+        value: connection.id,
+        label: `${connection.buyer.fullName} · ${connection.property.address}`,
+    }));
+
+export const CREATE_EVENT_COPY = {
+    title: "Schedule a viewing",
+    hint: "The client is notified and confirms one of the times you propose.",
+    client: "Client and property",
+    date: "Date",
+    slots: "Times to propose",
+    mode: "Format",
+    cancel: "Not now",
+    confirm: "Propose times",
+    empty: "You have no active enquiries to schedule against.",
+    failed: "That viewing did not reach the client.",
+    retry: "Check the details and try once more.",
+} as const;

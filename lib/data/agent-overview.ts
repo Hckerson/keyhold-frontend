@@ -5,12 +5,11 @@ import {
     FileSignature,
     UserPlus,
     CalendarPlus,
-    type LucideIcon,
 } from "lucide-react";
 import { format, isToday, isTomorrow } from "date-fns";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { ActivityEntry } from "@/lib/types";
+import type { ActivityEntry, QuickAction } from "@/lib/types";
 import type { Lead, LeadStage } from "@/lib/types/lead";
 import { formatAge, formatCompactUsd } from "@/lib/utils";
 import { daysBetween, minutesSince } from "@/lib/utils/elapsed";
@@ -65,20 +64,12 @@ export interface UpcomingShowing {
 export interface RecentLead {
     id: string;
     name: string;
-    budget: number;
+    listingPrice: number;
     stage: LeadStage;
     received: string;
 }
 
-export interface AgentQuickAction {
-    id: string;
-    label: string;
-    href: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const quickActions: AgentQuickAction[] = [
+export const agentQuickActions: QuickAction[] = [
     {
         id: "list-property",
         label: "List a property",
@@ -273,7 +264,7 @@ export const recentLeadsFrom = (leads: Lead[]): RecentLead[] =>
     leads.slice(0, RECENT_LIMIT).map((lead) => ({
         id: lead.id,
         name: lead.name,
-        budget: lead.budget,
+        listingPrice: lead.listingPrice,
         stage: lead.stage,
         received: lead.lastContact,
     }));

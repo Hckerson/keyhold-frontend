@@ -29,6 +29,19 @@ export const PROPERTY_SORTS = [
 
 export const CONNECTION_STATUSES = ["PENDING", "ACCEPTED", "REJECTED"] as const;
 
+export const CONTACT_CHANNELS = ["EMAIL", "SMS", "CALL"] as const;
+
+export const CONTACT_DIRECTIONS = ["OUTBOUND", "INBOUND"] as const;
+
+export const CONTACT_STATUSES = [
+    "QUEUED",
+    "SENT",
+    "RINGING",
+    "COMPLETED",
+    "NO_ANSWER",
+    "FAILED",
+] as const;
+
 export const VIEWING_MODES = ["IN_PERSON", "VIRTUAL", "OPEN_HOUSE"] as const;
 
 export const VIEWING_STATUSES = [
@@ -61,12 +74,16 @@ export const USER_ACCOUNT_STATUSES = [
     "ACTIVE",
     "PENDING",
     "SUSPENDED",
+    "DELETED",
 ] as const;
 
 export type PropertyType = (typeof PROPERTY_TYPES)[number];
 export type PropertyStatus = (typeof PROPERTY_STATUSES)[number];
 export type PropertySort = (typeof PROPERTY_SORTS)[number];
 export type ConnectionStatus = (typeof CONNECTION_STATUSES)[number];
+export type ContactChannel = (typeof CONTACT_CHANNELS)[number];
+export type ContactDirection = (typeof CONTACT_DIRECTIONS)[number];
+export type ContactStatus = (typeof CONTACT_STATUSES)[number];
 export type ViewingStatus = (typeof VIEWING_STATUSES)[number];
 export type ViewingMode = (typeof VIEWING_MODES)[number];
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
@@ -158,6 +175,22 @@ export const ESCROW_STATUSES = [
     "DISPUTED",
 ] as const;
 
+export const CONTINGENCIES = ["INSPECTION", "APPRAISAL", "FINANCING"] as const;
+
+export const MILESTONE_KINDS = [
+    "INSPECTION",
+    "APPRAISAL",
+    "FINANCING",
+    "CLOSING",
+] as const;
+
+export const MILESTONE_STATUSES = [
+    "PENDING",
+    "SCHEDULED",
+    "COMPLETED",
+    "WAIVED",
+] as const;
+
 export const NOTIFICATION_TYPES = [
     "PRICE_DROP",
     "NEW_LISTING",
@@ -196,6 +229,9 @@ export const AUDIT_ACTION_TYPES = [
     "DISPUTE_RESOLVED",
     "LOGIN",
     "LOGOUT",
+    "LOGIN_SUCCEEDED",
+    "LOGIN_FAILED",
+    "PERMISSION_DENIED",
 ] as const;
 
 export const MODERATION_DECISIONS = ["approve", "changes", "reject"] as const;
@@ -206,6 +242,9 @@ export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
 export type DisputeStatus = (typeof DISPUTE_STATUSES)[number];
 export type DisputeEvidenceType = (typeof DISPUTE_EVIDENCE_TYPES)[number];
 export type EscrowStatus = (typeof ESCROW_STATUSES)[number];
+export type Contingency = (typeof CONTINGENCIES)[number];
+export type MilestoneKind = (typeof MILESTONE_KINDS)[number];
+export type MilestoneStatus = (typeof MILESTONE_STATUSES)[number];
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
 export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number];
 export type SettingCategory = (typeof SETTING_CATEGORIES)[number];

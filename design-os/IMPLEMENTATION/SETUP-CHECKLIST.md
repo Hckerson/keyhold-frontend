@@ -1,92 +1,51 @@
 # Setup Checklist — Luxury Real Estate Platform
 
-**Files Created. Ready to Build. Follow This Checklist.**
+**How the styling foundation is wired, and the conventions that go with it.**
+
+`.claude/CLAUDE.md` at the repo root is the binding specification. This document explains the token and styling layer it assumes.
 
 ---
 
-## Code Files Already Created ✅
-
-These are in your project folder now:
+## The Styling Foundation
 
 ```
-✅ styles/tokens.css
-   └─ All CSS variables (colors, typography, spacing, motion)
-   └─ Dark mode primary
-   └─ Drop into your layout and it works
+styles/tokens.css
+   └─ All CSS custom properties: --colors-*, --fonts-*, --font-sizes-*,
+      --spacing-*, --durations-*, --timing-functions-*, --radii-*, --shadows-*
+   └─ Light theme (warm ivory ground, pine accent, brass highlight)
+   └─ Single source of truth for every design decision
 
-✅ lib/tokens.ts
-   └─ TypeScript exports of all token values
-   └─ Use when CSS variables aren't available
-   └─ Example: motion config, component libraries
+styles/globals.css
+   └─ @import "tailwindcss" + "tw-animate-css" + "./tokens.css"
+   └─ @theme block maps plural tokens onto Tailwind v4 theme names
+      (--colors-accent → --color-accent, --font-sizes-h1 → --text-h1, …)
+   └─ Named scale classes: .pad, .pad-x, .pad-y, .gap, .gap-x, .gap-y,
+      .smooth, .micro-label, .rail-label
+   └─ Layout primitives: .console-split, .stat-band, .card-grid,
+      .metric-strip, .stat-grid, .tile-quad, .table-flush
 
-✅ tailwind.config.ts
-   └─ Tailwind configured with luxury tokens
-   └─ Colors, typography, spacing, shadows, all set up
-   └─ Just import and use
-
-✅ components/ui/button.tsx
-   └─ Example component showing luxury styling
-   └─ Uses CVA for variants (primary, secondary, ghost, danger)
-   └─ Shows pattern to follow for other components
-
-✅ styles/globals.css (to be merged with existing)
-   └─ Base styles, typography resets, form elements
-   └─ Import tokens.css at the top
+public/fonts/font.ts
+   └─ next/font/google: Fraunces (display), Libre Franklin (body),
+      JetBrains Mono (mono) → --nf-display, --nf-body, --nf-mono
 ```
+
+**There is no `tailwind.config.ts`.** Tailwind v4 is configured entirely through the `@theme` block in `globals.css`, wired via `@tailwindcss/postcss` in `postcss.config.mjs`.
+
+**There is no `lib/tokens.ts`.** Motion values that JavaScript needs live in `lib/config/motion.ts`.
 
 ---
 
-## Next Steps (For Your Next Session)
+## Root Layout
 
-### Step 1: Import Token Files into Layout
-
-In your `app/layout.tsx`:
+`app/layout.tsx` imports the stylesheet and the font variables:
 
 ```tsx
-import "@/styles/tokens.css";
-import "@/styles/globals.css";
-import "@/styles/animations.css"; // (create this)
-
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    return (
-        <html lang="en">
-            <body className="bg-primary text-text">{children}</body>
-        </html>
-    );
-}
+import "../styles/globals.css";
+import Provider from "@/components/providers/provider";
+import { display, sans, mono } from "@/public/fonts/font";
 ```
 
-### Step 2: Verify Tailwind Config
-
-Your `tailwind.config.ts` now has:
-
-- ✅ Luxury colors (charcoal, orange, grays)
-- ✅ Font families (Merriweather, Space Grotesk, JetBrains Mono)
-- ✅ Spacing scale (8px base unit)
-- ✅ Motion tokens (fast, normal, slow)
-- ✅ Dark mode (media-based)
-
-### Step 3: Test with Example Component
-
-```tsx
-import { Button } from "@/components/ui/button";
-
-export default function Home() {
-    return (
-        <div>
-            <h1>Luxury Real Estate</h1>
-            <Button variant="primary">Get Started</Button>
-            <Button variant="secondary">Learn More</Button>
-        </div>
-    );
-}
-```
-
-Result: You'll see burnt orange button on dark charcoal background ✓
+`Provider` composes the Query, session and motion providers. Nothing else wraps the tree at the root.
 
 ---
 
@@ -94,14 +53,14 @@ Result: You'll see burnt orange button on dark charcoal background ✓
 
 When building each page, reference:
 
-| Page Type      | Reference File                                                                     |
-| -------------- | ---------------------------------------------------------------------------------- |
-| Home / Hero    | phase-4-page-blueprints.md (Page 1) + phase-5-section-blueprints.md (Sections 1-5) |
-| Search Results | phase-4-page-blueprints.md (Page 2) + phase-5 (Sections 6-9)                       |
-| Listing Detail | phase-4-page-blueprints.md (Page 3) + phase-5 (Sections 10-15)                     |
-| Dashboards     | phase-4-page-blueprints.md (Pages 8-21)                                            |
-| Components     | phase-6-component-library.md (all 78 components)                                   |
-| Tokens         | phase-7-design-tokens.md + LUXURY-VISUAL-DIRECTION.md                              |
+| Page Type      | Reference File                                                                                        |
+| -------------- | ----------------------------------------------------------------------------------------------------- |
+| Home / Hero    | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 1) + `../CORE-PHASES/phase-5-section-blueprints.md` |
+| Search Results | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 2) + phase-5 (listing sections)                     |
+| Listing Detail | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 3) + phase-5 (listing sections)                     |
+| Dashboards     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 8-27)                                              |
+| Components     | `../CORE-PHASES/phase-6-component-library.md` (all 80 components)                                     |
+| Tokens         | `../CORE-PHASES/phase-7-design-tokens.md`                                                             |
 
 ---
 
@@ -109,75 +68,72 @@ When building each page, reference:
 
 ### Colors (CSS)
 
+Custom properties in `tokens.css` use the **plural** prefix:
+
 ```css
-/* Use CSS variables in your CSS */
-.button {
-    background-color: var(--color-accent); /* #ff7a3d */
-    color: var(--color-text); /* #f5f7f9 */
-    border: 1px solid var(--color-border); /* #3f4556 */
+.panel {
+    background-color: var(--colors-background);
+    color: var(--colors-text);
+    border: 1px solid var(--colors-border);
 }
 
-.button:hover {
-    background-color: var(--color-accent-dark); /* #e66a2d */
+.panel__cta {
+    background-color: var(--colors-accent); /* pine #1f4e3d */
+}
+
+.panel__cta:hover {
+    background-color: var(--colors-accent-dark);
 }
 ```
 
 ### Colors (Tailwind)
 
+Tailwind class names use the **singular** theme names produced by `@theme`:
+
 ```tsx
-// Use Tailwind class names
-<div className="border-border bg-primary text-text border">
-    <button className="bg-accent text-primary hover:bg-accent-dark">
-        Click me
+<div className="bg-background text-text border-border border">
+    <button className="bg-accent text-text-inverse hover:bg-accent-dark">
+        Request a viewing
     </button>
 </div>
 ```
 
-### Typography (CSS)
+### Typography
 
-```css
-h1 {
-    font-family: var(--font-display);
-    font-size: var(--text-h1);
-    font-weight: var(--text-h1-weight);
-    line-height: var(--text-h1-line);
-}
+```tsx
+<h1 className="font-display text-h1">Estate</h1>
+<p className="text-sm text-text-secondary">Supporting copy</p>
+<span className="micro-label">Reference</span>
 ```
+
+Non-focal text sits at the smallest exposed size token. One focal value per card — differentiate by weight, color and case, never by size.
 
 ### Motion (JavaScript)
 
 ```tsx
-import { tokens } from "@/lib/tokens";
+import { NORMAL, EASE_SMOOTH } from "@/lib/config/motion";
 
 const variants = {
     hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            duration: parseFloat(tokens.motion.normal),
-            ease: tokens.motion.easing.out,
-        },
-    },
+    visible: { opacity: 1, transition: NORMAL },
 };
 ```
 
-### Spacing (Tailwind)
+The library is `motion` (`motion/react`), not `framer-motion`.
+
+### Spacing
 
 ```tsx
-// Tailwind classes use luxury spacing scale
-<div className="px-md py-lg gap-md">
-  <div className="mb-4">Content</div>
+<div className="pad gap">
+    <div className="pad-y">Content</div>
 </div>
-
-// Also available as CSS variables
-<div style={{padding: `var(--pad-lg)`, gap: `var(--gap-md)`}}>
 ```
+
+Named scale classes come first. Inline responsive utility chains are forbidden.
 
 ---
 
 ## Component Building Pattern
-
-When you build a component, follow this pattern:
 
 ```tsx
 // components/ui/my-component.tsx
@@ -186,22 +142,21 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const componentVariants = cva(
-    // base styles (always applied)
-    "flex items-center transition-all duration-200 ease-out",
+    "ease-smooth flex items-center transition-colors duration-200",
     {
         variants: {
-            variant: {
-                primary: "bg-accent text-primary hover:bg-accent-dark",
-                secondary: "bg-transparent border border-border text-text",
+            emphasis: {
+                solid: "bg-accent text-text-inverse hover:bg-accent-dark",
+                outline: "bg-background border-border border text-text",
             },
             size: {
-                sm: "px-4 py-2 text-sm",
-                md: "px-6 py-3 text-base",
+                sm: "h-8 px-3 text-xs",
+                lg: "h-11 px-5 text-sm",
             },
         },
         defaultVariants: {
-            variant: "primary",
-            size: "md",
+            emphasis: "solid",
+            size: "sm",
         },
     },
 );
@@ -213,109 +168,79 @@ export interface MyComponentProps
 
 export function MyComponent({
     className,
-    variant,
+    emphasis,
     size,
     ...props
 }: MyComponentProps) {
     return (
         <div
-            className={cn(componentVariants({ variant, size, className }))}
+            className={cn(componentVariants({ emphasis, size, className }))}
             {...props}
         />
     );
 }
 ```
 
-**Key Pattern:**
+**Key pattern:**
 
-1. Use CVA for variants (class-variance-authority)
-2. All colors/spacing via tokens (CSS classes, not hardcoded)
-3. Dark mode ready (tokens already include dark mode)
-4. Fully typed with TypeScript
-
----
-
-## Files You Still Need
-
-Create these in next session when building:
-
-```
-styles/animations.css
-  └─ @keyframes for entrance, exit, loading animations
-  └─ Motion tokens apply timing + easing
-
-lib/utils.ts (if not exists)
-  └─ Helper functions: cn() (class merge), format dates, etc.
-
-lib/constants.ts
-  └─ All hardcoded values: API endpoints, limits, durations
-  └─ NEVER hardcode in components
-
-components/providers/
-  └─ Providers for Auth, Query, Theme, Motion
-  └─ Wrap RootLayout with these
-```
+1. CVA for variants; `compoundVariants` when emphasis and tone interact (see `components/ui/button.tsx`)
+2. All colors and spacing via tokens — never hardcoded values
+3. `cn` from `@/lib/utils` merges classes
+4. Fully typed; no `any`
+5. One component per file, kebab-case filename matching the export
 
 ---
 
-## Testing the Setup
-
-Run this after you set up:
+## Running It
 
 ```bash
-# Should work without errors
-npm run dev
-
-# Check styles loaded
-open http://localhost:3000
-
-# You should see:
-# ✅ Dark charcoal background (#0a0e27)
-# ✅ Off-white text (#f5f7f9)
-# ✅ Thin fonts (Merriweather, Space Grotesk)
-# ✅ Generous spacing
+pnpm install
+pnpm dev          # http://localhost:3000
 ```
+
+You should see:
+
+- ✅ Warm ivory ground (`#faf8f4`) with white surfaces
+- ✅ Near-black text (`#1c1a17`), pine accent (`#1f4e3d`), brass highlight (`#b08d57`)
+- ✅ Fraunces for display, Libre Franklin for body, JetBrains Mono for figures
+- ✅ Dense application register — 16px icons, ~36px rows
+
+The backend must be running for authenticated routes; `proxy.ts` forwards API calls to the NestJS service in `../backend`.
 
 ---
 
-## Design Doc Files in `/design-os/`
+## Verify Before Pushing
 
-All ready to reference:
-
+```bash
+pnpm test
+pnpm type-check
+pnpm lint
 ```
-📋 LUXURY-README.md              ← Start here (quick summary)
-📋 LUXURY-VISUAL-DIRECTION.md    ← Token reference
-📋 LUXURY-FEATURES-ADDENDUM.md   ← Feature specs
-📋 LUXURY-IMPLEMENTATION-PROMPT.md ← Copy to next session
 
-📋 phase-1-product-vision.md      ← Strategy
-📋 phase-2-experience-maps.md     ← User flows
-📋 phase-3-information-architecture.md ← Navigation
-📋 phase-4-page-blueprints.md     ← Page specs (PRIMARY)
-📋 phase-5-section-blueprints.md  ← Section patterns
-📋 phase-6-component-library.md   ← Component specs
-📋 phase-7-design-tokens.md       ← Token reference
-📋 phase-8-frontend-architecture.md ← Folder structure
-📋 phase-9-implementation-roadmap.md ← 16-week plan
-📋 phase-10-qa-checklist.md       ← QA & launch
-```
+Husky's `pre-push` hook runs `type-check` then `lint` and blocks on failure. `pnpm test` is on you.
 
 ---
 
-## You're Ready
+## Design Docs in `design-os/`
 
-✅ Design OS complete (10 phases)  
-✅ Luxury visual direction defined  
-✅ 6 luxury features specified  
-✅ Code foundation (tokens, config, example component)  
-✅ Implementation prompt ready to copy
+```
+INDEX/START_HERE.md                        ← Start here
+INDEX/README.md                            ← 5-minute overview
+INDEX/DESIGN-OS-COMPLETE.md                ← Master index
+INDEX/ARTIFACT_INDEX.md                    ← Per-phase descriptions
+INDEX/_FOLDER_STRUCTURE.md                 ← Layout + reading orders
 
-**Next session:** Copy `LUXURY-IMPLEMENTATION-PROMPT.md` and start building.
+CORE-PHASES/phase-1-product-vision.md      ← Strategy
+CORE-PHASES/phase-2-experience-maps.md     ← User flows
+CORE-PHASES/phase-3-information-architecture.md ← Navigation
+CORE-PHASES/phase-4-page-blueprints.md     ← Page specs (PRIMARY)
+CORE-PHASES/phase-5-section-blueprints.md  ← Section patterns
+CORE-PHASES/phase-6-component-library.md   ← Component specs
+CORE-PHASES/phase-7-design-tokens.md       ← Token reference
+CORE-PHASES/phase-8-frontend-architecture.md ← Folder structure
+CORE-PHASES/phase-9-implementation-roadmap.md ← 16-week plan
+CORE-PHASES/phase-10-qa-checklist.md       ← QA & launch
 
-**Estimated timeline:** 16 weeks, 5-6 engineers, ~1490 total hours
-
-🚀 Ready to build the most elegant real estate platform.
-
----
-
-**Setup Complete. All Files Ready. Go Build.**
+IMPLEMENTATION/IMPLEMENTATION_PROMPT.md    ← Sprint guide
+IMPLEMENTATION/SETUP-CHECKLIST.md          ← This file
+```

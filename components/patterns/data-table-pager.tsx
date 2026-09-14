@@ -30,8 +30,6 @@ export function DataTablePager({
             </p>
             <div className="flex items-center gap-2">
                 <Button
-                    variant="secondary"
-                    size="sm"
                     iconOnly
                     aria-label="Previous page"
                     disabled={currentPage === 1}
@@ -43,8 +41,6 @@ export function DataTablePager({
                     {currentPage} / {totalPages}
                 </span>
                 <Button
-                    variant="secondary"
-                    size="sm"
                     iconOnly
                     aria-label="Next page"
                     disabled={currentPage === totalPages}

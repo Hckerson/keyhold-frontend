@@ -5,6 +5,8 @@ import { messagesAPI } from "@/lib/api/messages";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type { CreateMessageInput } from "@/lib/validations/message";
+
+export type SendMessageInput = CreateMessageInput & { files?: File[] };
 import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useConversation(connectionId: string | undefined) {
@@ -31,7 +33,12 @@ export function useSendMessage() {
     const client = useQueryClient();
     return useMutation({
         meta: FEEDBACK.sendMessage,
-        mutationFn: (input: CreateMessageInput) => messagesAPI.send(input),
+        mutationFn: async ({ files, ...input }: SendMessageInput) => {
+            const message = await messagesAPI.send(input);
+            if (files && files.length > 0)
+                await messagesAPI.attach(message.id, files);
+            return message;
+        },
         onSuccess: async (_message, input) => {
             await Promise.all([
                 client.invalidateQueries({

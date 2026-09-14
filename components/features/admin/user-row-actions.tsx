@@ -18,6 +18,10 @@ export function UserRowActions({
     onSuspend,
     onReactivate,
 }: UserRowActionsProps) {
+    if (user.status === "deleted") {
+        return <span className="flex items-center justify-end" />;
+    }
+
     if (user.status === "suspended") {
         return (
             <span className="flex items-center justify-end">

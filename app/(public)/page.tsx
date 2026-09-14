@@ -39,6 +39,8 @@ const toGalleryTile = (property: Property, index: number): GalleryTileData => ({
 
 const toLatestSale = (property: Property): LatestSaleData => ({
     id: property.id,
+    latitude: property.latitude,
+    longitude: property.longitude,
     imageUrl: property.images[0]?.url ?? "",
     address: property.address,
     locality: property.locality,

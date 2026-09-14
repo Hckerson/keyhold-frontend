@@ -1,6 +1,7 @@
 import { Check, X } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { StatusDot } from "@/components/patterns/status-dot";
+import { LeadTemperatureChip } from "@/components/features/agent/lead-temperature-chip";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 import type { Lead } from "@/lib/types/lead";
 import { formatCompactUsd, initialsOf } from "@/lib/utils";
@@ -37,6 +38,9 @@ export function LeadRow({ lead, onRespond }: LeadRowProps) {
                 </div>
             </td>
             <td className="py-0 pl-3">
+                <LeadTemperatureChip lead={lead} />
+            </td>
+            <td className="py-0 pl-3">
                 <span className="flex min-w-0 items-center gap-1.5">
                     <StatusDot tone={stage.tone} />
                     <span className="text-text-secondary min-w-0 truncate text-xs">
@@ -48,7 +52,7 @@ export function LeadRow({ lead, onRespond }: LeadRowProps) {
                 {lead.interests[0]}
             </td>
             <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
-                {formatCompactUsd(lead.budget)}
+                {formatCompactUsd(lead.listingPrice)}
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
                 {lead.unread > 0 ? `${lead.unread} ${UNREAD_SUFFIX}` : "—"}

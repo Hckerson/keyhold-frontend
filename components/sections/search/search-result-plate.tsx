@@ -8,24 +8,7 @@ import { PROPERTY_STATUS_LABELS } from "@/lib/enums/enums";
 import type { Listing } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { formatCount, formatUsd } from "@/lib/utils/format";
-
-const FRESH_DAYS = 7;
-const STALE_DAYS = 45;
-
-function describeMarketAge(days: number) {
-    if (days <= FRESH_DAYS) {
-        return {
-            label: days <= 1 ? "Listed today" : `${days} days new`,
-            tone: "text-highlight-dark",
-        };
-    }
-
-    if (days >= STALE_DAYS) {
-        return { label: `${days} days listed`, tone: "text-text-muted" };
-    }
-
-    return { label: `${days} days listed`, tone: "text-text-secondary" };
-}
+import { describeMarketAge } from "@/lib/utils/market-age";
 
 export interface SearchResultPlateProps {
     listing: Listing;

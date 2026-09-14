@@ -25,18 +25,13 @@ export function AdminReportsHeader({
             summary={period}
             action={
                 <>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={onDownload}
-                    >
+                    <Button type="button" onClick={onDownload}>
                         {DOWNLOAD_ACTION}
                     </Button>
                     <Button
                         type="button"
-                        variant="primary"
-                        size="sm"
+                        emphasis="solid"
+                        tone="accent"
                         onClick={onCustomise}
                     >
                         {CUSTOM_ACTION}

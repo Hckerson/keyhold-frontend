@@ -83,3 +83,14 @@ export const fieldErrorFor = (
     const result = schema.safeParse(values);
     return result.success ? undefined : toFieldErrors(result.error)[field];
 };
+
+export const EMAIL_CODE_LENGTH = 6;
+
+export const verifyEmailSchema = z.object({
+    code: z
+        .string()
+        .length(EMAIL_CODE_LENGTH, `Enter the ${EMAIL_CODE_LENGTH}-digit code`)
+        .regex(/^\d+$/, "The code is digits only"),
+});
+
+export type VerifyEmailInput = z.infer<typeof verifyEmailSchema>;

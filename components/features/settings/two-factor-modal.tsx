@@ -90,10 +90,8 @@ export function TwoFactorModal({
                 )}
             </ModalBody>
             <ModalFooter>
-                <Button variant="secondary" size="sm" onClick={close}>
-                    Cancel
-                </Button>
-                <Button variant="primary" size="sm" onClick={submit}>
+                <Button onClick={close}>Cancel</Button>
+                <Button emphasis="solid" tone="accent" onClick={submit}>
                     {enabled ? "Disable" : "Enable"}
                 </Button>
             </ModalFooter>

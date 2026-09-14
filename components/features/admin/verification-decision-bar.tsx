@@ -21,8 +21,8 @@ export function VerificationDecisionBar({
             {actionsByStatus[status].map((action) => (
                 <Button
                     key={action.mode}
-                    variant={action.variant}
-                    size="sm"
+                    emphasis={action.destructive ? "outline" : "solid"}
+                    tone={action.destructive ? "error" : "accent"}
                     onClick={() => onAction(action.mode)}
                 >
                     {action.label}

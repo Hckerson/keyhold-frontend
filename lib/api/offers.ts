@@ -2,9 +2,12 @@ import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
     CreateOfferInput,
+    DealMilestone,
     Offer,
     RespondOfferInput,
+    UpdateMilestoneInput,
 } from "@/lib/validations/offer";
+import type { MilestoneKind } from "@/lib/enums/enums";
 
 export const offersAPI = {
     byConnection: (connectionId: string) =>
@@ -20,4 +23,27 @@ export const offersAPI = {
 
     acceptCounter: (id: string) =>
         query.patch<Offer>(config.api.offers.acceptCounter(id)),
+
+    milestones: (id: string) =>
+        query.get<DealMilestone[]>(config.api.offers.milestones(id)),
+
+    updateMilestone: (
+        id: string,
+        kind: MilestoneKind,
+        input: UpdateMilestoneInput,
+    ) =>
+        query.patch<DealMilestone>(
+            config.api.offers.milestone(id, kind),
+            input,
+        ),
+
+    attachMilestoneDocument: (id: string, kind: MilestoneKind, file: File) => {
+        const body = new FormData();
+        body.append("file", file);
+        return query.post<DealMilestone>(
+            config.api.offers.milestoneDocument(id, kind),
+            body,
+            { headers: { "Content-Type": "multipart/form-data" } },
+        );
+    },
 };

@@ -44,16 +44,15 @@ export function HeroSection() {
                         <HeroSearch />
 
                         <div className="flex flex-wrap items-center gap-3">
-                            <Link href="/signup">
-                                <Button variant="secondary" size="sm">
+                            <Button asChild>
+                                <Link href="/signup">
                                     Sign Up
                                     <ArrowUpRight
-                                        size={13}
+                                        className="size-3"
                                         strokeWidth={1.5}
-                                        className="ml-1.5"
                                     />
-                                </Button>
-                            </Link>
+                                </Link>
+                            </Button>
                             <span className="text-text-muted text-xs">
                                 Free to join · Save listings and track offers
                             </span>

@@ -1,12 +1,14 @@
 import { Avatar } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { MetricCell } from "@/components/patterns/metric-cell";
+import { LeadTemperatureChip } from "@/components/features/agent/lead-temperature-chip";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 import type { Lead } from "@/lib/types/lead";
-import { formatCompactUsd, initialsOf, mailHref, telHref } from "@/lib/utils";
+import { formatCompactUsd, initialsOf } from "@/lib/utils";
 
 const HERO_EYEBROW = "Top enquiry";
+const TEMPERATURE_LABEL = "Temperature";
 const VALUE_LABEL = "Listing value";
 const MESSAGES_LABEL = "Unread";
 const VIEWINGS_LABEL = "Viewings";
@@ -19,12 +21,18 @@ const DECLINE_ACTION = "Decline";
 
 export interface LeadsTopProspectHeroProps {
     lead: Lead;
+    calling: boolean;
     onRespond: (id: string, accept: boolean) => void;
+    onCall: () => void;
+    onEmail: () => void;
 }
 
 export function LeadsTopProspectHero({
     lead,
+    calling,
     onRespond,
+    onCall,
+    onEmail,
 }: LeadsTopProspectHeroProps) {
     const stage = LEAD_STAGES[lead.stage];
 
@@ -44,7 +52,7 @@ export function LeadsTopProspectHero({
                         </p>
                         <div className="mt-1 flex items-baseline gap-2">
                             <p className="text-h4 font-display text-text font-light tabular-nums">
-                                {formatCompactUsd(lead.budget)}
+                                {formatCompactUsd(lead.listingPrice)}
                             </p>
                             <span className="micro-label">{VALUE_LABEL}</span>
                         </div>
@@ -72,39 +80,32 @@ export function LeadsTopProspectHero({
 
                 <div className="flex shrink-0 gap-2">
                     {lead.phone && (
-                        <a
-                            href={telHref(lead.phone)}
-                            className={buttonVariants({
-                                variant: "secondary",
-                                size: "sm",
-                            })}
+                        <Button
+                            type="button"
+                            size="sm"
+                            isLoading={calling}
+                            onClick={onCall}
                         >
                             {CALL_ACTION}
-                        </a>
+                        </Button>
                     )}
-                    <a
-                        href={mailHref(lead.email)}
-                        className={buttonVariants({
-                            variant: "secondary",
-                            size: "sm",
-                        })}
-                    >
-                        {EMAIL_ACTION}
-                    </a>
+                    {lead.email && (
+                        <Button type="button" size="sm" onClick={onEmail}>
+                            {EMAIL_ACTION}
+                        </Button>
+                    )}
                     {lead.stage === "pending" && (
                         <>
                             <Button
                                 type="button"
-                                variant="secondary"
-                                size="sm"
                                 onClick={() => onRespond(lead.id, false)}
                             >
                                 {DECLINE_ACTION}
                             </Button>
                             <Button
                                 type="button"
-                                variant="primary"
-                                size="sm"
+                                emphasis="solid"
+                                tone="accent"
                                 onClick={() => onRespond(lead.id, true)}
                             >
                                 {ACCEPT_ACTION}
@@ -115,6 +116,9 @@ export function LeadsTopProspectHero({
             </div>
 
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
+                <MetricCell label={TEMPERATURE_LABEL}>
+                    <LeadTemperatureChip lead={lead} />
+                </MetricCell>
                 <MetricCell label={MESSAGES_LABEL}>
                     <span className="tabular-nums">{lead.unread}</span>
                 </MetricCell>

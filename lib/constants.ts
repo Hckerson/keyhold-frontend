@@ -8,6 +8,9 @@ export const config = {
             forgotPassword: "/auth/forgot-password",
             resetPassword: "/auth/reset-password",
             onboarding: "/auth/onboarding",
+            logout: "/auth/logout",
+            verifyEmail: "/auth/verify-email",
+            resendVerification: "/auth/resend-verification",
         },
         users: {
             list: "/users",
@@ -17,14 +20,19 @@ export const config = {
             detail: (id: string) => `/users/${id}`,
             tierDistribution: "/users/tiers/distribution",
             tier: (id: string) => `/users/${id}/tier`,
+            avatar: "/users/me/avatar",
         },
         properties: {
             list: "/properties",
             search: "/properties/search",
             facets: "/properties/facets",
             detail: (id: string) => `/properties/${id}`,
+            nearby: (id: string) => `/properties/${id}/nearby`,
             bySeller: (sellerId: string) => `/properties/seller/${sellerId}`,
             images: (id: string) => `/properties/${id}/images`,
+            imageOrder: (id: string) => `/properties/${id}/images/order`,
+            image: (id: string, imageId: string) =>
+                `/properties/${id}/images/${imageId}`,
             markSold: (id: string) => `/properties/${id}/mark-sold`,
             moderate: (id: string) => `/properties/${id}/moderate`,
             view: (id: string) => `/properties/${id}/view`,
@@ -46,9 +54,15 @@ export const config = {
         },
         messages: {
             create: "/messages",
+            attachments: (id: string) => `/messages/${id}/attachments`,
             byConnection: (connectionId: string) =>
                 `/messages/connection/${connectionId}`,
             unreadCount: "/messages/unread/count",
+        },
+        contact: {
+            history: (connectionId: string) => `/contact/${connectionId}`,
+            email: (connectionId: string) => `/contact/${connectionId}/email`,
+            call: (connectionId: string) => `/contact/${connectionId}/call`,
         },
         viewings: {
             create: "/viewings",
@@ -66,6 +80,11 @@ export const config = {
                 `/offers/connection/${connectionId}`,
             respond: (id: string) => `/offers/${id}/respond`,
             acceptCounter: (id: string) => `/offers/${id}/accept-counter`,
+            milestones: (id: string) => `/offers/${id}/milestones`,
+            milestone: (id: string, kind: string) =>
+                `/offers/${id}/milestones/${kind}`,
+            milestoneDocument: (id: string, kind: string) =>
+                `/offers/${id}/milestones/${kind}/document`,
         },
         transactions: {
             list: "/transactions",
@@ -130,8 +149,14 @@ export const config = {
             read: (id: string) => `/notifications/${id}/read`,
             entry: (id: string) => `/notifications/${id}`,
         },
+        calendar: {
+            google: "/calendar/google",
+            connect: "/calendar/google/connect",
+        },
         settings: {
             list: "/settings",
+            restoreDefaults: "/settings/restore-defaults",
+            purgeVerifications: "/settings/purge-expired-verifications",
         },
         concierge: {
             overview: "/concierge/overview",
@@ -176,6 +201,7 @@ export const AUTH_ROUTES = {
     login: "/login",
     signup: "/signup",
     resetPassword: "/reset-password",
+    verifyEmail: "/verify-email",
     terms: "/terms",
     privacy: "/privacy",
     home: "/",
@@ -183,6 +209,7 @@ export const AUTH_ROUTES = {
 
 export const REDIRECT_PARAM = "redirect";
 export const EXPIRED_PARAM = "expired";
+export const ROLE_PARAM = "role";
 
 export const PORTAL_BY_ROLE = {
     ADMIN: "/admin",
@@ -203,16 +230,24 @@ export const AUTH_PROVIDERS = (process.env.NEXT_PUBLIC_AUTH_PROVIDERS ?? "")
     .map((provider) => provider.trim())
     .filter(Boolean);
 
-export const oauthStartUrl = (provider: string, redirectTo?: string) => {
-    const url = `${config.api.base}/auth/${provider}`;
-    return isSafeRedirect(redirectTo)
-        ? `${url}?${REDIRECT_PARAM}=${encodeURIComponent(redirectTo)}`
-        : url;
+export const oauthStartUrl = (
+    provider: string,
+    redirectTo?: string,
+    role?: string,
+) => {
+    const params = new URLSearchParams();
+    if (isSafeRedirect(redirectTo)) params.set(REDIRECT_PARAM, redirectTo);
+    if (role) params.set(ROLE_PARAM, role);
+    const search = params.toString();
+    return `${config.api.base}/auth/${provider}${search ? `?${search}` : ""}`;
 };
+
+export const calendarConnectUrl = `${config.api.base}${config.api.calendar.connect}`;
 
 export const LOCALE = "en-US";
 
 export const NEW_LISTING_DAYS = 7;
+export const STALE_LISTING_DAYS = 45;
 export const DEBOUNCE_DELAY = 300;
 export const DEFAULT_COMMISSION_RATE = 0.025;
 export const PLATFORM_PAYOUT_FEE_RATE = 0.05;
@@ -228,12 +263,14 @@ export const RAIL_QUERY = "(min-width: 64rem)";
 
 export const STALE_TIME = 5 * 60 * 1000;
 export const CACHE_TIME = 10 * 60 * 1000;
+export const REQUEST_TIMEOUT = 20 * 1000;
 
 export const TOAST_DURATION = 5 * 1000;
 export const TOAST_ERROR_DURATION = 8 * 1000;
 export const TOAST_STACK_LIMIT = 3;
 
 export const PUBLIC_ROUTES = {
+    search: "/search",
     listing: (id: string) => `/listing/${id}`,
 } as const;
 
@@ -273,6 +310,20 @@ export const AGENT_ROUTES = {
     calendar: "/agent/calendar",
     concierge: "/agent/concierge",
     settings: "/agent/settings",
+} as const;
+
+export const ADMIN_ROUTES = {
+    overview: "/admin",
+    listings: "/admin/listings",
+    users: "/admin/users",
+    user: (id: string) => `/admin/users/${id}`,
+    transactions: "/admin/transactions",
+    payments: "/admin/payments",
+    reports: "/admin/reports",
+    verifications: "/admin/verifications",
+    disputes: "/admin/disputes",
+    flags: "/admin/flags",
+    settings: "/admin/settings",
 } as const;
 
 export const OFFER_WINDOW_DAYS = 14;

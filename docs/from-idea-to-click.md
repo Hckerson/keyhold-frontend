@@ -85,7 +85,7 @@ The stage everyone skips and everyone regrets skipping. Code is expensive to wri
 > **Where first-timers lose months**
 > Building the admin panel first. It feels productive because it is unambiguous — but nobody is waiting for it. Build the one flow that a real user would pay for, all the way through to production, before building anything else. That single vertical slice teaches you more than six horizontal ones.
 
-**In your repo** — `design-os/CORE-PHASES/phase-1-product-vision.md` is this stage's artifact: the problem statement, four personas, the jobs each one hires the product for, and a KPI table with a target and a rationale per row — all written before the code existed. (`horizon-grove-real-estate.md` at the workspace root is often mistaken for it; that one is a design-system definition, and belongs to stage 02.)
+**In your repo** — `design-os/CORE-PHASES/phase-1-product-vision.md` is this stage's artifact: the problem statement, four personas, the jobs each one hires the product for, and a KPI table with a target and a rationale per row — all written before the code existed. (`docs/archive/horizon-grove-real-estate.md` is often mistaken for it; that one is a design-system definition, and belongs to stage 02.) It was audited against the shipped code on 9 September 2026, the last of the twelve stages to be: the four personas map to three roles ([ADR 0018](adr/0018-the-seller-is-the-agent.md)), five of the fourteen jobs-to-be-done are fully served and two are unserved, and three of the nine KPIs can be computed from the database today — one of them already is. The findings live in `design-os/INDEX/RATIFIED_DIVERGENCES.md`.
 
 ---
 
@@ -113,7 +113,7 @@ Design is not decoration applied at the end. It is the decision about structure 
 >
 > **Verdict — for a first project: primitives + your own tokens.** Accessible dropdowns and dialogs are genuinely hard to write correctly and teach you nothing about your product.
 
-**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `horizon-grove-real-estate.md` at the workspace root defines the brand, palette and type scale · `design-os/` the system's seed document.
+**In your repo** — `styles/tokens.css` holds the named values · `styles/globals.css` the scale classes · `components/ui/` the primitives · `docs/archive/horizon-grove-real-estate.md` is the design skill the brand, palette and type scale grew out of · `design-os/` the system's seed document.
 
 ---
 
@@ -286,7 +286,7 @@ The layer people skip until something inexplicable happens. Every developer even
 | **Load balancer / reverse proxy** | A front door that spreads traffic across servers, terminates TLS, and hides your topology (nginx, Caddy, or your host's).                                                                                                            |
 | **Edge functions**                | Small bits of your code running at the CDN, close to the user — redirects, auth checks, A/B splits — before the request ever reaches the origin.                                                                                     |
 
-**In your repo** — `middleware.ts` runs at the edge on every matching request, the cheapest possible place to bounce a logged-out user · `lib/constants.ts` holds `config.api.*` so no URL is ever typed twice.
+**In your repo** — `proxy.ts` runs at the edge on the five matched path groups — the three portals plus `/login` and `/signup` — which is the cheapest possible place to bounce a logged-out user, and to send a signed-in one back to the portal their role owns. Next 16 renamed the file: `proxy.ts` is what every other framework still calls middleware. `lib/constants.ts` holds `config.api.*` so no URL is ever typed twice.
 
 ---
 
@@ -346,7 +346,7 @@ Tests are not about proving code correct. They are about changing code six month
 >
 > **Verdict** — in order: **types and lint on everything** (nearly free) → **integration tests on the money paths** → **unit tests on genuinely tricky logic** → **three or four end-to-end tests** on the flows that would be an emergency. Ignore the coverage number.
 
-**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · husky and lint-staged are installed and configured, but the hook file sits at `.husky/pre-commit.disabled`, so nothing currently runs at commit time. Renaming it back restores a gate that type-checks, lints, and formats before a commit exists.
+**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · Vitest frontend-side via `vitest.config.mts`, with `pnpm test` over 29 files colocated beside the units they cover · husky runs the local gate in two stages: `.husky/pre-commit` runs `pnpm lint-staged` — eslint then prettier, over staged files only, so it stays fast — and `.husky/pre-push` runs `pnpm type-check` then `pnpm lint` and blocks on failure. Tests are in neither hook; they run in CI.
 
 ---
 
@@ -379,7 +379,7 @@ The gap between "works on my machine" and "works for everyone" is this stage. Au
 >
 > **Verdict — managed for the product, a VPS as a side quest.** Learning to run a server is genuinely valuable, just not while you are also learning everything else and trying to launch something.
 
-**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output. Neither half of CI is running: the husky pre-commit hook is disabled locally, and there is no pipeline file that runs lint, type-check, and test on every push.
+**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output · `.github/workflows/ci.yml` runs on every push to `master` or `development` and on every pull request: install, type-check, lint, `prettier --check`, build, test, with in-progress runs cancelled per branch. It covers the frontend only — the backend has no job yet, so its build and tests are still proven locally or not at all.
 
 ---
 
@@ -432,7 +432,7 @@ The stage that closes the circle and gets neglected the most. Everything up to h
 > **The measurement trap**
 > Tracking everything produces a dashboard nobody reads. Pick the **three** numbers that would change a decision — one acquisition, one activation, one retention — and instrument those properly. Add the fourth only when someone asks a question the first three cannot answer.
 
-**In your repo** — barely started: seven routes set page metadata, including a dynamic `generateMetadata` on the listing page, but there is no `sitemap.ts`, no `robots.ts`, no structured data, no product analytics, and no field Web Vitals. That is normal at this point and worth naming. The project currently has eleven stages out of twelve, and stage 12 is the one that tells you which of the other eleven to work on next.
+**In your repo** — the findable half is built: seven files set page metadata, including a dynamic `generateMetadata` on the listing page · `app/sitemap.ts` lists the static routes plus every available listing, paged out of the API · `app/robots.ts` disallows the three portals and the auth routes and points at the sitemap · the listing page emits `RealEstateListing` JSON-LD built by `lib/utils/to-listing-schema.ts`. The measured half is not: no product analytics, no field Web Vitals, so nothing records what a real visitor did or how fast the page was for them. That is the gap that keeps stage 12 from telling you which of the other eleven to work on next.
 
 ---
 

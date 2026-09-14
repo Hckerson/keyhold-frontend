@@ -1,12 +1,11 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
-import { deleteCookie } from "@/lib/utils/cookies";
 import {
-    ACCESS_TOKEN_COOKIE,
     AUTH_ROUTES,
     config,
     loginExpired,
+    REQUEST_TIMEOUT,
 } from "@/lib/constants";
 
 type ParamValue = string | number | boolean;
@@ -41,6 +40,7 @@ const defaultConfig: AxiosRequestConfig = {
     },
     paramsSerializer: serializeParams,
     withCredentials: true,
+    timeout: REQUEST_TIMEOUT,
 };
 
 export interface ApiEnvelope<T> {
@@ -74,9 +74,10 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
         if (error.response?.status === 401) {
+            const wasSignedIn = Boolean(useAuthStore.getState().user);
             useAuthStore.getState().clearAuth();
-            deleteCookie(ACCESS_TOKEN_COOKIE);
             if (
+                wasSignedIn &&
                 typeof window !== "undefined" &&
                 !window.location.pathname.startsWith(AUTH_ROUTES.login)
             ) {

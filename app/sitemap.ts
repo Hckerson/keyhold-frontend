@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { propertiesServerAPI } from "@/lib/api/server";
-import { config } from "@/lib/constants";
+import { config, PUBLIC_ROUTES } from "@/lib/constants";
 import type { Property } from "@/lib/validations/property";
 
 const PAGE_SIZE = 100;
@@ -12,7 +12,15 @@ const STATIC_ROUTES: {
     priority: number;
 }[] = [
     { path: "/", changeFrequency: "daily", priority: 1 },
-    { path: "/search", changeFrequency: "hourly", priority: 0.8 },
+    { path: PUBLIC_ROUTES.search, changeFrequency: "hourly", priority: 0.8 },
+    { path: "/map", changeFrequency: "hourly", priority: 0.7 },
+    { path: "/about", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/contact", changeFrequency: "monthly", priority: 0.5 },
+    { path: "/help", changeFrequency: "monthly", priority: 0.4 },
+    { path: "/blog", changeFrequency: "weekly", priority: 0.4 },
+    { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
+    { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
+    { path: "/accessibility", changeFrequency: "yearly", priority: 0.2 },
 ];
 
 const publishedListings = async (): Promise<Property[]> => {

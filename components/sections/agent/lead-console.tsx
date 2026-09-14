@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { LeadCreateModal } from "@/components/features/agent/lead-create-modal";
+import { LeadEmailModal } from "@/components/features/agent/lead-email-modal";
 import { LeadsHeader } from "@/components/sections/agent/leads-header";
 import { LeadsMain } from "@/components/sections/agent/leads-main";
 import { LeadsRail } from "@/components/sections/agent/leads-rail";
@@ -20,6 +21,7 @@ import {
     useRecordLead,
     useRespondToConnection,
 } from "@/lib/hooks/use-connections";
+import { useLeadOutreach } from "@/lib/hooks/use-lead-outreach";
 import { useSellerProperties } from "@/lib/hooks/use-properties";
 import { useSession } from "@/lib/hooks/use-session";
 import { toLead } from "@/lib/utils/to-lead";
@@ -47,6 +49,9 @@ export function LeadConsole() {
     const ranked = useMemo(() => rankLeads(leads), [leads]);
     const peers = useMemo(() => ranked.slice(1), [ranked]);
     const counts = useMemo(() => countByStage(peers), [peers]);
+
+    const top = ranked[0];
+    const outreach = useLeadOutreach(top?.id, top?.interests[0]);
 
     const visible = useMemo(
         () =>
@@ -104,13 +109,16 @@ export function LeadConsole() {
 
             <div className="console-split gap-3">
                 <LeadsMain
-                    top={ranked[0]}
+                    top={top}
                     leads={visible}
                     stageFilter={stageFilter}
                     counts={counts}
                     pending={isPending}
+                    calling={outreach.calling}
                     onFilterChange={setStageFilter}
                     onRespond={onRespond}
+                    onCall={outreach.call}
+                    onEmail={outreach.openCompose}
                 />
                 <LeadsRail leads={leads} />
             </div>
@@ -126,6 +134,19 @@ export function LeadConsole() {
                 onClose={() => setAdding(false)}
                 onSubmit={onSubmitLead}
             />
+
+            {top && (
+                <LeadEmailModal
+                    open={outreach.composing}
+                    recipient={top.email}
+                    draft={outreach.draft}
+                    errors={outreach.errors}
+                    pending={outreach.sending}
+                    onDraftChange={outreach.setDraft}
+                    onClose={outreach.closeCompose}
+                    onSubmit={outreach.submitEmail}
+                />
+            )}
         </div>
     );
 }

@@ -3,15 +3,20 @@ import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { AUTH_PROVIDERS, oauthStartUrl } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
+const providerColumns = (count: number) =>
+    count >= 3 ? "grid-cols-3" : "grid-cols-2";
+
 const PROVIDER_LABELS: Record<string, string> = {
     google: "Google",
     apple: "Apple",
+    facebook: "Facebook",
 };
 
 export interface SocialAuthRowProps {
     action?: string;
     label?: string;
     redirectTo?: string;
+    role?: string;
     disabled?: boolean;
 }
 
@@ -19,6 +24,7 @@ export function SocialAuthRow({
     action = "Continue",
     label = "Or continue with",
     redirectTo,
+    role,
     disabled = false,
 }: SocialAuthRowProps) {
     const providers = AUTH_PROVIDERS.filter(
@@ -41,7 +47,9 @@ export function SocialAuthRow({
                 </span>
                 <span aria-hidden="true" className="bg-border h-px flex-1" />
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div
+                className={cn("grid gap-2", providerColumns(providers.length))}
+            >
                 {providers.map((provider) => {
                     const Mark = PROVIDER_MARKS[provider];
                     const name = PROVIDER_LABELS[provider] ?? provider;
@@ -49,7 +57,7 @@ export function SocialAuthRow({
                     return (
                         <a
                             key={provider}
-                            href={oauthStartUrl(provider, redirectTo)}
+                            href={oauthStartUrl(provider, redirectTo, role)}
                             aria-label={`${action} with ${name}`}
                             aria-disabled={disabled || undefined}
                             tabIndex={disabled ? -1 : undefined}

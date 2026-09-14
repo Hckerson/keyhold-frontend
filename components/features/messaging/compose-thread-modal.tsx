@@ -12,6 +12,7 @@ import {
 import { ConversationList } from "@/components/features/messaging/conversation-list";
 import Link from "next/link";
 import { COMPOSE_COPY as COPY } from "@/lib/data/messages";
+import { PUBLIC_ROUTES } from "@/lib/constants";
 import type { Conversation } from "@/lib/types";
 
 export interface ComposeThreadModalProps {
@@ -59,9 +60,10 @@ export function ComposeThreadModal({
                         description={COPY.emptyLede}
                         action={
                             <Link
-                                href="/search"
+                                href={PUBLIC_ROUTES.search}
                                 className={buttonVariants({
-                                    variant: "primary",
+                                    emphasis: "solid",
+                                    tone: "accent",
                                     size: "sm",
                                 })}
                             >

@@ -147,8 +147,8 @@ export function SearchRail({
                 )}
                 <Button
                     type="submit"
-                    variant="primary"
-                    size="sm"
+                    emphasis="solid"
+                    tone="accent"
                     className="w-full"
                 >
                     Apply filters

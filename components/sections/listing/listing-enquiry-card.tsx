@@ -42,7 +42,7 @@ export function ListingEnquiryCard({
     return (
         <section
             aria-label={CARD_LABEL}
-            className="border-border-dark bg-background-alt flex flex-col gap-3 rounded-xl border p-4 shadow-md lg:sticky lg:top-56"
+            className="border-border-dark bg-background-alt flex flex-col gap-3 rounded-xl border p-4 shadow-md"
         >
             {flow.settling ? (
                 <Skeleton className="h-28 w-full rounded-lg" />

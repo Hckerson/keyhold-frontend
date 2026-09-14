@@ -20,35 +20,32 @@ export function UserFocusActions({
     onSuspend,
     onReactivate,
 }: UserFocusActionsProps) {
+    const moderable = user.status !== "deleted";
+
     return (
         <div className="flex shrink-0 items-center gap-2">
-            <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={() => onOpen(user.id)}
-            >
+            <Button type="button" onClick={() => onOpen(user.id)}>
                 {REVIEW_ACTION}
             </Button>
-            {user.status === "suspended" ? (
-                <Button
-                    type="button"
-                    variant="primary"
-                    size="sm"
-                    onClick={() => onReactivate(user.id)}
-                >
-                    {REACTIVATE_ACTION}
-                </Button>
-            ) : (
-                <Button
-                    type="button"
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => onSuspend(user.id)}
-                >
-                    {SUSPEND_ACTION}
-                </Button>
-            )}
+            {moderable &&
+                (user.status === "suspended" ? (
+                    <Button
+                        type="button"
+                        emphasis="solid"
+                        tone="accent"
+                        onClick={() => onReactivate(user.id)}
+                    >
+                        {REACTIVATE_ACTION}
+                    </Button>
+                ) : (
+                    <Button
+                        type="button"
+                        tone="error"
+                        onClick={() => onSuspend(user.id)}
+                    >
+                        {SUSPEND_ACTION}
+                    </Button>
+                ))}
         </div>
     );
 }

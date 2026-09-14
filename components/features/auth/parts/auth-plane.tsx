@@ -26,7 +26,7 @@ export function AuthPlane({ children }: AuthPlaneProps) {
             initial="hidden"
             animate="visible"
             exit="gone"
-            className="border-border bg-background-alt relative rounded-xs border p-4 shadow-sm"
+            className="border-border-dark bg-background-alt relative rounded-xs border p-4 shadow-sm"
         >
             {REGISTRATION_MARKS.map((mark) => (
                 <span
@@ -40,7 +40,12 @@ export function AuthPlane({ children }: AuthPlaneProps) {
             ))}
             <div className="flex flex-col gap-5">
                 {Children.map(children, (child) => (
-                    <m.div variants={AUTH_SECTION_MOTION}>{child}</m.div>
+                    <m.div
+                        variants={AUTH_SECTION_MOTION}
+                        className="empty:hidden"
+                    >
+                        {child}
+                    </m.div>
                 ))}
             </div>
         </m.div>

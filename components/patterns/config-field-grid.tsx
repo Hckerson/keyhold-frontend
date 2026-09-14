@@ -2,6 +2,8 @@
 
 import type { ChangeEvent } from "react";
 import { FormField } from "@/components/ui/forms/form-field";
+import { Select, type SelectOption } from "@/components/ui/forms/select";
+import { LabelledBlock } from "@/components/patterns/labelled-block";
 import type { InputProps } from "@/components/ui/forms/input";
 import type { FieldErrors } from "@/lib/validations/auth";
 
@@ -14,6 +16,7 @@ export interface ConfigField<K extends string> {
     suffix?: string;
     variant?: InputProps["variant"];
     hint?: string;
+    options?: readonly SelectOption<string>[];
 }
 
 export interface ConfigFieldGridProps<K extends string> {
@@ -21,6 +24,7 @@ export interface ConfigFieldGridProps<K extends string> {
     values: Record<K, string>;
     errors?: FieldErrors;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+    onSelect?: (name: K, value: string) => void;
 }
 
 export function ConfigFieldGrid<K extends string>({
@@ -28,29 +32,43 @@ export function ConfigFieldGrid<K extends string>({
     values,
     errors,
     onChange,
+    onSelect,
 }: ConfigFieldGridProps<K>) {
     return (
         <>
-            {fields.map((field) => (
-                <FormField
-                    key={field.name}
-                    label={field.label}
-                    name={field.name}
-                    type={field.type ?? "text"}
-                    variant={field.variant}
-                    value={values[field.name]}
-                    error={errors?.[field.name]}
-                    hint={field.hint}
-                    onChange={onChange}
-                    placeholder={field.placeholder}
-                    prefix={field.prefix}
-                    endSlot={
-                        field.suffix ? (
-                            <span className="micro-label">{field.suffix}</span>
-                        ) : undefined
-                    }
-                />
-            ))}
+            {fields.map((field) =>
+                field.options ? (
+                    <LabelledBlock key={field.name} label={field.label}>
+                        <Select
+                            options={field.options}
+                            value={values[field.name]}
+                            onChange={(next) => onSelect?.(field.name, next)}
+                            label={field.label}
+                        />
+                    </LabelledBlock>
+                ) : (
+                    <FormField
+                        key={field.name}
+                        label={field.label}
+                        name={field.name}
+                        type={field.type ?? "text"}
+                        variant={field.variant}
+                        value={values[field.name]}
+                        error={errors?.[field.name]}
+                        hint={field.hint}
+                        onChange={onChange}
+                        placeholder={field.placeholder}
+                        prefix={field.prefix}
+                        endSlot={
+                            field.suffix ? (
+                                <span className="micro-label">
+                                    {field.suffix}
+                                </span>
+                            ) : undefined
+                        }
+                    />
+                ),
+            )}
         </>
     );
 }

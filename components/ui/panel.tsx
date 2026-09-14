@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export interface PanelProps {
+    id?: string;
     title?: string;
     description?: string;
     count?: number | string;
@@ -14,6 +15,7 @@ export interface PanelProps {
 }
 
 export function Panel({
+    id,
     title,
     description,
     count,
@@ -28,6 +30,7 @@ export function Panel({
 
     return (
         <section
+            id={id}
             className={cn(
                 "bg-background-muted border-border-light rounded-xl border p-4 pt-3 shadow-sm",
                 className,

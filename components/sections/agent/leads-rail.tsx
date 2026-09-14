@@ -2,11 +2,14 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
 import { MetricList } from "@/components/patterns/metric-list";
-import { stageShares } from "@/lib/data/agent-leads";
+import { stageShares, temperatureShares } from "@/lib/data/agent-leads";
 import type { Lead } from "@/lib/types/lead";
 import type { MetricItem } from "@/lib/types";
 import { formatCount, sum } from "@/lib/utils";
 
+const TEMPERATURE_TITLE = "Temperature";
+const TEMPERATURE_LEDE =
+    "Intent scored from offers, viewings, replies and recency";
 const STAGE_TITLE = "Stage Mix";
 const STAGE_LEDE = "Where the book sits right now";
 const ENGAGEMENT_TITLE = "Engagement";
@@ -34,6 +37,16 @@ export function LeadsRail({ leads }: LeadsRailProps) {
 
     return (
         <div className="flex flex-col gap-3">
+            <Panel
+                title={TEMPERATURE_TITLE}
+                description={TEMPERATURE_LEDE}
+                count={leads.length}
+            >
+                <PanelInset>
+                    <ShareList shares={temperatureShares(leads)} />
+                </PanelInset>
+            </Panel>
+
             <Panel
                 title={STAGE_TITLE}
                 description={STAGE_LEDE}

@@ -9,40 +9,9 @@ import {
 import { SectionShell } from "@/components/patterns/section-shell";
 import { NewsletterForm } from "@/components/layout/newsletter-form";
 import { FooterLocalityIndex } from "@/components/layout/footer-locality-index";
-import { Wordmark } from "@/components/brand/wordmark";
+import { Wordmark, BRAND_NAME } from "@/components/brand/wordmark";
+import { FOOTER_COLUMNS } from "@/lib/config/site-nav";
 import styles from "@/components/layout/footer.module.css";
-
-interface LinkColumn {
-    heading: string;
-    links: { label: string; href: string }[];
-}
-
-const LINK_COLUMNS: LinkColumn[] = [
-    {
-        heading: "Company",
-        links: [
-            { label: "About", href: "/about" },
-            { label: "Blog", href: "/blog" },
-            { label: "Contact", href: "/contact" },
-        ],
-    },
-    {
-        heading: "Support",
-        links: [
-            { label: "Help", href: "/help" },
-            { label: "Search listings", href: "/search" },
-            { label: "Create an account", href: "/signup" },
-        ],
-    },
-    {
-        heading: "Legal",
-        links: [
-            { label: "Privacy", href: "/privacy" },
-            { label: "Terms", href: "/terms" },
-            { label: "Accessibility", href: "/accessibility" },
-        ],
-    },
-];
 
 const SOCIALS: { label: string; href: string; icon: LucideIcon }[] = [
     { label: "Instagram", href: "https://instagram.com", icon: Instagram },
@@ -63,7 +32,7 @@ export function Footer() {
                 <FooterLocalityIndex />
 
                 <div className="relative z-10 mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.6fr]">
-                    {LINK_COLUMNS.map((column) => (
+                    {FOOTER_COLUMNS.map((column) => (
                         <nav
                             key={column.heading}
                             aria-label={column.heading}
@@ -93,7 +62,7 @@ export function Footer() {
                     <div className="flex flex-col gap-2.5">
                         <Wordmark tone="dark" size="md" />
                         <p className="text-sidebar-text-muted font-mono text-[10px] tracking-[0.14em] tabular-nums">
-                            © {currentYear} Luxury RE
+                            © {currentYear} {BRAND_NAME}
                         </p>
                     </div>
 

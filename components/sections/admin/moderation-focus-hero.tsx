@@ -107,34 +107,26 @@ export function ModerationFocusHero({
                 <div className="grid grid-cols-2 gap-2 sm:flex">
                     <Button
                         type="button"
-                        variant="secondary"
-                        size="sm"
                         onClick={() => onDecide("changes", listing.id)}
                     >
                         {CHANGES_ACTION}
                     </Button>
                     <Button
                         type="button"
-                        variant="outline-danger"
-                        size="sm"
+                        tone="error"
                         onClick={() => onDecide("reject", listing.id)}
                     >
                         {REJECT_ACTION}
                     </Button>
                 </div>
                 <div className="grid grid-cols-2 gap-2 sm:flex">
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => onOpen(listing.id)}
-                    >
+                    <Button type="button" onClick={() => onOpen(listing.id)}>
                         {REVIEW_ACTION}
                     </Button>
                     <Button
                         type="button"
-                        variant="primary"
-                        size="sm"
+                        emphasis="solid"
+                        tone="accent"
                         onClick={() => onApprove(listing.id)}
                     >
                         {APPROVE_ACTION}

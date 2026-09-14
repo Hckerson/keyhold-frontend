@@ -34,10 +34,22 @@ interface TagProps
         React.HTMLAttributes<HTMLDivElement>,
         VariantProps<typeof tagVariants> {
     onRemove?: () => void;
+    removeLabel?: string;
 }
 
 const Tag = React.forwardRef<HTMLDivElement, TagProps>(
-    ({ className, variant, removable, onRemove, children, ...props }, ref) => (
+    (
+        {
+            className,
+            variant,
+            removable,
+            onRemove,
+            removeLabel = "Remove tag",
+            children,
+            ...props
+        },
+        ref,
+    ) => (
         <div
             ref={ref}
             className={cn(tagVariants({ variant, removable, className }))}
@@ -49,7 +61,7 @@ const Tag = React.forwardRef<HTMLDivElement, TagProps>(
                     type="button"
                     onClick={onRemove}
                     className="focus-visible:ring-accent grid size-4 shrink-0 place-items-center rounded-full transition-colors hover:bg-current/15 focus-visible:ring-2 focus-visible:outline-none"
-                    aria-label="Remove tag"
+                    aria-label={removeLabel}
                 >
                     <X className="size-3" strokeWidth={1.5} />
                 </button>

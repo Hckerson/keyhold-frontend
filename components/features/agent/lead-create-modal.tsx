@@ -63,7 +63,6 @@ export function LeadCreateModal({
                     <>
                         <LabelledBlock label={COPY.listing}>
                             <Select
-                                size="sm"
                                 label={COPY.listing}
                                 options={listings}
                                 value={draft.propertyId}
@@ -101,18 +100,13 @@ export function LeadCreateModal({
             </ModalBody>
 
             <ModalFooter className="gap-2 p-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={onClose}
-                >
+                <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button
                     type="button"
-                    variant="primary"
-                    size="sm"
+                    emphasis="solid"
+                    tone="accent"
                     isLoading={pending}
                     disabled={listings.length === 0}
                     onClick={onSubmit}

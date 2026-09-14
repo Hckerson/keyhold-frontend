@@ -72,12 +72,10 @@ export function VerificationDecisionModal({
                         </p>
                     </ModalBody>
                     <ModalFooter>
-                        <Button variant="secondary" size="sm" onClick={onClose}>
-                            Cancel
-                        </Button>
+                        <Button onClick={onClose}>Cancel</Button>
                         <Button
-                            variant={"danger"}
-                            size="sm"
+                            emphasis="solid"
+                            tone="error"
                             disabled={note.trim().length === 0}
                             onClick={onSubmit}
                         >

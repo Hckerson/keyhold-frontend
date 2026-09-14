@@ -3,13 +3,22 @@ import {
     FileText,
     Heart,
     MessageSquare,
+    Search,
     Users,
 } from "lucide-react";
 import { format, isToday, isTomorrow } from "date-fns";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { ActivityEntry, OfferStatus, ViewingStatus } from "@/lib/types";
+import type {
+    ActivityEntry,
+    Alert,
+    AlertType,
+    OfferStatus,
+    QuickAction,
+    ViewingStatus,
+} from "@/lib/types";
 import { formatAge, formatCompactUsd } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
+import { BUYER_ROUTES, PUBLIC_ROUTES } from "@/lib/constants";
 import {
     OFFER_STATUS_BY_API,
     VIEWING_STATUS_BY_API,
@@ -23,6 +32,9 @@ export const OFFER_FAIR_RATIO = 0.93;
 const VIEWING_TIME_FORMAT = "EEE H:mm";
 const VIEWING_LIMIT = 3;
 const ACTIVITY_LIMIT = 5;
+const TRIGGERED_LIMIT = 4;
+
+export const TRIGGERED_ALERT_TYPES: AlertType[] = ["PRICE_DROP", "NEW_LISTING"];
 
 export interface OfferBook {
     label: string;
@@ -90,7 +102,7 @@ export const offerBookFrom = (positions: OfferPosition[]): OfferBook => ({
     awaitingCount: positions.filter(
         (position) => position.status === "countered",
     ).length,
-    href: "/dashboard/offers",
+    href: BUYER_ROUTES.offers,
 });
 
 export const buyerStats = (
@@ -103,7 +115,7 @@ export const buyerStats = (
         label: "Saved",
         value: `${savedCount}`,
         icon: Heart,
-        href: "/dashboard/saved",
+        href: BUYER_ROUTES.saved,
         tone: "neutral",
     },
     {
@@ -111,7 +123,7 @@ export const buyerStats = (
         label: "Live offers",
         value: `${liveOffers(connections).length}`,
         icon: FileText,
-        href: "/dashboard/offers",
+        href: BUYER_ROUTES.offers,
         tone: "highlight",
     },
     {
@@ -122,7 +134,7 @@ export const buyerStats = (
             0,
         )}`,
         icon: CalendarDays,
-        href: "/dashboard/viewings",
+        href: BUYER_ROUTES.viewings,
         tone: "info",
     },
     {
@@ -130,7 +142,7 @@ export const buyerStats = (
         label: "Enquiries",
         value: `${connections.length}`,
         icon: Users,
-        href: "/dashboard/messages",
+        href: BUYER_ROUTES.messages,
         tone: "warning",
     },
     {
@@ -138,7 +150,7 @@ export const buyerStats = (
         label: "Unread",
         value: `${unreadCount}`,
         icon: MessageSquare,
-        href: "/dashboard/messages",
+        href: BUYER_ROUTES.messages,
         tone: "accent",
     },
 ];
@@ -267,13 +279,13 @@ export const journeyTasksFrom = (
         [
             "shortlist",
             "Save homes you like",
-            "/dashboard/saved",
+            BUYER_ROUTES.saved,
             savedCount > 0,
         ],
-        ["enquire", "Reach out to an agent", "/search", hasEnquiry],
-        ["viewing", "Book a viewing", "/dashboard/viewings", hasViewing],
-        ["offer", "Submit an offer", "/dashboard/offers", hasOffer],
-        ["escrow", "Open the transaction", "/dashboard/offers", hasPurchase],
+        ["enquire", "Reach out to an agent", PUBLIC_ROUTES.search, hasEnquiry],
+        ["viewing", "Book a viewing", BUYER_ROUTES.viewings, hasViewing],
+        ["offer", "Submit an offer", BUYER_ROUTES.offers, hasOffer],
+        ["escrow", "Open the transaction", BUYER_ROUTES.offers, hasPurchase],
     ];
 
     const firstOpen = steps.findIndex(([, , , done]) => !done);
@@ -285,3 +297,44 @@ export const journeyTasksFrom = (
         state: taskState(done, index === firstOpen),
     }));
 };
+
+export const triggeredAlertsFrom = (alerts: Alert[]): Alert[] =>
+    alerts
+        .filter((alert) => TRIGGERED_ALERT_TYPES.includes(alert.type))
+        .sort(
+            (a, b) =>
+                Number(!b.read) - Number(!a.read) ||
+                a.minutesAgo - b.minutesAgo,
+        )
+        .slice(0, TRIGGERED_LIMIT);
+
+export const buyerQuickActions: QuickAction[] = [
+    {
+        id: "browse",
+        label: "Browse properties",
+        href: PUBLIC_ROUTES.search,
+        icon: Search,
+        tone: "accent",
+    },
+    {
+        id: "offers",
+        label: "Manage offers",
+        href: BUYER_ROUTES.offers,
+        icon: FileText,
+        tone: "highlight",
+    },
+    {
+        id: "viewings",
+        label: "View all viewings",
+        href: BUYER_ROUTES.viewings,
+        icon: CalendarDays,
+        tone: "info",
+    },
+    {
+        id: "messages",
+        label: "Messages",
+        href: BUYER_ROUTES.messages,
+        icon: MessageSquare,
+        tone: "neutral",
+    },
+];

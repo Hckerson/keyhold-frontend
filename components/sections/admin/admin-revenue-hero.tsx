@@ -55,7 +55,6 @@ export function AdminRevenueHero({
                     <Link
                         href="/admin/transactions"
                         className={buttonVariants({
-                            variant: "secondary",
                             size: "sm",
                         })}
                     >
@@ -64,7 +63,7 @@ export function AdminRevenueHero({
                     <Link
                         href="/admin/payments"
                         className={buttonVariants({
-                            variant: "ghost",
+                            emphasis: "quiet",
                             size: "sm",
                         })}
                     >

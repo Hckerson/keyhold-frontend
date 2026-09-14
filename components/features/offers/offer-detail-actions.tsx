@@ -35,8 +35,8 @@ export function OfferDetailActions({
 
             {canPurchase ? (
                 <Button
-                    variant="primary"
-                    size="sm"
+                    emphasis="solid"
+                    tone="accent"
                     disabled={purchasePending}
                     onClick={onPurchase}
                 >
@@ -45,19 +45,14 @@ export function OfferDetailActions({
             ) : (
                 <>
                     <Button
-                        variant="primary"
-                        size="sm"
+                        emphasis="solid"
+                        tone="accent"
                         disabled={!canAccept}
                         onClick={onAccept}
                     >
                         Accept
                     </Button>
-                    <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled={!canCounter}
-                        onClick={onCounter}
-                    >
+                    <Button disabled={!canCounter} onClick={onCounter}>
                         Counter
                     </Button>
                 </>
