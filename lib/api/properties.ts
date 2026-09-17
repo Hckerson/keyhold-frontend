@@ -12,6 +12,7 @@ import type {
     UpdatePropertyInput,
 } from "@/lib/validations/property";
 import type { ModerationDecision, PropertyType } from "@/lib/enums/enums";
+import type { NearbyPlace } from "@/lib/types";
 
 export interface FacetOptions {
     price: string[];
@@ -43,6 +44,9 @@ export const propertiesAPI = {
 
     detail: (id: string) =>
         query.get<Property>(config.api.properties.detail(id)),
+
+    nearby: (id: string) =>
+        query.get<NearbyPlace[]>(config.api.properties.nearby(id)),
 
     facets: (filters: PropertyQuery, options: FacetOptions) =>
         query.post<FacetCounts>(config.api.properties.facets, {

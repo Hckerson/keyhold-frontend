@@ -1,6 +1,5 @@
 import { config } from "@/lib/constants";
 import type { ApiEnvelope } from "@/lib/api/client";
-import type { NearbyPlace } from "@/lib/types";
 import type {
     Property,
     PropertyPage,
@@ -43,9 +42,6 @@ async function serverGet<T>(path: string): Promise<T | null> {
 export const propertiesServerAPI = {
     detail: (id: string) =>
         serverGet<Property>(`${config.api.properties.detail(id)}`),
-
-    nearby: (id: string) =>
-        serverGet<NearbyPlace[]>(`${config.api.properties.nearby(id)}`),
 
     list: (input: PropertyQuery = {}) =>
         serverGet<PropertyPage>(
