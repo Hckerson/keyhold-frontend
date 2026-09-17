@@ -43,6 +43,15 @@ export const toPoiPins = (places: NearbyPlace[]): MapPin[] =>
         tone: POI_KINDS[place.kind].tone,
     }));
 
+export const neighbourhoodPins = (
+    listing: Listing,
+    places: NearbyPlace[],
+    shown: readonly PoiKind[],
+): MapPin[] => [
+    ...toListingPins([listing]),
+    ...toPoiPins(places.filter((place) => shown.includes(place.kind))),
+];
+
 export const countNearbyByKind = (
     places: NearbyPlace[],
 ): Record<PoiKind, number> =>

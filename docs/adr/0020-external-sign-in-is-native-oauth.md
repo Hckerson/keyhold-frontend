@@ -1,4 +1,4 @@
-# 0019 · External sign-in is native OAuth, not Passport strategies
+# 0020 · External sign-in is native OAuth, not Passport strategies
 
 **Status:** Accepted
 **Date:** 2026-09-11

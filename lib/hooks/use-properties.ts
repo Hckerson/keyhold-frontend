@@ -55,6 +55,16 @@ export function useProperty(id: string | undefined) {
     });
 }
 
+export function useNearbyPlaces(id: string, enabled = true) {
+    return useQuery({
+        queryKey: queryKeys.properties.nearby(id),
+        queryFn: () => propertiesAPI.nearby(id),
+        enabled,
+        staleTime: STALE_TIME,
+        gcTime: CACHE_TIME,
+    });
+}
+
 export function useCreateProperty() {
     const client = useQueryClient();
     return useMutation({

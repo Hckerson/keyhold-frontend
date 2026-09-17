@@ -346,7 +346,7 @@ Tests are not about proving code correct. They are about changing code six month
 >
 > **Verdict** — in order: **types and lint on everything** (nearly free) → **integration tests on the money paths** → **unit tests on genuinely tricky logic** → **three or four end-to-end tests** on the flows that would be an emergency. Ignore the coverage number.
 
-**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · Vitest frontend-side via `vitest.config.mts`, with `pnpm test` over 29 files colocated beside the units they cover · husky runs the local gate in two stages: `.husky/pre-commit` runs `pnpm lint-staged` — eslint then prettier, over staged files only, so it stays fast — and `.husky/pre-push` runs `pnpm type-check` then `pnpm lint` and blocks on failure. Tests are in neither hook; they run in CI.
+**In your repo** — `pnpm type-check` and `pnpm lint` on both sides · Jest configured backend-side with `backend/test/jest-e2e.json` · Vitest frontend-side via `vitest.config.mts`, with `pnpm test` over 31 files colocated beside the units they cover · husky runs the local gate in two stages: `.husky/pre-commit` runs `pnpm lint-staged` — eslint then prettier, over staged files only, so it stays fast — and `.husky/pre-push` runs `pnpm type-check` then `pnpm lint` and blocks on failure, and on the frontend `pnpm enums:check` after them, which fails the push when the hand-kept enum mirror drifts from the Prisma schema. Tests are in neither hook; they run in CI.
 
 ---
 
@@ -379,7 +379,7 @@ The gap between "works on my machine" and "works for everyone" is this stage. Au
 >
 > **Verdict — managed for the product, a VPS as a side quest.** Learning to run a server is genuinely valuable, just not while you are also learning everything else and trying to launch something.
 
-**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output · `.github/workflows/ci.yml` runs on every push to `master` or `development` and on every pull request: install, type-check, lint, `prettier --check`, build, test, with in-progress runs cancelled per branch. It covers the frontend only — the backend has no job yet, so its build and tests are still proven locally or not at all.
+**In your repo** — `pnpm build` produces the artifact on both sides · `backend/dist/` is the compiled output · `.github/workflows/ci.yml` runs on every push to `master` or `development` and on every pull request: install, type-check, lint, `prettier --check`, build, test, with in-progress runs cancelled per branch. The backend carries its own `.github/workflows/ci.yml` on the same triggers, and it starts a Postgres 17 service container first, so `pnpm db:deploy` applies every migration to a real database before type-check, lint, `prettier --check`, build and test run against it.
 
 ---
 

@@ -67,30 +67,31 @@ The spec has fallen behind these. Each is a considered decision that predates or
 
 These are **not** ratified. The blueprint stands, and each is blocked on a stated precondition rather than a disagreement.
 
-| Phase reference              | Owed                                                                | Blocked on                                                                                                 | Recorded in                                                         |
-| ---------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Page 5 · Sign Up             | Apple sign-in                                                       | Paid Apple developer account and a `.p8` signing key                                                       | [ADR 0019](../../docs/adr/0019-external-sign-in-is-native-oauth.md) |
-| Page 3 module 5 · Section 10 | School / transit / park / restaurant pins                           | No POI dataset — the map and the listing pin now render                                                    | ADR 0015                                                            |
-| Phase 1 · Buyer JTBD 1       | "Understand the market" — comparable prices, trends, neighbourhoods | No sold-price history is modelled; `/stats/trend` and `/stats/regions` exist but are admin-only            | —                                                                   |
-| Phase 1 · Competitive table  | Real-time collaboration                                             | No socket, SSE or polling transport — threads are `useQuery` with a five-minute `STALE_TIME`               | —                                                                   |
-| Phase 1 · Agent JTBD 2       | Qualify leads on buyer budget and readiness                         | No buyer financial field exists; the view model now says `Lead.listingPrice`, which is what it always held | —                                                                   |
-| Phase 1 · Agent JTBD 4       | Collaborate with other agents                                       | No representation model                                                                                    | [ADR 0018](../../docs/adr/0018-the-seller-is-the-agent.md)          |
-| Phase 1 · Seller JTBD 1      | Price guidance when listing                                         | No valuation source; sold comparables are not modelled                                                     | —                                                                   |
-| Phase 1 · KPI table          | Signup completion, search → offer, NPS                              | No product analytics; the funnel is unrecorded (stage 12 of the field guide)                               | —                                                                   |
+| Phase reference             | Owed                                                                | Blocked on                                                                                                 | Recorded in                                                         |
+| --------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| Page 5 · Sign Up            | Apple sign-in                                                       | Paid Apple developer account and a `.p8` signing key                                                       | [ADR 0020](../../docs/adr/0020-external-sign-in-is-native-oauth.md) |
+| Phase 1 · Buyer JTBD 1      | "Understand the market" — comparable prices, trends, neighbourhoods | No sold-price history is modelled; `/stats/trend` and `/stats/regions` exist but are admin-only            | —                                                                   |
+| Phase 1 · Competitive table | Real-time collaboration                                             | No socket, SSE or polling transport — threads are `useQuery` with a five-minute `STALE_TIME`               | —                                                                   |
+| Phase 1 · Agent JTBD 2      | Qualify leads on buyer budget and readiness                         | No buyer financial field exists; the view model now says `Lead.listingPrice`, which is what it always held | —                                                                   |
+| Phase 1 · Agent JTBD 4      | Collaborate with other agents                                       | No representation model                                                                                    | [ADR 0018](../../docs/adr/0018-the-seller-is-the-agent.md)          |
+| Phase 1 · Seller JTBD 1     | Price guidance when listing                                         | No valuation source; sold comparables are not modelled                                                     | —                                                                   |
+| Phase 1 · KPI table         | Signup completion, search → offer, NPS                              | No product analytics; the funnel is unrecorded (stage 12 of the field guide)                               | —                                                                   |
 
 ### Notes
 
 **The map surfaces are built.** MapLibre GL was taken as the dependency and the three surfaces shipped: `/map` (Page 4), the Map option on the search view toggle (Page 2 module 5), and a placed map on listing detail (Page 3 module 5). Tiles come from OpenFreeMap, which needs no key, and the origin is pinned in the CSP alongside `worker-src blob:` for MapLibre's workers.
 
-One part of Section 10 is still owed and is listed above: the school / transit / park / restaurant markers and their toggleable legend. Those need a POI dataset the platform does not have, and inventing pin positions for schools would be exactly the fabrication ADR 0015 refused for listings. The map, the listing's own pin and a status legend are real today.
+Section 10's place markers render too, and they are not invented. `GET /properties/:id/nearby` asks OpenStreetMap's Overpass API for named schools, railway stations, parks and restaurants within 1.5 km of the listing's coordinates, and caches the answer for 24 hours per coordinate cell of roughly 100 m. The neighbourhood tab fetches only when it opens, plots the places beside the listing's own pin, and carries a four-way toggle that is also the colour key and the count per kind. A listing without coordinates, or an area OpenStreetMap has not mapped, shows no places — the line ADR 0015 drew against fabricating positions.
 
-**Signup OTP.** The schema is closer than it looks: `VerificationToken` and `VerificationType.EMAIL` both exist, `User.emailVerified` exists and is surfaced, and `PhoneVerification` is already OTP-shaped (`code`, `attempts`, `expiresAt`). What is missing is that `AuthService.register` never mints an EMAIL token and never calls the email service. Two endpoints — send and verify — close this.
+One weakness is carried forward rather than hidden: a failed or timed-out Overpass call returns an empty list, and that empty list is cached for the same 24 hours, so a single slow response can blank an area's places for a day.
+
+**Signup OTP shipped.** `AuthService.register` now mints a six-digit `EMAIL` code and emails it, and `/verify-email` confirms or resends it — the send and verify endpoints this note once listed as missing.
 
 **Email verification does not gate anything.** The code is minted at register, emailed, and `/verify-email` writes `User.emailVerified` — but an unverified account still signs in and uses the platform, and the step offers "Do this later".
 
 That is deliberate. `EmailService` degrades to a logged warning when SMTP is unconfigured (`email.service.ts:76-81`), so a hard gate would lock every user out of any environment without mail credentials — including local and CI. Gating is a product decision to take once delivery is provably reliable; the flag it would read is now real.
 
-**External sign-in works for Google and Facebook.** Both are implemented natively against each provider's HTTP API — no Passport strategy and no new dependency — with PKCE, an HMAC-sealed state cookie, and Google's `id_token` verified against its JWKS by `node:crypto`. [ADR 0019](../../docs/adr/0019-external-sign-in-is-native-oauth.md) records why, and what it refused.
+**External sign-in works for Google and Facebook.** Both are implemented natively against each provider's HTTP API — no Passport strategy and no new dependency — with PKCE, an HMAC-sealed state cookie, and Google's `id_token` verified against its JWKS by `node:crypto`. [ADR 0020](../../docs/adr/0020-external-sign-in-is-native-oauth.md) records why, and what it refused.
 
 Listing a provider in `NEXT_PUBLIC_AUTH_PROVIDERS` is what renders its button, and credentials are what make it work: each provider needs its client ID and secret plus its redirect URI registered against `API_PUBLIC_URL`. Unconfigured, the client logs a warning and the route redirects to `/login?oauth=unavailable` rather than failing silently.
 
@@ -103,6 +104,16 @@ None of the five was a schema problem, which is the pattern worth keeping: the e
 **Real-time.** There is no transport for it. No `WebSocketGateway`, no `@nestjs/websockets`, no SSE, and no `refetchInterval` anywhere in `lib/hooks/`. Message threads are `useQuery` with `STALE_TIME` of five minutes plus invalidation after sending, so the sender sees their own message immediately and the recipient may not see it for five minutes. The competitive table's "Real-time Collaboration ✅" is the one positioning claim the code contradicts outright.
 
 **Market understanding.** The listing page's "comparables" are currently-active listings in the same locality, not sold comps — `soldMonthsAgo` is declared on the listing type and never populated by the mapper, so the "sold N months ago" branch is unreachable. Trend and region analytics do exist and are computed well; they are gated to `ADMIN`. Giving buyers market context is mostly a question of which audience the existing endpoints serve, plus a sold-price history the schema does not yet keep.
+
+---
+
+## Closed on 17 September 2026
+
+A sixth row of the same shape as the five closed on 9 September: the backend lookup shipped with `cffe088`, and nothing called it.
+
+| Phase reference              | Module                                                                                                |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Page 3 module 5 · Section 10 | School, transit, park and restaurant markers on listing detail, from OpenStreetMap, with a toggle key |
 
 ---
 
