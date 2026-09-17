@@ -1261,6 +1261,35 @@ footer span { font-family: var(--mono); }
             <code>common/access.ts</code>. The hot/warm/cold dimension the same row asked for was added instead, derived
             on read from offers, viewings, unread messages and contact recency. <b>ADR&nbsp;0016</b> records it.
         </p>
+
+        <h2>Remediation · 17 September 2026</h2>
+        <p class="lede">
+            Where the 8 September &ldquo;Still short&rdquo; list went. The sections above are left as they were
+            written.
+        </p>
+
+        <h3>Closed</h3>
+        <p>
+            Section&nbsp;10&rsquo;s school, transit, park and restaurant markers render on listing detail. The dataset
+            the section above said the platform lacked turned out to be OpenStreetMap:
+            <code>GET /properties/:id/nearby</code> asks the Overpass API for named places within 1.5&nbsp;km of the
+            listing&rsquo;s coordinates, and the neighbourhood tab plots them beside the listing&rsquo;s own pin with a
+            four-way toggle that is also the colour key and the count per kind. Positions come from the map data and
+            never from placement logic, so the fabrication concern above still holds. That closes the last open entry
+            in the section-level table.
+        </p>
+        <p>
+            Signup OTP and <code>/verify-email</code> shipped on 9 September. Google and Facebook sign-in shipped on
+            12 September, implemented natively against each provider &mdash; <b>ADR&nbsp;0020</b> records why &mdash;
+            alongside a one-way Google Calendar push for confirmed viewings.
+        </p>
+
+        <h3>Still short</h3>
+        <p>
+            Apple sign-in waits on a paid Apple developer account and its signing key. A failed or timed-out Overpass
+            lookup is cached as an empty result for the same 24 hours as a real one, so a single slow response can
+            blank an area&rsquo;s places for a day.
+        </p>
     </section>
 
     <footer>
@@ -1268,7 +1297,7 @@ footer span { font-family: var(--mono); }
         <span>15 conform · 13 short · 2 unbuilt</span>
         <span>8 beyond spec · 7 dead links</span>
         <span>Sources: phase-3 · phase-4 · phase-5</span>
-        <span>Remediated 8–9 Sep 2026 · 7 of 8 section gaps closed</span>
+        <span>Remediated 8–17 Sep 2026 · 8 of 8 section gaps closed</span>
     </footer>
 
 </div>

@@ -15,6 +15,7 @@ export const queryKeys = {
         bySeller: (sellerId: string, input: PropertyQuery) =>
             ["properties", "seller", sellerId, input] as const,
         detail: (id: string) => ["properties", "detail", id] as const,
+        nearby: (id: string) => ["properties", "nearby", id] as const,
         facets: (input: PropertyQuery) =>
             ["properties", "facets", input] as const,
     },
