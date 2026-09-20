@@ -101,7 +101,7 @@ export function MessagesConsole() {
                 onCompose={() => setComposing(true)}
             />
 
-            <MessagesStatBand stats={stats} />
+            <MessagesStatBand stats={stats} pending={interests.isPending} />
 
             <div className="console-split console-split--quarters console-split--tall gap-3">
                 <ConversationRail

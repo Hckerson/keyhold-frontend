@@ -52,7 +52,7 @@ export function InterestsConsole() {
         <div className="flex flex-col gap-4">
             <InterestsHeader summary={interestsSummary(interests)} />
 
-            <InterestsStatBand stats={stats} />
+            <InterestsStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <InterestsMain

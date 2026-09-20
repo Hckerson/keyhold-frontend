@@ -40,7 +40,10 @@ export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
                 onCreate={calendar.openCreate}
             />
 
-            <CalendarStatBand appointments={calendar.weekItems} />
+            <CalendarStatBand
+                appointments={calendar.weekItems}
+                pending={calendar.pending}
+            />
 
             <div className="console-split console-split--quarters gap-3">
                 <CalendarRail

@@ -29,7 +29,10 @@ export function DashboardSettingsConsole() {
                 onReset={settings.reset}
             />
 
-            <DashboardSettingsStatBand stats={settings.stats} />
+            <DashboardSettingsStatBand
+                stats={settings.stats}
+                pending={settings.loading}
+            />
 
             <DashboardSettingsNotices
                 saved={settings.saved}

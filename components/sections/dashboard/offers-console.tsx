@@ -52,7 +52,7 @@ export function OffersConsole() {
         <div className="flex flex-col gap-4">
             <OffersHeader summary={offersSummary(offers)} />
 
-            <OffersStatBand stats={stats} />
+            <OffersStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <OffersMain

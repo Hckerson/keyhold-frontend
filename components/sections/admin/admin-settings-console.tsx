@@ -164,6 +164,7 @@ export function AdminSettingsConsole() {
 
             <AdminSettingsStatBand
                 stats={buildSettingsStats(policies, loggedChanges)}
+                pending={settings.isPending}
             />
 
             {saved && (

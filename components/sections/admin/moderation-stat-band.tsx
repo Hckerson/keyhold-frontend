@@ -5,10 +5,14 @@ const BAND_LABEL = "Moderation queue at a glance";
 
 export interface ModerationStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function ModerationStatBand({ stats }: ModerationStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function ModerationStatBand({
+    stats,
+    pending,
+}: ModerationStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 ModerationStatBand.displayName = "ModerationStatBand";

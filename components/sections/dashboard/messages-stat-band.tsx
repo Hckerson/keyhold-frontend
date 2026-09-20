@@ -5,10 +5,11 @@ const BAND_LABEL = "Message activity at a glance";
 
 export interface MessagesStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function MessagesStatBand({ stats }: MessagesStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function MessagesStatBand({ stats, pending }: MessagesStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 MessagesStatBand.displayName = "MessagesStatBand";

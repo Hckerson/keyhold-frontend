@@ -105,7 +105,7 @@ export function LeadConsole() {
         <div className="flex flex-col gap-4">
             <LeadsHeader summary={leadsSummary(leads)} onAdd={onOpenAdd} />
 
-            <LeadsStatBand stats={leadStats(leads)} />
+            <LeadsStatBand stats={leadStats(leads)} pending={isPending} />
 
             <div className="console-split gap-3">
                 <LeadsMain

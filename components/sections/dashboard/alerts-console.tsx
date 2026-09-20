@@ -115,7 +115,7 @@ export function AlertsConsole() {
                 onMarkAllRead={onMarkAllRead}
             />
 
-            <AlertsStatBand stats={stats} />
+            <AlertsStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <AlertsMain

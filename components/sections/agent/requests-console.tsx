@@ -58,7 +58,11 @@ export function RequestsConsole() {
         <div className="flex flex-col gap-4">
             <PortalHeader title={COPY.title} lede={queue.summary} />
 
-            <StatBand label={COPY.title} stats={queue.stats} />
+            <StatBand
+                label={COPY.title}
+                stats={queue.stats}
+                pending={queue.pending}
+            />
 
             <div className="card-grid gap-3">
                 <Panel
