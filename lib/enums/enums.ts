@@ -232,6 +232,7 @@ export const AUDIT_ACTION_TYPES = [
     "LOGIN_SUCCEEDED",
     "LOGIN_FAILED",
     "PERMISSION_DENIED",
+    "SETTINGS_UPDATED",
 ] as const;
 
 export const MODERATION_DECISIONS = ["approve", "changes", "reject"] as const;
