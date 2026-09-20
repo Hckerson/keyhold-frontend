@@ -1,9 +1,13 @@
 import type { ReactNode } from "react";
 import { AxiosError, AxiosHeaders } from "axios";
-import { QueryClientProvider, useMutation } from "@tanstack/react-query";
+import {
+    QueryClientProvider,
+    useMutation,
+    useQuery,
+} from "@tanstack/react-query";
 import type { QueryClient } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createQueryClient } from "@/lib/api/query-client";
 import { GENERIC_FAILURE, type MutationFeedback } from "@/lib/config/feedback";
 import { useToastStore } from "@/lib/stores/toast-store";
@@ -29,6 +33,32 @@ const serverError = (message: string) => {
             data: { message },
         },
     );
+};
+
+const expiredSession = () => {
+    const headers = new AxiosHeaders();
+    return new AxiosError(
+        "Request failed",
+        "ERR_BAD_REQUEST",
+        { headers },
+        null,
+        {
+            status: 401,
+            statusText: "Unauthorized",
+            headers,
+            config: { headers },
+            data: { message: "This session has been ended" },
+        },
+    );
+};
+
+const runQuery = (key: string, failure: unknown) => {
+    const queryFn = vi.fn().mockRejectedValue(failure);
+    const { result } = renderHook(
+        () => useQuery({ queryKey: [key], queryFn, retryDelay: 0 }),
+        { wrapper },
+    );
+    return { queryFn, result };
 };
 
 const runMutation = async (
@@ -106,5 +136,20 @@ describe("mutation feedback", () => {
         );
 
         expect(toasts()[0].title).toBe("Offer submitted");
+    });
+});
+
+describe("retry policy", () => {
+    it("gives a stumbling service a second chance", async () => {
+        const { queryFn } = runQuery("stumble", serverError("Upstream failed"));
+
+        await waitFor(() => expect(queryFn).toHaveBeenCalledTimes(2));
+    });
+
+    it("spends no second request on a session the server has ended", async () => {
+        const { queryFn, result } = runQuery("expired", expiredSession());
+
+        await waitFor(() => expect(result.current.isError).toBe(true));
+        expect(queryFn).toHaveBeenCalledOnce();
     });
 });

@@ -1,9 +1,10 @@
 import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
+import { isUnauthorized } from "@/lib/utils/api-error";
 import {
-    AUTH_ROUTES,
     config,
+    isPortalPath,
     loginExpired,
     REQUEST_TIMEOUT,
 } from "@/lib/constants";
@@ -73,16 +74,14 @@ export const query = {
 apiClient.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-        if (error.response?.status === 401) {
-            const wasSignedIn = Boolean(useAuthStore.getState().user);
+        if (isUnauthorized(error)) {
             useAuthStore.getState().clearAuth();
-            if (
-                wasSignedIn &&
-                typeof window !== "undefined" &&
-                !window.location.pathname.startsWith(AUTH_ROUTES.login)
-            ) {
-                window.location.href = loginExpired(window.location.pathname);
-            }
+
+            const pathname =
+                typeof window === "undefined" ? "" : window.location.pathname;
+
+            if (isPortalPath(pathname))
+                window.location.href = loginExpired(pathname);
         }
         return Promise.reject(error);
     },
