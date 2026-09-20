@@ -18,7 +18,7 @@ export function TopbarTrail({ crumbs }: TopbarTrailProps) {
             <ol className="flex min-w-0 items-center gap-2">
                 {crumbs.map((crumb, index) => (
                     <li
-                        key={crumb.href}
+                        key={`${index}-${crumb.href}`}
                         className="flex min-w-0 items-center gap-2"
                     >
                         {index > 0 && (
