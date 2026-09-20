@@ -22,7 +22,7 @@ export interface MilestonePanelProps {
 
 export function MilestonePanel({ controls }: MilestonePanelProps) {
     const [editing, setEditing] = useState<DealMilestone | null>(null);
-    const { milestones, busy, rejected } = controls;
+    const { milestones, busy, rejected, progress } = controls;
     const settled = settledCount(milestones);
 
     return (
@@ -50,6 +50,14 @@ export function MilestonePanel({ controls }: MilestonePanelProps) {
                     icon={ListChecks}
                     title={COPY.empty}
                     description={COPY.emptyLede}
+                />
+            )}
+
+            {progress !== undefined && (
+                <ProgressBar
+                    value={progress}
+                    tone="info"
+                    label={COPY.uploading}
                 />
             )}
 
