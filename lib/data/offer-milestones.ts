@@ -25,6 +25,11 @@ export const MILESTONE_COPY = {
     reopen: "Reopen",
     appraisedValue: "Appraised value",
     note: "Note",
+    details: "Milestone detail",
+    edit: "Edit",
+    save: "Save",
+    cancel: "Cancel",
+    notePlaceholder: "What the other side should know",
 } as const;
 
 export const orderMilestones = (milestones: DealMilestone[]) =>

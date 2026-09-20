@@ -1,3 +1,9 @@
+import type { MilestoneKind } from "@/lib/enums/enums";
+import type {
+    DealMilestone,
+    UpdateMilestoneInput,
+} from "@/lib/validations/offer";
+
 export type OfferStatus =
     | "submitted"
     | "countered"
@@ -19,4 +25,20 @@ export interface Offer {
     status: OfferStatus;
     minutesAgo: number;
     note: string;
+}
+
+export type MilestoneDetailsInput = Pick<
+    UpdateMilestoneInput,
+    "appraisedValue" | "note"
+>;
+
+export interface DealMilestoneControls {
+    milestones: DealMilestone[];
+    loading: boolean;
+    busy: boolean;
+    rejected?: string;
+    onDateChange: (kind: MilestoneKind, date: string) => void;
+    onToggleComplete: (milestone: DealMilestone) => void;
+    onAttach: (kind: MilestoneKind, file: File) => void;
+    onSaveDetails: (kind: MilestoneKind, input: MilestoneDetailsInput) => void;
 }
