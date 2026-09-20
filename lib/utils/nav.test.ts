@@ -98,8 +98,30 @@ describe("trailFor", () => {
         ]);
     });
 
-    it("shows the portal root alone when the root is the current page", () => {
-        expect(labels("/dashboard")).toEqual(["Dashboard"]);
+    it("names the landing page on the portal root rather than the root alone", () => {
+        expect(labels("/dashboard")).toEqual(["Dashboard", "Overview"]);
+    });
+
+    it("shows the portal root alone when no nav route claims the root", () => {
+        expect(
+            trailFor({
+                pathname: "/dashboard",
+                routes: routesFrom(SECTIONS).filter(
+                    (route) => route.href !== "/dashboard",
+                ),
+                ...ROOT,
+            }).map((crumb) => crumb.label),
+        ).toEqual(["Dashboard"]);
+    });
+
+    it("marks exactly one crumb as the current page on the portal root", () => {
+        const crumbs = trailFor({
+            pathname: "/dashboard",
+            routes: routesFrom(SECTIONS),
+            ...ROOT,
+        });
+
+        expect(crumbs.filter((crumb) => crumb.current)).toHaveLength(1);
     });
 
     it("names a shared destination by its plain nav label", () => {
