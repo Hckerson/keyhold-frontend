@@ -1,4 +1,4 @@
-import { query } from "@/lib/api/client";
+import { query, type UploadProgress } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
     CreateOfferInput,
@@ -37,13 +37,18 @@ export const offersAPI = {
             input,
         ),
 
-    attachMilestoneDocument: (id: string, kind: MilestoneKind, file: File) => {
+    attachMilestoneDocument: (
+        id: string,
+        kind: MilestoneKind,
+        file: File,
+        onProgress?: UploadProgress,
+    ) => {
         const body = new FormData();
         body.append("file", file);
-        return query.post<DealMilestone>(
+        return query.upload<DealMilestone>(
             config.api.offers.milestoneDocument(id, kind),
             body,
-            { headers: { "Content-Type": "multipart/form-data" } },
+            onProgress,
         );
     },
 };
