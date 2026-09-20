@@ -2,8 +2,13 @@ import { MutationCache, QueryClient } from "@tanstack/react-query";
 import { GENERIC_FAILURE } from "@/lib/config/feedback";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import { notify } from "@/lib/stores/toast-store";
-import { errorMessage } from "@/lib/utils/api-error";
+import { errorMessage, isUnauthorized } from "@/lib/utils/api-error";
 import type { MutationFeedback } from "@/lib/config/feedback";
+
+const RETRY_LIMIT = 1;
+
+const retryUnlessExpired = (failureCount: number, error: unknown) =>
+    !isUnauthorized(error) && failureCount < RETRY_LIMIT;
 
 const reportSuccess = (meta?: MutationFeedback) => {
     if (!meta?.success) return;
@@ -28,10 +33,10 @@ export const createQueryClient = () =>
                 staleTime: STALE_TIME,
                 gcTime: CACHE_TIME,
                 refetchOnWindowFocus: false,
-                retry: 1,
+                retry: retryUnlessExpired,
             },
             mutations: {
-                retry: 1,
+                retry: retryUnlessExpired,
             },
         },
         mutationCache: new MutationCache({

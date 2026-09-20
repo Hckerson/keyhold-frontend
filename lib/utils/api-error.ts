@@ -2,6 +2,10 @@ import { isAxiosError } from "axios";
 import { NETWORK_FAILURE } from "@/lib/config/feedback";
 
 const CANCELED = "ERR_CANCELED";
+const UNAUTHORIZED = 401;
+
+export const isUnauthorized = (error: unknown): boolean =>
+    isAxiosError(error) && error.response?.status === UNAUTHORIZED;
 
 export const errorMessage = (error: unknown, fallback: string): string => {
     if (isAxiosError<{ message?: string | string[] }>(error)) {

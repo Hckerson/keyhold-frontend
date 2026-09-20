@@ -1,5 +1,6 @@
 "use client";
 
+import { PortalGuard } from "@/components/features/auth/portal-guard";
 import { PortalShell } from "@/components/layout/portal-shell";
 import { useDashboardNav } from "@/lib/hooks/use-dashboard-nav";
 
@@ -11,14 +12,16 @@ export default function DashboardLayout({
     const { sections, status } = useDashboardNav();
 
     return (
-        <PortalShell
-            brand={{ full: "Luxury RE", tagline: "Concierge" }}
-            sections={sections}
-            status={status}
-            rootLabel="Dashboard"
-            rootHref="/dashboard"
-        >
-            {children}
-        </PortalShell>
+        <PortalGuard role="BUYER">
+            <PortalShell
+                brand={{ full: "Luxury RE", tagline: "Concierge" }}
+                sections={sections}
+                status={status}
+                rootLabel="Dashboard"
+                rootHref="/dashboard"
+            >
+                {children}
+            </PortalShell>
+        </PortalGuard>
     );
 }
