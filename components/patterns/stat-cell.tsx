@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 
@@ -14,12 +15,22 @@ export interface StatDatum {
 
 export interface StatCellProps {
     stat: StatDatum;
+    pending?: boolean;
 }
 
 const CELL = "flex h-14 items-center gap-2 px-3";
 
-export function StatCell({ stat }: StatCellProps) {
+export function StatCell({ stat, pending }: StatCellProps) {
     const Icon = stat.icon;
+
+    if (pending)
+        return (
+            <div className={CELL}>
+                <Skeleton className="size-3 shrink-0 rounded-full" />
+                <Skeleton className="h-2.5 w-24" />
+                <Skeleton className="ml-auto h-4 w-12 shrink-0 rounded-md" />
+            </div>
+        );
 
     const body = (
         <>

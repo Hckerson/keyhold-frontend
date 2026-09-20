@@ -29,6 +29,9 @@ export function AgentOverviewConsole() {
     const connections = useIncomingConnections();
     const sales = useSales();
 
+    const pending =
+        seller.isPending || connections.isPending || sales.isPending;
+
     const items = useMemo(() => connections.data ?? [], [connections.data]);
     const salesItems = useMemo(() => sales.data ?? [], [sales.data]);
 
@@ -39,7 +42,25 @@ export function AgentOverviewConsole() {
         [items, salesItems],
     );
 
-    const summary = useMemo(() => pipelineSummaryFrom(stages), [stages]);
+    const view = useMemo(
+        () =>
+            pending
+                ? null
+                : {
+                      summary: pipelineSummaryFrom(stages),
+                      sales: closedSalesFrom(salesItems),
+                      activity: recentActivityFrom(items),
+                      showings: upcomingShowingsFrom(items),
+                      leads: recentLeadsFrom(leads),
+                      digest: leadsSummary(leads),
+                  },
+        [pending, stages, salesItems, items, leads],
+    );
+
+    const stats = useMemo(
+        () => agentStats(seller.data, leads),
+        [seller.data, leads],
+    );
 
     if (seller.isError || connections.isError)
         return (
@@ -54,23 +75,22 @@ export function AgentOverviewConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AgentOverviewHeader
-                name={user?.name}
-                summary={leadsSummary(leads)}
-            />
+            <AgentOverviewHeader name={user?.name} summary={view?.digest} />
 
-            <AgentOverviewStatBand stats={agentStats(seller.data, leads)} />
+            <AgentOverviewStatBand stats={stats} pending={pending} />
 
             <div className="console-split gap-3">
                 <AgentOverviewMain
-                    summary={summary}
+                    summary={view?.summary}
                     stages={stages}
-                    sales={closedSalesFrom(salesItems)}
-                    activity={recentActivityFrom(items)}
+                    sales={view?.sales ?? []}
+                    activity={view?.activity ?? []}
+                    pending={pending}
                 />
                 <AgentOverviewRail
-                    showings={upcomingShowingsFrom(items)}
-                    leads={recentLeadsFrom(leads)}
+                    showings={view?.showings ?? []}
+                    leads={view?.leads ?? []}
+                    pending={pending}
                 />
             </div>
         </div>

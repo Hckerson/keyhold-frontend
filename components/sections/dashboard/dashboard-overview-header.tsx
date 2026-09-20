@@ -5,7 +5,7 @@ import { PUBLIC_ROUTES } from "@/lib/constants";
 
 const OVERVIEW_LEDE = "Your offers, viewings and saved-search activity";
 const BROWSE_LABEL = "Browse properties";
-const FALLBACK_NAME = "there";
+const GREETING = "Welcome back";
 
 export interface DashboardOverviewHeaderProps {
     name?: string;
@@ -16,7 +16,7 @@ export function DashboardOverviewHeader({
 }: DashboardOverviewHeaderProps) {
     return (
         <PortalHeader
-            title={`Welcome back, ${name ?? FALLBACK_NAME}`}
+            title={name ? `${GREETING}, ${name}` : GREETING}
             lede={OVERVIEW_LEDE}
             action={
                 <Link
