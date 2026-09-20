@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { format, isToday, isTomorrow } from "date-fns";
 import type { ChartTone } from "@/lib/config/chart-tones";
+import { countByStage } from "@/lib/data/agent-leads";
 import type { StatDatum } from "@/components/patterns/stat-cell";
 import type { ActivityEntry, QuickAction } from "@/lib/types";
 import type { Lead, LeadStage } from "@/lib/types/lead";
@@ -108,7 +109,7 @@ export const agentStats = (
     {
         id: "leads",
         label: "Open enquiries",
-        value: `${leads.filter((lead) => lead.stage !== "declined").length}`,
+        value: `${countByStage(leads).pending}`,
         icon: Users,
         href: "/agent/leads",
         tone: "info",
@@ -198,6 +199,11 @@ export const pipelineSummaryFrom = (
 export const closedSalesFrom = (sales: Transaction[]): ClosedSale[] =>
     sales
         .filter((sale) => sale.status === "COMPLETED" && sale.completedAt)
+        .sort(
+            (a, b) =>
+                new Date(b.completedAt ?? b.updatedAt).getTime() -
+                new Date(a.completedAt ?? a.updatedAt).getTime(),
+        )
         .slice(0, RECENT_LIMIT)
         .map((sale) => {
             const ask = sale.property?.price ?? 0;
@@ -261,13 +267,16 @@ export const upcomingShowingsFrom = (
         }));
 
 export const recentLeadsFrom = (leads: Lead[]): RecentLead[] =>
-    leads.slice(0, RECENT_LIMIT).map((lead) => ({
-        id: lead.id,
-        name: lead.name,
-        listingPrice: lead.listingPrice,
-        stage: lead.stage,
-        received: lead.lastContact,
-    }));
+    [...leads]
+        .sort((a, b) => a.lastContactMinutes - b.lastContactMinutes)
+        .slice(0, RECENT_LIMIT)
+        .map((lead) => ({
+            id: lead.id,
+            name: lead.name,
+            listingPrice: lead.listingPrice,
+            stage: lead.stage,
+            received: lead.lastContact,
+        }));
 
 export const recentActivityFrom = (
     connections: ConnectionListItem[],

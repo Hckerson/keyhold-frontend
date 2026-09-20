@@ -1,5 +1,5 @@
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { formatMillions } from "@/lib/utils";
+import { formatCompactUsd, percentOf } from "@/lib/utils";
 import type { PipelineStage } from "@/lib/data/agent-overview";
 
 const NO_VALUE = "—";
@@ -19,12 +19,12 @@ export function OverviewStageRow({ stage, maxCount }: OverviewStageRowProps) {
                 {stage.count}
             </span>
             <ProgressBar
-                value={(stage.count / maxCount) * 100}
+                value={percentOf(stage.count, maxCount)}
                 tone={stage.tone}
                 className="min-w-0 flex-1"
             />
             <span className="text-text w-16 shrink-0 text-right text-xs font-semibold tabular-nums">
-                {stage.value > 0 ? formatMillions(stage.value) : NO_VALUE}
+                {stage.value > 0 ? formatCompactUsd(stage.value) : NO_VALUE}
             </span>
         </li>
     );

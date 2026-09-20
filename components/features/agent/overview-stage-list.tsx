@@ -6,7 +6,7 @@ export interface OverviewStageListProps {
 }
 
 export function OverviewStageList({ stages }: OverviewStageListProps) {
-    const maxCount = Math.max(...stages.map((stage) => stage.count));
+    const maxCount = Math.max(...stages.map((stage) => stage.count), 0);
 
     return (
         <ul className="divide-border divide-y">
