@@ -83,7 +83,7 @@ These are **not** ratified. The blueprint stands, and each is blocked on a state
 
 Section 10's place markers render too, and they are not invented. `GET /properties/:id/nearby` asks OpenStreetMap's Overpass API for named schools, railway stations, parks and restaurants within 1.5 km of the listing's coordinates, and caches the answer for 24 hours per coordinate cell of roughly 100 m. The neighbourhood tab fetches only when it opens, plots the places beside the listing's own pin, and carries a four-way toggle that is also the colour key and the count per kind. A listing without coordinates, or an area OpenStreetMap has not mapped, shows no places — the line ADR 0015 drew against fabricating positions.
 
-One weakness is carried forward rather than hidden: a failed or timed-out Overpass call returns an empty list, and that empty list is cached for the same 24 hours, so a single slow response can blank an area's places for a day.
+A failed lookup is told apart from a genuinely empty one. `fetchNearby` returns `null` when Overpass errors or times out and an array when it answers, so a real "nothing within 1.5 km" is cached for the full 24 hours while a failure is cached for five minutes and then retried. The visitor still sees no places either way; the difference is that an outage costs one map, not a day of them.
 
 **Signup OTP shipped.** `AuthService.register` now mints a six-digit `EMAIL` code and emails it, and `/verify-email` confirms or resends it — the send and verify endpoints this note once listed as missing.
 
