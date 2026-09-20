@@ -4,7 +4,7 @@ import {
     type StatusBadgeProps,
 } from "@/components/ui/status-badge";
 import { formatCompactUsd, initialsOf } from "@/lib/utils";
-import type { RecentLead } from "@/lib/data/agent-overview";
+import type { RecentLead } from "@/lib/types";
 import type { LeadStage } from "@/lib/types/lead";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 

@@ -1,6 +1,6 @@
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { formatCompactUsd, percentOf } from "@/lib/utils";
-import type { PipelineStage } from "@/lib/data/agent-overview";
+import type { PipelineStage } from "@/lib/types";
 
 const NO_VALUE = "—";
 

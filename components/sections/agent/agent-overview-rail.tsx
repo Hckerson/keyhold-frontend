@@ -6,11 +6,8 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { OverviewShowingList } from "@/components/features/agent/overview-showing-list";
 import { OverviewLeadList } from "@/components/features/agent/overview-lead-list";
 import { QuickActionList } from "@/components/features/shared/quick-action-list";
-import {
-    agentQuickActions,
-    type RecentLead,
-    type UpcomingShowing,
-} from "@/lib/data/agent-overview";
+import { agentQuickActions } from "@/lib/data/agent-overview";
+import type { RecentLead, UpcomingShowing } from "@/lib/types";
 
 const SHOWINGS_TITLE = "Upcoming Showings";
 const SHOWINGS_ACTION = "Calendar";

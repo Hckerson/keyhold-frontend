@@ -1,5 +1,5 @@
 import { OverviewSaleRow } from "@/components/features/agent/overview-sale-row";
-import type { ClosedSale } from "@/lib/data/agent-overview";
+import type { ClosedSale } from "@/lib/types";
 
 export interface OverviewSaleListProps {
     sales: ClosedSale[];

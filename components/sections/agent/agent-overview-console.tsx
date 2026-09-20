@@ -9,13 +9,15 @@ import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     agentStats,
-    closedSalesFrom,
     pipelineStagesFrom,
     pipelineSummaryFrom,
+} from "@/lib/data/agent-overview";
+import {
+    closedSalesFrom,
     recentActivityFrom,
     recentLeadsFrom,
     upcomingShowingsFrom,
-} from "@/lib/data/agent-overview";
+} from "@/lib/data/agent-overview-feed";
 import { leadsSummary, rankLeads } from "@/lib/data/agent-leads";
 import { useIncomingConnections } from "@/lib/hooks/use-connections";
 import { useSession } from "@/lib/hooks/use-session";

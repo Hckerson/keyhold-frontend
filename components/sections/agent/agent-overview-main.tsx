@@ -7,12 +7,12 @@ import { ActivityList } from "@/components/features/shared/activity-list";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Handshake, History } from "lucide-react";
 import type {
+    ActivityEntry,
     ClosedSale,
     PipelineStage,
     PipelineSummary,
-} from "@/lib/data/agent-overview";
+} from "@/lib/types";
 import { ACTIVITY_COPY } from "@/lib/config/activity";
-import type { ActivityEntry } from "@/lib/types";
 
 const SALES_TITLE = "Closed Sales";
 const SALES_LEDE = "Recent comps, days on market and result against ask";
