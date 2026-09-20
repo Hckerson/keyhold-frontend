@@ -91,7 +91,10 @@ export function AdminOverviewConsole() {
                 summary={overviewSummary(platform.data, users.data)}
             />
 
-            <AdminOverviewStatBand stats={stats} />
+            <AdminOverviewStatBand
+                stats={stats}
+                pending={platform.isPending || users.isPending}
+            />
 
             <div className="console-split gap-3">
                 <AdminOverviewMain

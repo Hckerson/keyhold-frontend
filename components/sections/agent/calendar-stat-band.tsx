@@ -5,11 +5,19 @@ const BAND_LABEL = "Week at a glance";
 
 export interface CalendarStatBandProps {
     appointments: Appointment[];
+    pending?: boolean;
 }
 
-export function CalendarStatBand({ appointments }: CalendarStatBandProps) {
+export function CalendarStatBand({
+    appointments,
+    pending,
+}: CalendarStatBandProps) {
     return (
-        <StatBand label={BAND_LABEL} stats={calendarLoadStats(appointments)} />
+        <StatBand
+            label={BAND_LABEL}
+            stats={calendarLoadStats(appointments)}
+            pending={pending}
+        />
     );
 }
 

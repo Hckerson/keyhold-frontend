@@ -5,10 +5,14 @@ const BAND_LABEL = "Platform configuration at a glance";
 
 export interface AdminSettingsStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function AdminSettingsStatBand({ stats }: AdminSettingsStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function AdminSettingsStatBand({
+    stats,
+    pending,
+}: AdminSettingsStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 AdminSettingsStatBand.displayName = "AdminSettingsStatBand";

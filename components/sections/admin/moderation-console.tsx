@@ -119,7 +119,7 @@ export function ModerationConsole() {
         <div className="flex flex-col gap-4">
             <ModerationHeader summary={moderationSummary(listings)} />
 
-            <ModerationStatBand stats={stats} />
+            <ModerationStatBand stats={stats} pending={flags.isPending} />
 
             <div className="console-split gap-3">
                 <ModerationMain

@@ -43,7 +43,7 @@ const SAVED_LEDE =
 const LISTING_QUERY = { limit: 1 } as const;
 
 export function AgentSettingsConsole() {
-    const { data: user, isError, refetch } = useCurrentUser();
+    const { data: user, isPending, isError, refetch } = useCurrentUser();
     const listings = useSellerProperties(user?.id, LISTING_QUERY);
     const updateUser = useUpdateUser(user?.id ?? "");
     const storedPreferences = useNotificationPreferences();
@@ -160,6 +160,7 @@ export function AgentSettingsConsole() {
                     credentials.length,
                     notifications,
                 )}
+                pending={isPending}
             />
 
             {saved && (
