@@ -4,6 +4,7 @@ export { parseLocalDate } from "./date-parser";
 export { storage } from "./local-storage";
 export { sum, percentOf, averageOf } from "./math";
 export {
+    formatDayAndMonth,
     formatUsd,
     formatCompactUsd,
     formatMillions,
