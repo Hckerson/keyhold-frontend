@@ -1,5 +1,10 @@
 import axios from "axios";
-import type { AxiosInstance, AxiosRequestConfig, AxiosError } from "axios";
+import type {
+    AxiosInstance,
+    AxiosRequestConfig,
+    AxiosError,
+    AxiosProgressEvent,
+} from "axios";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { isUnauthorized } from "@/lib/utils/api-error";
 import {
@@ -8,6 +13,12 @@ import {
     loginExpired,
     REQUEST_TIMEOUT,
 } from "@/lib/constants";
+
+const PERCENT = 100;
+
+const MULTIPART_HEADERS = { "Content-Type": "multipart/form-data" };
+
+export type UploadProgress = (percent: number) => void;
 
 type ParamValue = string | number | boolean;
 
@@ -58,6 +69,13 @@ const request = async <T>(config: AxiosRequestConfig): Promise<T> => {
     return response.data.data;
 };
 
+const trackUpload =
+    (onProgress: UploadProgress) =>
+    ({ loaded, total }: AxiosProgressEvent) => {
+        if (!total) return;
+        onProgress(Math.round((loaded / total) * PERCENT));
+    };
+
 export const query = {
     get: <T>(url: string, config?: AxiosRequestConfig) =>
         request<T>({ method: "GET", url, ...config }),
@@ -69,6 +87,14 @@ export const query = {
         request<T>({ method: "PUT", url, data: body, ...config }),
     delete: <T>(url: string, config?: AxiosRequestConfig) =>
         request<T>({ method: "DELETE", url, ...config }),
+    upload: <T>(url: string, body: FormData, onProgress?: UploadProgress) =>
+        request<T>({
+            method: "POST",
+            url,
+            data: body,
+            headers: MULTIPART_HEADERS,
+            onUploadProgress: onProgress ? trackUpload(onProgress) : undefined,
+        }),
 };
 
 apiClient.interceptors.response.use(
