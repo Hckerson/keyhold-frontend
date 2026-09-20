@@ -8,7 +8,6 @@ const providerColumns = (count: number) =>
 
 const PROVIDER_LABELS: Record<string, string> = {
     google: "Google",
-    apple: "Apple",
     facebook: "Facebook",
 };
 
