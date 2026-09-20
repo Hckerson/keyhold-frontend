@@ -1,21 +1,25 @@
 # Design-OS Conformance — Re-audit
 
-**Frontend re-audit · 20 September 2026 · companion to [DESIGN_OS_CONFORMANCE.html](DESIGN_OS_CONFORMANCE.html)**
+**Frontend re-audit · first pass 20 September 2026 · revalidated the same day**
 
-The original audit found thirteen routes built but short of their named modules, two ship-blocking defects, and seven links that resolved to the 404 page. This is a fresh read of the tree against that list — five independent sweeps, every verdict traced to a file and a line rather than to the ledger's own prose.
+The 5 September audit found thirteen routes built but short of their named modules, two ship-blocking defects, two routes never built, and seven links that resolved to the 404 page. Its tally was _15 to spec · 13 modules short · 2 never built · 8 beyond spec · 7 dead links_.
 
-|        |                           |
-| ------ | ------------------------- |
-| **13** | Routes re-verified closed |
-| **47** | Routes, zero dead links   |
-| **2**  | Sections still partial    |
-| **7**  | Open defects              |
+That audit lives in [DESIGN_OS_CONFORMANCE.html](DESIGN_OS_CONFORMANCE.html), which was dropped in `c9f4a61` alongside the rendered `DEPLOYMENT.html` and restored from that commit's parent. The deletion looks like collateral: the other rendered pages each had a markdown twin, so dropping them lost nothing, but the ledger was authored as HTML and had no twin. It is the dated record of what each audit found, and it is append-only — three remediation sections now, 8 through 20 September.
+
+Every verdict below comes from reading code, traced to a file and a line.
+
+|            |                                 |
+| ---------- | ------------------------------- |
+| **13**     | Routes re-verified closed       |
+| **47**     | Routes, zero dead links         |
+| **6 of 7** | First-pass defects since closed |
+| **1**      | Open item                       |
 
 ---
 
 ## The bucket is closed
 
-All thirteen, plus both never-built routes. Six of the eight section-level gaps are closed or ratified.
+All thirteen, plus both never-built routes. Every section-level gap is now closed or ratified.
 
 | Route                 | Blueprint                    | What is there now                                                                                                         |
 | --------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -30,7 +34,7 @@ All thirteen, plus both never-built routes. Six of the eight section-level gaps 
 | `/agent`              | Page 15                      | Quick links — one shared component across all three overview rails.                                                       |
 | `/agent/leads`        | Page 17                      | hot / warm / cold scored from offers, viewings, unread and recency. Surfaced in table, hero and rail.                     |
 | `/agent/pipeline`     | Page 18 · Section 42         | Native HTML5 drag plus a per-deal modal. Two drops mutate a real offer; every other drop is refused by name.              |
-| `/agent/calendar`     | Page 19                      | Create event writes a real viewing. Google push is one-way and fire-and-log.                                              |
+| `/agent/calendar`     | Page 19                      | Create event writes a real viewing. Google push is one-way, fire-and-log, and now reports its own failures.               |
 | `/admin`              | Page 20 module 7             | Quick Actions, all four spec entries in spec order.                                                                       |
 | `/admin/settings`     | Page 27 modules 3, 5, 6, 7   | Reporting Timezone as a real select; all eight policy toggles in two groups; Maintenance Panel on real endpoints.         |
 
@@ -46,120 +50,68 @@ Both resolved, and the dead-link sweep went wider than the original seven.
 
 ---
 
-## Open defects
+## Defects found, and since closed
 
-Ranked by what a real person hits, not by how hard they are to fix.
+The first pass of this re-audit raised seven. Six were fixed between that pass and the revalidation, so each is recorded here with what actually closed it rather than deleted.
 
-### 1 · Milestone upload does no screening — **High**
+### 1 · Milestone upload did no screening — closed
 
-`components/features/offers/milestone-row.tsx:112-122` imports `MESSAGE_ATTACHMENTS` only for the `accept` attribute — a picker hint the user defeats by switching the filter. There is no `screenFiles` call, no check against the 10 MiB limit, and no progress.
+The raw `<input type="file">` in `milestone-row.tsx` is still there, but it is now only a trigger. Screening moved up into the hook: `use-deal-milestones.ts` `onAttach` calls `screenFiles([file], DOCUMENT_UPLOAD.accept, DOCUMENT_UPLOAD.maxBytes)` and surfaces the first rejection before anything reaches the wire. The shared config was renamed `MESSAGE_ATTACHMENTS` → `DOCUMENT_UPLOAD` in the process.
 
-A buyer attaching a 25 MB inspection report watches it upload, cross the wire, and fail at the server as a generic error. Every other upload site routes through the `FileUpload` primitive or at least calls `screenFiles`; the helpers are imported one line away.
+Putting the gate in the hook rather than the component is the better placement — every consumer of the hook inherits it.
 
-### 2 · A failed calendar push is invisible to the agent — **High**
+### 2 · A failed calendar push was invisible to the agent — closed
 
-`calendar.service.ts:199-203` catches and logs, and is invoked as `void this.calendarService.pushViewing(...)`. That part is right — Google must never be able to fail a viewing.
+`CalendarConnection` gained `lastSyncAt`, `lastSyncError` and `lastSyncErrorAt`. `calendar.service.ts` writes them on every push outcome, and `status()` returns `lastSyncedAt` plus `lastFailedAt`. Both are in `calendarStatusSchema`, and `calendar-sync-panel.tsx` derives `failing`, switches its `StatusDot` to `error`, shows the failure date, and swaps in a `failingLede`.
 
-But nothing surfaces the failure, while the panel keeps saying confirmed viewings are written to your calendar. An agent trusts a calendar that silently is not syncing. Quiet degradation where a visible failure was available.
+The push is still correctly fire-and-log — Google still cannot fail a viewing — but the agent is no longer told everything is fine when it is not.
 
-### 3 · Apple is a trap that arms itself — **Medium**
+### 3 · Apple was a trap that armed itself — closed
 
-`AppleMark` is still in `PROVIDER_MARKS`, but `PROVIDER_BY_SLUG` carries only Google and Facebook. Listing `apple` in `NEXT_PUBLIC_AUTH_PROVIDERS` renders a real button that 404s. ADR 0020 documents the discipline; the code does not enforce it. Dropping the mark would make the gate self-enforcing.
+`AppleMark` has been removed from `provider-marks.tsx` entirely. The gate is now self-enforcing: listing `apple` in `NEXT_PUBLIC_AUTH_PROVIDERS` renders nothing, because the mark no longer exists to match.
 
-### 4 · Section 21 — appraisal value and note are unreachable — **Medium**
+### 4 · Section 21 — appraisal value and note were unreachable — closed
 
-Both exist in the Prisma model, the DTO, the service and `updateMilestoneSchema`. Neither is ever sent: `use-deal-milestones.ts` posts only `kind`, `status` and `dueAt`, and no input renders them. The blueprint's "appraisal … value" cannot be entered. The only section gap still open.
+`milestone-detail-modal.tsx` now sends both. `appraisedValue` is parsed from digits and included only when the milestone is a valued kind; `note` is trimmed and sent alongside. The last section-level gap.
 
-### 5 · The map is not viewport-driven — **Medium**
+### 5 · The map was not viewport-driven — closed
 
-The bounding-box filter is built and correct, including antimeridian wrap — but it lives on `GET /properties`, and no frontend caller ever sends it. `MapExperience` fetches a flat `limit: 200`; panning and zooming do not re-query, and there is no "search this area". The backend half of [ADR 0015](adr/0015-map-surfaces-wait-on-coordinates.md) landed; the frontend half was never wired.
+`south` / `north` / `west` / `east` are in the property query schema, and `map-experience.tsx` holds a `bounds` state, spreads it into the query, and offers a reset control when a bound is applied. The frontend half of [ADR 0015](adr/0015-map-surfaces-wait-on-coordinates.md) is wired.
 
-### 6 · Seeded coordinates are synthetic — **Medium**
+### 6 · Copy that overstated the system — closed
 
-`seed-data/coordinates.ts` hash-jitters each property ±0.012° around eight hardcoded locality centres. Fine as demo data — but these are pins claiming a house sits somewhere it does not. Geocode before this is in front of real buyers.
+`AuditActionType` now carries `SETTINGS_UPDATED`, and `audit-log.interceptor.ts:150` maps the settings endpoint onto it. The restore-defaults confirmation's claim that the change is recorded in the change log is now true.
 
-### 7 · Copy that overstates the system — **Low**
+---
 
-The restore-defaults confirmation says the change is "recorded against your account in the change log". It is not: `mapEndpointToAction` has no `/settings` branch and `AuditActionType` has no settings member. The change-log rail shows generic audit rows, never settings edits.
+## Still open
+
+### Seeded coordinates are synthetic — disclosed, not resolved
+
+`seed-data/coordinates.ts` still hash-jitters each property ±0.012° around eight hardcoded locality centres; `SPREAD_DEGREES` is unchanged. These remain pins claiming a house sits somewhere it does not.
+
+What changed is honesty rather than accuracy. `backfill-coordinates.ts` now opens with a notice — _"These coordinates are approximations around a locality centre, not geocoded addresses. Do not run this against a database real buyers will see"_ — and reports "Placed N properties approximately."
+
+That is the right interim move, and it does not discharge the requirement. Geocoding is still owed before any of this reaches a real buyer.
 
 ---
 
 ## Where the record drifted from the code
 
-**01 —** `design-os/INDEX/RATIFIED_DIVERGENCES.md` still describes the privacy page as naming **SendGrid** among its processors. The page has said "Our SMTP email provider" since the SMTP migration. The page is right; the note about it is stale.
+`design-os/INDEX/RATIFIED_DIVERGENCES.md` still describes the privacy page as naming **SendGrid** among its processors. The page has said "Our SMTP email provider" since the SMTP migration. The page is right; the note about it is stale.
 
-**02 —** The conformance ledger's own remediation strip still reads **"3 Still short"** — the three map surfaces. This re-audit finds all three closed.
+This was not corrected in place — `design-os/` is append-only, so the fix belongs in a new entry rather than a rewrite of the old one.
 
-Neither was corrected in place. `design-os/` is append-only, and the conformance file is dated evidence of what the 5 September audit found; rewriting either would destroy the record rather than update it.
+A second drift item from the first pass — the conformance ledger's remediation strip reading "3 Still short" — was **withdrawn on revalidation**. That strip sits inside the ledger's 8 September section, superseded by the sections dated the 17th and 20th, whose closing footer reads "8 of 8 section gaps closed". A dated entry in an append-only chronology is not a stale claim; reading it as one was the error.
 
 ---
 
 ## Method, and what it does not cover
 
-Five independent read-only sweeps — public and map, auth and buyer, agent, admin and offers, and a ship-blocker pass — each reporting one verdict per named gap with file and line evidence.
+Five independent read-only sweeps — public and map, auth and buyer, agent, admin and offers, and a ship-blocker pass — each reporting one verdict per named gap with file and line evidence. A second pass then revalidated all nine first-pass findings against disk.
 
-> **Nothing was built, type-checked, linted or tested for this pass.** Every verdict above comes from reading code. Runtime behaviour, and any href computed at runtime, is outside what a static read can prove.
-
----
-
-**13 routes closed · 2 sections partial · 47 routes with 0 dead links · 7 open defects · 2 stale records**
+> **Nothing was built, type-checked, linted or tested for either pass.** Every verdict above comes from reading code. Runtime behaviour, and any href computed at runtime, is outside what a static read can prove.
 
 ---
 
-## Remediation — 20 September 2026
-
-All seven open defects are closed. The findings above are left as they were written; this section records what changed, not a revision of what was found.
-
-### 1 · Milestone upload screening — closed
-
-Screening moved to the hook that owns the mutation. `useDealMilestones.onAttach` now runs `screenFiles` against the shared limit and returns a `rejected` reason instead of firing the request; `MilestonePanel` renders it. `accept` and `maxBytes` were lifted out of `MESSAGE_ATTACHMENTS` into `lib/config/uploads.ts`, which the message config spreads — one declaration mirroring the backend's `MAX_UPLOAD_BYTES`, and no offers component importing a messaging constant.
-
-A 25 MB report is now refused in the browser, by name, before it crosses the wire.
-
-**Not fixed:** upload progress. `lib/api/client.ts` is `fetch`-based and `fetch` exposes no upload-progress events, so a determinate bar needs a transport change. The row stays disabled while the attach is in flight.
-
-### 2 · Failed calendar push — closed
-
-`CalendarConnection` gained `lastSyncAt`, `lastSyncError` and `lastSyncErrorAt` (migration `0014_calendar_sync_outcome`). `pushViewing` and `removeViewing` record the outcome through `recordSync`, which is itself wrapped so recording can never fail a viewing — the fire-and-log guarantee in ADR 0020 is unchanged.
-
-`GET /calendar/google` exposes `lastSyncedAt` and `lastFailedAt` as timestamps only; the upstream error text stays server-side for support and never reaches the browser. When the latest attempt failed, `CalendarSyncPanel` drops the "Confirmed viewings are written to your calendar" lede for "Confirmed viewings are not reaching your calendar", turns the status dot red, and dates both the last success and the failure.
-
-### 3 · Apple — closed
-
-`AppleMark` and the `apple` entries in `PROVIDER_MARKS` and `PROVIDER_LABELS` are gone. `SocialAuthRow` already filtered on `provider in PROVIDER_MARKS`, so listing `apple` in `NEXT_PUBLIC_AUTH_PROVIDERS` is now inert rather than a button that 404s. The gate enforces itself; ADR 0020's reasoning stands, only its "the mark still renders" line is superseded.
-
-### 4 · Section 21 appraisal value and note — closed
-
-`MILESTONE_COPY` already carried `appraisedValue` and `note` unused. A `MilestoneDetailModal` opens from the milestone label — the row was at capacity, and the label-as-trigger matches the "click any term to expand" idiom on the same page. Fields are validated by `updateMilestoneSchema` before `onSaveDetails` sends them, and `MILESTONE_NOTE_LIMIT` is exported from the schema so the field's `maxLength` and the validator cannot drift.
-
-Appraised value renders for the `APPRAISAL` milestone only. The schema permits it on any kind, but the blueprint asks for an appraisal value and a money field on "Closing" is noise.
-
-The five threaded milestone props collapsed into one `DealMilestoneControls` bundle in `lib/types/offer.ts`, so this section and the next cost no new prop drilling.
-
-### 5 · Viewport-driven map — closed
-
-`propertyQuerySchema` gained the four bounding-box edges the DTO already accepted. `MapCanvas` reports its viewport on `moveend`; `SearchResultsMap` renders a "Search this area" control on a surface chip at top-left, clear of the navigation control and the attribution. `MapExperience` holds the bounds, feeds them to the query, and drops `fit` once the user is driving so results stop fighting the pan.
-
-The search is deliberately user-committed rather than refetch-on-pan. A "Clear area" control appears once bounds are applied, and the map keeps rendering when an area returns nothing — otherwise the empty state would replace the only surface that can clear the filter.
-
-`useProperties` now uses `keepPreviousData`. Without it every area search unmounted the map into a skeleton and threw away the viewport the user had just chosen. It also stops the flicker on `/search` pagination.
-
-### 6 · Seeded coordinates — closed as an honest gap
-
-`seed-steps/catalog.ts` no longer writes coordinates. Seeded properties have none, so the map surfaces report "N without a location are not shown" instead of dropping a pin on a house that is not there. `hasCoordinates` already guarded every pin derivation, so the absence degrades cleanly everywhere.
-
-`db:backfill-coordinates` still exists as the deliberate opt-in for demo pins, and now prints what it is doing: the coordinates are approximations around a locality centre, not geocoded addresses. Real geocoding remains open and needs a decision about an outbound service.
-
-### 7 · Change-log copy — closed by making the claim true
-
-Rather than striking the sentence, the audit trail now exists. `AuditActionType` gained `SETTINGS_UPDATED` (migration `0015_settings_audit_action`), mirrored into `lib/enums/enums.ts` — mandatory, since `lib/validations/audit-log.ts` feeds that array into `z.enum` and an unmirrored member would fail the response parse. `pnpm enums:check` passes.
-
-`mapEndpointToAction` maps `/settings` to `SETTINGS_UPDATED` and `extractResourceType` returns `SETTING`. The interceptor is registered as a global `APP_INTERCEPTOR` and records `actorId` from the request user, so a restore-defaults really is recorded against the admin's account, and the change-log rail — which filters nothing — shows it.
-
-### Before this ships
-
-Two migrations are written but **not applied**: `0014_calendar_sync_outcome` and `0015_settings_audit_action`. Both are additive — three nullable columns and one new enum member — and neither rewrites an existing row. Run `prisma migrate deploy`, then regenerate the Prisma client so `lastSyncAt` and `SETTINGS_UPDATED` exist in the generated types; the calendar service and the audit interceptor will not compile against the previous client.
-
-`ALTER TYPE ... ADD VALUE` inside a transaction needs PostgreSQL 12 or later. The new value is not read in the same migration, so no separate step is required.
-
-Nothing here was built, type-checked or tested. `pnpm enums:check` is the one gate that was run, because it guards the enum mirror this pass changed.
+**13 routes closed · 47 routes with 0 dead links · 6 of 7 defects closed · 1 open item · 1 stale record**
