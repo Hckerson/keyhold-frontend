@@ -1,7 +1,7 @@
 import { OverviewStageList } from "@/components/features/agent/overview-stage-list";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { formatCompactUsd } from "@/lib/utils";
-import type { PipelineStage, PipelineSummary } from "@/lib/data/agent-overview";
+import type { PipelineStage, PipelineSummary } from "@/lib/types";
 
 const CRM_LINK_LABEL = "Open CRM";
 const DEALS_SUFFIX = "active deals";

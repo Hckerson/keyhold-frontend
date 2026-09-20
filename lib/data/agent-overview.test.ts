@@ -3,12 +3,11 @@ import {
     aConnection,
     aPurchaseRecord,
 } from "@/lib/data/__fixtures__/connections";
+import { agentStats, pipelineStagesFrom } from "@/lib/data/agent-overview";
 import {
-    agentStats,
     closedSalesFrom,
-    pipelineStagesFrom,
     recentLeadsFrom,
-} from "@/lib/data/agent-overview";
+} from "@/lib/data/agent-overview-feed";
 import { rankLeads } from "@/lib/data/agent-leads";
 import { toLead } from "@/lib/utils/to-lead";
 
