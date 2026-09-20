@@ -1290,6 +1290,22 @@ footer span { font-family: var(--mono); }
             lookup is cached as an empty result for the same 24 hours as a real one, so a single slow response can
             blank an area&rsquo;s places for a day.
         </p>
+
+        <h2>Remediation · 20 September 2026</h2>
+        <p class="lede">
+            One line from the list above, closed.
+        </p>
+        <p>
+            The nearby lookup now tells a failure apart from an empty answer. <code>fetchNearby</code> returns
+            <code>null</code> when Overpass errors or times out and an array when it answers, so a genuine
+            &ldquo;nothing within 1.5&nbsp;km&rdquo; is cached for the full 24 hours while a failure is cached for five
+            minutes and then retried. A visitor sees no places in either case; the difference is that an Overpass
+            outage now costs one map rather than a day of them, and the short window still keeps a sustained outage
+            from being retried on every page view.
+        </p>
+        <p>
+            Apple sign-in remains the open item, and still waits on a paid Apple developer account.
+        </p>
     </section>
 
     <footer>
@@ -1297,7 +1313,7 @@ footer span { font-family: var(--mono); }
         <span>15 conform · 13 short · 2 unbuilt</span>
         <span>8 beyond spec · 7 dead links</span>
         <span>Sources: phase-3 · phase-4 · phase-5</span>
-        <span>Remediated 8–17 Sep 2026 · 8 of 8 section gaps closed</span>
+        <span>Remediated 8–20 Sep 2026 · 8 of 8 section gaps closed</span>
     </footer>
 
 </div>
