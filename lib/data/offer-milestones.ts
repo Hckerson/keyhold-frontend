@@ -30,6 +30,7 @@ export const MILESTONE_COPY = {
     save: "Save",
     cancel: "Cancel",
     notePlaceholder: "What the other side should know",
+    uploading: "Upload progress",
 } as const;
 
 export const orderMilestones = (milestones: DealMilestone[]) =>

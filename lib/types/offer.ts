@@ -37,6 +37,7 @@ export interface DealMilestoneControls {
     loading: boolean;
     busy: boolean;
     rejected?: string;
+    progress?: number;
     onDateChange: (kind: MilestoneKind, date: string) => void;
     onToggleComplete: (milestone: DealMilestone) => void;
     onAttach: (kind: MilestoneKind, file: File) => void;

@@ -56,6 +56,7 @@ export function useDealMilestones(
         loading: milestones.isPending,
         busy: update.isPending || attach.isPending,
         rejected,
+        progress: attach.progress,
         onDateChange,
         onToggleComplete,
         onAttach,
