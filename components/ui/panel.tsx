@@ -43,9 +43,9 @@ export function Panel({
                             <div className="min-w-0">
                                 <div className="flex items-baseline gap-2">
                                     {title && (
-                                        <h3 className="text-h6 font-display text-text truncate font-light">
+                                        <h2 className="text-text truncate text-xs font-semibold">
                                             {title}
-                                        </h3>
+                                        </h2>
                                     )}
                                     {count !== undefined && (
                                         <span

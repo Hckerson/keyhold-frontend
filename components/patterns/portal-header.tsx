@@ -36,7 +36,7 @@ export function PortalHeader({
 
             <div className="flex flex-wrap items-end justify-between gap-3">
                 <div className="min-w-0">
-                    <h1 className="text-h4 font-display text-text font-light">
+                    <h1 className="text-h5 font-display text-text font-light">
                         {title}
                     </h1>
                     {lede && (

@@ -63,6 +63,9 @@ export function DashboardOverviewConsole() {
                     savedCount,
                     unread.data?.unreadCount ?? 0,
                 )}
+                pending={
+                    connections.isPending || saved.isPending || unread.isPending
+                }
             />
 
             <div className="console-split gap-3">

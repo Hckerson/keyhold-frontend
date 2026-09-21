@@ -24,7 +24,9 @@ export function ProgressBar({
     label,
     className,
 }: ProgressBarProps) {
-    const clamped = Math.max(0, Math.min(100, value));
+    const clamped = Number.isFinite(value)
+        ? Math.max(0, Math.min(100, value))
+        : 0;
     return (
         <div
             role={label ? "progressbar" : undefined}

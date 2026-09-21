@@ -20,10 +20,9 @@ export const messagesAPI = {
     attach: (id: string, files: File[]) => {
         const body = new FormData();
         files.forEach((file) => body.append("files", file));
-        return query.post<MessageAttachment[]>(
+        return query.upload<MessageAttachment[]>(
             config.api.messages.attachments(id),
             body,
-            { headers: { "Content-Type": "multipart/form-data" } },
         );
     },
 };

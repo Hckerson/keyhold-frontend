@@ -52,11 +52,13 @@ export const dealMilestoneSchema = z.object({
     documentName: z.string().nullable(),
 });
 
+export const MILESTONE_NOTE_LIMIT = 500;
+
 export const updateMilestoneSchema = z.object({
     status: z.enum(MILESTONE_STATUSES).optional(),
     dueAt: z.iso.datetime().optional(),
     appraisedValue: z.number().nonnegative().optional(),
-    note: z.string().max(500).optional(),
+    note: z.string().max(MILESTONE_NOTE_LIMIT).optional(),
 });
 
 export const respondOfferSchema = z.object({

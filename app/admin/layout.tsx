@@ -1,5 +1,6 @@
 "use client";
 
+import { PortalGuard } from "@/components/features/auth/portal-guard";
 import { PortalShell } from "@/components/layout/portal-shell";
 import { useAdminNav } from "@/lib/hooks/use-admin-nav";
 
@@ -11,13 +12,15 @@ export default function AdminLayout({
     const sections = useAdminNav();
 
     return (
-        <PortalShell
-            brand={{ full: "Admin", tagline: "Console" }}
-            sections={sections}
-            rootLabel="Admin"
-            rootHref="/admin"
-        >
-            {children}
-        </PortalShell>
+        <PortalGuard role="ADMIN">
+            <PortalShell
+                brand={{ full: "Admin", tagline: "Console" }}
+                sections={sections}
+                rootLabel="Admin"
+                rootHref="/admin"
+            >
+                {children}
+            </PortalShell>
+        </PortalGuard>
     );
 }

@@ -318,6 +318,12 @@
         position: sticky;
         top: 0;
     }
+
+    .console-split > .console-rail {
+        position: sticky;
+        top: var(--spacing-10);
+        align-self: start;
+    }
 }
 
 .metric-strip {

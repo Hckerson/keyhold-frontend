@@ -23,6 +23,7 @@ export const metadata: Metadata = {
         "exclusive listings",
         "high-net-worth",
     ],
+
     openGraph: {
         title: "Luxury Real Estate Marketplace",
         description:

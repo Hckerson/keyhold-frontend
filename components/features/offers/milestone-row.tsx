@@ -9,7 +9,7 @@ import {
     MILESTONE_KINDS_META,
     MILESTONE_STATUSES_META,
 } from "@/lib/config/contingency-tones";
-import { MESSAGE_ATTACHMENTS } from "@/lib/config/message-attachments";
+import { DOCUMENT_UPLOAD } from "@/lib/config/uploads";
 import {
     MILESTONE_COPY as COPY,
     isOverdue,
@@ -27,6 +27,7 @@ export interface MilestoneRowProps {
     onDateChange: (kind: MilestoneKind, date: string) => void;
     onToggleComplete: (milestone: DealMilestone) => void;
     onAttach: (kind: MilestoneKind, file: File) => void;
+    onEdit: (milestone: DealMilestone) => void;
 }
 
 export function MilestoneRow({
@@ -35,6 +36,7 @@ export function MilestoneRow({
     onDateChange,
     onToggleComplete,
     onAttach,
+    onEdit,
 }: MilestoneRowProps) {
     const fileRef = useRef<HTMLInputElement>(null);
     const meta = MILESTONE_KINDS_META[milestone.kind];
@@ -55,9 +57,14 @@ export function MilestoneRow({
                 <Icon className="size-3" strokeWidth={1.5} aria-hidden="true" />
             </span>
 
-            <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
+            <button
+                type="button"
+                onClick={() => onEdit(milestone)}
+                aria-label={`${COPY.edit} ${meta.label}`}
+                className="text-text hover:text-accent focus-visible:ring-accent ease-smooth min-w-0 flex-1 truncate rounded-sm text-left text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            >
                 {meta.label}
-            </span>
+            </button>
 
             {milestone.appraisedValue !== null && (
                 <span className="text-text-secondary w-16 shrink-0 text-right text-xs tabular-nums">
@@ -112,7 +119,7 @@ export function MilestoneRow({
             <input
                 ref={fileRef}
                 type="file"
-                accept={MESSAGE_ATTACHMENTS.accept}
+                accept={DOCUMENT_UPLOAD.accept}
                 className="sr-only"
                 aria-label={`${COPY.attach} ${meta.label}`}
                 onChange={(event) => {

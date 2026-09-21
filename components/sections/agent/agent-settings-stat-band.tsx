@@ -5,10 +5,14 @@ const BAND_LABEL = "Profile and alert routing at a glance";
 
 export interface AgentSettingsStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function AgentSettingsStatBand({ stats }: AgentSettingsStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function AgentSettingsStatBand({
+    stats,
+    pending,
+}: AgentSettingsStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 AgentSettingsStatBand.displayName = "AgentSettingsStatBand";

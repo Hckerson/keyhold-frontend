@@ -5,10 +5,11 @@ const BAND_LABEL = "Pipeline at a glance";
 
 export interface LeadsStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function LeadsStatBand({ stats }: LeadsStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function LeadsStatBand({ stats, pending }: LeadsStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 LeadsStatBand.displayName = "LeadsStatBand";

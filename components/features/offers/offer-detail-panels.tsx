@@ -10,8 +10,7 @@ import { MilestonePanel } from "@/components/features/offers/milestone-panel";
 import { MetricList } from "@/components/patterns/metric-list";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { OFFER_TERMS_COPY } from "@/lib/data/offer-details";
-import type { MilestoneKind } from "@/lib/enums/enums";
-import type { DealMilestone } from "@/lib/validations/offer";
+import type { DealMilestoneControls } from "@/lib/types";
 import type {
     OfferDetail,
     ThreadMessage,
@@ -32,11 +31,7 @@ export interface OfferDetailPanelsProps {
     onCounterNoteChange: (value: string) => void;
     onSubmitCounter: () => void;
     onSendMessage: (content: string) => void;
-    milestones: DealMilestone[];
-    milestonesBusy: boolean;
-    onMilestoneDate: (kind: MilestoneKind, date: string) => void;
-    onMilestoneToggle: (milestone: DealMilestone) => void;
-    onMilestoneAttach: (kind: MilestoneKind, file: File) => void;
+    milestones: DealMilestoneControls;
 }
 
 export function OfferDetailPanels({
@@ -54,10 +49,6 @@ export function OfferDetailPanels({
     onSubmitCounter,
     onSendMessage,
     milestones,
-    milestonesBusy,
-    onMilestoneDate,
-    onMilestoneToggle,
-    onMilestoneAttach,
 }: OfferDetailPanelsProps) {
     return (
         <div className="console-split gap-3">
@@ -101,13 +92,7 @@ export function OfferDetailPanels({
                     </PanelInset>
                 </Panel>
 
-                <MilestonePanel
-                    milestones={milestones}
-                    busy={milestonesBusy}
-                    onDateChange={onMilestoneDate}
-                    onToggleComplete={onMilestoneToggle}
-                    onAttach={onMilestoneAttach}
-                />
+                <MilestonePanel controls={milestones} />
 
                 <Panel title="Offer Timeline" count={timeline.length}>
                     <TimelineList entries={timeline} />

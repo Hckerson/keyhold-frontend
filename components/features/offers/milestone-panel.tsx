@@ -1,34 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import { ListChecks } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { MilestoneChecklist } from "@/components/features/offers/milestone-checklist";
+import { MilestoneDetailModal } from "@/components/features/offers/milestone-detail-modal";
 import {
     MILESTONE_COPY as COPY,
     milestoneProgress,
     settledCount,
 } from "@/lib/data/offer-milestones";
-import type { MilestoneKind } from "@/lib/enums/enums";
+import type { DealMilestoneControls } from "@/lib/types";
 import type { DealMilestone } from "@/lib/validations/offer";
 
 export interface MilestonePanelProps {
-    milestones: DealMilestone[];
-    busy: boolean;
-    onDateChange: (kind: MilestoneKind, date: string) => void;
-    onToggleComplete: (milestone: DealMilestone) => void;
-    onAttach: (kind: MilestoneKind, file: File) => void;
+    controls: DealMilestoneControls;
 }
 
-export function MilestonePanel({
-    milestones,
-    busy,
-    onDateChange,
-    onToggleComplete,
-    onAttach,
-}: MilestonePanelProps) {
+export function MilestonePanel({ controls }: MilestonePanelProps) {
+    const [editing, setEditing] = useState<DealMilestone | null>(null);
+    const { milestones, busy, rejected, progress } = controls;
     const settled = settledCount(milestones);
 
     return (
@@ -46,11 +40,8 @@ export function MilestonePanel({
                     />
                     <PanelInset scroll>
                         <MilestoneChecklist
-                            milestones={milestones}
-                            busy={busy}
-                            onDateChange={onDateChange}
-                            onToggleComplete={onToggleComplete}
-                            onAttach={onAttach}
+                            controls={controls}
+                            onEdit={setEditing}
                         />
                     </PanelInset>
                 </>
@@ -59,6 +50,33 @@ export function MilestonePanel({
                     icon={ListChecks}
                     title={COPY.empty}
                     description={COPY.emptyLede}
+                />
+            )}
+
+            {progress !== undefined && (
+                <ProgressBar
+                    value={progress}
+                    tone="info"
+                    label={COPY.uploading}
+                />
+            )}
+
+            {rejected && (
+                <p role="status" className="text-error text-xs">
+                    {rejected}
+                </p>
+            )}
+
+            {editing && (
+                <MilestoneDetailModal
+                    key={editing.id}
+                    milestone={editing}
+                    busy={busy}
+                    onClose={() => setEditing(null)}
+                    onSave={(input) => {
+                        controls.onSaveDetails(editing.kind, input);
+                        setEditing(null);
+                    }}
                 />
             )}
         </Panel>

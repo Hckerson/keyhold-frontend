@@ -122,7 +122,10 @@ export function ListingConsole() {
         <div className="flex flex-col gap-4">
             <ListingsHeader summary={listingsSummary(listings)} />
 
-            <ListingsStatBand stats={listingStats(listings)} />
+            <ListingsStatBand
+                stats={listingStats(listings)}
+                pending={isPending}
+            />
 
             <div className="console-split gap-3">
                 <ListingsMain

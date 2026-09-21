@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    keepPreviousData,
+    useMutation,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { propertiesAPI, type FacetOptions } from "@/lib/api/properties";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import type { ModerationDecision } from "@/lib/enums/enums";
@@ -18,6 +23,7 @@ export function useProperties(input: PropertyQuery = {}) {
     return useQuery({
         queryKey: queryKeys.properties.list(input),
         queryFn: () => propertiesAPI.list(input),
+        placeholderData: keepPreviousData,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
     });

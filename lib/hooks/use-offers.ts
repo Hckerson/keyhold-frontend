@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { offersAPI } from "@/lib/api/offers";
 import { queryKeys } from "@/lib/hooks/query-keys";
@@ -111,13 +112,18 @@ export function useUpdateMilestone(offerId: string) {
 
 export function useAttachMilestoneDocument(offerId: string) {
     const client = useQueryClient();
-    return useMutation({
+    const [progress, setProgress] = useState<number>();
+
+    const mutation = useMutation({
         meta: FEEDBACK.attachMilestoneDocument,
         mutationFn: ({ kind, file }: { kind: MilestoneKind; file: File }) =>
-            offersAPI.attachMilestoneDocument(offerId, kind, file),
+            offersAPI.attachMilestoneDocument(offerId, kind, file, setProgress),
+        onSettled: () => setProgress(undefined),
         onSuccess: () =>
             client.invalidateQueries({
                 queryKey: queryKeys.offers.milestones(offerId),
             }),
     });
+
+    return { ...mutation, progress };
 }

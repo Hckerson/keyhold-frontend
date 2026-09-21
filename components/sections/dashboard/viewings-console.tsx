@@ -26,7 +26,7 @@ export function ViewingsConsole() {
         <div className="flex flex-col gap-4">
             <ViewingsHeader summary={view.summary} />
 
-            <ViewingsStatBand stats={view.stats} />
+            <ViewingsStatBand stats={view.stats} pending={view.pending} />
 
             <div className="console-split gap-3">
                 <ViewingsMain

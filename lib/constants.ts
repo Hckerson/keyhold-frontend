@@ -220,6 +220,11 @@ export const PORTAL_BY_ROLE = {
 export const portalForRole = (role: keyof typeof PORTAL_BY_ROLE) =>
     PORTAL_BY_ROLE[role] ?? AUTH_ROUTES.home;
 
+export const isPortalPath = (pathname: string) =>
+    Object.values(PORTAL_BY_ROLE).some(
+        (portal) => pathname === portal || pathname.startsWith(`${portal}/`),
+    );
+
 export const isSafeRedirect = (target: string | undefined): target is string =>
     typeof target === "string" &&
     target.startsWith("/") &&
