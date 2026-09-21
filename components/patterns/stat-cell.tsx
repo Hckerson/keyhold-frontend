@@ -16,7 +16,7 @@ export interface StatCellProps {
     stat: StatDatum;
 }
 
-const CELL = "flex h-14 items-center gap-2 px-3";
+export const STAT_CELL = "flex h-14 items-center gap-2 px-3";
 
 export function StatCell({ stat }: StatCellProps) {
     const Icon = stat.icon;
@@ -40,13 +40,13 @@ export function StatCell({ stat }: StatCellProps) {
         </>
     );
 
-    if (!stat.href) return <div className={CELL}>{body}</div>;
+    if (!stat.href) return <div className={STAT_CELL}>{body}</div>;
 
     return (
         <Link
             href={stat.href}
             className={cn(
-                CELL,
+                STAT_CELL,
                 "hover:bg-background-alt ease-smooth transition-colors",
             )}
         >

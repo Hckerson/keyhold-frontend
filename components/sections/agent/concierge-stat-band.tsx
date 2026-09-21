@@ -5,10 +5,11 @@ const BAND_LABEL = "VIP book at a glance";
 
 export interface ConciergeStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function ConciergeStatBand({ stats }: ConciergeStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function ConciergeStatBand({ stats, pending }: ConciergeStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 ConciergeStatBand.displayName = "ConciergeStatBand";

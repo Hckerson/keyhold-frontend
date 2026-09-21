@@ -108,11 +108,7 @@ export function useOfferDetail(id: string) {
     return {
         detail,
         status,
-        milestones: milestones.milestones,
-        milestonesBusy: milestones.busy,
-        onMilestoneDate: milestones.onDateChange,
-        onMilestoneToggle: milestones.onToggleComplete,
-        onMilestoneAttach: milestones.onAttach,
+        milestones,
         offerPrice: offer?.offeredPrice ?? 0,
         timeline: detail?.timeline ?? [],
         messages: detail?.messages ?? [],

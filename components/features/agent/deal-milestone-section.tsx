@@ -8,19 +8,11 @@ export interface DealMilestoneSectionProps {
 }
 
 export function DealMilestoneSection({ offerId }: DealMilestoneSectionProps) {
-    const milestones = useDealMilestones(offerId);
+    const controls = useDealMilestones(offerId);
 
-    if (milestones.loading) return null;
+    if (controls.loading) return null;
 
-    return (
-        <MilestonePanel
-            milestones={milestones.milestones}
-            busy={milestones.busy}
-            onDateChange={milestones.onDateChange}
-            onToggleComplete={milestones.onToggleComplete}
-            onAttach={milestones.onAttach}
-        />
-    );
+    return <MilestonePanel controls={controls} />;
 }
 
 DealMilestoneSection.displayName = "DealMilestoneSection";

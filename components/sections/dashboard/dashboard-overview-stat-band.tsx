@@ -5,12 +5,14 @@ const BAND_LABEL = "Your property journey";
 
 export interface DashboardOverviewStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
 export function DashboardOverviewStatBand({
     stats,
+    pending,
 }: DashboardOverviewStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 DashboardOverviewStatBand.displayName = "DashboardOverviewStatBand";

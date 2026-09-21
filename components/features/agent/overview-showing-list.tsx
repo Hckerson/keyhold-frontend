@@ -1,5 +1,5 @@
 import { OverviewShowingRow } from "@/components/features/agent/overview-showing-row";
-import type { UpcomingShowing } from "@/lib/data/agent-overview";
+import type { UpcomingShowing } from "@/lib/types";
 
 export interface OverviewShowingListProps {
     showings: UpcomingShowing[];

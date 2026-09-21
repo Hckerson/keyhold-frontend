@@ -214,7 +214,7 @@ export function AdminUsersConsole() {
                 onAdd={onOpenInvite}
             />
 
-            <AdminUsersStatBand stats={stats} />
+            <AdminUsersStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <AdminUsersMain

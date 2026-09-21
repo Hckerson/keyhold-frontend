@@ -74,6 +74,7 @@ export function ConciergeConsole() {
 
             <ConciergeStatBand
                 stats={overview.data ? conciergeStats(overview.data) : []}
+                pending={overview.isPending}
             />
 
             <div className="console-split gap-3">

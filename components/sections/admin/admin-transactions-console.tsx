@@ -101,7 +101,10 @@ export function AdminTransactionsConsole() {
                 onExport={onExport}
             />
 
-            <AdminTransactionsStatBand stats={transactionStats(transactions)} />
+            <AdminTransactionsStatBand
+                stats={transactionStats(transactions)}
+                pending={ledger.isPending}
+            />
 
             <div className="console-split gap-3">
                 <AdminTransactionsMain

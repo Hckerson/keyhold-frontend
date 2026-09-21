@@ -27,9 +27,7 @@ export const kycAPI = {
         );
         body.append("document", document);
         if (face) body.append("face", face);
-        return query.post<IdentityDocument>(config.api.kyc.submit, body, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
+        return query.upload<IdentityDocument>(config.api.kyc.submit, body);
     },
 
     approve: (id: string) =>

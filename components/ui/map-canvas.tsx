@@ -15,6 +15,7 @@ import {
     MAP_FIT_PADDING,
     MAP_MAX_FIT_ZOOM,
     MAP_STYLE_URL,
+    type MapBounds,
     type MapPin,
 } from "@/lib/config/map";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ export interface MapCanvasProps {
     fit?: boolean;
     label: string;
     onSelect?: (id: string) => void;
+    onBoundsChange?: (bounds: MapBounds) => void;
     className?: string;
 }
 
@@ -42,16 +44,19 @@ export function MapCanvas({
     fit = true,
     label,
     onSelect,
+    onBoundsChange,
     className,
 }: MapCanvasProps) {
     const host = useRef<HTMLDivElement>(null);
     const map = useRef<MapLibreMap | null>(null);
     const markers = useRef<Marker[]>([]);
     const select = useRef(onSelect);
+    const report = useRef(onBoundsChange);
     const camera = useRef({ centre, zoom });
     const [ready, setReady] = useState(false);
 
     select.current = onSelect;
+    report.current = onBoundsChange;
 
     useEffect(() => {
         if (!host.current || map.current) return;
@@ -66,6 +71,15 @@ export function MapCanvas({
 
         instance.addControl(new NavigationControl(), "top-right");
         instance.on("load", () => setReady(true));
+        instance.on("moveend", () => {
+            const box = instance.getBounds();
+            report.current?.({
+                south: box.getSouth(),
+                north: box.getNorth(),
+                west: box.getWest(),
+                east: box.getEast(),
+            });
+        });
         map.current = instance;
 
         return () => {

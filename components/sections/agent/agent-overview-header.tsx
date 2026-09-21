@@ -1,7 +1,7 @@
 import { PortalHeader } from "@/components/patterns/portal-header";
 
 const OVERVIEW_LEDE = "Your sales pipeline and performance overview";
-const FALLBACK_NAME = "there";
+const GREETING = "Welcome back";
 
 export interface AgentOverviewHeaderProps {
     name?: string;
@@ -14,7 +14,7 @@ export function AgentOverviewHeader({
 }: AgentOverviewHeaderProps) {
     return (
         <PortalHeader
-            title={`Welcome back, ${name ?? FALLBACK_NAME}`}
+            title={name ? `${GREETING}, ${name}` : GREETING}
             lede={OVERVIEW_LEDE}
             summary={summary}
         />

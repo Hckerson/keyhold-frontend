@@ -5,8 +5,8 @@ import {
     DAYS_ON_MARKET_BENCHMARK,
     FAST_SALE_DAYS,
     SLOW_SALE_DAYS,
-    type ClosedSale,
-} from "@/lib/data/agent-overview";
+} from "@/lib/data/agent-overview-feed";
+import type { ClosedSale } from "@/lib/types";
 
 const AT_ASK_LABEL = "At ask";
 

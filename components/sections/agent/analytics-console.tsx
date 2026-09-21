@@ -47,7 +47,7 @@ export function AnalyticsConsole() {
         <div className="flex flex-col gap-4">
             <AnalyticsHeader period={view?.period ?? ""} />
 
-            <AnalyticsStatBand stats={view?.stats ?? []} />
+            <AnalyticsStatBand stats={view?.stats ?? []} pending={isPending} />
 
             <div className="console-split gap-3">
                 <AnalyticsMain

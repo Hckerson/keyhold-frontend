@@ -21,3 +21,16 @@ export interface MapPin {
     tone: ChartTone;
     href?: string;
 }
+
+export interface MapBounds {
+    south: number;
+    north: number;
+    west: number;
+    east: number;
+}
+
+export const MAP_AREA_COPY = {
+    search: "Search this area",
+    clear: "Clear area",
+    emptyView: "No residences in this view",
+} as const;

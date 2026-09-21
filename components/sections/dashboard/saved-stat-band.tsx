@@ -5,10 +5,11 @@ const BAND_LABEL = "Saved book at a glance";
 
 export interface SavedStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function SavedStatBand({ stats }: SavedStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function SavedStatBand({ stats, pending }: SavedStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 SavedStatBand.displayName = "SavedStatBand";

@@ -165,6 +165,7 @@ export function useDashboardSettings() {
         dialog,
         resetSent,
         failed: queries.some((query) => query.isError),
+        loading: queries.some((query) => query.isPending),
         retry: () => queries.forEach((query) => void query.refetch()),
         resettingPassword: requestReset.isPending,
         saved,

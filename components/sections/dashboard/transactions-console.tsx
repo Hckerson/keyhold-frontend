@@ -71,7 +71,7 @@ export function TransactionsConsole() {
         <div className="flex flex-col gap-4">
             <TransactionsHeader summary={purchasesSummary(purchases)} />
 
-            <TransactionsStatBand stats={stats} />
+            <TransactionsStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <TransactionsMain
