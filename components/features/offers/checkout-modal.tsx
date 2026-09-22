@@ -57,7 +57,7 @@ export function CheckoutModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{STRIPE_COPY.title}</ModalTitle>
                 <p className="text-text-secondary mt-1 truncate text-xs">
                     {address} · {STRIPE_COPY.amountLabel}{" "}
@@ -67,7 +67,7 @@ export function CheckoutModal({
                 </p>
             </ModalHeader>
 
-            <ModalBody className="flex flex-col gap-3 p-4">
+            <ModalBody className="flex flex-col gap-3">
                 {!STRIPE_ENABLED && (
                     <Callout
                         variant="warning"

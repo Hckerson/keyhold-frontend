@@ -68,7 +68,7 @@ export function ListingImageCard({
                     />
                     <IconButton
                         icon={Trash2}
-                        tone="danger"
+                        tone="error"
                         label={COPY.removeImage}
                         disabled={busy}
                         onClick={onRemove}

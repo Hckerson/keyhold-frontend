@@ -63,7 +63,11 @@ const Tag = React.forwardRef<HTMLDivElement, TagProps>(
                     className="focus-visible:ring-accent grid size-4 shrink-0 place-items-center rounded-full transition-colors hover:bg-current/15 focus-visible:ring-2 focus-visible:outline-none"
                     aria-label={removeLabel}
                 >
-                    <X className="size-3" strokeWidth={1.5} />
+                    <X
+                        className="size-3"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                    />
                 </button>
             )}
         </div>

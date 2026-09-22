@@ -49,11 +49,11 @@ export function LeadEmailModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
+            <ModalBody className="space-y-3">
                 <p className="text-text-secondary text-xs">
                     {recipient} · {COPY.hint}
                 </p>
@@ -78,7 +78,7 @@ export function LeadEmailModal({
                 />
             </ModalBody>
 
-            <ModalFooter className="gap-2 p-4">
+            <ModalFooter>
                 <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>

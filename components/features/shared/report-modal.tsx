@@ -59,8 +59,6 @@ export function ReportModal({ open, targets, onClose }: ReportModalProps) {
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
-            role="dialog"
-            aria-modal="true"
             aria-labelledby="report-title"
         >
             <ModalContent>

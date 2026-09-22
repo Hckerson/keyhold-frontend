@@ -45,8 +45,6 @@ export function DisputeDecisionModal({
             onOpenChange={(open) => {
                 if (!open) onClose();
             }}
-            role="dialog"
-            aria-modal="true"
             aria-labelledby="dispute-decision-title"
         >
             {copy && decision && (

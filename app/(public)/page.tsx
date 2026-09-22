@@ -3,7 +3,7 @@ import { HeroSection } from "@/components/sections/home/hero";
 import { PremierListing } from "@/components/sections/home/premier-listing";
 import { FeaturedGallery } from "@/components/sections/home/featured-gallery";
 import { StatsBand } from "@/components/sections/home/stats-band";
-import { TestimonialsSection } from "@/components/sections/home/testimonials";
+import { GuaranteesSection } from "@/components/sections/home/guarantees";
 import { ConciergeSection } from "@/components/sections/home/concierge";
 import {
     LatestSales,
@@ -85,7 +85,7 @@ export default async function Home() {
                 <StatsBand />
             </Reveal>
             <Reveal>
-                <TestimonialsSection />
+                <GuaranteesSection />
             </Reveal>
             {sales.length > 0 && (
                 <Reveal>

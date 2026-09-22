@@ -39,7 +39,7 @@ export function ModerationRowActions({
             />
             {listing.status !== "rejected" && (
                 <IconButton
-                    tone="danger"
+                    tone="error"
                     icon={X}
                     label={`${REJECT_LABEL} ${target}`}
                     onClick={() => onDecide("reject", listing.id)}

@@ -151,7 +151,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
         if (asChild) {
             return (
-                <Slot className={classes} {...props}>
+                <Slot ref={ref} className={classes} {...props}>
                     {children}
                 </Slot>
             );
@@ -193,6 +193,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                         <Spinner
                             size="sm"
                             tone="current"
+                            aria-hidden="true"
                             className={GLYPH_SIZE[step]}
                         />
                     </span>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Wordmark } from "@/components/brand/wordmark";
 import styles from "@/components/features/auth/brand-panel.module.css";
+import { SIGN_IN_GUARANTEES } from "@/lib/data/platform-guarantees";
 
 const IMAGES = [
     "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1400&q=80",
@@ -14,24 +15,6 @@ const WORDS: { text: string; ital?: boolean }[] = [
     { text: "extraordinary" },
     { text: "homes" },
     { text: "find their owners.", ital: true },
-];
-
-const TESTIMONIALS = [
-    {
-        quote: "Every home felt genuinely curated — not a listings feed.",
-        name: "Anthony Sterling",
-        firm: "Sterling & Co.",
-    },
-    {
-        quote: "Discretion at every step. The Canyon House was ours in a week.",
-        name: "Elena Voss",
-        firm: "Private Client",
-    },
-    {
-        quote: "A quiet, considered process. Exactly how it should feel.",
-        name: "M. Laurent",
-        firm: "Bel Air",
-    },
 ];
 
 export function BrandPanel() {
@@ -75,24 +58,22 @@ export function BrandPanel() {
                 </h2>
 
                 <div className={styles.rot}>
-                    {TESTIMONIALS.map((testimonial, position) => (
+                    {SIGN_IN_GUARANTEES.map((guarantee, position) => (
                         <figure
-                            key={testimonial.name}
+                            key={guarantee.id}
                             aria-hidden={position > 0 || undefined}
                         >
-                            <blockquote>
-                                &ldquo;{testimonial.quote}&rdquo;
-                            </blockquote>
+                            <p>{guarantee.statement}</p>
                             <figcaption>
-                                <b>{testimonial.name}</b> · {testimonial.firm}
+                                <b>{guarantee.label}</b> · {guarantee.detail}
                             </figcaption>
                         </figure>
                     ))}
                 </div>
 
                 <div className={styles.dots} aria-hidden="true">
-                    {TESTIMONIALS.map((testimonial) => (
-                        <i key={testimonial.name} />
+                    {SIGN_IN_GUARANTEES.map((guarantee) => (
+                        <i key={guarantee.id} />
                     ))}
                 </div>
             </div>

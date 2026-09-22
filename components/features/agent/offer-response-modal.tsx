@@ -62,11 +62,11 @@ export function OfferResponseModal({
                 if (!next) close();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{copy?.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
+            <ModalBody className="space-y-3">
                 <div>
                     <p className="text-text text-xs font-semibold">
                         {request?.buyerName} ·{" "}
@@ -107,7 +107,7 @@ export function OfferResponseModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="p-4">
+            <ModalFooter>
                 <Button type="button" onClick={close}>
                     {FIELDS.cancel}
                 </Button>

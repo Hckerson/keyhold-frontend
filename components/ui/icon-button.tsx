@@ -12,7 +12,7 @@ const iconButtonVariants = cva(
                 accent: "hover:bg-accent-light hover:text-accent",
                 success: "hover:bg-success-light hover:text-success",
                 warning: "hover:bg-warning-light hover:text-warning",
-                danger: "hover:bg-error-light hover:text-error",
+                error: "hover:bg-error-light hover:text-error",
             },
             size: {
                 sm: "size-5",

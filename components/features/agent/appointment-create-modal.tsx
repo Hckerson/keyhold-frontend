@@ -77,11 +77,11 @@ export function AppointmentCreateModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
+            <ModalBody className="space-y-3">
                 <p className="text-text-secondary text-xs">{COPY.hint}</p>
 
                 {clients.length > 0 ? (
@@ -133,7 +133,7 @@ export function AppointmentCreateModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="gap-2 p-4">
+            <ModalFooter>
                 <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>

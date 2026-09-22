@@ -1,63 +1,56 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
+import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export type SwitchSize = "sm" | "md";
 
 interface SwitchProps extends Omit<
     InputHTMLAttributes<HTMLInputElement>,
-    "size"
+    "size" | "type"
 > {
     size?: SwitchSize;
 }
 
-const trackSize: Record<SwitchSize, string> = {
-    sm: "h-4 w-7",
-    md: "h-6 w-11",
-};
+const trackVariants = cva(
+    "bg-border peer-checked:bg-accent peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-background peer-disabled:opacity-50 ease-smooth pointer-events-none inline-flex items-center rounded-full transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2",
+    {
+        variants: {
+            size: {
+                sm: "h-4 w-7 peer-checked:[&>span]:translate-x-3.5",
+                md: "h-6 w-11 peer-checked:[&>span]:translate-x-6",
+            },
+        },
+        defaultVariants: { size: "md" },
+    },
+);
 
-const thumbSize: Record<SwitchSize, string> = {
-    sm: "size-3",
-    md: "size-4",
-};
-
-const thumbOff: Record<SwitchSize, string> = {
-    sm: "translate-x-0.5",
-    md: "translate-x-1",
-};
-
-const thumbOn: Record<SwitchSize, string> = {
-    sm: "translate-x-3.5",
-    md: "translate-x-6",
-};
+const thumbVariants = cva(
+    "bg-background ease-smooth inline-block rounded-full shadow-sm transition-transform duration-200",
+    {
+        variants: {
+            size: {
+                sm: "size-3 translate-x-0.5",
+                md: "size-4 translate-x-1",
+            },
+        },
+        defaultVariants: { size: "md" },
+    },
+);
 
 const Switch = forwardRef<HTMLInputElement, SwitchProps>(
-    ({ className, checked, onChange, size = "md", ...props }, ref) => (
-        <div className={cn("relative inline-flex", className)}>
+    ({ className, size = "md", ...props }, ref) => (
+        <span className={cn("relative inline-flex shrink-0", className)}>
             <input
                 ref={ref}
                 type="checkbox"
                 role="switch"
-                className="peer sr-only"
-                checked={checked ?? false}
-                onChange={onChange ?? (() => {})}
+                className="peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
                 {...props}
             />
-            <div
-                className={cn(
-                    "peer-focus-visible:ring-accent/40 peer-focus-visible:ring-offset-background ease-smooth relative inline-flex items-center rounded-full transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-offset-2",
-                    trackSize[size],
-                    checked ? "bg-accent" : "bg-border",
-                )}
-            >
-                <span
-                    className={cn(
-                        "bg-background ease-smooth inline-block transform rounded-full transition-transform duration-200",
-                        thumbSize[size],
-                        checked ? thumbOn[size] : thumbOff[size],
-                    )}
-                />
-            </div>
-        </div>
+            <span aria-hidden="true" className={trackVariants({ size })}>
+                <span className={thumbVariants({ size })} />
+            </span>
+        </span>
     ),
 );
 

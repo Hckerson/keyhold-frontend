@@ -64,7 +64,7 @@ export function Sparkline({
                             type="monotone"
                             dataKey="value"
                             stroke={stroke}
-                            strokeWidth={2}
+                            strokeWidth={1.5}
                             strokeLinecap="round"
                             fill={`url(#${gradientId})`}
                             dot={false}
