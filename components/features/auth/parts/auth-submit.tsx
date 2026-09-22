@@ -42,6 +42,7 @@ export function AuthSubmit({
                                 <Spinner
                                     size="sm"
                                     tone="current"
+                                    aria-hidden="true"
                                     className="size-3"
                                 />
                             </m.span>

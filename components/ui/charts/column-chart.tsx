@@ -110,9 +110,9 @@ export function ColumnChart({
                                 contentStyle={{
                                     background: "var(--color-background)",
                                     border: "1px solid var(--color-border)",
-                                    borderRadius: 10,
+                                    borderRadius: "var(--radius-lg)",
                                     fontSize: 12,
-                                    boxShadow: "0 4px 12px rgba(0,0,0,.06)",
+                                    boxShadow: "var(--shadow-md)",
                                 }}
                                 labelStyle={{
                                     color: "var(--color-text-muted)",
