@@ -20,74 +20,67 @@ function StatBody({
     featured,
 }: StatCardProps) {
     return (
-        <div className="relative z-10">
+        <>
             <div className="flex items-center justify-between gap-2">
-                <p className="text-text-muted text-caption font-mono tracking-wide uppercase">
-                    {label}
-                </p>
+                <p className="micro-label truncate">{label}</p>
                 {Icon && (
                     <span
                         className={cn(
-                            "ease-smooth grid size-7 shrink-0 place-items-center rounded-full border transition-colors",
+                            "ease-smooth grid size-6 shrink-0 place-items-center rounded-full border transition-colors duration-200",
                             featured
                                 ? "border-highlight/40 text-highlight"
                                 : "border-border-light text-text-muted group-hover:border-accent/40 group-hover:text-accent",
                         )}
                     >
-                        <Icon size={14} strokeWidth={1.5} />
+                        <Icon className="size-3" strokeWidth={1.5} />
                     </span>
                 )}
             </div>
 
-            <div className="mt-3 flex items-end justify-between gap-3">
+            <div className="flex items-end justify-between gap-3">
                 <p
                     className={cn(
-                        "font-display text-text font-light tabular-nums",
+                        "font-display text-text leading-none font-light tabular-nums",
                         featured ? "text-h4" : "text-h5",
                     )}
                 >
                     {value}
                 </p>
-                {change && <DeltaChip value={change} direction={trend} />}
+                {change && (
+                    <DeltaChip value={change} direction={trend} size="sm" />
+                )}
             </div>
 
-            {badge && <div className="mt-2">{badge}</div>}
+            {badge}
 
             {caption && (
-                <p className="text-text-muted mt-1 text-xs">{caption}</p>
+                <p className="text-text-muted truncate text-xs">{caption}</p>
             )}
-        </div>
+        </>
     );
 }
 
 export function StatCard(props: StatCardProps) {
     const { href, featured, className } = props;
     const shell = cn(
-        "group ease-smooth relative flex flex-col overflow-hidden rounded-xl border p-5 transition-all duration-300 hover:-translate-y-0.5",
+        "group ease-smooth flex flex-col gap-2 rounded-xl border transition-colors duration-200",
         featured
-            ? "bg-background border-highlight/30 ring-highlight/15 shadow-md ring-1"
-            : "bg-background-muted border-border-light hover:border-border shadow-sm hover:shadow-md",
+            ? "bg-background border-highlight/30 p-4 shadow-md"
+            : "bg-background-muted border-border-light p-3 shadow-sm",
+        href &&
+            "focus-visible:ring-accent transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-2 focus-visible:outline-none",
+        href && !featured && "hover:border-border",
         className,
-    );
-
-    const content = (
-        <>
-            {featured && (
-                <div
-                    aria-hidden="true"
-                    className="from-highlight/[0.07] pointer-events-none absolute inset-0 bg-linear-to-b to-transparent"
-                />
-            )}
-            <StatBody {...props} />
-        </>
     );
 
     return href ? (
         <Link href={href} className={shell}>
-            {content}
+            <StatBody {...props} />
         </Link>
     ) : (
-        <div className={shell}>{content}</div>
+        <div className={shell}>
+            <StatBody {...props} />
+        </div>
     );
 }
 

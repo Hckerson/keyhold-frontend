@@ -51,8 +51,6 @@ export function EscrowSettleModal({
             onOpenChange={(open) => {
                 if (!open) onClose();
             }}
-            role="dialog"
-            aria-modal="true"
             aria-labelledby="escrow-settle-title"
         >
             {payout && (

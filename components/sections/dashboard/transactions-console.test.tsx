@@ -65,8 +65,11 @@ const wrapper = ({ children }: { children: ReactNode }) => {
 const draw = () => render(<TransactionsConsole />, { wrapper });
 
 const releaseButtons = async () => {
-    const table = await screen.findByRole("table");
-    return within(table).getAllByRole("button", { name: /release funds/i });
+    const table = await screen.findByRole("table", { hidden: true });
+    return within(table).getAllByRole("button", {
+        name: /release funds/i,
+        hidden: true,
+    });
 };
 
 const dialog = () => screen.getByRole("dialog");

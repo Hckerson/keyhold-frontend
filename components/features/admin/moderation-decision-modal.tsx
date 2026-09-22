@@ -46,14 +46,14 @@ export function ModerationDecisionModal({
         >
             {meta && decision && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>{meta.title}</ModalTitle>
                         <p className="text-text-secondary mt-1 text-xs tabular-nums">
                             {decision.ids.length} {SELECTED_NOUN}
                             {decision.ids.length === 1 ? "" : "s"} selected
                         </p>
                     </ModalHeader>
-                    <ModalBody className="p-4">
+                    <ModalBody>
                         <TextareaField
                             id={NOTE_ID}
                             name={NOTE_NAME}
@@ -69,7 +69,7 @@ export function ModerationDecisionModal({
                             {NOTE_HINT}
                         </p>
                     </ModalBody>
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button type="button" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>

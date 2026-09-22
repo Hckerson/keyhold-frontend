@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 export interface Step {
     title: string;
-    description: string;
+    description?: string;
 }
 
 export function StepList({
@@ -23,9 +23,11 @@ export function StepList({
                         <p className="text-text text-xs font-semibold">
                             {step.title}
                         </p>
-                        <p className="text-text-secondary mt-0.5 text-xs">
-                            {step.description}
-                        </p>
+                        {step.description && (
+                            <p className="text-text-secondary mt-0.5 text-xs">
+                                {step.description}
+                            </p>
+                        )}
                     </div>
                 </li>
             ))}

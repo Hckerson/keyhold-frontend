@@ -67,7 +67,12 @@ export function CheckoutPaymentForm({
                     disabled={!stripe || pending}
                 >
                     {pending && (
-                        <Spinner size="sm" tone="current" className="mr-1.5" />
+                        <Spinner
+                            size="sm"
+                            tone="current"
+                            aria-hidden="true"
+                            className="mr-1.5"
+                        />
                     )}
                     {settling ? STRIPE_COPY.settlingLabel : STRIPE_COPY.submit}
                 </Button>

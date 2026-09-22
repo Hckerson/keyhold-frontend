@@ -82,3 +82,17 @@ export interface ActivityEntry {
     description: string;
     time: string;
 }
+
+export interface PlatformGuarantee {
+    id: string;
+    icon: LucideIcon;
+    label: string;
+    statement: string;
+    detail: string;
+}
+
+export interface TrustBadge {
+    icon: LucideIcon;
+    label: string;
+    detail: string;
+}

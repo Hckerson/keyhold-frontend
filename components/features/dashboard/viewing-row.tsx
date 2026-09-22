@@ -69,7 +69,7 @@ export function ViewingRow({
                             onClick={() => onReschedule(viewing.id)}
                         />
                         <IconButton
-                            tone="danger"
+                            tone="error"
                             icon={X}
                             label={`${CANCEL_LABEL} ${viewing.address}`}
                             onClick={() => onCancel(viewing.id)}

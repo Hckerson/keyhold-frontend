@@ -8,14 +8,13 @@ import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { LISTING_STATUSES } from "@/lib/config/listing-tones";
 import { MAP_AREA_COPY, type MapBounds } from "@/lib/config/map";
-import { toListingPins, unmappableCount } from "@/lib/data/listing-map";
+import { toListingPins } from "@/lib/data/listing-map";
 import { MANAGED_STATUS_BY_PROPERTY } from "@/lib/utils/to-managed-listing";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import { formatMillions } from "@/lib/utils";
 import type { Listing } from "@/lib/types";
 
 const MAP_LABEL = "Search results on a map";
-const UNMAPPED_SUFFIX = "without a location are not shown";
 
 export interface SearchResultsMapProps {
     listings: Listing[];
@@ -35,7 +34,6 @@ export function SearchResultsMap({
     const [bounds, setBounds] = useState<MapBounds>();
 
     const selected = listings.find((listing) => listing.id === selectedId);
-    const unmapped = unmappableCount(listings);
     const status =
         selected &&
         LISTING_STATUSES[MANAGED_STATUS_BY_PROPERTY[selected.status]];
@@ -104,12 +102,6 @@ export function SearchResultsMap({
                         {formatMillions(selected.price, 2)}
                     </span>
                 </Link>
-            )}
-
-            {unmapped > 0 && (
-                <p className="micro-label">
-                    {unmapped} {UNMAPPED_SUFFIX}
-                </p>
             )}
         </div>
     );

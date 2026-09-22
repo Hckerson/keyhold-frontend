@@ -77,6 +77,7 @@ export function DevAuthRow({ redirectTo, disabled = false }: DevAuthRowProps) {
                             <Spinner
                                 size="sm"
                                 tone="current"
+                                aria-hidden="true"
                                 className="size-3"
                             />
                         )}

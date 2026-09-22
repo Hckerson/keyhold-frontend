@@ -40,8 +40,6 @@ export function VerificationDecisionModal({
             onOpenChange={(open) => {
                 if (!open) onClose();
             }}
-            role="dialog"
-            aria-modal="true"
             aria-labelledby="verification-decision-title"
         >
             {copy && decision && (

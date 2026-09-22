@@ -49,14 +49,14 @@ export function ReleaseEscrowModal({
         >
             {purchase && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>{MODAL_TITLE}</ModalTitle>
                         <p className="text-text-secondary mt-1 truncate text-xs">
                             {purchase.address} · {purchase.locality}
                         </p>
                     </ModalHeader>
 
-                    <ModalBody className="flex flex-col gap-3 p-4">
+                    <ModalBody className="flex flex-col gap-3">
                         <Callout
                             variant={failed ? "error" : "warning"}
                             title={failed ? FAILURE_TITLE : WARNING_TITLE}
@@ -81,7 +81,7 @@ export function ReleaseEscrowModal({
                         </div>
                     </ModalBody>
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button type="button" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>

@@ -58,7 +58,7 @@ export function UserDetailModal({
         >
             {user && status && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>{user.name}</ModalTitle>
                         <div className="mt-1 flex items-center gap-2">
                             <UserStatusMark status={user.status} />
@@ -68,7 +68,7 @@ export function UserDetailModal({
                         </div>
                     </ModalHeader>
 
-                    <ModalBody className="scroll-y max-h-[60vh] space-y-4 p-4">
+                    <ModalBody className="scroll-y max-h-[60vh] space-y-4">
                         <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
                             <MetricCell label={VOLUME_LABEL}>
                                 <UserVolumeMeter
@@ -106,7 +106,7 @@ export function UserDetailModal({
                         </div>
                     </ModalBody>
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button
                             type="button"
                             emphasis="quiet"

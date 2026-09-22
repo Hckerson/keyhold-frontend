@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const inputVariants = cva(
-    "border-border bg-background-alt text-text placeholder:text-text-muted focus-visible:border-accent focus-visible:ring-accent/40 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 ease-smooth flex w-full rounded-lg border px-3 py-2 text-xs leading-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+    "border-border bg-background-alt text-text placeholder:text-text-muted focus-visible:border-accent focus-visible:ring-accent/40 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 ease-smooth flex h-8 w-full rounded-md border px-2.5 text-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
     {
         variants: {
             variant: {
@@ -30,7 +30,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, type, variant, prefix, endSlot, ...props }, ref) => (
         <div className="relative w-full">
             {prefix && (
-                <span className="micro-label absolute top-1/2 left-3 -translate-y-1/2">
+                <span className="micro-label pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2">
                     {prefix}
                 </span>
             )}
