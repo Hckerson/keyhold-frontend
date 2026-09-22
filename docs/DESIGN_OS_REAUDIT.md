@@ -12,8 +12,8 @@ Every verdict below comes from reading code, traced to a file and a line.
 | ---------- | ------------------------------- |
 | **13**     | Routes re-verified closed       |
 | **47**     | Routes, zero dead links         |
-| **6 of 7** | First-pass defects since closed |
-| **1**      | Open item                       |
+| **7 of 7** | First-pass defects since closed |
+| **0**      | Open items                      |
 
 ---
 
@@ -56,9 +56,11 @@ The first pass of this re-audit raised seven. Six were fixed between that pass a
 
 ### 1 · Milestone upload did no screening — closed
 
-The raw `<input type="file">` in `milestone-row.tsx` is still there, but it is now only a trigger. Screening moved up into the hook: `use-deal-milestones.ts` `onAttach` calls `screenFiles([file], DOCUMENT_UPLOAD.accept, DOCUMENT_UPLOAD.maxBytes)` and surfaces the first rejection before anything reaches the wire. The shared config was renamed `MESSAGE_ATTACHMENTS` → `DOCUMENT_UPLOAD` in the process.
+The raw `<input type="file">` in `milestone-row.tsx` is still there, but it is now only a trigger. Screening moved up into the hook: `use-deal-milestones.ts` `onAttach` calls `screenFiles([file], DOCUMENT_UPLOAD.accept, DOCUMENT_UPLOAD.maxBytes)` and surfaces the first rejection before anything reaches the wire. `DOCUMENT_UPLOAD` was extracted into `lib/config/uploads.ts` rather than renamed: `MESSAGE_ATTACHMENTS` still exists and spreads it, adding `maxFiles` and `fallbackContent`, so the limit is declared once and the offers component no longer imports a messaging constant.
 
 Putting the gate in the hook rather than the component is the better placement — every consumer of the hook inherits it.
+
+Upload progress closed with it. The transport is axios, which exposes `onUploadProgress` natively, and `uploadImages` and `uploadAvatar` already carried the convention in two byte-identical blocks. That block and the `multipart/form-data` header, repeated at five call sites, are now one `query.upload` helper in `lib/api/client.ts` that all five uploads route through. `useAttachMilestoneDocument` follows the existing progress shape, and `MilestonePanel` draws a determinate bar while an attach is in flight.
 
 ### 2 · A failed calendar push was invisible to the agent — closed
 
@@ -84,23 +86,35 @@ The push is still correctly fire-and-log — Google still cannot fail a viewing 
 
 ---
 
-## Still open
+## Seeded coordinates — closed by geocoding
 
-### Seeded coordinates are synthetic — disclosed, not resolved
+`seed-data/coordinates.ts` has been deleted. No synthetic coordinate is generated anywhere in the repo any more; `SPREAD_DEGREES`, `LOCALITY_CENTRES` and the hash jitter are gone.
 
-`seed-data/coordinates.ts` still hash-jitters each property ±0.012° around eight hardcoded locality centres; `SPREAD_DEGREES` is unchanged. These remain pins claiming a house sits somewhere it does not.
+In their place, `seed-data/geocode.ts` geocodes each property's real address line against Nominatim — free, keyless, no new dependency, plain `fetch`, the response parsed by a Zod schema like every other provider response per ADR 0020 — and `seed-steps/geocode.ts` writes the results. `backfill-coordinates.ts` is now a thin wrapper over the same step, so there is one implementation rather than two.
 
-What changed is honesty rather than accuracy. `backfill-coordinates.ts` now opens with a notice — _"These coordinates are approximations around a locality centre, not geocoded addresses. Do not run this against a database real buyers will see"_ — and reports "Placed N properties approximately."
+**The gate is the point.** A Nominatim result is accepted only at `place_rank` 30 with a `class` of `place` or `building`. Anything else is refused and the property keeps no coordinates. Measured against all 34 seeded addresses:
 
-That is the right interim move, and it does not discharge the requirement. Geocoding is still owed before any of this reaches a real buyer.
+| Outcome                                  | Count | What it would have been         |
+| ---------------------------------------- | ----- | ------------------------------- |
+| Exact house or building                  | **7** | a true pin                      |
+| Street centreline (`highway/*`, rank 26) | 12    | a pin in the middle of the road |
+| No result at all                         | 15    | nothing                         |
+
+One of those twelve is worth naming: `2200 Fillmore Street` resolves to `shop/alcohol` — a liquor store. Accepting rank-30 results without the class gate would have placed a multi-million-dollar listing on a shop. Verified live: the gate returns coordinates for `710 Roxbury Drive` and refuses Fillmore, `1100 Nimes Road` and the invented `8 Holmby Row`.
+
+Geocoding runs **after** the seed transaction commits, not inside it. Thirty-four requests at Nominatim's one-per-second policy is roughly forty seconds, and holding a database transaction open across that much third-party network would risk the whole seed on an upstream hang. A geocoding failure now leaves the seed intact and the property unplaced.
+
+**Densified on 22 September.** Seventeen invented addresses were replaced with real single-family homes found in OpenStreetMap, each kept only if it passed this same gate. Five candidates were refused on inspection: a college office on Pico Boulevard, an unconfirmable commercial building on Beverly Boulevard, a named multi-unit building offered to a townhouse listing, a street spelled wrong in the OSM data, and two Westwood houses that would have been listed as Brentwood. Three more were refused because the listing is a penthouse, townhouse or condo and the home is detached. Titles that named the old invented street were renamed to match. The seed geocoder now places **22 of 34**; the other twelve keep invented addresses and no pin.
+
+Because the catalogue now puts invented listings at real homes, `seed-guard.ts` refuses any seed or backfill under `NODE_ENV=production`, with or without `SEED_ACK`, and `app.json` no longer seeds review apps. Real visitors never see it.
 
 ---
 
 ## Where the record drifted from the code
 
-`design-os/INDEX/RATIFIED_DIVERGENCES.md` still describes the privacy page as naming **SendGrid** among its processors. The page has said "Our SMTP email provider" since the SMTP migration. The page is right; the note about it is stale.
+`design-os/INDEX/RATIFIED_DIVERGENCES.md` described the privacy page as naming **SendGrid** among its processors; the page has said "Our SMTP email provider" since `0833ca1`. **Closed on 21 September** by a dated entry under a new "Corrections to earlier entries" section, which names the line it supersedes. The original entry is untouched — `design-os/` is append-only.
 
-This was not corrected in place — `design-os/` is append-only, so the fix belongs in a new entry rather than a rewrite of the old one.
+The same pass found a second stale line in that file: the map table still listed POI markers on listing detail as owed, although `listing-neighborhood.tsx` has drawn them from live Overpass data since Section 10 closed. It is corrected in the same section, the same way.
 
 A second drift item from the first pass — the conformance ledger's remediation strip reading "3 Still short" — was **withdrawn on revalidation**. That strip sits inside the ledger's 8 September section, superseded by the sections dated the 17th and 20th, whose closing footer reads "8 of 8 section gaps closed". A dated entry in an append-only chronology is not a stale claim; reading it as one was the error.
 
@@ -114,4 +128,4 @@ Five independent read-only sweeps — public and map, auth and buyer, agent, adm
 
 ---
 
-**13 routes closed · 47 routes with 0 dead links · 6 of 7 defects closed · 1 open item · 1 stale record**
+**13 routes closed · 47 routes with 0 dead links · 7 of 7 defects closed · 22 of 34 seeded listings on verified homes, 12 unplaced · 0 stale records**

@@ -1,6 +1,6 @@
 # Ratified Divergences
 
-**Real Estate Platform | Companion to Phases 1–10 | Last reviewed 12 September 2026**
+**Real Estate Platform | Companion to Phases 1–10 | Last reviewed 21 September 2026**
 
 ---
 
@@ -200,6 +200,16 @@ Overdue is derived, never stored: a `SCHEDULED` milestone whose `dueAt` has pass
 **Section 42 drag semantics.** The blueprint says "Drag → change status (column)". On this domain a deal stage is _derived_ — from whether an offer exists and whether a transaction has opened — and the agent is not the actor at most of those boundaries. Only the buyer can submit an offer; only the buyer completes payment.
 
 So a drop is treated as a request to advance, resolved against what the agent can actually do. Dragging out of **Offers** accepts or declines the live offer, which are real mutations the agent owns. Every other drop is refused with a reason naming who must act — "Only _{buyer}_ can submit an offer on this property." The rules live in `dealMove` in `lib/data/agent-pipeline.ts`, and the same accept/decline actions are available from the detail modal, so the board is operable without a pointer.
+
+---
+
+## Corrections to earlier entries
+
+Entries above are not rewritten when they drift. A correction lands here, dated, and names the line it supersedes.
+
+**21 September 2026 — the privacy page no longer names SendGrid.** The footer-pages entry says the privacy page names "Stripe, Cloudinary, SendGrid, Twilio, OpenFreeMap" as processors. Since `0833ca1` (10 September) it has said "Our SMTP email provider" instead (`lib/data/privacy-page.ts`), following the move to SMTP for transactional email. The page is right; the entry is stale. The rest of that entry — processors named from what the platform actually uses, not from boilerplate — still holds.
+
+**21 September 2026 — POI markers on listing detail are built.** The map table lists Page 3 module 5 · Section 10 as a placed map with "POI markers still owed". They are no longer owed: `listing-neighborhood.tsx` draws school, transit, park and restaurant pins from live Overpass data through `neighbourhoodPins`, with a four-way toggle that doubles as the colour key.
 
 ---
 
