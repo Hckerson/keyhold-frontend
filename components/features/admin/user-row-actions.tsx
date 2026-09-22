@@ -38,7 +38,7 @@ export function UserRowActions({
     return (
         <span className="flex items-center justify-end">
             <IconButton
-                tone="danger"
+                tone="error"
                 icon={Ban}
                 label={`${SUSPEND_LABEL} ${user.name}`}
                 onClick={() => onSuspend(user.id)}

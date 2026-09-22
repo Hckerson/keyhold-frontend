@@ -58,11 +58,6 @@ export const LIGHTBOX_PLATE_MOTION: MotionPresence = {
     transition: NORMAL,
 };
 
-export const TAB_PANEL_MOTION: Variants = {
-    hidden: { opacity: 0, y: 4 },
-    visible: { opacity: 1, y: 0, transition: NORMAL },
-};
-
 export const REVEAL_MOTION: Variants = {
     hidden: { opacity: 0, y: 16 },
     visible: { opacity: 1, y: 0, transition: NORMAL },

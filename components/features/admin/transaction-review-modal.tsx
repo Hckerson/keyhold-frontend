@@ -34,7 +34,7 @@ export function TransactionReviewModal({
         >
             {transaction && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>{transaction.property}</ModalTitle>
                         <div className="mt-1 flex items-center gap-2">
                             <TransactionStatusMark
@@ -48,7 +48,7 @@ export function TransactionReviewModal({
 
                     <TransactionReviewBody transaction={transaction} />
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button
                             type="button"
                             emphasis="quiet"

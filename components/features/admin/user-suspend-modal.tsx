@@ -62,14 +62,14 @@ export function UserSuspendModal({
         >
             {user && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>{MODAL_TITLE}</ModalTitle>
                         <p className="text-text-secondary mt-1 truncate text-xs">
                             {user.name} · {user.email}
                         </p>
                     </ModalHeader>
 
-                    <ModalBody className="flex flex-col gap-3 p-4">
+                    <ModalBody className="flex flex-col gap-3">
                         <TextareaField
                             name={REASON_NAME}
                             label={REASON_FIELD}
@@ -108,7 +108,7 @@ export function UserSuspendModal({
                         />
                     </ModalBody>
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button type="button" onClick={onClose}>
                             {CANCEL_ACTION}
                         </Button>

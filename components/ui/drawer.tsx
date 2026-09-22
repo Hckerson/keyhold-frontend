@@ -1,61 +1,20 @@
 "use client";
 
-import {
-    createContext,
-    forwardRef,
-    useCallback,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-    type HTMLAttributes,
-    type ReactNode,
-} from "react";
-import { createPortal } from "react-dom";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { Dialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { useMounted } from "@/lib/hooks/use-mounted";
-import { cn } from "@/lib/utils";
+import {
+    DIALOG_CLOSE_MARK,
+    useDialogFocus,
+} from "@/lib/hooks/use-dialog-focus";
+import { useSettledContent } from "@/lib/hooks/use-settled-content";
+import { cn, composeRefs } from "@/lib/utils";
 
-const FOCUSABLE =
-    'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-const EXIT_DURATION = 300;
-
-const DrawerCloseContext = createContext<() => void>(() => {});
-
-function activeElement() {
-    const node = document.activeElement;
-    return node instanceof HTMLElement ? node : null;
-}
-
-function lockScroll(origin: HTMLElement | null) {
-    const targets: HTMLElement[] = [document.body];
-    let node = origin?.parentElement ?? null;
-
-    while (node && node !== document.body) {
-        const { overflowY } = getComputedStyle(node);
-        const scrolls = overflowY === "auto" || overflowY === "scroll";
-        if (scrolls && node.scrollHeight > node.clientHeight) {
-            targets.push(node);
-            break;
-        }
-        node = node.parentElement;
-    }
-
-    const previous = targets.map(
-        (target) => [target, target.style.overflow] as const,
-    );
-    for (const target of targets) target.style.overflow = "hidden";
-
-    return () => {
-        for (const [target, overflow] of previous)
-            target.style.overflow = overflow;
-    };
-}
+const CLOSE_LABEL = "Close panel";
 
 const drawerVariants = cva(
-    "bg-background-muted border-border-dark ease-smooth fixed inset-y-0 right-0 z-40 flex w-full flex-col border-l shadow-2xl transition-transform duration-300 focus:outline-none",
+    "bg-background-muted border-border-dark ease-smooth z-modal fixed inset-y-0 right-0 flex w-full flex-col border-l shadow-2xl outline-none transition-[translate] duration-300 data-ending-style:translate-x-full data-starting-style:translate-x-full",
     {
         variants: {
             size: {
@@ -83,105 +42,27 @@ const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
         { open, onOpenChange, label, size, className, children, ...props },
         ref,
     ) => {
-        const mounted = useMounted();
-        const [rendered, setRendered] = useState(open);
-        const [shown, setShown] = useState(false);
-        const panelRef = useRef<HTMLDivElement | null>(null);
-        const restoreRef = useRef<HTMLElement | null>(null);
+        const content = useSettledContent(open, children);
+        const { popupRef, initialFocus } = useDialogFocus();
 
-        const close = useCallback(() => onOpenChange(false), [onOpenChange]);
-
-        const setPanel = useCallback(
-            (node: HTMLDivElement | null) => {
-                panelRef.current = node;
-                if (typeof ref === "function") ref(node);
-                else if (ref) ref.current = node;
-            },
-            [ref],
-        );
-
-        useEffect(() => {
-            if (open) {
-                setRendered(true);
-                const frame = requestAnimationFrame(() => setShown(true));
-                return () => cancelAnimationFrame(frame);
-            }
-
-            setShown(false);
-            const timer = setTimeout(() => setRendered(false), EXIT_DURATION);
-            return () => clearTimeout(timer);
-        }, [open]);
-
-        useEffect(() => {
-            const panel = panelRef.current;
-            if (!open || !rendered || !panel) return;
-
-            restoreRef.current = activeElement();
-            const releaseScroll = lockScroll(restoreRef.current);
-            const target = panel.querySelector<HTMLElement>(FOCUSABLE) ?? panel;
-            target.focus();
-
-            const onKeyDown = (event: KeyboardEvent) => {
-                if (event.key === "Escape") {
-                    close();
-                    return;
-                }
-                if (event.key !== "Tab") return;
-
-                const items = Array.from(
-                    panel.querySelectorAll<HTMLElement>(FOCUSABLE),
-                );
-                const first = items[0];
-                const last = items[items.length - 1];
-                if (!first || !last) return;
-
-                const active = activeElement();
-                if (event.shiftKey && (active === first || active === panel)) {
-                    event.preventDefault();
-                    last.focus();
-                } else if (!event.shiftKey && active === last) {
-                    event.preventDefault();
-                    first.focus();
-                }
-            };
-
-            document.addEventListener("keydown", onKeyDown);
-            return () => {
-                document.removeEventListener("keydown", onKeyDown);
-                releaseScroll();
-                restoreRef.current?.focus();
-            };
-        }, [open, rendered, close]);
-
-        if (!mounted || !rendered) return null;
-
-        return createPortal(
-            <DrawerCloseContext.Provider value={close}>
-                <div
-                    aria-hidden="true"
-                    onClick={close}
-                    className={cn(
-                        "bg-overlay ease-smooth fixed inset-0 z-30 transition-opacity duration-300",
-                        shown ? "opacity-100" : "opacity-0",
-                    )}
-                />
-                <div
-                    ref={setPanel}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-label={label}
-                    tabIndex={-1}
-                    className={cn(
-                        drawerVariants({ size }),
-                        shown ? "translate-x-0" : "translate-x-full",
-                        className,
-                    )}
-                    {...props}
-                >
-                    {children}
-                </div>
-            </DrawerCloseContext.Provider>,
-            document.body,
+        return (
+            <Dialog.Root
+                open={open}
+                onOpenChange={(next) => onOpenChange(next)}
+            >
+                <Dialog.Portal>
+                    <Dialog.Backdrop className="bg-overlay z-modal-backdrop ease-smooth fixed inset-0 transition-opacity duration-300 data-ending-style:opacity-0 data-starting-style:opacity-0" />
+                    <Dialog.Popup
+                        ref={composeRefs(ref, popupRef)}
+                        initialFocus={initialFocus}
+                        aria-label={label}
+                        className={cn(drawerVariants({ size }), className)}
+                        {...props}
+                    >
+                        {content}
+                    </Dialog.Popup>
+                </Dialog.Portal>
+            </Dialog.Root>
         );
     },
 );
@@ -189,30 +70,25 @@ const Drawer = forwardRef<HTMLDivElement, DrawerProps>(
 Drawer.displayName = "Drawer";
 
 const DrawerHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-    ({ className, children, ...props }, ref) => {
-        const close = useContext(DrawerCloseContext);
-
-        return (
-            <div
-                ref={ref}
-                className={cn(
-                    "border-border-dark flex items-start justify-between gap-3 border-b px-4 py-3",
-                    className,
-                )}
-                {...props}
+    ({ className, children, ...props }, ref) => (
+        <div
+            ref={ref}
+            className={cn(
+                "border-border-dark flex items-start justify-between gap-3 border-b px-4 py-3",
+                className,
+            )}
+            {...props}
+        >
+            <div className="min-w-0">{children}</div>
+            <Dialog.Close
+                {...DIALOG_CLOSE_MARK}
+                aria-label={CLOSE_LABEL}
+                className="text-text-muted hover:text-text hover:bg-background-alt focus-visible:ring-accent ease-smooth grid size-6 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
             >
-                <div className="min-w-0">{children}</div>
-                <button
-                    type="button"
-                    onClick={close}
-                    aria-label="Close panel"
-                    className="text-text-muted hover:text-text hover:bg-background-alt focus-visible:ring-accent ease-smooth grid size-6 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-                >
-                    <X size={12} strokeWidth={1.5} aria-hidden="true" />
-                </button>
-            </div>
-        );
-    },
+                <X className="size-3" strokeWidth={1.5} aria-hidden="true" />
+            </Dialog.Close>
+        </div>
+    ),
 );
 
 DrawerHeader.displayName = "DrawerHeader";
@@ -221,7 +97,7 @@ const DrawerTitle = forwardRef<
     HTMLHeadingElement,
     HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
-    <h2
+    <Dialog.Title
         ref={ref}
         className={cn("text-text truncate text-xs font-medium", className)}
         {...props}

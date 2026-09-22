@@ -40,7 +40,7 @@ export function ModerationReviewModal({
         >
             {listing && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>
                             {listing.address}, {listing.locality}
                         </ModalTitle>
@@ -54,7 +54,7 @@ export function ModerationReviewModal({
 
                     <ModerationReviewBody listing={listing} />
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button
                             type="button"
                             emphasis="quiet"

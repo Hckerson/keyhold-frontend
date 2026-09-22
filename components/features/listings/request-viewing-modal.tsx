@@ -77,11 +77,11 @@ export function RequestViewingModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
+            <ModalBody className="space-y-3">
                 <div>
                     <p className="text-text text-xs font-semibold">{address}</p>
                     <p className="text-text-secondary mt-0.5 text-xs">
@@ -125,7 +125,7 @@ export function RequestViewingModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="p-4">
+            <ModalFooter>
                 <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
