@@ -5,6 +5,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
     output: process.env.DOCKER_BUILD ? "standalone" : undefined,
+    outputFileTracingIncludes: {
+        "/maplibre/**": ["./node_modules/maplibre-gl/dist/*.mjs"],
+    },
     devIndicators: {
         position: "bottom-right",
     },
