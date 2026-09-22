@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
+    getVersion,
     LngLatBounds,
     Map as MapLibreMap,
     Marker,
     NavigationControl,
+    setWorkerUrl,
 } from "maplibre-gl";
 import { chartToneFill } from "@/lib/config/chart-tones";
 import {
@@ -15,10 +17,14 @@ import {
     MAP_FIT_PADDING,
     MAP_MAX_FIT_ZOOM,
     MAP_STYLE_URL,
+    MAP_WORKER_BASE,
+    MAP_WORKER_ENTRY,
     type MapBounds,
     type MapPin,
 } from "@/lib/config/map";
 import { cn } from "@/lib/utils";
+
+setWorkerUrl(`${MAP_WORKER_BASE}/${getVersion()}/${MAP_WORKER_ENTRY}`);
 
 const MARKER_CLASS =
     "block size-4 rounded-full border-2 border-background shadow-md cursor-pointer";
