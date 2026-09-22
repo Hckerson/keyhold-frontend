@@ -1,20 +1,19 @@
-import React from "react";
+import { forwardRef, type HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-interface DividerProps extends React.HTMLAttributes<HTMLHRElement> {
+interface DividerProps extends HTMLAttributes<HTMLDivElement> {
     orientation?: "horizontal" | "vertical";
 }
 
-const Divider = React.forwardRef<HTMLHRElement, DividerProps>(
+const Divider = forwardRef<HTMLDivElement, DividerProps>(
     ({ className, orientation = "horizontal", ...props }, ref) => (
-        <hr
+        <div
             ref={ref}
+            role="separator"
+            aria-orientation={orientation}
             className={cn(
-                "border-0",
-                orientation === "horizontal" &&
-                    "via-border h-px w-full bg-linear-to-r from-transparent to-transparent",
-                orientation === "vertical" &&
-                    "via-border h-full w-px bg-linear-to-b from-transparent to-transparent",
+                "bg-border-light shrink-0",
+                orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
                 className,
             )}
             {...props}

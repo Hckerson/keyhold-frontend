@@ -5,6 +5,7 @@ import {
     BreadcrumbList,
     BreadcrumbItem,
     BreadcrumbLink,
+    BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ListingDetail } from "@/components/sections/listing/listing-detail";
@@ -90,7 +91,7 @@ export default async function ListingDetailPage({
             <ListingViewRecorder propertyId={property.id} />
 
             <Container className="pt-6">
-                <Breadcrumb aria-label="Breadcrumb">
+                <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
                             <BreadcrumbLink href="/">Home</BreadcrumbLink>
@@ -103,9 +104,7 @@ export default async function ListingDetailPage({
                         </BreadcrumbItem>
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
-                            <span className="text-text text-xs font-medium">
-                                {listing.title}
-                            </span>
+                            <BreadcrumbPage>{listing.title}</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>

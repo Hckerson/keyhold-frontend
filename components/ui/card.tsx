@@ -10,7 +10,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         <div
             ref={ref}
             className={cn(
-                "bg-background border-border-light ease-smooth hover:border-border rounded-lg border p-4 shadow-sm transition-colors duration-200",
+                "bg-background border-border-light rounded-lg border p-3 shadow-sm",
                 className,
             )}
             {...props}
@@ -22,7 +22,7 @@ Card.displayName = "Card";
 
 const CardHeader = forwardRef<HTMLDivElement, CardProps>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn("mb-3", className)} {...props} />
+        <div ref={ref} className={cn("mb-2", className)} {...props} />
     ),
 );
 
@@ -54,7 +54,7 @@ CardDescription.displayName = "CardDescription";
 
 const CardContent = forwardRef<HTMLDivElement, CardProps>(
     ({ className, ...props }, ref) => (
-        <div ref={ref} className={cn("", className)} {...props} />
+        <div ref={ref} className={className} {...props} />
     ),
 );
 
@@ -64,7 +64,7 @@ const CardFooter = forwardRef<HTMLDivElement, CardProps>(
     ({ className, ...props }, ref) => (
         <div
             ref={ref}
-            className={cn("mt-4 flex gap-2", className)}
+            className={cn("mt-3 flex gap-2", className)}
             {...props}
         />
     ),
