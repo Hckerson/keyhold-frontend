@@ -42,11 +42,11 @@ export function PasswordModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{MODAL_TITLE}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="p-4">
+            <ModalBody>
                 {sent ? (
                     <Callout
                         variant="success"
@@ -62,7 +62,7 @@ export function PasswordModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="gap-2 p-4">
+            <ModalFooter>
                 <Button type="button" onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>

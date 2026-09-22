@@ -21,7 +21,7 @@ export function ModerationReviewBody({ listing }: ModerationReviewBodyProps) {
     const status = MODERATION_STATUSES[listing.status];
 
     return (
-        <ModalBody className="scroll-y max-h-[60vh] space-y-4 p-4">
+        <ModalBody className="scroll-y max-h-[60vh] space-y-4">
             <ModerationReviewMetrics listing={listing} />
 
             {listing.note && (

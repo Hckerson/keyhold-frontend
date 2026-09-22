@@ -28,7 +28,7 @@ export function TransactionReviewBody({
     );
 
     return (
-        <ModalBody className="scroll-y max-h-[60vh] space-y-4 p-4">
+        <ModalBody className="scroll-y max-h-[60vh] space-y-4">
             <TransactionReviewMetrics
                 transaction={transaction}
                 open={meta.open}

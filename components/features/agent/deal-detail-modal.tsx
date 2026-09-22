@@ -58,7 +58,7 @@ export function DealDetailModal({
         >
             {deal && stage && (
                 <ModalContent>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                                 <ModalTitle id="deal-detail-title">
@@ -74,7 +74,7 @@ export function DealDetailModal({
                         </div>
                     </ModalHeader>
 
-                    <ModalBody className="space-y-3 p-4">
+                    <ModalBody className="space-y-3">
                         <DealDetailMetrics deal={deal} />
 
                         <DealProgress
@@ -104,7 +104,7 @@ export function DealDetailModal({
                         )}
                     </ModalBody>
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button
                             type="button"
                             emphasis="quiet"

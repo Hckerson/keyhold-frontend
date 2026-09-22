@@ -5,10 +5,13 @@ import {
     type HTMLAttributes,
     type MouseEvent,
     type MouseEventHandler,
+    type Ref,
 } from "react";
-import { cn } from "@/lib/utils";
+import { cn, composeRefs } from "@/lib/utils";
 
-type SlotProps = HTMLAttributes<HTMLElement>;
+interface SlotProps extends HTMLAttributes<HTMLElement> {
+    ref?: Ref<HTMLElement>;
+}
 
 function composeClick(
     slot: MouseEventHandler<HTMLElement> | undefined,
@@ -21,13 +24,14 @@ function composeClick(
     };
 }
 
-function Slot({ children, className, onClick, ...props }: SlotProps) {
+function Slot({ children, className, onClick, ref, ...props }: SlotProps) {
     const child = Children.only(children);
     if (!isValidElement<SlotProps>(child)) return null;
 
     return cloneElement(child, {
         ...props,
         ...child.props,
+        ref: ref ? composeRefs(ref, child.props.ref) : child.props.ref,
         className: cn(className, child.props.className),
         onClick: composeClick(onClick, child.props.onClick),
     });

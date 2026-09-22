@@ -38,12 +38,12 @@ export function MaintenanceConfirmModal({
         >
             {action && (
                 <ModalContent>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle id="maintenance-confirm-title">
                             {action.confirmTitle}
                         </ModalTitle>
                     </ModalHeader>
-                    <ModalBody className="space-y-3 p-4">
+                    <ModalBody className="space-y-3">
                         <p className="text-text-secondary text-xs">
                             {action.confirmLede}
                         </p>
@@ -52,7 +52,7 @@ export function MaintenanceConfirmModal({
                             title={CALLOUT_TITLE}
                         />
                     </ModalBody>
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button
                             type="button"
                             emphasis="quiet"
