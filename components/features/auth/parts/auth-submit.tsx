@@ -10,7 +10,7 @@ export interface AuthSubmitProps {
     label: string;
     pendingLabel: string;
     pending: boolean;
-    disabled: boolean;
+    disabled?: boolean;
 }
 
 export function AuthSubmit({
