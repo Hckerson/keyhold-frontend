@@ -2,10 +2,9 @@
 
 import Link from "next/link";
 import type { NavRoute } from "@/lib/types";
-import { TOPBAR_BADGE_CEILING, TOPBAR_SEGMENT } from "@/lib/config/topbar";
-import { cn } from "@/lib/utils";
+import { TOPBAR_BADGE_CEILING, TOPBAR_ICON_BUTTON } from "@/lib/config/topbar";
 
-function AlertSegment({ route }: { route: NavRoute }) {
+function AlertLink({ route }: { route: NavRoute }) {
     const Icon = route.icon;
     const count = route.badge ?? 0;
     const unread = count > 0;
@@ -13,18 +12,18 @@ function AlertSegment({ route }: { route: NavRoute }) {
     return (
         <Link
             href={route.href}
+            title={route.label}
             aria-label={
-                unread ? `${route.label}, ${count} unread` : route.label
+                unread ? `${route.label}, ${count} waiting` : route.label
             }
-            className={cn(TOPBAR_SEGMENT, "border-border border-l")}
+            className={TOPBAR_ICON_BUTTON}
         >
-            <Icon
-                size={12}
-                strokeWidth={1.5}
-                className={unread ? "text-text" : "text-text-secondary"}
-            />
+            <Icon className="size-4" strokeWidth={1.5} aria-hidden="true" />
             {unread && (
-                <span className="bg-highlight-light text-highlight-dark rounded-xs px-1 py-px font-mono text-[10px] leading-none font-semibold tabular-nums">
+                <span
+                    aria-hidden="true"
+                    className="bg-accent text-text-inverse ring-background absolute -top-0.5 -right-0.5 h-4 min-w-4 rounded-full px-1 text-center font-mono text-[10px] leading-4 font-semibold tabular-nums ring-2"
+                >
                     {count > TOPBAR_BADGE_CEILING
                         ? `${TOPBAR_BADGE_CEILING}+`
                         : count}
@@ -34,14 +33,14 @@ function AlertSegment({ route }: { route: NavRoute }) {
     );
 }
 
+AlertLink.displayName = "AlertLink";
+
 export interface TopbarAlertsProps {
     routes: NavRoute[];
 }
 
 export function TopbarAlerts({ routes }: TopbarAlertsProps) {
-    return routes.map((route) => (
-        <AlertSegment key={route.href} route={route} />
-    ));
+    return routes.map((route) => <AlertLink key={route.href} route={route} />);
 }
 
 TopbarAlerts.displayName = "TopbarAlerts";
