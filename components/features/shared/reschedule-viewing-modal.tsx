@@ -40,6 +40,7 @@ export function RescheduleViewingModal({
     return (
         <Modal
             open={address !== undefined}
+            locked={pending}
             onOpenChange={(open) => {
                 if (!open) onClose();
             }}
@@ -76,7 +77,7 @@ export function RescheduleViewingModal({
                 />
             </ModalBody>
             <ModalFooter className="gap-4">
-                <Button type="button" onClick={onClose}>
+                <Button type="button" disabled={pending} onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>
                 <Button

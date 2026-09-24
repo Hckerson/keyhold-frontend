@@ -19,10 +19,7 @@ import {
     type ViewingStatusFilter,
 } from "@/lib/data/viewings";
 import { useMyInterests } from "@/lib/hooks/use-connections";
-import {
-    useCancelViewing,
-    useRescheduleViewing,
-} from "@/lib/hooks/use-viewings";
+import { useRescheduleViewing } from "@/lib/hooks/use-viewings";
 import { draftToIso, toViewingBook } from "@/lib/utils/to-viewing";
 import type { RescheduleDraft } from "@/lib/types";
 
@@ -31,7 +28,6 @@ const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
 export function useViewingsConsole() {
     const interests = useMyInterests();
     const rescheduleViewing = useRescheduleViewing();
-    const cancelViewing = useCancelViewing();
 
     const [calendar, setCalendar] = useState({
         year: TODAY.year,
@@ -117,11 +113,6 @@ export function useViewingsConsole() {
         [viewings],
     );
 
-    const cancel = useCallback(
-        (id: string) => cancelViewing.mutate(id),
-        [cancelViewing],
-    );
-
     const closeReschedule = useCallback(() => setRescheduleId(null), []);
 
     const confirmReschedule = () => {
@@ -168,7 +159,6 @@ export function useViewingsConsole() {
         selectDay,
         changeMonth,
         startReschedule,
-        cancel,
         closeReschedule,
         confirmReschedule,
     };

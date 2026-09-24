@@ -12,8 +12,10 @@ import {
 } from "@/lib/hooks/use-offers";
 import { useDealMilestones } from "@/lib/hooks/use-deal-milestones";
 import { useCheckout } from "@/lib/hooks/use-checkout";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
+import type { CreateOfferInput } from "@/lib/validations/offer";
 
 const COUNTER_WINDOW_DAYS = 7;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -33,12 +35,24 @@ export function useOfferDetail(id: string) {
     const acceptCounter = useAcceptCounter();
     const createOffer = useCreateOffer();
     const sendMessage = useSendMessage();
+    const counterConfirmation = useConfirmation<CreateOfferInput, string>(
+        createOffer,
+    );
+    const acceptConfirmation = useConfirmation<string>(acceptCounter);
 
     const [counterAmount, setCounterAmount] = useState("");
     const [counterNote, setCounterNote] = useState("");
-    const [confirming, setConfirming] = useState<OfferConfirmAction | null>(
-        null,
-    );
+
+    const confirmations = {
+        accept: acceptConfirmation,
+        counter: counterConfirmation,
+    };
+    const confirming: OfferConfirmAction | null = acceptConfirmation.open
+        ? "accept"
+        : counterConfirmation.open
+          ? "counter"
+          : null;
+    const activeConfirmation = confirmations[confirming ?? "counter"];
 
     const detail = offer
         ? toOfferDetail(
@@ -68,9 +82,14 @@ export function useOfferDetail(id: string) {
         sendMessage.mutate({ connectionId: offer.connectionId, content });
     };
 
+    const requestConfirm = (action: OfferConfirmAction) => {
+        if (offer && !activeConfirmation.pending)
+            confirmations[action].request(offer.id);
+    };
+
     const confirmCounter = () => {
         if (!offer || !canCounter) return;
-        createOffer.mutate(
+        counterConfirmation.confirm(
             {
                 connectionId: offer.connectionId,
                 offeredPrice: counterValue,
@@ -79,12 +98,9 @@ export function useOfferDetail(id: string) {
                     Date.now() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
                 ).toISOString(),
             },
-            {
-                onSuccess: () => {
-                    setCounterAmount("");
-                    setCounterNote("");
-                    setConfirming(null);
-                },
+            () => {
+                setCounterAmount("");
+                setCounterNote("");
             },
         );
     };
@@ -100,9 +116,7 @@ export function useOfferDetail(id: string) {
 
     const confirmAccept = () => {
         if (!offer || !canAccept) return;
-        acceptCounter.mutate(offer.id, {
-            onSuccess: () => setConfirming(null),
-        });
+        acceptConfirmation.confirm(offer.id);
     };
 
     return {
@@ -115,6 +129,8 @@ export function useOfferDetail(id: string) {
         counterAmount,
         counterNote,
         confirming,
+        confirmPending: activeConfirmation.pending,
+        confirmFailed: activeConfirmation.failed,
         closed,
         counterValue,
         canCounter,
@@ -126,7 +142,8 @@ export function useOfferDetail(id: string) {
         refetch: offerQuery.refetch,
         setCounterAmount,
         setCounterNote,
-        setConfirming,
+        requestConfirm,
+        dismissConfirm: activeConfirmation.dismiss,
         addUserMessage,
         confirmCounter,
         confirmAccept,

@@ -18,12 +18,14 @@ const CANCEL_LABEL = "Cancel";
 
 export interface ViewingRowProps {
     viewing: Viewing;
+    cancelling: boolean;
     onReschedule: (id: string) => void;
     onCancel: (id: string) => void;
 }
 
 export function ViewingRow({
     viewing,
+    cancelling,
     onReschedule,
     onCancel,
 }: ViewingRowProps) {
@@ -72,6 +74,7 @@ export function ViewingRow({
                             tone="error"
                             icon={X}
                             label={`${CANCEL_LABEL} ${viewing.address}`}
+                            disabled={cancelling}
                             onClick={() => onCancel(viewing.id)}
                         />
                     </span>

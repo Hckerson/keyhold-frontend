@@ -1,34 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
-import {
-    Modal,
-    ModalHeader,
-    ModalTitle,
-    ModalBody,
-    ModalFooter,
-} from "@/components/ui/modal";
+import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { inspectionLabel } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
 import { formatUsd } from "@/lib/utils";
 
 const MODAL_TITLE = "Release the funds";
-const WARNING_TITLE = "This cannot be undone";
-const WARNING_BODY =
-    "Releasing settles the sale, transfers the held amount to the seller and marks the property sold.";
+const WARNING = {
+    title: "This cannot be undone",
+    body: "Releasing settles the sale, transfers the held amount to the seller and marks the property sold.",
+};
+const FAILURE = {
+    title: "The funds could not be released",
+    body: "Nothing has moved and the escrow is still held. Try again in a moment.",
+};
 const AMOUNT_LABEL = "Held in escrow";
 const WINDOW_LABEL = "Inspection window";
+const UNKNOWN_AMOUNT = "—";
 const CANCEL_ACTION = "Keep it held";
 const CONFIRM_ACTION = "Release funds";
-const FAILURE_TITLE = "The funds could not be released";
-const FAILURE_BODY =
-    "Nothing has moved and the escrow is still held. Try again in a moment.";
 
 export interface ReleaseEscrowModalProps {
     purchase?: Purchase;
     pending: boolean;
-    failed?: boolean;
+    failed: boolean;
     onClose: () => void;
     onConfirm: () => void;
 }
@@ -41,63 +36,38 @@ export function ReleaseEscrowModal({
     onConfirm,
 }: ReleaseEscrowModalProps) {
     return (
-        <Modal
+        <ConfirmModal
             open={purchase !== undefined}
-            onOpenChange={(open) => {
-                if (!open) onClose();
-            }}
+            title={MODAL_TITLE}
+            subject={purchase && `${purchase.address} · ${purchase.locality}`}
+            warning={WARNING}
+            failure={FAILURE}
+            cancelLabel={CANCEL_ACTION}
+            confirmLabel={CONFIRM_ACTION}
+            pending={pending}
+            failed={failed}
+            onClose={onClose}
+            onConfirm={onConfirm}
         >
             {purchase && (
-                <>
-                    <ModalHeader>
-                        <ModalTitle>{MODAL_TITLE}</ModalTitle>
-                        <p className="text-text-secondary mt-1 truncate text-xs">
-                            {purchase.address} · {purchase.locality}
+                <div className="bg-background-muted border-border-light grid grid-cols-2 gap-3 rounded-md border p-3">
+                    <div className="min-w-0">
+                        <p className="micro-label">{AMOUNT_LABEL}</p>
+                        <p className="text-text mt-0.5 text-xs font-semibold tabular-nums">
+                            {purchase.escrowAmount === null
+                                ? UNKNOWN_AMOUNT
+                                : formatUsd(purchase.escrowAmount)}
                         </p>
-                    </ModalHeader>
-
-                    <ModalBody className="flex flex-col gap-3">
-                        <Callout
-                            variant={failed ? "error" : "warning"}
-                            title={failed ? FAILURE_TITLE : WARNING_TITLE}
-                            description={failed ? FAILURE_BODY : WARNING_BODY}
-                        />
-
-                        <div className="bg-background-muted border-border-light grid grid-cols-2 gap-3 rounded-md border p-3">
-                            <div className="min-w-0">
-                                <p className="micro-label">{AMOUNT_LABEL}</p>
-                                <p className="text-text mt-0.5 text-xs font-semibold tabular-nums">
-                                    {formatUsd(
-                                        purchase.escrowAmount ?? purchase.price,
-                                    )}
-                                </p>
-                            </div>
-                            <div className="min-w-0">
-                                <p className="micro-label">{WINDOW_LABEL}</p>
-                                <p className="text-text mt-0.5 text-xs font-semibold tabular-nums">
-                                    {inspectionLabel(purchase)}
-                                </p>
-                            </div>
-                        </div>
-                    </ModalBody>
-
-                    <ModalFooter>
-                        <Button type="button" onClick={onClose}>
-                            {CANCEL_ACTION}
-                        </Button>
-                        <Button
-                            type="button"
-                            emphasis="solid"
-                            tone="accent"
-                            disabled={pending}
-                            onClick={onConfirm}
-                        >
-                            {CONFIRM_ACTION}
-                        </Button>
-                    </ModalFooter>
-                </>
+                    </div>
+                    <div className="min-w-0">
+                        <p className="micro-label">{WINDOW_LABEL}</p>
+                        <p className="text-text mt-0.5 text-xs font-semibold tabular-nums">
+                            {inspectionLabel(purchase)}
+                        </p>
+                    </div>
+                </div>
             )}
-        </Modal>
+        </ConfirmModal>
     );
 }
 

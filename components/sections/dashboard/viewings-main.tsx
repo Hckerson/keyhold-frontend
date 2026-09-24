@@ -38,6 +38,7 @@ export interface ViewingsMainProps {
     onStatusFilterChange: (filter: ViewingStatusFilter) => void;
     onModeFilterChange: (filter: ViewingModeFilter) => void;
     onClearDay: () => void;
+    cancellingId: string | null;
     onReschedule: (id: string) => void;
     onCancel: (id: string) => void;
 }
@@ -55,6 +56,7 @@ export function ViewingsMain({
     onStatusFilterChange,
     onModeFilterChange,
     onClearDay,
+    cancellingId,
     onReschedule,
     onCancel,
 }: ViewingsMainProps) {
@@ -63,6 +65,7 @@ export function ViewingsMain({
             {next && (
                 <ViewingsNextHero
                     viewing={next}
+                    cancelling={cancellingId === next.id}
                     onReschedule={onReschedule}
                     onCancel={onCancel}
                 />
@@ -93,6 +96,7 @@ export function ViewingsMain({
                     <PanelInset scroll>
                         <ViewingTable
                             viewings={viewings}
+                            cancellingId={cancellingId}
                             onReschedule={onReschedule}
                             onCancel={onCancel}
                         />
