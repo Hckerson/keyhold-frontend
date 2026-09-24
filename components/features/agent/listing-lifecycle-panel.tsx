@@ -10,14 +10,14 @@ import {
     type ListingDraft,
 } from "@/lib/config/listing-form";
 import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
-import { listingStatusOptions } from "@/lib/data/listing-form";
+import { canMarkSold, listingStatusOptions } from "@/lib/data/listing-form";
 import type { PropertyStatus } from "@/lib/enums/enums";
 
 export interface ListingLifecyclePanelProps {
     id: string;
     status: PropertyStatus;
+    storedStatus: PropertyStatus;
     featuredUntil?: string;
-    soldPending: boolean;
     onPatch: (change: Partial<ListingDraft>) => void;
     onPromote: () => void;
     onMarkSold: () => void;
@@ -27,8 +27,8 @@ export interface ListingLifecyclePanelProps {
 export function ListingLifecyclePanel({
     id,
     status,
+    storedStatus,
     featuredUntil,
-    soldPending,
     onPatch,
     onPromote,
     onMarkSold,
@@ -64,20 +64,17 @@ export function ListingLifecyclePanel({
                 }
             />
 
-            <ActionRow
-                title={COPY.markSold}
-                description={COPY.markSoldHint}
-                action={
-                    <Button
-                        type="button"
-                        disabled={status === "SOLD"}
-                        isLoading={soldPending}
-                        onClick={onMarkSold}
-                    >
-                        {COPY.markSold}
-                    </Button>
-                }
-            />
+            {canMarkSold(storedStatus) && (
+                <ActionRow
+                    title={COPY.markSold}
+                    description={COPY.markSoldHint}
+                    action={
+                        <Button type="button" onClick={onMarkSold}>
+                            {COPY.markSold}
+                        </Button>
+                    }
+                />
+            )}
 
             <ActionRow
                 danger

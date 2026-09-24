@@ -26,7 +26,7 @@ const SLOTS_LABEL = "Times the buyer proposed";
 export interface ViewingRequestRowProps {
     request: ViewingRequestItem;
     confirming: boolean;
-    declining: boolean;
+    busy: boolean;
     onConfirm: (id: string, confirmedTime: string) => void;
     onDecline: (id: string) => void;
 }
@@ -34,7 +34,7 @@ export interface ViewingRequestRowProps {
 export function ViewingRequestRow({
     request,
     confirming,
-    declining,
+    busy,
     onConfirm,
     onDecline,
 }: ViewingRequestRowProps) {
@@ -100,10 +100,10 @@ export function ViewingRequestRow({
             <div className="flex items-center justify-end gap-2">
                 <Button
                     type="button"
-                    isLoading={declining}
+                    disabled={busy}
                     onClick={() => onDecline(request.id)}
                 >
-                    {stale ? COPY.staleAction : DECLINE}
+                    {DECLINE}
                 </Button>
                 {!stale && (
                     <Button
@@ -111,7 +111,7 @@ export function ViewingRequestRow({
                         emphasis="solid"
                         tone="accent"
                         isLoading={confirming}
-                        disabled={!picked}
+                        disabled={busy || !picked}
                         onClick={() => onConfirm(request.id, picked)}
                     >
                         {CONFIRM}

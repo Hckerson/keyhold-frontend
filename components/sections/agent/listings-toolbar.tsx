@@ -17,6 +17,7 @@ export interface ListingsToolbarProps {
     filter: StatusFilter;
     counts: Record<StatusFilter, number>;
     selectedCount: number;
+    busy: boolean;
     onFilterChange: (filter: StatusFilter) => void;
     onClearSelection: () => void;
     onBulkAction: (action: BulkAction) => void;
@@ -26,6 +27,7 @@ export function ListingsToolbar({
     filter,
     counts,
     selectedCount,
+    busy,
     onFilterChange,
     onClearSelection,
     onBulkAction,
@@ -54,6 +56,7 @@ export function ListingsToolbar({
                         key={action}
                         type="button"
                         tone={action === "delete" ? "error" : "neutral"}
+                        disabled={busy}
                         onClick={() => onBulkAction(action)}
                     >
                         {BULK_LABELS[action]}
@@ -62,6 +65,7 @@ export function ListingsToolbar({
                 <Button
                     type="button"
                     emphasis="quiet"
+                    disabled={busy}
                     onClick={onClearSelection}
                 >
                     {CLEAR_LABEL}

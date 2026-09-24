@@ -1,15 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
-import {
-    Modal,
-    ModalHeader,
-    ModalTitle,
-    ModalBody,
-    ModalFooter,
-} from "@/components/ui/modal";
+import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
+
+const WARNING = { title: COPY.removeWarning, body: COPY.removeConfirmLede };
+const FAILURE = { title: COPY.removeFailed, body: COPY.removeFailedLede };
 
 export interface ListingDeleteModalProps {
     address?: string;
@@ -27,48 +22,19 @@ export function ListingDeleteModal({
     onConfirm,
 }: ListingDeleteModalProps) {
     return (
-        <Modal
+        <ConfirmModal
             open={address !== undefined}
-            onOpenChange={(next) => {
-                if (!next) onClose();
-            }}
-        >
-            <ModalHeader>
-                <ModalTitle>{COPY.removeConfirm}</ModalTitle>
-            </ModalHeader>
-
-            <ModalBody className="space-y-3">
-                <div>
-                    <p className="text-text text-xs font-semibold">{address}</p>
-                    <p className="text-text-secondary mt-0.5 text-xs">
-                        {COPY.removeConfirmLede}
-                    </p>
-                </div>
-
-                {failed && (
-                    <Callout
-                        variant="error"
-                        title={COPY.removeFailed}
-                        description={COPY.removeFailedLede}
-                    />
-                )}
-            </ModalBody>
-
-            <ModalFooter className="gap-4">
-                <Button type="button" onClick={onClose}>
-                    {COPY.cancel}
-                </Button>
-                <Button
-                    type="button"
-                    emphasis="solid"
-                    tone="error"
-                    isLoading={pending}
-                    onClick={onConfirm}
-                >
-                    {COPY.remove}
-                </Button>
-            </ModalFooter>
-        </Modal>
+            title={COPY.removeConfirm}
+            subject={address}
+            warning={WARNING}
+            failure={FAILURE}
+            cancelLabel={COPY.cancel}
+            confirmLabel={COPY.remove}
+            pending={pending}
+            failed={failed}
+            onClose={onClose}
+            onConfirm={onConfirm}
+        />
     );
 }
 

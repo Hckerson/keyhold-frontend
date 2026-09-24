@@ -1,12 +1,48 @@
 import { DEAL_STAGES } from "@/lib/config/deal-stages";
+import type { OfferStatus } from "@/lib/enums/enums";
 import type { Deal, DealStage } from "@/lib/types/deal";
 
 export const DEAL_DRAG_TYPE = "application/x-deal-id";
 
+export type DealDecision = "accept" | "decline";
+
 export type DealMove =
-    | { kind: "accept"; offerId: string; note: string }
-    | { kind: "decline"; offerId: string; note: string }
+    | { kind: DealDecision; offerId: string }
     | { kind: "refused"; reason: string };
+
+export const DEAL_DECISION_STATUS = {
+    accept: "ACCEPTED",
+    decline: "REJECTED",
+} as const satisfies Record<DealDecision, OfferStatus>;
+
+export const DEAL_DECISION_COPY = {
+    accept: {
+        title: "Accept this offer",
+        warning: {
+            title: "Accepting is binding",
+            body: "The sale moves to pending and every other open offer on this listing is closed. The buyer opens the transaction next.",
+        },
+        failure: {
+            title: "The offer was not accepted",
+            body: "Nothing changed and the offer is still open. Try again in a moment.",
+        },
+        cancel: "Not yet",
+        confirm: "Accept offer",
+    },
+    decline: {
+        title: "Decline this offer",
+        warning: {
+            title: "Declining is final",
+            body: "The buyer is told the offer was declined and it cannot be reopened. They return to your lead desk.",
+        },
+        failure: {
+            title: "The offer was not declined",
+            body: "Nothing changed and the offer is still open. Try again in a moment.",
+        },
+        cancel: "Keep it open",
+        confirm: "Decline offer",
+    },
+} as const;
 
 const labelOf = (stage: DealStage) =>
     DEAL_STAGES.find((item) => item.id === stage)?.label ?? stage;
@@ -22,18 +58,10 @@ const fromOffers = (deal: Deal, target: DealStage): DealMove => {
     if (!deal.openOfferId) return { kind: "refused", reason: ANSWERED };
 
     if (target === "pending")
-        return {
-            kind: "accept",
-            offerId: deal.openOfferId,
-            note: `Offer accepted. ${deal.buyer} opens the transaction next.`,
-        };
+        return { kind: "accept", offerId: deal.openOfferId };
 
     if (target === "leads")
-        return {
-            kind: "decline",
-            offerId: deal.openOfferId,
-            note: `Offer declined. ${deal.buyer} returns to your lead desk.`,
-        };
+        return { kind: "decline", offerId: deal.openOfferId };
 
     return {
         kind: "refused",

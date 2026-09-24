@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LISTING_FORM_COPY } from "@/lib/config/listing-form-copy";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import {
     useDeleteProperty,
     useMarkPropertySold,
@@ -17,33 +17,24 @@ export function useListingLifecycle(propertyId: string) {
     const markSold = useMarkPropertySold();
     const removeProperty = useDeleteProperty();
 
-    const [promoting, setPromoting] = useState(false);
-    const [removing, setRemoving] = useState(false);
+    const promotion = useConfirmation<{ id: string; days: number }, string>(
+        promoteProperty,
+    );
+    const sale = useConfirmation<string>(markSold);
+    const removal = useConfirmation<string>(removeProperty);
 
     return {
-        promoting,
-        removing,
-        promotePending: promoteProperty.isPending,
-        promoteFailed: promoteProperty.isError,
-        soldPending: markSold.isPending,
-        removePending: removeProperty.isPending,
-        removeFailed: removeProperty.isError,
-        openPromote: () => setPromoting(true),
-        closePromote: () => setPromoting(false),
-        openRemove: () => setRemoving(true),
-        closeRemove: () => setRemoving(false),
-        promote: (days: number) =>
-            promoteProperty.mutate(
-                { id: propertyId, days },
-                { onSuccess: () => setPromoting(false) },
-            ),
-        markSold: () => markSold.mutate(propertyId),
+        promotion,
+        sale,
+        removal,
+        openPromote: () => promotion.request(propertyId),
+        openSale: () => sale.request(propertyId),
+        openRemove: () => removal.request(propertyId),
+        promote: (days: number) => promotion.confirm({ id: propertyId, days }),
+        markSold: () => sale.confirm(propertyId),
         remove: () =>
-            removeProperty.mutate(propertyId, {
-                onSuccess: () => {
-                    setRemoving(false);
-                    router.push(LISTINGS_ROUTE);
-                },
-            }),
+            removal.confirm(propertyId, () => router.push(LISTINGS_ROUTE)),
     };
 }
+
+export type ListingLifecycle = ReturnType<typeof useListingLifecycle>;

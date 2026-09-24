@@ -19,6 +19,7 @@ import {
     percentOf,
     sum,
 } from "@/lib/utils";
+import { isPromotionActive } from "@/lib/utils/promotion";
 
 export const FEATURED_DATE_FORMAT = "MMM d, yyyy";
 
@@ -43,12 +44,14 @@ export const BULK_LABELS: Record<BulkAction, string> = {
     delete: "Delete",
 };
 
+export const matchesStatus = (listing: ManagedListing, filter: StatusFilter) =>
+    filter === "all" || listing.status === filter;
+
 export const saveRate = (listing: ManagedListing) =>
     percentOf(listing.saves, listing.views);
 
 export const isFeatured = (listing: ManagedListing) =>
-    listing.featuredUntil !== null &&
-    new Date(listing.featuredUntil) > new Date();
+    isPromotionActive(listing.featuredUntil);
 
 export const featuredUntilLabel = (listing: ManagedListing) =>
     listing.featuredUntil
