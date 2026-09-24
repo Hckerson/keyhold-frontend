@@ -203,6 +203,20 @@ So a drop is treated as a request to advance, resolved against what the agent ca
 
 ---
 
+## Admin overview rebuild — 22 September 2026
+
+Page 20 was rebuilt from its primitives up. Three modules now diverge from the blueprint, and the code is right in each case.
+
+| Phase reference  | Blueprint says                                                                  | App does                                                                                                    | Why                                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page 20 module 4 | System Alerts panel beside a separate Moderation Queue panel (module 6)         | One "Needs a Decision" panel: each queue's open count and oldest-item age, oldest first                     | With no alert feed in the API, both panels were derived from the same four queue counts and showed the same facts twice. The age tone carries the severity the alert rows were meant to show. |
+| Page 20 module 5 | Revenue Breakdown: commissions YTD, GMV YTD, take rate, avg commission per deal | Folded into the revenue hero as one line: estimated commission on the latest month at the default take rate | Commission is volume × `DEFAULT_COMMISSION_RATE`, not a ledger figure, so it is labelled an estimate. Take rate is a config constant, not a measurement. GMV already sits in the stat band.   |
+| Page 20 module 7 | Quick Actions panel                                                             | Removed                                                                                                     | All four links duplicate the sidebar and the panel-header links on the same screen. This reopens the row closed on 8 September.                                                               |
+
+The moderation queue no longer shows a load meter. It divided each backlog by a fixed reviewer capacity of 12 that no data backs. The flagged-content queue now counts only user and message flags, since listing flags already have their own row and were counted twice in the open total.
+
+---
+
 ## Corrections to earlier entries
 
 Entries above are not rewritten when they drift. A correction lands here, dated, and names the line it supersedes.

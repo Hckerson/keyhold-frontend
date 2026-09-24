@@ -107,7 +107,7 @@ export function OfferResponseModal({
                 )}
             </ModalBody>
 
-            <ModalFooter>
+            <ModalFooter className="gap-4">
                 <Button type="button" onClick={close}>
                     {FIELDS.cancel}
                 </Button>

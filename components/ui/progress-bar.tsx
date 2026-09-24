@@ -35,7 +35,7 @@ export function ProgressBar({
             aria-valuemin={label ? 0 : undefined}
             aria-valuemax={label ? 100 : undefined}
             className={cn(
-                "bg-background-alt h-1.5 w-full overflow-hidden rounded-full",
+                "bg-background-muted h-1.5 w-full overflow-hidden rounded-full",
                 className,
             )}
         >

@@ -38,13 +38,13 @@ export function OfferConfirmModal({
                 if (!open) onClose();
             }}
         >
-            <ModalHeader>
+            <ModalHeader className="p-6">
                 <ModalTitle>
                     {action === "accept" && "Accept counter offer"}
                     {action === "counter" && "Submit counter offer"}
                 </ModalTitle>
             </ModalHeader>
-            <ModalBody>
+            <ModalBody className="p-6">
                 <p className="text-text-secondary text-xs">
                     {action === "accept" &&
                         counterPrice !== undefined &&
@@ -53,7 +53,7 @@ export function OfferConfirmModal({
                         `You are countering at ${formatUsd(counterValue)} for ${address}.`}
                 </p>
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="gap-4 p-6">
                 <Button onClick={onClose}>Cancel</Button>
                 {action === "accept" && (
                     <Button emphasis="solid" tone="accent" onClick={onAccept}>
