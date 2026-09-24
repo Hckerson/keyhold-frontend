@@ -1,12 +1,3 @@
-export type SignalSeverity = "critical" | "elevated" | "routine";
-
-export type SignalDomain =
-    | "verification"
-    | "moderation"
-    | "transaction"
-    | "payout"
-    | "infrastructure";
-
 export type ModerationQueueId =
     | "verifications"
     | "listings"
@@ -15,21 +6,9 @@ export type ModerationQueueId =
 
 export type ServiceState = "operational" | "degraded" | "down";
 
-export interface PlatformSignal {
-    id: string;
-    severity: SignalSeverity;
-    domain: SignalDomain;
-    title: string;
-    subject: string;
-    exposure?: number;
-    ageMinutes: number;
-    href: string;
-}
-
 export interface ModerationQueueLoad {
     id: ModerationQueueId;
     backlog: number;
-    capacity: number;
     oldestMinutes: number;
 }
 

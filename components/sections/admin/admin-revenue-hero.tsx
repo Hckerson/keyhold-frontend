@@ -1,97 +1,97 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { BarChart3 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { ColumnChart } from "@/components/ui/charts/column-chart";
-import { MetricCell } from "@/components/patterns/metric-cell";
-import { GMV_SERIES } from "@/lib/data/admin-overview";
-import type { MetricItem } from "@/lib/types";
+import { DeltaChip } from "@/components/ui/delta-chip";
+import { EmptyState } from "@/components/ui/empty-state";
+import { GMV_SERIES, type GmvReading } from "@/lib/data/admin-overview";
 import { formatMillions } from "@/lib/utils";
 
-const HERO_EYEBROW = "Gross merchandise value · latest month";
-const GMV_LABEL = "Settled";
-const COMMISSION_LEAD = "Commissions on settled volume";
-const PAYMENTS_ACTION = "Payments";
+const HERO_EYEBROW = "Gross merchandise value";
+const PRIOR_LABEL = "vs prior month";
+const COMMISSION_LEAD = "Est. commissions";
+const COMMISSION_BASIS = "at the default take of";
 const TRANSACTIONS_ACTION = "Transactions";
-const CHART_HEIGHT = 200;
+const PAYMENTS_ACTION = "Payments";
+const EMPTY_TITLE = "No settled volume yet";
+const EMPTY_LEDE = "Monthly GMV charts once the first deal settles.";
+const CHART_HEIGHT = 180;
 const MILLIONS = 1_000_000;
 
 export interface AdminRevenueHeroProps {
-    gmv: number;
-    growthLabel: string;
-    commissionsLabel: string;
+    reading: GmvReading | null;
     months: Record<string, string | number>[];
-    metrics: MetricItem[];
 }
 
-export function AdminRevenueHero({
-    gmv,
-    growthLabel,
-    commissionsLabel,
-    months,
-    metrics,
-}: AdminRevenueHeroProps) {
+export function AdminRevenueHero({ reading, months }: AdminRevenueHeroProps) {
     return (
-        <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
+        <section className="bg-background border-border rounded-xl border p-4 shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                    <p className="micro-label truncate">{HERO_EYEBROW}</p>
-                    <div className="mt-1 flex items-baseline gap-2">
-                        <p className="text-h4 font-display text-text font-light tabular-nums">
-                            {formatMillions(gmv, 0)}
-                        </p>
-                        <span className="micro-label">{GMV_LABEL}</span>
-                        <span className="text-success text-xs font-medium tabular-nums">
-                            {growthLabel}
-                        </span>
-                    </div>
-                    <p className="text-text-secondary mt-0.5 truncate text-xs">
-                        {COMMISSION_LEAD} ·{" "}
-                        <span className="text-text font-semibold tabular-nums">
-                            {commissionsLabel}
-                        </span>
+                    <p className="micro-label truncate">
+                        {HERO_EYEBROW}
+                        {reading && ` · ${reading.month}`}
                     </p>
+                    <div className="mt-1 flex items-center gap-2">
+                        <p className="text-h4 font-display text-text leading-none font-light tabular-nums">
+                            {formatMillions(reading?.value ?? 0, 1)}
+                        </p>
+                        {reading?.delta && (
+                            <>
+                                <DeltaChip
+                                    size="sm"
+                                    value={reading.delta.label}
+                                    direction={reading.delta.direction}
+                                />
+                                <span className="text-text-muted text-xs">
+                                    {PRIOR_LABEL}
+                                </span>
+                            </>
+                        )}
+                    </div>
+                    {reading && (
+                        <p className="text-text-secondary mt-1.5 truncate text-xs">
+                            {COMMISSION_LEAD}{" "}
+                            <span className="text-text font-semibold tabular-nums">
+                                {reading.commissionEstimate}
+                            </span>{" "}
+                            {COMMISSION_BASIS} {reading.commissionRate}
+                        </p>
+                    )}
                 </div>
 
-                <div className="flex shrink-0 items-center gap-2">
-                    <Link
-                        href="/admin/transactions"
-                        className={buttonVariants({
-                            size: "sm",
-                        })}
-                    >
-                        {TRANSACTIONS_ACTION}
-                    </Link>
-                    <Link
-                        href="/admin/payments"
-                        className={buttonVariants({
-                            emphasis: "quiet",
-                            size: "sm",
-                        })}
-                    >
-                        {PAYMENTS_ACTION}
-                    </Link>
+                <div className="flex shrink-0 items-center gap-1">
+                    <Button asChild>
+                        <Link href="/admin/transactions">
+                            {TRANSACTIONS_ACTION}
+                        </Link>
+                    </Button>
+                    <Button asChild emphasis="quiet">
+                        <Link href="/admin/payments">{PAYMENTS_ACTION}</Link>
+                    </Button>
                 </div>
             </div>
 
-            <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
-                {metrics.map((metric) => (
-                    <MetricCell key={metric.label} label={metric.label}>
-                        <span className="truncate tabular-nums">
-                            {metric.value}
-                        </span>
-                    </MetricCell>
-                ))}
+            <div className="border-border-light mt-3 border-t pt-3">
+                {months.length > 0 ? (
+                    <ColumnChart
+                        data={months}
+                        xKey="month"
+                        series={GMV_SERIES}
+                        divideBy={MILLIONS}
+                        fractionDigits={1}
+                        valuePrefix="$"
+                        valueSuffix="M"
+                        height={CHART_HEIGHT}
+                    />
+                ) : (
+                    <EmptyState
+                        icon={BarChart3}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
+                    />
+                )}
             </div>
-
-            <ColumnChart
-                className="mt-3"
-                data={months}
-                xKey="month"
-                series={GMV_SERIES}
-                divideBy={MILLIONS}
-                valuePrefix="$"
-                valueSuffix="M"
-                height={CHART_HEIGHT}
-            />
         </section>
     );
 }

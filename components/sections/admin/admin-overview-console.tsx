@@ -8,18 +8,12 @@ import { AdminOverviewStatBand } from "@/components/sections/admin/admin-overvie
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    commissionsLabel,
-    gmvGrowthLabel,
-    gmvLatest,
     gmvMonths,
-    moderationLoad,
-    overviewSummary,
-    platformSignals,
-    platformStatBand,
-    revenueMetrics,
+    gmvReading,
     integrationSummary,
+    moderationLoad,
+    platformStatBand,
     serviceSummary,
-    signalExposureLabel,
     toIntegrationRows,
     toServiceRows,
 } from "@/lib/data/admin-overview";
@@ -65,14 +59,16 @@ export function AdminOverviewConsole() {
         [flags.data, kyc.data, disputes.data],
     );
 
-    const signals = useMemo(() => platformSignals(queues), [queues]);
-
     const services = useMemo(() => toServiceRows(health.data), [health.data]);
 
     const integrations = useMemo(
         () => toIntegrationRows(health.data),
         [health.data],
     );
+
+    const gmv = useMemo(() => gmvReading(trend.data), [trend.data]);
+
+    const months = useMemo(() => gmvMonths(trend.data), [trend.data]);
 
     if (platform.isError || users.isError)
         return (
@@ -87,9 +83,7 @@ export function AdminOverviewConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AdminOverviewHeader
-                summary={overviewSummary(platform.data, users.data)}
-            />
+            <AdminOverviewHeader />
 
             <AdminOverviewStatBand
                 stats={stats}
@@ -98,13 +92,8 @@ export function AdminOverviewConsole() {
 
             <div className="console-split gap-3">
                 <AdminOverviewMain
-                    gmv={gmvLatest(trend.data)}
-                    growthLabel={gmvGrowthLabel(trend.data)}
-                    commissionsLabel={commissionsLabel(platform.data)}
-                    months={gmvMonths(trend.data)}
-                    metrics={revenueMetrics(trend.data, platform.data)}
-                    signals={signals}
-                    exposureLabel={signalExposureLabel(platform.data)}
+                    gmv={gmv}
+                    months={months}
                     services={services}
                     serviceSummary={serviceSummary(health.data)}
                     integrations={integrations}
@@ -113,7 +102,6 @@ export function AdminOverviewConsole() {
                 <AdminOverviewRail
                     roles={roles}
                     statuses={statuses}
-                    total={users.data?.total ?? 0}
                     queues={queues}
                 />
             </div>

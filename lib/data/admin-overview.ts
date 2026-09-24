@@ -2,41 +2,28 @@ import {
     ArrowLeftRight,
     ClipboardCheck,
     Home,
-    TrendingUp,
     Users,
     Wallet,
 } from "lucide-react";
 import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import type { StatDatum } from "@/components/patterns/stat-cell";
-import { MODERATION_QUEUES } from "@/lib/config/admin-tones";
-import { ADMIN_ROUTES, DEFAULT_COMMISSION_RATE } from "@/lib/constants";
-import type {
-    MetricItem,
-    ModerationQueueLoad,
-    QuickAction,
-    ModerationQueueId,
-    PlatformSignal,
-    ServiceHealth as ServiceHealthRow,
-} from "@/lib/types";
+import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import type { ModerationQueueLoad, Trend } from "@/lib/types";
 import type { DisputeCounts } from "@/lib/validations/dispute";
 import type { FlagCounts } from "@/lib/validations/flag";
 import type { KycCounts } from "@/lib/validations/kyc";
 import type {
     IntegrationStatus,
-    ServiceHealth,
+    ServiceHealth as ServiceHealthReadout,
 } from "@/lib/validations/service-health";
+import type { ServiceHealth } from "@/lib/types";
 import type {
     PlatformStats,
     TrendStats,
     UserStats,
 } from "@/lib/validations/stats";
 import { minutesSince } from "@/lib/utils/elapsed";
-import {
-    formatCount,
-    formatMillions,
-    formatThousands,
-    formatUsd,
-} from "@/lib/utils";
+import { formatCount, formatMillions } from "@/lib/utils";
 
 const MONTH_LABELS = [
     "Jan",
@@ -53,19 +40,9 @@ const MONTH_LABELS = [
     "Dec",
 ];
 
-const CRITICAL_AGE_MINUTES = 24 * 60;
-const ELEVATED_AGE_MINUTES = 4 * 60;
-const REVIEWER_CAPACITY = 12;
-
 const monthLabel = (key: string) => MONTH_LABELS[Number(key.slice(5, 7)) - 1];
 
 const ageOf = (iso: string | null) => (iso ? minutesSince(iso) : 0);
-
-const severityFor = (ageMinutes: number) => {
-    if (ageMinutes >= CRITICAL_AGE_MINUTES) return "critical" as const;
-    if (ageMinutes >= ELEVATED_AGE_MINUTES) return "elevated" as const;
-    return "routine" as const;
-};
 
 export const moderationLoad = (
     flags: FlagCounts | undefined,
@@ -75,25 +52,21 @@ export const moderationLoad = (
     {
         id: "verifications",
         backlog: kyc?.pending ?? 0,
-        capacity: REVIEWER_CAPACITY,
         oldestMinutes: ageOf(kyc?.oldestPendingAt ?? null),
     },
     {
         id: "listings",
         backlog: flags?.byType.properties ?? 0,
-        capacity: REVIEWER_CAPACITY,
         oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
     },
     {
         id: "flags",
-        backlog: flags?.active ?? 0,
-        capacity: REVIEWER_CAPACITY,
+        backlog: (flags?.byType.users ?? 0) + (flags?.byType.messages ?? 0),
         oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
     },
     {
         id: "disputes",
         backlog: disputes?.byStatus.OPEN ?? 0,
-        capacity: REVIEWER_CAPACITY,
         oldestMinutes: ageOf(disputes?.oldestOpenAt ?? null),
     },
 ];
@@ -101,38 +74,16 @@ export const moderationLoad = (
 export const openBacklog = (queues: ModerationQueueLoad[]) =>
     queues.reduce((total, queue) => total + queue.backlog, 0);
 
-export const queueShare = (queue: ModerationQueueLoad) =>
-    Math.round((queue.backlog / queue.capacity) * 100);
-
-const SIGNAL_DOMAIN: Record<ModerationQueueId, PlatformSignal["domain"]> = {
-    verifications: "verification",
-    listings: "moderation",
-    flags: "moderation",
-    disputes: "transaction",
-};
-
-export const platformSignals = (
-    queues: ModerationQueueLoad[],
-): PlatformSignal[] =>
-    queues
-        .filter((queue) => queue.backlog > 0)
-        .map((queue) => ({
-            id: queue.id,
-            severity: severityFor(queue.oldestMinutes),
-            domain: SIGNAL_DOMAIN[queue.id],
-            title: `${MODERATION_QUEUES[queue.id].label} awaiting review`,
-            subject: `${queue.backlog} in queue`,
-            ageMinutes: queue.oldestMinutes,
-            href: MODERATION_QUEUES[queue.id].href,
-        }))
-        .sort((a, b) => b.ageMinutes - a.ageMinutes);
-
-export const signalExposureLabel = (platform: PlatformStats | undefined) =>
-    formatUsd(platform?.volume ?? 0);
+export const decisionQueues = (queues: ModerationQueueLoad[]) =>
+    [...queues].sort(
+        (a, b) =>
+            Number(b.backlog > 0) - Number(a.backlog > 0) ||
+            b.oldestMinutes - a.oldestMinutes,
+    );
 
 export const toServiceRows = (
-    health: ServiceHealth | undefined,
-): ServiceHealthRow[] =>
+    health: ServiceHealthReadout | undefined,
+): ServiceHealth[] =>
     (health?.services ?? []).flatMap((service) =>
         service.state === "unknown"
             ? []
@@ -156,13 +107,15 @@ const integrationRank = (integration: IntegrationStatus) => {
 };
 
 export const toIntegrationRows = (
-    health: ServiceHealth | undefined,
+    health: ServiceHealthReadout | undefined,
 ): IntegrationStatus[] =>
     [...(health?.integrations ?? [])].sort(
         (a, b) => integrationRank(a) - integrationRank(b),
     );
 
-export const integrationSummary = (health: ServiceHealth | undefined) => {
+export const integrationSummary = (
+    health: ServiceHealthReadout | undefined,
+) => {
     const rows = health?.integrations ?? [];
     const missing = rows.filter(
         (integration) => integration.required && !integration.configured,
@@ -173,7 +126,7 @@ export const integrationSummary = (health: ServiceHealth | undefined) => {
     return `${missing.length} required credential${missing.length === 1 ? "" : "s"} missing`;
 };
 
-export const serviceSummary = (health: ServiceHealth | undefined) => {
+export const serviceSummary = (health: ServiceHealthReadout | undefined) => {
     const rows = health?.services ?? [];
     const measured = rows.filter((service) => service.samples > 0);
     const degraded = measured.filter(
@@ -193,7 +146,7 @@ export const platformStatBand = (
         icon: Users,
         label: "Members",
         value: formatCount(platform?.users ?? 0),
-        tone: "accent",
+        tone: "neutral",
         href: "/admin/users",
     },
     {
@@ -201,7 +154,7 @@ export const platformStatBand = (
         icon: Home,
         label: "Live listings",
         value: formatCount(platform?.activeProperties ?? 0),
-        tone: "info",
+        tone: "neutral",
         href: "/admin/listings",
     },
     {
@@ -209,7 +162,7 @@ export const platformStatBand = (
         icon: ArrowLeftRight,
         label: "Deals closed",
         value: formatCount(platform?.completedTransactions ?? 0),
-        tone: "highlight",
+        tone: "neutral",
         href: "/admin/transactions",
     },
     {
@@ -217,7 +170,7 @@ export const platformStatBand = (
         icon: Wallet,
         label: "Settled volume",
         value: formatMillions(platform?.volume ?? 0, 0),
-        tone: "success",
+        tone: "neutral",
         href: "/admin/reports",
     },
     {
@@ -225,7 +178,7 @@ export const platformStatBand = (
         icon: ClipboardCheck,
         label: "Pending accounts",
         value: formatCount(users?.pending ?? 0),
-        tone: "warning",
+        tone: users?.pending ? "warning" : "neutral",
         href: "/admin/users",
     },
 ];
@@ -242,87 +195,39 @@ export const gmvMonths = (
         gmv: point.value,
     }));
 
-export const gmvLatest = (trend: TrendStats | undefined) => {
-    const points = trend?.gmv ?? [];
-    return points[points.length - 1]?.value ?? 0;
-};
+export interface GmvReading {
+    value: number;
+    month: string;
+    delta: { label: string; direction: Trend } | null;
+    commissionEstimate: string;
+    commissionRate: string;
+}
 
-export const gmvGrowthLabel = (trend: TrendStats | undefined) => {
-    const points = trend?.gmv ?? [];
-    const latest = points[points.length - 1]?.value ?? 0;
-    const previous = points[points.length - 2]?.value ?? 0;
-    if (previous <= 0) return "";
-    const change = Math.round(((latest - previous) / previous) * 100);
-    return `${change > 0 ? "+" : ""}${change}% vs prior month`;
-};
-
-export const commissionsFor = (volume: number, rate: number) => volume * rate;
-
-export const revenueMetrics = (
+export const gmvReading = (
     trend: TrendStats | undefined,
-    platform: PlatformStats | undefined,
     rate = DEFAULT_COMMISSION_RATE,
-): MetricItem[] => {
-    const settled = platform?.volume ?? 0;
-    const deals = platform?.completedTransactions ?? 0;
-    const latest = gmvLatest(trend);
+): GmvReading | null => {
+    const points = trend?.gmv ?? [];
+    const latest = points[points.length - 1];
+    if (!latest) return null;
 
-    return [
-        {
-            label: "Commissions this month",
-            value: formatMillions(commissionsFor(latest, rate), 1),
-        },
-        { label: "Settled volume", value: formatMillions(settled, 0) },
-        { label: "Take rate", value: `${(rate * 100).toFixed(2)}%` },
-        {
-            label: "Avg per deal",
-            value: deals
-                ? formatThousands(commissionsFor(settled, rate) / deals, 1)
-                : formatThousands(0, 1),
-        },
-    ];
+    const previous = points[points.length - 2]?.value ?? 0;
+    const change =
+        previous > 0
+            ? Math.round(((latest.value - previous) / previous) * 100)
+            : null;
+
+    return {
+        value: latest.value,
+        month: monthLabel(latest.name),
+        delta:
+            change === null
+                ? null
+                : {
+                      label: `${change > 0 ? "+" : ""}${change}%`,
+                      direction: change < 0 ? "down" : "up",
+                  },
+        commissionEstimate: formatMillions(latest.value * rate, 1),
+        commissionRate: `${(rate * 100).toFixed(1)}%`,
+    };
 };
-
-export const commissionsLabel = (
-    platform: PlatformStats | undefined,
-    rate = DEFAULT_COMMISSION_RATE,
-) => formatMillions(commissionsFor(platform?.volume ?? 0, rate), 1);
-
-export const overviewSummary = (
-    platform: PlatformStats | undefined,
-    users: UserStats | undefined,
-) =>
-    `${formatCount(users?.active ?? 0)} active · ${formatCount(
-        platform?.connections ?? 0,
-    )} connections · ${formatMillions(platform?.volume ?? 0, 0)} settled`;
-
-export const adminQuickActions: QuickAction[] = [
-    {
-        id: "manage-users",
-        label: "Manage users",
-        href: ADMIN_ROUTES.users,
-        icon: Users,
-        tone: "accent",
-    },
-    {
-        id: "review-listings",
-        label: "Review listings",
-        href: ADMIN_ROUTES.listings,
-        icon: Home,
-        tone: "warning",
-    },
-    {
-        id: "process-verifications",
-        label: "Process verifications",
-        href: ADMIN_ROUTES.verifications,
-        icon: ClipboardCheck,
-        tone: "info",
-    },
-    {
-        id: "view-reports",
-        label: "View reports",
-        href: ADMIN_ROUTES.reports,
-        icon: TrendingUp,
-        tone: "highlight",
-    },
-];
