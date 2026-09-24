@@ -1,22 +1,13 @@
 import {
-    ArrowLeftRight,
     ClipboardCheck,
     Flag,
     Gavel,
-    Server,
     ShieldCheck,
-    Wallet,
     type LucideIcon,
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type {
-    ModerationQueueId,
-    PayoutState,
-    ServiceState,
-    SignalDomain,
-    SignalSeverity,
-} from "@/lib/types";
+import type { ModerationQueueId, PayoutState, ServiceState } from "@/lib/types";
 
 interface ToneBand {
     ceiling: number;
@@ -25,36 +16,6 @@ interface ToneBand {
 
 const bandTone = (bands: ToneBand[], value: number, fallback: ChartTone) =>
     bands.find((band) => value < band.ceiling)?.tone ?? fallback;
-
-export interface SignalSeverityMeta {
-    label: string;
-    tone: DotTone;
-    rank: number;
-}
-
-export const SIGNAL_SEVERITIES: Record<SignalSeverity, SignalSeverityMeta> = {
-    critical: { label: "Critical", tone: "error", rank: 2 },
-    elevated: { label: "Elevated", tone: "warning", rank: 1 },
-    routine: { label: "Routine", tone: "info", rank: 0 },
-};
-
-export interface SignalDomainMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const SIGNAL_DOMAINS: Record<SignalDomain, SignalDomainMeta> = {
-    verification: { label: "Verification", icon: ShieldCheck, tone: "accent" },
-    moderation: { label: "Moderation", icon: Flag, tone: "warning" },
-    transaction: {
-        label: "Transaction",
-        icon: ArrowLeftRight,
-        tone: "highlight",
-    },
-    payout: { label: "Payout", icon: Wallet, tone: "info" },
-    infrastructure: { label: "Platform", icon: Server, tone: "neutral" },
-};
 
 export interface ModerationQueueMeta {
     label: string;
@@ -78,9 +39,9 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
             tone: "info",
         },
         flags: {
-            label: "Flagged content",
+            label: "Flagged accounts & messages",
             icon: Flag,
-            href: "/admin/listings",
+            href: "/admin/flags",
             tone: "warning",
         },
         disputes: {

@@ -93,7 +93,7 @@ export function ViewingDayModal({
                     </article>
                 ))}
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="gap-4">
                 <Button type="button" onClick={() => onOpenChange(false)}>
                     {CLOSE_ACTION}
                 </Button>

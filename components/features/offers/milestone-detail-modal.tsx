@@ -73,14 +73,14 @@ export function MilestoneDetailModal({
             }}
         >
             <form onSubmit={submit}>
-                <ModalHeader>
+                <ModalHeader className="p-6">
                     <ModalTitle>{COPY.details}</ModalTitle>
                     <p className="text-text-secondary mt-1 text-xs">
                         {MILESTONE_KINDS_META[milestone.kind].label}
                     </p>
                 </ModalHeader>
 
-                <ModalBody className="flex flex-col gap-4">
+                <ModalBody className="flex flex-col gap-4 p-6">
                     {valued && (
                         <FormField
                             label={COPY.appraisedValue}
@@ -112,7 +112,7 @@ export function MilestoneDetailModal({
                     )}
                 </ModalBody>
 
-                <ModalFooter>
+                <ModalFooter className="gap-4 p-6">
                     <Button type="button" onClick={onClose}>
                         {COPY.cancel}
                     </Button>

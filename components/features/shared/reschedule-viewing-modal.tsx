@@ -75,7 +75,7 @@ export function RescheduleViewingModal({
                     }
                 />
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="gap-4">
                 <Button type="button" onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>

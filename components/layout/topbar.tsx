@@ -7,7 +7,11 @@ import type { AuthUser, NavRoute } from "@/lib/types";
 import { Container } from "@/components/ui/container";
 import { TopbarTrail } from "@/components/layout/topbar-trail";
 import { TopbarActions } from "@/components/layout/topbar-actions";
-import { TOPBAR_SETTINGS_SEGMENT } from "@/lib/config/topbar";
+import {
+    TOPBAR_ICON_BUTTON,
+    TOPBAR_SETTINGS_SEGMENT,
+} from "@/lib/config/topbar";
+import { cn } from "@/lib/utils";
 import { trailFor } from "@/lib/utils/nav";
 
 export interface TopbarProps {
@@ -39,7 +43,7 @@ export function Topbar({
             ?.href ?? rootHref;
 
     return (
-        <header className="border-border-dark bg-background sticky top-0 z-40 border-b">
+        <header className="border-border bg-background sticky top-0 z-40 border-b">
             <Container className="gutter-x gutter-x--tight flex h-14 items-center justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-2">
                     {onNavOpen && (
@@ -47,9 +51,16 @@ export function Topbar({
                             type="button"
                             onClick={onNavOpen}
                             aria-label="Open navigation"
-                            className="border-border bg-background-alt text-text-secondary hover:bg-background-muted hover:text-text focus-visible:ring-accent ease-smooth grid size-8 shrink-0 place-items-center rounded-lg border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none lg:hidden"
+                            className={cn(
+                                TOPBAR_ICON_BUTTON,
+                                "-ml-1 lg:hidden",
+                            )}
                         >
-                            <Menu size={14} strokeWidth={1.5} />
+                            <Menu
+                                className="size-4"
+                                strokeWidth={1.5}
+                                aria-hidden="true"
+                            />
                         </button>
                     )}
 
