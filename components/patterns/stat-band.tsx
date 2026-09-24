@@ -14,7 +14,7 @@ export function StatBand({ label, stats, pending }: StatBandProps) {
         <section
             aria-label={label}
             aria-busy={pending || undefined}
-            className="border-border-light bg-background-muted overflow-hidden rounded-lg border shadow-sm"
+            className="border-border bg-background overflow-hidden rounded-xl border shadow-sm"
         >
             <div className="stat-band">
                 {pending

@@ -29,12 +29,7 @@ export function StatCell({ stat }: StatCellProps) {
                 aria-hidden="true"
             />
             <span className="micro-label min-w-0 truncate">{stat.label}</span>
-            <span
-                className={cn(
-                    "bg-background ml-auto shrink-0 rounded-md px-1.5 py-0.5 text-xs font-semibold tabular-nums",
-                    chartToneText[stat.tone],
-                )}
-            >
+            <span className="font-display text-text text-h6 ml-auto shrink-0 leading-none font-light tabular-nums">
                 {stat.value}
             </span>
         </>
@@ -47,7 +42,7 @@ export function StatCell({ stat }: StatCellProps) {
             href={stat.href}
             className={cn(
                 STAT_CELL,
-                "hover:bg-background-alt ease-smooth transition-colors",
+                "hover:bg-background-alt focus-visible:ring-accent ease-smooth transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset",
             )}
         >
             {body}
