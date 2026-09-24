@@ -1,24 +1,30 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { FEEDBACK } from "@/lib/config/feedback";
 import {
     type VerificationActionMode,
     type VerificationDecision,
     type VerificationFilterKey,
 } from "@/lib/data/admin-verifications";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useKycQueue, useReviewKyc } from "@/lib/hooks/use-kyc";
 import { toVerificationQueue } from "@/lib/utils/to-verification-request";
+import type { RejectKycInput } from "@/lib/validations/kyc";
 
 const ALL_FILTER: VerificationFilterKey = "all";
 const QUEUE_PAGE_SIZE = 100;
 
 export function useVerificationQueue() {
     const queue = useKycQueue({ limit: QUEUE_PAGE_SIZE });
-    const review = useReviewKyc();
+    const approval = useReviewKyc();
+    const rejection = useConfirmation<
+        { id: string } & RejectKycInput,
+        VerificationDecision
+    >(useReviewKyc(FEEDBACK.rejectKyc));
 
     const [filter, setFilter] = useState<VerificationFilterKey>(ALL_FILTER);
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [decision, setDecision] = useState<VerificationDecision | null>(null);
     const [note, setNote] = useState("");
 
     const items = useMemo(
@@ -48,43 +54,45 @@ export function useVerificationQueue() {
     const active =
         visible.find((item) => item.id === selectedId) ?? visible[0] ?? null;
 
+    const busy = approval.isPending || rejection.pending;
+
     const runAction = (mode: VerificationActionMode, id: string) => {
+        if (busy) return;
         if (mode === "approve") {
-            review.mutate({ id });
+            approval.mutate({ id });
             return;
         }
-        setDecision({ mode, id });
         setNote("");
-    };
-
-    const closeDecision = () => {
-        setDecision(null);
-        setNote("");
+        rejection.request({ mode, id });
     };
 
     const submitDecision = () => {
         const trimmed = note.trim();
-        if (!decision || !trimmed) return;
-        review.mutate(
-            { id: decision.id, rejectionReason: trimmed },
-            { onSuccess: closeDecision },
-        );
+        if (!rejection.target || !trimmed) return;
+        rejection.confirm({
+            id: rejection.target.id,
+            rejectionReason: trimmed,
+        });
     };
 
     const changeFilter = (key: VerificationFilterKey) => {
         setFilter(key);
-        setDecision(null);
+        rejection.dismiss();
     };
 
     const applicantName =
-        items.find((item) => item.id === decision?.id)?.name ?? "";
+        items.find((item) => item.id === rejection.target?.id)?.name ?? "";
 
     return {
         filter,
         counts,
         visible,
         active,
-        decision,
+        decision: rejection.target,
+        deciding: rejection.pending,
+        decisionFailed: rejection.failed,
+        approvingId: approval.isPending ? approval.variables?.id : undefined,
+        busy,
         note,
         applicantName,
         pending: queue.isPending,
@@ -93,7 +101,7 @@ export function useVerificationQueue() {
         setSelectedId,
         setNote,
         runAction,
-        closeDecision,
+        closeDecision: rejection.dismiss,
         submitDecision,
         changeFilter,
     };

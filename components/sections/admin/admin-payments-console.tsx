@@ -94,6 +94,7 @@ export function AdminPaymentsConsole() {
                 mode={settle.mode}
                 reason={settle.reason}
                 pending={settle.pending}
+                failed={settle.failed}
                 onModeChange={settle.changeMode}
                 onReasonChange={settle.changeReason}
                 onClose={settle.close}

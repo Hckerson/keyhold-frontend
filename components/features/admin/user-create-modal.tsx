@@ -47,6 +47,7 @@ export function UserCreateModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}

@@ -28,6 +28,7 @@ const REJECT_ACTION = "Reject";
 
 export interface ModerationFocusHeroProps {
     listing: ModerationListing;
+    approvingId?: string;
     onOpen: (id: string) => void;
     onApprove: (id: string) => void;
     onDecide: (mode: DecisionMode, id: string) => void;
@@ -35,6 +36,7 @@ export interface ModerationFocusHeroProps {
 
 export function ModerationFocusHero({
     listing,
+    approvingId,
     onOpen,
     onApprove,
     onDecide,
@@ -127,6 +129,8 @@ export function ModerationFocusHero({
                         type="button"
                         emphasis="solid"
                         tone="accent"
+                        isLoading={approvingId === listing.id}
+                        disabled={approvingId !== undefined}
                         onClick={() => onApprove(listing.id)}
                     >
                         {APPROVE_ACTION}

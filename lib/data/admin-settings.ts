@@ -248,6 +248,7 @@ export interface MaintenanceAction {
     label: string;
     confirmTitle: string;
     confirmLede: string;
+    failure: string;
     danger: boolean;
 }
 
@@ -261,7 +262,8 @@ export const MAINTENANCE_ACTIONS: readonly MaintenanceAction[] = [
         confirmTitle: "Purge expired verifications?",
         confirmLede:
             "Expired email and phone verification records are deleted permanently. Active verifications and user accounts are untouched.",
-        danger: false,
+        failure: "The expired verifications were not purged",
+        danger: true,
     },
     {
         id: "restore-defaults",
@@ -272,6 +274,7 @@ export const MAINTENANCE_ACTIONS: readonly MaintenanceAction[] = [
         confirmTitle: "Restore default settings?",
         confirmLede:
             "Every configured value on this page is overwritten with its shipped default, including all eight policy toggles. The change is recorded against your account in the change log.",
+        failure: "The default settings were not restored",
         danger: true,
     },
 ];

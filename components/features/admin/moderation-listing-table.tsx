@@ -10,6 +10,7 @@ const ACTION_HEADING = "Approve, request changes or reject";
 
 export interface ModerationListingTableProps {
     listings: ModerationListing[];
+    approvingId?: string;
     onOpen: (id: string) => void;
     onApprove: (id: string) => void;
     onDecide: (mode: DecisionMode, id: string) => void;
@@ -17,6 +18,7 @@ export interface ModerationListingTableProps {
 
 export function ModerationListingTable({
     listings,
+    approvingId,
     onOpen,
     onApprove,
     onDecide,
@@ -70,6 +72,7 @@ export function ModerationListingTable({
                         <ModerationListingRow
                             key={listing.id}
                             listing={listing}
+                            approvingId={approvingId}
                             onOpen={onOpen}
                             onApprove={onApprove}
                             onDecide={onDecide}

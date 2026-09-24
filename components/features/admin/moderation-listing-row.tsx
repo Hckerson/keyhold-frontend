@@ -15,6 +15,7 @@ import type { DecisionMode, ModerationListing } from "@/lib/types";
 
 export interface ModerationListingRowProps {
     listing: ModerationListing;
+    approvingId?: string;
     onOpen: (id: string) => void;
     onApprove: (id: string) => void;
     onDecide: (mode: DecisionMode, id: string) => void;
@@ -22,6 +23,7 @@ export interface ModerationListingRowProps {
 
 export function ModerationListingRow({
     listing,
+    approvingId,
     onOpen,
     onApprove,
     onDecide,
@@ -61,6 +63,7 @@ export function ModerationListingRow({
             <td className="py-0 pl-3">
                 <ModerationRowActions
                     listing={listing}
+                    approvingId={approvingId}
                     onApprove={onApprove}
                     onDecide={onDecide}
                 />

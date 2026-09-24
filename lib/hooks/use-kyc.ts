@@ -9,7 +9,7 @@ import type {
     RejectKycInput,
     SubmitKycInput,
 } from "@/lib/validations/kyc";
-import { FEEDBACK } from "@/lib/config/feedback";
+import { FEEDBACK, type MutationFeedback } from "@/lib/config/feedback";
 
 export function useKycQueue(input: KycQuery = {}, enabled = true) {
     return useQuery({
@@ -69,10 +69,10 @@ export function useSubmitKyc() {
     });
 }
 
-export function useReviewKyc() {
+export function useReviewKyc(feedback: MutationFeedback = FEEDBACK.reviewKyc) {
     const client = useQueryClient();
     return useMutation({
-        meta: FEEDBACK.reviewKyc,
+        meta: feedback,
         mutationFn: ({
             id,
             rejectionReason,

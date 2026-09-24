@@ -5,9 +5,11 @@ import {
     countReports,
     filterReports,
     rankReports,
+    type FlagDecision,
     type FlagFilterKey,
     type FlagSettleMode,
 } from "@/lib/data/admin-flags";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useFlags, useSettleFlag } from "@/lib/hooks/use-flags";
 import { toAbuseQueue } from "@/lib/utils/to-abuse-report";
 
@@ -16,7 +18,10 @@ const QUEUE_PAGE_SIZE = 100;
 
 export function useFlagQueue() {
     const queue = useFlags({ limit: QUEUE_PAGE_SIZE });
-    const settle = useSettleFlag();
+    const settle = useConfirmation<
+        { id: string; dismiss: boolean },
+        FlagDecision
+    >(useSettleFlag());
 
     const [filter, setFilter] = useState<FlagFilterKey>(ALL_FILTER);
     const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -43,8 +48,16 @@ export function useFlagQueue() {
         visible[0] ??
         null;
 
-    const settleReport = (mode: FlagSettleMode, id: string) =>
-        settle.mutate({ id, dismiss: mode === "dismiss" });
+    const requestSettle = (mode: FlagSettleMode, id: string) =>
+        settle.request({ mode, id });
+
+    const confirmSettle = () => {
+        if (!settle.target) return;
+        settle.confirm({
+            id: settle.target.id,
+            dismiss: settle.target.mode === "dismiss",
+        });
+    };
 
     return {
         filter,
@@ -52,11 +65,16 @@ export function useFlagQueue() {
         visible,
         active,
         pending: queue.isPending,
-        settling: settle.isPending,
+        decision: settle.target,
+        deciding: reports.find((report) => report.id === settle.target?.id),
+        settling: settle.pending,
+        settleFailed: settle.failed,
         failed: queue.isError,
         refetch: queue.refetch,
         setSelectedId,
         changeFilter: setFilter,
-        settleReport,
+        requestSettle,
+        confirmSettle,
+        dismissSettle: settle.dismiss,
     };
 }
