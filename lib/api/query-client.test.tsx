@@ -66,7 +66,7 @@ const runMutation = async (
     outcome: () => Promise<string>,
 ) => {
     const { result } = renderHook(
-        () => useMutation({ meta, retry: false, mutationFn: outcome }),
+        () => useMutation({ meta, mutationFn: outcome }),
         { wrapper },
     );
 
@@ -151,5 +151,19 @@ describe("retry policy", () => {
 
         await waitFor(() => expect(result.current.isError).toBe(true));
         expect(queryFn).toHaveBeenCalledOnce();
+    });
+
+    it("never sends a failed write a second time", async () => {
+        const mutationFn = vi
+            .fn()
+            .mockRejectedValue(serverError("Upstream failed"));
+        const { result } = renderHook(() => useMutation({ mutationFn }), {
+            wrapper,
+        });
+
+        result.current.mutate();
+
+        await waitFor(() => expect(result.current.isError).toBe(true));
+        expect(mutationFn).toHaveBeenCalledOnce();
     });
 });

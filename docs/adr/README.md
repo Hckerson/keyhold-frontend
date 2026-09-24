@@ -4,28 +4,29 @@ A short file per decision that is expensive to reverse. Each records what was ch
 
 Records are immutable once merged. A decision that changes gets a new record that supersedes the old one; the old file stays, with its status updated.
 
-| #                                                          | Decision                                                                      | Status                                                   |
-| ---------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
-| [0001](0001-rest-over-graphql.md)                          | REST over GraphQL or tRPC                                                     | Accepted                                                 |
-| [0002](0002-per-route-rendering-split.md)                  | Rendering strategy is chosen per route                                        | Accepted                                                 |
-| [0003](0003-repository-layer.md)                           | A repository layer sits under services                                        | Accepted                                                 |
-| [0004](0004-mock-data-first-frontend.md)                   | The frontend was built on seed data                                           | Superseded by [0006](0006-data-holds-route-selectors.md) |
-| [0005](0005-query-owns-server-state.md)                    | TanStack Query owns all server state                                          | Accepted                                                 |
-| [0006](0006-data-holds-route-selectors.md)                 | `lib/data/` holds route-scoped selectors                                      | Accepted                                                 |
-| [0007](0007-money-is-decimal.md)                           | Money is stored and computed as `Decimal`                                     | Accepted                                                 |
-| [0008](0008-escrow-release-authorisation.md)               | Who may release an escrow hold, and when                                      | Accepted                                                 |
-| [0009](0009-repositories-wrap-aggregate.md)                | Repositories wrap `aggregate` as an eleventh method                           | Accepted                                                 |
-| [0010](0010-repositories-wrap-groupby.md)                  | Repositories wrap `groupBy` and `upsert`                                      | Accepted                                                 |
-| [0011](0011-transactions-via-ambient-client.md)            | Transactions run through an ambient Prisma client                             | Accepted                                                 |
-| [0012](0012-tokens-are-the-design-source-of-truth.md)      | `styles/tokens.css` is the design source of truth                             | Accepted                                                 |
-| [0013](0013-mutation-feedback-is-global-by-default.md)     | Mutation feedback is global by default, inline by exception                   | Accepted                                                 |
-| [0014](0014-outbound-contact-runs-through-the-platform.md) | Outbound contact runs through the platform, and calls bridge rather than dial | Accepted                                                 |
-| [0015](0015-map-surfaces-wait-on-coordinates.md)           | Map surfaces wait on coordinates, not on a provider                           | Accepted                                                 |
-| [0016](0016-lead-temperature-is-derived.md)                | Lead temperature is derived; the connection taxonomy stays                    | Accepted                                                 |
-| [0017](0017-screen-classes-are-named-by-state-source.md)   | Screen classes are named by what drives their state                           | Accepted                                                 |
-| [0018](0018-the-seller-is-the-agent.md)                    | The seller is the agent; there is no representation model                     | Accepted                                                 |
-| [0019](0019-production-runs-in-europe.md)                  | Production runs in one region, and it is Europe                               | Accepted                                                 |
-| [0020](0020-external-sign-in-is-native-oauth.md)           | External sign-in is native OAuth, not Passport strategies                     | Accepted                                                 |
+| #                                                           | Decision                                                                      | Status                                                   |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
+| [0001](0001-rest-over-graphql.md)                           | REST over GraphQL or tRPC                                                     | Accepted                                                 |
+| [0002](0002-per-route-rendering-split.md)                   | Rendering strategy is chosen per route                                        | Accepted                                                 |
+| [0003](0003-repository-layer.md)                            | A repository layer sits under services                                        | Accepted                                                 |
+| [0004](0004-mock-data-first-frontend.md)                    | The frontend was built on seed data                                           | Superseded by [0006](0006-data-holds-route-selectors.md) |
+| [0005](0005-query-owns-server-state.md)                     | TanStack Query owns all server state                                          | Accepted                                                 |
+| [0006](0006-data-holds-route-selectors.md)                  | `lib/data/` holds route-scoped selectors                                      | Accepted                                                 |
+| [0007](0007-money-is-decimal.md)                            | Money is stored and computed as `Decimal`                                     | Accepted                                                 |
+| [0008](0008-escrow-release-authorisation.md)                | Who may release an escrow hold, and when                                      | Accepted                                                 |
+| [0009](0009-repositories-wrap-aggregate.md)                 | Repositories wrap `aggregate` as an eleventh method                           | Accepted                                                 |
+| [0010](0010-repositories-wrap-groupby.md)                   | Repositories wrap `groupBy` and `upsert`                                      | Accepted                                                 |
+| [0011](0011-transactions-via-ambient-client.md)             | Transactions run through an ambient Prisma client                             | Accepted                                                 |
+| [0012](0012-tokens-are-the-design-source-of-truth.md)       | `styles/tokens.css` is the design source of truth                             | Accepted                                                 |
+| [0013](0013-mutation-feedback-is-global-by-default.md)      | Mutation feedback is global by default, inline by exception                   | Accepted                                                 |
+| [0014](0014-outbound-contact-runs-through-the-platform.md)  | Outbound contact runs through the platform, and calls bridge rather than dial | Accepted                                                 |
+| [0015](0015-map-surfaces-wait-on-coordinates.md)            | Map surfaces wait on coordinates, not on a provider                           | Accepted                                                 |
+| [0016](0016-lead-temperature-is-derived.md)                 | Lead temperature is derived; the connection taxonomy stays                    | Accepted                                                 |
+| [0017](0017-screen-classes-are-named-by-state-source.md)    | Screen classes are named by what drives their state                           | Accepted                                                 |
+| [0018](0018-the-seller-is-the-agent.md)                     | The seller is the agent; there is no representation model                     | Accepted                                                 |
+| [0019](0019-production-runs-in-europe.md)                   | Production runs in one region, and it is Europe                               | Accepted                                                 |
+| [0020](0020-external-sign-in-is-native-oauth.md)            | External sign-in is native OAuth, not Passport strategies                     | Accepted                                                 |
+| [0021](0021-writes-are-sent-once-and-confirmations-lock.md) | Writes are sent once, and confirmations lock while in flight                  | Accepted                                                 |
 
 ## Template
 

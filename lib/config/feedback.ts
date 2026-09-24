@@ -17,7 +17,7 @@ export const SESSION_EXPIRED = {
 export const FEEDBACK = {
     disconnectGoogleCalendar: {
         success: "Google Calendar disconnected",
-        error: "We couldn't disconnect Google Calendar.",
+        silentError: true,
     },
     requestPasswordReset: { silentError: true },
     resetPassword: { silentError: true },
@@ -30,10 +30,11 @@ export const FEEDBACK = {
         error: "We couldn't send your enquiry.",
     },
     recordLead: { success: "Lead recorded", silentError: true },
-    respondToConnection: {
-        success: "Response sent",
-        error: "We couldn't send your response.",
+    acceptConnection: {
+        success: "Enquiry accepted",
+        error: "We couldn't accept that enquiry.",
     },
+    declineConnection: { success: "Enquiry declined", silentError: true },
 
     createOffer: { success: "Offer submitted", silentError: true },
     respondToOffer: { success: "Response sent", silentError: true },
@@ -45,10 +46,7 @@ export const FEEDBACK = {
         success: "Document attached",
         error: "We couldn't attach that document.",
     },
-    acceptCounter: {
-        success: "Counter accepted",
-        error: "We couldn't accept the counter-offer.",
-    },
+    acceptCounter: { success: "Counter accepted", silentError: true },
 
     requestViewing: { success: "Viewing requested", silentError: true },
     confirmViewing: {
@@ -59,7 +57,8 @@ export const FEEDBACK = {
         success: "Viewing rescheduled",
         error: "We couldn't reschedule the viewing.",
     },
-    cancelViewing: { error: "We couldn't cancel the viewing." },
+    cancelViewing: { silentError: true },
+    declineViewing: { success: "Viewing request declined", silentError: true },
 
     sendMessage: { error: "Your message wasn't sent." },
 
@@ -101,36 +100,32 @@ export const FEEDBACK = {
         success: "Listing updated",
         error: "We couldn't save your changes.",
     },
-    updatePropertyStatus: {
-        success: "Listing status updated",
-        error: "We couldn't update the listing status.",
+    bulkUpdatePropertyStatus: {
+        success: "Listings updated",
+        error: "We couldn't update every selected listing.",
     },
-    deleteProperty: { error: "We couldn't delete the listing." },
+    deleteProperty: { silentError: true },
+    bulkDeleteProperties: { success: "Listings deleted", silentError: true },
     recordPropertyView: { silentError: true },
     promoteProperty: { success: "Listing promoted", silentError: true },
-    markPropertySold: {
-        success: "Listing marked sold",
-        error: "We couldn't mark the listing sold.",
-    },
+    markPropertySold: { success: "Listing marked sold", silentError: true },
     uploadPropertyImages: {
         success: "Images uploaded",
         error: "We couldn't upload those images.",
     },
-    deletePropertyImage: {
-        success: "Photo removed",
-        error: "We couldn't remove that photo.",
-    },
+    deletePropertyImage: { success: "Photo removed", silentError: true },
     reorderPropertyImages: { error: "We couldn't reorder those photos." },
-    moderateProperty: {
-        success: "Decision recorded",
-        error: "We couldn't record your decision.",
-    },
 
     createFlag: {
         success: "Report submitted",
         error: "We couldn't submit your report.",
     },
-    settleFlag: { error: "We couldn't settle the flag." },
+    settleFlag: { silentError: true },
+    approveFlaggedListing: {
+        success: "Listing approved",
+        error: "We couldn't approve the listing.",
+    },
+    decideFlaggedListing: { success: "Decision recorded", silentError: true },
 
     submitKyc: {
         success: "Documents submitted",
@@ -140,6 +135,7 @@ export const FEEDBACK = {
         success: "Verification decided",
         error: "We couldn't record the verification decision.",
     },
+    rejectKyc: { success: "Verification decided", silentError: true },
 
     createDispute: {
         success: "Dispute opened",
@@ -149,16 +145,10 @@ export const FEEDBACK = {
         success: "Evidence added",
         error: "We couldn't add that evidence.",
     },
-    settleDispute: {
-        success: "Dispute settled",
-        error: "We couldn't settle the dispute.",
-    },
+    settleDispute: { success: "Dispute settled", silentError: true },
 
     releaseEscrow: { success: "Funds released", silentError: true },
-    refundEscrow: {
-        success: "Refund issued",
-        error: "We couldn't issue the refund.",
-    },
+    refundEscrow: { success: "Refund issued", silentError: true },
 
     createTransaction: { silentError: true },
     confirmPayment: { silentError: true },
@@ -174,7 +164,7 @@ export const FEEDBACK = {
         success: "Tier updated",
         error: "We couldn't update the tier.",
     },
-    suspendUser: { error: "We couldn't suspend that account." },
+    suspendUser: { silentError: true },
     liftSuspension: {
         success: "Suspension lifted",
         error: "We couldn't lift the suspension.",
@@ -199,11 +189,11 @@ export const FEEDBACK = {
     },
     restorePlatformDefaults: {
         success: "Settings restored to defaults",
-        error: "We couldn't restore the default settings.",
+        silentError: true,
     },
     purgeExpiredVerifications: {
         success: "Expired verifications purged",
-        error: "We couldn't purge the expired verifications.",
+        silentError: true,
     },
 
     createConciergeClient: {
