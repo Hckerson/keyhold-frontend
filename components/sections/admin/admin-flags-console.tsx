@@ -4,6 +4,7 @@ import { Flag } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PortalHeader } from "@/components/patterns/portal-header";
 import { FilterPills } from "@/components/patterns/filter-pills";
+import { AbuseReportDecisionModal } from "@/components/features/admin/abuse-report-decision-modal";
 import { AbuseReportPane } from "@/components/features/admin/abuse-report-pane";
 import { AbuseReportRail } from "@/components/features/admin/abuse-report-rail";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
@@ -54,7 +55,9 @@ export function AdminFlagsConsole() {
                     <AbuseReportPane
                         report={active}
                         pending={queue.settling}
-                        onAction={(mode) => queue.settleReport(mode, active.id)}
+                        onAction={(mode) =>
+                            queue.requestSettle(mode, active.id)
+                        }
                     />
                 ) : (
                     <EmptyState
@@ -64,6 +67,15 @@ export function AdminFlagsConsole() {
                     />
                 )}
             </div>
+
+            <AbuseReportDecisionModal
+                mode={queue.decision?.mode}
+                report={queue.deciding}
+                pending={queue.settling}
+                failed={queue.settleFailed}
+                onClose={queue.dismissSettle}
+                onConfirm={queue.confirmSettle}
+            />
         </div>
     );
 }

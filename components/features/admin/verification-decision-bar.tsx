@@ -9,11 +9,15 @@ import {
 
 export interface VerificationDecisionBarProps {
     status: VerificationStatus;
+    approving: boolean;
+    busy: boolean;
     onAction: (mode: VerificationActionMode) => void;
 }
 
 export function VerificationDecisionBar({
     status,
+    approving,
+    busy,
     onAction,
 }: VerificationDecisionBarProps) {
     return (
@@ -23,6 +27,8 @@ export function VerificationDecisionBar({
                     key={action.mode}
                     emphasis={action.destructive ? "outline" : "solid"}
                     tone={action.destructive ? "error" : "accent"}
+                    isLoading={approving && action.mode === "approve"}
+                    disabled={busy}
                     onClick={() => onAction(action.mode)}
                 >
                     {action.label}

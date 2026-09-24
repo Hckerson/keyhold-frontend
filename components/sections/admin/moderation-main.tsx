@@ -31,6 +31,7 @@ export interface ModerationMainProps {
     checkFilter: ModerationCheckFilter;
     counts: Record<ModerationStatusFilter, number>;
     pending?: boolean;
+    approvingId?: string;
     onStatusFilterChange: (filter: ModerationStatusFilter) => void;
     onCheckFilterChange: (filter: ModerationCheckFilter) => void;
     onOpen: (id: string) => void;
@@ -45,6 +46,7 @@ export function ModerationMain({
     checkFilter,
     counts,
     pending,
+    approvingId,
     onStatusFilterChange,
     onCheckFilterChange,
     onOpen,
@@ -57,6 +59,7 @@ export function ModerationMain({
                 <PresenceSwap swapKey={focus.id}>
                     <ModerationFocusHero
                         listing={focus}
+                        approvingId={approvingId}
                         onOpen={onOpen}
                         onApprove={onApprove}
                         onDecide={onDecide}
@@ -86,6 +89,7 @@ export function ModerationMain({
                         <PanelInset scroll>
                             <ModerationListingTable
                                 listings={listings}
+                                approvingId={approvingId}
                                 onOpen={onOpen}
                                 onApprove={onApprove}
                                 onDecide={onDecide}

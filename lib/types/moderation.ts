@@ -41,6 +41,11 @@ export interface ModerationDecision {
     ids: string[];
 }
 
+export interface ModerationTarget {
+    flagId: string;
+    listingId: string;
+}
+
 export interface ModerationAgentLoad {
     id: string;
     name: string;

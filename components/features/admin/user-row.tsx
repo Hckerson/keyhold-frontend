@@ -19,6 +19,7 @@ export interface UserRowProps {
     peak: number;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -27,6 +28,7 @@ export function UserRow({
     peak,
     onOpen,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: UserRowProps) {
     return (
@@ -59,6 +61,7 @@ export function UserRow({
                 <UserRowActions
                     user={user}
                     onSuspend={onSuspend}
+                    reactivatingId={reactivatingId}
                     onReactivate={onReactivate}
                 />
             </td>

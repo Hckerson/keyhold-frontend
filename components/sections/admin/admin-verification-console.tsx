@@ -52,6 +52,8 @@ export function AdminVerificationConsole() {
                 {active ? (
                     <VerificationReviewPane
                         request={active}
+                        approving={queue.approvingId === active.id}
+                        busy={queue.busy}
                         onAction={(mode) => queue.runAction(mode, active.id)}
                     />
                 ) : (
@@ -67,6 +69,8 @@ export function AdminVerificationConsole() {
                 decision={queue.decision}
                 applicantName={queue.applicantName}
                 note={queue.note}
+                pending={queue.deciding}
+                failed={queue.decisionFailed}
                 onNoteChange={queue.setNote}
                 onClose={queue.closeDecision}
                 onSubmit={queue.submitDecision}

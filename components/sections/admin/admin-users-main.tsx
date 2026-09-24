@@ -50,6 +50,7 @@ export interface AdminUsersMainProps {
     onSortChange: (next: UserSortKey) => void;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -74,6 +75,7 @@ export function AdminUsersMain({
     onSortChange,
     onOpen,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: AdminUsersMainProps) {
     return (
@@ -85,6 +87,7 @@ export function AdminUsersMain({
                         directoryVolume={directoryVolume}
                         onOpen={onOpen}
                         onSuspend={onSuspend}
+                        reactivatingId={reactivatingId}
                         onReactivate={onReactivate}
                     />
                 </PresenceSwap>
@@ -125,6 +128,7 @@ export function AdminUsersMain({
                                     peak={peak}
                                     onOpen={onOpen}
                                     onSuspend={onSuspend}
+                                    reactivatingId={reactivatingId}
                                     onReactivate={onReactivate}
                                 />
                             </PageSwap>

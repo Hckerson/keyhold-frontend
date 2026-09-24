@@ -17,11 +17,15 @@ import { initialsOf } from "@/lib/utils";
 
 export interface VerificationReviewPaneProps {
     request: VerificationRequest;
+    approving: boolean;
+    busy: boolean;
     onAction: (mode: VerificationActionMode) => void;
 }
 
 export function VerificationReviewPane({
     request,
+    approving,
+    busy,
     onAction,
 }: VerificationReviewPaneProps) {
     const meta = statusMeta[request.status];
@@ -87,6 +91,8 @@ export function VerificationReviewPane({
 
             <VerificationDecisionBar
                 status={request.status}
+                approving={approving}
+                busy={busy}
                 onAction={onAction}
             />
         </section>
