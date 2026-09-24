@@ -18,9 +18,16 @@ const matchingPasswords = <
     values: T,
 ) => values.password === values.confirmPassword;
 
+const passwordPair = z.object({
+    password: z.string(),
+    confirmPassword: z.string(),
+});
+
 const mismatchIssue = {
     error: "Passwords do not match",
     path: ["confirmPassword"],
+    when: ({ value }: z.core.ParsePayload) =>
+        passwordPair.safeParse(value).success,
 };
 
 export const loginSchema = z.object({
@@ -74,6 +81,14 @@ export const toFieldErrors = (error: z.ZodError): FieldErrors =>
         }
         return collected;
     }, {});
+
+export const clearFieldError = (
+    errors: FieldErrors,
+    field: string,
+): FieldErrors =>
+    field === "password"
+        ? { ...errors, password: undefined, confirmPassword: undefined }
+        : { ...errors, [field]: undefined };
 
 export const fieldErrorFor = (
     schema: z.ZodType,
