@@ -30,7 +30,7 @@ export const EMPTY_FILTERS: SearchFilters = {
     type: [],
 };
 
-const LISTABLE_TYPES: PropertyType[] = PROPERTY_TYPES.filter(
+export const LISTABLE_TYPES: PropertyType[] = PROPERTY_TYPES.filter(
     (type) => type !== "LAND" && type !== "OTHER",
 );
 

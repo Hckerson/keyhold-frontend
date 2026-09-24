@@ -56,11 +56,6 @@ function ShortlistStack({ items }: { items: ShortlistItem[] }) {
                         </p>
                         <p className={microLabelClass}>{item.note}</p>
                     </div>
-                    {item.offMarket && (
-                        <span className="text-highlight-dark ml-auto shrink-0 font-mono text-[10px] tracking-[0.12em] uppercase">
-                            Off-market
-                        </span>
-                    )}
                 </li>
             ))}
         </ul>

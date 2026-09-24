@@ -6,6 +6,7 @@ export * from "./auth";
 export * from "./contact";
 export * from "./deal";
 export * from "./feedback";
+export * from "./home";
 export * from "./interest";
 export * from "./journey";
 export * from "./lead";
