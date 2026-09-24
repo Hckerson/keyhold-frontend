@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     getVersion,
     LngLatBounds,
@@ -36,6 +37,7 @@ export interface MapCanvasProps {
     zoom?: number;
     centre?: [number, number];
     fit?: boolean;
+    cooperative?: boolean;
     label: string;
     onSelect?: (id: string) => void;
     onBoundsChange?: (bounds: MapBounds) => void;
@@ -48,6 +50,7 @@ export function MapCanvas({
     zoom = MAP_DEFAULT_ZOOM,
     centre = MAP_DEFAULT_CENTRE,
     fit = true,
+    cooperative = true,
     label,
     onSelect,
     onBoundsChange,
@@ -56,9 +59,10 @@ export function MapCanvas({
     const host = useRef<HTMLDivElement>(null);
     const map = useRef<MapLibreMap | null>(null);
     const markers = useRef<Marker[]>([]);
+    const router = useRouter();
     const select = useRef(onSelect);
     const report = useRef(onBoundsChange);
-    const camera = useRef({ centre, zoom });
+    const camera = useRef({ centre, zoom, cooperative });
     const [ready, setReady] = useState(false);
 
     select.current = onSelect;
@@ -72,6 +76,7 @@ export function MapCanvas({
             style: MAP_STYLE_URL,
             center: camera.current.centre,
             zoom: camera.current.zoom,
+            cooperativeGestures: camera.current.cooperative,
             attributionControl: { customAttribution: MAP_ATTRIBUTION },
         });
 
@@ -107,14 +112,21 @@ export function MapCanvas({
                 pin.id === selectedId && SELECTED_CLASS,
             );
             element.title = `${pin.label} · ${pin.caption}`;
-            element.setAttribute("role", "button");
+            element.setAttribute(
+                "role",
+                !select.current && pin.href ? "link" : "button",
+            );
             element.setAttribute("tabindex", "0");
             element.setAttribute("aria-label", `${pin.label}, ${pin.caption}`);
-            element.addEventListener("click", () => select.current?.(pin.id));
+            const activate = () => {
+                if (select.current) select.current(pin.id);
+                else if (pin.href) router.push(pin.href);
+            };
+            element.addEventListener("click", activate);
             element.addEventListener("keydown", (event) => {
                 if (event.key !== "Enter" && event.key !== " ") return;
                 event.preventDefault();
-                select.current?.(pin.id);
+                activate();
             });
 
             return new Marker({ element })
@@ -137,7 +149,7 @@ export function MapCanvas({
             maxZoom: MAP_MAX_FIT_ZOOM,
             animate: false,
         });
-    }, [pins, selectedId, ready, fit]);
+    }, [pins, selectedId, ready, fit, router]);
 
     return (
         <div
