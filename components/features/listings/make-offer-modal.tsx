@@ -90,6 +90,7 @@ export function MakeOfferModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) close();
             }}
@@ -199,6 +200,7 @@ export function MakeOfferModal({
             <ModalFooter>
                 <Button
                     type="button"
+                    disabled={pending}
                     onClick={reviewing ? () => setReviewing(false) : close}
                 >
                     {reviewing ? COPY.back : COPY.cancel}

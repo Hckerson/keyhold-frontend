@@ -54,13 +54,13 @@ The whole design rests on one asymmetry: **failing to release is recoverable, re
 
 The gap between clicking confirm and the server answering is the dangerous window. A held escrow is a real sum of money and the request is not idempotent.
 
-| #   | Criterion                                                                                                                                                                           |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 4.1 | The confirm control is disabled for the duration of the request.                                                                                                                    |
-| 4.2 | The release is visible as in-progress on the row it belongs to, for the whole duration.                                                                                             |
-| 4.3 | A release in flight cannot be started again for the same escrow, by any route through the interface — including dismissing the modal and pressing release on the row a second time. |
-| 4.4 | Dismissing the modal mid-flight does not cancel the request, and does not hide the fact that it is still running.                                                                   |
-| 4.5 | A release in flight on one purchase does not disable release on a different purchase.                                                                                               |
+| #   | Criterion                                                                                                                                          |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4.1 | The confirm control is disabled for the duration of the request.                                                                                   |
+| 4.2 | The release is visible as in-progress on the row it belongs to, for the whole duration.                                                            |
+| 4.3 | A release in flight cannot be started again for the same escrow, by any route through the interface.                                               |
+| 4.4 | The confirmation cannot be dismissed while the release is in flight — Escape, backdrop, close and cancel are all refused until the server answers. |
+| 4.5 | A release in flight on one purchase does not disable release on a different purchase.                                                              |
 
 ## 05 · When it fails
 
@@ -156,6 +156,10 @@ Writing the checklist first, then the tests, turned up three defects. All three 
 Both are fixed by deriving the in-flight id from the mutation itself — `release.isPending ? release.variables : null` — so dismissal cannot clear it and no second piece of state has to be kept in step.
 
 **5.3 — a failed release said nothing.** `release.isError` was never rendered anywhere. A buyer who pressed the money button and hit a failing gateway saw the modal close and the row unchanged, with no way to tell whether the release had gone through. The modal now stays open on failure and states that the funds were not released and the escrow is still held.
+
+**3.5 and 5.1 — the release was sent twice in production.** The tests built their own client with mutation retry off; the real client retried every failed write once. A release that timed out after committing was re-sent, refused as settled, and reported as "still held". Writes are now never retried ([ADR 0021](../adr/0021-writes-are-sent-once-and-confirmations-lock.md)), and `query-client.test.tsx` proves it against the production client.
+
+**4.4 — dismissing mid-flight could still hide a failure.** Deriving the in-flight id kept the row honest, but a release dismissed and then failed was silent: the failure only renders inside the modal. The confirmation now locks until the server answers, and 4.3 and 4.4 were rewritten to prove the lock.
 
 ## What the server criteria caught
 

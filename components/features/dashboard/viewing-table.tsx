@@ -10,12 +10,14 @@ const ACTION_HEADING = "Reschedule or cancel";
 
 export interface ViewingTableProps {
     viewings: Viewing[];
+    cancellingId: string | null;
     onReschedule: (id: string) => void;
     onCancel: (id: string) => void;
 }
 
 export function ViewingTable({
     viewings,
+    cancellingId,
     onReschedule,
     onCancel,
 }: ViewingTableProps) {
@@ -65,6 +67,7 @@ export function ViewingTable({
                         <ViewingRow
                             key={viewing.id}
                             viewing={viewing}
+                            cancelling={cancellingId === viewing.id}
                             onReschedule={onReschedule}
                             onCancel={onCancel}
                         />

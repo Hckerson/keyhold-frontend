@@ -56,6 +56,7 @@ export function ReportModal({ open, targets, onClose }: ReportModalProps) {
     return (
         <Modal
             open={open}
+            locked={createFlag.isPending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
