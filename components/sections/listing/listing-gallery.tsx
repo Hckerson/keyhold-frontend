@@ -32,14 +32,15 @@ export function ListingGallery({ images, title, badge }: ListingGalleryProps) {
     );
 
     useEffect(() => {
+        if (!fullscreen) return;
+
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === "ArrowRight") step(1);
             if (event.key === "ArrowLeft") step(-1);
-            if (event.key === "Escape") setFullscreen(false);
         };
-        window.addEventListener("keydown", onKeyDown);
-        return () => window.removeEventListener("keydown", onKeyDown);
-    }, [step]);
+        window.addEventListener("keydown", onKeyDown, true);
+        return () => window.removeEventListener("keydown", onKeyDown, true);
+    }, [step, fullscreen]);
 
     return (
         <section aria-label="Property gallery" className="flex flex-col gap-2">
