@@ -10,7 +10,8 @@ export const OFFER_RESPONSE_STATUS: Record<OfferResponseAction, OfferStatus> = {
 
 export interface OfferResponseCopy {
     title: string;
-    lede: string;
+    lede: (address: string) => string;
+    final?: string;
     confirm: string;
 }
 
@@ -20,17 +21,22 @@ export const OFFER_RESPONSE_COPY: Record<
 > = {
     accept: {
         title: "Accept this offer",
-        lede: "Accepting closes every other offer on this listing and moves it to pending.",
+        lede: (address) =>
+            `Accepting binds you to this buyer for ${address}, closes every other offer on the listing and moves it to pending.`,
+        final: "Accepting is final",
         confirm: "Accept offer",
     },
     counter: {
         title: "Counter this offer",
-        lede: "Name the figure you will take. The buyer can accept it or walk away.",
+        lede: (address) =>
+            `Name the figure you will take for ${address}. The buyer can accept it or walk away.`,
         confirm: "Send counter",
     },
     decline: {
         title: "Decline this offer",
-        lede: "The buyer is told the offer was declined, along with any note you leave.",
+        lede: (address) =>
+            `The buyer is told their offer on ${address} was declined, along with any note you leave. It cannot be reopened.`,
+        final: "Declining is final",
         confirm: "Decline offer",
     },
 };
@@ -41,5 +47,5 @@ export const OFFER_RESPONSE_FIELDS = {
     notePlaceholder: "Optional — what would move this deal forward.",
     cancel: "Back",
     failed: "That response did not reach the buyer.",
-    retry: "Check the figure and try once more.",
+    retry: "Nothing was sent and the offer is still open. Try once more.",
 } as const;

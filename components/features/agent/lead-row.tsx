@@ -10,14 +10,15 @@ const ACCEPT_LABEL = "Accept enquiry from";
 const DECLINE_LABEL = "Decline enquiry from";
 const UNREAD_SUFFIX = "unread";
 const ACTION_CLASS =
-    "ease-smooth focus-visible:ring-accent grid size-6 place-items-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none";
+    "ease-smooth focus-visible:ring-accent grid size-6 place-items-center rounded-md transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-45";
 
 export interface LeadRowProps {
     lead: Lead;
+    responding: boolean;
     onRespond: (id: string, accept: boolean) => void;
 }
 
-export function LeadRow({ lead, onRespond }: LeadRowProps) {
+export function LeadRow({ lead, responding, onRespond }: LeadRowProps) {
     const stage = LEAD_STAGES[lead.stage];
 
     return (
@@ -65,6 +66,7 @@ export function LeadRow({ lead, onRespond }: LeadRowProps) {
                     <span className="flex items-center gap-1">
                         <button
                             type="button"
+                            disabled={responding}
                             onClick={() => onRespond(lead.id, true)}
                             aria-label={`${ACCEPT_LABEL} ${lead.name}`}
                             className={`${ACTION_CLASS} text-success hover:bg-success-light`}
@@ -73,6 +75,7 @@ export function LeadRow({ lead, onRespond }: LeadRowProps) {
                         </button>
                         <button
                             type="button"
+                            disabled={responding}
                             onClick={() => onRespond(lead.id, false)}
                             aria-label={`${DECLINE_LABEL} ${lead.name}`}
                             className={`${ACTION_CLASS} text-text-muted hover:bg-background-muted hover:text-error`}

@@ -6,9 +6,11 @@ import { CalendarRail } from "@/components/sections/agent/calendar-rail";
 import { CalendarSchedule } from "@/components/sections/agent/calendar-schedule";
 import { RescheduleViewingModal } from "@/components/features/shared/reschedule-viewing-modal";
 import { AppointmentCreateModal } from "@/components/features/agent/appointment-create-modal";
+import { CalendarDisconnectModal } from "@/components/features/agent/calendar-disconnect-modal";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useAgentCalendar } from "@/lib/hooks/use-agent-calendar";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import {
     useDisconnectGoogleCalendar,
     useGoogleCalendarStatus,
@@ -24,6 +26,7 @@ export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
     const calendar = useAgentCalendar();
     const calendarStatus = useGoogleCalendarStatus();
     const disconnectCalendar = useDisconnectGoogleCalendar();
+    const disconnect = useConfirmation<void, true>(disconnectCalendar);
 
     if (calendar.failed)
         return (
@@ -59,7 +62,7 @@ export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
                     calendarStatus={calendarStatus.data}
                     calendarOutcome={calendarOutcome}
                     disconnectingCalendar={disconnectCalendar.isPending}
-                    onDisconnectCalendar={() => disconnectCalendar.mutate()}
+                    onDisconnectCalendar={() => disconnect.request(true)}
                 />
 
                 <CalendarSchedule
@@ -83,6 +86,15 @@ export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
                 onDraftChange={calendar.setDraft}
                 onClose={calendar.closeReschedule}
                 onConfirm={calendar.confirmReschedule}
+            />
+
+            <CalendarDisconnectModal
+                open={disconnect.open}
+                account={calendarStatus.data?.email}
+                pending={disconnect.pending}
+                failed={disconnect.failed}
+                onClose={disconnect.dismiss}
+                onConfirm={() => disconnect.confirm()}
             />
 
             <AppointmentCreateModal

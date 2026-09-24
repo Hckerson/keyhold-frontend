@@ -26,3 +26,17 @@ export const CALENDAR_SYNC_COPY = {
         failed: "The connection didn't complete. Try once more.",
     },
 } as const;
+
+export const CALENDAR_DISCONNECT_COPY = {
+    title: "Disconnect Google Calendar",
+    warning: {
+        title: "This revokes access to your calendar",
+        body: "Confirmed viewings stop reaching Google Calendar. To reconnect you will need to sign in to Google and grant access again.",
+    },
+    failure: {
+        title: "Google Calendar is still connected",
+        body: "The access grant was not revoked. Try again in a moment.",
+    },
+    cancel: "Stay connected",
+    confirm: "Disconnect",
+} as const;

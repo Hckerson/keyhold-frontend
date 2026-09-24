@@ -24,6 +24,7 @@ export interface LeadsMainProps {
     counts: Record<LeadStageFilter, number>;
     pending?: boolean;
     calling: boolean;
+    respondingId: string | null;
     onFilterChange: (stage: LeadStageFilter) => void;
     onRespond: (id: string, accept: boolean) => void;
     onCall: () => void;
@@ -37,6 +38,7 @@ export function LeadsMain({
     counts,
     pending = false,
     calling,
+    respondingId,
     onFilterChange,
     onRespond,
     onCall,
@@ -48,6 +50,7 @@ export function LeadsMain({
                 <LeadsTopProspectHero
                     lead={top}
                     calling={calling}
+                    responding={respondingId === top.id}
                     onRespond={onRespond}
                     onCall={onCall}
                     onEmail={onEmail}
@@ -73,7 +76,11 @@ export function LeadsMain({
 
                 {leads.length > 0 ? (
                     <PanelInset scroll>
-                        <LeadTable leads={leads} onRespond={onRespond} />
+                        <LeadTable
+                            leads={leads}
+                            respondingId={respondingId}
+                            onRespond={onRespond}
+                        />
                     </PanelInset>
                 ) : (
                     <EmptyState

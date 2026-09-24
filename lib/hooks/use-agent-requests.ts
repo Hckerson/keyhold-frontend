@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import type { OfferResponseAction } from "@/lib/config/offer-response";
 import {
     pendingCount,
     rankOffers,
@@ -8,21 +9,30 @@ import {
     requestStats,
     requestsSummary,
 } from "@/lib/data/agent-requests";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useIncomingConnections } from "@/lib/hooks/use-connections";
 import { useRespondToOffer } from "@/lib/hooks/use-offers";
-import { useCancelViewing, useConfirmViewing } from "@/lib/hooks/use-viewings";
+import { useConfirmViewing, useDeclineViewing } from "@/lib/hooks/use-viewings";
 import { toRequestBook } from "@/lib/utils/to-agent-request";
+import type { OfferRequestItem } from "@/lib/types";
 import type { RespondOfferInput } from "@/lib/validations/offer";
 
-type OfferAnswer = Omit<RespondOfferInput, "status"> & {
-    status: RespondOfferInput["status"];
-};
+interface OfferAnswering {
+    action: OfferResponseAction;
+    request: OfferRequestItem;
+}
 
 export function useAgentRequests() {
     const connections = useIncomingConnections();
     const confirmViewing = useConfirmViewing();
-    const cancelViewing = useCancelViewing();
+    const declineViewing = useDeclineViewing();
     const respondToOffer = useRespondToOffer();
+
+    const answer = useConfirmation<
+        RespondOfferInput & { id: string },
+        OfferAnswering
+    >(respondToOffer);
+    const decline = useConfirmation<string>(declineViewing);
 
     const book = useMemo(
         () => toRequestBook(connections.data ?? []),
@@ -33,40 +43,16 @@ export function useAgentRequests() {
     const offers = useMemo(() => rankOffers(book.offers), [book]);
 
     const confirm = useCallback(
-        async (id: string, confirmedTime: string) => {
-            try {
-                await confirmViewing.mutateAsync({ id, confirmedTime });
-                return true;
-            } catch {
-                return false;
-            }
-        },
+        (id: string, confirmedTime: string) =>
+            confirmViewing.mutate({ id, confirmedTime }),
         [confirmViewing],
     );
 
-    const declineViewing = useCallback(
-        async (id: string) => {
-            try {
-                await cancelViewing.mutateAsync(id);
-                return true;
-            } catch {
-                return false;
-            }
-        },
-        [cancelViewing],
-    );
-
-    const answerOffer = useCallback(
-        async (id: string, answer: OfferAnswer) => {
-            try {
-                await respondToOffer.mutateAsync({ id, ...answer });
-                return true;
-            } catch {
-                return false;
-            }
-        },
-        [respondToOffer],
-    );
+    const busyViewingId = confirmViewing.isPending
+        ? (confirmViewing.variables?.id ?? null)
+        : declineViewing.isPending
+          ? (declineViewing.variables ?? null)
+          : null;
 
     return {
         viewings,
@@ -80,15 +66,13 @@ export function useAgentRequests() {
         confirmingId: confirmViewing.isPending
             ? (confirmViewing.variables?.id ?? null)
             : null,
-        decliningId: cancelViewing.isPending
-            ? (cancelViewing.variables ?? null)
-            : null,
+        busyViewingId,
         answeringId: respondToOffer.isPending
             ? (respondToOffer.variables?.id ?? null)
             : null,
-        answerFailed: respondToOffer.isError,
         confirm,
-        declineViewing,
-        answerOffer,
+        answer,
+        decline,
+        declining: viewings.find((request) => request.id === decline.target),
     };
 }

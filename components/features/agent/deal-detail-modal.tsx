@@ -124,7 +124,7 @@ export function DealDetailModal({
                                     type="button"
                                     emphasis="outline"
                                     tone="error"
-                                    isLoading={pending}
+                                    disabled={pending}
                                     onClick={() => onDecline(offerId)}
                                 >
                                     {DECLINE_LABEL}
@@ -133,7 +133,7 @@ export function DealDetailModal({
                                     type="button"
                                     emphasis="solid"
                                     tone="accent"
-                                    isLoading={pending}
+                                    disabled={pending}
                                     onClick={() => onAccept(offerId)}
                                 >
                                     {ACCEPT_LABEL}

@@ -7,10 +7,11 @@ const RESPOND_HEADING = "Respond";
 
 export interface LeadTableProps {
     leads: Lead[];
+    respondingId: string | null;
     onRespond: (id: string, accept: boolean) => void;
 }
 
-export function LeadTable({ leads, onRespond }: LeadTableProps) {
+export function LeadTable({ leads, respondingId, onRespond }: LeadTableProps) {
     return (
         <table className="table-flush w-full min-w-3xl table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
@@ -50,7 +51,12 @@ export function LeadTable({ leads, onRespond }: LeadTableProps) {
             </thead>
             <tbody className="divide-border divide-y">
                 {leads.map((lead) => (
-                    <LeadRow key={lead.id} lead={lead} onRespond={onRespond} />
+                    <LeadRow
+                        key={lead.id}
+                        lead={lead}
+                        responding={respondingId === lead.id}
+                        onRespond={onRespond}
+                    />
                 ))}
             </tbody>
         </table>

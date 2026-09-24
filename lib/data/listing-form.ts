@@ -130,3 +130,8 @@ export const listingStatusOptions = (status: PropertyStatus) =>
               { value: status, label: PROPERTY_STATUS_LABELS[status] },
               ...LISTING_STATUS_OPTIONS,
           ];
+
+const SELLABLE_STATUSES: readonly PropertyStatus[] = ["AVAILABLE", "PENDING"];
+
+export const canMarkSold = (status: PropertyStatus) =>
+    SELLABLE_STATUSES.includes(status);

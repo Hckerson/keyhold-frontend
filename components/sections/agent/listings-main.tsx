@@ -26,6 +26,7 @@ export interface ListingsMainProps {
     selectedIds: string[];
     allSelected: boolean;
     pending?: boolean;
+    bulkPending: boolean;
     onFilterChange: (filter: StatusFilter) => void;
     onToggleAll: () => void;
     onSelectedChange: (id: string, selected: boolean) => void;
@@ -43,6 +44,7 @@ export function ListingsMain({
     selectedIds,
     allSelected,
     pending = false,
+    bulkPending,
     onFilterChange,
     onToggleAll,
     onSelectedChange,
@@ -72,6 +74,7 @@ export function ListingsMain({
                     filter={filter}
                     counts={counts}
                     selectedCount={selectedIds.length}
+                    busy={bulkPending}
                     onFilterChange={onFilterChange}
                     onClearSelection={onClearSelection}
                     onBulkAction={onBulkAction}

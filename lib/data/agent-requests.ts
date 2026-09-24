@@ -26,7 +26,24 @@ export const REQUESTS_COPY = {
     offersEmptyLede:
         "Offers on your listings appear here the moment a buyer submits one.",
     stale: "Proposed times have passed",
-    staleAction: "Ask for new times",
+} as const;
+
+export const VIEWING_DECLINE_COPY = {
+    title: "Decline this viewing request",
+    warning: {
+        title: "This cancels the buyer's request",
+        body: "The buyer is told you declined and the request leaves your queue. To view the property they would need to send a new request.",
+    },
+    staleWarning: {
+        title: "Every proposed time has passed",
+        body: "None of the buyer's times can be confirmed any more, so declining cancels their request. To view the property they would need to send a new request with new times.",
+    },
+    failure: {
+        title: "The request was not declined",
+        body: "It is still waiting in your queue. Try again in a moment.",
+    },
+    cancel: "Keep it",
+    confirm: "Decline request",
 } as const;
 
 export const confirmableTimes = (request: ViewingRequestItem) =>

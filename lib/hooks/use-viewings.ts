@@ -99,3 +99,19 @@ export function useCancelViewing() {
         },
     });
 }
+
+export function useDeclineViewing() {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.declineViewing,
+        mutationFn: (id: string) => viewingsAPI.cancel(id),
+        onSuccess: async () => {
+            await Promise.all([
+                client.invalidateQueries({ queryKey: queryKeys.viewings.all }),
+                client.invalidateQueries({
+                    queryKey: queryKeys.connections.all,
+                }),
+            ]);
+        },
+    });
+}
