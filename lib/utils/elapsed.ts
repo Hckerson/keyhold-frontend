@@ -16,6 +16,11 @@ export const daysSince = (iso: string) =>
 export const monthsSince = (iso: string) =>
     Math.max(1, Math.round(daysSince(iso) / DAYS_PER_MONTH));
 
+export const elapsedLabel = (iso: string) => {
+    const days = daysSince(iso);
+    return days < DAYS_PER_MONTH ? `${days}d` : `${monthsSince(iso)}mo`;
+};
+
 export const minutesSince = (iso: string) =>
     Math.max(
         0,

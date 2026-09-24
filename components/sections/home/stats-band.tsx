@@ -1,20 +1,8 @@
 import { SectionShell } from "@/components/patterns/section-shell";
 import { cn } from "@/lib/utils";
+import type { HomeStat } from "@/lib/types";
 
-interface Stat {
-    value: string;
-    unit?: string;
-    label: string;
-}
-
-const STATS: Stat[] = [
-    { value: "$8.5", unit: "B", label: "In sales closed" },
-    { value: "2,500+", label: "Curated listings" },
-    { value: "27", label: "Years of practice" },
-    { value: "95", unit: "%", label: "Referral rate" },
-];
-
-export function StatsBand({ stats = STATS }: { stats?: Stat[] }) {
+export function StatsBand({ stats }: { stats: HomeStat[] }) {
     return (
         <section className="band-pady bg-background border-border relative isolate overflow-hidden border-y">
             <div
@@ -23,7 +11,7 @@ export function StatsBand({ stats = STATS }: { stats?: Stat[] }) {
             />
 
             <SectionShell>
-                <dl className="grid grid-cols-2 gap-y-8 sm:grid-cols-[1.3fr_1fr_1fr_1fr]">
+                <dl className="grid grid-cols-2 gap-y-8 sm:auto-cols-fr sm:grid-flow-col sm:grid-cols-none">
                     {stats.map((stat, i) => {
                         const focal = i === 0;
                         return (
@@ -50,11 +38,6 @@ export function StatsBand({ stats = STATS }: { stats?: Stat[] }) {
                                     )}
                                 >
                                     {stat.value}
-                                    {stat.unit && (
-                                        <span className="text-highlight italic">
-                                            {stat.unit}
-                                        </span>
-                                    )}
                                 </dd>
                             </div>
                         );

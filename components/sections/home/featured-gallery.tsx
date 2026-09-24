@@ -2,11 +2,10 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
-import {
-    GalleryTile,
-    type GalleryTileData,
-} from "@/components/sections/home/gallery-tile";
+import { GalleryTile } from "@/components/sections/home/gallery-tile";
+import type { GalleryTileData } from "@/lib/types";
 import { PUBLIC_ROUTES } from "@/lib/constants";
+import { HOME_COPY } from "@/lib/data/home";
 
 interface FeaturedGalleryProps {
     tiles: GalleryTileData[];
@@ -18,14 +17,14 @@ export function FeaturedGallery({ tiles }: FeaturedGalleryProps) {
             <SectionShell>
                 <div className="mb-8 flex items-end justify-between gap-6">
                     <SectionHeading
-                        eyebrow={`The collection · ${tiles.length} residences`}
-                        title="Curated selections"
+                        eyebrow={HOME_COPY.gallery.eyebrow(tiles.length)}
+                        title={HOME_COPY.gallery.title}
                     />
                     <Link
                         href={PUBLIC_ROUTES.search}
                         className="text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth group inline-flex shrink-0 items-center gap-1.5 text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                     >
-                        View all
+                        {HOME_COPY.gallery.viewAll}
                         <ArrowUpRight
                             size={13}
                             strokeWidth={1.5}

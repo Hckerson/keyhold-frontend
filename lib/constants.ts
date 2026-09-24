@@ -26,6 +26,7 @@ export const config = {
             list: "/properties",
             search: "/properties/search",
             facets: "/properties/facets",
+            localities: "/properties/localities",
             detail: (id: string) => `/properties/${id}`,
             nearby: (id: string) => `/properties/${id}/nearby`,
             bySeller: (sellerId: string) => `/properties/seller/${sellerId}`,

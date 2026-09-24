@@ -1,13 +1,11 @@
 import Link from "next/link";
 import {
-    Star,
     MapPin,
     BedDouble,
     Bath,
     Ruler,
     ArrowUpRight,
     ArrowRight,
-    type LucideIcon,
 } from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
@@ -16,89 +14,49 @@ import { formatUsd } from "@/lib/utils";
 import type { Listing } from "@/lib/types";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import { formatCount } from "@/lib/utils/format";
-import { Image } from "@/components/ui/image";
-
-interface Spec {
-    icon: LucideIcon;
-    value: string;
-    label: string;
-}
+import { PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
+import {
+    PremierListingMedia,
+    type PremierMediaView,
+} from "@/components/sections/home/premier-listing-media";
+import {
+    PremierSpecCluster,
+    type PremierSpec,
+} from "@/components/sections/home/premier-spec-cluster";
 
 interface PremierListingProps {
     listing: Listing;
 }
 
-interface ListingView {
+interface ListingView extends PremierMediaView {
     id: string;
-    image: string;
     place: string;
-    name: string;
     address: string;
     price: string;
     priceLabel: string;
 }
 
 const PRICE_LABEL = "Guide price";
+const POPULAR_BADGE = "Most viewed";
 const VIEWING_ACTION = "Private viewing";
 const DOSSIER_ACTION = "View full dossier";
 
 const toView = (listing: Listing): ListingView => ({
     id: listing.id,
     image: listing.images[0] ?? "",
-    place: `${listing.locality.split(",")[0]} · Off-market`,
+    place: `${listing.locality.split(",")[0]} · ${PROPERTY_TYPE_LABELS[listing.type]}`,
     name: listing.title,
     address: `${listing.address}, ${listing.locality}`,
     price: formatUsd(listing.price),
     priceLabel: PRICE_LABEL,
+    badge: listing.featured ? undefined : POPULAR_BADGE,
 });
 
-const toSpecs = (listing: Listing): Spec[] => [
+const toSpecs = (listing: Listing): PremierSpec[] => [
     { icon: BedDouble, value: String(listing.beds), label: "Bedrooms" },
     { icon: Bath, value: String(listing.baths), label: "Bathrooms" },
     { icon: Ruler, value: formatCount(listing.sqft), label: "Sq Ft" },
 ];
-
-function ListingMedia({ listing }: { listing: ListingView }) {
-    return (
-        <div className="relative">
-            <span className="bg-sidebar/75 text-text-inverse ring-highlight/30 absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 font-mono text-[10px] tracking-[0.14em] uppercase shadow-md ring-1 backdrop-blur-md">
-                <Star size={12} strokeWidth={1.5} className="text-highlight" />
-                Premier listing
-            </span>
-            <Image
-                variant="bare"
-                width={1200}
-                height={560}
-                sizes="(min-width: 64rem) 58vw, 100vw"
-                src={listing.image}
-                alt={listing.name}
-                className="h-100 w-full rounded-xl object-cover shadow-md md:h-140"
-            />
-        </div>
-    );
-}
-
-function SpecCluster({ specs }: { specs: Spec[] }) {
-    return (
-        <div className="bg-background-muted/60 border-border-light flex flex-wrap gap-x-8 gap-y-3 rounded-md border p-3">
-            {specs.map((spec) => (
-                <div key={spec.label} className="flex items-center gap-2">
-                    <spec.icon
-                        size={12}
-                        strokeWidth={1.5}
-                        className="text-highlight-dark shrink-0"
-                    />
-                    <span className="text-text text-xs font-semibold tabular-nums">
-                        {spec.value}
-                    </span>
-                    <span className="text-text-muted font-mono text-[10px] tracking-[0.12em] uppercase">
-                        {spec.label}
-                    </span>
-                </div>
-            ))}
-        </div>
-    );
-}
 
 export function PremierListing({ listing }: PremierListingProps) {
     const view = toView(listing);
@@ -108,7 +66,7 @@ export function PremierListing({ listing }: PremierListingProps) {
         <section className="section-pady bg-background">
             <SectionShell>
                 <div className="grid items-center gap-10 lg:grid-cols-[58%_1fr] lg:gap-14">
-                    <ListingMedia listing={view} />
+                    <PremierListingMedia listing={view} />
 
                     <div className="flex flex-col gap-5">
                         <div className="flex flex-col gap-2.5">
@@ -139,7 +97,7 @@ export function PremierListing({ listing }: PremierListingProps) {
                             </span>
                         </div>
 
-                        <SpecCluster specs={specs} />
+                        <PremierSpecCluster specs={specs} />
 
                         <div className="flex flex-wrap items-center gap-6">
                             <Link

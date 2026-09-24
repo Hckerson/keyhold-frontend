@@ -1,24 +1,12 @@
 import Link from "next/link";
-import { ArrowUpRight, TrendingUp } from "lucide-react";
+import { ArrowUpRight, Clock } from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import { Image } from "@/components/ui/image";
 import { MapView } from "@/components/ui/map-view";
 import type { MapPin } from "@/lib/config/map";
-
-export interface LatestSaleData {
-    id: string;
-    latitude: number | null;
-    longitude: number | null;
-    imageUrl: string;
-    address: string;
-    locality: string;
-    price: string;
-    specs: string;
-    soldLabel: string;
-    daysOnMarket: number;
-}
+import type { LatestSaleData } from "@/lib/types";
 
 interface LatestSalesProps {
     sales: LatestSaleData[];
@@ -79,8 +67,11 @@ function SaleCard({ sale }: { sale: LatestSaleData }) {
                     <span className="text-text-muted font-mono text-[10px] tracking-[0.12em] uppercase">
                         {sale.specs}
                     </span>
-                    <span className="text-success inline-flex items-center gap-1 text-xs font-medium tabular-nums">
-                        <TrendingUp size={12} strokeWidth={1.5} />
+                    <span
+                        className="text-text-secondary inline-flex items-center gap-1 text-xs font-medium tabular-nums"
+                        title="Days on market"
+                    >
+                        <Clock size={12} strokeWidth={1.5} />
                         {sale.daysOnMarket}d
                     </span>
                 </div>
