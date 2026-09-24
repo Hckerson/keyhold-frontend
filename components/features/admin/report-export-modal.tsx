@@ -78,7 +78,7 @@ export function ReportExportModal({
                 </LabelledBlock>
             </ModalBody>
 
-            <ModalFooter>
+            <ModalFooter className="gap-4">
                 <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>

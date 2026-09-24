@@ -49,7 +49,7 @@ export function DisputeDecisionModal({
         >
             {copy && decision && (
                 <ModalContent>
-                    <ModalHeader>
+                    <ModalHeader className="p-6">
                         <ModalTitle id="dispute-decision-title">
                             {copy.title}
                         </ModalTitle>
@@ -57,7 +57,7 @@ export function DisputeDecisionModal({
                             {subjectTitle}
                         </p>
                     </ModalHeader>
-                    <ModalBody>
+                    <ModalBody className="p-6">
                         <TextareaField
                             id="dispute-note"
                             name="disputeNote"
@@ -73,7 +73,7 @@ export function DisputeDecisionModal({
                             {NOTE_HINT}
                         </p>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter className="gap-4 p-6">
                         <Button onClick={onClose} disabled={pending}>
                             {CANCEL_LABEL}
                         </Button>

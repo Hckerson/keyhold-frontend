@@ -55,7 +55,7 @@ export function EscrowSettleModal({
         >
             {payout && (
                 <ModalContent>
-                    <ModalHeader>
+                    <ModalHeader className="p-6">
                         <ModalTitle id="escrow-settle-title">
                             {copy.title}
                         </ModalTitle>
@@ -64,7 +64,7 @@ export function EscrowSettleModal({
                             {formatUsd(payoutNet(payout))} net
                         </p>
                     </ModalHeader>
-                    <ModalBody className="space-y-3">
+                    <ModalBody className="space-y-3 p-6">
                         <p className="text-text-secondary text-xs">
                             {copy.lede}
                         </p>
@@ -108,7 +108,7 @@ export function EscrowSettleModal({
                                 : SWITCH_TO_RELEASE}
                         </Button>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter className="gap-4 p-6">
                         <Button
                             type="button"
                             onClick={onClose}

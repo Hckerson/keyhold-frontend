@@ -57,12 +57,12 @@ export function TwoFactorModal({
                 if (!next) close();
             }}
         >
-            <ModalHeader>
+            <ModalHeader className="p-6">
                 <ModalTitle>
                     {enabled ? "Disable Two-Factor" : "Enable Two-Factor"}
                 </ModalTitle>
             </ModalHeader>
-            <ModalBody className="space-y-3">
+            <ModalBody className="space-y-3 p-6">
                 {enabled ? (
                     <p className="text-text-secondary text-xs">
                         Turning this off removes the second step when you sign
@@ -89,7 +89,7 @@ export function TwoFactorModal({
                     </>
                 )}
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="gap-4 p-6">
                 <Button onClick={close}>Cancel</Button>
                 <Button emphasis="solid" tone="accent" onClick={submit}>
                     {enabled ? "Disable" : "Enable"}

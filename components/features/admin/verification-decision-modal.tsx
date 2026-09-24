@@ -44,7 +44,7 @@ export function VerificationDecisionModal({
         >
             {copy && decision && (
                 <ModalContent>
-                    <ModalHeader>
+                    <ModalHeader className="p-6">
                         <ModalTitle id="verification-decision-title">
                             {copy.title}
                         </ModalTitle>
@@ -52,7 +52,7 @@ export function VerificationDecisionModal({
                             {applicantName}
                         </p>
                     </ModalHeader>
-                    <ModalBody>
+                    <ModalBody className="p-6">
                         <TextareaField
                             id="verification-note"
                             name="verificationNote"
@@ -69,7 +69,7 @@ export function VerificationDecisionModal({
                             decision.
                         </p>
                     </ModalBody>
-                    <ModalFooter>
+                    <ModalFooter className="gap-4 p-6">
                         <Button onClick={onClose}>Cancel</Button>
                         <Button
                             emphasis="solid"
