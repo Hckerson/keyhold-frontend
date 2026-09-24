@@ -1,21 +1,16 @@
+import { Activity, PlugZap } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { PanelLink } from "@/components/features/shared/panel-link";
-import { PlatformSignalTable } from "@/components/features/admin/platform-signal-table";
-import { ServiceHealthTable } from "@/components/features/admin/service-health-table";
-import { IntegrationTable } from "@/components/features/admin/integration-table";
-import { AdminRevenueHero } from "@/components/sections/admin/admin-revenue-hero";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Activity, PlugZap, ShieldCheck } from "lucide-react";
-import type { MetricItem, PlatformSignal, ServiceHealth } from "@/lib/types";
+import { PanelLink } from "@/components/features/shared/panel-link";
+import { IntegrationCoverage } from "@/components/features/admin/integration-coverage";
+import { ServiceHealthTable } from "@/components/features/admin/service-health-table";
+import { AdminRevenueHero } from "@/components/sections/admin/admin-revenue-hero";
+import type { GmvReading } from "@/lib/data/admin-overview";
+import type { ServiceHealth } from "@/lib/types";
 import type { IntegrationStatus } from "@/lib/validations/service-health";
 
-const SIGNALS_TITLE = "Signals";
-const SIGNALS_ACTION = "Verifications";
-const SIGNALS_EMPTY = "Nothing waiting on a decision";
-const SIGNALS_EMPTY_LEDE = "Every moderation queue is clear.";
 const HEALTH_TITLE = "Service Health";
-const HEALTH_LEDE = "Measured from live request traffic";
 const HEALTH_ACTION = "Settings";
 const HEALTH_EMPTY = "No traffic recorded yet";
 const HEALTH_EMPTY_LEDE =
@@ -27,13 +22,8 @@ const INTEGRATIONS_EMPTY_LEDE =
     "The API did not report which external services are configured.";
 
 export interface AdminOverviewMainProps {
-    gmv: number;
-    growthLabel: string;
-    commissionsLabel: string;
+    gmv: GmvReading | null;
     months: Record<string, string | number>[];
-    metrics: MetricItem[];
-    signals: PlatformSignal[];
-    exposureLabel: string;
     services: ServiceHealth[];
     serviceSummary: string;
     integrations: IntegrationStatus[];
@@ -42,12 +32,7 @@ export interface AdminOverviewMainProps {
 
 export function AdminOverviewMain({
     gmv,
-    growthLabel,
-    commissionsLabel,
     months,
-    metrics,
-    signals,
-    exposureLabel,
     services,
     serviceSummary,
     integrations,
@@ -55,41 +40,11 @@ export function AdminOverviewMain({
 }: AdminOverviewMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
-            <AdminRevenueHero
-                gmv={gmv}
-                growthLabel={growthLabel}
-                commissionsLabel={commissionsLabel}
-                months={months}
-                metrics={metrics}
-            />
-
-            <Panel
-                title={SIGNALS_TITLE}
-                description={`${exposureLabel} of settled value on the platform`}
-                count={signals.length}
-                action={
-                    <PanelLink
-                        href="/admin/verifications"
-                        label={SIGNALS_ACTION}
-                    />
-                }
-            >
-                {signals.length > 0 ? (
-                    <PanelInset scroll>
-                        <PlatformSignalTable signals={signals} />
-                    </PanelInset>
-                ) : (
-                    <EmptyState
-                        icon={ShieldCheck}
-                        title={SIGNALS_EMPTY}
-                        description={SIGNALS_EMPTY_LEDE}
-                    />
-                )}
-            </Panel>
+            <AdminRevenueHero reading={gmv} months={months} />
 
             <Panel
                 title={HEALTH_TITLE}
-                description={`${HEALTH_LEDE} · ${serviceSummary}`}
+                description={serviceSummary}
                 action={
                     <PanelLink href="/admin/settings" label={HEALTH_ACTION} />
                 }
@@ -118,9 +73,7 @@ export function AdminOverviewMain({
                 }
             >
                 {integrations.length > 0 ? (
-                    <PanelInset scroll>
-                        <IntegrationTable integrations={integrations} />
-                    </PanelInset>
+                    <IntegrationCoverage integrations={integrations} />
                 ) : (
                     <EmptyState
                         icon={PlugZap}

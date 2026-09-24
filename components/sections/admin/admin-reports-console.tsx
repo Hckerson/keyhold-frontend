@@ -35,7 +35,6 @@ import {
 import { useTierDistribution, useUsers } from "@/lib/hooks/use-users";
 import { toRoleSegments, toTierSegments } from "@/lib/utils/to-user-segments";
 import { downloadCsv } from "@/lib/utils/download";
-import { formatCount } from "@/lib/utils";
 import type { TimeFilter } from "@/lib/enums/enums";
 
 export function AdminReportsConsole() {
@@ -138,9 +137,6 @@ export function AdminReportsConsole() {
                     )}
                     roles={roles}
                     tiers={tierSegments}
-                    totalLabel={formatCount(
-                        tiers.data?.total ?? users.data?.total ?? 0,
-                    )}
                 />
             </div>
 
