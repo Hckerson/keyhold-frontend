@@ -17,7 +17,9 @@ import {
     ACCOUNT_MENU_LABEL,
     type AccountMenuAction,
 } from "@/lib/config/account-menu";
+import { USER_ROLES } from "@/lib/config/user-tones";
 import { initialsOf } from "@/lib/utils";
+import { MANAGED_ROLE_BY_USER } from "@/lib/utils/to-user-segments";
 
 export interface TopbarAccountProps {
     user: AuthUser;
@@ -41,15 +43,22 @@ export function TopbarAccount({
         <Menu>
             <MenuTrigger
                 aria-label={ACCOUNT_MENU_LABEL}
-                className="group hover:bg-background-muted data-popup-open:bg-background-muted focus-visible:ring-accent ease-smooth flex h-8 shrink-0 items-center gap-1 rounded-full py-0 pr-1.5 pl-0 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                className="group hover:bg-background-muted data-popup-open:bg-background-muted focus-visible:ring-accent ease-smooth flex h-9 shrink-0 items-center gap-2 rounded-md px-1 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none md:pr-2"
             >
                 <Avatar
-                    size="sm"
+                    size="xs"
                     tone="accent"
                     elevated={false}
                     initials={initialsOf(user.name)}
-                    className="ring-border ring-1"
                 />
+                <span className="reading-only-inline min-w-0 text-left">
+                    <span className="text-text block max-w-32 truncate text-xs leading-tight font-medium">
+                        {user.name}
+                    </span>
+                    <span className="text-text-muted block font-mono text-[10px] leading-tight tracking-wide uppercase">
+                        {USER_ROLES[MANAGED_ROLE_BY_USER[user.role]].label}
+                    </span>
+                </span>
                 <ChevronDown
                     className="text-text-muted ease-smooth size-3 transition-transform duration-200 group-data-popup-open:rotate-180"
                     strokeWidth={1.5}
