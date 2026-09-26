@@ -247,6 +247,8 @@ Entries above are not rewritten when they drift. A correction lands here, dated,
 
 **21 September 2026 — POI markers on listing detail are built.** The map table lists Page 3 module 5 · Section 10 as a placed map with "POI markers still owed". They are no longer owed: `listing-neighborhood.tsx` draws school, transit, park and restaurant pins from live Overpass data through `neighbourhoodPins`, with a four-way toggle that doubles as the colour key.
 
+**26 September 2026 — the footer newsletter is back, on a real list.** The home-page entry for Page 1 module 7 says the newsletter signup was removed, and the note under it defers its return "until there is a subscriber store with consent and a sender behind it". The store now exists: `POST /newsletter/subscribe` records the address with the exact consent wording, and nothing is added to the list until the person confirms from the email (double opt-in, [ADR 0023](../../docs/adr/0023-newsletter-uses-double-opt-in.md)). The form says "Check your inbox to confirm", never "You are on the list". The sender is still owed: nothing sends newsletters yet, so no copy may promise an issue on a schedule. The social icons stay removed.
+
 ---
 
 ## Adding to this file
