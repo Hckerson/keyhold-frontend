@@ -4,7 +4,8 @@ import { useState } from "react";
 import type { OfferConfirmAction } from "@/components/features/offers/offer-confirm-modal";
 import { toOfferDetail } from "@/lib/data/offer-details";
 import { useConnection } from "@/lib/hooks/use-connections";
-import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
+import { useConversation } from "@/lib/hooks/use-messages";
+import { useOfferMessage } from "@/lib/hooks/use-offer-message";
 import {
     useAcceptCounter,
     useCreateOffer,
@@ -13,6 +14,7 @@ import {
 import { useDealMilestones } from "@/lib/hooks/use-deal-milestones";
 import { useCheckout } from "@/lib/hooks/use-checkout";
 import { useConfirmation } from "@/lib/hooks/use-confirmation";
+import { usePurchaseEligibility } from "@/lib/hooks/use-purchase-eligibility";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
 import type { CreateOfferInput } from "@/lib/validations/offer";
@@ -34,7 +36,7 @@ export function useOfferDetail(id: string) {
     const checkout = useCheckout();
     const acceptCounter = useAcceptCounter();
     const createOffer = useCreateOffer();
-    const sendMessage = useSendMessage();
+    const message = useOfferMessage(offer?.connectionId);
     const counterConfirmation = useConfirmation<CreateOfferInput, string>(
         createOffer,
     );
@@ -71,16 +73,15 @@ export function useOfferDetail(id: string) {
 
     const isBuyer =
         Boolean(user?.id) && connectionQuery.data?.buyerId === user?.id;
-    const canPurchase = status === "accepted" && isBuyer;
+    const canPurchase = usePurchaseEligibility({
+        accepted: status === "accepted",
+        isBuyer,
+        propertyId: offer?.propertyId,
+    });
 
     const counterValue = Number(toDigits(counterAmount));
     const canCounter = Boolean(offer) && !closed && counterValue > 0;
     const canAccept = status === "countered";
-
-    const addUserMessage = (content: string) => {
-        if (!offer) return;
-        sendMessage.mutate({ connectionId: offer.connectionId, content });
-    };
 
     const requestConfirm = (action: OfferConfirmAction) => {
         if (offer && !activeConfirmation.pending)
@@ -144,7 +145,8 @@ export function useOfferDetail(id: string) {
         setCounterNote,
         requestConfirm,
         dismissConfirm: activeConfirmation.dismiss,
-        addUserMessage,
+        addUserMessage: message.send,
+        sendingMessage: message.sending,
         confirmCounter,
         confirmAccept,
         startPurchase,
