@@ -61,6 +61,9 @@ export const FEEDBACK = {
     declineViewing: { success: "Viewing request declined", silentError: true },
 
     sendMessage: { error: "Your message wasn't sent." },
+    attachMessageFiles: {
+        error: "Your message was sent, but its attachments weren't. Attach them again.",
+    },
 
     sendLeadEmail: {
         success: "Email sent",
@@ -171,6 +174,9 @@ export const FEEDBACK = {
     },
 
     signOut: { error: "We couldn't sign you out. Try again." },
+    subscribeNewsletter: { silentError: true },
+    confirmNewsletter: { silentError: true },
+    unsubscribeNewsletter: { silentError: true },
     verifyEmail: {
         success: "Email confirmed",
         error: "That code was not accepted.",

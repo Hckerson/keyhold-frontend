@@ -5,7 +5,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { MessageComposer } from "@/components/features/messaging/message-composer";
 import { ThreadHeader } from "@/components/features/messaging/thread-header";
 import { ThreadMessages } from "@/components/features/messaging/thread-messages";
-import type { Conversation, Message } from "@/lib/types";
+import type { Conversation, Message, MessageSendHandler } from "@/lib/types";
 
 const COMPOSER_LABEL = "Message";
 const COMPOSER_PLACEHOLDER = "Type your message…";
@@ -16,13 +16,15 @@ export interface ThreadPanelProps {
     conversation?: Conversation;
     messages: Message[];
     typing: boolean;
-    onSend: (content: string, files: File[]) => void;
+    sending: boolean;
+    onSend: MessageSendHandler;
 }
 
 export function ThreadPanel({
     conversation,
     messages,
     typing,
+    sending,
     onSend,
 }: ThreadPanelProps) {
     return (
@@ -40,6 +42,7 @@ export function ThreadPanel({
                         inputLabel={COMPOSER_LABEL}
                         placeholder={COMPOSER_PLACEHOLDER}
                         onSend={onSend}
+                        pending={sending}
                         attachable
                     />
                 </>
