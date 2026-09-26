@@ -4,10 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { messagesAPI } from "@/lib/api/messages";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
+import { FEEDBACK } from "@/lib/config/feedback";
+import { notify } from "@/lib/stores/toast-store";
+import { errorMessage } from "@/lib/utils/api-error";
 import type { CreateMessageInput } from "@/lib/validations/message";
 
 export type SendMessageInput = CreateMessageInput & { files?: File[] };
-import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useConversation(connectionId: string | undefined) {
     return useQuery({
@@ -29,17 +31,33 @@ export function useUnreadMessageCount(enabled = true) {
     });
 }
 
+const attachFiles = async (messageId: string, files: File[]) => {
+    try {
+        await messagesAPI.attach(messageId, files);
+        return true;
+    } catch (error) {
+        notify({
+            tone: "error",
+            title: FEEDBACK.attachMessageFiles.error,
+            description: errorMessage(error, "") || undefined,
+        });
+        return false;
+    }
+};
+
 export function useSendMessage() {
     const client = useQueryClient();
     return useMutation({
         meta: FEEDBACK.sendMessage,
         mutationFn: async ({ files, ...input }: SendMessageInput) => {
             const message = await messagesAPI.send(input);
-            if (files && files.length > 0)
-                await messagesAPI.attach(message.id, files);
-            return message;
+            const attached =
+                !files || files.length === 0
+                    ? true
+                    : await attachFiles(message.id, files);
+            return { message, attached };
         },
-        onSuccess: async (_message, input) => {
+        onSuccess: async (_result, input) => {
             await Promise.all([
                 client.invalidateQueries({
                     queryKey: queryKeys.messages.byConnection(
