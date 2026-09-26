@@ -1,6 +1,11 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    useMutation,
+    useMutationState,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { savedPropertiesAPI } from "@/lib/api/saved-properties";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
@@ -26,17 +31,35 @@ export function useSavedPropertyIds(enabled = true) {
     });
 }
 
+interface ToggleSavedInput {
+    propertyId: string;
+    saved: boolean;
+}
+
+const togglingPropertyId = (variables: unknown) =>
+    typeof variables === "object" &&
+    variables !== null &&
+    "propertyId" in variables &&
+    typeof variables.propertyId === "string"
+        ? variables.propertyId
+        : undefined;
+
+export function useTogglingPropertyIds() {
+    return useMutationState({
+        filters: {
+            mutationKey: queryKeys.savedProperties.toggle,
+            status: "pending",
+        },
+        select: (mutation) => togglingPropertyId(mutation.state.variables),
+    });
+}
+
 export function useToggleSavedProperty() {
     const client = useQueryClient();
     return useMutation({
+        mutationKey: queryKeys.savedProperties.toggle,
         meta: FEEDBACK.toggleSavedProperty,
-        mutationFn: async ({
-            propertyId,
-            saved,
-        }: {
-            propertyId: string;
-            saved: boolean;
-        }) => {
+        mutationFn: async ({ propertyId, saved }: ToggleSavedInput) => {
             if (saved) {
                 await savedPropertiesAPI.unsave(propertyId);
                 return { propertyId, saved: false };

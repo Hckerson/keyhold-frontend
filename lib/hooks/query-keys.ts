@@ -22,6 +22,7 @@ export const queryKeys = {
     savedProperties: {
         all: ["saved-properties"] as const,
         ids: ["saved-properties", "ids"] as const,
+        toggle: ["saved-properties", "toggle"] as const,
     },
     connections: {
         all: ["connections"] as const,
