@@ -155,7 +155,7 @@ describe("retry policy", () => {
 
     it("never sends a failed write a second time", async () => {
         const mutationFn = vi
-            .fn()
+            .fn<() => Promise<string>>()
             .mockRejectedValue(serverError("Upstream failed"));
         const { result } = renderHook(() => useMutation({ mutationFn }), {
             wrapper,
