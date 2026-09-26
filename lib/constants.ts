@@ -65,6 +65,11 @@ export const config = {
             email: (connectionId: string) => `/contact/${connectionId}/email`,
             call: (connectionId: string) => `/contact/${connectionId}/call`,
         },
+        newsletter: {
+            subscribe: "/newsletter/subscribe",
+            confirm: "/newsletter/confirm",
+            unsubscribe: "/newsletter/unsubscribe",
+        },
         viewings: {
             create: "/viewings",
             detail: (id: string) => `/viewings/${id}`,

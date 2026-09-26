@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SectionShell } from "@/components/patterns/section-shell";
 import { FooterLocalityIndex } from "@/components/layout/footer-locality-index";
+import { NewsletterForm } from "@/components/layout/newsletter-form";
 import { Wordmark, BRAND_NAME } from "@/components/brand/wordmark";
 import { FOOTER_COLUMNS } from "@/lib/config/site-nav";
 import styles from "@/components/layout/footer.module.css";
@@ -45,6 +46,9 @@ export function Footer() {
                         <p className="text-sidebar-text-muted font-mono text-[10px] tracking-[0.14em] tabular-nums">
                             © {currentYear} {BRAND_NAME}
                         </p>
+                    </div>
+                    <div className={styles.newsletter}>
+                        <NewsletterForm />
                     </div>
                 </div>
             </SectionShell>
