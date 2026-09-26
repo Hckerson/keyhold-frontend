@@ -1,4 +1,4 @@
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import { config } from "@/lib/constants";
 import type { Metadata, Viewport } from "next";
 import Provider from "@/components/providers/provider";
