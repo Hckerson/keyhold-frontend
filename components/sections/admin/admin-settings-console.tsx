@@ -51,10 +51,17 @@ export function AdminSettingsConsole() {
     const [config, setConfig] = useState(EMPTY_ADMIN_CONFIG);
     const [policies, setPolicies] = useState(EMPTY_POLICY_STATE);
     const [hydrated, setHydrated] = useState(false);
-    const [saved, setSaved] = useState(false);
+    const [savedDraft, setSavedDraft] = useState<{
+        config: typeof config;
+        policies: typeof policies;
+    }>();
+    const saved =
+        savedDraft !== undefined &&
+        savedDraft.config === config &&
+        savedDraft.policies === policies;
     const maintenance = useMaintenanceRun(() => {
         setHydrated(false);
-        setSaved(false);
+        setSavedDraft(undefined);
     });
 
     const baselineConfig = useMemo(
@@ -91,25 +98,24 @@ export function AdminSettingsConsole() {
     const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setConfig((current) => ({ ...current, [name]: value }));
-        setSaved(false);
     };
 
     const handleFieldSelect = (name: AdminConfigKey, value: string) => {
         setConfig((current) => ({ ...current, [name]: value }));
-        setSaved(false);
     };
 
     const handlePolicyToggle = (id: PolicySwitchId) => {
         setPolicies((current) => ({ ...current, [id]: !current[id] }));
-        setSaved(false);
     };
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
+        if (update.isPending) return;
+        const submitted = { config, policies };
         update.mutate(
             toSettingsPayload(settings.data ?? [], config, policies),
             {
-                onSuccess: () => setSaved(true),
+                onSuccess: () => setSavedDraft(submitted),
             },
         );
     };
@@ -117,7 +123,6 @@ export function AdminSettingsConsole() {
     const handleReset = () => {
         setConfig(baselineConfig);
         setPolicies(baselinePolicies);
-        setSaved(false);
     };
 
     if (settings.isError)
@@ -133,6 +138,7 @@ export function AdminSettingsConsole() {
             <AdminSettingsHeader
                 dirty={dirty}
                 saved={saved}
+                saving={update.isPending}
                 onReset={handleReset}
             />
 
