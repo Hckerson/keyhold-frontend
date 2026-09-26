@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { newsletterAPI } from "@/lib/api/newsletter";
-import { FEEDBACK } from "@/lib/config/feedback";
+import { FEEDBACK, type MutationFeedback } from "@/lib/config/feedback";
 import {
     isInvalidLinkStatus,
     NEWSLETTER_CONSENT_TEXT,
@@ -42,7 +42,10 @@ const subscribeFailure = (error: Error) =>
         ? NEWSLETTER_FORM_COPY.tooMany
         : errorMessage(error, NEWSLETTER_FORM_COPY.failure);
 
-const TOKEN_REQUESTS = {
+const TOKEN_REQUESTS: Record<
+    NewsletterTokenAction,
+    { meta: MutationFeedback; send: (token: string) => Promise<unknown> }
+> = {
     confirm: {
         meta: FEEDBACK.confirmNewsletter,
         send: newsletterAPI.confirm,
