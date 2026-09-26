@@ -18,6 +18,7 @@ export interface SidebarProps {
     status?: JourneyStatus | null;
     user?: AuthUser | null;
     onLogout?: () => void;
+    signingOut?: boolean;
     open?: boolean;
     onClose?: () => void;
     className?: string;
@@ -70,6 +71,7 @@ export function Sidebar({
     status,
     user,
     onLogout,
+    signingOut,
     open = false,
     onClose,
     className,
@@ -156,6 +158,7 @@ export function Sidebar({
                 <SidebarFooter
                     user={user}
                     onLogout={onLogout}
+                    signingOut={signingOut}
                     collapsed={collapsed}
                 />
             </aside>

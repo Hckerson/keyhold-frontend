@@ -15,7 +15,7 @@ import styles from "@/components/layout/header.module.css";
 
 export function Header() {
     const { user } = useSession();
-    const signOut = useSignOut();
+    const { signOut, signingOut } = useSignOut();
     const pathname = usePathname();
     const [contracted, setContracted] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -37,7 +37,6 @@ export function Header() {
     }, []);
 
     const links = siteNavFor(user?.role);
-    const handleLogout = () => void signOut();
 
     return (
         <div className={cn(styles.wrap, menuOpen && styles.recessed)}>
@@ -70,7 +69,9 @@ export function Header() {
                             <>
                                 <button
                                     type="button"
-                                    onClick={handleLogout}
+                                    onClick={signOut}
+                                    disabled={signingOut}
+                                    aria-busy={signingOut}
                                     className={styles.signin}
                                 >
                                     Log out
@@ -100,7 +101,8 @@ export function Header() {
                             links={links}
                             pathname={pathname}
                             signedIn={Boolean(user)}
-                            onLogout={handleLogout}
+                            onLogout={signOut}
+                            signingOut={signingOut}
                         />
                     </div>
                 </div>
