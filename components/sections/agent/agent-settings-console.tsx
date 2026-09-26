@@ -78,6 +78,7 @@ export function AgentSettingsConsole() {
     const strength = profileStrength(signals);
     const verified = verifiedCredentialCount(credentials);
 
+    const saving = updateUser.isPending || updatePreferences.isPending;
     const pending = changedFieldCount(form, baseline);
     const dirty =
         pending > 0 || areNotificationsDirty(notifications, baselineAlerts);
@@ -96,7 +97,7 @@ export function AgentSettingsConsole() {
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
-        if (!user) return;
+        if (!user || saving) return;
         updateUser.mutate(
             {
                 fullName: form.fullName,
@@ -149,6 +150,7 @@ export function AgentSettingsConsole() {
             <AgentSettingsHeader
                 dirty={dirty}
                 saved={saved}
+                saving={saving}
                 updatedAt={user?.updatedAt}
                 onReset={handleReset}
             />
