@@ -1,15 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
-import {
-    Modal,
-    ModalHeader,
-    ModalTitle,
-    ModalBody,
-    ModalFooter,
-} from "@/components/ui/modal";
+import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { ChoiceChips } from "@/components/patterns/choice-chips";
 import { LabelledBlock } from "@/components/patterns/labelled-block";
 import {
@@ -18,6 +10,8 @@ import {
     PROMOTION_SPANS,
     type PromotionSpan,
 } from "@/lib/config/listing-promotion";
+
+const FAILURE = { title: COPY.failed, body: COPY.retry };
 
 export interface ListingPromoteModalProps {
     address?: string;
@@ -39,63 +33,36 @@ export function ListingPromoteModal({
     const [span, setSpan] = useState<PromotionSpan>(DEFAULT_PROMOTION_SPAN);
 
     return (
-        <Modal
+        <ConfirmModal
             open={address !== undefined}
-            onOpenChange={(next) => {
-                if (!next) onClose();
-            }}
+            title={COPY.title}
+            subject={address}
+            failure={FAILURE}
+            tone="accent"
+            cancelLabel={COPY.cancel}
+            confirmLabel={COPY.confirm}
+            pending={pending}
+            failed={failed}
+            onClose={onClose}
+            onConfirm={() => onConfirm(Number(span))}
         >
-            <ModalHeader>
-                <ModalTitle>{COPY.title}</ModalTitle>
-            </ModalHeader>
+            <p className="text-text-secondary text-xs">{COPY.hint}</p>
 
-            <ModalBody className="space-y-3">
-                <div>
-                    <p className="text-text text-xs font-semibold">{address}</p>
-                    <p className="text-text-secondary mt-0.5 text-xs">
-                        {COPY.hint}
-                    </p>
-                </div>
+            {featuredUntil && (
+                <p className="micro-label tabular-nums">
+                    {COPY.featuredUntil} {featuredUntil}
+                </p>
+            )}
 
-                {featuredUntil && (
-                    <p className="micro-label tabular-nums">
-                        {COPY.featuredUntil} {featuredUntil}
-                    </p>
-                )}
-
-                <LabelledBlock label={COPY.span}>
-                    <ChoiceChips
-                        label={COPY.span}
-                        choices={PROMOTION_SPANS}
-                        selected={[span]}
-                        onToggle={setSpan}
-                    />
-                </LabelledBlock>
-
-                {failed && (
-                    <Callout
-                        variant="error"
-                        title={COPY.failed}
-                        description={COPY.retry}
-                    />
-                )}
-            </ModalBody>
-
-            <ModalFooter className="gap-4">
-                <Button type="button" onClick={onClose}>
-                    {COPY.cancel}
-                </Button>
-                <Button
-                    type="button"
-                    emphasis="solid"
-                    tone="accent"
-                    isLoading={pending}
-                    onClick={() => onConfirm(Number(span))}
-                >
-                    {COPY.confirm}
-                </Button>
-            </ModalFooter>
-        </Modal>
+            <LabelledBlock label={COPY.span}>
+                <ChoiceChips
+                    label={COPY.span}
+                    choices={PROMOTION_SPANS}
+                    selected={[span]}
+                    onToggle={setSpan}
+                />
+            </LabelledBlock>
+        </ConfirmModal>
     );
 }
 

@@ -6,6 +6,12 @@ export type ConversationStatus =
 
 export type MessageSender = "user" | "agent";
 
+export type MessageSendHandler = (
+    content: string,
+    files: File[],
+    onSent: (unsentFiles: File[]) => void,
+) => void;
+
 export interface Conversation {
     id: string;
     agent: string;

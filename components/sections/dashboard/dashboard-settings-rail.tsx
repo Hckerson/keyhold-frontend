@@ -33,6 +33,7 @@ export interface DashboardSettingsRailProps {
     documents: AccountCredential[];
     onSecurityAction: (id: SettingsDialogKey) => void;
     onDownloadData: () => void;
+    exporting: boolean;
 }
 
 export function DashboardSettingsRail({
@@ -41,6 +42,7 @@ export function DashboardSettingsRail({
     documents,
     onSecurityAction,
     onDownloadData,
+    exporting,
 }: DashboardSettingsRailProps) {
     return (
         <div className="flex flex-col gap-3">
@@ -75,6 +77,7 @@ export function DashboardSettingsRail({
                     <Button
                         type="button"
                         onClick={onDownloadData}
+                        isLoading={exporting}
                         icon={Download}
                     >
                         {DOWNLOAD_ACTION}

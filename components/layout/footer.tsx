@@ -1,24 +1,10 @@
 import Link from "next/link";
-import {
-    Facebook,
-    Instagram,
-    Linkedin,
-    Youtube,
-    type LucideIcon,
-} from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
-import { NewsletterForm } from "@/components/layout/newsletter-form";
 import { FooterLocalityIndex } from "@/components/layout/footer-locality-index";
+import { NewsletterForm } from "@/components/layout/newsletter-form";
 import { Wordmark, BRAND_NAME } from "@/components/brand/wordmark";
 import { FOOTER_COLUMNS } from "@/lib/config/site-nav";
 import styles from "@/components/layout/footer.module.css";
-
-const SOCIALS: { label: string; href: string; icon: LucideIcon }[] = [
-    { label: "Instagram", href: "https://instagram.com", icon: Instagram },
-    { label: "LinkedIn", href: "https://linkedin.com", icon: Linkedin },
-    { label: "Facebook", href: "https://facebook.com", icon: Facebook },
-    { label: "YouTube", href: "https://youtube.com", icon: Youtube },
-];
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
@@ -31,7 +17,7 @@ export function Footer() {
             <SectionShell>
                 <FooterLocalityIndex />
 
-                <div className="relative z-10 mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.6fr]">
+                <div className="relative z-10 mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                     {FOOTER_COLUMNS.map((column) => (
                         <nav
                             key={column.heading}
@@ -52,35 +38,18 @@ export function Footer() {
                             ))}
                         </nav>
                     ))}
-
-                    <div className="border-sidebar-border bg-sidebar-hover rounded-lg border p-4">
-                        <NewsletterForm />
-                    </div>
                 </div>
 
-                <div className="border-sidebar-border relative z-10 mt-10 flex flex-wrap items-end justify-between gap-6 border-t pt-6">
+                <div className="border-sidebar-border relative z-10 mt-10 flex flex-wrap items-end gap-6 border-t pt-6">
                     <div className="flex flex-col gap-2.5">
                         <Wordmark tone="dark" size="md" />
                         <p className="text-sidebar-text-muted font-mono text-[10px] tracking-[0.14em] tabular-nums">
                             © {currentYear} {BRAND_NAME}
                         </p>
                     </div>
-
-                    <ul className="flex items-center gap-2">
-                        {SOCIALS.map((social) => (
-                            <li key={social.label}>
-                                <a
-                                    href={social.href}
-                                    aria-label={social.label}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="border-sidebar-border text-sidebar-text hover:text-highlight hover:border-highlight focus-visible:ring-highlight ease-smooth grid size-8 place-items-center rounded-full border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-                                >
-                                    <social.icon size={14} strokeWidth={1.5} />
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className={styles.newsletter}>
+                        <NewsletterForm />
+                    </div>
                 </div>
             </SectionShell>
         </footer>

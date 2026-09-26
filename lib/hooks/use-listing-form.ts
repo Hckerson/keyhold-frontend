@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     EMPTY_LISTING_DRAFT,
@@ -36,13 +36,14 @@ export function useListingForm(property?: Property) {
     const [baseline, setBaseline] = useState<ListingDraft>(EMPTY_LISTING_DRAFT);
     const [errors, setErrors] = useState<FieldErrors>({});
     const [saved, setSaved] = useState(false);
+    const [draftedFrom, setDraftedFrom] = useState<Property>();
 
-    useEffect(() => {
-        if (!property) return;
+    if (property && property !== draftedFrom) {
         const next = toListingDraft(property);
+        setDraftedFrom(property);
         setDraft(next);
         setBaseline(next);
-    }, [property]);
+    }
 
     const changed = useMemo(
         () => changedKeys(draft, baseline),

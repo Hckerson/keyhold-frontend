@@ -54,6 +54,7 @@ export function AdminDisputesConsole() {
                 {active ? (
                     <DisputeReviewPane
                         dispute={active}
+                        busy={queue.settling}
                         onAction={(mode) => queue.openDecision(mode, active.id)}
                     />
                 ) : (
@@ -70,6 +71,7 @@ export function AdminDisputesConsole() {
                 subjectTitle={queue.subjectTitle}
                 note={queue.note}
                 pending={queue.settling}
+                failed={queue.settleFailed}
                 onNoteChange={queue.setNote}
                 onClose={queue.closeDecision}
                 onSubmit={queue.submitDecision}

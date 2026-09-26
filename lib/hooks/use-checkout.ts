@@ -6,13 +6,11 @@ import {
     useCreateTransaction,
 } from "@/lib/hooks/use-transactions";
 import { STRIPE_COPY } from "@/lib/config/stripe";
+import { errorMessage } from "@/lib/utils/api-error";
 import type {
     CreateTransactionInput,
     CreateTransactionResult,
 } from "@/lib/validations/transaction";
-
-const messageOf = (error: unknown) =>
-    error instanceof Error ? error.message : STRIPE_COPY.genericFailure;
 
 export function useCheckout() {
     const createTransaction = useCreateTransaction();
@@ -31,7 +29,7 @@ export function useCheckout() {
             try {
                 setSession(await createTransaction.mutateAsync(input));
             } catch (cause) {
-                setError(messageOf(cause));
+                setError(errorMessage(cause, STRIPE_COPY.genericFailure));
             }
         },
         [createTransaction],
@@ -48,7 +46,7 @@ export function useCheckout() {
                 });
                 setSettled(true);
             } catch (cause) {
-                setError(messageOf(cause));
+                setError(errorMessage(cause, STRIPE_COPY.settleFailure));
             }
         },
         [confirmPayment, session],

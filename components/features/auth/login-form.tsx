@@ -194,7 +194,6 @@ export function LoginForm({
                     label="Sign in"
                     pendingLabel="Signing in"
                     pending={pending}
-                    disabled={!parsed.success}
                 />
             </form>
 

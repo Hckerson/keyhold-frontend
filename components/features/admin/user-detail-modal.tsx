@@ -35,6 +35,7 @@ export interface UserDetailModalProps {
     peak: number;
     onClose: () => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -43,6 +44,7 @@ export function UserDetailModal({
     peak,
     onClose,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: UserDetailModalProps) {
     const status = user ? USER_STATUSES[user.status] : null;
@@ -128,6 +130,8 @@ export function UserDetailModal({
                                     type="button"
                                     emphasis="solid"
                                     tone="accent"
+                                    isLoading={reactivatingId === user.id}
+                                    disabled={reactivatingId !== undefined}
                                     onClick={() => onReactivate(user.id)}
                                 >
                                     {REACTIVATE_ACTION}

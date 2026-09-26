@@ -45,6 +45,7 @@ export interface Listing {
     description: string;
     features: string[];
     pricePerSqft: number;
+    featured: boolean;
 }
 
 export type ManagedListingStatus =

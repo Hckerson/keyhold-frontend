@@ -18,18 +18,15 @@ import {
     changedFieldCount,
     EMPTY_ADMIN_CONFIG,
     EMPTY_POLICY_STATE,
-    MAINTENANCE_ACTIONS,
     toAdminConfig,
     toPolicyState,
     toSettingsPayload,
     type AdminConfigKey,
-    type MaintenanceActionId,
 } from "@/lib/data/admin-settings";
 import { useAuditLogs } from "@/lib/hooks/use-audit-logs";
+import { useMaintenanceRun } from "@/lib/hooks/use-maintenance-run";
 import {
     usePlatformSettings,
-    usePurgeExpiredVerifications,
-    useRestorePlatformDefaults,
     useUpdatePlatformSettings,
 } from "@/lib/hooks/use-platform-settings";
 import { toConfigChanges } from "@/lib/utils/to-config-change";
@@ -44,8 +41,6 @@ const LATEST_LIMIT = 1;
 export function AdminSettingsConsole() {
     const settings = usePlatformSettings();
     const update = useUpdatePlatformSettings();
-    const restoreDefaults = useRestorePlatformDefaults();
-    const purgeVerifications = usePurgeExpiredVerifications();
     const [logPage, setLogPage] = useState(FIRST_PAGE);
     const logs = useAuditLogs({ page: logPage, limit: TABLE_PAGE_SIZE });
     const latestLog = useAuditLogs({
@@ -56,8 +51,18 @@ export function AdminSettingsConsole() {
     const [config, setConfig] = useState(EMPTY_ADMIN_CONFIG);
     const [policies, setPolicies] = useState(EMPTY_POLICY_STATE);
     const [hydrated, setHydrated] = useState(false);
-    const [saved, setSaved] = useState(false);
-    const [maintenanceId, setMaintenanceId] = useState<MaintenanceActionId>();
+    const [savedDraft, setSavedDraft] = useState<{
+        config: typeof config;
+        policies: typeof policies;
+    }>();
+    const saved =
+        savedDraft !== undefined &&
+        savedDraft.config === config &&
+        savedDraft.policies === policies;
+    const maintenance = useMaintenanceRun(() => {
+        setHydrated(false);
+        setSavedDraft(undefined);
+    });
 
     const baselineConfig = useMemo(
         () => toAdminConfig(settings.data ?? []),
@@ -93,25 +98,24 @@ export function AdminSettingsConsole() {
     const handleFieldChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setConfig((current) => ({ ...current, [name]: value }));
-        setSaved(false);
     };
 
     const handleFieldSelect = (name: AdminConfigKey, value: string) => {
         setConfig((current) => ({ ...current, [name]: value }));
-        setSaved(false);
     };
 
     const handlePolicyToggle = (id: PolicySwitchId) => {
         setPolicies((current) => ({ ...current, [id]: !current[id] }));
-        setSaved(false);
     };
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
+        if (update.isPending) return;
+        const submitted = { config, policies };
         update.mutate(
             toSettingsPayload(settings.data ?? [], config, policies),
             {
-                onSuccess: () => setSaved(true),
+                onSuccess: () => setSavedDraft(submitted),
             },
         );
     };
@@ -119,31 +123,6 @@ export function AdminSettingsConsole() {
     const handleReset = () => {
         setConfig(baselineConfig);
         setPolicies(baselinePolicies);
-        setSaved(false);
-    };
-
-    const maintenanceAction =
-        MAINTENANCE_ACTIONS.find((action) => action.id === maintenanceId) ??
-        null;
-
-    const maintenanceRunning =
-        restoreDefaults.isPending || purgeVerifications.isPending;
-
-    const closeMaintenance = () => setMaintenanceId(undefined);
-
-    const handleMaintenanceConfirm = () => {
-        if (maintenanceId === "restore-defaults") {
-            restoreDefaults.mutate(undefined, {
-                onSuccess: () => {
-                    setHydrated(false);
-                    setSaved(false);
-                    closeMaintenance();
-                },
-            });
-            return;
-        }
-
-        purgeVerifications.mutate(undefined, { onSuccess: closeMaintenance });
     };
 
     if (settings.isError)
@@ -159,6 +138,7 @@ export function AdminSettingsConsole() {
             <AdminSettingsHeader
                 dirty={dirty}
                 saved={saved}
+                saving={update.isPending}
                 onReset={handleReset}
             />
 
@@ -180,14 +160,12 @@ export function AdminSettingsConsole() {
                     config={config}
                     policies={policies}
                     pending={pending}
-                    maintenancePending={
-                        maintenanceRunning ? maintenanceId : undefined
-                    }
+                    maintenancePending={maintenance.running}
                     onFieldChange={handleFieldChange}
                     onFieldSelect={handleFieldSelect}
                     onPolicyToggle={handlePolicyToggle}
                     onSubmit={handleSubmit}
-                    onMaintenanceRun={setMaintenanceId}
+                    onMaintenanceRun={maintenance.request}
                     lastChange={lastChange}
                 />
                 <AdminSettingsRail
@@ -200,10 +178,11 @@ export function AdminSettingsConsole() {
             </div>
 
             <MaintenanceConfirmModal
-                action={maintenanceAction}
-                pending={maintenanceRunning}
-                onClose={closeMaintenance}
-                onConfirm={handleMaintenanceConfirm}
+                action={maintenance.action}
+                pending={maintenance.pending}
+                failed={maintenance.failed}
+                onClose={maintenance.dismiss}
+                onConfirm={maintenance.confirm}
             />
         </div>
     );

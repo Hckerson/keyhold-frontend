@@ -18,6 +18,7 @@ import {
 } from "@/lib/config/auth-recovery";
 import {
     MIN_PASSWORD_LENGTH,
+    clearFieldError,
     fieldErrorFor,
     newPasswordSchema,
     toFieldErrors,
@@ -46,7 +47,7 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
         (event: ChangeEvent<HTMLInputElement>) => {
             const { value } = event.target;
             setValues((current) => ({ ...current, [field]: value }));
-            setErrors((current) => ({ ...current, [field]: undefined }));
+            setErrors((current) => clearFieldError(current, field));
             reset.clearError();
         };
 
@@ -125,7 +126,6 @@ export function ResetConfirmStep({ token }: ResetConfirmStepProps) {
                             label="Update password"
                             pendingLabel="Updating password"
                             pending={pending}
-                            disabled={!parsed.success}
                         />
                     </form>
 

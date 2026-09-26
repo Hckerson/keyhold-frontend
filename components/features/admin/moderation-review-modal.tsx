@@ -19,6 +19,7 @@ const CLOSE_ACTION = "Close";
 
 export interface ModerationReviewModalProps {
     listing?: ModerationListing;
+    approvingId?: string;
     onClose: () => void;
     onApprove: (id: string) => void;
     onDecide: (mode: DecisionMode, id: string) => void;
@@ -26,6 +27,7 @@ export interface ModerationReviewModalProps {
 
 export function ModerationReviewModal({
     listing,
+    approvingId,
     onClose,
     onApprove,
     onDecide,
@@ -82,6 +84,8 @@ export function ModerationReviewModal({
                                 type="button"
                                 emphasis="solid"
                                 tone="accent"
+                                isLoading={approvingId === listing.id}
+                                disabled={approvingId !== undefined}
                                 onClick={() => onApprove(listing.id)}
                             >
                                 {APPROVE_ACTION}

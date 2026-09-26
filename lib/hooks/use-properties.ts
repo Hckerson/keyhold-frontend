@@ -9,15 +9,14 @@ import {
 } from "@tanstack/react-query";
 import { propertiesAPI, type FacetOptions } from "@/lib/api/properties";
 import { queryKeys } from "@/lib/hooks/query-keys";
-import type { ModerationDecision } from "@/lib/enums/enums";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type {
     CreatePropertyInput,
     PropertyQuery,
     UpdatePropertyInput,
 } from "@/lib/validations/property";
-import type { PropertyStatus } from "@/lib/enums/enums";
-import { FEEDBACK } from "@/lib/config/feedback";
+import type { BulkStatusChange } from "@/lib/data/agent-listings";
+import { FEEDBACK, GENERIC_FAILURE } from "@/lib/config/feedback";
 
 export function useProperties(input: PropertyQuery = {}) {
     return useQuery({
@@ -92,23 +91,49 @@ export function useUpdateProperty(id: string) {
     });
 }
 
-export function useUpdatePropertyStatus() {
-    const client = useQueryClient();
-    return useMutation({
-        meta: FEEDBACK.updatePropertyStatus,
-        mutationFn: ({ id, status }: { id: string; status: PropertyStatus }) =>
-            propertiesAPI.update(id, { status }),
-        onSuccess: () =>
-            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
-    });
-}
-
 export function useDeleteProperty() {
     const client = useQueryClient();
     return useMutation({
         meta: FEEDBACK.deleteProperty,
         mutationFn: (id: string) => propertiesAPI.remove(id),
         onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
+    });
+}
+
+const settleEvery = async (
+    ids: readonly string[],
+    run: (id: string) => Promise<unknown>,
+) => {
+    const results = await Promise.allSettled(ids.map(run));
+    const failure = results.find(
+        (result): result is PromiseRejectedResult =>
+            result.status === "rejected",
+    );
+    if (!failure) return;
+    throw failure.reason instanceof Error
+        ? failure.reason
+        : new Error(GENERIC_FAILURE);
+};
+
+export function useBulkUpdatePropertyStatus() {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.bulkUpdatePropertyStatus,
+        mutationFn: ({ ids, status }: BulkStatusChange) =>
+            settleEvery(ids, (id) => propertiesAPI.update(id, { status })),
+        onSettled: () =>
+            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
+    });
+}
+
+export function useBulkDeleteProperties() {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.bulkDeleteProperties,
+        mutationFn: (ids: readonly string[]) =>
+            settleEvery(ids, (id) => propertiesAPI.remove(id)),
+        onSettled: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
     });
 }
@@ -173,30 +198,6 @@ export function useReorderPropertyImages(id: string) {
             client.invalidateQueries({
                 queryKey: queryKeys.properties.detail(id),
             }),
-    });
-}
-
-export function useModerateProperty() {
-    const client = useQueryClient();
-    return useMutation({
-        meta: FEEDBACK.moderateProperty,
-        mutationFn: ({
-            id,
-            decision,
-            note,
-        }: {
-            id: string;
-            decision: ModerationDecision;
-            note?: string;
-        }) => propertiesAPI.moderate(id, decision, note),
-        onSuccess: async () => {
-            await Promise.all([
-                client.invalidateQueries({
-                    queryKey: queryKeys.properties.all,
-                }),
-                client.invalidateQueries({ queryKey: queryKeys.flags.all }),
-            ]);
-        },
     });
 }
 

@@ -129,7 +129,7 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
 
                     <aside
                         id="agent"
-                        className="detail-rail flex flex-col gap-4"
+                        className="detail-rail scroll-hidden flex flex-col gap-4"
                     >
                         <ListingEnquiryCard
                             propertyId={listing.id}

@@ -45,6 +45,7 @@ export function SearchResultsMap({
                     pins={pins}
                     selectedId={selectedId}
                     fit={fit}
+                    cooperative={false}
                     label={MAP_LABEL}
                     onSelect={setSelectedId}
                     onBoundsChange={onSearchArea ? setBounds : undefined}

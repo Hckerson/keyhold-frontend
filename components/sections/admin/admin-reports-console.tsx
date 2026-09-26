@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ReportExportModal } from "@/components/features/admin/report-export-modal";
 import { AdminReportsHeader } from "@/components/sections/admin/admin-reports-header";
 import { AdminReportsMain } from "@/components/sections/admin/admin-reports-main";
@@ -43,6 +43,7 @@ export function AdminReportsConsole() {
     const [queued, setQueued] = useState<readonly ReportSectionId[] | null>(
         null,
     );
+    const exported = useRef<readonly ReportSectionId[] | null>(null);
 
     const platform = usePlatformStats();
     const users = useUserStats();
@@ -92,9 +93,9 @@ export function AdminReportsConsole() {
     );
 
     useEffect(() => {
-        if (!queued || trend.isFetching) return;
+        if (!queued || trend.isFetching || exported.current === queued) return;
+        exported.current = queued;
         exportReport(period, queued);
-        setQueued(null);
     }, [queued, trend.isFetching, exportReport, period]);
 
     const queries = [platform, users, directory, tiers, regions, trend];

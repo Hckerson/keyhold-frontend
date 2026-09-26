@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SearchResultFrames } from "@/components/sections/search/search-result-frames";
 import { SearchResultPlate } from "@/components/sections/search/search-result-plate";
+import { FeaturedBadge } from "@/components/features/shared/featured-badge";
 import type { Listing } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,7 @@ export function SearchResultCard({
                 activeFrame={activeFrame}
                 onFrameChange={setActiveFrame}
             />
+            {listing.featured && <FeaturedBadge className="top-3 left-3" />}
 
             <SearchResultPlate
                 listing={listing}

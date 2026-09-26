@@ -25,6 +25,8 @@ export const PROPERTY_SORTS = [
     "bedrooms-desc",
     "sqft-desc",
     "popular",
+    "recently-sold",
+    "featured",
 ] as const;
 
 export const CONNECTION_STATUSES = ["PENDING", "ACCEPTED", "REJECTED"] as const;
@@ -147,6 +149,8 @@ export const PROPERTY_SORT_LABELS: Record<PropertySort, string> = {
     "bedrooms-desc": "Most bedrooms",
     "sqft-desc": "Largest first",
     popular: "Most viewed",
+    "recently-sold": "Recently sold",
+    featured: "Featured first",
 };
 
 export const FLAG_TYPES = ["USER", "PROPERTY", "MESSAGE"] as const;

@@ -18,6 +18,7 @@ const SAVED_ACTION = "Saved";
 export interface AgentSettingsHeaderProps {
     dirty: boolean;
     saved: boolean;
+    saving: boolean;
     updatedAt?: string;
     onReset: () => void;
 }
@@ -25,6 +26,7 @@ export interface AgentSettingsHeaderProps {
 export function AgentSettingsHeader({
     dirty,
     saved,
+    saving,
     updatedAt,
     onReset,
 }: AgentSettingsHeaderProps) {
@@ -48,6 +50,7 @@ export function AgentSettingsHeader({
                         tone="accent"
                         form={AGENT_SETTINGS_FORM_ID}
                         disabled={!dirty}
+                        isLoading={saving}
                     >
                         {saved ? SAVED_ACTION : SAVE_ACTION}
                     </Button>

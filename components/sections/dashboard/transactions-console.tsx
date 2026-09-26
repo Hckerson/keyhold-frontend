@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { TransactionsHeader } from "@/components/sections/dashboard/transactions-header";
 import { TransactionsMain } from "@/components/sections/dashboard/transactions-main";
 import { TransactionsRail } from "@/components/sections/dashboard/transactions-rail";
@@ -16,6 +16,7 @@ import {
     rankPurchases,
     type PurchaseFilter,
 } from "@/lib/utils/purchases";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useReleaseEscrow } from "@/lib/hooks/use-escrow";
 import { usePurchases } from "@/lib/hooks/use-transactions";
 import { toPurchases } from "@/lib/utils/to-purchase";
@@ -23,9 +24,9 @@ import { toPurchases } from "@/lib/utils/to-purchase";
 export function TransactionsConsole() {
     const { data, isPending, isError, refetch } = usePurchases();
     const release = useReleaseEscrow();
+    const confirmation = useConfirmation(release);
 
     const [filter, setFilter] = useState<PurchaseFilter>("all");
-    const [confirmingId, setConfirmingId] = useState<string | null>(null);
 
     const purchases = useMemo(() => toPurchases(data ?? []), [data]);
 
@@ -39,24 +40,13 @@ export function TransactionsConsole() {
     );
 
     const confirming = purchases.find(
-        (purchase) => purchase.escrowId === confirmingId,
+        (purchase) => purchase.escrowId === confirmation.target,
     );
 
     const releasingId = release.isPending ? (release.variables ?? null) : null;
 
-    const onRelease = useCallback(
-        (escrowId: string) => {
-            if (!release.isPending) release.reset();
-            setConfirmingId(escrowId);
-        },
-        [release],
-    );
-
     const onConfirm = () => {
-        if (!confirmingId) return;
-        release.mutate(confirmingId, {
-            onSuccess: () => setConfirmingId(null),
-        });
+        if (confirmation.target) confirmation.confirm(confirmation.target);
     };
 
     if (isError)
@@ -81,16 +71,16 @@ export function TransactionsConsole() {
                     pending={isPending}
                     releasingId={releasingId}
                     onFilterChange={setFilter}
-                    onRelease={onRelease}
+                    onRelease={confirmation.request}
                 />
                 <TransactionsRail purchases={purchases} />
             </div>
 
             <ReleaseEscrowModal
                 purchase={confirming}
-                pending={release.isPending}
-                failed={release.isError && release.variables === confirmingId}
-                onClose={() => setConfirmingId(null)}
+                pending={confirmation.pending}
+                failed={confirmation.failed}
+                onClose={confirmation.dismiss}
                 onConfirm={onConfirm}
             />
         </div>

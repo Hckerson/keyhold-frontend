@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 
 export function useSettledContent<T>(open: boolean, content: T): T {
-    const settled = useRef(content);
+    const [settled, setSettled] = useState(content);
 
-    useEffect(() => {
-        if (open) settled.current = content;
-    });
+    if (open && settled !== content) setSettled(content);
 
-    return open ? content : settled.current;
+    return open ? content : settled;
 }

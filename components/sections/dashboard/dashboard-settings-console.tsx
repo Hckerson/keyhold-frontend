@@ -26,6 +26,7 @@ export function DashboardSettingsConsole() {
             <DashboardSettingsHeader
                 dirty={settings.dirty}
                 saved={settings.saved}
+                saving={settings.saving}
                 onReset={settings.reset}
             />
 
@@ -63,6 +64,7 @@ export function DashboardSettingsConsole() {
                     documents={settings.documents}
                     onSecurityAction={settings.runSecurityAction}
                     onDownloadData={settings.exportData}
+                    exporting={settings.exporting}
                 />
             </div>
 

@@ -1,19 +1,21 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Paperclip, Send } from "lucide-react";
+import { useState } from "react";
+import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/forms/input";
+import { ComposerAttachButton } from "@/components/features/messaging/composer-attach-button";
 import { ComposerAttachments } from "@/components/features/messaging/composer-attachments";
 import { MESSAGE_ATTACHMENTS } from "@/lib/config/message-attachments";
 import { screenFiles } from "@/lib/data/file-upload";
 import { cn } from "@/lib/utils";
+import type { MessageSendHandler } from "@/lib/types";
 
-const ATTACH_LABEL = "Attach files";
 const SEND_LABEL = "Send message";
 
 export interface MessageComposerProps {
-    onSend: (content: string, files: File[]) => void;
+    onSend: MessageSendHandler;
+    pending?: boolean;
     inputLabel: string;
     placeholder: string;
     variant?: "thread" | "panel";
@@ -23,6 +25,7 @@ export interface MessageComposerProps {
 
 export function MessageComposer({
     onSend,
+    pending = false,
     inputLabel,
     placeholder,
     variant = "thread",
@@ -32,20 +35,24 @@ export function MessageComposer({
     const [text, setText] = useState("");
     const [files, setFiles] = useState<File[]>([]);
     const [rejected, setRejected] = useState<string>();
-    const fileRef = useRef<HTMLInputElement>(null);
     const isThread = variant === "thread";
 
     const submit = (event: React.FormEvent) => {
         event.preventDefault();
         const trimmed = text.trim();
-        if (!trimmed && files.length === 0) return;
+        if (pending || (!trimmed && files.length === 0)) return;
 
-        onSend(trimmed || MESSAGE_ATTACHMENTS.fallbackContent(files.length), [
-            ...files,
-        ]);
-        setText("");
-        setFiles([]);
-        setRejected(undefined);
+        onSend(
+            trimmed || MESSAGE_ATTACHMENTS.fallbackContent(files.length),
+            [...files],
+            (unsentFiles) => {
+                setText((current) =>
+                    current.trim() === trimmed ? "" : current,
+                );
+                setFiles(unsentFiles);
+                setRejected(undefined);
+            },
+        );
     };
 
     const take = (incoming: File[]) => {
@@ -72,36 +79,10 @@ export function MessageComposer({
     );
 
     const attachButton = attachable && (
-        <>
-            <Button
-                emphasis="quiet"
-                tone="neutral"
-                iconOnly
-                type="button"
-                aria-label={ATTACH_LABEL}
-                disabled={files.length >= MESSAGE_ATTACHMENTS.maxFiles}
-                onClick={() => fileRef.current?.click()}
-                className="shrink-0"
-            >
-                <Paperclip
-                    className="size-3"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                />
-            </Button>
-            <input
-                ref={fileRef}
-                type="file"
-                multiple
-                accept={MESSAGE_ATTACHMENTS.accept}
-                aria-label={ATTACH_LABEL}
-                className="sr-only"
-                onChange={(event) => {
-                    take(Array.from(event.target.files ?? []));
-                    event.target.value = "";
-                }}
-            />
-        </>
+        <ComposerAttachButton
+            disabled={pending || files.length >= MESSAGE_ATTACHMENTS.maxFiles}
+            onPick={take}
+        />
     );
 
     const sendButton = (
@@ -111,6 +92,7 @@ export function MessageComposer({
             iconOnly
             type="submit"
             aria-label={SEND_LABEL}
+            isLoading={pending}
             className={cn(!isThread && "shrink-0")}
         >
             <Send className="size-3" strokeWidth={1.5} aria-hidden="true" />

@@ -9,10 +9,10 @@ export function ConciergeSection() {
                 <ConciergeProcess>
                     <div className="flex flex-col gap-4">
                         <SectionHeading
-                            eyebrow="The concierge · 4 steps"
+                            eyebrow="How it works · 4 steps"
                             title={
                                 <>
-                                    Considered from first call to{" "}
+                                    Considered from first search to{" "}
                                     <span className="text-accent italic">
                                         keys.
                                     </span>
@@ -20,10 +20,9 @@ export function ConciergeSection() {
                             }
                         />
                         <p className="text-text-secondary max-w-[44ch] text-xs leading-[1.9]">
-                            A single point of contact, discretion at every step,
-                            and a process shaped entirely around you. No
-                            listings feed, no noise — only the work of finding
-                            the right home.
+                            One account carries you from a saved search to the
+                            closing checklist, with private calls, escrow and a
+                            dated milestone for every step.
                         </p>
                     </div>
                 </ConciergeProcess>

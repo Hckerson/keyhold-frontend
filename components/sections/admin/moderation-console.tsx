@@ -19,11 +19,10 @@ import {
     type ModerationCheckFilter,
     type ModerationStatusFilter,
 } from "@/lib/data/admin-listings";
-import { useFlags, useSettleFlag } from "@/lib/hooks/use-flags";
-import { useModerateProperty } from "@/lib/hooks/use-properties";
+import { useFlags } from "@/lib/hooks/use-flags";
+import { useModerationActions } from "@/lib/hooks/use-moderation-actions";
 import { toModerationQueue } from "@/lib/utils/to-moderation-listing";
-import type { DecisionMode, ModerationDecision } from "@/lib/types";
-import type { ModerationDecision as ModerationDecisionValue } from "@/lib/enums/enums";
+import type { DecisionMode } from "@/lib/types";
 
 const EVERY_STATUS: ModerationStatusFilter = "all";
 const EVERY_CHECK: ModerationCheckFilter = "all";
@@ -31,16 +30,12 @@ const QUEUE_PAGE_SIZE = 100;
 
 export function ModerationConsole() {
     const flags = useFlags({ type: "PROPERTY", limit: QUEUE_PAGE_SIZE });
-    const moderate = useModerateProperty();
-    const settleFlag = useSettleFlag();
 
     const [statusFilter, setStatusFilter] =
         useState<ModerationStatusFilter>(EVERY_STATUS);
     const [checkFilter, setCheckFilter] =
         useState<ModerationCheckFilter>(EVERY_CHECK);
     const [reviewId, setReviewId] = useState<string | null>(null);
-    const [decision, setDecision] = useState<ModerationDecision | null>(null);
-    const [note, setNote] = useState("");
 
     const listings = useMemo(
         () => toModerationQueue(flags.data?.items ?? []),
@@ -52,6 +47,10 @@ export function ModerationConsole() {
     const stats = useMemo(() => moderationStats(listings), [listings]);
     const focus = useMemo(() => focusListing(listings), [listings]);
 
+    const actions = useModerationActions(listings, (id) =>
+        setReviewId((current) => (current === id ? null : current)),
+    );
+
     const visible = useMemo(
         () =>
             ranked.filter((listing) =>
@@ -60,51 +59,13 @@ export function ModerationConsole() {
         [ranked, statusFilter, checkFilter],
     );
 
-    const settle = useCallback(
-        (
-            flagId: string,
-            mode: ModerationDecisionValue,
-            reviewNote?: string,
-        ) => {
-            const listing = listings.find((item) => item.id === flagId);
-            if (!listing) return;
-
-            moderate.mutate(
-                { id: listing.listingId, decision: mode, note: reviewNote },
-                { onSuccess: () => settleFlag.mutate({ id: flagId }) },
-            );
-        },
-        [listings, moderate, settleFlag],
-    );
-
     const onOpen = useCallback((id: string) => setReviewId(id), []);
 
     const onCloseReview = useCallback(() => setReviewId(null), []);
 
-    const onApprove = useCallback(
-        (id: string) => {
-            setReviewId(null);
-            settle(id, "approve");
-        },
-        [settle],
-    );
-
-    const onDecide = useCallback((mode: DecisionMode, id: string) => {
+    const onDecide = (mode: DecisionMode, id: string) => {
         setReviewId(null);
-        setNote("");
-        setDecision({ mode, ids: [id] });
-    }, []);
-
-    const onCloseDecision = useCallback(() => {
-        setDecision(null);
-        setNote("");
-    }, []);
-
-    const onSubmitDecision = () => {
-        const trimmed = note.trim();
-        if (!decision || !trimmed) return;
-        decision.ids.forEach((id) => settle(id, decision.mode, trimmed));
-        onCloseDecision();
+        actions.decide(mode, id);
     };
 
     if (flags.isError)
@@ -131,8 +92,9 @@ export function ModerationConsole() {
                     pending={flags.isPending}
                     onStatusFilterChange={setStatusFilter}
                     onCheckFilterChange={setCheckFilter}
+                    approvingId={actions.approvingId}
                     onOpen={onOpen}
-                    onApprove={onApprove}
+                    onApprove={actions.approve}
                     onDecide={onDecide}
                 />
                 <ModerationRail listings={listings} />
@@ -140,17 +102,21 @@ export function ModerationConsole() {
 
             <ModerationReviewModal
                 listing={listings.find((listing) => listing.id === reviewId)}
+                approvingId={actions.approvingId}
                 onClose={onCloseReview}
-                onApprove={onApprove}
+                onApprove={actions.approve}
                 onDecide={onDecide}
             />
 
             <ModerationDecisionModal
-                decision={decision}
-                note={note}
-                onNoteChange={setNote}
-                onClose={onCloseDecision}
-                onSubmit={onSubmitDecision}
+                decision={actions.decision.target}
+                listings={actions.decidingListings}
+                note={actions.note}
+                pending={actions.decision.pending}
+                failed={actions.decision.failed}
+                onNoteChange={actions.setNote}
+                onClose={actions.decision.dismiss}
+                onSubmit={actions.submit}
             />
         </div>
     );

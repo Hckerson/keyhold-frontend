@@ -20,6 +20,7 @@ import {
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
 import { useSession } from "@/lib/hooks/use-session";
+import type { MessageSendHandler } from "@/lib/types";
 import { toConversationList } from "@/lib/utils/to-conversation";
 import {
     medianReplyMinutes,
@@ -78,10 +79,15 @@ export function MessagesConsole() {
 
     const onSelect = useCallback((id: string) => setSelectedId(id), []);
 
-    const onSend = useCallback(
-        (content: string, files: File[]) => {
+    const onSend = useCallback<MessageSendHandler>(
+        (content, files, onSent) => {
             if (!activeId) return;
-            sendMessage.mutate({ connectionId: activeId, content, files });
+            sendMessage.mutate(
+                { connectionId: activeId, content, files },
+                {
+                    onSuccess: ({ attached }) => onSent(attached ? [] : files),
+                },
+            );
         },
         [activeId, sendMessage],
     );
@@ -118,6 +124,7 @@ export function MessagesConsole() {
                     conversation={selected}
                     messages={messages}
                     typing={sendMessage.isPending}
+                    sending={sendMessage.isPending}
                     onSend={onSend}
                 />
                 <ThreadContextRail
