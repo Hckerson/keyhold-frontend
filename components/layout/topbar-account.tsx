@@ -25,12 +25,14 @@ export interface TopbarAccountProps {
     user: AuthUser;
     settingsHref: string;
     onLogout?: () => void;
+    signingOut?: boolean;
 }
 
 export function TopbarAccount({
     user,
     settingsHref,
     onLogout,
+    signingOut = false,
 }: TopbarAccountProps) {
     const router = useRouter();
 
@@ -82,6 +84,7 @@ export function TopbarAccount({
                                 key={action.id}
                                 icon={action.icon}
                                 tone={action.tone ?? "neutral"}
+                                disabled={action.id === "logout" && signingOut}
                                 onClick={() => run(action.id)}
                             >
                                 {action.label}

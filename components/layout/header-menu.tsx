@@ -21,6 +21,7 @@ interface HeaderMenuProps {
     pathname: string;
     signedIn: boolean;
     onLogout: () => void;
+    signingOut: boolean;
 }
 
 export function HeaderMenu({
@@ -30,6 +31,7 @@ export function HeaderMenu({
     pathname,
     signedIn,
     onLogout,
+    signingOut,
 }: HeaderMenuProps) {
     const close = () => onOpenChange(false);
 
@@ -96,6 +98,8 @@ export function HeaderMenu({
                                 close();
                                 onLogout();
                             }}
+                            disabled={signingOut}
+                            aria-busy={signingOut}
                             className="border-border-dark text-text hover:border-accent hover:text-accent focus-visible:ring-accent ease-smooth h-9 rounded-full border text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                         >
                             Log out

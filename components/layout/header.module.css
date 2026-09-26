@@ -205,6 +205,10 @@
 .signin:hover {
     color: var(--color-text);
 }
+.signin:disabled {
+    cursor: default;
+    opacity: 0.45;
+}
 .pill {
     display: inline-flex;
     align-items: center;

@@ -170,6 +170,7 @@ export const FEEDBACK = {
         error: "We couldn't lift the suspension.",
     },
 
+    signOut: { error: "We couldn't sign you out. Try again." },
     verifyEmail: {
         success: "Email confirmed",
         error: "That code was not accepted.",
