@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Image } from "@/components/ui/image";
+import { FeaturedBadge } from "@/components/features/shared/featured-badge";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import type { GalleryTileData } from "@/lib/types";
 import { useSavedToggle } from "@/lib/hooks/use-saved-toggle";
