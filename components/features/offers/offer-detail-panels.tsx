@@ -10,7 +10,7 @@ import { MilestonePanel } from "@/components/features/offers/milestone-panel";
 import { MetricList } from "@/components/patterns/metric-list";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { OFFER_TERMS_COPY } from "@/lib/data/offer-details";
-import type { DealMilestoneControls } from "@/lib/types";
+import type { DealMilestoneControls, MessageSendHandler } from "@/lib/types";
 import type {
     OfferDetail,
     ThreadMessage,
@@ -30,7 +30,8 @@ export interface OfferDetailPanelsProps {
     onCounterAmountChange: (value: string) => void;
     onCounterNoteChange: (value: string) => void;
     onSubmitCounter: () => void;
-    onSendMessage: (content: string) => void;
+    onSendMessage: MessageSendHandler;
+    sendingMessage: boolean;
     milestones: DealMilestoneControls;
 }
 
@@ -48,6 +49,7 @@ export function OfferDetailPanels({
     onCounterNoteChange,
     onSubmitCounter,
     onSendMessage,
+    sendingMessage,
     milestones,
 }: OfferDetailPanelsProps) {
     return (
@@ -79,6 +81,7 @@ export function OfferDetailPanels({
                 <OfferMessagesPanel
                     messages={messages}
                     onSend={onSendMessage}
+                    sending={sendingMessage}
                 />
             </div>
 

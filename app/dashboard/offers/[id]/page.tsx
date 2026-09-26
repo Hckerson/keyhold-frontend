@@ -56,6 +56,7 @@ export default function OfferDetailPage({
                 onCounterNoteChange={offer.setCounterNote}
                 onSubmitCounter={() => offer.requestConfirm("counter")}
                 onSendMessage={offer.addUserMessage}
+                sendingMessage={offer.sendingMessage}
                 milestones={offer.milestones}
             />
 
