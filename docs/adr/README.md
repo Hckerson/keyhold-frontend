@@ -27,6 +27,7 @@ Records are immutable once merged. A decision that changes gets a new record tha
 | [0019](0019-production-runs-in-europe.md)                   | Production runs in one region, and it is Europe                               | Accepted                                                 |
 | [0020](0020-external-sign-in-is-native-oauth.md)            | External sign-in is native OAuth, not Passport strategies                     | Accepted                                                 |
 | [0021](0021-writes-are-sent-once-and-confirmations-lock.md) | Writes are sent once, and confirmations lock while in flight                  | Accepted                                                 |
+| [0023](0023-newsletter-uses-double-opt-in.md)               | The newsletter uses double opt-in and stores its consent                      | Accepted                                                 |
 
 ## Template
 
