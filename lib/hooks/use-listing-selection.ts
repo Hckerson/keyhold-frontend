@@ -54,6 +54,7 @@ export function useListingSelection(listings: ManagedListing[]) {
     return {
         filter,
         visible,
+        selected,
         selectedIds: selected.map((listing) => listing.id),
         allSelected,
         changeFilter,

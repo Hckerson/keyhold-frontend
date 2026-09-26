@@ -1,5 +1,4 @@
 import {
-    PROPERTY_STATUS_LABELS,
     PROPERTY_TYPES,
     PROPERTY_TYPE_LABELS,
     type PropertyStatus,
@@ -63,22 +62,6 @@ export const CLEARABLE_LISTING_FIELDS = [
     "walkScore",
 ] as const satisfies readonly (keyof ListingDraft)[];
 
-export const SELLER_STATUSES = [
-    "DRAFT",
-    "AVAILABLE",
-    "PENDING",
-] as const satisfies readonly PropertyStatus[];
-
-export type SellerStatus = (typeof SELLER_STATUSES)[number];
-
-export const isSellerStatus = (status: PropertyStatus) =>
-    SELLER_STATUSES.some((settable) => settable === status);
-
-export const LISTING_STATUS_OPTIONS = SELLER_STATUSES.map((value) => ({
-    value,
-    label: PROPERTY_STATUS_LABELS[value],
-}));
-
 export const LISTING_TYPE_OPTIONS = PROPERTY_TYPES.map((value) => ({
     value,
     label: PROPERTY_TYPE_LABELS[value],
@@ -87,9 +70,10 @@ export const LISTING_TYPE_OPTIONS = PROPERTY_TYPES.map((value) => ({
 export const LISTING_STATUS_HINTS: Record<PropertyStatus, string> = {
     DRAFT: "Only you can see this listing",
     AVAILABLE: "Live in search and open to enquiries",
-    PENDING: "Shown as under offer, still visible",
-    SOLD: "Closed — set it back to for sale to reopen",
-    EXPIRED: "Off market — set it back to for sale to relist",
+    PENDING:
+        "Under offer — only the deal settling or falling through changes it",
+    SOLD: "Sold — contact support if this sale needs correcting",
+    EXPIRED: "Rejected by moderation — contact support to have it reviewed",
 };
 
 export const LISTING_AMENITY_SUGGESTIONS = [

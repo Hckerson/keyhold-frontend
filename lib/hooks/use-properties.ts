@@ -15,7 +15,7 @@ import type {
     PropertyQuery,
     UpdatePropertyInput,
 } from "@/lib/validations/property";
-import type { PropertyStatus } from "@/lib/enums/enums";
+import type { BulkStatusChange } from "@/lib/data/agent-listings";
 import { FEEDBACK, GENERIC_FAILURE } from "@/lib/config/feedback";
 
 export function useProperties(input: PropertyQuery = {}) {
@@ -120,13 +120,8 @@ export function useBulkUpdatePropertyStatus() {
     const client = useQueryClient();
     return useMutation({
         meta: FEEDBACK.bulkUpdatePropertyStatus,
-        mutationFn: ({
-            ids,
-            status,
-        }: {
-            ids: readonly string[];
-            status: PropertyStatus;
-        }) => settleEvery(ids, (id) => propertiesAPI.update(id, { status })),
+        mutationFn: ({ ids, status }: BulkStatusChange) =>
+            settleEvery(ids, (id) => propertiesAPI.update(id, { status })),
         onSettled: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
     });
