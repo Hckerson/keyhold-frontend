@@ -17,8 +17,10 @@ export const STRIPE_COPY = {
     unavailableTitle: "Payments are switched off here",
     unavailableBody:
         "This environment has no Stripe publishable key, so the purchase cannot be taken online.",
-    failureTitle: "The payment did not go through",
+    failureTitle: "The purchase did not complete",
     genericFailure: "Nothing was charged. Try again in a moment.",
+    settleFailure:
+        "Your card may have been charged, but we could not record the payment yet. Do not pay again — refresh in a moment.",
     settlingLabel: "Confirming…",
     settledTitle: "Payment received",
 } as const;

@@ -4,15 +4,18 @@ import { Panel } from "@/components/ui/panel";
 import { MessageBubble } from "@/components/features/messaging/message-bubble";
 import { MessageComposer } from "@/components/features/messaging/message-composer";
 import type { ThreadMessage } from "@/lib/data/offer-details";
+import type { MessageSendHandler } from "@/lib/types";
 
 export interface OfferMessagesPanelProps {
     messages: ThreadMessage[];
-    onSend: (content: string, files: File[]) => void;
+    onSend: MessageSendHandler;
+    sending: boolean;
 }
 
 export function OfferMessagesPanel({
     messages,
     onSend,
+    sending,
 }: OfferMessagesPanelProps) {
     return (
         <Panel title="Messages" count={messages.length}>
@@ -34,6 +37,7 @@ export function OfferMessagesPanel({
                     inputLabel="Message to agent"
                     placeholder="Message your agent…"
                     onSend={onSend}
+                    pending={sending}
                     attachable
                 />
             </div>

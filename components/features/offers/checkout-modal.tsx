@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { Callout } from "@/components/ui/callout";
 import { Spinner } from "@/components/ui/spinner";
@@ -49,10 +49,12 @@ export function CheckoutModal({
                 : undefined,
         [clientSecret],
     );
+    const [charging, setCharging] = useState(false);
 
     return (
         <Modal
             open={open}
+            locked={charging || settling}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
@@ -101,7 +103,9 @@ export function CheckoutModal({
                 {STRIPE_ENABLED && !settled && options && (
                     <Elements stripe={getStripe()} options={options}>
                         <CheckoutPaymentForm
+                            charging={charging}
                             settling={settling}
+                            onChargingChange={setCharging}
                             onPaid={onPaid}
                             onFail={onFail}
                             onCancel={onClose}

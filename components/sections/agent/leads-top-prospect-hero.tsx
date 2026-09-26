@@ -22,6 +22,7 @@ const DECLINE_ACTION = "Decline";
 export interface LeadsTopProspectHeroProps {
     lead: Lead;
     calling: boolean;
+    responding: boolean;
     onRespond: (id: string, accept: boolean) => void;
     onCall: () => void;
     onEmail: () => void;
@@ -30,6 +31,7 @@ export interface LeadsTopProspectHeroProps {
 export function LeadsTopProspectHero({
     lead,
     calling,
+    responding,
     onRespond,
     onCall,
     onEmail,
@@ -98,6 +100,7 @@ export function LeadsTopProspectHero({
                         <>
                             <Button
                                 type="button"
+                                disabled={responding}
                                 onClick={() => onRespond(lead.id, false)}
                             >
                                 {DECLINE_ACTION}
@@ -106,6 +109,7 @@ export function LeadsTopProspectHero({
                                 type="button"
                                 emphasis="solid"
                                 tone="accent"
+                                disabled={responding}
                                 onClick={() => onRespond(lead.id, true)}
                             >
                                 {ACCEPT_ACTION}

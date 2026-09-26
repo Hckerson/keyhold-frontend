@@ -11,11 +11,13 @@ const SETTLED_LEDE = "This dispute is settled. Its record is read-only.";
 
 export interface DisputeDecisionBarProps {
     status: DisputeStatus;
+    busy: boolean;
     onAction: (mode: DisputeDecisionMode) => void;
 }
 
 export function DisputeDecisionBar({
     status,
+    busy,
     onAction,
 }: DisputeDecisionBarProps) {
     const actions = disputeActionsByStatus[status];
@@ -30,6 +32,7 @@ export function DisputeDecisionBar({
                         key={action.mode}
                         emphasis={action.destructive ? "outline" : "solid"}
                         tone={action.destructive ? "error" : "accent"}
+                        disabled={busy}
                         onClick={() => onAction(action.mode)}
                     >
                         {action.label}

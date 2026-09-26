@@ -39,10 +39,12 @@ function UserCard({ user, collapsed }: { user: AuthUser; collapsed: boolean }) {
 export function SidebarFooter({
     user,
     onLogout,
+    signingOut = false,
     collapsed,
 }: {
     user?: AuthUser | null;
     onLogout?: () => void;
+    signingOut?: boolean;
     collapsed: boolean;
 }) {
     return (
@@ -58,9 +60,16 @@ export function SidebarFooter({
                 <button
                     type="button"
                     onClick={onLogout}
+                    disabled={signingOut}
+                    aria-busy={signingOut}
                     title={collapsed ? "Log out" : undefined}
                     aria-label="Log out"
-                    className={cn(rowBase, rowIdle, collapsed && rowCollapsed)}
+                    className={cn(
+                        rowBase,
+                        rowIdle,
+                        collapsed && rowCollapsed,
+                        "disabled:pointer-events-none disabled:opacity-45",
+                    )}
                 >
                     <span className={rowIconSlot}>
                         <LogOut size={12} strokeWidth={1.5} />

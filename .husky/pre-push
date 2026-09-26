@@ -3,3 +3,4 @@ set -e
 pnpm type-check
 pnpm lint
 pnpm enums:check
+pnpm contract:check

@@ -1,8 +1,11 @@
 import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AxiosError, AxiosHeaders } from "axios";
+import type { AxiosResponse } from "axios";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { transactionsAPI } from "@/lib/api/transactions";
+import { STRIPE_COPY } from "@/lib/config/stripe";
 import {
     aCheckoutSession,
     aSettlement,
@@ -20,6 +23,23 @@ const PURCHASE = {
     offerId: "off_1",
     finalPrice: 1_150_000,
     terms: "Cash, thirty-day close",
+};
+
+const refused = (message: string) => {
+    const response: AxiosResponse<{ message: string }> = {
+        status: 400,
+        statusText: "Bad Request",
+        headers: {},
+        config: { headers: new AxiosHeaders() },
+        data: { message },
+    };
+    return new AxiosError(
+        "Request failed with status code 400",
+        "ERR_BAD_REQUEST",
+        response.config,
+        undefined,
+        response,
+    );
 };
 
 let client: QueryClient;
@@ -60,8 +80,8 @@ describe("useCheckout", () => {
         expect(result.current.active).toBe(true);
     });
 
-    it("surfaces a failure to open the checkout instead of throwing", async () => {
-        create.mockRejectedValue(new Error("Offer must be accepted"));
+    it("surfaces the server's reason when the checkout cannot open", async () => {
+        create.mockRejectedValue(refused("Offer must be accepted"));
 
         const { result } = renderHook(() => useCheckout(), { wrapper });
         await act(() => result.current.open(PURCHASE));
@@ -92,7 +112,7 @@ describe("useCheckout", () => {
     it("reports a settlement failure without claiming the purchase completed", async () => {
         create.mockResolvedValue(aCheckoutSession());
         confirmPayment.mockRejectedValue(
-            new Error("Payment could not be confirmed"),
+            refused("Payment could not be confirmed"),
         );
 
         const { result } = renderHook(() => useCheckout(), { wrapper });
@@ -101,6 +121,17 @@ describe("useCheckout", () => {
 
         expect(result.current.settled).toBe(false);
         expect(result.current.error).toBe("Payment could not be confirmed");
+    });
+
+    it("never tells the buyer nothing was charged when recording a card payment fails", async () => {
+        create.mockResolvedValue(aCheckoutSession());
+        confirmPayment.mockRejectedValue(new Error("socket hang up"));
+
+        const { result } = renderHook(() => useCheckout(), { wrapper });
+        await act(() => result.current.open(PURCHASE));
+        await act(() => result.current.settle("pi_1"));
+
+        expect(result.current.error).toBe(STRIPE_COPY.settleFailure);
     });
 
     it("clears the session when the buyer closes the checkout", async () => {

@@ -12,6 +12,7 @@ export interface TopbarActionsProps {
     settingsHref: string;
     user?: AuthUser | null;
     onLogout?: () => void;
+    signingOut?: boolean;
 }
 
 export function TopbarActions({
@@ -19,6 +20,7 @@ export function TopbarActions({
     settingsHref,
     user,
     onLogout,
+    signingOut,
 }: TopbarActionsProps) {
     const palette = useCommandPalette(routes);
 
@@ -40,6 +42,7 @@ export function TopbarActions({
                         user={user}
                         settingsHref={settingsHref}
                         onLogout={onLogout}
+                        signingOut={signingOut}
                     />
                 </>
             )}

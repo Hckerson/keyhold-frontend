@@ -29,3 +29,8 @@
     );
     background-size: 4px 4px;
 }
+.newsletter {
+    flex: 1 1 18rem;
+    max-width: 22rem;
+    margin-left: auto;
+}

@@ -48,6 +48,7 @@ export function LeadCreateModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
@@ -100,7 +101,7 @@ export function LeadCreateModal({
             </ModalBody>
 
             <ModalFooter>
-                <Button type="button" onClick={onClose}>
+                <Button type="button" disabled={pending} onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button

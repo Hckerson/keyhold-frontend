@@ -10,12 +10,14 @@ const REJECT_LABEL = "Reject";
 
 export interface ModerationRowActionsProps {
     listing: ModerationListing;
+    approvingId?: string;
     onApprove: (id: string) => void;
     onDecide: (mode: DecisionMode, id: string) => void;
 }
 
 export function ModerationRowActions({
     listing,
+    approvingId,
     onApprove,
     onDecide,
 }: ModerationRowActionsProps) {
@@ -28,6 +30,7 @@ export function ModerationRowActions({
                     tone="success"
                     icon={Check}
                     label={`${APPROVE_LABEL} ${target}`}
+                    disabled={approvingId !== undefined}
                     onClick={() => onApprove(listing.id)}
                 />
             )}

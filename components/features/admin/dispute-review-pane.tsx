@@ -19,11 +19,13 @@ const NO_DEALS = "No transaction is attached to this dispute.";
 
 export interface DisputeReviewPaneProps {
     dispute: DisputeCase;
+    busy: boolean;
     onAction: (mode: DisputeDecisionMode) => void;
 }
 
 export function DisputeReviewPane({
     dispute,
+    busy,
     onAction,
 }: DisputeReviewPaneProps) {
     const meta = disputeStatusMeta[dispute.status];
@@ -110,7 +112,11 @@ export function DisputeReviewPane({
                 </div>
             </div>
 
-            <DisputeDecisionBar status={dispute.status} onAction={onAction} />
+            <DisputeDecisionBar
+                status={dispute.status}
+                busy={busy}
+                onAction={onAction}
+            />
         </section>
     );
 }

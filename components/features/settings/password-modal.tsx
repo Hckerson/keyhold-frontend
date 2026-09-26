@@ -38,6 +38,7 @@ export function PasswordModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
@@ -63,7 +64,7 @@ export function PasswordModal({
             </ModalBody>
 
             <ModalFooter>
-                <Button type="button" onClick={onClose}>
+                <Button type="button" disabled={pending} onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>
                 {!sent && (

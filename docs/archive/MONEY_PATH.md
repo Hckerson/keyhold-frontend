@@ -54,13 +54,13 @@ The whole design rests on one asymmetry: **failing to release is recoverable, re
 
 The gap between clicking confirm and the server answering is the dangerous window. A held escrow is a real sum of money and the request is not idempotent.
 
-| #   | Criterion                                                                                                                                                                           |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 4.1 | The confirm control is disabled for the duration of the request.                                                                                                                    |
-| 4.2 | The release is visible as in-progress on the row it belongs to, for the whole duration.                                                                                             |
-| 4.3 | A release in flight cannot be started again for the same escrow, by any route through the interface — including dismissing the modal and pressing release on the row a second time. |
-| 4.4 | Dismissing the modal mid-flight does not cancel the request, and does not hide the fact that it is still running.                                                                   |
-| 4.5 | A release in flight on one purchase does not disable release on a different purchase.                                                                                               |
+| #   | Criterion                                                                                                                                          |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 4.1 | The confirm control is disabled for the duration of the request.                                                                                   |
+| 4.2 | The release is visible as in-progress on the row it belongs to, for the whole duration.                                                            |
+| 4.3 | A release in flight cannot be started again for the same escrow, by any route through the interface.                                               |
+| 4.4 | The confirmation cannot be dismissed while the release is in flight — Escape, backdrop, close and cancel are all refused until the server answers. |
+| 4.5 | A release in flight on one purchase does not disable release on a different purchase.                                                              |
 
 ## 05 · When it fails
 
@@ -114,11 +114,6 @@ The window is the pivot. Before it closes the money is the buyer's to hold; afte
 | 8.1 | An escrow id that matches nothing is refused as not found.                                      |
 | 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
 | 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
-| #   | Criterion                                                                                       |
-| --- | ----------------------------------------------------------------------------------------------- |
-| 8.1 | An escrow id that matches nothing is refused as not found.                                      |
-| 8.2 | A hold that is already `RELEASED`, `REFUNDED` or `DISPUTED` is refused as already settled.      |
-| 8.3 | A hold attached to no transaction is refused, and no part of a settlement is attempted.         |
 | 8.4 | A refusal of any of the above writes nothing — the hold survives every rejected release intact. |
 
 ## 09 · What a release does
@@ -143,6 +138,23 @@ The three writes that settle a hold describe one event. A partial settlement is 
 | 10.3 | A failure on any of the three writes fails the whole release. No subset of them survives.                              |
 | 10.4 | A release that is refused never opens a transaction at all.                                                            |
 
+## 11 · Resuming a checkout
+
+A buyer who closes checkout has not abandoned the purchase. The open transaction is theirs to finish, and leaving it must never lock them — or the listing — out of paying.
+
+**Surface:** `POST /transactions` → `TransactionsController` → `TransactionsService.initiateTransaction`
+
+| #    | Criterion                                                                                                                                                         |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 11.1 | The buyer's own `PENDING` transaction on the same connection is resumed: the same transaction and the same intent come back, and nothing new is created.          |
+| 11.2 | An intent that was cancelled is replaced by a fresh one on the **same** transaction, whose `stripePaymentIntentId` is updated to it.                              |
+| 11.3 | A payable intent whose amount or currency no longer matches the agreed price is cancelled before its replacement is issued — never left chargeable.               |
+| 11.4 | An intent that is `processing`, `requires_capture` or `succeeded` is refused with "Your payment is already being processed" — no second charge.                   |
+| 11.5 | A live transaction that belongs to another buyer, or to another connection, is refused as before, and Stripe is never consulted.                                  |
+| 11.6 | The buyer's own transaction once it has left `PENDING` is refused as before.                                                                                      |
+| 11.7 | The buyer's own `PENDING` transaction that never received an intent is given one on the **same** transaction — never a second transaction.                        |
+| 11.8 | Settlement compares the charged amount in the currency's own smallest unit: a zero-decimal currency settles on the whole amount, and a mismatch is still refused. |
+
 ---
 
 ## What the criteria caught
@@ -157,6 +169,10 @@ Both are fixed by deriving the in-flight id from the mutation itself — `releas
 
 **5.3 — a failed release said nothing.** `release.isError` was never rendered anywhere. A buyer who pressed the money button and hit a failing gateway saw the modal close and the row unchanged, with no way to tell whether the release had gone through. The modal now stays open on failure and states that the funds were not released and the escrow is still held.
 
+**3.5 and 5.1 — the release was sent twice in production.** The tests built their own client with mutation retry off; the real client retried every failed write once. A release that timed out after committing was re-sent, refused as settled, and reported as "still held". Writes are now never retried ([ADR 0021](../adr/0021-writes-are-sent-once-and-confirmations-lock.md)), and `query-client.test.tsx` proves it against the production client.
+
+**4.4 — dismissing mid-flight could still hide a failure.** Deriving the in-flight id kept the row honest, but a release dismissed and then failed was silent: the failure only renders inside the modal. The confirmation now locks until the server answers, and 4.3 and 4.4 were rewritten to prove the lock.
+
 ## What the server criteria caught
 
 Sections 07–10 are green: `EscrowService.release` grants and refuses exactly as written, and a refused release leaves no trace — no agreement, no upload, no email, no write. `EscrowController.release` decides on the authenticated caller and nothing else.
@@ -168,6 +184,12 @@ Three things the checklist surfaced were **not** written as criteria at the time
 **Settlement was not atomic — it is now.** The three writes ran in a `Promise.all`, so a failure between them could leave a released hold against an in-progress transaction, or a sold property against an unreleased hold. Stage 04 of the field guide names this exact case: _"Accepting an offer while marking a property sold must not half-succeed."_ It is closed. `PrismaContext` ([ADR 0011](../adr/0011-transactions-via-ambient-client.md)) gives the repository layer a transaction boundary it did not have, and `release` and `refund` now open one around their three writes. The agreement is still generated and uploaded first, outside the transaction, so no Cloudinary round-trip is held open inside it. Section 10 above is the checklist this closed against.
 
 **A refusal tells a stranger too much.** `requireHeld` runs before the authorisation check, so an unauthorised caller learns whether a hold exists and whether it has settled — 404 and 400 separate from 403. Moving the ownership check ahead of the state check closes it, at the cost of one extra branch.
+
+**11 — a closed checkout locked the listing for good.** `initiateTransaction` created the `PENDING` transaction and its PaymentIntent the moment the buyer pressed "Complete purchase". Closing checkout left both behind, and every later attempt hit the live-transaction check and was refused as "already in progress" — by the buyer's own abandoned attempt. There was no cancel and no resume, so the buyer could never pay and no one else could either. The buyer's own open checkout is now resumed, re-issued when its intent is dead or stale, and refused only when money is already moving. Section 11 is the checklist, and `transactions.service.spec.ts` names its cases after it.
+
+**11.7 — a checkout that never got an intent was stuck too.** If the intent could not be created after the transaction was written, the `PENDING` row had no intent to resume and blocked the listing just the same. It now receives its first intent on that same row.
+
+**11.8 — zero-decimal currencies could never settle.** `settleConfirmedPayment` multiplied the agreed price by 100 unconditionally, while `createPaymentIntent` charges zero-decimal currencies such as JPY in whole units. Every such payment would have been taken by Stripe and then refused as a mismatch. Both sides now use the same currency-aware conversion.
 
 ## Note on placement
 

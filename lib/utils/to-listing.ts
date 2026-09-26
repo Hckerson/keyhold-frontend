@@ -1,5 +1,6 @@
 import type { Property } from "@/lib/validations/property";
 import { daysSince } from "@/lib/utils/elapsed";
+import { isPromotionActive } from "@/lib/utils/promotion";
 import type { Listing, ListingAgent } from "@/lib/types/listing";
 
 const toAgent = (property: Property): ListingAgent => {
@@ -48,5 +49,6 @@ export const toListing = (property: Property): Listing => {
         description: property.description,
         features: property.features,
         pricePerSqft: sqft > 0 ? Math.round(property.price / sqft) : 0,
+        featured: isPromotionActive(property.featuredUntil),
     };
 };

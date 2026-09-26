@@ -11,6 +11,7 @@ export interface UserFocusActionsProps {
     user: ManagedUser;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -18,6 +19,7 @@ export function UserFocusActions({
     user,
     onOpen,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: UserFocusActionsProps) {
     const moderable = user.status !== "deleted";
@@ -33,6 +35,8 @@ export function UserFocusActions({
                         type="button"
                         emphasis="solid"
                         tone="accent"
+                        isLoading={reactivatingId === user.id}
+                        disabled={reactivatingId !== undefined}
                         onClick={() => onReactivate(user.id)}
                     >
                         {REACTIVATE_ACTION}

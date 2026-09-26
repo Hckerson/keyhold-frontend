@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+    useSyncExternalStore,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
 import type { CommandItem, NavRoute } from "@/lib/types";
@@ -14,17 +20,32 @@ import { rovingIndex } from "@/lib/utils/roving";
 
 const STEP: Record<string, number> = { ArrowDown: 1, ArrowUp: -1 };
 
+const APPLE_PLATFORM = /Mac|iPhone|iPad/;
+const subscribe = () => () => {};
+
 export function useCommandPalette(routes: NavRoute[]) {
     const router = useRouter();
     const pathname = usePathname();
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState("");
     const [active, setActive] = useState(0);
-    const [isAppleDevice, setIsAppleDevice] = useState(false);
+    const [openOn, setOpenOn] = useState(pathname);
+    const [activeFor, setActiveFor] = useState({ query, open });
+    const isAppleDevice = useSyncExternalStore(
+        subscribe,
+        () => APPLE_PLATFORM.test(navigator.userAgent),
+        () => false,
+    );
 
-    useEffect(() => {
-        setIsAppleDevice(/Mac|iPhone|iPad/.test(navigator.userAgent));
-    }, []);
+    if (openOn !== pathname) {
+        setOpenOn(pathname);
+        setOpen(false);
+    }
+
+    if (activeFor.query !== query || activeFor.open !== open) {
+        setActiveFor({ query, open });
+        setActive(0);
+    }
 
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
@@ -40,8 +61,6 @@ export function useCommandPalette(routes: NavRoute[]) {
         window.addEventListener("keydown", onKeyDown);
         return () => window.removeEventListener("keydown", onKeyDown);
     }, []);
-
-    useEffect(() => setOpen(false), [pathname]);
 
     const go = useCallback(
         (href: string) => {
@@ -78,8 +97,6 @@ export function useCommandPalette(routes: NavRoute[]) {
             },
         ];
     }, [routes, query, pathname, go]);
-
-    useEffect(() => setActive(0), [query, open]);
 
     const openWith = useCallback(() => {
         setQuery("");

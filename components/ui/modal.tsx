@@ -1,6 +1,12 @@
 "use client";
 
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import {
+    createContext,
+    forwardRef,
+    useContext,
+    type HTMLAttributes,
+    type ReactNode,
+} from "react";
 import { Dialog, type DialogPopupProps } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
 import {
@@ -12,22 +18,38 @@ import { cn, composeRefs } from "@/lib/utils";
 
 const CLOSE_LABEL = "Close dialog";
 
+const ModalLockContext = createContext(false);
+
 interface ModalProps extends Omit<DialogPopupProps, "className" | "ref"> {
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
+    locked?: boolean;
     className?: string;
     children: ReactNode;
 }
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
-    ({ open = false, onOpenChange, className, children, ...props }, ref) => {
+    (
+        {
+            open = false,
+            onOpenChange,
+            locked = false,
+            className,
+            children,
+            ...props
+        },
+        ref,
+    ) => {
         const content = useSettledContent(open, children);
         const { popupRef, initialFocus } = useDialogFocus();
 
         return (
             <Dialog.Root
                 open={open}
-                onOpenChange={(next) => onOpenChange?.(next)}
+                onOpenChange={(next) => {
+                    if (!next && locked) return;
+                    onOpenChange?.(next);
+                }}
             >
                 <Dialog.Portal>
                     <Dialog.Backdrop className="bg-overlay z-modal-backdrop ease-smooth fixed inset-0 transition-opacity duration-200 data-ending-style:opacity-0 data-starting-style:opacity-0" />
@@ -41,7 +63,9 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
                             )}
                             {...props}
                         >
-                            {content}
+                            <ModalLockContext.Provider value={locked}>
+                                {content}
+                            </ModalLockContext.Provider>
                         </Dialog.Popup>
                     </Dialog.Viewport>
                 </Dialog.Portal>
@@ -65,25 +89,34 @@ const ModalContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 ModalContent.displayName = "ModalContent";
 
 const ModalHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
-    ({ className, children, ...props }, ref) => (
-        <div
-            ref={ref}
-            className={cn(
-                "border-border-light flex shrink-0 items-start justify-between gap-3 border-b p-4",
-                className,
-            )}
-            {...props}
-        >
-            <div className="min-w-0 flex-1">{children}</div>
-            <Dialog.Close
-                {...DIALOG_CLOSE_MARK}
-                aria-label={CLOSE_LABEL}
-                className="text-text-muted hover:text-text hover:bg-background-alt focus-visible:ring-accent ease-smooth -mt-0.5 -mr-1 grid size-6 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+    ({ className, children, ...props }, ref) => {
+        const locked = useContext(ModalLockContext);
+
+        return (
+            <div
+                ref={ref}
+                className={cn(
+                    "border-border-light flex shrink-0 items-start justify-between gap-3 border-b p-4",
+                    className,
+                )}
+                {...props}
             >
-                <X className="size-3" strokeWidth={1.5} aria-hidden="true" />
-            </Dialog.Close>
-        </div>
-    ),
+                <div className="min-w-0 flex-1">{children}</div>
+                <Dialog.Close
+                    {...DIALOG_CLOSE_MARK}
+                    aria-label={CLOSE_LABEL}
+                    disabled={locked}
+                    className="text-text-muted hover:text-text hover:bg-background-alt focus-visible:ring-accent ease-smooth -mt-0.5 -mr-1 grid size-6 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-45"
+                >
+                    <X
+                        className="size-3"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                    />
+                </Dialog.Close>
+            </div>
+        );
+    },
 );
 
 ModalHeader.displayName = "ModalHeader";

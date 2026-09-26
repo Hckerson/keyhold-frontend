@@ -48,6 +48,7 @@ export const propertySchema = z.object({
     walkScore: z.number().int().nullable(),
     viewsCount: z.number().int(),
     featuredUntil: z.iso.datetime().nullable().optional(),
+    soldAt: z.iso.datetime().nullable().optional(),
     amenities: z.array(z.string()),
     features: z.array(z.string()),
     type: z.enum(PROPERTY_TYPES),
@@ -121,6 +122,7 @@ export const propertyQuerySchema = z.object({
     beds: z.array(z.string()).optional(),
     baths: z.array(z.string()).optional(),
     minSqFt: z.number().optional(),
+    featured: z.boolean().optional(),
     south: z.number().optional(),
     north: z.number().optional(),
     west: z.number().optional(),
@@ -137,6 +139,14 @@ export const facetCountsSchema = z.object({
     type: z.record(z.string(), z.number()),
 });
 
+export const localityCountSchema = z.object({
+    locality: z.string(),
+    region: z.string(),
+    count: z.number().int(),
+});
+
+export const localityCountsSchema = z.array(localityCountSchema);
+
 export type PropertyImage = z.infer<typeof propertyImageSchema>;
 export type PropertySeller = z.infer<typeof propertySellerSchema>;
 export type Property = z.infer<typeof propertySchema>;
@@ -147,3 +157,4 @@ export type ListingFormInput = z.infer<typeof listingFormSchema>;
 export type PromotePropertyInput = z.infer<typeof promotePropertySchema>;
 export type PropertyQuery = z.infer<typeof propertyQuerySchema>;
 export type FacetCounts = z.infer<typeof facetCountsSchema>;
+export type LocalityCount = z.infer<typeof localityCountSchema>;

@@ -4,6 +4,7 @@ import {
     SEARCH_URL_CODEC,
     EMPTY_SEARCH_URL_STATE,
 } from "@/lib/utils/search-url";
+import { DEFAULT_SEARCH_SORT } from "@/lib/utils/search";
 
 const read = (query: string) =>
     SEARCH_URL_CODEC.fromParams(new URLSearchParams(query));
@@ -60,7 +61,7 @@ describe("reading search state from the URL", () => {
 
     it("falls back rather than trusting an unknown sort, view or page", () => {
         const state = read("sort=cheapest&view=globe&page=-4");
-        expect(state.sort).toBe("newest");
+        expect(state.sort).toBe(DEFAULT_SEARCH_SORT);
         expect(state.view).toBe("grid");
         expect(state.page).toBe(1);
     });
@@ -75,7 +76,7 @@ describe("writing search state back to the URL", () => {
         expect(
             write({
                 filters: { ...EMPTY_FILTERS, beds: ["3"] },
-                sort: "newest",
+                sort: DEFAULT_SEARCH_SORT,
                 view: "grid",
                 page: 1,
             }),

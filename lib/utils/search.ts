@@ -10,6 +10,7 @@ import type { PropertyQuery } from "@/lib/validations/property";
 export const SEARCH_PAGE_SIZE = 20;
 
 export const TOOLBAR_SORTS: PropertySort[] = [
+    "featured",
     "newest",
     "price-asc",
     "price-desc",
@@ -22,6 +23,8 @@ export const SORT_OPTIONS = TOOLBAR_SORTS.map((value) => ({
 }));
 
 export type SortValue = PropertySort;
+
+export const DEFAULT_SEARCH_SORT: SortValue = "featured";
 
 export interface ActiveFilter {
     key: FilterGroupKey | "location";

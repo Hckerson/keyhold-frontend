@@ -21,6 +21,7 @@ export interface TopbarProps {
     user?: AuthUser | null;
     onNavOpen?: () => void;
     onLogout?: () => void;
+    signingOut?: boolean;
 }
 
 export function Topbar({
@@ -30,6 +31,7 @@ export function Topbar({
     user,
     onNavOpen,
     onLogout,
+    signingOut,
 }: TopbarProps) {
     const pathname = usePathname();
 
@@ -72,6 +74,7 @@ export function Topbar({
                     settingsHref={settingsHref}
                     user={user}
                     onLogout={onLogout}
+                    signingOut={signingOut}
                 />
             </Container>
         </header>

@@ -36,7 +36,9 @@ export function ListingEnquiryCard({
 
     const run = (kind: PropertyActionKind) => {
         if (kind === "interest") return flow.registerInterest();
-        if (kind === "viewing" || kind === "offer") setOpen(kind);
+        if (kind !== "viewing" && kind !== "offer") return;
+        flow.resetRequests();
+        setOpen(kind);
     };
 
     return (

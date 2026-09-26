@@ -1,23 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Callout } from "@/components/ui/callout";
-import {
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalTitle,
-    ModalBody,
-    ModalFooter,
-} from "@/components/ui/modal";
+import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import type { MaintenanceAction } from "@/lib/data/admin-settings";
 
-const CANCEL_LABEL = "Cancel";
-const CALLOUT_TITLE = "This cannot be undone";
+const WARNING_TITLE = "This cannot be undone";
+const FAILURE_BODY = "Nothing was changed. Try again in a moment.";
 
 export interface MaintenanceConfirmModalProps {
     action: MaintenanceAction | null;
     pending: boolean;
+    failed: boolean;
     onClose: () => void;
     onConfirm: () => void;
 }
@@ -25,55 +17,23 @@ export interface MaintenanceConfirmModalProps {
 export function MaintenanceConfirmModal({
     action,
     pending,
+    failed,
     onClose,
     onConfirm,
 }: MaintenanceConfirmModalProps) {
     return (
-        <Modal
+        <ConfirmModal
             open={action !== null}
-            onOpenChange={(open) => {
-                if (!open) onClose();
-            }}
-            aria-labelledby="maintenance-confirm-title"
-        >
-            {action && (
-                <ModalContent>
-                    <ModalHeader>
-                        <ModalTitle id="maintenance-confirm-title">
-                            {action.confirmTitle}
-                        </ModalTitle>
-                    </ModalHeader>
-                    <ModalBody className="space-y-3">
-                        <p className="text-text-secondary text-xs">
-                            {action.confirmLede}
-                        </p>
-                        <Callout
-                            variant={action.danger ? "error" : "warning"}
-                            title={CALLOUT_TITLE}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            type="button"
-                            emphasis="quiet"
-                            onClick={onClose}
-                            disabled={pending}
-                        >
-                            {CANCEL_LABEL}
-                        </Button>
-                        <Button
-                            type="button"
-                            emphasis="solid"
-                            tone={action.danger ? "error" : "accent"}
-                            isLoading={pending}
-                            onClick={onConfirm}
-                        >
-                            {action.label}
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            )}
-        </Modal>
+            title={action?.confirmTitle ?? ""}
+            warning={{ title: WARNING_TITLE, body: action?.confirmLede }}
+            failure={{ title: action?.failure ?? "", body: FAILURE_BODY }}
+            confirmLabel={action?.label ?? ""}
+            tone={action?.danger ? "error" : "accent"}
+            pending={pending}
+            failed={failed}
+            onClose={onClose}
+            onConfirm={onConfirm}
+        />
     );
 }
 
