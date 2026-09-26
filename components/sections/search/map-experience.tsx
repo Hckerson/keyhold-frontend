@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SearchFilterAside } from "@/components/sections/search/search-filter-aside";
 import { SearchResultsMap } from "@/components/sections/search/search-results-map";
 import { SearchResultsError } from "@/components/sections/search/search-results-error";
@@ -59,10 +59,12 @@ export function MapExperience() {
     const [panelOpen, setPanelOpen] = useState(false);
     const appliedKey = JSON.stringify(applied);
     const [draft, setDraft] = useState<SearchFilters>(applied);
+    const [draftSource, setDraftSource] = useState(appliedKey);
 
-    useEffect(() => {
-        setDraft(JSON.parse(appliedKey) as SearchFilters);
-    }, [appliedKey]);
+    if (draftSource !== appliedKey) {
+        setDraftSource(appliedKey);
+        setDraft(applied);
+    }
 
     const query = useMemo(
         () => ({
