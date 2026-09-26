@@ -259,7 +259,7 @@ describe("TransactionsConsole · when the release fails", () => {
         await userEvent.click((await releaseButtons())[0]);
         await userEvent.click(confirmButton());
 
-        const table = await screen.findByRole("table");
+        const table = await screen.findByRole("table", { hidden: true });
         await waitFor(() =>
             expect(within(table).getByText(/in escrow/i)).toBeInTheDocument(),
         );

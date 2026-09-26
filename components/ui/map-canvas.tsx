@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
     getVersion,
@@ -65,8 +65,10 @@ export function MapCanvas({
     const camera = useRef({ centre, zoom, cooperative });
     const [ready, setReady] = useState(false);
 
-    select.current = onSelect;
-    report.current = onBoundsChange;
+    useLayoutEffect(() => {
+        select.current = onSelect;
+        report.current = onBoundsChange;
+    });
 
     useEffect(() => {
         if (!host.current || map.current) return;
