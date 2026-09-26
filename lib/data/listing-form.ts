@@ -1,13 +1,16 @@
-import {
-    DEFAULT_COUNTRY,
-    LISTING_STATUS_OPTIONS,
-    isSellerStatus,
-    type ListingDraft,
-} from "@/lib/config/listing-form";
+import { DEFAULT_COUNTRY, type ListingDraft } from "@/lib/config/listing-form";
 import { LISTING_FORM_COPY } from "@/lib/config/listing-form-copy";
-import { FEATURED_DATE_FORMAT } from "@/lib/data/agent-listings";
-import { PROPERTY_STATUS_LABELS, type PropertyStatus } from "@/lib/enums/enums";
+import {
+    BULK_TRANSITIONS,
+    FEATURED_DATE_FORMAT,
+} from "@/lib/data/agent-listings";
+import {
+    PROPERTY_STATUSES,
+    PROPERTY_STATUS_LABELS,
+    type PropertyStatus,
+} from "@/lib/enums/enums";
 import { dateFormatter } from "@/lib/utils";
+import { MANAGED_STATUS_BY_PROPERTY } from "@/lib/utils/to-managed-listing";
 import type {
     ListingFormInput,
     Property,
@@ -123,13 +126,24 @@ export const movedImageIds = (
     return [...without.slice(0, to), moving, ...without.slice(to)];
 };
 
-export const listingStatusOptions = (status: PropertyStatus) =>
-    isSellerStatus(status)
-        ? LISTING_STATUS_OPTIONS
-        : [
-              { value: status, label: PROPERTY_STATUS_LABELS[status] },
-              ...LISTING_STATUS_OPTIONS,
-          ];
+const bulkTargetsFrom = (stored: PropertyStatus) =>
+    Object.values(BULK_TRANSITIONS)
+        .filter((transition) =>
+            transition.from.includes(MANAGED_STATUS_BY_PROPERTY[stored]),
+        )
+        .map((transition) => transition.to);
+
+export const isStatusLocked = (stored: PropertyStatus) =>
+    bulkTargetsFrom(stored).length === 0;
+
+export const listingStatusOptions = (stored: PropertyStatus) => {
+    const reachable = isStatusLocked(stored)
+        ? [stored]
+        : [stored, ...bulkTargetsFrom(stored)];
+    return PROPERTY_STATUSES.filter((value) => reachable.includes(value)).map(
+        (value) => ({ value, label: PROPERTY_STATUS_LABELS[value] }),
+    );
+};
 
 const SELLABLE_STATUSES: readonly PropertyStatus[] = ["AVAILABLE", "PENDING"];
 

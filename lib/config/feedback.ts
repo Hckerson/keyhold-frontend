@@ -105,7 +105,7 @@ export const FEEDBACK = {
     },
     bulkUpdatePropertyStatus: {
         success: "Listings updated",
-        error: "We couldn't update every selected listing.",
+        silentError: true,
     },
     deleteProperty: { silentError: true },
     bulkDeleteProperties: { success: "Listings deleted", silentError: true },

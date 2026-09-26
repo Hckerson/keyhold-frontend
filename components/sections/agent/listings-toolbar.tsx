@@ -6,9 +6,11 @@ import {
     BULK_ACTIONS,
     BULK_LABELS,
     FILTERS,
+    allowsBulk,
     type BulkAction,
     type StatusFilter,
 } from "@/lib/data/agent-listings";
+import type { ManagedListing } from "@/lib/types";
 
 const SELECTED_SUFFIX = "selected";
 const CLEAR_LABEL = "Clear";
@@ -16,7 +18,7 @@ const CLEAR_LABEL = "Clear";
 export interface ListingsToolbarProps {
     filter: StatusFilter;
     counts: Record<StatusFilter, number>;
-    selectedCount: number;
+    selected: ManagedListing[];
     busy: boolean;
     onFilterChange: (filter: StatusFilter) => void;
     onClearSelection: () => void;
@@ -26,13 +28,13 @@ export interface ListingsToolbarProps {
 export function ListingsToolbar({
     filter,
     counts,
-    selectedCount,
+    selected,
     busy,
     onFilterChange,
     onClearSelection,
     onBulkAction,
 }: ListingsToolbarProps) {
-    if (selectedCount === 0) {
+    if (selected.length === 0) {
         return (
             <div className="flex min-h-11 flex-wrap items-center py-1.5">
                 <FilterPills<StatusFilter>
@@ -48,7 +50,7 @@ export function ListingsToolbar({
     return (
         <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 py-1.5">
             <p className="micro-label">
-                {selectedCount} {SELECTED_SUFFIX}
+                {selected.length} {SELECTED_SUFFIX}
             </p>
             <div className="flex flex-wrap items-center gap-2">
                 {BULK_ACTIONS.map((action) => (
@@ -56,7 +58,12 @@ export function ListingsToolbar({
                         key={action}
                         type="button"
                         tone={action === "delete" ? "error" : "neutral"}
-                        disabled={busy}
+                        disabled={
+                            busy ||
+                            !selected.some((listing) =>
+                                allowsBulk(listing, action),
+                            )
+                        }
                         onClick={() => onBulkAction(action)}
                     >
                         {BULK_LABELS[action]}

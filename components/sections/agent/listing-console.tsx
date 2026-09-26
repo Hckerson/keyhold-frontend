@@ -6,9 +6,10 @@ import { ListingsMain } from "@/components/sections/agent/listings-main";
 import { ListingsRail } from "@/components/sections/agent/listings-rail";
 import { ListingsStatBand } from "@/components/sections/agent/listings-stat-band";
 import { ListingPromoteModal } from "@/components/features/agent/listing-promote-modal";
-import { ListingBulkDeleteModal } from "@/components/features/agent/listing-bulk-delete-modal";
+import { ListingBulkModals } from "@/components/features/agent/listing-bulk-modals";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import {
+    bulkStatusTarget,
     countByStatus,
     featuredUntilLabel,
     listingStats,
@@ -16,9 +17,10 @@ import {
     peakViews,
     rankListings,
     type BulkAction,
+    type BulkStatusChange,
+    type BulkStatusTarget,
 } from "@/lib/data/agent-listings";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
-import { BULK_STATUS } from "@/lib/config/listing-bulk";
 import { useSession } from "@/lib/hooks/use-session";
 import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useListingSelection } from "@/lib/hooks/use-listing-selection";
@@ -42,6 +44,9 @@ export function ListingConsole() {
     const bulkDelete = useBulkDeleteProperties();
     const promoteProperty = usePromoteProperty();
     const deletion = useConfirmation<readonly string[]>(bulkDelete);
+    const statusChange = useConfirmation<BulkStatusChange, BulkStatusTarget>(
+        bulkStatus,
+    );
     const promotion = useConfirmation<{ id: string; days: number }, string>(
         promoteProperty,
     );
@@ -57,24 +62,17 @@ export function ListingConsole() {
     const peak = useMemo(() => peakViews(listings), [listings]);
     const selection = useListingSelection(peers);
 
-    const bulkPending = bulkStatus.isPending || deletion.pending;
+    const bulkPending = statusChange.pending || deletion.pending;
 
     const runBulkAction = (action: BulkAction) => {
-        const ids = selection.selectedIds;
-        if (bulkPending || ids.length === 0) return;
+        if (bulkPending || selection.selected.length === 0) return;
         if (action === "delete") {
-            deletion.request(ids);
+            deletion.request(selection.selectedIds);
             return;
         }
-        bulkStatus.mutate(
-            { ids, status: BULK_STATUS[action] },
-            { onSuccess: selection.clear },
-        );
+        const target = bulkStatusTarget(selection.selected, action);
+        if (target.ids.length > 0) statusChange.request(target);
     };
-
-    const deleting = listings.filter((listing) =>
-        deletion.target?.includes(listing.id),
-    );
 
     const promoteTarget = listings.find(
         (listing) => listing.id === promotion.target,
@@ -108,6 +106,7 @@ export function ListingConsole() {
                     peak={peak}
                     filter={selection.filter}
                     counts={counts}
+                    selected={selection.selected}
                     selectedIds={selection.selectedIds}
                     allSelected={selection.allSelected}
                     pending={isPending}
@@ -122,18 +121,11 @@ export function ListingConsole() {
                 <ListingsRail listings={listings} />
             </div>
 
-            <ListingBulkDeleteModal
-                open={deletion.open}
-                listings={deleting}
-                pending={deletion.pending}
-                failed={deletion.failed}
-                onClose={deletion.dismiss}
-                onConfirm={() =>
-                    deletion.confirm(
-                        deleting.map((listing) => listing.id),
-                        selection.clear,
-                    )
-                }
+            <ListingBulkModals
+                listings={listings}
+                deletion={deletion}
+                statusChange={statusChange}
+                onDone={selection.clear}
             />
 
             <ListingPromoteModal

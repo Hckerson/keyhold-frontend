@@ -10,7 +10,11 @@ import {
     type ListingDraft,
 } from "@/lib/config/listing-form";
 import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
-import { canMarkSold, listingStatusOptions } from "@/lib/data/listing-form";
+import {
+    canMarkSold,
+    isStatusLocked,
+    listingStatusOptions,
+} from "@/lib/data/listing-form";
 import type { PropertyStatus } from "@/lib/enums/enums";
 
 export interface ListingLifecyclePanelProps {
@@ -39,8 +43,9 @@ export function ListingLifecyclePanel({
             <LabelledBlock label={COPY.status}>
                 <Select
                     label={COPY.status}
-                    options={listingStatusOptions(status)}
+                    options={listingStatusOptions(storedStatus)}
                     value={status}
+                    disabled={isStatusLocked(storedStatus)}
                     onChange={(next: PropertyStatus) =>
                         onPatch({ status: next })
                     }
