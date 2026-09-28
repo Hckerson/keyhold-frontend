@@ -1,3 +1,6 @@
+import type { DotTone } from "@/components/patterns/status-dot";
+import type { Trend } from "@/lib/types/ui";
+
 export type ModerationQueueId =
     | "verifications"
     | "listings"
@@ -10,6 +13,61 @@ export interface ModerationQueueLoad {
     id: ModerationQueueId;
     backlog: number;
     oldestMinutes: number;
+}
+
+export type QueueReadiness = "pending" | "error" | "ready";
+
+export type DecisionLaneId = ModerationQueueId | "accounts";
+
+export interface DecisionLane {
+    id: DecisionLaneId;
+    backlog: number;
+    oldestMinutes: number | null;
+    position: number;
+    share: number;
+}
+
+export interface WaitTick {
+    minutes: number;
+    label: string;
+}
+
+export interface SystemsReading {
+    figure: string;
+    belowSlo: boolean;
+    reading: string;
+}
+
+export interface MonthDelta {
+    label: string;
+    direction: Trend;
+}
+
+export interface BusinessFigure {
+    id: "members" | "listings" | "deals";
+    label: string;
+    href: string;
+    latest: string;
+    delta: MonthDelta | null;
+    points: number[];
+    total: string;
+    ratio: { percent: number; label: string };
+}
+
+export interface LifetimeVolume {
+    settled: string;
+    averageDeal: string | null;
+}
+
+export interface AuditEvent {
+    id: string;
+    action: string;
+    tone: DotTone;
+    security: boolean;
+    actor: string;
+    initials: string;
+    subject: string;
+    ageMinutes: number;
 }
 
 export interface ServiceHealth {
