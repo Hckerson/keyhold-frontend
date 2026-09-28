@@ -7,7 +7,7 @@ import { AgeMark } from "@/components/features/shared/age-mark";
 import { Button } from "@/components/ui/button";
 import { PayoutAmount } from "@/components/features/admin/payout-amount";
 import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";
-import { payoutAgeTone, PAYOUT_STATES } from "@/lib/config/admin-tones";
+import { payoutAgeTone, PAYOUT_STATES } from "@/lib/config/payout-tones";
 import {
     inspectionLabel,
     payoutFee,
