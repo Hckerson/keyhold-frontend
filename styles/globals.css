@@ -285,7 +285,29 @@
     --split-columns: 4;
 }
 
+.register-section {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.register-section > * {
+    min-width: 0;
+}
+
+.register-spine {
+    border-bottom: 1px solid var(--color-border-light);
+}
+
 @container console (min-width: 56rem) {
+    .register-section {
+        grid-template-columns: 15rem minmax(0, 1fr);
+    }
+
+    .register-spine {
+        border-bottom: 0;
+        border-right: 1px solid var(--color-border-light);
+    }
+
     .console-split {
         grid-template-columns: repeat(var(--split-columns), minmax(0, 1fr));
     }
