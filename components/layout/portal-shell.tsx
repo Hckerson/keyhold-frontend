@@ -4,6 +4,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Sidebar, type SidebarProps } from "@/components/layout/sidebar";
+import { SignOutModal } from "@/components/layout/sign-out-modal";
 import { Topbar, type TopbarProps } from "@/components/layout/topbar";
 import { useSession } from "@/lib/hooks/use-session";
 import { useSignOut } from "@/lib/hooks/use-sign-out";
@@ -26,7 +27,7 @@ export function PortalShell({
 }: PortalShellProps) {
     const pathname = usePathname();
     const { user } = useSession();
-    const { signOut, signingOut } = useSignOut();
+    const { signOut, signingOut, confirmation } = useSignOut();
     const [navOpenedOn, setNavOpenedOn] = useState<string | null>(null);
     const navOpen = navOpenedOn === pathname;
 
@@ -64,6 +65,8 @@ export function PortalShell({
                     </Container>
                 </div>
             </main>
+
+            <SignOutModal confirmation={confirmation} />
         </div>
     );
 }

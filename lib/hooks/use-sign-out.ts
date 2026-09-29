@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAPI } from "@/lib/api/auth";
 import { FEEDBACK } from "@/lib/config/feedback";
 import { AUTH_ROUTES } from "@/lib/constants";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useAuthStore } from "@/lib/stores/auth-store";
 import { isUnauthorized } from "@/lib/utils/api-error";
 
@@ -22,7 +23,7 @@ export function useSignOut() {
     const queryClient = useQueryClient();
     const clearAuth = useAuthStore((state) => state.clearAuth);
 
-    const { mutate, isPending } = useMutation({
+    const mutation = useMutation({
         meta: FEEDBACK.signOut,
         mutationFn: endServerSession,
         onSuccess: () => {
@@ -32,9 +33,10 @@ export function useSignOut() {
         },
     });
 
-    const signOut = useCallback(() => {
-        if (!isPending) mutate();
-    }, [isPending, mutate]);
+    const confirmation = useConfirmation<void, true>(mutation);
+    const { request } = confirmation;
 
-    return { signOut, signingOut: isPending };
+    const signOut = useCallback(() => request(true), [request]);
+
+    return { signOut, signingOut: confirmation.pending, confirmation };
 }
