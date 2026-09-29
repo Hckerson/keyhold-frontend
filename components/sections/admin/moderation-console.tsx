@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { ModerationApproveModal } from "@/components/features/admin/moderation-approve-modal";
 import { ModerationDecisionModal } from "@/components/features/admin/moderation-decision-modal";
 import { ModerationReviewModal } from "@/components/features/admin/moderation-review-modal";
 import { ModerationHeader } from "@/components/sections/admin/moderation-header";
@@ -10,12 +11,8 @@ import { ModerationStatBand } from "@/components/sections/admin/moderation-stat-
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    countByStatus,
-    focusListing,
     matchesModerationFilters,
-    moderationStats,
-    moderationSummary,
-    rankListings,
+    moderationDesk,
     type ModerationCheckFilter,
     type ModerationStatusFilter,
 } from "@/lib/data/admin-listings";
@@ -42,26 +39,26 @@ export function ModerationConsole() {
         [flags.data?.items],
     );
 
-    const ranked = useMemo(() => rankListings(listings), [listings]);
-    const counts = useMemo(() => countByStatus(listings), [listings]);
-    const stats = useMemo(() => moderationStats(listings), [listings]);
-    const focus = useMemo(() => focusListing(listings), [listings]);
+    const desk = useMemo(() => moderationDesk(listings), [listings]);
 
-    const actions = useModerationActions(listings, (id) =>
-        setReviewId((current) => (current === id ? null : current)),
-    );
+    const actions = useModerationActions(listings);
 
     const visible = useMemo(
         () =>
-            ranked.filter((listing) =>
+            desk.ranked.filter((listing) =>
                 matchesModerationFilters(listing, statusFilter, checkFilter),
             ),
-        [ranked, statusFilter, checkFilter],
+        [desk.ranked, statusFilter, checkFilter],
     );
 
     const onOpen = useCallback((id: string) => setReviewId(id), []);
 
     const onCloseReview = useCallback(() => setReviewId(null), []);
+
+    const onApprove = (id: string) => {
+        setReviewId(null);
+        actions.approval.request(id);
+    };
 
     const onDecide = (mode: DecisionMode, id: string) => {
         setReviewId(null);
@@ -78,34 +75,53 @@ export function ModerationConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <ModerationHeader summary={moderationSummary(listings)} />
+            <ModerationHeader />
 
-            <ModerationStatBand stats={stats} pending={flags.isPending} />
+            <ModerationStatBand
+                tiles={desk.tiles}
+                active={statusFilter}
+                pending={flags.isPending}
+                onChange={setStatusFilter}
+            />
 
             <div className="console-split gap-3">
                 <ModerationMain
-                    focus={focus}
                     listings={visible}
-                    statusFilter={statusFilter}
+                    reading={desk.reading}
+                    checks={desk.checks}
                     checkFilter={checkFilter}
-                    counts={counts}
                     pending={flags.isPending}
-                    onStatusFilterChange={setStatusFilter}
-                    onCheckFilterChange={setCheckFilter}
                     approvingId={actions.approvingId}
+                    onCheckFilterChange={setCheckFilter}
                     onOpen={onOpen}
-                    onApprove={actions.approve}
+                    onApprove={onApprove}
                     onDecide={onDecide}
                 />
-                <ModerationRail listings={listings} />
+                <ModerationRail
+                    focus={desk.focus}
+                    loads={desk.loads}
+                    pending={flags.isPending}
+                    approvingId={actions.approvingId}
+                    onOpen={onOpen}
+                    onApprove={onApprove}
+                    onDecide={onDecide}
+                />
             </div>
 
             <ModerationReviewModal
                 listing={listings.find((listing) => listing.id === reviewId)}
                 approvingId={actions.approvingId}
                 onClose={onCloseReview}
-                onApprove={actions.approve}
+                onApprove={onApprove}
                 onDecide={onDecide}
+            />
+
+            <ModerationApproveModal
+                listing={actions.approvingListing}
+                pending={actions.approval.pending}
+                failed={actions.approval.failed}
+                onClose={actions.approval.dismiss}
+                onConfirm={actions.confirmApproval}
             />
 
             <ModerationDecisionModal

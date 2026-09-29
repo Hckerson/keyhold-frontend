@@ -93,4 +93,8 @@ export const toModerationQueue = (flags: Flag[]): ModerationListing[] => {
 export const toModerationTargets = (
     listings: ModerationListing[],
 ): ModerationTarget[] =>
-    listings.map(({ id, listingId }) => ({ flagId: id, listingId }));
+    listings.map(({ id, listingId, status }) => ({
+        flagId: id,
+        listingId,
+        flagActive: status === "flagged",
+    }));

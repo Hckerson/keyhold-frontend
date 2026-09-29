@@ -2,37 +2,31 @@
 
 import { ClipboardCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { PanelLink } from "@/components/features/shared/panel-link";
-import { ModerationListingTable } from "@/components/features/admin/moderation-listing-table";
-import { ModerationFocusHero } from "@/components/sections/admin/moderation-focus-hero";
-import { ModerationToolbar } from "@/components/sections/admin/moderation-toolbar";
+import { PresenceSwap } from "@/components/patterns/presence-swap";
+import { CheckBreakdown } from "@/components/features/admin/check-breakdown";
+import { ModerationQueueList } from "@/components/features/admin/moderation-queue-list";
+import type { ModerationCheckFilter } from "@/lib/data/admin-listings";
 import type {
-    ModerationCheckFilter,
-    ModerationStatusFilter,
-} from "@/lib/data/admin-listings";
-import type { DecisionMode, ModerationListing } from "@/lib/types";
+    CheckBreakdown as CheckBreakdownData,
+    DecisionMode,
+    ModerationListing,
+} from "@/lib/types";
 
 const QUEUE_TITLE = "Review Queue";
-const QUEUE_LEDE = "Every submission behind the one you decide next";
-const QUEUE_ACTION = "Platform reports";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
-    "Widen the status filter or drop back to every check to see the full queue.";
+    "Widen the status filter or drop the check filter to see the full queue.";
 const LOADING_TITLE = "Loading the queue";
 const LOADING_LEDE = "Fetching reported listings.";
 
 export interface ModerationMainProps {
-    focus?: ModerationListing;
     listings: ModerationListing[];
-    statusFilter: ModerationStatusFilter;
+    reading: string;
+    checks: CheckBreakdownData[];
     checkFilter: ModerationCheckFilter;
-    counts: Record<ModerationStatusFilter, number>;
     pending?: boolean;
     approvingId?: string;
-    onStatusFilterChange: (filter: ModerationStatusFilter) => void;
     onCheckFilterChange: (filter: ModerationCheckFilter) => void;
     onOpen: (id: string) => void;
     onApprove: (id: string) => void;
@@ -40,71 +34,39 @@ export interface ModerationMainProps {
 }
 
 export function ModerationMain({
-    focus,
     listings,
-    statusFilter,
+    reading,
+    checks,
     checkFilter,
-    counts,
     pending,
-    approvingId,
-    onStatusFilterChange,
     onCheckFilterChange,
-    onOpen,
-    onApprove,
-    onDecide,
+    ...actions
 }: ModerationMainProps) {
     return (
-        <div className="console-span-2 flex flex-col gap-3">
-            {focus && (
-                <PresenceSwap swapKey={focus.id}>
-                    <ModerationFocusHero
-                        listing={focus}
-                        approvingId={approvingId}
-                        onOpen={onOpen}
-                        onApprove={onApprove}
-                        onDecide={onDecide}
+        <Panel
+            title={QUEUE_TITLE}
+            description={reading}
+            count={listings.length}
+            className="console-span-2 min-w-0"
+            bodyClassName="space-y-3"
+        >
+            <CheckBreakdown
+                rows={checks}
+                active={checkFilter}
+                onChange={onCheckFilterChange}
+            />
+            <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
+                {listings.length > 0 ? (
+                    <ModerationQueueList listings={listings} {...actions} />
+                ) : (
+                    <EmptyState
+                        icon={ClipboardCheck}
+                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
                     />
-                </PresenceSwap>
-            )}
-
-            <Panel
-                title={QUEUE_TITLE}
-                description={QUEUE_LEDE}
-                count={listings.length}
-                action={
-                    <PanelLink href="/admin/reports" label={QUEUE_ACTION} />
-                }
-                toolbar={
-                    <ModerationToolbar
-                        statusFilter={statusFilter}
-                        checkFilter={checkFilter}
-                        counts={counts}
-                        onStatusFilterChange={onStatusFilterChange}
-                        onCheckFilterChange={onCheckFilterChange}
-                    />
-                }
-            >
-                <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
-                    {listings.length > 0 ? (
-                        <PanelInset scroll>
-                            <ModerationListingTable
-                                listings={listings}
-                                approvingId={approvingId}
-                                onOpen={onOpen}
-                                onApprove={onApprove}
-                                onDecide={onDecide}
-                            />
-                        </PanelInset>
-                    ) : (
-                        <EmptyState
-                            icon={ClipboardCheck}
-                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
-                        />
-                    )}
-                </PresenceSwap>
-            </Panel>
-        </div>
+                )}
+            </PresenceSwap>
+        </Panel>
     );
 }
 

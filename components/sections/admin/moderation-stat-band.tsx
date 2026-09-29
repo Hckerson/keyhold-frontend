@@ -1,18 +1,41 @@
-import { StatBand } from "@/components/patterns/stat-band";
-import type { StatDatum } from "@/components/patterns/stat-cell";
+"use client";
 
-const BAND_LABEL = "Moderation queue at a glance";
+import { ModerationStatusTile } from "@/components/features/admin/moderation-status-tile";
+import type { ModerationStatusFilter } from "@/lib/data/admin-listings";
+import type { ModerationStatusTile as ModerationStatusTileData } from "@/lib/types";
+
+const BAND_LABEL = "Filter the queue by review status";
 
 export interface ModerationStatBandProps {
-    stats: StatDatum[];
+    tiles: ModerationStatusTileData[];
+    active: ModerationStatusFilter;
     pending?: boolean;
+    onChange: (filter: ModerationStatusFilter) => void;
 }
 
 export function ModerationStatBand({
-    stats,
+    tiles,
+    active,
     pending,
+    onChange,
 }: ModerationStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
+    return (
+        <section
+            aria-label={BAND_LABEL}
+            aria-busy={pending || undefined}
+            className="console-split console-split--sixths gap-2"
+        >
+            {tiles.map((tile) => (
+                <ModerationStatusTile
+                    key={tile.id}
+                    tile={tile}
+                    active={tile.id === active}
+                    pending={pending}
+                    onSelect={() => onChange(tile.id)}
+                />
+            ))}
+        </section>
+    );
 }
 
 ModerationStatBand.displayName = "ModerationStatBand";
