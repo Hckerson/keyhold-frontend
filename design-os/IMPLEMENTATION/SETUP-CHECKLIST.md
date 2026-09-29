@@ -1,246 +1,180 @@
-# Setup Checklist — Luxury Real Estate Platform
+# Setup Checklist — Keyhold
 
-**How the styling foundation is wired, and the conventions that go with it.**
+**From a fresh clone to a verified working environment.** · Version 2.0 · 29 September 2026
 
-`.claude/CLAUDE.md` at the repo root is the binding specification. This document explains the token and styling layer it assumes.
-
----
-
-## The Styling Foundation
-
-```
-styles/tokens.css
-   └─ All CSS custom properties: --colors-*, --fonts-*, --font-sizes-*,
-      --spacing-*, --durations-*, --timing-functions-*, --radii-*, --shadows-*
-   └─ Light theme (warm ivory ground, pine accent, brass highlight)
-   └─ Single source of truth for every design decision
-
-styles/globals.css
-   └─ @import "tailwindcss" + "tw-animate-css" + "./tokens.css"
-   └─ @theme block maps plural tokens onto Tailwind v4 theme names
-      (--colors-accent → --color-accent, --font-sizes-h1 → --text-h1, …)
-   └─ Named scale classes: .pad, .pad-x, .pad-y, .gap, .gap-x, .gap-y,
-      .smooth, .micro-label, .rail-label
-   └─ Layout primitives: .console-split, .stat-band, .card-grid,
-      .metric-strip, .stat-grid, .tile-quad, .table-flush
-
-public/fonts/font.ts
-   └─ next/font/google: Fraunces (display), Libre Franklin (body),
-      JetBrains Mono (mono) → --nf-display, --nf-body, --nf-mono
-```
-
-**There is no `tailwind.config.ts`.** Tailwind v4 is configured entirely through the `@theme` block in `globals.css`, wired via `@tailwindcss/postcss` in `postcss.config.mjs`.
-
-**There is no `lib/tokens.ts`.** Motion values that JavaScript needs live in `lib/config/motion.ts`.
+`.claude/CLAUDE.md` at the repo root is the binding specification. This checklist gets you to the point where [IMPLEMENTATION_PROMPT](IMPLEMENTATION_PROMPT.md) can be followed. Entry point: [START_HERE](../INDEX/START_HERE.md).
 
 ---
 
-## Root Layout
+## Contents
 
-`app/layout.tsx` imports the stylesheet and the font variables:
-
-```tsx
-import "../styles/globals.css";
-import Provider from "@/components/providers/provider";
-import { display, sans, mono } from "@/public/fonts/font";
-```
-
-`Provider` composes the Query, session and motion providers. Nothing else wraps the tree at the root.
+1. [Pre-implementation Prerequisites](#1-pre-implementation-prerequisites)
+2. [Environment Setup](#2-environment-setup)
+3. [Project Initialization](#3-project-initialization)
+4. [Dependencies](#4-dependencies)
+5. [Testing Setup](#5-testing-setup)
+6. [Developer Workflow Setup](#6-developer-workflow-setup)
+7. [Design Phase Reference](#7-design-phase-reference)
+8. [Verification Checklist](#8-verification-checklist)
+9. [Design Docs in `design-os/`](#9-design-docs-in-design-os)
+10. [Regeneration Notes](#regeneration-notes)
 
 ---
 
-## Design Phase Reference
+## 1. Pre-implementation Prerequisites
+
+### Read these phases first
+
+- [ ] `.claude/CLAUDE.md` — binding rules (10 min)
+- [ ] [Phase 1 — Product Vision](../CORE-PHASES/phase-1-product-vision.md): personas, roles, business rules
+- [ ] [Phase 3 — Information Architecture](../CORE-PHASES/phase-3-information-architecture.md): routes, permissions, labels
+- [ ] [Phase 7 — Frontend Architecture](../CORE-PHASES/phase-7-frontend-architecture.md): where code goes
+
+### Understand these concepts
+
+- [ ] **Personas and roles** — four personas, three system roles; `SELLER` serves both the agent and the seller ([ADR 0018](../../docs/adr/0018-the-seller-is-the-agent.md))
+- [ ] **Navigation** — three portals (`/dashboard`, `/agent`, `/admin`), each guarded by role
+- [ ] **Interaction contracts** — every control's behaviour is specified in [Phase 6](../CORE-PHASES/phase-6-interaction-contracts.md); its look is decided at build time with the owner
+- [ ] **Build status** — lives only in [Phase 8](../CORE-PHASES/phase-8-implementation-roadmap.md#per-feature-build-status)
+- [ ] **Divergences** — where the code departs from the spec, [RATIFIED_DIVERGENCES](../INDEX/RATIFIED_DIVERGENCES.md) records the owner's decision
+
+---
+
+## 2. Environment Setup
+
+- [ ] **Node 22.x** (`engines.node` in `package.json`)
+- [ ] **pnpm 10** (`packageManager: pnpm@10.17.0`; `corepack enable` picks it up)
+- [ ] **Backend** — the NestJS service checked out beside this repo at `../backend`, running on port 5000 (authenticated routes and all data depend on it; `pnpm enums:check` skips when it is absent)
+- [ ] **Editor** — TypeScript from the workspace, ESLint and Prettier extensions, format on save
+
+---
+
+## 3. Project Initialization
+
+The project already exists; initialization means getting a local copy running.
+
+```bash
+git clone <repo> frontend && cd frontend
+git checkout development
+pnpm install
+cp .env.example .env.local
+```
+
+### Environment variables (`.env.example`)
+
+| Variable | Needed for | Local value |
+| -------- | ---------- | ----------- |
+| `NEXT_PUBLIC_API_BASE_URL` | All data | `http://localhost:5000/api` |
+| `JWT_PUBLIC_KEY` | Portal session verification in `proxy.ts` (portals redirect to `/login` without it) | Same base64 PEM as the backend |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, Open Graph, sitemap, robots | `http://localhost:3000` |
+| `NEXT_PUBLIC_STRIPE_KEY`, `NEXT_PUBLIC_ENABLE_STRIPE` | Checkout (disabled while empty) | Test key, or leave off |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_*` | Error reporting, source maps | Empty locally |
+| `NEXT_PUBLIC_AUTH_PROVIDERS` | Social sign-in buttons (`google,facebook`; never `apple` until deferred work lands) | Empty or configured providers |
+| `NEXT_PUBLIC_DEV_QUICK_LOGIN`, `NEXT_PUBLIC_DEV_PASSWORD` | Development-only quick login | Local only — never enable elsewhere |
+
+### TypeScript configuration
+
+- `tsconfig.json` is strict; no `any`.
+- Imports use `@/`; `next.config.ts` uses no `@/` aliases (they resolve wrong there).
+
+### Folder structure
+
+Already matches [Phase 7 › Folder Structure](../CORE-PHASES/phase-7-frontend-architecture.md#folder-structure). New code goes where `.claude/CLAUDE.md` says; do not create new top-level folders.
+
+---
+
+## 4. Dependencies
+
+- [ ] `pnpm install` from the lockfile — the lockfile is the contract.
+- [ ] Nothing new without approval: per the Library Selection Policy, reuse what is installed; otherwise propose a package and the reason, and wait for the owner's yes before `pnpm add`. Never hand-edit `package.json`.
+- [ ] The installed stack is listed in [IMPLEMENTATION_PROMPT › The Installed Stack](IMPLEMENTATION_PROMPT.md#the-installed-stack).
+
+---
+
+## 5. Testing Setup
+
+- [ ] **Unit and component:** Vitest (`vitest.config.mts`), Testing Library, `vitest-axe`, `jsdom` — already installed. `pnpm test` runs once; `pnpm test:watch` watches.
+- [ ] Tests colocated as `<unit>.test.ts(x)`; fixtures in `lib/data/__fixtures__/`; mock at `lib/api/<resource>.ts`.
+- [ ] **End-to-end:** no runner installed. Choosing one is a dependency decision for the owner (Phase 8 lists it as Specified).
+
+---
+
+## 6. Developer Workflow Setup
+
+- [ ] **Git hooks are disabled.** The `prepare` script unsets `core.hooksPath` on every install, so `.husky/` never runs. Run the gate yourself:
+    - before committing: `pnpm lint-staged` (or `pnpm lint` + `pnpm format`)
+    - before pushing: `pnpm type-check && pnpm lint && pnpm enums:check && pnpm contract:check`
+- [ ] **Enum parity:** `pnpm enums:check` compares `lib/enums/enums.ts` with `../backend/prisma/schema.prisma`.
+- [ ] **Contract:** `pnpm contract` regenerates `lib/contract/` from the backend's OpenAPI; `pnpm contract:check` fails when it is stale. Never edit `lib/contract/` by hand.
+- [ ] **Styling:** follow `.claude/CLAUDE.md` › Required patterns › Styling. The visual design of any page is decided with the owner before it is built ([Visual Design Hand-off](IMPLEMENTATION_PROMPT.md#visual-design-hand-off)).
+
+---
+
+## 7. Design Phase Reference
 
 When building each page, reference:
 
-| Page Type      | Reference File                                                                                        |
-| -------------- | ----------------------------------------------------------------------------------------------------- |
-| Home / Hero    | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 1) + `../CORE-PHASES/phase-5-section-blueprints.md` |
-| Search Results | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 2) + phase-5 (listing sections)                     |
-| Listing Detail | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 3) + phase-5 (listing sections)                     |
-| Dashboards     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 8-27)                                              |
-| Components     | `../CORE-PHASES/phase-6-component-library.md` (all 80 components)                                     |
-| Tokens         | `../CORE-PHASES/phase-7-design-tokens.md`                                                             |
+| Page Type      | Reference File                                                                                                    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Home           | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 1) + `../CORE-PHASES/phase-5-section-blueprints.md` (Sections 1–5) |
+| Search Results | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 2) + phase-5 (listing and form sections)                        |
+| Listing Detail | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 3) + phase-5 (listing sections)                                 |
+| Dashboards     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 8-27, 38-44)                                                   |
+| Site pages     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 28-37, 45-46)                                                  |
+| Controls       | `../CORE-PHASES/phase-6-interaction-contracts.md` (C1–C88)                                                        |
+| Status         | `../CORE-PHASES/phase-8-implementation-roadmap.md`                                                                |
 
 ---
 
-## Token Usage Examples
-
-### Colors (CSS)
-
-Custom properties in `tokens.css` use the **plural** prefix:
-
-```css
-.panel {
-    background-color: var(--colors-background);
-    color: var(--colors-text);
-    border: 1px solid var(--colors-border);
-}
-
-.panel__cta {
-    background-color: var(--colors-accent); /* pine #1f4e3d */
-}
-
-.panel__cta:hover {
-    background-color: var(--colors-accent-dark);
-}
-```
-
-### Colors (Tailwind)
-
-Tailwind class names use the **singular** theme names produced by `@theme`:
-
-```tsx
-<div className="bg-background text-text border-border border">
-    <button className="bg-accent text-text-inverse hover:bg-accent-dark">
-        Request a viewing
-    </button>
-</div>
-```
-
-### Typography
-
-```tsx
-<h1 className="font-display text-h1">Estate</h1>
-<p className="text-sm text-text-secondary">Supporting copy</p>
-<span className="micro-label">Reference</span>
-```
-
-Non-focal text sits at the smallest exposed size token. One focal value per card — differentiate by weight, color and case, never by size.
-
-### Motion (JavaScript)
-
-```tsx
-import { NORMAL, EASE_SMOOTH } from "@/lib/config/motion";
-
-const variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: NORMAL },
-};
-```
-
-The library is `motion` (`motion/react`), not `framer-motion`.
-
-### Spacing
-
-```tsx
-<div className="pad gap">
-    <div className="pad-y">Content</div>
-</div>
-```
-
-Named scale classes come first. Inline responsive utility chains are forbidden.
-
----
-
-## Component Building Pattern
-
-```tsx
-// components/ui/my-component.tsx
-
-import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
-
-const componentVariants = cva(
-    "ease-smooth flex items-center transition-colors duration-200",
-    {
-        variants: {
-            emphasis: {
-                solid: "bg-accent text-text-inverse hover:bg-accent-dark",
-                outline: "bg-background border-border border text-text",
-            },
-            size: {
-                sm: "h-8 px-3 text-xs",
-                lg: "h-11 px-5 text-sm",
-            },
-        },
-        defaultVariants: {
-            emphasis: "solid",
-            size: "sm",
-        },
-    },
-);
-
-export interface MyComponentProps
-    extends
-        React.HTMLAttributes<HTMLDivElement>,
-        VariantProps<typeof componentVariants> {}
-
-export function MyComponent({
-    className,
-    emphasis,
-    size,
-    ...props
-}: MyComponentProps) {
-    return (
-        <div
-            className={cn(componentVariants({ emphasis, size, className }))}
-            {...props}
-        />
-    );
-}
-```
-
-**Key pattern:**
-
-1. CVA for variants; `compoundVariants` when emphasis and tone interact (see `components/ui/button.tsx`)
-2. All colors and spacing via tokens — never hardcoded values
-3. `cn` from `@/lib/utils` merges classes
-4. Fully typed; no `any`
-5. One component per file, kebab-case filename matching the export
-
----
-
-## Running It
+## 8. Verification Checklist
 
 ```bash
 pnpm install
 pnpm dev          # http://localhost:3000
 ```
 
-You should see:
-
-- ✅ Warm ivory ground (`#faf8f4`) with white surfaces
-- ✅ Near-black text (`#1c1a17`), pine accent (`#1f4e3d`), brass highlight (`#b08d57`)
-- ✅ Fraunces for display, Libre Franklin for body, JetBrains Mono for figures
-- ✅ Dense application register — 16px icons, ~36px rows
+- [ ] `/` renders with live listings (backend reachable)
+- [ ] `/search` returns results; `/map` shows listings located on the map
+- [ ] Sign in as a buyer, an agent and an admin; each lands in its own portal and cannot open the others
+- [ ] `pnpm test` passes
+- [ ] `pnpm type-check` passes
+- [ ] `pnpm lint` passes
+- [ ] `pnpm enums:check` passes (or reports the backend is absent)
+- [ ] `pnpm contract:check` passes
+- [ ] `pnpm build` succeeds
 
 The backend must be running for authenticated routes; `proxy.ts` forwards API calls to the NestJS service in `../backend`.
 
 ---
 
-## Verify Before Pushing
+## 9. Design Docs in `design-os/`
 
-```bash
-pnpm test
-pnpm type-check
-pnpm lint
 ```
+INDEX/START_HERE.md                               ← Start here
+INDEX/README.md                                   ← 5-minute overview
+INDEX/DESIGN-OS-COMPLETE.md                       ← Master index
+INDEX/ARTIFACT_INDEX.md                           ← Per-phase descriptions
+INDEX/_FOLDER_STRUCTURE.md                        ← Layout + reading orders
+INDEX/RATIFIED_DIVERGENCES.md                     ← Where code and spec part company
 
-Husky's `pre-push` hook runs `type-check` then `lint` and blocks on failure. `pnpm test` is on you.
+CORE-PHASES/phase-1-product-vision.md             ← Strategy, business rules
+CORE-PHASES/phase-2-experience-maps.md            ← User flows
+CORE-PHASES/phase-3-information-architecture.md   ← Navigation
+CORE-PHASES/phase-4-page-blueprints.md            ← Page specs (PRIMARY)
+CORE-PHASES/phase-5-section-blueprints.md         ← Section specs
+CORE-PHASES/phase-6-interaction-contracts.md      ← Control behaviour
+CORE-PHASES/phase-7-frontend-architecture.md      ← Folder structure
+CORE-PHASES/phase-8-implementation-roadmap.md     ← 16-week plan + build status
+CORE-PHASES/phase-9-qa-checklist.md               ← QA & launch
+
+IMPLEMENTATION/IMPLEMENTATION_PROMPT.md           ← Sprint guide
+IMPLEMENTATION/SETUP-CHECKLIST.md                 ← This file
+```
 
 ---
 
-## Design Docs in `design-os/`
+## Regeneration Notes
 
-```
-INDEX/START_HERE.md                        ← Start here
-INDEX/README.md                            ← 5-minute overview
-INDEX/DESIGN-OS-COMPLETE.md                ← Master index
-INDEX/ARTIFACT_INDEX.md                    ← Per-phase descriptions
-INDEX/_FOLDER_STRUCTURE.md                 ← Layout + reading orders
-
-CORE-PHASES/phase-1-product-vision.md      ← Strategy
-CORE-PHASES/phase-2-experience-maps.md     ← User flows
-CORE-PHASES/phase-3-information-architecture.md ← Navigation
-CORE-PHASES/phase-4-page-blueprints.md     ← Page specs (PRIMARY)
-CORE-PHASES/phase-5-section-blueprints.md  ← Section patterns
-CORE-PHASES/phase-6-component-library.md   ← Component specs
-CORE-PHASES/phase-7-design-tokens.md       ← Token reference
-CORE-PHASES/phase-8-frontend-architecture.md ← Folder structure
-CORE-PHASES/phase-9-implementation-roadmap.md ← 16-week plan
-CORE-PHASES/phase-10-qa-checklist.md       ← QA & launch
-
-IMPLEMENTATION/IMPLEMENTATION_PROMPT.md    ← Sprint guide
-IMPLEMENTATION/SETUP-CHECKLIST.md          ← This file
-```
+- **Retained:** the binding-authority statement, root layout facts (the stylesheet, font variables and `Provider` wiring now live in Phase 7 › Layouts), the design phase reference table, `pnpm install` / `pnpm dev`, the verification commands, the backend note, the design-docs listing.
+- **Added:** the seed's structure — prerequisites, environment, initialization with the real `.env.example` variables, dependencies under the Library Selection Policy, testing setup, developer workflow (hooks disabled, enum and contract gates), verification checklist.
+- **Changed:** title "Luxury Real Estate Platform" → "Keyhold". **Dropped as visual prescription:** the whole "Styling Foundation" tree (token categories, "Light theme (warm ivory ground, pine accent, brass highlight)", named scale classes and layout primitives `.console-split`, `.stat-band`, `.card-grid`…, font families Fraunces / Libre Franklin / JetBrains Mono); "Token Usage Examples" (colour CSS and Tailwind samples with `#1f4e3d`, typography, motion and spacing samples, "Non-focal text sits at the smallest exposed size token…"); the CVA "Component Building Pattern" with size and colour classes; and "You should see: warm ivory ground (`#faf8f4`)…, near-black text, pine accent, brass highlight, Fraunces…, dense application register — 16px icons, ~36px rows". How styles are written is governed by `.claude/CLAUDE.md` and the code; how pages look is decided with the owner. The old claim that Husky's pre-push runs `type-check` then `lint` is corrected — hooks are disabled.

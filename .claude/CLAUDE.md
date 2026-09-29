@@ -42,7 +42,7 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 | `/components/brand`     | _(flat)_                                                                                               | Wordmark, logo mark, logo chip.                                                                                                                                                                                                               |
 | `/components/providers` | _(flat)_                                                                                               | React context providers.                                                                                                                                                                                                                      |
 | `/lib`                  | `api` • `config` • `data` • `enums` • `hooks` • `stores` • `types` • `utils` • `validations`           | Core logic layer. No JSX. Transport lives in `api/client.ts`; config in `constants.ts`. `data/` is route-scoped selectors over live API types — not mock data; the only literal content left there is placeholder imagery and marketing copy. |
-| `/design-os`            | _(flat)_                                                                                               | Design-system seed prompt. Not application code.                                                                                                                                                                                              |
+| `/design-os`            | `CORE-PHASES` • `IMPLEMENTATION` • `INDEX`                                                             | The generated design OS: what the product does, never how it looks. Start at `design-os/INDEX/START_HERE.md`; the seed prompt is `docs/MASTER_PROMPT_COMPLETE.md`. Not application code.                                                      |
 | `/public`               | `fonts`                                                                                                | Static assets.                                                                                                                                                                                                                                |
 | `/styles`               | _(flat)_                                                                                               | Global styles and token exports.                                                                                                                                                                                                              |
 | `/tools`                | _(flat)_                                                                                               | Repo tooling that runs outside the app: the enum parity gate. Not application code. Node runs these with `--experimental-strip-types`, so they are `.mts` and import each other with an explicit extension.                                   |
@@ -52,11 +52,11 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 
 `lib/enums/enums.ts` mirrors the backend by hand. Thirty of its `as const` arrays name an `enum` block in `../backend/prisma/schema.prisma`, and `lib/validations/` feeds those arrays straight into `z.enum`, so a member the backend has and the mirror lacks is not a cosmetic gap — the response fails to parse. The other arrays (`PROPERTY_SORTS`, `TIME_FILTERS`, `MODERATION_DECISIONS`, `SERVICE_STATES`, `INTEGRATION_IDS`) are UI vocabulary with no backend counterpart and are deliberately unmapped.
 
-Parity is not left to memory: `pnpm enums:check` reads both files, compares members for every mapped pair, and fails the pre-push hook when they disagree. The pairing is the explicit table in `tools/enum-parity.mts` — never a naming heuristic, because `CONTINGENCIES`/`Contingency` and friends do not survive one. Adding an array that mirrors a new Prisma enum means adding it to that table; a member the UI genuinely should not carry means dropping the pair from it, with the reason stated here.
+Parity is not left to memory: `pnpm enums:check` reads both files, compares members for every mapped pair, and fails when they disagree. It is part of the push gate below. The pairing is the explicit table in `tools/enum-parity.mts` — never a naming heuristic, because `CONTINGENCIES`/`Contingency` and friends do not survive one. Adding an array that mirrors a new Prisma enum means adding it to that table; a member the UI genuinely should not carry means dropping the pair from it, with the reason stated here.
 
 A missing schema skips the check rather than failing it, so the gate never blocks a frontend cloned without its sibling backend.
 
-**Any script that maintains a committed artifact from a source outside it gets this treatment** — a check twin that re-derives, diffs, and exits non-zero, wired into pre-push. Regeneration and hand-mirroring are never left to memory.
+**Any script that maintains a committed artifact from a source outside it gets this treatment** — a check twin that re-derives, diffs, and exits non-zero, listed in the push gate. Regeneration and hand-mirroring are never left to memory.
 
 ## File rules
 
@@ -68,11 +68,11 @@ A missing schema skips the check rather than failing it, so the gate never block
 
 ## Before you commit or push
 
-Formatting and linting are automated. They are not chores you run by hand.
+Git hooks are **disabled**. `.husky/` is kept but not installed: the `prepare` script unsets `core.hooksPath` on every `pnpm install`, so nothing runs on commit or push.
 
-- **Commit** — Husky's `pre-commit` hook runs `pnpm lint-staged` and nothing else: `eslint --fix` then `prettier --write`, over staged files only. It is fast by design.
-- **Push** — Husky's `pre-push` hook runs `pnpm type-check`, then `pnpm lint`, then `pnpm enums:check`, and blocks on failure. This is the real gate.
+- **Commit** — `.husky/pre-commit` would run `pnpm lint-staged`: `eslint --fix` then `prettier --write`, over staged files only.
+- **Push** — `.husky/pre-push` would run `pnpm type-check`, then `pnpm lint`, then `pnpm enums:check`. This is the real gate.
 
-`pnpm format` and `pnpm lint` stay available for a manual full-repo sweep, but no workflow requires you to run them.
+Run those by hand when you want the gate. To re-enable the hooks, set `prepare` back to `husky` and run `pnpm install`.
 
 The rules above are not restated here. They bind every edit, not the gate.
