@@ -1,35 +1,16 @@
-import { WAIT_AXIS_MINUTES } from "@/lib/config/admin-tones";
 import { formatAge, formatCount, percentOf } from "@/lib/utils";
 import type {
     DecisionLane,
     ModerationQueueLoad,
     QueueReadiness,
-    WaitTick,
 } from "@/lib/types";
 import type { UserStats } from "@/lib/validations/stats";
 
-const LAST_TICK = WAIT_AXIS_MINUTES.length - 1;
-
-export const WAIT_TICKS: WaitTick[] = WAIT_AXIS_MINUTES.map((minutes) => ({
-    minutes,
-    label: formatAge(minutes),
-}));
-
-export const tickPosition = (index: number) =>
-    Math.round((index / LAST_TICK) * 100);
-
-export const waitPosition = (minutes: number) => {
-    const ceiling = WAIT_AXIS_MINUTES.findIndex(
-        (bound, index) => index > 0 && minutes < bound,
-    );
-    if (ceiling === -1) return 100;
-
-    const floor = WAIT_AXIS_MINUTES[ceiling - 1];
-    const span = WAIT_AXIS_MINUTES[ceiling] - floor;
-
-    return Math.round(
-        ((ceiling - 1 + (minutes - floor) / span) / LAST_TICK) * 100,
-    );
+export const queueReadiness = (
+    queries: { isError: boolean; isPending: boolean }[],
+): QueueReadiness => {
+    if (queries.some((query) => query.isError)) return "error";
+    return queries.some((query) => query.isPending) ? "pending" : "ready";
 };
 
 const byUrgency = (a: DecisionLane, b: DecisionLane) =>
@@ -40,21 +21,19 @@ export const decisionLanes = (
     queues: ModerationQueueLoad[],
     users: UserStats | undefined,
 ): DecisionLane[] => {
-    const loads: Omit<DecisionLane, "position" | "share">[] = [
+    const loads: Omit<DecisionLane, "share">[] = [
         ...queues,
         { id: "accounts", backlog: users?.pending ?? 0, oldestMinutes: null },
     ];
     const open = loads.reduce((total, lane) => total + lane.backlog, 0);
 
     return loads
-        .map((lane): DecisionLane => ({
-            ...lane,
-            position:
-                lane.backlog > 0 && lane.oldestMinutes !== null
-                    ? waitPosition(lane.oldestMinutes)
-                    : 0,
-            share: percentOf(lane.backlog, open),
-        }))
+        .map(
+            (lane): DecisionLane => ({
+                ...lane,
+                share: percentOf(lane.backlog, open),
+            }),
+        )
         .sort(byUrgency);
 };
 

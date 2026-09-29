@@ -1,8 +1,16 @@
 import { ServiceHealthRow } from "@/components/features/admin/service-health-row";
+import { cn } from "@/lib/utils";
 import type { ServiceHealth } from "@/lib/types";
 
 const TABLE_CAPTION =
     "Platform services by state, share of uptime budget spent, p95 latency and error rate";
+
+const COLUMNS = [
+    { id: "service", label: "Service", className: "text-left" },
+    { id: "budget", label: "Budget", className: "w-24 pl-3 text-right" },
+    { id: "p95", label: "p95", className: "w-14 pl-3 text-right" },
+    { id: "errors", label: "Errors", className: "w-14 pl-3 text-right" },
+];
 
 export interface ServiceHealthTableProps {
     services: ServiceHealth[];
@@ -10,34 +18,19 @@ export interface ServiceHealthTableProps {
 
 export function ServiceHealthTable({ services }: ServiceHealthTableProps) {
     return (
-        <table className="table-flush w-full min-w-lg table-fixed">
+        <table className="table-flush w-full table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border-light h-9 border-b">
-                    <th scope="col" className="micro-label text-left">
-                        Service
-                    </th>
-                    <th scope="col" className="micro-label w-28 pl-3 text-left">
-                        State
-                    </th>
-                    <th
-                        scope="col"
-                        className="micro-label w-28 pl-3 text-right"
-                    >
-                        Budget spent
-                    </th>
-                    <th
-                        scope="col"
-                        className="micro-label w-16 pl-3 text-right"
-                    >
-                        p95
-                    </th>
-                    <th
-                        scope="col"
-                        className="micro-label w-16 pl-3 text-right"
-                    >
-                        Errors
-                    </th>
+                    {COLUMNS.map((column) => (
+                        <th
+                            key={column.id}
+                            scope="col"
+                            className={cn("micro-label", column.className)}
+                        >
+                            {column.label}
+                        </th>
+                    ))}
                 </tr>
             </thead>
             <tbody className="divide-border-light divide-y">

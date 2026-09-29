@@ -1,11 +1,18 @@
 import type { ModerationQueueLoad } from "@/lib/types";
-import type { AuditLog } from "@/lib/validations/audit-log";
+import type { AuditLog, AuditLogPage } from "@/lib/validations/audit-log";
+import type { DisputeCounts } from "@/lib/validations/dispute";
+import type { FlagCounts } from "@/lib/validations/flag";
+import type { KycCounts } from "@/lib/validations/kyc";
 import type {
     IntegrationStatus,
     ServiceComponentHealth,
     ServiceHealth,
 } from "@/lib/validations/service-health";
-import type { PlatformStats, UserStats } from "@/lib/validations/stats";
+import type {
+    PlatformStats,
+    TrendStats,
+    UserStats,
+} from "@/lib/validations/stats";
 
 const AT = "2026-08-01T09:00:00.000Z";
 
@@ -91,4 +98,48 @@ export const anAuditLog = (overrides: Partial<AuditLog> = {}): AuditLog => ({
     },
     createdAt: AT,
     ...overrides,
+});
+
+export const aTrend = (overrides: Partial<TrendStats> = {}): TrendStats => ({
+    gmv: [],
+    deals: [],
+    users: [],
+    listings: [],
+    ...overrides,
+});
+
+export const aFlagCount = (
+    overrides: Partial<FlagCounts> = {},
+): FlagCounts => ({
+    active: 0,
+    resolved: 0,
+    dismissed: 0,
+    byType: { users: 0, properties: 0, messages: 0 },
+    oldestActiveAt: null,
+    ...overrides,
+});
+
+export const aKycCount = (overrides: Partial<KycCounts> = {}): KycCounts => ({
+    pending: 0,
+    verified: 0,
+    rejected: 0,
+    total: 0,
+    oldestPendingAt: null,
+    ...overrides,
+});
+
+export const aDisputeCount = (
+    overrides: Partial<DisputeCounts> = {},
+): DisputeCounts => ({
+    byStatus: { OPEN: 0, PENDING_REVIEW: 0, RESOLVED: 0, DISMISSED: 0 },
+    oldestOpenAt: null,
+    ...overrides,
+});
+
+export const anAuditPage = (items: AuditLog[] = []): AuditLogPage => ({
+    items,
+    total: items.length,
+    page: 1,
+    limit: items.length,
+    pageCount: 1,
 });

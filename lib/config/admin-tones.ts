@@ -56,7 +56,7 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
         disputes: {
             label: "Disputes",
             icon: Gavel,
-            href: ADMIN_ROUTES.transactions,
+            href: ADMIN_ROUTES.disputes,
             tone: "error",
         },
     };
@@ -91,12 +91,6 @@ const AGE_BANDS: ToneBand[] = [
     { ceiling: 60, tone: "neutral" },
     { ceiling: 240, tone: "info" },
     { ceiling: 1_440, tone: "warning" },
-];
-
-export const WAIT_AXIS_MINUTES = [
-    0,
-    ...AGE_BANDS.map((band) => band.ceiling),
-    10_080,
 ];
 
 const LOAD_BANDS: ToneBand[] = [

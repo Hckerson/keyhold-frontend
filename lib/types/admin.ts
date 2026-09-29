@@ -23,13 +23,7 @@ export interface DecisionLane {
     id: DecisionLaneId;
     backlog: number;
     oldestMinutes: number | null;
-    position: number;
     share: number;
-}
-
-export interface WaitTick {
-    minutes: number;
-    label: string;
 }
 
 export interface SystemsReading {

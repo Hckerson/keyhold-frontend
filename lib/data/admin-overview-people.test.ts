@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { anAuditLog } from "@/lib/data/__fixtures__/admin";
-import { peopleReading, recordReading } from "@/lib/data/admin-overview-people";
+import { anAuditLog, aUserCount } from "@/lib/data/__fixtures__/admin";
+import { aMemberRecord } from "@/lib/data/__fixtures__/users";
+import {
+    coverageReading,
+    recordReading,
+    statusShares,
+} from "@/lib/data/admin-overview-people";
 import { toAuditEvents } from "@/lib/utils/to-audit-event";
 
 describe("recordReading", () => {
@@ -29,8 +34,38 @@ describe("recordReading", () => {
     });
 });
 
-describe("peopleReading", () => {
-    it("says the counts are unavailable rather than showing zeros", () => {
-        expect(peopleReading(undefined)).toBe("Account counts unavailable");
+describe("statusShares", () => {
+    it("gives each account state its share of every account", () => {
+        const shares = statusShares(
+            aUserCount({ total: 10, active: 7, pending: 2, suspended: 1 }),
+        );
+
+        expect(shares.map((share) => share.percent)).toEqual([70, 20, 10]);
+    });
+
+    it("shows empty meters rather than dividing by zero when counts are unknown", () => {
+        expect(statusShares(undefined).map((share) => share.percent)).toEqual([
+            0, 0, 0,
+        ]);
+    });
+});
+
+describe("coverageReading", () => {
+    it("states how many buyers each agent serves", () => {
+        const users = [
+            ...Array.from({ length: 6 }, () =>
+                aMemberRecord({ role: "BUYER" }),
+            ),
+            aMemberRecord({ role: "SELLER" }),
+            aMemberRecord({ role: "SELLER" }),
+        ];
+
+        expect(coverageReading(users)).toBe("3 buyers for every agent");
+    });
+
+    it("says there are no agents instead of dividing by zero", () => {
+        expect(coverageReading([aMemberRecord({ role: "BUYER" })])).toBe(
+            "No agents on the platform yet",
+        );
     });
 });
