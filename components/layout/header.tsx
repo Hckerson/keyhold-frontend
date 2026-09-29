@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { HeaderMenu } from "@/components/layout/header-menu";
 import { HeaderNav } from "@/components/layout/header-nav";
+import { SignOutModal } from "@/components/layout/sign-out-modal";
 import { useSession } from "@/lib/hooks/use-session";
 import { useSignOut } from "@/lib/hooks/use-sign-out";
 import { siteNavFor } from "@/lib/config/site-nav";
@@ -15,7 +16,7 @@ import styles from "@/components/layout/header.module.css";
 
 export function Header() {
     const { user } = useSession();
-    const { signOut, signingOut } = useSignOut();
+    const { signOut, signingOut, confirmation } = useSignOut();
     const pathname = usePathname();
     const [contracted, setContracted] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -107,6 +108,8 @@ export function Header() {
                     </div>
                 </div>
             </header>
+
+            <SignOutModal confirmation={confirmation} />
         </div>
     );
 }
