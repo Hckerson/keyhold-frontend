@@ -1,17 +1,9 @@
-import { RegisterSection } from "@/components/patterns/register-section";
-import { DecisionLaneBoard } from "@/components/features/admin/decision-lane-board";
-import { ageTone } from "@/lib/config/admin-tones";
-import {
-    oldestWait,
-    openDecisions,
-    triageReading,
-} from "@/lib/data/admin-overview-triage";
-import { formatCount } from "@/lib/utils";
+import { DeckPanel } from "@/components/patterns/deck-panel";
+import { QueueDeck } from "@/components/features/admin/queue-deck";
+import { triageReading } from "@/lib/data/admin-overview-triage";
 import type { DecisionLane, QueueReadiness } from "@/lib/types";
 
-const INDEX = "01";
-const TITLE = "Decide";
-const UNKNOWN = "—";
+const TITLE = "Decisions";
 
 export interface AdminOverviewTriageProps {
     lanes: DecisionLane[];
@@ -22,22 +14,14 @@ export function AdminOverviewTriage({
     lanes,
     readiness,
 }: AdminOverviewTriageProps) {
-    const ready = readiness === "ready";
-    const open = openDecisions(lanes);
-
     return (
-        <RegisterSection
-            index={INDEX}
+        <DeckPanel
             title={TITLE}
-            figure={ready ? formatCount(open) : UNKNOWN}
-            figureTone={
-                ready && open > 0 ? ageTone(oldestWait(lanes)) : undefined
-            }
-            reading={triageReading(lanes, readiness)}
+            summary={triageReading(lanes, readiness)}
             pending={readiness === "pending"}
         >
-            <DecisionLaneBoard lanes={lanes} readiness={readiness} />
-        </RegisterSection>
+            <QueueDeck lanes={lanes} readiness={readiness} />
+        </DeckPanel>
     );
 }
 

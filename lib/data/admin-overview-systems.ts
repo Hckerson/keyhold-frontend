@@ -75,3 +75,10 @@ export const systemsReading = (
         reading: `Uptime over ${health.windowHours}h against a ${UPTIME_SLO}% target · ${degraded} of ${measured.length} services degraded`,
     };
 };
+
+export const systemsDeck = (health: ServiceHealthReadout | undefined) => ({
+    reading: systemsReading(health),
+    services: toServiceRows(health),
+    integrations: toIntegrationRows(health),
+    summary: integrationSummary(health),
+});

@@ -3,10 +3,7 @@ import { aQueueLoad, aUserCount } from "@/lib/data/__fixtures__/admin";
 import {
     decisionLanes,
     oldestWait,
-    tickPosition,
     triageReading,
-    WAIT_TICKS,
-    waitPosition,
 } from "@/lib/data/admin-overview-triage";
 
 const aBacklog = () => [
@@ -18,22 +15,6 @@ const aBacklog = () => [
 
 const shareOf = (lanes: ReturnType<typeof decisionLanes>, id: string) =>
     lanes.find((lane) => lane.id === id)?.share;
-
-describe("waitPosition", () => {
-    it("places a wait that sits on a band edge exactly on that edge's tick", () => {
-        WAIT_TICKS.forEach((tick, index) =>
-            expect(waitPosition(tick.minutes)).toBe(tickPosition(index)),
-        );
-    });
-
-    it("interpolates a wait linearly between the two ticks around it", () => {
-        expect(waitPosition(150)).toBe(38);
-    });
-
-    it("pins a wait past the last tick to the end of the axis", () => {
-        expect(waitPosition(20_000)).toBe(100);
-    });
-});
 
 describe("decisionLanes", () => {
     it("puts waiting queues ahead of clear ones, longest wait first", () => {
@@ -56,13 +37,12 @@ describe("decisionLanes", () => {
         expect(shareOf(lanes, "accounts")).toBe(50);
     });
 
-    it("leaves the wait bar empty for account approvals, whose age is not tracked", () => {
+    it("reports no age for account approvals, whose age is not tracked", () => {
         const lanes = decisionLanes([], aUserCount({ pending: 3 }));
 
         expect(lanes[0]).toMatchObject({
             id: "accounts",
             oldestMinutes: null,
-            position: 0,
         });
     });
 

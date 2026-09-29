@@ -1,5 +1,10 @@
 import { ADMIN_ROUTES } from "@/lib/constants";
-import { monthLabel, monthOverMonth } from "@/lib/data/admin-overview";
+import {
+    gmvMonths,
+    gmvReading,
+    monthLabel,
+    monthOverMonth,
+} from "@/lib/data/admin-overview";
 import { formatCount, formatMillions, percentOf } from "@/lib/utils";
 import type { BusinessFigure, LifetimeVolume } from "@/lib/types";
 import type {
@@ -92,3 +97,14 @@ export const lifetimeVolume = (
             completed > 0 ? formatMillions(volume / completed, 1) : null,
     };
 };
+
+export const businessDeck = (
+    trend: TrendStats | undefined,
+    platform: PlatformStats | undefined,
+    users: UserStats | undefined,
+) => ({
+    reading: gmvReading(trend),
+    months: gmvMonths(trend),
+    figures: businessFigures(trend, platform, users),
+    lifetime: lifetimeVolume(platform),
+});

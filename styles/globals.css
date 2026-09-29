@@ -285,31 +285,54 @@
     --split-columns: 4;
 }
 
-.register-section {
+.queue-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        "thumb name price"
+        "thumb signals actions";
+    align-items: center;
+    column-gap: var(--spacing-3);
 }
 
-.register-section > * {
-    min-width: 0;
+.queue-row__thumb {
+    grid-area: thumb;
 }
 
-.register-spine {
-    border-bottom: 1px solid var(--color-border-light);
+.queue-row__name {
+    grid-area: name;
+}
+
+.queue-row__signals {
+    grid-area: signals;
+}
+
+.queue-row__price {
+    grid-area: price;
+}
+
+.queue-row__actions {
+    grid-area: actions;
+}
+
+.console-split--sixths {
+    --split-columns: 6;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.console-split--fifths {
+    --split-columns: 5;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 @container console (min-width: 56rem) {
-    .register-section {
-        grid-template-columns: 15rem minmax(0, 1fr);
-    }
-
-    .register-spine {
-        border-bottom: 0;
-        border-right: 1px solid var(--color-border-light);
-    }
-
     .console-split {
         grid-template-columns: repeat(var(--split-columns), minmax(0, 1fr));
+    }
+
+    .queue-row {
+        grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+        grid-template-areas: "thumb name signals price actions";
     }
 
     .panel-pair {

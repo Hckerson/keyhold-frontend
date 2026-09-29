@@ -20,6 +20,12 @@ describe("toAuditEvent", () => {
         ).toBe("Listing");
     });
 
+    it("recognises a subject whatever casing the backend recorded it in", () => {
+        expect(
+            toAuditEvent(anAuditLog({ entityType: "Property" })).subject,
+        ).toBe("Listing");
+    });
+
     it("passes through a subject the UI has no label for", () => {
         expect(toAuditEvent(anAuditLog({ entityType: "WIDGET" })).subject).toBe(
             "WIDGET",

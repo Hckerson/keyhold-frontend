@@ -1,6 +1,6 @@
 import { ErrorBudgetMeter } from "@/components/features/admin/error-budget-meter";
-import { ServiceStateMark } from "@/components/features/admin/service-state-mark";
-import { errorRateTone } from "@/lib/config/admin-tones";
+import { StatusDot } from "@/components/patterns/status-dot";
+import { errorRateTone, SERVICE_STATES } from "@/lib/config/admin-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { ServiceHealth } from "@/lib/types";
@@ -12,14 +12,22 @@ export interface ServiceHealthRowProps {
 }
 
 export function ServiceHealthRow({ service }: ServiceHealthRowProps) {
+    const state = SERVICE_STATES[service.state];
+
     return (
         <tr className="ease-smooth hover:bg-background-muted h-9 transition-colors">
-            <td className="text-text truncate py-0 text-xs font-medium">
-                {service.label}
-            </td>
-            <td className="py-0 pl-3">
-                <ServiceStateMark state={service.state} />
-            </td>
+            <th scope="row" className="py-0 text-left font-normal">
+                <span
+                    title={state.label}
+                    className="flex min-w-0 items-center gap-2"
+                >
+                    <StatusDot tone={state.tone} />
+                    <span className="text-text truncate text-xs font-medium">
+                        {service.label}
+                    </span>
+                    <span className="sr-only">{state.label}</span>
+                </span>
+            </th>
             <td className="py-0 pl-3">
                 <ErrorBudgetMeter
                     uptime={service.uptime}
