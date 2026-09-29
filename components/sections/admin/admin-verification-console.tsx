@@ -4,6 +4,7 @@ import { ShieldCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PortalHeader } from "@/components/patterns/portal-header";
 import { FilterPills } from "@/components/patterns/filter-pills";
+import { VerificationApproveModal } from "@/components/features/admin/verification-approve-modal";
 import { VerificationDecisionModal } from "@/components/features/admin/verification-decision-modal";
 import { VerificationQueueRail } from "@/components/features/admin/verification-queue-rail";
 import { VerificationReviewPane } from "@/components/features/admin/verification-review-pane";
@@ -64,6 +65,15 @@ export function AdminVerificationConsole() {
                     />
                 )}
             </div>
+
+            <VerificationApproveModal
+                open={queue.approval.open}
+                applicantName={queue.approvalName}
+                pending={queue.approval.pending}
+                failed={queue.approval.failed}
+                onClose={queue.approval.dismiss}
+                onConfirm={queue.submitApproval}
+            />
 
             <VerificationDecisionModal
                 decision={queue.decision}

@@ -10,11 +10,11 @@ import { useReactivateUser, useSuspendUser } from "@/lib/hooks/use-suspensions";
 import type { SuspensionDraft } from "@/lib/types";
 import type { CreateSuspensionInput } from "@/lib/validations/suspension";
 
-export function useUserSuspension(onReactivated: (id: string) => void) {
+export function useUserSuspension() {
     const suspension = useConfirmation<CreateSuspensionInput, string>(
         useSuspendUser(),
     );
-    const reactivation = useReactivateUser();
+    const reactivation = useConfirmation<string>(useReactivateUser());
     const [draft, setDraft] = useState<SuspensionDraft>(EMPTY_SUSPENSION_DRAFT);
 
     const open = (id: string) => {
@@ -33,9 +33,8 @@ export function useUserSuspension(onReactivated: (id: string) => void) {
         });
     };
 
-    const reactivate = (id: string) => {
-        if (reactivation.isPending) return;
-        reactivation.mutate(id, { onSuccess: () => onReactivated(id) });
+    const confirmReactivation = () => {
+        if (reactivation.target) reactivation.confirm(reactivation.target);
     };
 
     return {
@@ -43,13 +42,13 @@ export function useUserSuspension(onReactivated: (id: string) => void) {
         draft,
         pending: suspension.pending,
         failed: suspension.failed,
-        reactivatingId: reactivation.isPending
-            ? reactivation.variables
-            : undefined,
+        reactivatingId:
+            (reactivation.pending && reactivation.target) || undefined,
+        reactivation,
         setDraft,
         open,
         dismiss: suspension.dismiss,
         submit,
-        reactivate,
+        confirmReactivation,
     };
 }
