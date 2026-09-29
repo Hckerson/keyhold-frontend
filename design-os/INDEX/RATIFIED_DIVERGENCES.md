@@ -1,12 +1,12 @@
 # Ratified Divergences
 
-**Real Estate Platform | Companion to Phases 1–10 | Last reviewed 21 September 2026**
+**Keyhold | Companion to Phases 1–9 | Last reviewed 29 September 2026**
 
 ---
 
 ## What this file is
 
-The ten phase documents in `CORE-PHASES/` are the design record. They are **not edited when the code disagrees with them** — a blueprint that is quietly rewritten to match whatever shipped stops being a specification and becomes a changelog.
+The nine phase documents in `CORE-PHASES/` are the design record. (Until 29 September 2026 there were ten; see [Design OS 2.0 regeneration](#design-os-20-regeneration--29-september-2026). Page, section and phase references below are unchanged by it.) They are **not edited when the code disagrees with them** — a blueprint that is quietly rewritten to match whatever shipped stops being a specification and becomes a changelog.
 
 So divergences land here instead. Every entry names the phase text it departs from, states what the app does instead, and says whether that is a **ratified** decision (the code is right, the spec has fallen behind) or a **deferral** (the spec is right, the work is scheduled behind a stated precondition).
 
@@ -248,6 +248,43 @@ Entries above are not rewritten when they drift. A correction lands here, dated,
 **21 September 2026 — POI markers on listing detail are built.** The map table lists Page 3 module 5 · Section 10 as a placed map with "POI markers still owed". They are no longer owed: `listing-neighborhood.tsx` draws school, transit, park and restaurant pins from live Overpass data through `neighbourhoodPins`, with a four-way toggle that doubles as the colour key.
 
 **26 September 2026 — the footer newsletter is back, on a real list.** The home-page entry for Page 1 module 7 says the newsletter signup was removed, and the note under it defers its return "until there is a subscriber store with consent and a sender behind it". The store now exists: `POST /newsletter/subscribe` records the address with the exact consent wording, and nothing is added to the list until the person confirms from the email (double opt-in, [ADR 0023](../../docs/adr/0023-newsletter-uses-double-opt-in.md)). The form says "Check your inbox to confirm", never "You are on the list". The sender is still owed: nothing sends newsletters yet, so no copy may promise an issue on a schedule. The social icons stay removed.
+
+---
+
+## Design OS 2.0 regeneration — 29 September 2026
+
+The design OS was regenerated under `docs/MASTER_PROMPT_COMPLETE.md` (nine phases, no visual prescription) as a merge. No entry above was rewritten. This section records what the regeneration means for them.
+
+**References still resolve.** Page numbers 1–27, Section numbers 1–70 and Phase 1 principle/JTBD numbers are unchanged. "Page N module M" now reads as content requirement M of Page N in [Phase 4](../CORE-PHASES/phase-4-page-blueprints.md). Phase 4 and Phase 5 carry inline pointers back to the entries here. The routes that had no blueprint — the seven footer pages, the map and the per-entity routes this file counts in "44 routes against 27 pages" — are now Pages 28–46. Build status for every entry now lives in [Phase 8](../CORE-PHASES/phase-8-implementation-roadmap.md#per-feature-build-status), and the Deferred table above is carried there as the Deferred Register.
+
+**Nothing in `CORE-PHASES/` was reworded to accommodate an entry here.** The regeneration dropped visual prescription throughout (listed in each phase's Regeneration Notes) for its own reason, not to close a gap recorded on this page.
+
+**Visual entries.** The design OS no longer governs how anything looks, so an entry that is purely about presentation is kept as a record but no longer describes a gap between code and spec:
+
+| Entry | Classification |
+| ----- | -------------- |
+| Page 9 · Saved Listings — card grid vs dense table | **Visual — governed by the code, not this design OS.** Phase 4 no longer prescribes cards or a table. |
+| Phase 1 · Principle 5 — the "desktop-dense application register" half | **Visual — governed by the code, not this design OS.** The product halves stand: portals are desktop-first and there is no offline capability. |
+| Page 1 · How It Works — the *scroll-narrative* presentation of the Concierge | **Visual — governed by the code, not this design OS.** The content change (a narrative of shipping features instead of four steps) stands. |
+| Page 1 module 1 — "a framed decorative image" | **Visual — governed by the code, not this design OS.** Headline copy and neighbourhood chips ranked by live count stand. |
+| Page 1 module 2 — "One premier listing, then a six-tile gallery" as an arrangement | **Visual — governed by the code, not this design OS.** The promotion rule and the Featured / Most viewed labels stand. |
+| Page 1 · order — screen order of the home sections | **Visual — governed by the code, not this design OS.** The added browse index and "Just listed" rows stand as content. |
+| Section 48 · Privacy — the contents rail | **Not visual.** Tracking the reader's position is navigation behaviour; its presentation is governed by the code. |
+
+Every other entry is about content, data, behaviour or scope and is unaffected.
+
+**Stale pointer.** Two entries cite "Density rule, `.claude/CLAUDE.md`" as their record. The current `.claude/CLAUDE.md` contains no density rule. Owner to decide whether the rule moved, was retired, or should be restored.
+
+**Found during the regeneration, not yet recorded here.** Listed for the owner to ratify, defer or fix — they are not entries until the owner says so:
+
+- Phase 3 taxonomy (property types, price bands, listing and offer statuses) differs from the code's enums; see Phase 3 › Vocabulary in the code.
+- Page 14 · Account — "Delete account" is not wired, while the Privacy page tells users they can delete their account from settings.
+- Page 26 · Revoke and Allow Resubmit — not found in the admin verification surface.
+- Page 16 · Import CSV — not built.
+- Section 37 / Page 2 — no location autocomplete.
+- `/admin/flags` collects no decision note, unlike moderation and disputes.
+- `/agent/concierge` is read-only while its empty state asks the agent to add a client.
+- A two-factor dialog exists, unwired, and appears in no blueprint.
 
 ---
 

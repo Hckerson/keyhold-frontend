@@ -1,18 +1,43 @@
 # Phase 5: Section Blueprints
 
-**Real Estate Platform Design Operating System** - 70 reusable section patterns
+**Keyhold Design Operating System** · Phase 5 of 9 · Version 2.0 · 29 September 2026
+
+Every page in [Phase 4](phase-4-page-blueprints.md) broken into sections by the job each one does. Next: [Phase 6 — Interaction Contracts](phase-6-interaction-contracts.md).
+
+Sections describe content and behaviour only — never layout, order on screen, sizing, imagery, animation or wireframes. Section numbers are stable identifiers: RATIFIED_DIVERGENCES and Phase 4 cite them. Build status lives in [Phase 8](phase-8-implementation-roadmap.md#sections).
 
 ---
 
-## Overview
+## Contents
 
-Reusable sections that compose pages. Each includes:
+1. [Section Defaults](#section-defaults)
+2. [Hero Sections (1–5)](#hero-sections-5)
+3. [Listing Sections (6–15)](#listing-sections-10)
+4. [Offer Sections (16–21)](#offer-sections-6)
+5. [Messaging Sections (22–29)](#messaging-sections-8)
+6. [Form Sections (30–39)](#form-sections-10)
+7. [Dashboard & Data Sections (40–46)](#dashboard--data-sections-7)
+8. [Navigation Sections (47–49)](#navigation-sections-3)
+9. [State & Feedback Sections (50–52)](#state--feedback-sections-3)
+10. [Error Sections (53–55)](#error-sections-3)
+11. [Admin Sections (56–70)](#admin-sections-15)
+12. [Regeneration Notes](#regeneration-notes)
 
-- Content model (data structure)
-- Layout pattern
-- Interaction behavior
-- Responsive behavior
-- Accessibility requirements
+---
+
+## Section Defaults
+
+Every section inherits these unless its entry overrides them. They satisfy the master prompt's per-section loading, error, empty, accessibility and technical fields without restating them seventy times.
+
+| Field                     | Default                                                                                                                                                                   |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Loading**               | A placeholder that preserves the section's structure so nothing shifts when data arrives; the container is marked busy for assistive technology.                          |
+| **Error**                 | A section-level message naming what failed, with a retry. Other sections keep rendering. Never fall back to fabricated data (BR15).                                      |
+| **Empty**                 | Say what is missing and offer the next useful action (Phase 3 › Empty States).                                                                                           |
+| **Accessibility**         | WCAG 2.2 AA; every control keyboard operable with a visible focus indicator; status never conveyed by colour alone; icons that carry meaning have an accessible name.     |
+| **Device needs**          | Every task achievable on every supported device; touch users get equivalents for anything offered on hover. Portal sections are desktop-first (ratified, Principle 5). |
+| **Data requirements**     | Read through a hook over the API client (Phase 7); portal sections receive rows as props from their route's console and never fetch.                                    |
+| **Technical notes**       | Mutation feedback is global by default ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)); writes send once and confirmations lock (BR10).     |
 
 ---
 
@@ -20,35 +45,31 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 1: Hero Search
 
-**Used on:** Home, potentially dashboard
+**Purpose:** Start a search from the first screen. · **Used on:** Home, potentially dashboard
 
 **Content Model:**
 
 - Headline: "Find Your Next Home"
 - Subheadline: "Search 10k+ properties"
-- Background image (aspirational lifestyle)
 - Search input (location + price range)
 - CTA buttons (Search, Sign Up)
-
-**Layout:** Full-width, centered text overlay on image
 
 **Interactions:**
 
 - Input autocomplete on location
-- Price slider on focus
+- Price range selectable
 - Enter key triggers search
-- Click Search button → navigate to /search
+- Click Search → navigate to /search with the criteria in the URL
 
-**Responsive:**
+**Device needs:** Search usable one-handed on a phone.
 
-- Mobile: Single column, text centered, image smaller
-- Desktop: Side-by-side text/image
+> **Ratified divergence (Page 1 module 1).** The shipped headline is "Find the home that finds you."; neighbourhood shortcuts are ranked by live listing count; the subheadline figure is not shown until it is true (BR15).
 
 ---
 
 ### Section 2: Featured Carousel
 
-**Used on:** Home, dashboard
+**Purpose:** Show promoted and popular inventory. · **Used on:** Home, dashboard
 
 **Content Model:**
 
@@ -57,64 +78,59 @@ Reusable sections that compose pages. Each includes:
 - Agent name + photo
 - "New" or "Hot" badge
 
-**Layout:** Horizontal scrollable carousel on mobile, 2-3 column grid on desktop
-
 **Interactions:**
 
-- Swipe to next on mobile
-- Hover → enlarge on desktop
 - Click → navigate to listing detail
-- Star icon → save listing
+- Save → save listing
 
-**Responsive:**
+**Device needs:** Touch users can move through the set by swiping.
 
-- Mobile: 1 column + swipe
-- Tablet: 2 columns
-- Desktop: 3 columns
+> **Ratified divergence (Page 1 module 2).** One premier listing, then six. Promoted listings fill first and are labelled "Featured"; the rest are labelled "Most viewed" (BR15).
 
 ---
 
 ### Section 3: Trust Signals
 
-**Used on:** Home, sign up page
+**Purpose:** Earn trust with verifiable facts. · **Used on:** Home, sign up page
 
 **Content Model:**
 
-- Stat card: "10k+ buyers"
-- Stat card: "$500M+ transactions"
+- Stat: "10k+ buyers"
+- Stat: "$500M+ transactions"
 - Review: "5 stars - Great experience"
 - Badge: "Verified platform"
 
-**Layout:** Grid (2x2 on desktop, 1 on mobile)
-
 **Interactions:**
 
-- Click stat → modal with details
+- Click stat → details
 - Testimonial → link to full review
+
+**States:** Hide the stats when fewer than two are non-zero.
+
+> **Ratified divergence (Page 1 module 4 · Section 3).** Live counts only (homes on the market, homes sold, neighbourhoods); no testimonials until reviewers consent. Trust is carried by the guarantees.
 
 ---
 
 ### Section 4: How It Works
 
-**Used on:** Home, sign up page
+**Purpose:** Explain what the platform does for a buyer. · **Used on:** Home, sign up page
 
 **Content Model:**
 
 - 4 steps: Search, View, Offer, Close
-- Each step: icon + headline + description
-
-**Layout:** Timeline visual or 4-column grid
+- Each step: headline + description
 
 **Interactions:**
 
-- Hover step → highlight
-- Click → expand description (mobile)
+- Expand a step's description
+
+> **Ratified divergence (Page 1 · How It Works; Page 1 module 3).** Retold as a narrative of shipping features: saved search, saved shortlist, bridged viewings, escrow and the four deal milestones.
 
 ---
 
 ### Section 5: CTA Banner
 
-**Used on:** Home, bottom of many pages
+**Purpose:** Convert an engaged visitor. · **Used on:** Home, bottom of many pages
 
 **Content Model:**
 
@@ -122,19 +138,17 @@ Reusable sections that compose pages. Each includes:
 - Subheadline: "Join 10k+ buyers today"
 - CTA buttons: Sign Up, Learn More
 
-**Layout:** Full-width, centered text
-
 **Interactions:**
 
-- Button click → navigate or open modal
+- Button → navigate or open sign-up
 
 ---
 
-## LISTING SECTIONS (15)
+## LISTING SECTIONS (10)
 
 ### Section 6: Listing Gallery
 
-**Used on:** Listing detail
+**Purpose:** Let the buyer see the property. · **Used on:** Listing detail
 
 **Content Model:**
 
@@ -142,149 +156,143 @@ Reusable sections that compose pages. Each includes:
 - Captions (optional)
 - Photographer credit (optional)
 
-**Layout:** Hero image + carousel, thumbnails below
-
 **Interactions:**
 
-- Swipe next/prev
-- Click thumbnail → jump to image
-- Full-screen button → modal
+- Next/prev
+- Choose a specific image
+- Full-screen view
 - Keyboard arrows (← →) to navigate
 
-**Responsive:**
+**Device needs:** Swipe on touch.
 
-- Mobile: Full-width, tall aspect ratio
-- Desktop: Wider, shorter aspect ratio
+**Accessibility:** Each image has meaningful alternative text; position announced ("3 of 18"); full-screen view traps focus and closes on Escape.
 
 ---
 
-### Section 7: Listing Price Bar (Sticky)
+### Section 7: Listing Price Bar
 
-**Used on:** Listing detail
+**Purpose:** Keep price, status and the main actions available while reading. · **Used on:** Listing detail
 
 **Content Model:**
 
-- Price (large)
-- Status badge
+- Price
+- Status
 - Address
-- Save button (star)
-- Share button
-- Message agent button
-
-**Layout:** Horizontal bar, sticky on scroll
+- Save
+- Share
+- Message agent
 
 **Interactions:**
 
-- Star toggle → save/unsave
-- Share → copy link / open share sheet
-- Message → scroll to agent card or open chat
-- Status badge → info tooltip
+- Save toggle → save/unsave
+- Share → copy link / system share
+- Message → agent contact or chat
+- Status → explanation on demand
+
+**Device needs:** Remains reachable while the buyer reads the rest of the page.
 
 ---
 
 ### Section 8: Listing Key Facts
 
-**Used on:** Listing detail, search card
+**Purpose:** The facts buyers filter and compare on. · **Used on:** Listing detail, search card
 
 **Content Model:**
 
 - Beds, Baths, Sq Ft, Lot Size, Year Built
 - Optional: Garage, Basement, Pool
 
-**Layout:** 3-5 boxes in row
-
 **Interactions:**
 
-- Hover box → tooltip with description
+- Each fact explains itself on demand (touch and keyboard included)
 
 ---
 
 ### Section 9: Listing Description
 
-**Used on:** Listing detail
+**Purpose:** The seller's account of the property. · **Used on:** Listing detail
 
 **Content Model:**
 
 - Full text description
-- Highlights (renovations, features) in bullet points
+- Highlights (renovations, features)
 - Optional: Video tour link
-
-**Layout:** Text block, expandable on mobile
 
 **Interactions:**
 
-- Read More button expands text (mobile)
-- Click video link → modal with embed
+- Read More expands long text
+- Video link → embedded player
 
 ---
 
 ### Section 10: Neighborhood Map
 
-**Used on:** Listing detail
+**Purpose:** Where the property is and what is nearby. · **Used on:** Listing detail
 
 **Content Model:**
 
-- Google Map centered on address
-- Markers: Schools, Transit, Parks, Restaurants
-- Legend with counts
+- Map centred on the address
+- Places: Schools, Transit, Parks, Restaurants
+- Key with counts per kind
+- Walkability score
 
-**Layout:** Full-width map container, 400px min height
+**Data requirements:** Listing coordinates; `GET /properties/:id/nearby` (Overpass, 1.5 km, cached 24 h per ~100 m cell; failures cached 5 min).
 
 **Interactions:**
 
 - Pan/zoom map
-- Click marker → popup with info
-- Legend checkbox → toggle marker type
+- Choose a place → its details
+- Toggle each place kind on and off (the toggle doubles as the key and count)
+
+**States:** No coordinates or no mapped places → no places shown, never invented (BR15). Map fails → text neighbourhood facts. Fetches only when opened.
 
 ---
 
 ### Section 11: Comparables
 
-**Used on:** Listing detail
+**Purpose:** Price context. · **Used on:** Listing detail
 
 **Content Model:**
 
 - 3-5 recent sales nearby
 - Each: image, price, date sold, address, beds/baths
 
-**Layout:** Table on desktop, cards on mobile
-
 **Interactions:**
 
-- Click row/card → navigate to listing detail (if still available)
+- Open a comparable (if still available)
 - Sort by price/date
+
+> **Deferred (Buyer JTBD 1).** Comparables today are active listings in the same locality; sold comparables need a sold-price history.
 
 ---
 
 ### Section 12: Agent Card
 
-**Used on:** Listing detail
+**Purpose:** Who is selling and how to reach them. · **Used on:** Listing detail
 
 **Content Model:**
 
 - Photo
 - Name, license #
 - Agency name
-- Star rating (5.0 / 5)
+- Rating (5.0 / 5)
 - Review count ("48 reviews")
 - Response time ("Usually replies in 2 hours")
 - Recent listings count
-- Call button, Message button
-
-**Layout:** Vertical card, 300px wide
+- Call, Message
 
 **Interactions:**
 
-- Photo click → full profile modal
-- Call → tel: link
-- Message → scroll to message section or open chat
-- "View all listings" → agent's listing grid
+- Photo → full profile
+- Call → through the platform (BR9)
+- Message → open chat
+- "View all listings" → the agent's listings
 
 ---
 
 ### Section 13: Listing Card (Search Results)
 
-**Used on:** Search results, saved listings, featured sections
+**Purpose:** One listing, enough to decide whether to open it. · **Used on:** Search results, saved listings, featured sections
 
 **Content Model:**
 
@@ -293,23 +301,20 @@ Reusable sections that compose pages. Each includes:
 - Address
 - Beds/Baths/Sq Ft
 - Agent name + avatar
-- Badges: "New", "Hot", "Price Reduced"
-- Save star (if not saved, unfilled)
-
-**Layout:** Grid card (2-3 per row desktop, 1 mobile)
+- Labels: "New", "Hot", "Price Reduced", "Featured"
+- Save state
 
 **Interactions:**
 
-- Click card → navigate to listing detail
-- Star icon → save/unsave
-- Hover → enlarge/shadow
-- Long press mobile → context menu (save, share, report)
+- Open → listing detail
+- Save/unsave
+- Secondary actions (save, share, report) available on touch as well as pointer
 
 ---
 
 ### Section 14: Listing Status Timeline
 
-**Used on:** Offer detail, CRM
+**Purpose:** The history of a listing's deal. · **Used on:** Offer detail, CRM
 
 **Content Model:**
 
@@ -317,18 +322,16 @@ Reusable sections that compose pages. Each includes:
 - Date listed, first offer, offer accepted, inspection, appraisal, closed
 - Each event: date, status, notes
 
-**Layout:** Vertical timeline or horizontal progress
-
 **Interactions:**
 
-- Click event → detail modal
+- Open an event's detail
 - Estimated close date shown
 
 ---
 
 ### Section 15: Listing Moderation Queue
 
-**Used on:** Admin listings
+**Purpose:** Decide a flagged or submitted listing. · **Used on:** Admin listings (extended by Section 63)
 
 **Content Model:**
 
@@ -337,51 +340,48 @@ Reusable sections that compose pages. Each includes:
 - Reason for flag
 - Agent name, contact
 
-**Layout:** Card with buttons below
-
 **Interactions:**
 
-- Approve button → move to approved
-- Reject → reason required
+- Approve → move to approved
+- Reject → reason required (BR4)
 - Request Changes → send feedback to agent
 
 ---
 
-## OFFER SECTIONS (10)
+## OFFER SECTIONS (6)
+
+The earlier run headed this group "(10)" but specified six sections (16–21). The count is corrected; no section was removed.
 
 ### Section 16: Offer Form
 
-**Used on:** Make offer dialog/page
+**Purpose:** Capture a structured offer. · **Used on:** Make offer dialog/page
 
 **Content Model:**
 
 - Listing address (read-only)
 - Offer amount (input, validation)
-- Move-in date (date picker)
-- Contingencies: Inspection, Appraisal, Financing (checkboxes)
+- Move-in date
+- Contingencies: Inspection, Appraisal, Financing
 - Earnest money amount (optional)
-- Additional notes (textarea)
+- Additional notes
 - Review summary (before submit)
-
-**Layout:** Form in modal or full page
 
 **Interactions:**
 
-- Amount input → format as currency
-- Contingencies checkboxes → toggle requirements
-- Submit → review summary modal → confirm submit
+- Amount formats as currency
+- Contingencies toggle requirements
+- Submit → review summary → confirm submit
 - Cancel → dismiss
 
-**Responsive:**
+**Validation:** Amount required and positive; move-in date not in the past; earnest money non-negative.
 
-- Mobile: Stack fields vertically
-- Desktop: 2-column grid
+> **Closed 8 Sept.** Contingencies are values, not prose; the review is a second step inside the same dialog.
 
 ---
 
 ### Section 17: Offer Status Card
 
-**Used on:** My offers, agent pipeline
+**Purpose:** Where one offer stands. · **Used on:** My offers, agent pipeline
 
 **Content Model:**
 
@@ -391,76 +391,68 @@ Reusable sections that compose pages. Each includes:
 - Last activity (date)
 - Next step hint
 
-**Layout:** Horizontal card or table row
-
 **Interactions:**
 
-- Click → expand to full offer detail
-- Status badge → tooltip with explanation
+- Open → full offer detail
+- Status → explanation on demand
 
 ---
 
 ### Section 18: Offer Timeline
 
-**Used on:** Offer detail
+**Purpose:** Every round of the negotiation. · **Used on:** Offer detail
 
 **Content Model:**
 
-- Vertical timeline of all offers/counters
+- Chronology of all offers/counters
 - Date, time, amount, status for each
 - Message history interleaved
 
-**Layout:** Vertical timeline
-
 **Interactions:**
 
-- Click offer → show full details
-- Hover message → show timestamp
+- Open an offer → full details
+- Timestamp available for each message
 
 ---
 
 ### Section 19: Counter Offer Form
 
-**Used on:** Offer detail (when offer countered)
+**Purpose:** Respond to a counter with a new number. · **Used on:** Offer detail (when offer countered)
 
 **Content Model:**
 
 - Your original offer amount
 - Seller's counter amount
 - Your new counter amount (input)
-- Message to seller (textarea)
-
-**Layout:** Form with comparison of amounts
+- Message to seller
 
 **Interactions:**
 
-- Counter amount input → format as currency
-- Submit → confirmation modal
+- Counter amount formats as currency
+- Submit → confirmation
 
 ---
 
 ### Section 20: Offer Comparison
 
-**Used on:** Offer detail
+**Purpose:** What changed between two positions. · **Used on:** Offer detail
 
 **Content Model:**
 
-- Column 1: Your offer
-- Column 2: Current counter
-- Rows: Amount, Contingencies, Earnest money, Move-in date, Conditions
-
-**Layout:** 2-column table or cards side-by-side
+- Your offer
+- Current counter
+- Compared: Amount, Contingencies, Earnest money, Move-in date, Conditions
 
 **Interactions:**
 
-- Hover row → highlight both cells
-- Click cell → expand detail
+- Each compared term pairs both values
+- Expand a term's detail
 
 ---
 
 ### Section 21: Inspection/Appraisal Tracker
 
-**Used on:** Offer detail (post-accepted)
+**Purpose:** Post-acceptance steps to closing. · **Used on:** Offer detail (post-accepted), agent deal detail
 
 **Content Model:**
 
@@ -469,12 +461,12 @@ Reusable sections that compose pages. Each includes:
 - Financing contingency (deadline, status)
 - Closing date (scheduled, confirmed)
 
-**Layout:** Checklist with dates and status badges
-
 **Interactions:**
 
-- Click item → upload document or change date
+- Open an item → upload document or change date
 - Document → view/download in-app
+
+**Business rules:** BR7 — four milestones seeded at acceptance; untaken contingencies `WAIVED`; overdue derived.
 
 ---
 
@@ -482,7 +474,7 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 22: Message Thread
 
-**Used on:** Messages page, offer detail chat
+**Purpose:** The conversation. · **Used on:** Messages page, offer detail chat
 
 **Content Model:**
 
@@ -490,32 +482,31 @@ Reusable sections that compose pages. Each includes:
 - Timestamp, sender, content
 - Typing indicator (if agent typing)
 
-**Layout:** Chat bubble style (mine on right, theirs on left)
-
 **Interactions:**
 
-- Scroll to load older messages
-- Typing indicator → show "Agent is typing..."
-- Click name → profile modal
+- Load older messages
+- Typing indicator → "Agent is typing..."
+- Sender name → profile
+- Report a received message (Journey 18)
+
+**Accessibility:** Sender distinguishable in text, not by position alone; new messages announced politely.
 
 ---
 
 ### Section 23: Message Input
 
-**Used on:** Messages page, chat sections
+**Purpose:** Compose and send. · **Used on:** Messages page, chat sections
 
 **Content Model:**
 
 - Text input field
-- Attach button (files, photos)
-- Send button
-
-**Layout:** Fixed at bottom or inline
+- Attach (files, photos)
+- Send
 
 **Interactions:**
 
-- Type → grow input height (max 4 lines)
-- Attach → file picker
+- Input grows up to 4 lines
+- Attach → file picker (Section 38 limits)
 - Send (Enter key or button) → submit message
 - Typing indicator → update thread
 
@@ -523,48 +514,51 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 24: Message Notification
 
-**Used on:** Messages list
+**Purpose:** One conversation in a list. · **Used on:** Messages list
 
 **Content Model:**
 
 - Sender name + avatar
 - Last message preview (truncated)
 - Timestamp
-- Unread indicator (dot or badge)
-
-**Layout:** List item
+- Unread indicator
 
 **Interactions:**
 
-- Click → navigate to thread
-- Unread dot → cleared on view
-- Long press → mark as read / delete / snooze (mobile)
+- Open → thread
+- Unread cleared on view
+- Mark as read / delete / snooze (available on touch)
 
 ---
 
 ### Section 25: Document Share
 
-**Used on:** Messaging, offer detail
+**Purpose:** Documents exchanged in a deal. · **Used on:** Messaging, offer detail
 
 **Content Model:**
 
-- Document thumbnail (preview)
+- Document preview
 - Filename
 - Uploaded by, date
-- Download button
-- Share button
-
-**Layout:** Card or list item
+- Download
+- Share
 
 **Interactions:**
 
-- Click → full screen viewer
+- Open → full viewer
 - Download → local file
 - Share → copy link or send message
 
 ---
 
-### Section 26-29: Additional Messaging Sections (Typing Indicator, Thread Header, Conversation List Sidebar, etc.)
+### Sections 26–29: Additional Messaging Sections
+
+Version 1 named these as one line: "Typing Indicator, Thread Header, Conversation List Sidebar, etc." They are split here with a note, per Scope Preservation.
+
+- **Section 26: Typing Indicator** — shows that the other party is composing; announced politely. _(Real-time dependency deferred — see Phase 8.)_
+- **Section 27: Thread Header** — who the conversation is with, the property it concerns, and thread-level actions.
+- **Section 28: Conversation List** — every conversation, searchable and filterable, unread first.
+- **Section 29: Unnamed ("etc.")** — reserved; version 1 did not specify it. Owner to name or confirm as the thread context (property and agent) panel.
 
 ---
 
@@ -572,7 +566,7 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 30: Input Field
 
-**Used on:** All forms
+**Purpose:** One labelled value. · **Used on:** All forms
 
 **Content Model:**
 
@@ -581,28 +575,23 @@ Reusable sections that compose pages. Each includes:
 - Help text (optional)
 - Error message (if validation fails)
 
-**Layout:** Label above input
-
 **Interactions:**
 
-- Focus → label color change, border highlight
 - Type → validate in real-time
 - Blur → show error if invalid
-- Error state → red border, error message
+- Error state → error message associated with the field
 
 ---
 
 ### Section 31: Checkbox Group
 
-**Used on:** Offer form, filter panel
+**Purpose:** Several independent choices. · **Used on:** Offer form, filter panel
 
 **Content Model:**
 
 - Label
 - Array of checkbox items
 - Help text per item
-
-**Layout:** Stack vertically
 
 **Interactions:**
 
@@ -613,24 +602,23 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 32: Radio Button Group
 
-**Used on:** Filters, forms (single selection)
+**Purpose:** One choice from a set. · **Used on:** Filters, forms (single selection)
 
 **Content Model:**
 
 - Label
 - Array of radio options
 
-**Layout:** Stack or grid
-
 **Interactions:**
 
-- Click → select (previous deselected)
+- Select one (previous deselected)
+- Arrow keys move within the group
 
 ---
 
 ### Section 33: Dropdown/Select
 
-**Used on:** Forms, filters
+**Purpose:** One choice from a long set. · **Used on:** Forms, filters
 
 **Content Model:**
 
@@ -639,11 +627,9 @@ Reusable sections that compose pages. Each includes:
 - Array of options
 - Optional search
 
-**Layout:** Closed by default, opens on click
-
 **Interactions:**
 
-- Click → expand options
+- Open → options
 - Type → filter options
 - Arrow keys → navigate
 - Enter → select
@@ -653,21 +639,19 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 34: Date Picker
 
-**Used on:** Viewing scheduling, offer form
+**Purpose:** Choose a date. · **Used on:** Viewing scheduling, offer form
 
 **Content Model:**
 
 - Label
-- Calendar widget
+- Calendar
 - Month/year controls
 - Disabled dates (past, unavailable)
 
-**Layout:** Input + popup calendar
-
 **Interactions:**
 
-- Click input → show calendar
-- Click date → select (close calendar)
+- Open → calendar
+- Choose date → select (close calendar)
 - Next/prev month → navigate
 - Type date directly → parse input
 
@@ -675,7 +659,7 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 35: Price Slider
 
-**Used on:** Filter panel
+**Purpose:** Narrow by price. · **Used on:** Filter panel
 
 **Content Model:**
 
@@ -684,19 +668,19 @@ Reusable sections that compose pages. Each includes:
 - Current range selected
 - Step size ($5k, $10k, etc.)
 
-**Layout:** Range input or dual slider
-
 **Interactions:**
 
-- Drag → update range
-- Input numbers in text field → update slider
-- Reset button → default range
+- Adjust range
+- Type numbers → update range
+- Reset → default range
+
+> **Ratified divergence (Page 2 module 5 · Section 35).** Discrete price-band chips with live facet counts replace the slider.
 
 ---
 
 ### Section 36: Toggle/Switch
 
-**Used on:** Settings, notification preferences
+**Purpose:** An on/off setting that applies immediately. · **Used on:** Settings, notification preferences
 
 **Content Model:**
 
@@ -704,76 +688,70 @@ Reusable sections that compose pages. Each includes:
 - On/off state
 - Help text
 
-**Layout:** Horizontal, toggle on right
-
 **Interactions:**
 
-- Click toggle or label → switch state
+- Toggle or label → switch state
 - Keyboard: Space to toggle
 
 ---
 
 ### Section 37: Search Input (Autocomplete)
 
-**Used on:** Location search, listing search
+**Purpose:** Free text with suggestions. · **Used on:** Location search, listing search
 
 **Content Model:**
 
 - Placeholder
-- Debounce suggestions (300ms)
+- Debounced suggestions (300ms)
 - Recent searches (if applicable)
-
-**Layout:** Input with dropdown suggestions
 
 **Interactions:**
 
 - Type → show suggestions
-- Click suggestion → fill input / submit
+- Choose suggestion → fill input / submit
 - Keyboard: Arrow up/down navigate, Enter select, Escape close
 
 ---
 
 ### Section 38: File Upload
 
-**Used on:** Messages, admin uploads
+**Purpose:** Add files. · **Used on:** Messages, listing media, identity verification, avatar, admin uploads
 
 **Content Model:**
 
-- Drag-drop zone
+- Drop zone
 - "Choose file" button
 - File type restrictions
 - File size limit
 
-**Layout:** Dropzone area
-
 **Interactions:**
 
-- Drag file over → highlight
+- Drag file over → drop target indicated
 - Drop → upload
-- Click → open file picker
-- Show upload progress bar
+- Choose → file picker
+- Upload progress shown
+
+**Validation:** Reject wrong type or oversize before upload, naming the limit.
 
 ---
 
 ### Section 39: Multi-Step Form
 
-**Used on:** Sign up, complex workflows
+**Purpose:** A long task in validated steps. · **Used on:** Sign up, listing submission, complex workflows
 
 **Content Model:**
 
 - Step indicator (1/3, 2/3, 3/3)
 - Form fields for current step
 - Validation per step
-- Next, Back, Submit buttons
-
-**Layout:** Vertical progress indicator + form
+- Next, Back, Submit
 
 **Interactions:**
 
 - Next → validate current step, advance if valid
 - Back → return to previous step
 - Submit → validate all steps, submit if valid
-- Step indicator click → jump to step (if already completed)
+- Jump to an already completed step
 
 ---
 
@@ -781,49 +759,49 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 40: Stat Card
 
-**Used on:** Dashboards
+**Purpose:** One headline figure. · **Used on:** Dashboards
 
 **Content Model:**
 
 - Label (e.g., "Saved Listings")
 - Value (e.g., "5")
 - Trend (up/down with %)
-- Icon or small chart
-
-**Layout:** Card (100-150px)
+- Optional small trend series
 
 **Interactions:**
 
-- Click → navigate to detail page
-- Hover → show description
+- Open → detail page
+- Description on demand
 
 ---
 
 ### Section 41: Data Table
 
-**Used on:** Offers, listings, admin, agent dashboard
+**Purpose:** Many records, comparable by column. · **Used on:** Offers, listings, admin, agent dashboard
 
 **Content Model:**
 
 - Column headers (sortable)
-- Data rows (each column is cell)
+- Data rows
 - Pagination or infinite scroll
-- Bulk action checkboxes (optional)
-
-**Layout:** Scrollable table (responsive: becomes cards on mobile)
+- Bulk selection (optional)
 
 **Interactions:**
 
-- Click header → sort (ascending/descending)
-- Click row → detail modal or navigate
-- Checkbox → select for bulk action
-- Bulk action button → apply to selected
+- Header → sort (ascending/descending)
+- Row → detail or navigate
+- Select for bulk action
+- Bulk action → apply to selected
+
+**Device needs:** On narrow screens every column's information stays reachable.
+
+**Accessibility:** Caption describing the columns; sort state announced.
 
 ---
 
 ### Section 42: Pipeline Card (CRM-style)
 
-**Used on:** Agent pipeline
+**Purpose:** One deal in the agent's pipeline. · **Used on:** Agent pipeline
 
 **Content Model:**
 
@@ -834,134 +812,131 @@ Reusable sections that compose pages. Each includes:
 - Last activity
 - Notes snippet
 
-**Layout:** Card with drag handle
-
 **Interactions:**
 
 - Drag → change status (column)
-- Click → detail modal
-- Click notes → expand
+- Open → detail
+- Notes → expand
+
+**Accessibility:** Every drag outcome also available from the detail without a pointer.
+
+> **Closed 8 Sept · Section 42 drag semantics.** A drop is a request to advance, resolved against what the agent can do (BR6).
 
 ---
 
 ### Section 43: Activity Feed
 
-**Used on:** Dashboard, offer detail
+**Purpose:** What happened recently. · **Used on:** Dashboard, offer detail
 
 **Content Model:**
 
 - Array of events (viewed, saved, offer made, offer countered, etc.)
-- Timestamp, icon, description
-
-**Layout:** Timeline style, newest first
+- Timestamp, kind, description
 
 **Interactions:**
 
-- Click event → detail or navigate
+- Open event → detail or navigate
+
+**Ordering:** Newest first.
 
 ---
 
 ### Section 44: Quick Stats Widget
 
-**Used on:** Dashboard, admin overview
+**Purpose:** A role's few key numbers. · **Used on:** Dashboard, admin overview
 
 **Content Model:**
 
 - 3-4 key metrics (number + trend)
-- Icon per metric
-
-**Layout:** Grid (1-4 cards)
 
 **Interactions:**
 
-- Click card → navigate to detail
+- Open a metric → detail
 
 ---
 
 ### Section 45: Calendar Widget
 
-**Used on:** Viewing calendar, agent calendar
+**Purpose:** Events by date. · **Used on:** Viewing calendar, agent calendar
 
 **Content Model:**
 
 - Month view
-- Events marked on dates
+- Events on dates
 - Event count per day
-
-**Layout:** Standard calendar grid
 
 **Interactions:**
 
-- Click date → list events for that day
-- Click event → detail modal
+- Choose date → events for that day
+- Open event → detail
 - Next/prev month → navigate
 
 ---
 
 ### Section 46: Chart/Graph
 
-**Used on:** Agent analytics, admin reports
+**Purpose:** A trend or distribution. · **Used on:** Agent analytics, admin reports
 
 **Content Model:**
 
-- Bar chart, line chart, pie chart (varies by metric)
+- A series over time, a ranking or a share (varies by metric)
 - Data points, legend
-- Tooltip on hover
-
-**Layout:** Responsive container
+- Value on demand
 
 **Interactions:**
 
-- Hover → show tooltip
-- Click legend → toggle series
-- Tap on mobile → show data point details
+- Point → value
+- Legend → toggle series
+- Tap on touch → data point details
+
+**Accessibility:** Text summary or table alternative; series distinguishable without colour.
 
 ---
 
-## LAYOUT SECTIONS (3)
+## NAVIGATION SECTIONS (3)
+
+Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe navigation content, not layout.
 
 ### Section 47: Header
 
-**Used on:** All pages
+**Purpose:** Global navigation. · **Used on:** All pages
 
 **Content Model:**
 
-- Logo (clickable → home)
+- Brand (→ home)
 - Nav links (search, saved, messages, etc. for logged-in)
 - User menu (profile, settings, logout)
-- Mobile hamburger
-
-**Layout:** Horizontal, sticky or scroll
+- Navigation reachable on small screens
 
 ---
 
 ### Section 48: Footer
 
-**Used on:** All pages (public pages)
+**Purpose:** Site-wide links. · **Used on:** All pages (public pages)
 
 **Content Model:**
 
 - Links: About, Help, Blog, Privacy, Terms
-- Social media icons
+- Social media links
 - Newsletter signup
 - Copyright
 
-**Layout:** Multi-column on desktop, stacked on mobile
+> **Ratified divergences (Section 48).** The linked pages are now written (Pages 28–34). Social links removed until accounts exist. Newsletter signup is back on a double opt-in list (BR14; correction 26 Sept).
 
 ---
 
 ### Section 49: Sidebar Navigation
 
-**Used on:** Dashboard, agent, admin
+**Purpose:** Portal navigation. · **Used on:** Dashboard, agent, admin
 
 **Content Model:**
 
-- Logo
+- Brand
 - Menu items (Dashboard, Saved, Offers, etc.)
-- Active indicator
-- Collapse/expand (mobile)
+- Current location indicated
+- Collapse/expand
 
-**Layout:** Vertical, sticky or fixed
+**Accessibility:** Current page marked `aria-current`.
 
 ---
 
@@ -969,91 +944,89 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 50: Toast Notification
 
-**Used on:** Everywhere (save, send, error, etc.)
+**Purpose:** Confirm an outcome that is not otherwise visible. · **Used on:** Everywhere (save, send, error, etc.)
 
 **Content Model:**
 
 - Message
-- Icon (success, error, info, warning)
-- Close button (optional)
+- Kind (success, error, info, warning)
+- Close (optional)
 - Auto-dismiss (5s)
-
-**Layout:** Fixed bottom-right (or top-right), slides out/in
 
 **Interactions:**
 
-- Click close → dismiss
+- Close → dismiss
 - Auto-dismiss after 5s
-- Stack multiple toasts
+- Multiple notifications queue
+
+**Rules:** An error you can retry in context is reported next to its control, not as a toast; success is toasted only when not already visible ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)).
 
 ---
 
 ### Section 51: Modal/Dialog
 
-**Used on:** Confirm actions, forms, details
+**Purpose:** A focused task or confirmation. · **Used on:** Confirm actions, forms, details
 
 **Content Model:**
 
 - Title
 - Content (text, form, image, etc.)
-- Buttons (OK, Cancel, Delete, etc.)
-- Close button (X)
-
-**Layout:** Centered overlay, darken background
+- Actions (OK, Cancel, Delete, etc.)
+- Close
 
 **Interactions:**
 
-- Click button → action or close
-- Click X → close
-- Click outside (if dismissible) → close
+- Action → act or close
+- Close → close
+- Outside interaction (if dismissible) → close
 - Keyboard: Escape closes
+- Locked while its request is in flight (BR10)
 
 ---
 
 ### Section 52: Empty State
 
-**Used on:** No results, no data
+**Purpose:** Explain an absence. · **Used on:** No results, no data
 
 **Content Model:**
 
-- Icon or illustration
 - Headline
 - Description
-- CTA button
-
-**Layout:** Centered, centered vertically within container
+- Next action
 
 **Interactions:**
 
-- Click CTA → action (search, create, etc.)
+- Action → search, create, etc.
 
 ---
 
-## ERROR PAGES (3)
+## ERROR SECTIONS (3)
+
+Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ### Section 53: 404 Not Found
 
-**Used on:** Invalid routes
+**Used on:** Invalid routes (Page 45)
 
 **Content Model:**
 
-- "404" or icon
+- "404"
 - "Page not found" headline
 - Helpful description
-- Home button, back button
+- Home, back
 
 ---
 
 ### Section 54: 500 Server Error
 
-**Used on:** Server errors
+**Used on:** Server errors (Page 46)
 
 **Content Model:**
 
-- "500" or icon
+- "500"
 - "Something went wrong" headline
 - Description (vague for security)
-- Retry button, home button
+- Retry, home
 - Error ID (for support)
 
 ---
@@ -1064,10 +1037,11 @@ Reusable sections that compose pages. Each includes:
 
 **Content Model:**
 
-- Icon
 - "No connection" headline
 - "Check your internet" description
-- Retry button
+- Retry
+
+> **Ratified divergence (Phase 1 · Principle 5).** No offline capability exists. This section remains specified for network-error handling.
 
 ---
 
@@ -1075,28 +1049,23 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 56: Admin Console Shell
 
-**Used on:** Every /admin route
+**Purpose:** Admin navigation and identity. · **Used on:** Every /admin route
 
 **Content Model:**
 
 - Brand block: "Admin" / "Console"
 - Six nav groups, each with a label and items — Overview (Dashboard), Marketplace (Listings, Users), Finance (Transactions, Payments), Insights (Reports), Trust & Safety (Verifications), System (Settings)
-- Nav item: icon, label, description, optional count badge
-- Topbar: breadcrumb from route registry, user menu
+- Nav item: label, description, optional count
+- Current location from the route registry, user menu
 - Signed-in user, logout action
-
-**Layout:** Full-height flex — fixed sidebar, scrollable main column with topbar pinned above a contained content area
 
 **Interactions:**
 
-- Active route highlighted in the sidebar
-- Badge count on Verifications reflects pending requests
+- Current route indicated
+- Count on Verifications reflects pending requests
 - Logout clears auth state and token, redirects to /
 
-**Responsive:**
-
-- Mobile: Sidebar collapses to a drawer
-- Desktop: Sidebar persistent, content in a max-width container
+**Device needs:** Navigation reachable on narrow screens.
 
 **Accessibility:** Nav landmark with grouped lists, current page marked, logout is a real button
 
@@ -1104,44 +1073,35 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 57: Volume Metrics Grid
 
-**Used on:** Admin overview
+**Purpose:** Platform volume at a glance. · **Used on:** Admin overview
 
 **Content Model:**
 
-- 4 stat items: label, value, icon, change, trend direction, caption, sparkline series, target href
+- 4 stat items: label, value, change, trend direction, caption, 6-point trend series, target href
 - One item marked featured
-
-**Layout:** Responsive grid, 4 columns at desktop
 
 **Interactions:**
 
-- Whole card is a link to its detail route
-- Trend chip colours by direction
+- Each metric is a link to its detail route
 
-**Responsive:** 1 / 2 / 4 columns
-
-**Accessibility:** Each card is a single link with an accessible name combining label and value; sparkline is decorative
+**Accessibility:** Each metric is a single link with an accessible name combining label and value; the trend series is decorative
 
 ---
 
 ### Section 58: Revenue Trend Panel
 
-**Used on:** Admin overview, admin payments
+**Purpose:** Revenue over time. · **Used on:** Admin overview, admin payments
 
 **Content Model:**
 
-- Panel title, description, optional action button
-- Column chart: x-axis month, one or more value series with tones
+- Panel title, description, optional action
+- Values by month, one or more series
 - Value formatting: divisor, prefix, suffix
-
-**Layout:** Panel wrapper with fixed-height chart
 
 **Interactions:**
 
-- Hover a column → value tooltip
-- Action button navigates to the related finance route
-
-**Responsive:** Chart scales to container; labels thin out on narrow widths
+- Value on demand per month
+- Action navigates to the related finance route
 
 **Accessibility:** Chart has a text summary; series names exposed in the legend
 
@@ -1149,37 +1109,29 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 59: Revenue Breakdown Panel
 
-**Used on:** Admin overview
+**Purpose:** Where revenue comes from. · **Used on:** Admin overview
 
 **Content Model:**
 
 - Headline metric: label + value (commissions YTD)
 - Supporting metrics: GMV, take rate, average commission per deal
 
-**Layout:** Headline above a stacked list of label/value rows
-
 **Interactions:** Static display
 
-**Responsive:** Full width in the panel rail
-
 **Accessibility:** Rendered as a description list
+
+> **Ratified divergence (Page 20 module 5).** Folded into the revenue figure as one estimated commission line (BR17).
 
 ---
 
 ### Section 60: System Health List
 
-**Used on:** Admin overview
+**Purpose:** Which systems are healthy. · **Used on:** Admin overview
 
 **Content Model:**
 
-- Per system: label, icon, uptime, error rate, state (operational / degraded)
-- Panel description carries overall uptime and error rate over 24h
-
-**Layout:** One row per system, metrics right-aligned
-
-**Interactions:** State drives dot tone and text colour
-
-**Responsive:** Metrics wrap under the label on narrow widths
+- Per system: label, uptime, error rate, state (operational / degraded)
+- Overall uptime and error rate over 24h
 
 **Accessibility:** State conveyed by text, not colour alone
 
@@ -1187,66 +1139,55 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 61: System Alert List
 
-**Used on:** Admin overview
+**Purpose:** What needs an operator. · **Used on:** Admin overview
 
 **Content Model:**
 
-- Per alert: title, description, relative time, tone (info / warning / error)
-- Panel header shows the alert count
+- Per alert: title, description, relative time, severity (info / warning / error)
+- Alert count
 
-**Layout:** Stacked rows separated by the quiet divider token
+**Accessibility:** Alerts are a list; severity is stated in text
 
-**Interactions:** Tone sets the leading indicator
-
-**Responsive:** Time stamp moves below the title on mobile
-
-**Accessibility:** Alerts are a list; tone is paired with a text label
+> **Ratified divergence (Page 20 module 4).** Merged with Section 62 into one "Needs a Decision" list: each queue's open count and oldest-item age, oldest first.
 
 ---
 
 ### Section 62: Moderation Queue Summary
 
-**Used on:** Admin overview
+**Purpose:** How much review work is waiting. · **Used on:** Admin overview
 
 **Content Model:**
 
-- Per row: label, count, icon, tone (warning / error), target href
+- Per row: label, count, severity (warning / error), target href
 - Rows: pending verifications, listings awaiting review, flagged content
 
-**Layout:** Compact row list inside a panel
-
-**Interactions:** Click a row → the matching moderation route
-
-**Responsive:** Full width in the panel rail
+**Interactions:** Open a row → the matching moderation route
 
 **Accessibility:** Each row is a link naming both the count and the queue
+
+> **Ratified divergence (Page 20 module 4).** See Section 61. Flagged content counts user and message flags only.
 
 ---
 
 ### Section 63: Moderation Listings Table
 
-**Used on:** Admin listings
-
-**Extends:** Section 15 (Listing Moderation Queue)
+**Purpose:** The moderation queue as records. · **Used on:** Admin listings · **Extends:** Section 15
 
 **Content Model:**
 
 - Per listing: id, address, cover photo, price, agent (name, email, phone), submitted date, description, image set, compliance checks, status, flag reason, moderator note, changes-requested flag
 - Compliance check: label + state (pass / warn / fail)
 - Status: pending / flagged / approved / rejected
-
-**Layout:** Sortable, selectable, paginated table with a totals footer and a large side panel for row detail
+- Totals: queue size, total value, open compliance checks
 
 **Interactions:**
 
-- Filter pills switch the visible set and reset selection
+- Status filters switch the visible set and reset selection
 - Sort by any column; default sort by status
-- Open a row → detail panel with photos, description, flag reason, compliance checklist, agent contact
-- Row and panel actions: Approve, Request Changes, Reject
-- Select rows → bulk action bar with the same three actions
-- Flagged and rejected rows carry a tinted background
-
-**Responsive:** Horizontal scroll inside the table container; detail panel goes full-screen on mobile
+- Open a row → detail with photos, description, flag reason, compliance checklist, agent contact
+- Row and detail actions: Approve, Request Changes, Reject
+- Select rows → bulk actions with the same three
+- Flagged and rejected rows identifiable without colour
 
 **Accessibility:** Table caption describes every column; action columns have screen-reader-only headers
 
@@ -1254,7 +1195,7 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 64: Moderation Decision Modal
 
-**Used on:** Admin listings
+**Purpose:** Record a reasoned decision. · **Used on:** Admin listings
 
 **Content Model:**
 
@@ -1262,16 +1203,12 @@ Reusable sections that compose pages. Each includes:
 - Target ids (single row or bulk selection)
 - Required note field
 
-**Layout:** Centred dialog, note field above the action row
-
 **Interactions:**
 
-- Submit stays disabled until the note is non-empty
+- Submit stays disabled until the note is non-empty (whitespace does not count)
 - Reject → status rejected, note attached
 - Request Changes → status returns to pending, flagged as changes requested
 - Close or submit clears the note and the selection for affected rows
-
-**Responsive:** Full width with margin on mobile
 
 **Accessibility:** Focus trapped, labelled dialog, Escape closes, note field has a visible label
 
@@ -1279,75 +1216,64 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 65: User Management Table
 
-**Used on:** Admin users
+**Purpose:** Every account and its standing. · **Used on:** Admin users
 
 **Content Model:**
 
 - Per user: id, name, email, role (buyer / agent / admin), tier (standard / premium / platinum), join date, status (active / suspended / inactive), transaction count
 
-**Layout:** Sortable, selectable, paginated table
-
 **Interactions:**
 
 - Sort by any column; default sort by name ascending
-- Role rendered as a colour-coded chip, tier as coloured text ranked for sorting
+- Tier ranked for sorting
 - Row action suspends or reactivates
-- Bulk action bar: Reactivate, Suspend
-- Suspended rows carry an error-tinted background
+- Bulk actions: Reactivate, Suspend
+- Suspended rows identifiable without colour
+- Open a row → user profile (`/admin/users/:id`)
 
-**Responsive:** Horizontal scroll inside the table container
-
-**Accessibility:** Caption names every column; status is a badge with text
+**Accessibility:** Caption names every column; status is text
 
 ---
 
 ### Section 66: Transaction Ledger Table
 
-**Used on:** Admin transactions
+**Purpose:** Every deal's money. · **Used on:** Admin transactions
 
 **Content Model:**
 
-- Per transaction: id, property address, buyer, agent, sale price, commission (price × platform rate), initiated date, status (pending / escrow / completed)
-
-**Layout:** Sortable table with a totals footer for price and commission
+- Per transaction: id, property address, buyer, agent, sale price, commission (price × platform rate — BR17), initiated date, status (pending / escrow / completed)
+- Totals for price and commission
 
 **Interactions:**
 
 - Sort by any column
-- Commission rendered as an accent chip
-- Status tints the initiated date
+- Escrow status identifiable without colour
 - Row actions open the deal
 
-**Responsive:** Horizontal scroll inside the table container
-
-**Accessibility:** Footer totals are announced as part of the table; numeric columns use tabular figures
+**Accessibility:** Footer totals are announced as part of the table
 
 ---
 
 ### Section 67: Verification Request List
 
-**Used on:** Admin verifications
+**Purpose:** Identity and tier requests to decide. · **Used on:** Admin verifications
 
 **Content Model:**
 
 - Per request: id, name, email, current tier, requested tier, status (pending / approved / rejected), submitted date, document count
 
-**Layout:** Card per request — identity block left, status badge and actions right
-
 **Interactions:**
 
 - Actions vary by status: pending → Approve / Review Docs / Reject; approved → View Details / Revoke; rejected → View Reason / Allow Resubmit
-- Decision moves the card to its new status and updates the header counts and the sidebar badge
+- Decision moves the request to its new status and updates the counts and the navigation count
 
-**Responsive:** Actions wrap below the identity block on mobile
-
-**Accessibility:** Status is text plus tone; each action names the subject
+**Accessibility:** Status is text; each action names the subject
 
 ---
 
 ### Section 68: Platform Config Panel
 
-**Used on:** Admin settings
+**Purpose:** Platform and marketplace values. · **Used on:** Admin settings
 
 **Content Model:**
 
@@ -1355,15 +1281,11 @@ Reusable sections that compose pages. Each includes:
 - Fields: name, label, placeholder, optional type, optional prefix or suffix
 - Current values keyed by field name
 
-**Layout:** Panel wrapping a two-column field grid
-
 **Interactions:**
 
 - Editing any field clears the saved state
-- Submit is owned by the page header button via form id
+- Submit is owned by the page-level save action
 - Reset restores stored values
-
-**Responsive:** Single column on mobile
 
 **Accessibility:** Every field has a real label; prefix and suffix are not the only unit indicator
 
@@ -1371,18 +1293,14 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 69: Policy Toggle Panel
 
-**Used on:** Admin settings
+**Purpose:** Moderation and operations policies. · **Used on:** Admin settings
 
 **Content Model:**
 
 - Panel title and description
 - Toggles: title, description, default state
 
-**Layout:** Stacked rows, switch right-aligned
-
 **Interactions:** Toggle flips immediately; description explains the consequence
-
-**Responsive:** Description wraps under the title on mobile
 
 **Accessibility:** Switch role with the title as its accessible name and the description as help text
 
@@ -1390,20 +1308,26 @@ Reusable sections that compose pages. Each includes:
 
 ### Section 70: Maintenance Panel
 
-**Used on:** Admin settings
+**Purpose:** Operational and destructive maintenance. · **Used on:** Admin settings
 
 **Content Model:**
 
 - Operational and destructive maintenance actions
 
-**Layout:** Panel placed last, visually separated from ordinary configuration
+**Interactions:** Kept apart from ordinary configuration; destructive actions require confirmation before running (BR10)
 
-**Interactions:** Destructive actions require confirmation before running
-
-**Responsive:** Actions stack on mobile
-
-**Accessibility:** Destructive actions use the danger variant and state their effect in the label
+**Accessibility:** Destructive actions state their effect in the label
 
 ---
 
-**Phase 5 Complete. All 70 sections specified with content, layout, interactions, and responsive behavior. These compose all 27 pages.**
+## Regeneration Notes
+
+- **Retained:** all 70 sections with their numbers, "Used on", content models, interactions and accessibility notes.
+- **Added:** Section Defaults table; a Purpose line per section; validation for Sections 16 and 38; data requirements for Section 10; Sections 26–29 split out by name from one heading (Section 29 remains unnamed and reserved); divergence pointers.
+- **Changed — dropped as visual prescription:** every "Layout:" line (e.g. "Full-width, centered text overlay on image", "Horizontal scrollable carousel on mobile, 2-3 column grid on desktop", "Grid (2x2 on desktop, 1 on mobile)", "Timeline visual or 4-column grid", "Hero image + carousel, thumbnails below", "Horizontal bar, sticky on scroll", "3-5 boxes in row", "Full-width map container, 400px min height", "Table on desktop, cards on mobile", "Vertical card, 300px wide", "Grid card (2-3 per row desktop, 1 mobile)", "Chat bubble style (mine on right, theirs on left)", "Fixed at bottom or inline", "Label above input", "Stack vertically", "Card (100-150px)", "Standard calendar grid", "Multi-column on desktop, stacked on mobile", "Fixed bottom-right (or top-right), slides out/in", "Centered overlay, darken background", "Centered, centered vertically", "Full-height flex — fixed sidebar…", "Responsive grid, 4 columns at desktop", "Panel wrapper with fixed-height chart", "Stacked rows separated by the quiet divider token", "Card per request — identity block left…", "Panel wrapping a two-column field grid", "Stacked rows, switch right-aligned", "Panel placed last, visually separated"); every "Responsive:" column count and aspect ratio; "Background image (aspirational lifestyle)"; hover effects ("Hover → enlarge", "Hover step → highlight", "Hover row → highlight both cells", "Hover → enlarge/shadow"); "Focus → label color change, border highlight"; "Error state → red border"; "Icon or illustration" / icon slots; "Star icon", "star toggle"; "Trend chip colours by direction"; "State drives dot tone and text colour"; "Tone sets the leading indicator"; "Role rendered as a colour-coded chip, tier as coloured text"; "Commission rendered as an accent chip"; "Status tints the initiated date"; "tinted background" rows; "numeric columns use tabular figures"; "danger variant"; "Timestamp moves below the title on mobile"; "Chart scales to container; labels thin out"; chart types ("Bar chart, line chart, pie chart", "Column chart"). Where a dropped line carried behaviour it survives in neutral words (e.g. tinted rows → "identifiable without colour").
+- **Changed — provider neutral:** Section 10 "Google Map centered on address" → "Map centred on the address"; the map provider is a code decision recorded in [ADR 0015](../../docs/adr/0015-map-surfaces-wait-on-coordinates.md) (MapLibre GL, OpenFreeMap).
+- **Changed — renamed:** "LAYOUT SECTIONS" → "NAVIGATION SECTIONS"; "ERROR PAGES" → "ERROR SECTIONS"; the Offer group count corrected from "(10)" to "(6)" and the Listing group from "(15)" to "(10)" — no section removed.
+
+---
+
+**Phase 5 Complete.** All 70 sections specified with content and behaviour. They compose the 46 pages in Phase 4. Next: [Phase 6 — Interaction Contracts](phase-6-interaction-contracts.md).
