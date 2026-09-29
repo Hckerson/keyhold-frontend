@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import type { OfferResponseAction } from "@/lib/config/offer-response";
 import {
     pendingCount,
@@ -33,6 +33,10 @@ export function useAgentRequests() {
         OfferAnswering
     >(respondToOffer);
     const decline = useConfirmation<string>(declineViewing);
+    const confirmation = useConfirmation<{
+        id: string;
+        confirmedTime: string;
+    }>(confirmViewing);
 
     const book = useMemo(
         () => toRequestBook(connections.data ?? []),
@@ -41,12 +45,6 @@ export function useAgentRequests() {
 
     const viewings = useMemo(() => rankViewings(book.viewings), [book]);
     const offers = useMemo(() => rankOffers(book.offers), [book]);
-
-    const confirm = useCallback(
-        (id: string, confirmedTime: string) =>
-            confirmViewing.mutate({ id, confirmedTime }),
-        [confirmViewing],
-    );
 
     const busyViewingId = confirmViewing.isPending
         ? (confirmViewing.variables?.id ?? null)
@@ -70,9 +68,12 @@ export function useAgentRequests() {
         answeringId: respondToOffer.isPending
             ? (respondToOffer.variables?.id ?? null)
             : null,
-        confirm,
+        confirmation,
         answer,
         decline,
         declining: viewings.find((request) => request.id === decline.target),
+        confirmingRequest: viewings.find(
+            (request) => request.id === confirmation.target?.id,
+        ),
     };
 }

@@ -1,15 +1,17 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { LeadCallModal } from "@/components/features/agent/lead-call-modal";
 import { LeadCreateModal } from "@/components/features/agent/lead-create-modal";
-import { LeadDeclineModal } from "@/components/features/agent/lead-decline-modal";
 import { LeadEmailModal } from "@/components/features/agent/lead-email-modal";
+import { LeadResponseModal } from "@/components/features/agent/lead-response-modal";
 import { LeadsHeader } from "@/components/sections/agent/leads-header";
 import { LeadsMain } from "@/components/sections/agent/leads-main";
 import { LeadsRail } from "@/components/sections/agent/leads-rail";
 import { LeadsStatBand } from "@/components/sections/agent/leads-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { LEAD_RESPONSE_COPY } from "@/lib/config/lead-response";
 import {
     countByStage,
     leadStats,
@@ -34,7 +36,8 @@ const SELLER_QUERY = { limit: 100 } as const;
 
 export function LeadConsole() {
     const { data, isPending, isError, refetch } = useIncomingConnections();
-    const accept = useAcceptConnection();
+    const acceptConnection = useAcceptConnection();
+    const accept = useConfirmation<string>(acceptConnection);
     const declineConnection = useDeclineConnection();
     const decline = useConfirmation<string>(declineConnection);
     const { user } = useSession();
@@ -66,21 +69,19 @@ export function LeadConsole() {
 
     const capture = useLeadCapture(listingOptions[0]?.value ?? "");
 
-    const respondingId = accept.isPending
-        ? (accept.variables ?? null)
+    const respondingId = accept.pending
+        ? (acceptConnection.variables ?? null)
         : decline.pending
           ? (declineConnection.variables ?? null)
           : null;
 
     const onRespond = useCallback(
         (id: string, accepted: boolean) => {
-            if (accepted) accept.mutate(id);
+            if (accepted) accept.request(id);
             else decline.request(id);
         },
         [accept, decline],
     );
-
-    const declining = leads.find((lead) => lead.id === decline.target);
 
     if (isError)
         return (
@@ -113,12 +114,16 @@ export function LeadConsole() {
                 <LeadsRail leads={leads} />
             </div>
 
-            <LeadDeclineModal
-                lead={declining}
-                pending={decline.pending}
-                failed={decline.failed}
-                onClose={decline.dismiss}
-                onConfirm={() => declining && decline.confirm(declining.id)}
+            <LeadResponseModal
+                copy={LEAD_RESPONSE_COPY.accept}
+                leads={leads}
+                response={accept}
+            />
+
+            <LeadResponseModal
+                copy={LEAD_RESPONSE_COPY.decline}
+                leads={leads}
+                response={decline}
             />
 
             <LeadCreateModal
@@ -131,6 +136,11 @@ export function LeadConsole() {
                 onDraftChange={capture.setDraft}
                 onClose={capture.close}
                 onSubmit={capture.submit}
+            />
+
+            <LeadCallModal
+                lead={top}
+                confirmation={outreach.callConfirmation}
             />
 
             {top && (

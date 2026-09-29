@@ -9,6 +9,7 @@ import {
     OfferResponseModal,
     type OfferResponse,
 } from "@/components/features/agent/offer-response-modal";
+import { ViewingConfirmModal } from "@/components/features/agent/viewing-confirm-modal";
 import { ViewingDeclineModal } from "@/components/features/agent/viewing-decline-modal";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { OFFER_RESPONSE_STATUS } from "@/lib/config/offer-response";
@@ -17,7 +18,7 @@ import { useAgentRequests } from "@/lib/hooks/use-agent-requests";
 
 export function RequestsConsole() {
     const queue = useAgentRequests();
-    const { answer, decline } = queue;
+    const { answer, decline, confirmation } = queue;
 
     if (queue.failed)
         return (
@@ -58,7 +59,9 @@ export function RequestsConsole() {
                 confirmingId={queue.confirmingId}
                 busyViewingId={queue.busyViewingId}
                 answeringId={queue.answeringId}
-                onConfirmViewing={queue.confirm}
+                onConfirmViewing={(id, confirmedTime) =>
+                    confirmation.request({ id, confirmedTime })
+                }
                 onDeclineViewing={decline.request}
                 onAnswer={(action, request) =>
                     answer.request({ action, request })
@@ -72,6 +75,18 @@ export function RequestsConsole() {
                 failed={answer.failed}
                 onClose={answer.dismiss}
                 onSubmit={submit}
+            />
+
+            <ViewingConfirmModal
+                request={queue.confirmingRequest}
+                time={confirmation.target?.confirmedTime}
+                pending={confirmation.pending}
+                failed={confirmation.failed}
+                onClose={confirmation.dismiss}
+                onConfirm={() =>
+                    confirmation.target &&
+                    confirmation.confirm(confirmation.target)
+                }
             />
 
             <ViewingDeclineModal
