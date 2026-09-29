@@ -17,7 +17,7 @@ const QUEUE_PAGE_SIZE = 100;
 
 export function useVerificationQueue() {
     const queue = useKycQueue({ limit: QUEUE_PAGE_SIZE });
-    const approval = useReviewKyc();
+    const approval = useConfirmation<{ id: string }, string>(useReviewKyc());
     const rejection = useConfirmation<
         { id: string } & RejectKycInput,
         VerificationDecision
@@ -54,12 +54,12 @@ export function useVerificationQueue() {
     const active =
         visible.find((item) => item.id === selectedId) ?? visible[0] ?? null;
 
-    const busy = approval.isPending || rejection.pending;
+    const busy = approval.pending || rejection.pending;
 
     const runAction = (mode: VerificationActionMode, id: string) => {
         if (busy) return;
         if (mode === "approve") {
-            approval.mutate({ id });
+            approval.request(id);
             return;
         }
         setNote("");
@@ -75,13 +75,17 @@ export function useVerificationQueue() {
         });
     };
 
+    const submitApproval = () => {
+        if (approval.target) approval.confirm({ id: approval.target });
+    };
+
     const changeFilter = (key: VerificationFilterKey) => {
         setFilter(key);
         rejection.dismiss();
     };
 
-    const applicantName =
-        items.find((item) => item.id === rejection.target?.id)?.name ?? "";
+    const nameOf = (id?: string | null) =>
+        items.find((item) => item.id === id)?.name ?? "";
 
     return {
         filter,
@@ -91,10 +95,12 @@ export function useVerificationQueue() {
         decision: rejection.target,
         deciding: rejection.pending,
         decisionFailed: rejection.failed,
-        approvingId: approval.isPending ? approval.variables?.id : undefined,
+        approvingId: approval.pending ? approval.target : undefined,
+        approval,
+        approvalName: nameOf(approval.target),
         busy,
         note,
-        applicantName,
+        applicantName: nameOf(rejection.target?.id),
         pending: queue.isPending,
         failed: queue.isError,
         refetch: queue.refetch,
@@ -103,6 +109,7 @@ export function useVerificationQueue() {
         runAction,
         closeDecision: rejection.dismiss,
         submitDecision,
+        submitApproval,
         changeFilter,
     };
 }

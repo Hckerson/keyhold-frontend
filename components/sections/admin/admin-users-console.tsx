@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { UserCreateModal } from "@/components/features/admin/user-create-modal";
 import { UserDetailModal } from "@/components/features/admin/user-detail-modal";
+import { UserReactivateModal } from "@/components/features/admin/user-reactivate-modal";
 import { UserSuspendModal } from "@/components/features/admin/user-suspend-modal";
 import { AdminUsersHeader } from "@/components/sections/admin/admin-users-header";
 import { AdminUsersMain } from "@/components/sections/admin/admin-users-main";
@@ -49,9 +50,7 @@ export function AdminUsersConsole() {
 
     const users = useMemo(() => (data ?? []).map(toManagedUser), [data]);
 
-    const suspension = useUserSuspension((id) =>
-        setDetailId((current) => (current === id ? null : current)),
-    );
+    const suspension = useUserSuspension();
 
     const counts = useMemo(() => countUsersByStatus(users), [users]);
     const stats = useMemo(() => userStats(users), [users]);
@@ -114,6 +113,11 @@ export function AdminUsersConsole() {
         suspension.open(id);
     };
 
+    const onReactivate = (id: string) => {
+        setDetailId(null);
+        suspension.reactivation.request(id);
+    };
+
     if (isError)
         return (
             <ConsoleUnavailable
@@ -154,7 +158,7 @@ export function AdminUsersConsole() {
                     reactivatingId={suspension.reactivatingId}
                     onOpen={onOpen}
                     onSuspend={onSuspend}
-                    onReactivate={suspension.reactivate}
+                    onReactivate={onReactivate}
                 />
                 <AdminUsersRail users={users} />
             </div>
@@ -165,7 +169,7 @@ export function AdminUsersConsole() {
                 reactivatingId={suspension.reactivatingId}
                 onClose={onCloseDetail}
                 onSuspend={onSuspend}
-                onReactivate={suspension.reactivate}
+                onReactivate={onReactivate}
             />
 
             <UserCreateModal
@@ -177,6 +181,16 @@ export function AdminUsersConsole() {
                 onDraftChange={invite.setDraft}
                 onClose={invite.close}
                 onSubmit={invite.submit}
+            />
+
+            <UserReactivateModal
+                user={users.find(
+                    (user) => user.id === suspension.reactivation.target,
+                )}
+                pending={suspension.reactivation.pending}
+                failed={suspension.reactivation.failed}
+                onClose={suspension.reactivation.dismiss}
+                onConfirm={suspension.confirmReactivation}
             />
 
             <UserSuspendModal
