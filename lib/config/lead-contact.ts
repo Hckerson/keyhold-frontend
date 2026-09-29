@@ -25,6 +25,17 @@ export const LEAD_EMAIL_COPY = {
 export const LEAD_CALL_COPY = {
     unconfigured: "Calling is not available on this environment",
     ringing: "Calling you now — pick up to be connected",
+    title: "Call this lead",
+    warning: {
+        title: "Your phone rings first",
+        body: "The platform calls the number on your profile, then connects you to the lead once you pick up.",
+    },
+    failure: {
+        title: "The call was not placed",
+        body: "Check that you and the lead both have a phone number on file, then try again.",
+    },
+    cancel: "Not now",
+    confirm: "Place call",
 } as const;
 
 export const EMAIL_NOT_DELIVERED =

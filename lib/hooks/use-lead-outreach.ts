@@ -7,6 +7,7 @@ import {
     draftFrom,
     type LeadEmailDraft,
 } from "@/lib/config/lead-contact";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { sendLeadEmailSchema } from "@/lib/validations/contact";
 import { toFieldErrors, type FieldErrors } from "@/lib/validations/auth";
 
@@ -20,6 +21,7 @@ export function useLeadOutreach(
 
     const sendEmail = useSendLeadEmail(connectionId ?? "");
     const startCall = useStartLeadCall(connectionId ?? "");
+    const callConfirmation = useConfirmation<void, true>(startCall);
 
     const openCompose = useCallback(() => {
         if (!connectionId) return;
@@ -44,8 +46,8 @@ export function useLeadOutreach(
     }, [draft, sendEmail, closeCompose]);
 
     const call = useCallback(() => {
-        if (connectionId) startCall.mutate();
-    }, [connectionId, startCall]);
+        if (connectionId) callConfirmation.request(true);
+    }, [connectionId, callConfirmation]);
 
     return {
         composing,
@@ -58,5 +60,6 @@ export function useLeadOutreach(
         setDraft,
         submitEmail,
         call,
+        callConfirmation,
     };
 }

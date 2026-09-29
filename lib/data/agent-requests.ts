@@ -46,6 +46,20 @@ export const VIEWING_DECLINE_COPY = {
     confirm: "Decline request",
 } as const;
 
+export const VIEWING_CONFIRM_COPY = {
+    title: "Confirm this viewing",
+    warning: {
+        title: "The buyer is booked for this time",
+        body: "The buyer is told the viewing is confirmed. Changing the time afterwards means rescheduling it with them.",
+    },
+    failure: {
+        title: "The viewing was not confirmed",
+        body: "It is still waiting in your queue. The time may already be taken — try again or pick another.",
+    },
+    cancel: "Not yet",
+    confirm: "Confirm viewing",
+} as const;
+
 export const confirmableTimes = (request: ViewingRequestItem) =>
     request.proposedTimes.filter((at) => new Date(at).getTime() > Date.now());
 
