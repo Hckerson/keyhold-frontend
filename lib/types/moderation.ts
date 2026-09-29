@@ -1,3 +1,6 @@
+import type { LucideIcon } from "lucide-react";
+import type { ChartTone } from "@/lib/config/chart-tones";
+
 export type ModerationStatus =
     | "flagged"
     | "pending"
@@ -6,6 +9,8 @@ export type ModerationStatus =
     | "rejected";
 
 export type CheckState = "pass" | "warn" | "fail";
+
+export type ModerationStatusFilter = ModerationStatus | "all";
 
 export type ComplianceCheckId = "photos" | "accuracy" | "licence";
 
@@ -44,6 +49,7 @@ export interface ModerationDecision {
 export interface ModerationTarget {
     flagId: string;
     listingId: string;
+    flagActive: boolean;
 }
 
 export interface ModerationAgentLoad {
@@ -54,3 +60,17 @@ export interface ModerationAgentLoad {
     open: number;
     reports: number;
 }
+
+export interface ModerationStatusTile {
+    id: ModerationStatusFilter;
+    label: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+    count: number;
+    percent: number;
+}
+
+export type CheckBreakdown = { id: ComplianceCheckId } & Record<
+    CheckState,
+    number
+>;

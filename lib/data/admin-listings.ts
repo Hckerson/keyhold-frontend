@@ -1,20 +1,18 @@
-import { Flag, Clock, ClipboardCheck, Wallet, ShieldAlert } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { SelectOption } from "@/components/ui/forms/select";
+import { Layers } from "lucide-react";
 import {
     CHECK_STATES,
-    CHECK_STATE_KEYS,
-    COMPLIANCE_CHECKS,
     COMPLIANCE_CHECK_KEYS,
     MODERATION_STATUSES,
     MODERATION_STATUS_KEYS,
 } from "@/lib/config/moderation-tones";
 import type {
+    CheckBreakdown,
+    CheckState,
     ComplianceCheckId,
     ModerationAgentLoad,
     ModerationListing,
-    ModerationStatus,
+    ModerationStatusFilter,
+    ModerationStatusTile,
 } from "@/lib/types";
 import {
     averageOf,
@@ -27,9 +25,8 @@ import {
 const MS_PER_MINUTE = 60_000;
 const CHECK_TOTAL = COMPLIANCE_CHECK_KEYS.length;
 const EVERY_CHECK = "all";
-const NO_QUEUE_LABEL = "—";
 
-export type ModerationStatusFilter = ModerationStatus | "all";
+export type { ModerationStatusFilter };
 
 export type ModerationCheckFilter = ComplianceCheckId | typeof EVERY_CHECK;
 
@@ -41,14 +38,6 @@ export const MODERATION_FILTERS: {
     ...MODERATION_STATUS_KEYS.map((id) => ({
         id,
         label: MODERATION_STATUSES[id].label,
-    })),
-];
-
-export const CHECK_FILTER_OPTIONS: SelectOption<ModerationCheckFilter>[] = [
-    { value: EVERY_CHECK, label: "Every check" },
-    ...COMPLIANCE_CHECK_KEYS.map((id) => ({
-        value: id,
-        label: `${COMPLIANCE_CHECKS[id].label} open`,
     })),
 ];
 
@@ -114,77 +103,36 @@ export const oldestQueued = (listings: ModerationListing[]) =>
 export const totalReports = (listings: ModerationListing[]) =>
     sum(listings.filter(isOpen).map((listing) => listing.reports));
 
-export const moderationStats = (listings: ModerationListing[]): StatDatum[] => {
+export const statusTiles = (
+    listings: ModerationListing[],
+): ModerationStatusTile[] => {
     const counts = countByStatus(listings);
-    const oldest = oldestQueued(listings);
 
-    return [
-        {
-            id: "flagged",
-            icon: Flag,
-            label: "Flagged",
-            value: `${counts.flagged}`,
-            tone: "error",
-        },
-        {
-            id: "pending",
-            icon: ClipboardCheck,
-            label: "Awaiting review",
-            value: `${counts.pending}`,
-            tone: "warning",
-        },
-        {
-            id: "reports",
-            icon: ShieldAlert,
-            label: "Open reports",
-            value: `${totalReports(listings)}`,
-            tone: "accent",
-        },
-        {
-            id: "oldest",
-            icon: Clock,
-            label: "Oldest in queue",
-            value: oldest > 0 ? formatAge(oldest) : NO_QUEUE_LABEL,
-            tone: "info",
-        },
-        {
-            id: "value",
-            icon: Wallet,
-            label: "Value held",
-            value: formatCompactUsd(queuedValue(listings)),
-            tone: "highlight",
-        },
-    ];
-};
-
-export const statusShares = (listings: ModerationListing[]): ShareDatum[] => {
-    const counts = countByStatus(listings);
-    return MODERATION_STATUS_KEYS.map((id) => ({
+    return MODERATION_FILTERS.map(({ id, label }) => ({
         id,
-        icon: MODERATION_STATUSES[id].icon,
-        label: MODERATION_STATUSES[id].label,
-        value: `${counts[id]}`,
+        label,
+        icon: id === "all" ? Layers : MODERATION_STATUSES[id].icon,
+        tone: id === "all" ? "accent" : MODERATION_STATUSES[id].chartTone,
+        count: counts[id],
         percent: percentOf(counts[id], listings.length),
-        tone: MODERATION_STATUSES[id].chartTone,
     }));
 };
 
-export const complianceShares = (
+export const checkBreakdown = (
     listings: ModerationListing[],
-): ShareDatum[] => {
-    const states = listings.flatMap(checkStates);
-    return CHECK_STATE_KEYS.map((id) => {
-        const count = states.filter((state) => state === id).length;
+): CheckBreakdown[] =>
+    COMPLIANCE_CHECK_KEYS.map((id) => {
+        const countOf = (state: CheckState) =>
+            listings.filter((listing) => listing.compliance[id] === state)
+                .length;
+
         return {
             id,
-            icon: CHECK_STATES[id].icon,
-            label: CHECK_STATES[id].label,
-            value: `${count}`,
-            percent: percentOf(count, states.length),
-            tone: CHECK_STATES[id].tone,
+            pass: countOf("pass"),
+            warn: countOf("warn"),
+            fail: countOf("fail"),
         };
     });
-};
 
 export const agentLoads = (
     listings: ModerationListing[],
@@ -212,18 +160,21 @@ export const agentLoads = (
     );
 };
 
-export const moderationSummary = (listings: ModerationListing[]) => {
-    const counts = countByStatus(listings);
+export const queueReading = (listings: ModerationListing[]) => {
     const open = listings.filter(isOpen).length;
-    return `${open} open · ${counts.flagged} flagged · ${formatCompactUsd(queuedValue(listings))} held`;
+    const oldest = oldestQueued(listings);
+    const reading = `${open} open · ${totalReports(listings)} reports · ${formatCompactUsd(queuedValue(listings))} held`;
+
+    return oldest > 0 ? `${reading} · oldest ${formatAge(oldest)}` : reading;
 };
 
-export const clearedCheckShare = (listings: ModerationListing[]) => {
-    const states = listings.flatMap(checkStates);
-    return percentOf(
-        states.filter((state) => state === "pass").length,
-        states.length,
-    );
-};
+export const moderationDesk = (listings: ModerationListing[]) => ({
+    ranked: rankListings(listings),
+    focus: focusListing(listings),
+    tiles: statusTiles(listings),
+    reading: queueReading(listings),
+    checks: checkBreakdown(listings),
+    loads: agentLoads(listings),
+});
 
 export const CHECK_COUNT_LABEL = `${CHECK_TOTAL} checks`;

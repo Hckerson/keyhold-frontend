@@ -19,9 +19,9 @@ export function useModerateFlag(feedback: MutationFeedback) {
     return useMutation({
         meta: feedback,
         mutationFn: async ({ targets, decision, note }: ModerateFlagInput) => {
-            for (const { flagId, listingId } of targets) {
+            for (const { flagId, listingId, flagActive } of targets) {
                 await propertiesAPI.moderate(listingId, decision, note);
-                await flagsAPI.resolve(flagId);
+                if (flagActive) await flagsAPI.resolve(flagId);
             }
         },
         onSettled: async () => {

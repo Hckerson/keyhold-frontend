@@ -14,11 +14,9 @@ import type {
     ModerationListing,
 } from "@/lib/types";
 
-export function useModerationActions(
-    listings: ModerationListing[],
-    onApproved: (id: string) => void,
-) {
-    const approval = useModerateFlag(FEEDBACK.approveFlaggedListing);
+export function useModerationActions(listings: ModerationListing[]) {
+    const approveFlag = useModerateFlag(FEEDBACK.approveFlaggedListing);
+    const approval = useConfirmation<ModerateFlagInput, string>(approveFlag);
     const decision = useConfirmation<ModerateFlagInput, ModerationDecision>(
         useModerateFlag(FEEDBACK.decideFlaggedListing),
     );
@@ -32,17 +30,16 @@ export function useModerationActions(
         [listings, decision.target],
     );
 
-    const approve = (id: string) => {
-        if (approval.isPending) return;
-        approval.mutate(
-            {
-                targets: toModerationTargets(
-                    listings.filter((listing) => listing.id === id),
-                ),
-                decision: "approve",
-            },
-            { onSuccess: () => onApproved(id) },
-        );
+    const approvingListing = listings.find(
+        (listing) => listing.id === approval.target,
+    );
+
+    const confirmApproval = () => {
+        if (!approvingListing) return;
+        approval.confirm({
+            targets: toModerationTargets([approvingListing]),
+            decision: "approve",
+        });
     };
 
     const decide = (mode: DecisionMode, id: string) => {
@@ -62,10 +59,12 @@ export function useModerationActions(
     };
 
     return {
-        approvingId: approval.isPending
-            ? approval.variables?.targets.at(0)?.flagId
+        approvingId: approveFlag.isPending
+            ? approveFlag.variables?.targets.at(0)?.flagId
             : undefined,
-        approve,
+        approval,
+        approvingListing,
+        confirmApproval,
         decision,
         decidingListings,
         note,
