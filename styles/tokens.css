@@ -287,6 +287,8 @@
     --scrollbar-thumb: #d4ccc0;
     --scrollbar-thumb-hover: #b9ae9e;
     --scrollbar-thumb-idle: transparent;
+
+    --queue-max-height: 32rem;
 }
 
 /* ============================================

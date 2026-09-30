@@ -1,5 +1,5 @@
 import { ImageOff } from "lucide-react";
-import { Image } from "@/components/ui/image";
+import { Image, type ImageProps } from "@/components/ui/image";
 import { cn } from "@/lib/utils";
 
 const THUMB_SHAPE =
@@ -8,10 +8,16 @@ const THUMB_SHAPE =
 export interface ListingThumbProps {
     src: string | null;
     alt: string;
+    variant?: ImageProps["variant"];
     className?: string;
 }
 
-export function ListingThumb({ src, alt, className }: ListingThumbProps) {
+export function ListingThumb({
+    src,
+    alt,
+    variant = "thumbnail",
+    className,
+}: ListingThumbProps) {
     if (!src)
         return (
             <span
@@ -29,7 +35,7 @@ export function ListingThumb({ src, alt, className }: ListingThumbProps) {
 
     return (
         <Image
-            variant="thumbnail"
+            variant={variant}
             src={src}
             alt={alt}
             loading="lazy"

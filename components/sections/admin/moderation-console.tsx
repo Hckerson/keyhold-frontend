@@ -90,6 +90,7 @@ export function ModerationConsole() {
                     reading={desk.reading}
                     checks={desk.checks}
                     checkFilter={checkFilter}
+                    loads={desk.loads}
                     pending={flags.isPending}
                     approvingId={actions.approvingId}
                     onCheckFilterChange={setCheckFilter}
@@ -99,7 +100,6 @@ export function ModerationConsole() {
                 />
                 <ModerationRail
                     focus={desk.focus}
-                    loads={desk.loads}
                     pending={flags.isPending}
                     approvingId={actions.approvingId}
                     onOpen={onOpen}

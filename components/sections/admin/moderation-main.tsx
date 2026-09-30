@@ -6,10 +6,12 @@ import { Panel } from "@/components/ui/panel";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { CheckBreakdown } from "@/components/features/admin/check-breakdown";
 import { ModerationQueueList } from "@/components/features/admin/moderation-queue-list";
+import { ModerationAgents } from "@/components/sections/admin/moderation-agents";
 import type { ModerationCheckFilter } from "@/lib/data/admin-listings";
 import type {
     CheckBreakdown as CheckBreakdownData,
     DecisionMode,
+    ModerationAgentLoad,
     ModerationListing,
 } from "@/lib/types";
 
@@ -25,6 +27,7 @@ export interface ModerationMainProps {
     reading: string;
     checks: CheckBreakdownData[];
     checkFilter: ModerationCheckFilter;
+    loads: ModerationAgentLoad[];
     pending?: boolean;
     approvingId?: string;
     onCheckFilterChange: (filter: ModerationCheckFilter) => void;
@@ -38,35 +41,38 @@ export function ModerationMain({
     reading,
     checks,
     checkFilter,
+    loads,
     pending,
     onCheckFilterChange,
     ...actions
 }: ModerationMainProps) {
     return (
-        <Panel
-            title={QUEUE_TITLE}
-            description={reading}
-            count={listings.length}
-            className="console-span-2 min-w-0"
-            bodyClassName="space-y-3"
-        >
-            <CheckBreakdown
-                rows={checks}
-                active={checkFilter}
-                onChange={onCheckFilterChange}
-            />
-            <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
-                {listings.length > 0 ? (
-                    <ModerationQueueList listings={listings} {...actions} />
-                ) : (
-                    <EmptyState
-                        icon={ClipboardCheck}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
-                    />
-                )}
-            </PresenceSwap>
-        </Panel>
+        <div className="console-span-2 flex min-w-0 flex-col gap-3 self-start">
+            <Panel
+                title={QUEUE_TITLE}
+                description={reading}
+                count={listings.length}
+                bodyClassName="space-y-3"
+            >
+                <CheckBreakdown
+                    rows={checks}
+                    active={checkFilter}
+                    onChange={onCheckFilterChange}
+                />
+                <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
+                    {listings.length > 0 ? (
+                        <ModerationQueueList listings={listings} {...actions} />
+                    ) : (
+                        <EmptyState
+                            icon={ClipboardCheck}
+                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
+                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        />
+                    )}
+                </PresenceSwap>
+            </Panel>
+            <ModerationAgents loads={loads} />
+        </div>
     );
 }
 
