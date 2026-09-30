@@ -68,6 +68,7 @@ export function ModerationInspector({
                     <ListingThumb
                         src={listing.photos[0] ?? null}
                         alt={listing.address}
+                        variant="card"
                         className="aspect-video h-auto w-full rounded-none border-0"
                     />
 

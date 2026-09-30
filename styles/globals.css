@@ -285,34 +285,15 @@
     --split-columns: 4;
 }
 
-.queue-row {
+.queue-grid {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas:
-        "thumb name price"
-        "thumb signals actions";
+    grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem;
     align-items: center;
     column-gap: var(--spacing-3);
 }
 
-.queue-row__thumb {
-    grid-area: thumb;
-}
-
-.queue-row__name {
-    grid-area: name;
-}
-
-.queue-row__signals {
-    grid-area: signals;
-}
-
-.queue-row__price {
-    grid-area: price;
-}
-
-.queue-row__actions {
-    grid-area: actions;
+.queue-grid__wide {
+    display: none;
 }
 
 .console-split--sixths {
@@ -330,9 +311,15 @@
         grid-template-columns: repeat(var(--split-columns), minmax(0, 1fr));
     }
 
-    .queue-row {
-        grid-template-columns: auto minmax(0, 1fr) auto auto auto;
-        grid-template-areas: "thumb name signals price actions";
+    .queue-grid {
+        grid-template-columns: minmax(
+                0,
+                1fr
+            ) 6rem 5.5rem 2rem 2.5rem 4.5rem 4.5rem;
+    }
+
+    .queue-grid__wide {
+        display: flex;
     }
 
     .panel-pair {
