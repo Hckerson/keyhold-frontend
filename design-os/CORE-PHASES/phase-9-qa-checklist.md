@@ -218,7 +218,7 @@ The same action works the same way everywhere.
 
 - [ ] Every destructive or irreversible action uses the one confirmation pattern (C85): names target and effect, locks while pending, reports failure inline (BR10)
 - [ ] No write is retried automatically; a failed write is retried only by the person
-- [ ] Save/unsave behaves identically on cards, detail and saved list
+- [ ] Save/unsave behaves identically in search results, listing detail and the saved list
 - [ ] Every decision that requires a note (moderation, disputes, refunds) enforces it the same way — whitespace-only is rejected
 - [ ] Error toasts never duplicate an inline error for the same failure (ADR 0013)
 - [ ] Counts that describe the same thing (badges, headers, lists) agree everywhere
@@ -451,6 +451,7 @@ in as a buyer and as an agent.
 - **Retained:** every accessibility, cross-browser, performance, security, testing, admin-console, error-handling, SEO, pre-launch and post-launch item, and the sign-off block.
 - **Added:** non-text contrast, keyboard equivalents for pointer-only interactions, motion and target-size checks; behavioural consistency; content honesty; trust-queue checks; scalability, maintainability and developer experience; enum/contract gate items; the reduced-motion and divider-contrast rules moved from old Phase 7.
 - **Changed:** file renamed `phase-10-qa-checklist.md` → `phase-9-qa-checklist.md`. FID replaced by INP. The **Design System Compliance** section (no hardcoded colours / spacing / typography / motion, token names) dropped — styling is governed by the code and checked by lint. Responsive section recast as functional checks — dropped: breakpoint bands "320-479px / 480-1023px / 1024px+", "Touch targets ≥48px / ≥44px", "Text readable without zoom (14-16px minimum)", "2-column layout works (sidebar + content)", "3-column layout optimized (not stretched)", "Max content width ~1200px", "Hover states visible", "Whitespace adequate", "No fixed widths (use %)", "Images responsive (max-width: 100%)". Cross-browser "Layout renders correctly", "CSS variables working", "Flexbox/Grid renders as expected", "Modals display correctly", "Scrolling smooth", "Sticky headers work" recast functionally. "Tab order is logical (left-to-right, top-to-bottom)" → "follows reading order". "Numeric columns use tabular figures and right alignment" dropped. "404/500 page styled and helpful" → "helpful". "Loading states use skeletons (not spinners)" → "preserve structure". "Success feedback clear (toast or banner)" → "clear". "Hero image optimized" → "LCP image prioritised". "Row tinting", "badge", "sidebar", "callout" → neutral terms. "WebP with JPEG fallback" → "modern formats with fallback".
+- **Changed (30 September 2026, screen-content pass):** the save/unsave consistency item names where saving happens (search results, listing detail, saved list) instead of "cards".
 
 ---
 

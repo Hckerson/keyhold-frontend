@@ -315,7 +315,7 @@ Applies to copy — the words the product uses. Visual identity is governed by t
 - **Intent before code, status beside it.** Phases 1–7 record intent; Phase 8 records progress. Absence from the codebase is evidence about the codebase, not about the spec.
 - **The cheap half makes the expensive half real.** Several features shipped backend-first and only became real when something rendered them (RATIFIED_DIVERGENCES › Closed 9 Sept). Every specified backend capability needs a surface.
 - **Honest states over flattering ones.** An outage must not look like a quiet market; a failed lookup is told apart from an empty one.
-- **One source per fact.** Counts, badges and totals that describe the same thing derive from one place.
+- **One source per fact.** Counts, labels and totals that describe the same thing derive from one place.
 - **The owner decides the look.** Each page's visual concept is proposed and approved at build time.
 
 ---
@@ -326,7 +326,7 @@ Only those the record supports. Deferred features are **not** non-goals — they
 
 1. **Offline-capable portals** — ratified (Principle 5 divergence).
 2. **Fabricated or placeholder figures, inventory or testimonials** — ratified (BR15).
-3. **A public review feed without reviewer consent** — ratified (Landing page, Page 1 module 4).
+3. **A public review feed without reviewer consent** — ratified (Landing page, Page 1 module 4 · trust).
 4. **Visual prescription in this design OS** — the look is decided per page at build time.
 
 ---
@@ -378,6 +378,7 @@ Version 2.0 regenerates this phase under the 9-phase master prompt as a merge; e
 
 - **Added:** business vision, product purpose, business goals, value proposition, roles table, Admin JTBD, business rules BR1–BR18, North Star, governance, platform constraints, implementation philosophy, non-goals, future scalability, assumptions, inline divergence pointers.
 - **Changed:** "Design Principles" renamed "Product Principles". Principle 4 drops "Professional design". Principle 7 "Delightful Details" becomes "Thoughtful Details" and drops "Polished interactions, smooth animations". Brand Voice drops the visual line "Design: Premium but approachable, modern, trustworthy" and gains an honesty line.
+- **Changed — screen content removed (30 September 2026, seed-prompt Self-Audit):** Implementation Philosophy "Counts, badges and totals" → "Counts, labels and totals"; the review-feed divergence pointer names its subject ("Page 1 module 4 · trust").
 
 ---
 

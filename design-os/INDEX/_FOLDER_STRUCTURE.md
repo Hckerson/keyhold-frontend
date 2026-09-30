@@ -64,7 +64,7 @@ The seed's file names are used inside the folders. `design-os/generated/` is not
 | **phase-1-product-vision.md**           | Vision, personas, roles, business rules, KPIs, principles.                 | same                                |
 | **phase-2-experience-maps.md**          | 19 user journeys (search, offer, messaging, admin, escrow, disputes…).     | same                                |
 | **phase-3-information-architecture.md** | Navigation, sitemap, taxonomy, permissions, hierarchies.                   | same                                |
-| **phase-4-page-blueprints.md**          | 46 pages — content requirements, data, device needs, states.               | same                                |
+| **phase-4-page-blueprints.md**          | 46 pages — user goals, data, device needs, states, rules.                  | same                                |
 | **phase-5-section-blueprints.md**       | 70 sections by job.                                                        | same                                |
 | **phase-6-interaction-contracts.md**    | 88 behaviour contracts.                                                    | `phase-6-component-library.md`      |
 | **phase-7-frontend-architecture.md**    | Folder structure, routing, layouts, data flow, performance.                | `phase-8-frontend-architecture.md`  |
