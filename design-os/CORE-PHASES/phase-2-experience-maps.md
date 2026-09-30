@@ -45,7 +45,7 @@ Each journey carries an **Experience frame** (intent, trigger, entry points, dec
 
 - **Intent:** Find properties worth a closer look.
 - **Trigger:** A buying need, a saved-search reminder, a shared link.
-- **Entry points:** `/` (search entry, browse index, neighbourhood shortcuts), `/search`, `/map`, header search.
+- **Entry points:** `/` (search entry, browse index, neighbourhood shortcuts), `/search`, `/map`, search from any page.
 - **Decision points:** Which filters to apply; list vs map; which result to open; save or skip.
 - **Recovery paths:** Clear or relax filters; switch to map; browse by type, price band or neighbourhood.
 - **Completion criteria:** At least one listing opened or saved.
@@ -57,7 +57,7 @@ Each journey carries an **Experience frame** (intent, trigger, entry points, dec
 | ---- | ---------------------- | --------------- | ------------------------------------------- | -------------------- |
 | 1    | Opens app              | Curious/hopeful | Show search entry + featured listings       | Fast load (<1s)      |
 | 2    | Enters search criteria | Focused         | Auto-complete, show filters                 | Filters feel natural |
-| 3    | Views results          | Scanning        | Show 20 results, map, sorting               | Results match intent |
+| 3    | Views results          | Scanning        | 20 results, on a map if wanted, in the chosen order | Results match intent |
 | 4    | Refines filters        | Deliberate      | Live filter updates                         | <500ms response      |
 | 5    | Sees saved count       | Encouraged      | Saved count updates ("Saved 3")             | Clear feedback       |
 | 6    | Scrolls/pages results  | Browsing        | Pagination or infinite scroll               | Feels fast           |
@@ -94,8 +94,8 @@ Hopeful → Focused → Satisfied (or frustrated if results miss mark)
 
 | Step | User Action         | Emotional State | System Behavior                                 | Success Criteria          |
 | ---- | ------------------- | --------------- | ----------------------------------------------- | ------------------------- |
-| 1    | Clicks listing      | Intrigued       | Load photos, description, map                   | Primary photo loads fast  |
-| 2    | Steps through photos | Evaluating     | Next/previous, full-screen option               | Photos load quickly       |
+| 1    | Opens listing       | Intrigued       | Load photos, description, map                   | Primary photo loads fast  |
+| 2    | Steps through photos | Evaluating     | Moves through photos; full-screen on request    | Photos load quickly       |
 | 3    | Reads details       | Investigating   | Description, beds/baths, price, tax             | Facts easy to scan        |
 | 4    | Checks neighborhood | Curious         | Map, nearby schools, transit, walkability       | Interactive map works     |
 | 5    | Sees comps          | Confident       | 3-5 similar recent sales                        | Data is transparent       |
@@ -105,7 +105,7 @@ Hopeful → Focused → Satisfied (or frustrated if results miss mark)
 
 ### Failure Paths
 
-- Photos missing → Show placeholder + agent contact option
+- Photos missing → Say photos are not available yet; the agent can still be contacted
 - Map not loading → Show text-based neighborhood info
 - Agent not responsive → Show alternative agents or buyer option
 - Nearby-place lookup fails → Show no places rather than invented ones; retry soon (RATIFIED_DIVERGENCES › map notes)
@@ -285,7 +285,7 @@ Empowered (fast communication) → Trusting (responsive agent) → Relaxed (know
 
 | Step | User Action             | System Behavior             | Validation                   |
 | ---- | ----------------------- | --------------------------- | ---------------------------- |
-| 1    | Clicks "Sign Up"        | Show form: email + persona  | -                            |
+| 1    | Chooses to sign up      | Asks for email and persona  | -                            |
 | 2    | Enters email            | Check if registered         | Real-time feedback           |
 | 3    | Checks email for code   | Send OTP                    | OTP via email (6 digits)     |
 | 4    | Enters OTP              | Verify, show password form  | Attempt limit: 3x            |
@@ -297,7 +297,7 @@ Empowered (fast communication) → Trusting (responsive agent) → Relaxed (know
 
 ### Failure Paths
 
-- Email already registered → "Account exists, sign in" + forgot password link
+- Email already registered → "Account exists, sign in", with a way to recover a forgotten password
 - OTP expired → "Resend code" option
 - Password weak → Clear requirements + try again
 - Social auth fails → Fallback to email signup
@@ -358,7 +358,7 @@ Confident (taking control) → Personalized (preferences saved)
 - **Intent:** Know within seconds what needs attention.
 - **Trigger:** Start of shift; an alert.
 - **Decision points:** Which queue to open first (oldest item first).
-- **Recovery paths:** Stale data → refresh; a panel fails → the rest keep rendering.
+- **Recovery paths:** Stale data → refresh; one area fails → the rest keep working.
 - **Completion criteria:** The admin lands in the queue that most needs a decision.
 - **Dependencies:** Stats API, service health, queue counts (verifications, listings, flags, disputes, escrow), audit log.
 
@@ -371,13 +371,13 @@ Confident (taking control) → Personalized (preferences saved)
 | 3    | Reads system health        | Alert           | Uptime, error rate, per-system state                | Degraded system stands out     |
 | 4    | Scans alert list           | Prioritising    | Alerts ordered by recency, severity stated          | Severity obvious               |
 | 5    | Reads moderation queue     | Deciding        | Pending verifications, review queue, flagged        | Counts link to their route     |
-| 6    | Clicks into the worst item | Committed       | Deep-links to the filtered queue                    | Lands in context, not a list   |
+| 6    | Goes to the worst item     | Committed       | Deep-links to the filtered queue                    | Lands in context, not a list   |
 
 ### Failure Paths
 
 - All systems degraded → Health status is the first thing reported, with a global alert
 - Alert with no owning route → Alert must still name what to do next
-- Stale counts → Badge and page counts disagree; both read from one source
+- Stale counts → Navigation and page counts disagree; both read from one source
 
 ### Emotional Arc
 
@@ -407,10 +407,10 @@ Vigilant → Assessing → Decisive (or overwhelmed if severity is not ranked)
 | Step | User Action                 | Emotional State | System Behavior                                                                   | Success Criteria              |
 | ---- | --------------------------- | --------------- | --------------------------------------------------------------------------------- | ----------------------------- |
 | 1    | Filters to Pending/Flagged  | Focused         | Status filters with counts, selection resets                                      | Queue narrows instantly       |
-| 2    | Scans compliance column     | Screening       | Pass/warn/fail signals per row                                                    | Problem rows readable at once |
-| 3    | Opens a row                 | Investigating   | Detail view: photos, description, flag reason, compliance checklist, agent contact | Everything needed, no new tab |
-| 4    | Approves clean listing      | Confident       | Status flips, row leaves pending count                                            | One click, no dialog          |
-| 5    | Rejects or requests changes | Deliberate      | Modal demands a note before submitting                                            | Cannot act without a reason   |
+| 2    | Scans compliance            | Screening       | Pass/warn/fail per listing                                                        | Problem listings stand out at once |
+| 3    | Opens a listing             | Investigating   | Photos, description, flag reason, compliance checklist and agent contact to hand  | Everything needed without leaving the queue |
+| 4    | Approves clean listing      | Confident       | Status flips, listing leaves the pending count                                    | One step, no confirmation     |
+| 5    | Rejects or requests changes | Deliberate      | A note is required before the decision is sent                                    | Cannot act without a reason   |
 | 6    | Selects a batch             | Efficient       | Bulk actions: Approve / Request Changes / Reject                                  | Same rules apply in bulk      |
 
 ### Failure Paths
@@ -482,10 +482,10 @@ Prompted → Diligent → Judging → Accountable
 | Step | User Action           | Emotional State | System Behavior                                           | Success Criteria           |
 | ---- | --------------------- | --------------- | --------------------------------------------------------- | -------------------------- |
 | 1    | Opens user management | Purposeful      | States active vs total                                    | Standing visible at once   |
-| 2    | Sorts or filters      | Searching       | Sort by any column, default by name                       | Target found fast          |
-| 3    | Reads the row         | Assessing       | Role, tier, join date, deal count, status                 | Context without opening    |
-| 4    | Suspends the account  | Resolute        | Status flips, row marked suspended, action becomes Reactivate | Reversible, visibly marked |
-| 5    | Suspends in bulk      | Efficient       | Bulk actions: Reactivate / Suspend                        | Header count updates       |
+| 2    | Sorts or filters      | Searching       | Sort by any attribute, default by name                    | Target found fast          |
+| 3    | Reads a user's standing | Assessing       | Role, tier, join date, deal count, status                 | Context without opening    |
+| 4    | Suspends the account  | Resolute        | Status flips, user marked suspended, action becomes Reactivate | Reversible, visibly marked |
+| 5    | Suspends in bulk      | Efficient       | Bulk actions: Reactivate / Suspend                        | Page counts update         |
 
 ### Failure Paths
 
@@ -524,13 +524,13 @@ Purposeful → Assessing → Resolute (with reversal always one click away)
 | 4    | Reads the pending warning   | Concerned       | Pending payouts warning with outstanding amount          | Amount and cause both stated  |
 | 5    | Releases payouts            | Decisive        | Process action, average processing time shown            | Expectation set before action |
 | 6    | Opens reports for the story | Reflective      | GMV, growth, region ranking, user mix                    | Explains the numbers above    |
-| 7    | Exports                     | Satisfied       | Download / Generate Custom                               | Figures match on-screen       |
+| 7    | Exports                     | Satisfied       | Downloads a report or builds a custom one                | Figures match on-screen       |
 
 ### Failure Paths
 
-- Totals disagree between stats and table footer → One derivation, computed from the same rows
+- Totals disagree between the summary figures and the ledger totals → One derivation, computed from the same records
 - Nothing outstanding → Pending warning is hidden rather than shown empty
-- No regional data → Show an empty state, not an axis with no bars
+- No regional data → Say there is no regional data yet
 
 ### Emotional Arc
 
@@ -558,8 +558,8 @@ Analytical → Watchful → Decisive → Satisfied
 | Step | User Action                | Emotional State | System Behavior                                                            | Success Criteria             |
 | ---- | -------------------------- | --------------- | -------------------------------------------------------------------------- | ---------------------------- |
 | 1    | Opens settings             | Cautious        | Config grouped: Platform, Marketplace, Moderation, Operations, Maintenance | Blast radius grouped by area |
-| 2    | Edits a marketplace value  | Careful         | Saved state clears, button returns to "Save Changes"                       | Unsaved work is obvious      |
-| 3    | Saves                      | Relieved        | Success confirmation, button reads "Saved"                                 | Confirmation is explicit     |
+| 2    | Edits a marketplace value  | Careful         | Saved state clears; the page reads as unsaved again                         | Unsaved work is obvious      |
+| 3    | Saves                      | Relieved        | Success confirmation; the page reads as saved                               | Confirmation is explicit     |
 | 4    | Reads the scope note       | Reassured       | "Applies to listings and payouts created from now on"                      | Retroactivity clarified      |
 | 5    | Toggles a policy           | Deliberate      | Each toggle states its consequence                                         | No guessing at the effect    |
 | 6    | Discards a change          | Safe            | Reset restores stored values and clears saved                              | Escape hatch always present  |
@@ -589,8 +589,8 @@ _Added in version 2.0 — the buyer's role dashboard (Page 8)._
 - **Journey:** Read counts (saved, offers, viewings) → see what changed (recent activity, new alerts) → see what is next (upcoming viewings, open tasks) → jump to the item.
 - **Decision points:** Which item to act on; reschedule or cancel a viewing; respond to a counter.
 - **Emotional state:** Anticipation → Oriented → In control.
-- **Failure paths:** A panel's data fails → that panel says so, the rest render; nothing yet → empty states point to search.
-- **Recovery paths:** Retry per panel; links to each full list.
+- **Failure paths:** One area's data fails → that area says so, the rest keep working; nothing yet → empty states point to search.
+- **Recovery paths:** Retry per area; each full list is reachable.
 - **System behavior:** Counts derive from the same queries as the full lists.
 - **Completion criteria:** The buyer opens the item that needed them, or confirms nothing does.
 - **Dependencies:** Saved, offers, viewings, notifications, activity.
@@ -625,7 +625,7 @@ _Added in version 2.0 — the seller's "List the property" job had no journey in
 
 - **Intent:** Publish a complete, accurate listing and keep it current until sold.
 - **Trigger:** A new instruction to sell; a price change; a sale.
-- **Entry points:** `/agent/listings` → create; edit from a listing row.
+- **Entry points:** `/agent/listings` → create; edit from any listing.
 - **Journey:** Identity (title, description, type) → place (address, locality, coordinates) → specs (price, rooms, area, year, walk score) → extras (amenities, features) → save → media (photos) → lifecycle (status, promote, mark sold) → moderation (Journey 9).
 - **Decision points:** Save as draft or publish; promote; mark sold; delete (single or bulk).
 - **Emotional state:** Careful → Proud → Watchful (waiting for interest).
@@ -685,7 +685,7 @@ _Added in version 2.0 — the notifications supporting flow (Pages 13 and topbar
 
 - **Intent:** Learn about changes that need attention without watching every screen.
 - **Trigger:** Offer response, viewing confirmation, price drop, new match, message.
-- **Entry points:** Account alerts in the portal chrome, `/dashboard/alerts`, email.
+- **Entry points:** Account alerts from anywhere in the portal, `/dashboard/alerts`, email.
 - **Journey:** Event occurs → notification recorded → member sees unread count → opens the item → marks read (single or all).
 - **Decision points:** Open, mark read, change channel preferences.
 - **Emotional state:** Interrupted → Informed.
@@ -737,7 +737,8 @@ whether the console converts vigilance into a defensible decision.
 
 - **Retained:** Journeys 1–13, every step, emotional state, failure path and both arc tables.
 - **Added:** an Experience frame per journey (intent, trigger, entry points, decision points, recovery paths, completion criteria, dependencies); Journeys 14–19; a few failure paths drawn from RATIFIED_DIVERGENCES (search outage, place lookup failure, unconfigured provider); inline divergence pointers.
-- **Changed (visual wording dropped, behaviour kept):** J1 "Show hero + featured listings" → "Show search entry + featured listings"; J1 '"Saved 3" badge' and 'Toast: "Saved" + star badge' → saved count and confirmation; J1 "skeleton cards" → "a loading state that keeps the results' structure"; J2 "Fast hero image", "Smooth carousel", "Clear, scannable layout" → primary photo fast, next/previous, facts easy to scan; J8 "Sidebar renders with pending-count badge", "4 stat cards with trend + sparkline", "tone-coded", "Health panel leads, alert banner above the fold" → navigation count, volume metrics with trend, severity stated, health reported first with a global alert; J9 "Filter pills", "Side panel", "Bulk bar" → status filters, detail view, bulk actions; J10 "Sidebar badge", "card" → navigation count, request; J11 "Header", "row tints", "Role chip", "Bulk bar" → standing stated, row marked suspended, role, bulk actions; J12 "Status tints the initiated date", "monthly chart, breakdown donut", "Warning callout" → escrow flagged by status, monthly trend and commission/fee breakdown, pending payouts warning; J13 "Success callout", "Destructive actions separated" → success confirmation, destructive actions kept apart.
+- **Changed — screen content removed (30 September 2026, seed-prompt Self-Audit):** "header search" → search from any page; J1 "Show 20 results, map, sorting" → results on a map if wanted, in the chosen order; J2 "Clicks listing", "Next/previous, full-screen option", "Show placeholder + agent contact option" → behaviour; J6 "Clicks 'Sign Up'" / "Show form: email + persona" / "+ forgot password link" → what is asked and offered; J8 "a panel fails", "Clicks into"; J9 "compliance column", "per row", "Opens a row", "Detail view:", "row leaves pending count", "no dialog", "Modal demands a note"; J11 "any column", "Reads the row", "row marked", "Header count"; J12 "Download / Generate Custom", "an axis with no bars"; J13 "button returns to 'Save Changes'", "button reads 'Saved'"; J14 "panel" (three times); J16 "listing row"; J12 "table footer" totals; J19 "portal chrome"; the "badge" in the stale-counts failure path. All reworded as behaviour; no step, failure path or journey removed.
+- **Changed (visual wording dropped, behaviour kept, version 2.0):** J1 "Show hero + featured listings" → "Show search entry + featured listings"; J1 '"Saved 3" badge' and 'Toast: "Saved" + star badge' → saved count and confirmation; J1 "skeleton cards" → "a loading state that keeps the results' structure"; J2 "Fast hero image", "Smooth carousel", "Clear, scannable layout" → primary photo fast, next/previous, facts easy to scan; J8 "Sidebar renders with pending-count badge", "4 stat cards with trend + sparkline", "tone-coded", "Health panel leads, alert banner above the fold" → navigation count, volume metrics with trend, severity stated, health reported first with a global alert; J9 "Filter pills", "Side panel", "Bulk bar" → status filters, detail view, bulk actions; J10 "Sidebar badge", "card" → navigation count, request; J11 "Header", "row tints", "Role chip", "Bulk bar" → standing stated, row marked suspended, role, bulk actions; J12 "Status tints the initiated date", "monthly chart, breakdown donut", "Warning callout" → escrow flagged by status, monthly trend and commission/fee breakdown, pending payouts warning; J13 "Success callout", "Destructive actions separated" → success confirmation, destructive actions kept apart.
 
 ---
 

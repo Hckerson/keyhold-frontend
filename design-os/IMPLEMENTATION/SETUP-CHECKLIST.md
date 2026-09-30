@@ -121,7 +121,7 @@ When building each page, reference:
 | Listing Detail | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 3) + phase-5 (listing sections)                                 |
 | Dashboards     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 8-27, 38-44)                                                   |
 | Site pages     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 28-37, 45-46)                                                  |
-| Controls       | `../CORE-PHASES/phase-6-interaction-contracts.md` (C1–C88)                                                        |
+| Interactions   | `../CORE-PHASES/phase-6-interaction-contracts.md` (C1–C88)                                                        |
 | Status         | `../CORE-PHASES/phase-8-implementation-roadmap.md`                                                                |
 
 ---

@@ -1,10 +1,10 @@
 # Phase 5: Section Blueprints
 
-**Keyhold Design Operating System** · Phase 5 of 9 · Version 2.0 · 29 September 2026
+**Keyhold Design Operating System** · Phase 5 of 9 · Version 2.0 · 29 September 2026 · screen-content pass 30 September 2026
 
 Every page in [Phase 4](phase-4-page-blueprints.md) broken into sections by the job each one does. Next: [Phase 6 — Interaction Contracts](phase-6-interaction-contracts.md).
 
-Sections describe content and behaviour only — never layout, order on screen, sizing, imagery, animation or wireframes. Section numbers are stable identifiers: RATIFIED_DIVERGENCES and Phase 4 cite them. Build status lives in [Phase 8](phase-8-implementation-roadmap.md#sections).
+Sections describe behaviour only — never what a section shows, which components or controls it uses, layout, order on screen, sizing, imagery, animation or wireframes. Section numbers and headings are stable identifiers: RATIFIED_DIVERGENCES, Phase 4 and Phase 8 cite them, so a heading that still carries a version 1 presentational name ("Hero", "Banner", "Card", "Panel", "Modal", "Shell", "Header", "Sidebar") is kept as an identifier only and prescribes nothing. Build status lives in [Phase 8](phase-8-implementation-roadmap.md#sections).
 
 ---
 
@@ -31,12 +31,12 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 | Field                     | Default                                                                                                                                                                   |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Loading**               | A placeholder that preserves the section's structure so nothing shifts when data arrives; the container is marked busy for assistive technology.                          |
-| **Error**                 | A section-level message naming what failed, with a retry. Other sections keep rendering. Never fall back to fabricated data (BR15).                                      |
+| **Loading**               | The user and assistive technology are told the section is busy; arriving data never displaces what the user is already reading (Phase 9 › CLS).                          |
+| **Error**                 | The section says what failed and offers a retry. Other sections keep working. Never fall back to fabricated data (BR15).                                                 |
 | **Empty**                 | Say what is missing and offer the next useful action (Phase 3 › Empty States).                                                                                           |
-| **Accessibility**         | WCAG 2.2 AA; every control keyboard operable with a visible focus indicator; status never conveyed by colour alone; icons that carry meaning have an accessible name.     |
+| **Accessibility**         | WCAG 2.2 AA; everything operable by keyboard with a visible focus indicator; status never conveyed by colour alone; anything that carries meaning without text has an accessible name. |
 | **Device needs**          | Every task achievable on every supported device; touch users get equivalents for anything offered on hover. Portal sections are desktop-first (ratified, Principle 5). |
-| **Data requirements**     | Read through a hook over the API client (Phase 7); portal sections receive rows as props from their route's console and never fetch.                                    |
+| **Data requirements**     | Read through a hook over the API client (Phase 7); portal sections take their data from the route that owns the portal's queries and never fetch on their own ([Phase 7 › Portal Data Flow](phase-7-frontend-architecture.md#portal-data-flow)). |
 | **Technical notes**       | Mutation feedback is global by default ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)); writes send once and confirmations lock (BR10).     |
 
 ---
@@ -47,23 +47,21 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Start a search from the first screen. · **Used on:** Home, potentially dashboard
 
-**Content Model:**
-
-- Headline: "Find Your Next Home"
-- Subheadline: "Search 10k+ properties"
-- Search input (location + price range)
-- CTA buttons (Search, Sign Up)
+**Data requirements:** Localities for location suggestions; price range.
 
 **Interactions:**
 
-- Input autocomplete on location
-- Price range selectable
-- Enter key triggers search
-- Click Search → navigate to /search with the criteria in the URL
+- Location suggestions appear as the visitor types
+- A price range can be chosen
+- Enter starts the search
+- Starting a search navigates to /search with the criteria in the URL
+- A visitor who is not signed in can go on to sign up instead
 
 **Device needs:** Search usable one-handed on a phone.
 
-> **Ratified divergence (Page 1 module 1).** The shipped headline is "Find the home that finds you."; neighbourhood shortcuts are ranked by live listing count; the subheadline figure is not shown until it is true (BR15).
+**Rules:** Any figure it claims about the marketplace is true at the time it is read (BR15).
+
+> **Ratified divergence (Page 1 module 1 · search entry).** The shipped headline is "Find the home that finds you."; neighbourhood shortcuts are ranked by live listing count; the subheadline figure is not shown until it is true (BR15).
 
 ---
 
@@ -71,21 +69,16 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Show promoted and popular inventory. · **Used on:** Home, dashboard
 
-**Content Model:**
-
-- 6-12 property cards
-- Image, price, address, beds/baths
-- Agent name + photo
-- "New" or "Hot" badge
+**Data requirements:** 6–12 listings: image, price, address, beds/baths, agent name and photo, "New" or "Hot" label (Phase 3 › Status Labels), save state.
 
 **Interactions:**
 
-- Click → navigate to listing detail
-- Save → save listing
+- Opening a listing navigates to its detail
+- Saving saves the listing
 
 **Device needs:** Touch users can move through the set by swiping.
 
-> **Ratified divergence (Page 1 module 2).** One premier listing, then six. Promoted listings fill first and are labelled "Featured"; the rest are labelled "Most viewed" (BR15).
+> **Ratified divergence (Page 1 module 2 · featured listings).** One premier listing, then six. Promoted listings fill first and are labelled "Featured"; the rest are labelled "Most viewed" (BR15).
 
 ---
 
@@ -93,19 +86,16 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Earn trust with verifiable facts. · **Used on:** Home, sign up page
 
-**Content Model:**
-
-- Stat: "10k+ buyers"
-- Stat: "$500M+ transactions"
-- Review: "5 stars - Great experience"
-- Badge: "Verified platform"
+**Data requirements:** Platform counts (buyers, transaction volume); reviews with reviewer consent; verification status of the platform.
 
 **Interactions:**
 
-- Click stat → details
-- Testimonial → link to full review
+- Each figure leads to its details
+- Each review leads to the full review
 
-**States:** Hide the stats when fewer than two are non-zero.
+**States:** Hide the figures when fewer than two are non-zero.
+
+**Rules:** Every figure is true and every review is quoted with consent (BR15).
 
 > **Ratified divergence (Page 1 module 4 · Section 3).** Live counts only (homes on the market, homes sold, neighbourhoods); no testimonials until reviewers consent. Trust is carried by the guarantees.
 
@@ -113,16 +103,11 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ### Section 4: How It Works
 
-**Purpose:** Explain what the platform does for a buyer. · **Used on:** Home, sign up page
-
-**Content Model:**
-
-- 4 steps: Search, View, Offer, Close
-- Each step: headline + description
+**Purpose:** Explain what the platform does for a buyer, in four steps — search, view, offer, close. · **Used on:** Home, sign up page
 
 **Interactions:**
 
-- Expand a step's description
+- Each step's explanation can be expanded
 
 > **Ratified divergence (Page 1 · How It Works; Page 1 module 3).** Retold as a narrative of shipping features: saved search, saved shortlist, bridged viewings, escrow and the four deal milestones.
 
@@ -130,17 +115,13 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ### Section 5: CTA Banner
 
-**Purpose:** Convert an engaged visitor. · **Used on:** Home, bottom of many pages
-
-**Content Model:**
-
-- Headline: "Ready to get started?"
-- Subheadline: "Join 10k+ buyers today"
-- CTA buttons: Sign Up, Learn More
+**Purpose:** Convert an engaged visitor. · **Used on:** Home and many other pages
 
 **Interactions:**
 
-- Button → navigate or open sign-up
+- The visitor can go on to sign up, or find out more first
+
+**Rules:** Any figure it claims about the marketplace is true (BR15).
 
 ---
 
@@ -150,18 +131,14 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Let the buyer see the property. · **Used on:** Listing detail
 
-**Content Model:**
-
-- Array of images (10-30)
-- Captions (optional)
-- Photographer credit (optional)
+**Data requirements:** 10–30 images; optional captions and photographer credit.
 
 **Interactions:**
 
-- Next/prev
-- Choose a specific image
-- Full-screen view
-- Keyboard arrows (← →) to navigate
+- Move to the next or previous image
+- Go straight to any image
+- View full-screen
+- Arrow keys (← →) move between images
 
 **Device needs:** Swipe on touch.
 
@@ -173,21 +150,14 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Keep price, status and the main actions available while reading. · **Used on:** Listing detail
 
-**Content Model:**
-
-- Price
-- Status
-- Address
-- Save
-- Share
-- Message agent
+**Data requirements:** Price, status, address, save state, agent contact.
 
 **Interactions:**
 
-- Save toggle → save/unsave
-- Share → copy link / system share
-- Message → agent contact or chat
-- Status → explanation on demand
+- Saving toggles save/unsave
+- Sharing copies the link or opens the system share
+- Messaging opens the agent contact or chat
+- The status explains itself on demand
 
 **Device needs:** Remains reachable while the buyer reads the rest of the page.
 
@@ -195,12 +165,9 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ### Section 8: Listing Key Facts
 
-**Purpose:** The facts buyers filter and compare on. · **Used on:** Listing detail, search card
+**Purpose:** The facts buyers filter and compare on. · **Used on:** Listing detail, search results
 
-**Content Model:**
-
-- Beds, Baths, Sq Ft, Lot Size, Year Built
-- Optional: Garage, Basement, Pool
+**Data requirements:** Beds, baths, sq ft, lot size, year built; optional garage, basement, pool.
 
 **Interactions:**
 
@@ -212,16 +179,12 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** The seller's account of the property. · **Used on:** Listing detail
 
-**Content Model:**
-
-- Full text description
-- Highlights (renovations, features)
-- Optional: Video tour link
+**Data requirements:** Full description; highlights (renovations, features); optional video tour link.
 
 **Interactions:**
 
-- Read More expands long text
-- Video link → embedded player
+- Long text expands on request
+- A video tour plays in-app
 
 ---
 
@@ -229,20 +192,13 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Where the property is and what is nearby. · **Used on:** Listing detail
 
-**Content Model:**
-
-- Map centred on the address
-- Places: Schools, Transit, Parks, Restaurants
-- Key with counts per kind
-- Walkability score
-
-**Data requirements:** Listing coordinates; `GET /properties/:id/nearby` (Overpass, 1.5 km, cached 24 h per ~100 m cell; failures cached 5 min).
+**Data requirements:** Listing coordinates; `GET /properties/:id/nearby` (Overpass, 1.5 km, cached 24 h per ~100 m cell; failures cached 5 min) for schools, transit, parks and restaurants, with a count per kind; walkability score.
 
 **Interactions:**
 
-- Pan/zoom map
-- Choose a place → its details
-- Toggle each place kind on and off (the toggle doubles as the key and count)
+- The map centres on the address and can be panned and zoomed
+- Choosing a place gives its details
+- Each kind of place can be turned on and off; the same choice serves as the key and shows the count
 
 **States:** No coordinates or no mapped places → no places shown, never invented (BR15). Map fails → text neighbourhood facts. Fetches only when opened.
 
@@ -252,15 +208,12 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Price context. · **Used on:** Listing detail
 
-**Content Model:**
-
-- 3-5 recent sales nearby
-- Each: image, price, date sold, address, beds/baths
+**Data requirements:** 3–5 recent sales nearby, each with image, price, date sold, address, beds/baths.
 
 **Interactions:**
 
 - Open a comparable (if still available)
-- Sort by price/date
+- Order by price or date
 
 > **Deferred (Buyer JTBD 1).** Comparables today are active listings in the same locality; sold comparables need a sold-price history.
 
@@ -270,23 +223,14 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Who is selling and how to reach them. · **Used on:** Listing detail
 
-**Content Model:**
-
-- Photo
-- Name, license #
-- Agency name
-- Rating (5.0 / 5)
-- Review count ("48 reviews")
-- Response time ("Usually replies in 2 hours")
-- Recent listings count
-- Call, Message
+**Data requirements:** Agent photo, name, licence number, agency, rating, review count, response time, recent listings count.
 
 **Interactions:**
 
-- Photo → full profile
-- Call → through the platform (BR9)
-- Message → open chat
-- "View all listings" → the agent's listings
+- Opening the agent leads to their full profile
+- Calling goes through the platform (BR9)
+- Messaging opens the chat
+- The buyer can reach all of the agent's listings
 
 ---
 
@@ -294,19 +238,11 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** One listing, enough to decide whether to open it. · **Used on:** Search results, saved listings, featured sections
 
-**Content Model:**
-
-- Image
-- Price
-- Address
-- Beds/Baths/Sq Ft
-- Agent name + avatar
-- Labels: "New", "Hot", "Price Reduced", "Featured"
-- Save state
+**Data requirements:** Image, price, address, beds/baths/sq ft, agent name and avatar, labels ("New", "Hot", "Price Reduced", "Featured"), save state.
 
 **Interactions:**
 
-- Open → listing detail
+- Opening leads to listing detail
 - Save/unsave
 - Secondary actions (save, share, report) available on touch as well as pointer
 
@@ -316,16 +252,12 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** The history of a listing's deal. · **Used on:** Offer detail, CRM
 
-**Content Model:**
-
-- Timeline of listing events
-- Date listed, first offer, offer accepted, inspection, appraisal, closed
-- Each event: date, status, notes
+**Data requirements:** Listing events — listed, first offer, offer accepted, inspection, appraisal, closed — each with date, status and notes; estimated close date.
 
 **Interactions:**
 
 - Open an event's detail
-- Estimated close date shown
+- The estimated close date is always available
 
 ---
 
@@ -333,18 +265,13 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 **Purpose:** Decide a flagged or submitted listing. · **Used on:** Admin listings (extended by Section 63)
 
-**Content Model:**
-
-- Flagged listing
-- Photos, description, location
-- Reason for flag
-- Agent name, contact
+**Data requirements:** The listing's photos, description, location, flag reason, agent name and contact.
 
 **Interactions:**
 
-- Approve → move to approved
+- Approve → moves to approved
 - Reject → reason required (BR4)
-- Request Changes → send feedback to agent
+- Request changes → sends feedback to the agent
 
 ---
 
@@ -354,28 +281,20 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 ### Section 16: Offer Form
 
-**Purpose:** Capture a structured offer. · **Used on:** Make offer dialog/page
+**Purpose:** Capture a structured offer. · **Used on:** Make-offer flow
 
-**Content Model:**
-
-- Listing address (read-only)
-- Offer amount (input, validation)
-- Move-in date
-- Contingencies: Inspection, Appraisal, Financing
-- Earnest money amount (optional)
-- Additional notes
-- Review summary (before submit)
+**Data requirements:** Listing address (read-only); offer amount; move-in date; contingencies (inspection, appraisal, financing); optional earnest money; optional note.
 
 **Interactions:**
 
 - Amount formats as currency
-- Contingencies toggle requirements
-- Submit → review summary → confirm submit
-- Cancel → dismiss
+- Choosing a contingency adds its requirements
+- Submitting shows a review of the offer, then confirms
+- Cancelling dismisses without sending
 
 **Validation:** Amount required and positive; move-in date not in the past; earnest money non-negative.
 
-> **Closed 8 Sept.** Contingencies are values, not prose; the review is a second step inside the same dialog.
+> **Closed 8 Sept.** Contingencies are values, not prose; the review is a second step of the same flow.
 
 ---
 
@@ -383,18 +302,12 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** Where one offer stands. · **Used on:** My offers, agent pipeline
 
-**Content Model:**
-
-- Listing address
-- Your offer amount
-- Current status (Submitted / Countered / Accepted / Rejected)
-- Last activity (date)
-- Next step hint
+**Data requirements:** Listing address, offer amount, current status (Submitted / Countered / Accepted / Rejected), last activity date, next step.
 
 **Interactions:**
 
-- Open → full offer detail
-- Status → explanation on demand
+- Opening leads to the full offer detail
+- The status explains itself on demand
 
 ---
 
@@ -402,16 +315,12 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** Every round of the negotiation. · **Used on:** Offer detail
 
-**Content Model:**
-
-- Chronology of all offers/counters
-- Date, time, amount, status for each
-- Message history interleaved
+**Data requirements:** Every offer and counter with date, time, amount and status, interleaved with the message history.
 
 **Interactions:**
 
-- Open an offer → full details
-- Timestamp available for each message
+- Opening an offer gives its full details
+- Every message's timestamp is available
 
 ---
 
@@ -419,17 +328,12 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** Respond to a counter with a new number. · **Used on:** Offer detail (when offer countered)
 
-**Content Model:**
-
-- Your original offer amount
-- Seller's counter amount
-- Your new counter amount (input)
-- Message to seller
+**Data requirements:** Original offer amount, seller's counter amount; captures the new counter amount and a message to the seller.
 
 **Interactions:**
 
 - Counter amount formats as currency
-- Submit → confirmation
+- Submitting asks for confirmation first
 
 ---
 
@@ -437,16 +341,12 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** What changed between two positions. · **Used on:** Offer detail
 
-**Content Model:**
-
-- Your offer
-- Current counter
-- Compared: Amount, Contingencies, Earnest money, Move-in date, Conditions
+**Data requirements:** The buyer's offer and the current counter: amount, contingencies, earnest money, move-in date, conditions.
 
 **Interactions:**
 
 - Each compared term pairs both values
-- Expand a term's detail
+- A term's detail can be expanded
 
 ---
 
@@ -454,17 +354,12 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** Post-acceptance steps to closing. · **Used on:** Offer detail (post-accepted), agent deal detail
 
-**Content Model:**
-
-- Inspection date (scheduled, completed, report)
-- Appraisal date (scheduled, completed, value)
-- Financing contingency (deadline, status)
-- Closing date (scheduled, confirmed)
+**Data requirements:** Inspection (date, scheduled/completed, report); appraisal (date, scheduled/completed, value); financing contingency (deadline, status); closing (date, scheduled/confirmed).
 
 **Interactions:**
 
-- Open an item → upload document or change date
-- Document → view/download in-app
+- Opening an item lets the user upload a document or change its date
+- Documents can be viewed and downloaded in-app
 
 **Business rules:** BR7 — four milestones seeded at acceptance; untaken contingencies `WAIVED`; overdue derived.
 
@@ -476,18 +371,14 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** The conversation. · **Used on:** Messages page, offer detail chat
 
-**Content Model:**
-
-- Array of messages
-- Timestamp, sender, content
-- Typing indicator (if agent typing)
+**Data requirements:** Messages with timestamp, sender and content; typing state of the other party.
 
 **Interactions:**
 
-- Load older messages
-- Typing indicator → "Agent is typing..."
-- Sender name → profile
-- Report a received message (Journey 18)
+- Older messages load on request
+- When the agent is typing, the user is told "Agent is typing..."
+- A sender's name leads to their profile
+- A received message can be reported (Journey 18)
 
 **Accessibility:** Sender distinguishable in text, not by position alone; new messages announced politely.
 
@@ -497,18 +388,14 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** Compose and send. · **Used on:** Messages page, chat sections
 
-**Content Model:**
-
-- Text input field
-- Attach (files, photos)
-- Send
+**Data requirements:** Message text; attachments (files, photos) within Section 38 limits.
 
 **Interactions:**
 
-- Input grows up to 4 lines
-- Attach → file picker (Section 38 limits)
-- Send (Enter key or button) → submit message
-- Typing indicator → update thread
+- The message can grow up to four lines before scrolling
+- Attaching opens the file picker (Section 38 limits)
+- Enter, or an explicit send, submits the message
+- Composing updates the typing state in the thread
 
 ---
 
@@ -516,17 +403,12 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** One conversation in a list. · **Used on:** Messages list
 
-**Content Model:**
-
-- Sender name + avatar
-- Last message preview (truncated)
-- Timestamp
-- Unread indicator
+**Data requirements:** Sender name and avatar, last message preview (truncated), timestamp, unread state.
 
 **Interactions:**
 
-- Open → thread
-- Unread cleared on view
+- Opening leads to the thread
+- Unread clears on view
 - Mark as read / delete / snooze (available on touch)
 
 ---
@@ -535,19 +417,13 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 **Purpose:** Documents exchanged in a deal. · **Used on:** Messaging, offer detail
 
-**Content Model:**
-
-- Document preview
-- Filename
-- Uploaded by, date
-- Download
-- Share
+**Data requirements:** Document preview, filename, uploader, upload date.
 
 **Interactions:**
 
-- Open → full viewer
-- Download → local file
-- Share → copy link or send message
+- Opening shows the full document
+- Downloading saves a local file
+- Sharing copies a link or sends it as a message
 
 ---
 
@@ -555,10 +431,10 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 Version 1 named these as one line: "Typing Indicator, Thread Header, Conversation List Sidebar, etc." They are split here with a note, per Scope Preservation.
 
-- **Section 26: Typing Indicator** — shows that the other party is composing; announced politely. _(Real-time dependency deferred — see Phase 8.)_
-- **Section 27: Thread Header** — who the conversation is with, the property it concerns, and thread-level actions.
+- **Section 26: Typing Indicator** — tells the user the other party is composing; announced politely. _(Real-time dependency deferred — see Phase 8.)_
+- **Section 27: Thread Header** — who the conversation is with, the property it concerns, and what can be done with the whole thread.
 - **Section 28: Conversation List** — every conversation, searchable and filterable, unread first.
-- **Section 29: Unnamed ("etc.")** — reserved; version 1 did not specify it. Owner to name or confirm as the thread context (property and agent) panel.
+- **Section 29: Unnamed ("etc.")** — reserved; version 1 did not specify it. Owner to name or confirm as the thread's context (property and agent).
 
 ---
 
@@ -568,35 +444,26 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** One labelled value. · **Used on:** All forms
 
-**Content Model:**
-
-- Label (required indicator if needed)
-- Placeholder text
-- Help text (optional)
-- Error message (if validation fails)
+**Data requirements:** Label, whether required, optional help text, validation message.
 
 **Interactions:**
 
-- Type → validate in real-time
-- Blur → show error if invalid
-- Error state → error message associated with the field
+- Values validate as they are typed
+- Leaving an invalid value reports its error
+- The error message is associated with the value it concerns
 
 ---
 
 ### Section 31: Checkbox Group
 
-**Purpose:** Several independent choices. · **Used on:** Offer form, filter panel
+**Purpose:** Several independent choices. · **Used on:** Offer form, search filters
 
-**Content Model:**
-
-- Label
-- Array of checkbox items
-- Help text per item
+**Data requirements:** Group label; choices with optional help text each.
 
 **Interactions:**
 
-- Click → toggle checkbox
-- Keyboard: Space to toggle
+- Each choice toggles independently
+- Keyboard: Space toggles
 
 ---
 
@@ -604,14 +471,11 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** One choice from a set. · **Used on:** Filters, forms (single selection)
 
-**Content Model:**
-
-- Label
-- Array of radio options
+**Data requirements:** Group label; options.
 
 **Interactions:**
 
-- Select one (previous deselected)
+- Choosing one deselects the previous
 - Arrow keys move within the group
 
 ---
@@ -620,20 +484,14 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** One choice from a long set. · **Used on:** Forms, filters
 
-**Content Model:**
-
-- Label
-- Placeholder
-- Array of options
-- Optional search
+**Data requirements:** Label, options, whether the options are searchable.
 
 **Interactions:**
 
-- Open → options
-- Type → filter options
-- Arrow keys → navigate
-- Enter → select
-- Escape → close
+- Opening lists the options
+- Typing filters them
+- Arrow keys move, Enter chooses
+- Escape closes without choosing
 
 ---
 
@@ -641,40 +499,29 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** Choose a date. · **Used on:** Viewing scheduling, offer form
 
-**Content Model:**
-
-- Label
-- Calendar
-- Month/year controls
-- Disabled dates (past, unavailable)
+**Data requirements:** Label; unavailable dates (past, unavailable).
 
 **Interactions:**
 
-- Open → calendar
-- Choose date → select (close calendar)
-- Next/prev month → navigate
-- Type date directly → parse input
+- Choosing a date sets it and closes the calendar
+- Months can be stepped forward and back
+- A date typed directly is parsed
 
 ---
 
 ### Section 35: Price Slider
 
-**Purpose:** Narrow by price. · **Used on:** Filter panel
+**Purpose:** Narrow by price. · **Used on:** Search filters
 
-**Content Model:**
-
-- Label
-- Min/max values
-- Current range selected
-- Step size ($5k, $10k, etc.)
+**Data requirements:** Label; minimum and maximum; current range; step size ($5k, $10k, etc.).
 
 **Interactions:**
 
-- Adjust range
-- Type numbers → update range
-- Reset → default range
+- The range can be adjusted
+- Typed numbers update the range
+- Reset returns to the default range
 
-> **Ratified divergence (Page 2 module 5 · Section 35).** Discrete price-band chips with live facet counts replace the slider.
+> **Ratified divergence (Page 2 module 5 · Section 35).** Discrete price bands with live facet counts replace the slider.
 
 ---
 
@@ -682,16 +529,12 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** An on/off setting that applies immediately. · **Used on:** Settings, notification preferences
 
-**Content Model:**
-
-- Label
-- On/off state
-- Help text
+**Data requirements:** Label, on/off state, help text.
 
 **Interactions:**
 
-- Toggle or label → switch state
-- Keyboard: Space to toggle
+- Activating the setting or its label switches its state
+- Keyboard: Space toggles
 
 ---
 
@@ -699,17 +542,13 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** Free text with suggestions. · **Used on:** Location search, listing search
 
-**Content Model:**
-
-- Placeholder
-- Debounced suggestions (300ms)
-- Recent searches (if applicable)
+**Data requirements:** Suggestions, debounced (300 ms); recent searches (if applicable).
 
 **Interactions:**
 
-- Type → show suggestions
-- Choose suggestion → fill input / submit
-- Keyboard: Arrow up/down navigate, Enter select, Escape close
+- Typing brings up suggestions
+- Choosing a suggestion fills the search or submits it
+- Keyboard: Arrow up/down move, Enter chooses, Escape closes
 
 ---
 
@@ -717,19 +556,13 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** Add files. · **Used on:** Messages, listing media, identity verification, avatar, admin uploads
 
-**Content Model:**
-
-- Drop zone
-- "Choose file" button
-- File type restrictions
-- File size limit
+**Data requirements:** Accepted file types and size limit per use.
 
 **Interactions:**
 
-- Drag file over → drop target indicated
-- Drop → upload
-- Choose → file picker
-- Upload progress shown
+- Files can be dragged in or chosen from the file picker; a drag over the target is acknowledged
+- Dropping or choosing starts the upload
+- Upload progress is reported
 
 **Validation:** Reject wrong type or oversize before upload, naming the limit.
 
@@ -739,19 +572,15 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** A long task in validated steps. · **Used on:** Sign up, listing submission, complex workflows
 
-**Content Model:**
-
-- Step indicator (1/3, 2/3, 3/3)
-- Form fields for current step
-- Validation per step
-- Next, Back, Submit
+**Data requirements:** Steps, the values for each, validation per step.
 
 **Interactions:**
 
-- Next → validate current step, advance if valid
-- Back → return to previous step
-- Submit → validate all steps, submit if valid
-- Jump to an already completed step
+- The user always knows which step they are on and how many remain
+- Going forward validates the current step and advances only if it is valid
+- Going back returns to the previous step
+- Submitting validates every step and submits only if all are valid
+- The user can return to any step already completed
 
 ---
 
@@ -761,17 +590,12 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** One headline figure. · **Used on:** Dashboards
 
-**Content Model:**
-
-- Label (e.g., "Saved Listings")
-- Value (e.g., "5")
-- Trend (up/down with %)
-- Optional small trend series
+**Data requirements:** Label (e.g. "Saved Listings"), value (e.g. "5"), trend (up/down with %), optional short trend series.
 
 **Interactions:**
 
-- Open → detail page
-- Description on demand
+- Opening leads to the detail page
+- The figure's description is available on demand
 
 ---
 
@@ -779,19 +603,13 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** Many records, comparable by column. · **Used on:** Offers, listings, admin, agent dashboard
 
-**Content Model:**
-
-- Column headers (sortable)
-- Data rows
-- Pagination or infinite scroll
-- Bulk selection (optional)
+**Data requirements:** Records with sortable attributes; paging or continuous loading; optional bulk selection.
 
 **Interactions:**
 
-- Header → sort (ascending/descending)
-- Row → detail or navigate
-- Select for bulk action
-- Bulk action → apply to selected
+- Any sortable attribute can order the records, ascending or descending
+- Opening a record leads to its detail
+- Records can be selected for a bulk action, which applies to every selected record
 
 **Device needs:** On narrow screens every column's information stays reachable.
 
@@ -803,20 +621,13 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** One deal in the agent's pipeline. · **Used on:** Agent pipeline
 
-**Content Model:**
-
-- Listing address
-- Buyer/offer amount
-- Status
-- Days in stage
-- Last activity
-- Notes snippet
+**Data requirements:** Listing address, buyer and offer amount, status, days in stage, last activity, notes.
 
 **Interactions:**
 
-- Drag → change status (column)
-- Open → detail
-- Notes → expand
+- Dragging a deal to another stage requests that status change
+- Opening leads to the deal's detail
+- Notes expand on request
 
 **Accessibility:** Every drag outcome also available from the detail without a pointer.
 
@@ -828,14 +639,11 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** What happened recently. · **Used on:** Dashboard, offer detail
 
-**Content Model:**
-
-- Array of events (viewed, saved, offer made, offer countered, etc.)
-- Timestamp, kind, description
+**Data requirements:** Events (viewed, saved, offer made, offer countered, etc.) with timestamp, kind and description.
 
 **Interactions:**
 
-- Open event → detail or navigate
+- Opening an event leads to its detail or the item it concerns
 
 **Ordering:** Newest first.
 
@@ -845,13 +653,11 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** A role's few key numbers. · **Used on:** Dashboard, admin overview
 
-**Content Model:**
-
-- 3-4 key metrics (number + trend)
+**Data requirements:** 3–4 key metrics, each a number and a trend.
 
 **Interactions:**
 
-- Open a metric → detail
+- Opening a metric leads to its detail
 
 ---
 
@@ -859,17 +665,13 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** Events by date. · **Used on:** Viewing calendar, agent calendar
 
-**Content Model:**
-
-- Month view
-- Events on dates
-- Event count per day
+**Data requirements:** Events by date for the month; event count per day.
 
 **Interactions:**
 
-- Choose date → events for that day
-- Open event → detail
-- Next/prev month → navigate
+- Choosing a date gives that day's events
+- Opening an event leads to its detail
+- Months can be stepped forward and back
 
 ---
 
@@ -877,17 +679,12 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 **Purpose:** A trend or distribution. · **Used on:** Agent analytics, admin reports
 
-**Content Model:**
-
-- A series over time, a ranking or a share (varies by metric)
-- Data points, legend
-- Value on demand
+**Data requirements:** A series over time, a ranking or a share (varies by metric); series names.
 
 **Interactions:**
 
-- Point → value
-- Legend → toggle series
-- Tap on touch → data point details
+- Any data point's value is available on demand, on touch as well as pointer
+- Series can be turned on and off
 
 **Accessibility:** Text summary or table alternative; series distinguishable without colour.
 
@@ -895,18 +692,17 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ## NAVIGATION SECTIONS (3)
 
-Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe navigation content, not layout.
+Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe navigation, not layout.
 
 ### Section 47: Header
 
 **Purpose:** Global navigation. · **Used on:** All pages
 
-**Content Model:**
+**Interactions:**
 
-- Brand (→ home)
-- Nav links (search, saved, messages, etc. for logged-in)
-- User menu (profile, settings, logout)
-- Navigation reachable on small screens
+- Home is reachable from every page
+- A signed-in user reaches their main destinations (search, saved, messages, etc.) and their account (profile, settings, sign out)
+- Navigation stays reachable on small screens
 
 ---
 
@@ -914,12 +710,13 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 **Purpose:** Site-wide links. · **Used on:** All pages (public pages)
 
-**Content Model:**
+**Interactions:**
 
-- Links: About, Help, Blog, Privacy, Terms
-- Social media links
-- Newsletter signup
-- Copyright
+- Every site page is reachable: About, Help, Blog, Privacy, Terms
+- The visitor can follow Keyhold on social media
+- The visitor can subscribe to the newsletter
+
+**Rules:** Copyright is stated.
 
 > **Ratified divergences (Section 48).** The linked pages are now written (Pages 28–34). Social links removed until accounts exist. Newsletter signup is back on a double opt-in list (BR14; correction 26 Sept).
 
@@ -929,12 +726,11 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 **Purpose:** Portal navigation. · **Used on:** Dashboard, agent, admin
 
-**Content Model:**
+**Interactions:**
 
-- Brand
-- Menu items (Dashboard, Saved, Offers, etc.)
-- Current location indicated
-- Collapse/expand
+- Every page of the role's portal is reachable (Dashboard, Saved, Offers, etc.)
+- The current location is always identifiable
+- Navigation can be collapsed and expanded
 
 **Accessibility:** Current page marked `aria-current`.
 
@@ -946,39 +742,28 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 **Purpose:** Confirm an outcome that is not otherwise visible. · **Used on:** Everywhere (save, send, error, etc.)
 
-**Content Model:**
-
-- Message
-- Kind (success, error, info, warning)
-- Close (optional)
-- Auto-dismiss (5s)
+**Data requirements:** Message; kind (success, error, info, warning).
 
 **Interactions:**
 
-- Close → dismiss
-- Auto-dismiss after 5s
-- Multiple notifications queue
+- Can be dismissed where dismissal is offered
+- Dismisses itself after 5 s
+- Several notifications queue
 
-**Rules:** An error you can retry in context is reported next to its control, not as a toast; success is toasted only when not already visible ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)).
+**Rules:** An error you can retry in context is reported with what it concerns, not as a transient notification; success is confirmed this way only when not already visible ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)).
 
 ---
 
 ### Section 51: Modal/Dialog
 
-**Purpose:** A focused task or confirmation. · **Used on:** Confirm actions, forms, details
-
-**Content Model:**
-
-- Title
-- Content (text, form, image, etc.)
-- Actions (OK, Cancel, Delete, etc.)
-- Close
+**Purpose:** A focused task or confirmation. · **Used on:** Confirmations, forms, details
 
 **Interactions:**
 
-- Action → act or close
-- Close → close
-- Outside interaction (if dismissible) → close
+- Every task it holds can be completed or abandoned
+- Choosing an action acts or closes
+- Closing closes
+- Interacting outside closes it only when it is dismissible
 - Keyboard: Escape closes
 - Locked while its request is in flight (BR10)
 
@@ -988,15 +773,9 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 **Purpose:** Explain an absence. · **Used on:** No results, no data
 
-**Content Model:**
-
-- Headline
-- Description
-- Next action
-
 **Interactions:**
 
-- Action → search, create, etc.
+- Says what is missing and why, and offers the next useful action (search, create, etc.)
 
 ---
 
@@ -1006,40 +785,37 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ### Section 53: 404 Not Found
 
-**Used on:** Invalid routes (Page 45)
+**Purpose:** Tell the visitor the page does not exist and help them on. · **Used on:** Invalid routes (Page 45)
 
-**Content Model:**
+**Interactions:**
 
-- "404"
-- "Page not found" headline
-- Helpful description
-- Home, back
+- The visitor is told the page was not found (404), with a helpful explanation
+- Home and the previous page are reachable
 
 ---
 
 ### Section 54: 500 Server Error
 
-**Used on:** Server errors (Page 46)
+**Purpose:** Tell the user something failed and help them recover. · **Used on:** Server errors (Page 46)
 
-**Content Model:**
+**Interactions:**
 
-- "500"
-- "Something went wrong" headline
-- Description (vague for security)
-- Retry, home
-- Error ID (for support)
+- The user is told something went wrong (500), without detail that could aid an attacker
+- Retry, and home, are available
+- An error ID is given for support
+
+**Rules (security):** The description stays vague; no stack trace or internal detail is disclosed.
 
 ---
 
 ### Section 55: Offline/No Connection
 
-**Used on:** Network errors
+**Purpose:** Tell the user the connection is lost and let them retry. · **Used on:** Network errors
 
-**Content Model:**
+**Interactions:**
 
-- "No connection" headline
-- "Check your internet" description
-- Retry
+- The user is told there is no connection and to check their internet
+- Retry is available
 
 > **Ratified divergence (Phase 1 · Principle 5).** No offline capability exists. This section remains specified for network-error handling.
 
@@ -1051,23 +827,17 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Admin navigation and identity. · **Used on:** Every /admin route
 
-**Content Model:**
-
-- Brand block: "Admin" / "Console"
-- Six nav groups, each with a label and items — Overview (Dashboard), Marketplace (Listings, Users), Finance (Transactions, Payments), Insights (Reports), Trust & Safety (Verifications), System (Settings)
-- Nav item: label, description, optional count
-- Current location from the route registry, user menu
-- Signed-in user, logout action
+**Data requirements:** Six navigation groups, each with its routes — Overview (Dashboard), Marketplace (Listings, Users), Finance (Transactions, Payments), Insights (Reports), Trust & Safety (Verifications), System (Settings); per route a label, a description and an optional count; current location from the route registry; the signed-in user.
 
 **Interactions:**
 
 - Current route indicated
-- Count on Verifications reflects pending requests
-- Logout clears auth state and token, redirects to /
+- The Verifications count reflects pending requests
+- Signing out clears auth state and token and redirects to /
 
 **Device needs:** Navigation reachable on narrow screens.
 
-**Accessibility:** Nav landmark with grouped lists, current page marked, logout is a real button
+**Accessibility:** Nav landmark with grouped lists, current page marked, sign-out is a real button
 
 ---
 
@@ -1075,14 +845,11 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Platform volume at a glance. · **Used on:** Admin overview
 
-**Content Model:**
-
-- 4 stat items: label, value, change, trend direction, caption, 6-point trend series, target href
-- One item marked featured
+**Data requirements:** Four metrics, each with label, value, change, trend direction, caption, 6-point trend series and target route; one metric marked featured.
 
 **Interactions:**
 
-- Each metric is a link to its detail route
+- Each metric leads to its detail route
 
 **Accessibility:** Each metric is a single link with an accessible name combining label and value; the trend series is decorative
 
@@ -1092,18 +859,14 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Revenue over time. · **Used on:** Admin overview, admin payments
 
-**Content Model:**
-
-- Panel title, description, optional action
-- Values by month, one or more series
-- Value formatting: divisor, prefix, suffix
+**Data requirements:** Values by month, one or more series; value formatting (divisor, prefix, suffix); optional related finance route.
 
 **Interactions:**
 
-- Value on demand per month
-- Action navigates to the related finance route
+- Each month's value is available on demand
+- The admin can go on to the related finance route
 
-**Accessibility:** Chart has a text summary; series names exposed in the legend
+**Accessibility:** Text summary of the trend; series names exposed
 
 ---
 
@@ -1111,16 +874,13 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Where revenue comes from. · **Used on:** Admin overview
 
-**Content Model:**
+**Data requirements:** Headline metric (commissions YTD); supporting metrics: GMV, take rate, average commission per deal.
 
-- Headline metric: label + value (commissions YTD)
-- Supporting metrics: GMV, take rate, average commission per deal
+**Interactions:** None — read only
 
-**Interactions:** Static display
+**Accessibility:** Exposed as a description list
 
-**Accessibility:** Rendered as a description list
-
-> **Ratified divergence (Page 20 module 5).** Folded into the revenue figure as one estimated commission line (BR17).
+> **Ratified divergence (Page 20 module 5 · revenue breakdown).** Folded into the revenue figure as one estimated commission line (BR17).
 
 ---
 
@@ -1128,10 +888,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Which systems are healthy. · **Used on:** Admin overview
 
-**Content Model:**
-
-- Per system: label, uptime, error rate, state (operational / degraded)
-- Overall uptime and error rate over 24h
+**Data requirements:** Per system: label, uptime, error rate, state (operational / degraded); overall uptime and error rate over 24h.
 
 **Accessibility:** State conveyed by text, not colour alone
 
@@ -1141,14 +898,11 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** What needs an operator. · **Used on:** Admin overview
 
-**Content Model:**
-
-- Per alert: title, description, relative time, severity (info / warning / error)
-- Alert count
+**Data requirements:** Per alert: title, description, relative time, severity (info / warning / error); alert count.
 
 **Accessibility:** Alerts are a list; severity is stated in text
 
-> **Ratified divergence (Page 20 module 4).** Merged with Section 62 into one "Needs a Decision" list: each queue's open count and oldest-item age, oldest first.
+> **Ratified divergence (Page 20 module 4 · system alerts).** Merged with Section 62 into one "Needs a Decision" list: each queue's open count and oldest-item age, oldest first.
 
 ---
 
@@ -1156,16 +910,13 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** How much review work is waiting. · **Used on:** Admin overview
 
-**Content Model:**
+**Data requirements:** Per queue — pending verifications, listings awaiting review, flagged content: count, severity (warning / error), target route.
 
-- Per row: label, count, severity (warning / error), target href
-- Rows: pending verifications, listings awaiting review, flagged content
+**Interactions:** Opening a queue leads to the matching moderation route
 
-**Interactions:** Open a row → the matching moderation route
+**Accessibility:** Each queue is a link naming both the count and the queue
 
-**Accessibility:** Each row is a link naming both the count and the queue
-
-> **Ratified divergence (Page 20 module 4).** See Section 61. Flagged content counts user and message flags only.
+> **Ratified divergence (Page 20 module 4 · system alerts).** See Section 61. Flagged content counts user and message flags only.
 
 ---
 
@@ -1173,23 +924,17 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** The moderation queue as records. · **Used on:** Admin listings · **Extends:** Section 15
 
-**Content Model:**
-
-- Per listing: id, address, cover photo, price, agent (name, email, phone), submitted date, description, image set, compliance checks, status, flag reason, moderator note, changes-requested flag
-- Compliance check: label + state (pass / warn / fail)
-- Status: pending / flagged / approved / rejected
-- Totals: queue size, total value, open compliance checks
+**Data requirements:** Per listing: id, address, cover photo, price, agent (name, email, phone), submitted date, description, image set, compliance checks (label + pass / warn / fail), status (pending / flagged / approved / rejected), flag reason, moderator note, changes-requested flag. Totals: queue size, total value, open compliance checks.
 
 **Interactions:**
 
 - Status filters switch the visible set and reset selection
-- Sort by any column; default sort by status
-- Open a row → detail with photos, description, flag reason, compliance checklist, agent contact
-- Row and detail actions: Approve, Request Changes, Reject
-- Select rows → bulk actions with the same three
-- Flagged and rejected rows identifiable without colour
+- Sort by any attribute; default order by status
+- Opening a listing gives its photos, description, flag reason, compliance checklist and agent contact
+- Approve, request changes or reject, for one listing or for a selection
+- A listing already approved is not offered approval, and one already rejected is not offered rejection
 
-**Accessibility:** Table caption describes every column; action columns have screen-reader-only headers
+**Accessibility:** Table caption describes every column; action columns have screen-reader-only names; flagged and rejected listings identifiable without colour
 
 ---
 
@@ -1197,20 +942,16 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Record a reasoned decision. · **Used on:** Admin listings
 
-**Content Model:**
-
-- Mode: reject or request-changes
-- Target ids (single row or bulk selection)
-- Required note field
+**Data requirements:** Mode (reject or request changes); target ids (one listing or a selection); a required note.
 
 **Interactions:**
 
-- Submit stays disabled until the note is non-empty (whitespace does not count)
+- The decision cannot be submitted until the note is non-empty (whitespace does not count)
 - Reject → status rejected, note attached
-- Request Changes → status returns to pending, flagged as changes requested
-- Close or submit clears the note and the selection for affected rows
+- Request changes → status returns to pending, flagged as changes requested
+- Closing or submitting clears the note and the selection for affected listings
 
-**Accessibility:** Focus trapped, labelled dialog, Escape closes, note field has a visible label
+**Accessibility:** Focus trapped, labelled dialog, Escape closes, the note has a visible label
 
 ---
 
@@ -1218,20 +959,17 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Every account and its standing. · **Used on:** Admin users
 
-**Content Model:**
-
-- Per user: id, name, email, role (buyer / agent / admin), tier (standard / premium / platinum), join date, status (active / suspended / inactive), transaction count
+**Data requirements:** Per user: id, name, email, role (buyer / agent / admin), tier (standard / premium / platinum), join date, status (active / suspended / inactive), transaction count.
 
 **Interactions:**
 
-- Sort by any column; default sort by name ascending
+- Sort by any attribute; default order by name ascending
 - Tier ranked for sorting
-- Row action suspends or reactivates
-- Bulk actions: Reactivate, Suspend
-- Suspended rows identifiable without colour
-- Open a row → user profile (`/admin/users/:id`)
+- Each user can be suspended or reactivated
+- Reactivate or suspend a selection at once
+- Opening a user leads to their profile (`/admin/users/:id`)
 
-**Accessibility:** Caption names every column; status is text
+**Accessibility:** Caption names every column; status is text; suspended users identifiable without colour
 
 ---
 
@@ -1239,18 +977,14 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Every deal's money. · **Used on:** Admin transactions
 
-**Content Model:**
-
-- Per transaction: id, property address, buyer, agent, sale price, commission (price × platform rate — BR17), initiated date, status (pending / escrow / completed)
-- Totals for price and commission
+**Data requirements:** Per transaction: id, property address, buyer, agent, sale price, commission (price × platform rate — BR17), initiated date, status (pending / escrow / completed). Totals for price and commission.
 
 **Interactions:**
 
-- Sort by any column
-- Escrow status identifiable without colour
-- Row actions open the deal
+- Sort by any attribute
+- Opening a transaction leads to the deal
 
-**Accessibility:** Footer totals are announced as part of the table
+**Accessibility:** Totals are announced as part of the table; escrow status identifiable without colour
 
 ---
 
@@ -1258,14 +992,12 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Identity and tier requests to decide. · **Used on:** Admin verifications
 
-**Content Model:**
-
-- Per request: id, name, email, current tier, requested tier, status (pending / approved / rejected), submitted date, document count
+**Data requirements:** Per request: id, name, email, current tier, requested tier, status (pending / approved / rejected), submitted date, document count.
 
 **Interactions:**
 
-- Actions vary by status: pending → Approve / Review Docs / Reject; approved → View Details / Revoke; rejected → View Reason / Allow Resubmit
-- Decision moves the request to its new status and updates the counts and the navigation count
+- What can be done depends on status: pending → approve, review documents, reject; approved → view details, revoke; rejected → view reason, allow resubmission
+- A decision moves the request to its new status and updates the counts and the navigation count
 
 **Accessibility:** Status is text; each action names the subject
 
@@ -1275,19 +1007,15 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Platform and marketplace values. · **Used on:** Admin settings
 
-**Content Model:**
-
-- Panel title and description
-- Fields: name, label, placeholder, optional type, optional prefix or suffix
-- Current values keyed by field name
+**Data requirements:** Config values keyed by name, each with its type and unit (e.g. %, $, days).
 
 **Interactions:**
 
-- Editing any field clears the saved state
-- Submit is owned by the page-level save action
+- Editing any value clears the saved state
+- Saving is a page-level action (Page 27)
 - Reset restores stored values
 
-**Accessibility:** Every field has a real label; prefix and suffix are not the only unit indicator
+**Accessibility:** Every value has a real label; the unit is stated in the label or accessible name, not only by a prefix or suffix
 
 ---
 
@@ -1295,12 +1023,9 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Moderation and operations policies. · **Used on:** Admin settings
 
-**Content Model:**
+**Data requirements:** Per policy: title, description of its consequence, default state.
 
-- Panel title and description
-- Toggles: title, description, default state
-
-**Interactions:** Toggle flips immediately; description explains the consequence
+**Interactions:** Switching a policy takes effect immediately; its description explains the consequence
 
 **Accessibility:** Switch role with the title as its accessible name and the description as help text
 
@@ -1310,24 +1035,24 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 **Purpose:** Operational and destructive maintenance. · **Used on:** Admin settings
 
-**Content Model:**
+**Interactions:** Kept apart from ordinary configuration; destructive operations require confirmation before running (BR10)
 
-- Operational and destructive maintenance actions
-
-**Interactions:** Kept apart from ordinary configuration; destructive actions require confirmation before running (BR10)
-
-**Accessibility:** Destructive actions state their effect in the label
+**Accessibility:** Destructive actions state their effect in their name
 
 ---
 
 ## Regeneration Notes
 
-- **Retained:** all 70 sections with their numbers, "Used on", content models, interactions and accessibility notes.
+- **Retained:** all 70 sections with their numbers, headings, "Used on", interactions and accessibility notes. (Version 2.0 also retained each section's content model; the 30 September pass below converted it.)
 - **Added:** Section Defaults table; a Purpose line per section; validation for Sections 16 and 38; data requirements for Section 10; Sections 26–29 split out by name from one heading (Section 29 remains unnamed and reserved); divergence pointers.
-- **Changed — dropped as visual prescription:** every "Layout:" line (e.g. "Full-width, centered text overlay on image", "Horizontal scrollable carousel on mobile, 2-3 column grid on desktop", "Grid (2x2 on desktop, 1 on mobile)", "Timeline visual or 4-column grid", "Hero image + carousel, thumbnails below", "Horizontal bar, sticky on scroll", "3-5 boxes in row", "Full-width map container, 400px min height", "Table on desktop, cards on mobile", "Vertical card, 300px wide", "Grid card (2-3 per row desktop, 1 mobile)", "Chat bubble style (mine on right, theirs on left)", "Fixed at bottom or inline", "Label above input", "Stack vertically", "Card (100-150px)", "Standard calendar grid", "Multi-column on desktop, stacked on mobile", "Fixed bottom-right (or top-right), slides out/in", "Centered overlay, darken background", "Centered, centered vertically", "Full-height flex — fixed sidebar…", "Responsive grid, 4 columns at desktop", "Panel wrapper with fixed-height chart", "Stacked rows separated by the quiet divider token", "Card per request — identity block left…", "Panel wrapping a two-column field grid", "Stacked rows, switch right-aligned", "Panel placed last, visually separated"); every "Responsive:" column count and aspect ratio; "Background image (aspirational lifestyle)"; hover effects ("Hover → enlarge", "Hover step → highlight", "Hover row → highlight both cells", "Hover → enlarge/shadow"); "Focus → label color change, border highlight"; "Error state → red border"; "Icon or illustration" / icon slots; "Star icon", "star toggle"; "Trend chip colours by direction"; "State drives dot tone and text colour"; "Tone sets the leading indicator"; "Role rendered as a colour-coded chip, tier as coloured text"; "Commission rendered as an accent chip"; "Status tints the initiated date"; "tinted background" rows; "numeric columns use tabular figures"; "danger variant"; "Timestamp moves below the title on mobile"; "Chart scales to container; labels thin out"; chart types ("Bar chart, line chart, pie chart", "Column chart"). Where a dropped line carried behaviour it survives in neutral words (e.g. tinted rows → "identifiable without colour").
+- **Changed — dropped as visual prescription (version 2.0):** every "Layout:" line (e.g. "Full-width, centered text overlay on image", "Horizontal scrollable carousel on mobile, 2-3 column grid on desktop", "Grid (2x2 on desktop, 1 on mobile)", "Timeline visual or 4-column grid", "Hero image + carousel, thumbnails below", "Horizontal bar, sticky on scroll", "3-5 boxes in row", "Full-width map container, 400px min height", "Table on desktop, cards on mobile", "Vertical card, 300px wide", "Grid card (2-3 per row desktop, 1 mobile)", "Chat bubble style (mine on right, theirs on left)", "Fixed at bottom or inline", "Label above input", "Stack vertically", "Card (100-150px)", "Standard calendar grid", "Multi-column on desktop, stacked on mobile", "Fixed bottom-right (or top-right), slides out/in", "Centered overlay, darken background", "Centered, centered vertically", "Full-height flex — fixed sidebar…", "Responsive grid, 4 columns at desktop", "Panel wrapper with fixed-height chart", "Stacked rows separated by the quiet divider token", "Card per request — identity block left…", "Panel wrapping a two-column field grid", "Stacked rows, switch right-aligned", "Panel placed last, visually separated"); every "Responsive:" column count and aspect ratio; "Background image (aspirational lifestyle)"; hover effects ("Hover → enlarge", "Hover step → highlight", "Hover row → highlight both cells", "Hover → enlarge/shadow"); "Focus → label color change, border highlight"; "Error state → red border"; "Icon or illustration" / icon slots; "Star icon", "star toggle"; "Trend chip colours by direction"; "State drives dot tone and text colour"; "Tone sets the leading indicator"; "Role rendered as a colour-coded chip, tier as coloured text"; "Commission rendered as an accent chip"; "Status tints the initiated date"; "tinted background" rows; "numeric columns use tabular figures"; "danger variant"; "Timestamp moves below the title on mobile"; "Chart scales to container; labels thin out"; chart types ("Bar chart, line chart, pie chart", "Column chart"). Where a dropped line carried behaviour it survives in neutral words (e.g. tinted rows → "identifiable without colour").
 - **Changed — provider neutral:** Section 10 "Google Map centered on address" → "Map centred on the address"; the map provider is a code decision recorded in [ADR 0015](../../docs/adr/0015-map-surfaces-wait-on-coordinates.md) (MapLibre GL, OpenFreeMap).
 - **Changed — renamed:** "LAYOUT SECTIONS" → "NAVIGATION SECTIONS"; "ERROR PAGES" → "ERROR SECTIONS"; the Offer group count corrected from "(10)" to "(6)" and the Listing group from "(15)" to "(10)" — no section removed.
+- **Changed — screen content removed (30 September 2026, seed-prompt Self-Audit):**
+    - **Field removed:** every "Content Model" block (Sections 1–25, 30–46, 47–70). Data in it moved to **Data requirements**; behaviour to **Interactions**; requirements to **Rules** or **Accessibility**. Blocks that were pure inventories (Sections 4, 5, 47–55) were replaced by what the section must let the user do or know. No section had a "Controls" field or a component-building technical note; the Section Defaults' data default was reworded from "receive rows as props from their route's console" to data ownership.
+    - **Relocated as requirements:** Sections 1, 3 and 5 — marketplace figures must be true and reviews quoted with consent (Rules, BR15); Section 48 — copyright stated (Rules); Section 54 — error description stays vague, no internal detail disclosed (Rules, security); Section 63 — flagged/rejected listings identifiable without colour moved from interactions to Accessibility, and "Approve hidden when already approved" (from Page 21) added as a rule; Section 65 and 66 — "identifiable without colour" moved to Accessibility; Section 68 — unit stated in the label or accessible name.
+    - **Dropped as screen content:** headline and CTA copy ("Find Your Next Home", "Search 10k+ properties", "Ready to get started?", "Join 10k+ buyers today", "Something went wrong", "Page not found", "Check your internet" as prescribed headings — the messages survive as what the user is told); "CTA buttons", "Search input", "Drop zone", "'Choose file' button", "Step indicator (1/3…)", "Next, Back, Submit", "Text input field", "Send", "Placeholder text", "Month/year controls", "Column headers (sortable)", "Brand block: 'Admin' / 'Console'", "Brand", "Menu items", "Panel title and description", "Title / Content / Actions (OK, Cancel, Delete) / Close" for dialogs, "Headline / Description / Next action" for empty states, "Data points, legend", "Label (required indicator)"; placement words in interactions ("Click", "Button →", "Header →", "Row actions", "Footer totals", "Legend → toggle series", "Photo → full profile"); "Used on" wording "bottom of many pages", "Make offer dialog/page", "search card", "filter panel".
 
 ---
 
-**Phase 5 Complete.** All 70 sections specified with content and behaviour. They compose the 46 pages in Phase 4. Next: [Phase 6 — Interaction Contracts](phase-6-interaction-contracts.md).
+**Phase 5 Complete.** All 70 sections specified by job, data and behaviour. They compose the 46 pages in Phase 4. Next: [Phase 6 — Interaction Contracts](phase-6-interaction-contracts.md).

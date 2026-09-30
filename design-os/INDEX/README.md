@@ -78,7 +78,7 @@ Paths are relative to `design-os/`.
 
 ### Designers
 
-→ Start from **Phase 2** (journeys) and **Phase 4** (what each page must offer, in priority order)
+→ Start from **Phase 2** (journeys) and **Phase 4** (what each page lets the user get done)
 → Use **Phase 5** (Sections) and **Phase 6** (Contracts) as the behaviour your concept must honour
 → Propose each page's look to the owner at build time — this OS gives no visual direction
 

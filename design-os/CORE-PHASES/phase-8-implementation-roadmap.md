@@ -50,7 +50,7 @@ The sprint plan below is the original plan and the delivery order it implies. Mo
 | Release  | Scope                                                                                                  |
 | -------- | ------------------------------------------------------------------------------------------------------ |
 | MVP 1.0  | Foundation, primitives, search and discovery, authentication                                           |
-| MVP 1.5  | The 27 original pages end to end, plus the trust surfaces (flags, disputes, escrow settlement), QA      |
+| MVP 1.5  | The 27 original pages end to end, plus the trust features (flags, disputes, escrow settlement), QA      |
 | 2.0      | The [Deferred Register](#deferred-register): real-time, market data, agent collaboration, analytics, Apple sign-in |
 
 **Priority order:** Foundation → Contracts (primitives) → Search + Auth → Buyer Dashboard → Agent → Admin → QA. Within a release, anything that moves money or trust (BR1–BR5) goes before anything that only informs.
@@ -78,8 +78,8 @@ Setup Next.js codebase per Phase 7 spec:
 
 Implement Phase 6 contracts (primitives + patterns, C1–C30):
 
-- Primitives: Button, Input, Select, Checkbox, Badge, Icon, Image, Skeleton
-- Patterns: Modal, Toast, Banner, Tabs, Date Picker, Multi-Step Form
+- Primitive contracts C1–C12
+- Pattern contracts C13–C30
 - Unit tests (Vitest), accessibility audit (WCAG AA)
 
 **Deliverable:** All primitives + patterns working to contract.
@@ -90,10 +90,10 @@ Implement Phase 6 contracts (primitives + patterns, C1–C30):
 
 Implement Phase 4 browse pages:
 
-- Home (/) with search entry, featured, trending, trust signals
-- Search Results (/search) with filters, pagination, map
-- Listing Details (/listing/:id) with photos, description, map, comps, agent
-- Map View (/map)
+- Home (/) — Page 1, Journey 1
+- Search Results (/search) — Page 2: filter, sort, page through and map results
+- Listing Details (/listing/:id) — Page 3, Journey 2
+- Map View (/map) — Page 4
 
 **Deliverable:** Full buyer search flow end-to-end.
 
@@ -116,7 +116,7 @@ Implement auth pages and flows:
 
 Implement buyer dashboard (private):
 
-- Overview (quick stats, recent saves, offers, messages)
+- Overview (where saves, offers and messages stand)
 - My Saved (filters, sorting)
 - My Offers (status, counter-offer, timeline)
 - My Viewings (calendar, upcoming, reschedule)
@@ -131,7 +131,7 @@ Implement buyer dashboard (private):
 
 Implement agent dashboard:
 
-- Dashboard (pipeline view, stats)
+- Dashboard (the pipeline in numbers)
 - My Listings (draft/published/sold, bulk actions)
 - Leads (inquiries, qualification)
 - Pipeline (viewings, offers, closings)
@@ -146,7 +146,7 @@ Implement agent dashboard:
 
 Implement admin oversight:
 
-- Overview (health stats, alerts)
+- Overview (platform health, what needs a decision)
 - Listings Moderation (queue, approve/reject)
 - Users (search, verify, suspend)
 - Transactions, Payments, Reports, Settings
@@ -282,7 +282,7 @@ Every page, section, interaction contract and flow specified in Phases 1–7 app
 
 Status lives here and nowhere else. It is recorded against a feature, never used to remove one. A feature with no implementation is **Specified**, not absent.
 
-**Evidence.** Statuses were resolved on 29 September 2026 by reading `app/**/page.tsx`, `components/` and `lib/` at `HEAD` of `development` (read-only), plus RATIFIED_DIVERGENCES. **Nothing is Verified:** no Phase 9 sign-off is recorded anywhere. **Nothing is Scheduled:** no sprint currently assigns remaining work. Where a feature is built but a named part of it is not, the part gets its own row (e.g. `26.3a`).
+**Evidence.** Statuses were resolved on 29 September 2026 by reading `app/**/page.tsx`, `components/` and `lib/` at `HEAD` of `development` (read-only), plus RATIFIED_DIVERGENCES. **Nothing is Verified:** no Phase 9 sign-off is recorded anywhere. **Nothing is Scheduled:** no sprint currently assigns remaining work. Where a feature is built but a named part of it is not, the part gets its own row (e.g. `26.3a`). Sub-row numbers carry the version 2.0 module numbers as identifiers ([Phase 4 › How to Read a Blueprint](phase-4-page-blueprints.md#how-to-read-a-blueprint)); the part itself is a primary task, rule or state of that page.
 
 **Working tree.** The owner has uncommitted work in `components/`, `lib/` and `styles/` (notably the admin overview, portal topbar and lead response). Statuses describe `HEAD`; rows affected by that work are marked ✎.
 
@@ -517,8 +517,8 @@ Carried from RATIFIED_DIVERGENCES › Deferred. Each carries a reason and a revi
 | Agent collaboration (Agent JTBD 4)                  | No representation model (ADR 0018)                  | Representation model designed                           |
 | Price guidance (Seller JTBD 1)                      | No valuation source                                 | Valuation source chosen                                 |
 | Funnel KPIs and NPS                                 | No product analytics                                | Analytics chosen (dependency approval)                  |
-| Testimonials (Page 1 module 4)                      | Reviewer consent not collected                      | Consent mechanism exists                                |
-| Social links (Page 1 module 7)                      | Accounts do not exist                               | Accounts created                                        |
+| Testimonials (Page 1 module 4 · trust)              | Reviewer consent not collected                      | Consent mechanism exists                                |
+| Social links (Page 1 module 7 · site-wide links)    | Accounts do not exist                               | Accounts created                                        |
 | Newsletter issues                                   | No sender                                           | A sender exists (the list itself is built)              |
 | Saved-search alerts                                 | `SavedSearch.notify` is never read                  | A matcher sends them                                    |
 
@@ -528,6 +528,7 @@ Carried from RATIFIED_DIVERGENCES › Deferred. Each carries a reason and a revi
 
 - **Retained:** overview, the full sprint breakdown with hours, milestones, critical path, risk table, testing strategy, deployment and rollback, success criteria.
 - **Added:** development phases and priority order, dependencies, three risks, technical debt prevention, the Build Status Vocabulary, per-feature build status for 46 pages, 70 sections, 88 contracts and 19 flows (with sub-rows for unbuilt parts), cross-cutting status, the Deferred Register.
+- **Changed — screen content removed (30 September 2026, seed-prompt Self-Audit):** Sprint 2-3 component list ("Primitives: Button, Input, Select, Checkbox, Badge, Icon, Image, Skeleton", "Patterns: Modal, Toast, Banner, Tabs, Date Picker, Multi-Step Form") → contract ranges C1–C12 and C13–C30; Sprint 3-4 page-content lists ("with search entry, featured, trending, trust signals", "with photos, description, map, comps, agent") → page and journey references; Sprint 5-6, 6-7 and 7-8 "quick stats", "stats", "health stats, alerts" → what the user learns; "trust surfaces" → "trust features"; Deferred Register entries name their subject beside the module number. Build-status evidence (file paths such as `cta-banner`, `listing-agent-card`, `ui/modal`) is a record of code and is unchanged.
 - **Changed:** file renamed `phase-9-implementation-roadmap.md` → `phase-8-implementation-roadmap.md`; Sprint 1 "Design tokens (CSS variables + TS exports)" → "Styling foundation per the host repo's conventions"; Sprint 2-3 "Component Library / Implement Phase 6 components" → "Interaction Contracts / … contracts"; milestone "design system" → "styling foundation", "Component Library" → "Contracts Ready"; "My Saved (grid, …)", "My Offers (table, …)", "My Listings (grid, …)" drop the presentation word; "Home with hero" → "with search entry"; "Transforms Phases 1-8" → "Phases 1-7"; FID target → INP (FID was retired as a Core Web Vital); the hook-based push gate statement corrected (hooks disabled).
 
 ---

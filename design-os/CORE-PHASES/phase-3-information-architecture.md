@@ -4,7 +4,7 @@
 
 Sitemap, navigation, permissions, taxonomy, labelling and hierarchies, derived from the journeys in [Phase 2](phase-2-experience-maps.md). Next: [Phase 4 — Page Blueprints](phase-4-page-blueprints.md).
 
-Information architecture decides what exists, what it is called, who can reach it and in what priority it is offered. It never decides where anything sits on a screen.
+Information architecture records structure and reachability: which pages exist, what they are called, how they relate, which route group each belongs to and who can reach them. It never decides what a layout shows — no navigation bars, sidebars, headers, cards or other on-screen chrome.
 
 ---
 
@@ -62,7 +62,7 @@ Routes marked **(added)** exist in the app and had no entry in version 1; they a
 │   ├── /dashboard/saved (Saved Listings)
 │   ├── /dashboard/interests (Enquiries — added, Page 38)
 │   ├── /dashboard/offers (My Offers)
-│   │   └── /dashboard/offers/:id (Offer Detail — Page 10 content requirement 3)
+│   │   └── /dashboard/offers/:id (Offer Detail — Page 10)
 │   ├── /dashboard/viewings (Scheduled Viewings)
 │   ├── /dashboard/messages (Messages)
 │   ├── /dashboard/transactions (Purchases and escrow — added, Page 39)
@@ -108,25 +108,25 @@ Routes marked **(added)** exist in the app and had no entry in version 1; they a
 
 ## Role-Based Navigation Models
 
-Each model lists what a role's navigation must offer, in priority order. Where and how it is presented is decided at build time.
+Each model lists what a role can reach and from where. How navigation is presented is decided at build time.
 
 ### Anonymous User (Not Logged In)
 
 **Primary Navigation:** Home → Search → Listing Detail → Sign Up
 
-**Global navigation offers:**
+**Reachable from every page:**
 
-- Brand (home link)
+- Home
 - Search
-- Sign In / Sign Up
+- Sign in and sign up
 
-**Site-wide links:**
+**Site pages reachable from every public page:**
 
-- About, Help, Blog links
-- Social media
+- About, Help, Blog
+- Keyhold's social media accounts
 - Privacy, Terms
 
-> **Ratified divergence (Page 1 module 7).** Social links are removed until the accounts exist; the newsletter signup is back on a double opt-in list (BR14). See RATIFIED_DIVERGENCES.
+> **Ratified divergence (Page 1 module 7 · site-wide links).** Social links are removed until the accounts exist; the newsletter signup is back on a double opt-in list (BR14). See RATIFIED_DIVERGENCES.
 
 **Restrictions:**
 
@@ -143,15 +143,15 @@ A restricted action prompts sign-in and returns the visitor to the action afterw
 
 **Primary Navigation:** Home → Search → Saved/Offers/Viewings/Messages
 
-**Global navigation offers:**
+**Reachable from every page:**
 
-- Brand
-- Search + filters
-- Saved count
-- Messages (with unread count)
-- User menu (Profile, Settings, Logout)
+- Home
+- Search and filters
+- Saved listings, and how many are saved
+- Messages, and how many are unread
+- Profile, settings and sign out
 
-**Portal navigation (all devices):**
+**Reachable within the buyer portal (every device):**
 
 - Saved Listings
 - My Offers
@@ -161,11 +161,11 @@ A restricted action prompts sign-in and returns the visitor to the action afterw
 - Settings
 - Enquiries, Purchases (added routes)
 
-**Quick Actions:**
+**Reachable directly from the listing they concern:**
 
-- "Save" on listings
-- "Schedule Viewing" on detail
-- "Make Offer" on detail
+- Saving a listing (from any listing)
+- Scheduling a viewing (from listing detail)
+- Making an offer (from listing detail)
 
 ---
 
@@ -175,14 +175,14 @@ Serves both the Modern Agent and the Seller persona (ADR 0018).
 
 **Primary Navigation:** Dashboard → Listings → Leads → Pipeline → Calendar → Analytics
 
-**Global navigation offers:**
+**Reachable from every page:**
 
-- Brand
+- Home
 - Search (for listings to preview)
 - Notifications (new leads, showing requests)
-- User menu
+- Profile, settings and sign out
 
-**Portal navigation:**
+**Reachable within the agent portal:**
 
 - Dashboard (overview)
 - My Listings (list, actions)
@@ -194,11 +194,11 @@ Serves both the Modern Agent and the Seller persona (ADR 0018).
 - Analytics (performance)
 - Settings
 
-**Quick Actions:**
+**Reachable from anywhere in the agent portal:**
 
-- "Upload Listing"
-- "Import CSV" for bulk actions
-- "Create Listing"
+- Uploading a listing
+- Importing listings in bulk from CSV
+- Creating a listing
 
 ---
 
@@ -206,14 +206,14 @@ Serves both the Modern Agent and the Seller persona (ADR 0018).
 
 **Primary Navigation:** Overview → Moderation → Users → Transactions → Payments → Reports → Verifications
 
-**Global navigation offers:**
+**Reachable from every admin page:**
 
-- Brand
+- Home (admin overview)
 - System health (uptime, error rate)
-- Alerts count
-- Admin menu
+- How many alerts are open
+- Admin account and sign out
 
-**Portal navigation (grouped):**
+**Reachable within the admin portal, in six groups:**
 
 - Overview — Dashboard (health overview)
 - Marketplace — Listings (moderation queue), Users (verification, suspension)
@@ -222,14 +222,14 @@ Serves both the Modern Agent and the Seller persona (ADR 0018).
 - Trust & Safety — Verifications (tier upgrades, count of pending), Flags, Disputes (added)
 - System — Settings (system config)
 
-**Quick Actions:**
+**Reachable directly from the admin overview:**
 
-- "Manage Users"
-- "Review Listings" (bulk approve)
-- "Process Verifications"
-- "View Reports"
+- Managing users
+- Reviewing listings (bulk approve)
+- Processing verifications
+- Viewing reports
 
-> **Ratified divergence (Page 20 module 7).** The admin overview's Quick Actions were removed because they duplicate the portal navigation. The actions remain reachable from navigation.
+> **Ratified divergence (Page 20 module 7 · quick access).** The admin overview's direct routes were removed because they duplicate the portal navigation. Each remains reachable from navigation.
 
 ---
 
@@ -364,36 +364,36 @@ The app's enums (`lib/enums/enums.ts`, mirrored from the backend schema) use a d
 
 ## Information Priority (Content Hierarchy)
 
-Priority order of what each page must offer. Order here is importance, not screen position.
+What a user needs to know or do on each page. This is a set of needs, not an order: which comes first, and how any of it is shown, is decided when the page is built.
 
 ### Listing Detail Page
 
-1. **Primary photo and photo set**
-2. **Price + status**
-3. **Address + key facts** (beds, baths, sq ft)
-4. **Further photos**
-5. **Description** (full property details)
-6. **Neighborhood** (map, schools, transit)
-7. **Comparables** (similar recent sales)
-8. **Agent info** (who's listing)
-9. **Actions** (Schedule Viewing, Make Offer, Save)
+- **What the home looks like**
+- **What it costs and whether it is still available**
+- **Where it is and its key facts** (beds, baths, sq ft)
+- **The rest of the photography**
+- **The seller's full account of it**
+- **What the neighbourhood offers** (schools, transit, where it is)
+- **How its price compares** (similar recent sales)
+- **Who is selling it**
+- **How to act on it** (view it, make an offer, keep it)
 
 ### Search Results
 
-1. **Filters** (always reachable)
-2. **Result count** (12 in metro, 20 nearby, etc.)
-3. **Sorting options** (Price: Low-High, Newest, Most Saved)
-4. **Results**
-5. **Pagination/Infinite scroll**
-6. **Map option** (see results on map)
+- **Narrowing the results** (always reachable)
+- **How many homes match** (12 in metro, 20 nearby, etc.)
+- **Ordering the results** (price low–high, newest, most saved — Search Hierarchy › Sort)
+- **The results themselves**
+- **Seeing more results**
+- **Seeing the results on a map**
 
 ### Dashboard (Buyer)
 
-1. **Quick stats** (Saved: 5, Offers: 2, Viewings: 1)
-2. **Recent activity** (Last viewed, saved today)
-3. **Upcoming** (Viewing scheduled for Saturday)
-4. **New alerts** (Price dropped on saved listing)
-5. **Quick links** (Browse, Manage Offers, Messages)
+- **Where things stand** (how many saved, offers, viewings)
+- **What has happened recently** (last viewed, saved today)
+- **What is coming up** (the next viewing)
+- **What has changed** (price dropped on a saved listing)
+- **Getting on with it** (browse, manage offers, messages)
 
 ---
 
@@ -417,19 +417,19 @@ Filters are reflected in the URL so any result set is shareable and survives rel
 
 ## Cross-linking
 
-- Listing ↔ agent (agent card → the agent's other listings).
+- Listing ↔ agent (the agent → the agent's other listings).
 - Listing → comparables → their listings (when still available).
 - Home browse index → pre-filtered search (type, price band, neighbourhood).
 - Offer ↔ listing ↔ message thread ↔ milestones: every deal record links to the other three.
 - Admin overview queue → the filtered queue it counts (Journey 8).
 - Admin user row → user profile; transaction row → the deal.
-- Footer → every site page (Pages 28–34).
+- Every public page → every site page (Pages 28–34, Section 48).
 - Every notification links to the item it describes.
 
 ## Breadcrumb Strategy
 
 - **Public site:** no breadcrumb trail; listing detail offers a return to the originating search with its filters intact.
-- **Portals:** the current location is always identifiable from the portal chrome, derived from a single route registry per portal, so the trail and navigation cannot disagree.
+- **Portals:** the current location is always identifiable anywhere in a portal, derived from a single route registry per portal, so the trail and navigation cannot disagree.
 - **Detail routes** (`/dashboard/offers/:id`, `/admin/users/:id`, `/agent/listings/:id/edit`) name their parent and link back to it.
 
 ## SEO Hierarchy
@@ -448,7 +448,7 @@ Filters are reflected in the URL so any result set is shareable and survives rel
 - **Empty collections** keep their route and say what is missing and what to do next (Labeling › Empty States); `/blog` ships with no entries and an honest empty state.
 - **Unavailable listing** (`/listing/:id` for a sold, withdrawn or missing listing) → "This listing is no longer available" with a route back to search.
 - **Unknown route** → Not Found (Page 45) with links home and to search.
-- **Server failure** in a segment → that segment's error boundary (Page 46) with retry; the rest of the portal chrome stays usable.
+- **Server failure** in a segment → that segment's error boundary (Page 46) with retry; the rest of the portal stays usable.
 - **Unauthenticated portal visit** → sign-in, then back to the requested route.
 - **Wrong role** → the visitor's own portal, never an empty console.
 - **Unavailable provider** (sign-in, calendar) → the originating page with a stated reason.
@@ -457,7 +457,7 @@ Filters are reflected in the URL so any result set is shareable and survives rel
 
 - New portal pages join an existing navigation group before a new group is created.
 - Buyer-facing market data (trends, regions) would become a public route, reusing the admin endpoints once their audience is widened (deferred).
-- Agent collaboration (deferred) would add a shared-listing surface under `/agent`.
+- Agent collaboration (deferred) would add a shared-listing route under `/agent`.
 - Blog entries are content, not new routes.
 - Localised routes would prefix, not fork, the public tree.
 
@@ -467,7 +467,8 @@ Filters are reflected in the URL so any result set is shareable and survives rel
 
 - **Retained:** the sitemap, all four role models, the permissions matrix, taxonomy, labelling, empty-state copy and the three content hierarchies.
 - **Added:** sitemap entries for 19 shipped routes; added permission rows; code-vocabulary reference table; "Report", "Featured"/"Most viewed" labels; copy rules; search, filtering, cross-linking, breadcrumb, SEO, empty/fallback and future-expansion sections; inline divergence pointers.
-- **Changed (visual/placement wording dropped):** "Header" / "Footer" / "Sidebar (Mobile Hamburger)" became "Global navigation offers" / "Site-wide links" / "Portal navigation (all devices)"; "Logo" → "Brand"; "icon/bar", "count badge", "button" dropped from nav items; "My Listings (grid, actions)" → "(list, actions)"; Listing Detail priority "Hero image (largest, first)", "Price + status (prominent)", "Gallery (scrollable photos)", "CTAs" → primary photo, price + status, further photos, actions; Search Results "Filters (sticky on desktop, collapsible on mobile)", "Results grid (card layout, 2-3 columns)", "Map toggle" → filters always reachable, results, map option; section heading "Information Priority (Page Hierarchy)" → "(Content Hierarchy)"; "Status Badges" → "Status Labels".
+- **Changed — layout chrome removed (30 September 2026, seed-prompt Self-Audit):** the role models' "Global navigation offers", "Site-wide links", "Portal navigation" and "Quick Actions" lists (which enumerated what navigation shows: "Brand", "User menu", "Saved count", "Admin menu", "Alerts count", quoted button labels) became reachability lists — what each role can reach, and from where; the Information Priority lists became user needs rather than page content ("Primary photo", "Result count", "Sorting options", "Pagination/Infinite scroll", "Quick stats", "Quick links", "Actions (Schedule Viewing, Make Offer, Save)"); "agent card", "Footer →", "portal chrome" (twice) and "shared-listing surface" reworded as relations and routes; the Offer Detail sitemap entry no longer cites "Page 10 content requirement 3". Nothing reachable was removed.
+- **Changed (visual/placement wording dropped, version 2.0):** "Header" / "Footer" / "Sidebar (Mobile Hamburger)" became "Global navigation offers" / "Site-wide links" / "Portal navigation (all devices)"; "Logo" → "Brand"; "icon/bar", "count badge", "button" dropped from nav items; "My Listings (grid, actions)" → "(list, actions)"; Listing Detail priority "Hero image (largest, first)", "Price + status (prominent)", "Gallery (scrollable photos)", "CTAs" → primary photo, price + status, further photos, actions; Search Results "Filters (sticky on desktop, collapsible on mobile)", "Results grid (card layout, 2-3 columns)", "Map toggle" → filters always reachable, results, map option; section heading "Information Priority (Page Hierarchy)" → "(Content Hierarchy)"; "Status Badges" → "Status Labels".
 
 ---
 

@@ -87,12 +87,12 @@ Sitemap (all shipped routes), role navigation, permissions matrix, taxonomy, lab
 
 ### Phase 4: Page Blueprints
 
-46 pages, each with purpose, objectives, primary tasks, content requirements in priority order, data, permissions, device needs, states, actions, dependencies, implementation notes.
+46 pages, each with purpose, objectives, primary tasks (user goals), data, permissions, device needs, states, rules, dependencies, implementation notes. No page content is prescribed.
 **Use When:** Building a page (PRIMARY REFERENCE FOR CODING).
 
 ### Phase 5: Section Blueprints
 
-70 sections by the job each does — content model, data, interaction, device needs, accessibility, states — with shared Section Defaults.
+70 sections by the job each does — data, interaction, device needs, accessibility, states — with shared Section Defaults.
 **Use When:** Composing pages.
 
 ### Phase 6: Interaction Contracts
@@ -162,12 +162,12 @@ Use it as the index: find the phase that answers your question in [Quick Referen
 | Phase 1 business rules | Phases 2, 4, 5, 6, 9 | Cited as BR1–BR18 |
 | Phase 2 journeys | Phase 4 pages, Phase 8 flows | Cited as J1–J19 |
 | Phase 3 routes | Phase 4 Page Index, Phase 7 route structure | Same route list |
-| Phase 4 content requirements | Phase 5 sections | "(Section N)" |
+| Phase 4 implementation notes | Phase 5 sections | "Sections N" |
 | Phase 5 sections | Phase 6 contracts | Contracts implement section interactions |
 | Phase 6 contracts | Phase 7 component organisation | C1–C30 in `ui/` and `patterns/`, C31–C88 in `features/` |
 | Phases 1–7 features | Phase 8 build status | One status row each |
 | Phase 9 checks | Phase 8 "Verified" | Passing Phase 9 is the only route to Verified |
-| RATIFIED_DIVERGENCES | Phases 1, 4, 5 | "Page N module M", "Section N", "Phase 1 · …" |
+| RATIFIED_DIVERGENCES | Phases 1, 4, 5 | "Page N module M" (version 1 module number, kept as an identifier — Phase 4 › How to Read a Blueprint), "Section N", "Phase 1 · …" |
 
 ---
 
@@ -262,6 +262,7 @@ Version 1's `phase-7-design-tokens.md` has no successor. Its non-visual rules mo
 | ------- | ---- | ------ |
 | 1.0–1.1 | to 6 September 2026 | Ten-phase design OS: Phases 1–7 design and tokens, 8–10 architecture, roadmap, QA |
 | 2.0 | 29 September 2026 | Regenerated as a merge under the 9-phase master prompt: visual prescription dropped, component library → interaction contracts, tokens phase retired, 19 pages / 6 journeys / 10 contracts added, build status resolved against the code |
+| 2.0 (screen-content pass) | 30 September 2026 | Seed-prompt Self-Audit against the tightened No Visual Prescription rule. **Changed:** Phase 4 "Content requirements" and "Actions" removed, converted into primary tasks (user goals), required data, rules and states; Phase 5 "Content Model" removed, converted into data requirements, interactions, rules and accessibility; Phase 3 navigation models rewritten as reachability, content hierarchy as user needs; placement and container words reworded as behaviour in Phases 1–3, 8 and the implementation prompt; index files no longer point at removed fields. No page, section, contract, journey, persona, role, state, open decision or build status removed — see each phase's Regeneration Notes |
 
 ---
 

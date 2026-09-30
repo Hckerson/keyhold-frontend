@@ -54,7 +54,7 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 ### Phase 4: Page Blueprints
 
 **File:** [`CORE-PHASES/phase-4-page-blueprints.md`](../CORE-PHASES/phase-4-page-blueprints.md) ⭐ PRIMARY REFERENCE
-**Description:** Forty-six pages, each specified by purpose, objectives, primary tasks, content requirements in priority order, required data, permissions, device needs, states, actions and dependencies. The 27 original pages keep their numbers and module numbers (now content requirements), so RATIFIED_DIVERGENCES references still resolve. Pages 28–46 record the routes that shipped without a blueprint.
+**Description:** Forty-six pages, each specified by purpose, objectives, primary tasks (user goals, never controls), required data, permissions, device needs, states, rules and dependencies. What a page contains is decided with the owner at build time. The 27 original pages keep their numbers, and their version 1 module numbers survive as identifiers, so RATIFIED_DIVERGENCES references still resolve. Pages 28–46 record the routes that shipped without a blueprint.
 **Who needs it:** Engineers building a page; QA writing cases; the owner reviewing a visual concept against what the page must do.
 **When to reference:** Before building or changing any page.
 **Contains:** Page Index, Pages 1–46, mapping from the seed's generic page list.
@@ -63,7 +63,7 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 ### Phase 5: Section Blueprints
 
 **File:** [`CORE-PHASES/phase-5-section-blueprints.md`](../CORE-PHASES/phase-5-section-blueprints.md)
-**Description:** Seventy sections, each defined by the single job it does: content model, data, interactions, device needs, accessibility and states. Section Defaults state the shared loading, error, empty and accessibility behaviour once. Layout, sizing and imagery were removed; behaviour that those lines carried survives in neutral words.
+**Description:** Seventy sections, each defined by the single job it does: data requirements, interactions, device needs, accessibility, rules and states — never what the section shows or which components it uses. Section Defaults state the shared loading, error, empty and accessibility behaviour once. Layout, sizing and imagery were removed; behaviour that those lines carried survives in neutral words.
 **Who needs it:** Engineers composing pages.
 **When to reference:** Building or reusing a section.
 **Contains:** Sections 1–70 in ten groups.
@@ -175,8 +175,8 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 | 1 | vision, persona, role, SELLER, JTBD, business rule, BR, escrow, KPI, North Star, NPS, principle, governance, non-goal |
 | 2 | journey, J1–J19, trigger, entry point, decision point, emotional arc, failure path, recovery, triage, moderation, dispute |
 | 3 | sitemap, route, navigation, permission, taxonomy, label, empty state copy, breadcrumb, SEO, fallback, filter hierarchy |
-| 4 | page, Page N, module, content requirement, device needs, loading, empty, error, success, admin, portal |
-| 5 | section, Section N, content model, defaults, hero, listing card, offer form, message thread, data table, admin shell |
+| 4 | page, Page N, module, primary task, required data, rules, device needs, loading, empty, error, success, admin, portal |
+| 5 | section, Section N, data requirements, interactions, defaults, Hero Search, Listing Card, Offer Form, Message Thread, Data Table, Admin Console Shell (headings kept as identifiers) |
 | 6 | contract, C1–C88, keyboard, ARIA, validation, confirm modal, focus, toast, combobox, switch |
 | 7 | folder, route group, layout, provider, store, console, hook, query key, mapper, API client, contract, splitting, lazy |
 | 8 | sprint, milestone, risk, dependency, status, Specified, Built, Verified, Deferred, register |
