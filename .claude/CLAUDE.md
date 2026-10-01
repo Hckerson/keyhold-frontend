@@ -8,10 +8,9 @@ This is a **luxury real-estate marketplace** on the Next.js App Router. It serve
 2. **No hardcoding.** API routes, durations, enums, and copy that appears twice live in `lib/constants.ts` or feature-scoped `lib/config/<feature>.ts`. Endpoints come from `config.api.*`, shapes from Zod schemas. Sample and placeholder content lives in `lib/data/`, never inline in a page.
 3. **No `any` in TypeScript.** Use `unknown` + narrowing or a precise type. Derive types from Zod with `z.infer`.
 4. **Match the existing architecture.** Do not invent patterns, and do not invent locations — when you are unsure where something goes, re-read this file. State the reason before deviating.
-5. **Use the framework natively.** Next.js and the installed libraries (Query / Zustand / Zod / motion / CSS `clamp()`) cover the need. Do not add a dependency that duplicates one, and do not rebuild what the tool already does.
-6. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
-7. **Minimize LOC.** Ship the shortest solution that stays maintainable.
-8. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
+5. **Single source of truth.** Name a recurring decision once as a semantic token and reference it everywhere. Define once, change in one place.
+6. **Minimize LOC.** Ship the shortest solution that stays maintainable.
+7. **No `console.log`, `console.error`, or debug statements** in committed code. Logging belongs in services.
 
 ## Required patterns
 
@@ -63,7 +62,7 @@ A missing schema skips the check rather than failing it, so the gate never block
 - **One component per file.** Kebab-case filename matching the export (`stat-grid.tsx` → `StatGrid`).
 - **Absolute imports via `@/`.** Never deep-relative (`../../../lib/...`).
 - **Any file over ~150 lines gets split**, `page.tsx` included. Derivation logic moves to `lib/data/`, JSX to `components/`. The rule targets complexity, not length: `lib/enums/enums.ts` is exempt, because a flat list of enum literals and their label maps has no seam to split on and dividing it by domain would scatter one lookup across five files. Any other exemption gets written here before it is taken.
-- **Add packages with `pnpm add` — only once rule 5 has been satisfied.** Never hand-edit `package.json`.
+- **Add packages with `pnpm add`.** Never hand-edit `package.json`.
 - **A flow that moves money gets written acceptance criteria before it gets tests.** `docs/archive/MONEY_PATH.md` is the pattern: criteria numbered, tests named after them.
 
 ## Before you commit or push
