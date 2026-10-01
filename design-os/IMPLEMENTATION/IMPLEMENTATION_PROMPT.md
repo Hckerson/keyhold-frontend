@@ -245,10 +245,9 @@ The foundation, primitives and all portals exist in the tree today. Treat the ta
 2. **No hardcoding.** Endpoints in `config.api.*`, shapes from Zod, recurring copy in `lib/constants.ts` or `lib/config/<feature>.ts`, sample content in `lib/data/`.
 3. **No `any`.** Use `unknown` + narrowing or precise types. Derive from Zod with `z.infer`.
 4. **Match the existing architecture.** Don't invent patterns or locations. State the reason before deviating.
-5. **Use the framework natively.** Don't add a dependency that duplicates one already installed.
-6. **Single source of truth.** Name a recurring decision once and reference it everywhere.
-7. **Minimize LOC.** Shortest solution that stays maintainable.
-8. **No `console.log` / `console.error`** in committed code.
+5. **Single source of truth.** Name a recurring decision once and reference it everywhere.
+6. **Minimize LOC.** Shortest solution that stays maintainable.
+7. **No `console.log` / `console.error`** in committed code.
 
 ### Styling
 
