@@ -62,15 +62,15 @@ cp .env.example .env.local
 
 ### Environment variables (`.env.example`)
 
-| Variable | Needed for | Local value |
-| -------- | ---------- | ----------- |
-| `NEXT_PUBLIC_API_BASE_URL` | All data | `http://localhost:5000/api` |
-| `JWT_PUBLIC_KEY` | Portal session verification in `proxy.ts` (portals redirect to `/login` without it) | Same base64 PEM as the backend |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, Open Graph, sitemap, robots | `http://localhost:3000` |
-| `NEXT_PUBLIC_STRIPE_KEY`, `NEXT_PUBLIC_ENABLE_STRIPE` | Checkout (disabled while empty) | Test key, or leave off |
-| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_*` | Error reporting, source maps | Empty locally |
-| `NEXT_PUBLIC_AUTH_PROVIDERS` | Social sign-in buttons (`google,facebook`; never `apple` until deferred work lands) | Empty or configured providers |
-| `NEXT_PUBLIC_DEV_QUICK_LOGIN`, `NEXT_PUBLIC_DEV_PASSWORD` | Development-only quick login | Local only — never enable elsewhere |
+| Variable                                                  | Needed for                                                                          | Local value                         |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------- |
+| `NEXT_PUBLIC_API_BASE_URL`                                | All data                                                                            | `http://localhost:5000/api`         |
+| `JWT_PUBLIC_KEY`                                          | Portal session verification in `proxy.ts` (portals redirect to `/login` without it) | Same base64 PEM as the backend      |
+| `NEXT_PUBLIC_SITE_URL`                                    | Canonical URLs, Open Graph, sitemap, robots                                         | `http://localhost:3000`             |
+| `NEXT_PUBLIC_STRIPE_KEY`, `NEXT_PUBLIC_ENABLE_STRIPE`     | Checkout (disabled while empty)                                                     | Test key, or leave off              |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_*`                      | Error reporting, source maps                                                        | Empty locally                       |
+| `NEXT_PUBLIC_AUTH_PROVIDERS`                              | Social sign-in buttons (`google,facebook`; never `apple` until deferred work lands) | Empty or configured providers       |
+| `NEXT_PUBLIC_DEV_QUICK_LOGIN`, `NEXT_PUBLIC_DEV_PASSWORD` | Development-only quick login                                                        | Local only — never enable elsewhere |
 
 ### TypeScript configuration
 
@@ -114,15 +114,15 @@ Already matches [Phase 7 › Folder Structure](../CORE-PHASES/phase-7-frontend-a
 
 When building each page, reference:
 
-| Page Type      | Reference File                                                                                                    |
-| -------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Page Type      | Reference File                                                                                                       |
+| -------------- | -------------------------------------------------------------------------------------------------------------------- |
 | Home           | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 1) + `../CORE-PHASES/phase-5-section-blueprints.md` (Sections 1–5) |
-| Search Results | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 2) + phase-5 (listing and form sections)                        |
-| Listing Detail | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 3) + phase-5 (listing sections)                                 |
-| Dashboards     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 8-27, 38-44)                                                   |
-| Site pages     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 28-37, 45-46)                                                  |
-| Interactions   | `../CORE-PHASES/phase-6-interaction-contracts.md` (C1–C88)                                                        |
-| Status         | `../CORE-PHASES/phase-8-implementation-roadmap.md`                                                                |
+| Search Results | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 2) + phase-5 (listing and form sections)                           |
+| Listing Detail | `../CORE-PHASES/phase-4-page-blueprints.md` (Page 3) + phase-5 (listing sections)                                    |
+| Dashboards     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 8-27, 38-44)                                                      |
+| Site pages     | `../CORE-PHASES/phase-4-page-blueprints.md` (Pages 28-37, 45-46)                                                     |
+| Interactions   | `../CORE-PHASES/phase-6-interaction-contracts.md` (C1–C88)                                                           |
+| Status         | `../CORE-PHASES/phase-8-implementation-roadmap.md`                                                                   |
 
 ---
 

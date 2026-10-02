@@ -261,15 +261,15 @@ The design OS was regenerated under `docs/MASTER_PROMPT_COMPLETE.md` (nine phase
 
 **Visual entries.** The design OS no longer governs how anything looks, so an entry that is purely about presentation is kept as a record but no longer describes a gap between code and spec:
 
-| Entry | Classification |
-| ----- | -------------- |
-| Page 9 · Saved Listings — card grid vs dense table | **Visual — governed by the code, not this design OS.** Phase 4 no longer prescribes cards or a table. |
-| Phase 1 · Principle 5 — the "desktop-dense application register" half | **Visual — governed by the code, not this design OS.** The product halves stand: portals are desktop-first and there is no offline capability. |
-| Page 1 · How It Works — the *scroll-narrative* presentation of the Concierge | **Visual — governed by the code, not this design OS.** The content change (a narrative of shipping features instead of four steps) stands. |
-| Page 1 module 1 — "a framed decorative image" | **Visual — governed by the code, not this design OS.** Headline copy and neighbourhood chips ranked by live count stand. |
-| Page 1 module 2 — "One premier listing, then a six-tile gallery" as an arrangement | **Visual — governed by the code, not this design OS.** The promotion rule and the Featured / Most viewed labels stand. |
-| Page 1 · order — screen order of the home sections | **Visual — governed by the code, not this design OS.** The added browse index and "Just listed" rows stand as content. |
-| Section 48 · Privacy — the contents rail | **Not visual.** Tracking the reader's position is navigation behaviour; its presentation is governed by the code. |
+| Entry                                                                              | Classification                                                                                                                                 |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page 9 · Saved Listings — card grid vs dense table                                 | **Visual — governed by the code, not this design OS.** Phase 4 no longer prescribes cards or a table.                                          |
+| Phase 1 · Principle 5 — the "desktop-dense application register" half              | **Visual — governed by the code, not this design OS.** The product halves stand: portals are desktop-first and there is no offline capability. |
+| Page 1 · How It Works — the _scroll-narrative_ presentation of the Concierge       | **Visual — governed by the code, not this design OS.** The content change (a narrative of shipping features instead of four steps) stands.     |
+| Page 1 module 1 — "a framed decorative image"                                      | **Visual — governed by the code, not this design OS.** Headline copy and neighbourhood chips ranked by live count stand.                       |
+| Page 1 module 2 — "One premier listing, then a six-tile gallery" as an arrangement | **Visual — governed by the code, not this design OS.** The promotion rule and the Featured / Most viewed labels stand.                         |
+| Page 1 · order — screen order of the home sections                                 | **Visual — governed by the code, not this design OS.** The added browse index and "Just listed" rows stand as content.                         |
+| Section 48 · Privacy — the contents rail                                           | **Not visual.** Tracking the reader's position is navigation behaviour; its presentation is governed by the code.                              |
 
 Every other entry is about content, data, behaviour or scope and is unaffected.
 

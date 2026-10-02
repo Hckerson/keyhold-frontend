@@ -46,25 +46,25 @@ Version 2.0 regenerated the earlier ten-phase set under `docs/MASTER_PROMPT_COMP
 
 ## All Files
 
-| File                                                | Phase | Purpose                                              |
-| --------------------------------------------------- | ----- | ---------------------------------------------------- |
-| **INDEX/START_HERE.md**                             | Intro | Read this first (2 min)                              |
-| **INDEX/README.md**                                 | Intro | Five-minute overview                                 |
-| **INDEX/DESIGN-OS-COMPLETE.md**                     | Intro | This file — master index                             |
-| **INDEX/ARTIFACT_INDEX.md**                         | All   | Deep description of each phase                       |
-| **INDEX/\_FOLDER_STRUCTURE.md**                     | All   | Folder layout, per-role reading order                |
-| **INDEX/RATIFIED_DIVERGENCES.md**                   | All   | Where the code and the spec part company             |
-| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md**         | 7-9   | ⭐ Engineering synthesis, sprint guide, hand-off     |
-| **IMPLEMENTATION/SETUP-CHECKLIST.md**               | 7     | Clone to verified working environment                |
-| **CORE-PHASES/phase-1-product-vision.md**           | 1     | Strategy, personas, business rules, KPIs             |
-| **CORE-PHASES/phase-2-experience-maps.md**          | 2     | 19 user journeys, decision points                    |
-| **CORE-PHASES/phase-3-information-architecture.md** | 3     | Sitemap, navigation, permissions, hierarchies        |
-| **CORE-PHASES/phase-4-page-blueprints.md**          | 4     | 46 page specs                                        |
-| **CORE-PHASES/phase-5-section-blueprints.md**       | 5     | 70 sections                                          |
-| **CORE-PHASES/phase-6-interaction-contracts.md**    | 6     | 88 interaction contracts                             |
-| **CORE-PHASES/phase-7-frontend-architecture.md**    | 7     | Codebase structure                                   |
-| **CORE-PHASES/phase-8-implementation-roadmap.md**   | 8     | 16-week plan, build status, deferred register        |
-| **CORE-PHASES/phase-9-qa-checklist.md**             | 9     | Pre-launch verification                              |
+| File                                                | Phase | Purpose                                          |
+| --------------------------------------------------- | ----- | ------------------------------------------------ |
+| **INDEX/START_HERE.md**                             | Intro | Read this first (2 min)                          |
+| **INDEX/README.md**                                 | Intro | Five-minute overview                             |
+| **INDEX/DESIGN-OS-COMPLETE.md**                     | Intro | This file — master index                         |
+| **INDEX/ARTIFACT_INDEX.md**                         | All   | Deep description of each phase                   |
+| **INDEX/\_FOLDER_STRUCTURE.md**                     | All   | Folder layout, per-role reading order            |
+| **INDEX/RATIFIED_DIVERGENCES.md**                   | All   | Where the code and the spec part company         |
+| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md**         | 7-9   | ⭐ Engineering synthesis, sprint guide, hand-off |
+| **IMPLEMENTATION/SETUP-CHECKLIST.md**               | 7     | Clone to verified working environment            |
+| **CORE-PHASES/phase-1-product-vision.md**           | 1     | Strategy, personas, business rules, KPIs         |
+| **CORE-PHASES/phase-2-experience-maps.md**          | 2     | 19 user journeys, decision points                |
+| **CORE-PHASES/phase-3-information-architecture.md** | 3     | Sitemap, navigation, permissions, hierarchies    |
+| **CORE-PHASES/phase-4-page-blueprints.md**          | 4     | 46 page specs                                    |
+| **CORE-PHASES/phase-5-section-blueprints.md**       | 5     | 70 sections                                      |
+| **CORE-PHASES/phase-6-interaction-contracts.md**    | 6     | 88 interaction contracts                         |
+| **CORE-PHASES/phase-7-frontend-architecture.md**    | 7     | Codebase structure                               |
+| **CORE-PHASES/phase-8-implementation-roadmap.md**   | 8     | 16-week plan, build status, deferred register    |
+| **CORE-PHASES/phase-9-qa-checklist.md**             | 9     | Pre-launch verification                          |
 
 ---
 
@@ -119,32 +119,32 @@ Development phases, 16-week sprint breakdown, milestones, dependencies, risks, t
 
 ## Ancillary Documents
 
-| Document | What it is |
-| -------- | ---------- |
-| [START_HERE.md](START_HERE.md) | Entry point: what is here, the three-step workflow, quick reference |
-| [README.md](README.md) | Five-minute overview, file list, how each role uses it, statistics |
-| DESIGN-OS-COMPLETE.md | This master index |
-| [ARTIFACT_INDEX.md](ARTIFACT_INDEX.md) | Per-phase deep descriptions, reading paths, keywords, build status roll-up |
-| [SETUP-CHECKLIST.md](../IMPLEMENTATION/SETUP-CHECKLIST.md) | Environment, initialization, dependencies, testing, workflow, verification |
+| Document                                                               | What it is                                                                  |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [START_HERE.md](START_HERE.md)                                         | Entry point: what is here, the three-step workflow, quick reference         |
+| [README.md](README.md)                                                 | Five-minute overview, file list, how each role uses it, statistics          |
+| DESIGN-OS-COMPLETE.md                                                  | This master index                                                           |
+| [ARTIFACT_INDEX.md](ARTIFACT_INDEX.md)                                 | Per-phase deep descriptions, reading paths, keywords, build status roll-up  |
+| [SETUP-CHECKLIST.md](../IMPLEMENTATION/SETUP-CHECKLIST.md)             | Environment, initialization, dependencies, testing, workflow, verification  |
 | [IMPLEMENTATION_PROMPT.md](../IMPLEMENTATION/IMPLEMENTATION_PROMPT.md) | The self-contained engineering prompt, including the Visual Design Hand-off |
-| [\_FOLDER_STRUCTURE.md](_FOLDER_STRUCTURE.md) | Folder layout and reading orders (kept from version 1) |
-| [RATIFIED_DIVERGENCES.md](RATIFIED_DIVERGENCES.md) | Owner decisions where code departs from the spec (kept from version 1) |
+| [\_FOLDER_STRUCTURE.md](_FOLDER_STRUCTURE.md)                          | Folder layout and reading orders (kept from version 1)                      |
+| [RATIFIED_DIVERGENCES.md](RATIFIED_DIVERGENCES.md)                     | Owner decisions where code departs from the spec (kept from version 1)      |
 
 ---
 
 ## Deliverable Statistics
 
-| Measure | Count |
-| ------- | ----- |
-| Phases | 9 |
-| Documents | 17 (9 phases + 6 ancillary + 2 retained companions) |
-| Journeys | 19 |
-| Pages | 46 (27 original + 19 added) |
-| Sections | 70 |
-| Interaction contracts | 88 (78 carried + 10 added) |
-| Business rules | 18 |
-| QA items | 213 |
-| Timeline | 16 weeks, ~1120 hours |
+| Measure                             | Count                                                                               |
+| ----------------------------------- | ----------------------------------------------------------------------------------- |
+| Phases                              | 9                                                                                   |
+| Documents                           | 17 (9 phases + 6 ancillary + 2 retained companions)                                 |
+| Journeys                            | 19                                                                                  |
+| Pages                               | 46 (27 original + 19 added)                                                         |
+| Sections                            | 70                                                                                  |
+| Interaction contracts               | 88 (78 carried + 10 added)                                                          |
+| Business rules                      | 18                                                                                  |
+| QA items                            | 213                                                                                 |
+| Timeline                            | 16 weeks, ~1120 hours                                                               |
 | Build status (pages incl. sub-rows) | See [ARTIFACT_INDEX › Build Status Roll-up](ARTIFACT_INDEX.md#build-status-roll-up) |
 
 ---
@@ -157,17 +157,17 @@ Use it as the index: find the phase that answers your question in [Quick Referen
 
 ## Cross-references Between Phases
 
-| From | To | Link |
-| ---- | -- | ---- |
-| Phase 1 business rules | Phases 2, 4, 5, 6, 9 | Cited as BR1–BR18 |
-| Phase 2 journeys | Phase 4 pages, Phase 8 flows | Cited as J1–J19 |
-| Phase 3 routes | Phase 4 Page Index, Phase 7 route structure | Same route list |
-| Phase 4 implementation notes | Phase 5 sections | "Sections N" |
-| Phase 5 sections | Phase 6 contracts | Contracts implement section interactions |
-| Phase 6 contracts | Phase 7 component organisation | C1–C30 in `ui/` and `patterns/`, C31–C88 in `features/` |
-| Phases 1–7 features | Phase 8 build status | One status row each |
-| Phase 9 checks | Phase 8 "Verified" | Passing Phase 9 is the only route to Verified |
-| RATIFIED_DIVERGENCES | Phases 1, 4, 5 | "Page N module M" (version 1 module number, kept as an identifier — Phase 4 › How to Read a Blueprint), "Section N", "Phase 1 · …" |
+| From                         | To                                          | Link                                                                                                                               |
+| ---------------------------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 1 business rules       | Phases 2, 4, 5, 6, 9                        | Cited as BR1–BR18                                                                                                                  |
+| Phase 2 journeys             | Phase 4 pages, Phase 8 flows                | Cited as J1–J19                                                                                                                    |
+| Phase 3 routes               | Phase 4 Page Index, Phase 7 route structure | Same route list                                                                                                                    |
+| Phase 4 implementation notes | Phase 5 sections                            | "Sections N"                                                                                                                       |
+| Phase 5 sections             | Phase 6 contracts                           | Contracts implement section interactions                                                                                           |
+| Phase 6 contracts            | Phase 7 component organisation              | C1–C30 in `ui/` and `patterns/`, C31–C88 in `features/`                                                                            |
+| Phases 1–7 features          | Phase 8 build status                        | One status row each                                                                                                                |
+| Phase 9 checks               | Phase 8 "Verified"                          | Passing Phase 9 is the only route to Verified                                                                                      |
+| RATIFIED_DIVERGENCES         | Phases 1, 4, 5                              | "Page N module M" (version 1 module number, kept as an identifier — Phase 4 › How to Read a Blueprint), "Section N", "Phase 1 · …" |
 
 ---
 
@@ -206,21 +206,21 @@ Use it as the index: find the phase that answers your question in [Quick Referen
 
 ## Quick Reference
 
-| I want to...                    | Go to...                                        |
-| ------------------------------- | ----------------------------------------------- |
-| Know the binding rules          | `.claude/CLAUDE.md`                             |
-| See where code differs          | `INDEX/RATIFIED_DIVERGENCES.md`                 |
-| Understand the strategy         | `CORE-PHASES/phase-1-product-vision.md`         |
-| Check a business rule           | `CORE-PHASES/phase-1-product-vision.md#business-rules` |
-| See user flows                  | `CORE-PHASES/phase-2-experience-maps.md`        |
-| See page specifications         | `CORE-PHASES/phase-4-page-blueprints.md`        |
-| Find how a control behaves      | `CORE-PHASES/phase-6-interaction-contracts.md`  |
+| I want to...                    | Go to...                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Know the binding rules          | `.claude/CLAUDE.md`                                                                              |
+| See where code differs          | `INDEX/RATIFIED_DIVERGENCES.md`                                                                  |
+| Understand the strategy         | `CORE-PHASES/phase-1-product-vision.md`                                                          |
+| Check a business rule           | `CORE-PHASES/phase-1-product-vision.md#business-rules`                                           |
+| See user flows                  | `CORE-PHASES/phase-2-experience-maps.md`                                                         |
+| See page specifications         | `CORE-PHASES/phase-4-page-blueprints.md`                                                         |
+| Find how a control behaves      | `CORE-PHASES/phase-6-interaction-contracts.md`                                                   |
 | Decide how a page looks         | With the owner, at build time — `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md#visual-design-hand-off` |
-| Know what to build              | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`       |
-| Know whether something is built | `CORE-PHASES/phase-8-implementation-roadmap.md#per-feature-build-status` |
-| Understand codebase setup       | `CORE-PHASES/phase-7-frontend-architecture.md`  |
-| See sprint breakdown            | `CORE-PHASES/phase-8-implementation-roadmap.md` |
-| Verify before shipping          | `CORE-PHASES/phase-9-qa-checklist.md`           |
+| Know what to build              | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`                                                        |
+| Know whether something is built | `CORE-PHASES/phase-8-implementation-roadmap.md#per-feature-build-status`                         |
+| Understand codebase setup       | `CORE-PHASES/phase-7-frontend-architecture.md`                                                   |
+| See sprint breakdown            | `CORE-PHASES/phase-8-implementation-roadmap.md`                                                  |
+| Verify before shipping          | `CORE-PHASES/phase-9-qa-checklist.md`                                                            |
 
 ---
 
@@ -258,11 +258,11 @@ Version 1's `phase-7-design-tokens.md` has no successor. Its non-visual rules mo
 
 ## Version History
 
-| Version | Date | Change |
-| ------- | ---- | ------ |
-| 1.0–1.1 | to 6 September 2026 | Ten-phase design OS: Phases 1–7 design and tokens, 8–10 architecture, roadmap, QA |
-| 2.0 | 29 September 2026 | Regenerated as a merge under the 9-phase master prompt: visual prescription dropped, component library → interaction contracts, tokens phase retired, 19 pages / 6 journeys / 10 contracts added, build status resolved against the code |
-| 2.0 (screen-content pass) | 30 September 2026 | Seed-prompt Self-Audit against the tightened No Visual Prescription rule. **Changed:** Phase 4 "Content requirements" and "Actions" removed, converted into primary tasks (user goals), required data, rules and states; Phase 5 "Content Model" removed, converted into data requirements, interactions, rules and accessibility; Phase 3 navigation models rewritten as reachability, content hierarchy as user needs; placement and container words reworded as behaviour in Phases 1–3, 8 and the implementation prompt; index files no longer point at removed fields. No page, section, contract, journey, persona, role, state, open decision or build status removed — see each phase's Regeneration Notes |
+| Version                   | Date                | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1.0–1.1                   | to 6 September 2026 | Ten-phase design OS: Phases 1–7 design and tokens, 8–10 architecture, roadmap, QA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| 2.0                       | 29 September 2026   | Regenerated as a merge under the 9-phase master prompt: visual prescription dropped, component library → interaction contracts, tokens phase retired, 19 pages / 6 journeys / 10 contracts added, build status resolved against the code                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| 2.0 (screen-content pass) | 30 September 2026   | Seed-prompt Self-Audit against the tightened No Visual Prescription rule. **Changed:** Phase 4 "Content requirements" and "Actions" removed, converted into primary tasks (user goals), required data, rules and states; Phase 5 "Content Model" removed, converted into data requirements, interactions, rules and accessibility; Phase 3 navigation models rewritten as reachability, content hierarchy as user needs; placement and container words reworded as behaviour in Phases 1–3, 8 and the implementation prompt; index files no longer point at removed fields. No page, section, contract, journey, persona, role, state, open decision or build status removed — see each phase's Regeneration Notes |
 
 ---
 

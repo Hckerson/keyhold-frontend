@@ -218,13 +218,13 @@ frontend/
 
 ## Route Structure
 
-| Group         | Routes                                                                                     | Rendering ([ADR 0002](../../docs/adr/0002-per-route-rendering-split.md)) | Guard                           |
-| ------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | ------------------------------- |
-| `(public)`    | `/`, `/search`, `/listing/:id`, `/map`, site pages, newsletter tokens                      | Server components; client leaves only where state demands ([ADR 0017](../../docs/adr/0017-screen-classes-are-named-by-state-source.md)) | None                            |
-| `(auth)`      | `/signup`, `/login`, `/reset-password`, `/verify-email`                                    | Client forms                                                                 | Signed-in users leave for their portal |
-| `dashboard`   | `/dashboard/*`                                                                             | Client portal shell; thin server `page.tsx`; client `*-console`             | `BUYER`                         |
-| `agent`       | `/agent/*`                                                                                 | Same as dashboard                                                           | `SELLER`                        |
-| `admin`       | `/admin/*`                                                                                 | Same as dashboard                                                           | `ADMIN`                         |
+| Group       | Routes                                                                | Rendering ([ADR 0002](../../docs/adr/0002-per-route-rendering-split.md))                                                                | Guard                                  |
+| ----------- | --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `(public)`  | `/`, `/search`, `/listing/:id`, `/map`, site pages, newsletter tokens | Server components; client leaves only where state demands ([ADR 0017](../../docs/adr/0017-screen-classes-are-named-by-state-source.md)) | None                                   |
+| `(auth)`    | `/signup`, `/login`, `/reset-password`, `/verify-email`               | Client forms                                                                                                                            | Signed-in users leave for their portal |
+| `dashboard` | `/dashboard/*`                                                        | Client portal shell; thin server `page.tsx`; client `*-console`                                                                         | `BUYER`                                |
+| `agent`     | `/agent/*`                                                            | Same as dashboard                                                                                                                       | `SELLER`                               |
+| `admin`     | `/admin/*`                                                            | Same as dashboard                                                                                                                       | `ADMIN`                                |
 
 Page-to-route mapping for all 46 blueprinted pages is in [Phase 4](phase-4-page-blueprints.md#page-index).
 
@@ -241,13 +241,13 @@ Page-to-route mapping for all 46 blueprinted pages is in [Phase 4](phase-4-page-
 
 ## Providers, Contexts and Stores
 
-| Layer                                     | What it holds                                                                                |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `components/providers/provider.tsx`       | Composes the TanStack `QueryClientProvider`, `SessionProvider`, `MotionProvider` and the toast viewport; Query devtools in development only |
-| `components/providers/session-provider.tsx` | Session context: signed-in user and role                                                   |
-| `components/providers/motion-provider.tsx`  | Motion configuration, including reduced-motion                                             |
-| `lib/stores/auth-store.ts`                | Zustand — auth session that spans the tree and outlives a route                              |
-| `lib/stores/toast-store.ts`               | Zustand — global toast queue fed by the mutation cache ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)) |
+| Layer                                       | What it holds                                                                                                                               |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components/providers/provider.tsx`         | Composes the TanStack `QueryClientProvider`, `SessionProvider`, `MotionProvider` and the toast viewport; Query devtools in development only |
+| `components/providers/session-provider.tsx` | Session context: signed-in user and role                                                                                                    |
+| `components/providers/motion-provider.tsx`  | Motion configuration, including reduced-motion                                                                                              |
+| `lib/stores/auth-store.ts`                  | Zustand — auth session that spans the tree and outlives a route                                                                             |
+| `lib/stores/toast-store.ts`                 | Zustand — global toast queue fed by the mutation cache ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md))          |
 
 No other context or store exists. A new store requires a stated reason.
 
@@ -255,14 +255,14 @@ No other context or store exists. A new store requires a stated reason.
 
 ## Feature Folders and Component Organization
 
-| Folder                  | Holds                                                                                      | Rule                                                                  |
-| ----------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| `components/ui/`        | Domain-free primitives (Phase 6 C1–C30)                                                    | Reusable in any app                                                   |
-| `components/patterns/`  | Generic compositions over primitives                                                       | No domain vocabulary                                                  |
-| `components/features/<portal>/` | Reusable domain leaves (Phase 6 C31–C88)                                           | Named after the portal that **consumes** it; `shared/` for two or more |
-| `components/sections/<route>/` | Route-level composition (Phase 5 sections as built)                                  | One route per section; serving two moves it to `features/`            |
-| `components/layout/`    | App chrome (Sections 47–49, 56)                                                            | —                                                                     |
-| `components/brand/`     | Wordmark and marks                                                                         | —                                                                     |
+| Folder                          | Holds                                               | Rule                                                                   |
+| ------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------- |
+| `components/ui/`                | Domain-free primitives (Phase 6 C1–C30)             | Reusable in any app                                                    |
+| `components/patterns/`          | Generic compositions over primitives                | No domain vocabulary                                                   |
+| `components/features/<portal>/` | Reusable domain leaves (Phase 6 C31–C88)            | Named after the portal that **consumes** it; `shared/` for two or more |
+| `components/sections/<route>/`  | Route-level composition (Phase 5 sections as built) | One route per section; serving two moves it to `features/`             |
+| `components/layout/`            | App chrome (Sections 47–49, 56)                     | —                                                                      |
+| `components/brand/`             | Wordmark and marks                                  | —                                                                      |
 
 ---
 
@@ -324,11 +324,11 @@ Components consume hooks. They never call `lib/api/*` and never touch `fetch` di
 
 `lib/hooks/use-<resource>.ts`, one resource or one screen concern per file, keyed through `query-keys.ts`.
 
-| Kind                  | Examples                                                                                                   |
-| --------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Resource queries      | `use-properties`, `use-offers`, `use-messages`, `use-viewings`, `use-transactions`, `use-users`, `use-stats` |
-| Mutations / workflows | `use-checkout`, `use-escrow-settle`, `use-moderation-actions`, `use-deal-pipeline`, `use-deal-milestones`, `use-lead-outreach` |
-| Screen consoles       | `use-viewings-console`, `use-verification-queue`, `use-dispute-queue`, `use-flag-queue`                    |
+| Kind                  | Examples                                                                                                                                                           |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Resource queries      | `use-properties`, `use-offers`, `use-messages`, `use-viewings`, `use-transactions`, `use-users`, `use-stats`                                                       |
+| Mutations / workflows | `use-checkout`, `use-escrow-settle`, `use-moderation-actions`, `use-deal-pipeline`, `use-deal-milestones`, `use-lead-outreach`                                     |
+| Screen consoles       | `use-viewings-console`, `use-verification-queue`, `use-dispute-queue`, `use-flag-queue`                                                                            |
 | Cross-cutting         | `use-confirmation` (C85 cycle), `use-unsaved-changes-warning` (C86), `use-url-state`, `use-debounced-search`, `use-dialog-focus`, `use-media-query`, `use-session` |
 
 Queries retry once; mutations never retry ([ADR 0021](../../docs/adr/0021-writes-are-sent-once-and-confirmations-lock.md)).
@@ -398,13 +398,13 @@ Styling organisation follows the host repo's conventions and is **not specified 
 
 Version 1's Phase 7 (Design Tokens) catalogued the palette, type scale, spacing, motion, shadows, radii, z-index and component tokens. That catalogue has no successor here. Its non-visual rules moved:
 
-| Rule from old Phase 7                                                           | Now in                                            |
-| ------------------------------------------------------------------------------- | ------------------------------------------------- |
-| `tokens.css` is canonical; the doc is stale when they disagree                  | This section (ADR 0012, as a code convention)     |
-| No TypeScript token export; motion values JavaScript needs live in `lib/config/motion.ts` | [Utilities and Constants](#utilities-and-constants) |
-| Reduced motion is honoured globally                                             | Phase 6 › Contract Defaults; Phase 9 › Accessibility |
-| Text contrast 4.5:1 / 3:1; dividers checked against their actual surface        | Phase 9 › Accessibility (WCAG 1.4.3, 1.4.11)      |
-| "Always use tokens" / "no hardcoded colours" / "never a raw z-index"            | Governed by `.claude/CLAUDE.md` and ESLint — not restated |
+| Rule from old Phase 7                                                                     | Now in                                                    |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| `tokens.css` is canonical; the doc is stale when they disagree                            | This section (ADR 0012, as a code convention)             |
+| No TypeScript token export; motion values JavaScript needs live in `lib/config/motion.ts` | [Utilities and Constants](#utilities-and-constants)       |
+| Reduced motion is honoured globally                                                       | Phase 6 › Contract Defaults; Phase 9 › Accessibility      |
+| Text contrast 4.5:1 / 3:1; dividers checked against their actual surface                  | Phase 9 › Accessibility (WCAG 1.4.3, 1.4.11)              |
+| "Always use tokens" / "no hardcoded colours" / "never a raw z-index"                      | Governed by `.claude/CLAUDE.md` and ESLint — not restated |
 
 ---
 

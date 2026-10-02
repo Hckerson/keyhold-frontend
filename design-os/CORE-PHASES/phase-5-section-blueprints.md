@@ -29,15 +29,15 @@ Sections describe behaviour only — never what a section shows, which component
 
 Every section inherits these unless its entry overrides them. They satisfy the master prompt's per-section loading, error, empty, accessibility and technical fields without restating them seventy times.
 
-| Field                     | Default                                                                                                                                                                   |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Loading**               | The user and assistive technology are told the section is busy; arriving data never displaces what the user is already reading (Phase 9 › CLS).                          |
-| **Error**                 | The section says what failed and offers a retry. Other sections keep working. Never fall back to fabricated data (BR15).                                                 |
-| **Empty**                 | Say what is missing and offer the next useful action (Phase 3 › Empty States).                                                                                           |
-| **Accessibility**         | WCAG 2.2 AA; everything operable by keyboard with a visible focus indicator; status never conveyed by colour alone; anything that carries meaning without text has an accessible name. |
-| **Device needs**          | Every task achievable on every supported device; touch users get equivalents for anything offered on hover. Portal sections are desktop-first (ratified, Principle 5). |
-| **Data requirements**     | Read through a hook over the API client (Phase 7); portal sections take their data from the route that owns the portal's queries and never fetch on their own ([Phase 7 › Portal Data Flow](phase-7-frontend-architecture.md#portal-data-flow)). |
-| **Technical notes**       | Mutation feedback is global by default ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)); writes send once and confirmations lock (BR10).     |
+| Field                 | Default                                                                                                                                                                                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Loading**           | The user and assistive technology are told the section is busy; arriving data never displaces what the user is already reading (Phase 9 › CLS).                                                                                                  |
+| **Error**             | The section says what failed and offers a retry. Other sections keep working. Never fall back to fabricated data (BR15).                                                                                                                         |
+| **Empty**             | Say what is missing and offer the next useful action (Phase 3 › Empty States).                                                                                                                                                                   |
+| **Accessibility**     | WCAG 2.2 AA; everything operable by keyboard with a visible focus indicator; status never conveyed by colour alone; anything that carries meaning without text has an accessible name.                                                           |
+| **Device needs**      | Every task achievable on every supported device; touch users get equivalents for anything offered on hover. Portal sections are desktop-first (ratified, Principle 5).                                                                           |
+| **Data requirements** | Read through a hook over the API client (Phase 7); portal sections take their data from the route that owns the portal's queries and never fetch on their own ([Phase 7 › Portal Data Flow](phase-7-frontend-architecture.md#portal-data-flow)). |
+| **Technical notes**   | Mutation feedback is global by default ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)); writes send once and confirmations lock (BR10).                                                                              |
 
 ---
 

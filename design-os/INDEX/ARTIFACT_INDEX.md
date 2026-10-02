@@ -109,11 +109,11 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 
 ## Implementation Files (Phases 7–9)
 
-| File | Breakdown |
-| ---- | --------- |
-| Phase 7 — Frontend Architecture | Folder tree · route/rendering/guard table · layouts · providers and stores · component folders · console data flow · API pattern · hooks by kind · utilities and constants · state · types · libraries (Library Selection Policy) · assets · styling pointer · naming · splitting · performance |
-| Phase 8 — Implementation Roadmap | Releases and priority · 8 sprints (hours, deliverables) · milestones · dependency table · risks · debt prevention · testing · deployment · status vocabulary · 4 status tables + cross-cutting · deferred register |
-| Phase 9 — QA Checklist | Accessibility · responsiveness · browsers · Core Web Vitals · consistency · states · content honesty · code and security · admin console · SEO · scalability · pre-launch · post-launch · sign-off |
+| File                             | Breakdown                                                                                                                                                                                                                                                                                       |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Phase 7 — Frontend Architecture  | Folder tree · route/rendering/guard table · layouts · providers and stores · component folders · console data flow · API pattern · hooks by kind · utilities and constants · state · types · libraries (Library Selection Policy) · assets · styling pointer · naming · splitting · performance |
+| Phase 8 — Implementation Roadmap | Releases and priority · 8 sprints (hours, deliverables) · milestones · dependency table · risks · debt prevention · testing · deployment · status vocabulary · 4 status tables + cross-cutting · deferred register                                                                              |
+| Phase 9 — QA Checklist           | Accessibility · responsiveness · browsers · Core Web Vitals · consistency · states · content honesty · code and security · admin console · SEO · scalability · pre-launch · post-launch · sign-off                                                                                              |
 
 ---
 
@@ -170,17 +170,17 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 
 ## Search Keywords
 
-| Phase | Keywords |
-| ----- | -------- |
-| 1 | vision, persona, role, SELLER, JTBD, business rule, BR, escrow, KPI, North Star, NPS, principle, governance, non-goal |
-| 2 | journey, J1–J19, trigger, entry point, decision point, emotional arc, failure path, recovery, triage, moderation, dispute |
-| 3 | sitemap, route, navigation, permission, taxonomy, label, empty state copy, breadcrumb, SEO, fallback, filter hierarchy |
-| 4 | page, Page N, module, primary task, required data, rules, device needs, loading, empty, error, success, admin, portal |
-| 5 | section, Section N, data requirements, interactions, defaults, Hero Search, Listing Card, Offer Form, Message Thread, Data Table, Admin Console Shell (headings kept as identifiers) |
-| 6 | contract, C1–C88, keyboard, ARIA, validation, confirm modal, focus, toast, combobox, switch |
-| 7 | folder, route group, layout, provider, store, console, hook, query key, mapper, API client, contract, splitting, lazy |
-| 8 | sprint, milestone, risk, dependency, status, Specified, Built, Verified, Deferred, register |
-| 9 | QA, WCAG, contrast, reflow, LCP, INP, CLS, bundle, security, admin QA, sign-off |
+| Phase | Keywords                                                                                                                                                                             |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1     | vision, persona, role, SELLER, JTBD, business rule, BR, escrow, KPI, North Star, NPS, principle, governance, non-goal                                                                |
+| 2     | journey, J1–J19, trigger, entry point, decision point, emotional arc, failure path, recovery, triage, moderation, dispute                                                            |
+| 3     | sitemap, route, navigation, permission, taxonomy, label, empty state copy, breadcrumb, SEO, fallback, filter hierarchy                                                               |
+| 4     | page, Page N, module, primary task, required data, rules, device needs, loading, empty, error, success, admin, portal                                                                |
+| 5     | section, Section N, data requirements, interactions, defaults, Hero Search, Listing Card, Offer Form, Message Thread, Data Table, Admin Console Shell (headings kept as identifiers) |
+| 6     | contract, C1–C88, keyboard, ARIA, validation, confirm modal, focus, toast, combobox, switch                                                                                          |
+| 7     | folder, route group, layout, provider, store, console, hook, query key, mapper, API client, contract, splitting, lazy                                                                |
+| 8     | sprint, milestone, risk, dependency, status, Specified, Built, Verified, Deferred, register                                                                                          |
+| 9     | QA, WCAG, contrast, reflow, LCP, INP, CLS, bundle, security, admin QA, sign-off                                                                                                      |
 
 ---
 
@@ -188,15 +188,15 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 
 A view over [Phase 8](../CORE-PHASES/phase-8-implementation-roadmap.md#per-feature-build-status) as of 29 September 2026 — never a substitute for it. Features are never removed because of their status.
 
-| Area | Total | Built | In progress | Specified | Deferred | Verified |
-| ---- | ----- | ----- | ----------- | --------- | -------- | -------- |
-| Pages | 46 | 46 | — | — | — | 0 |
-| Page parts (sub-rows) | 14 | — | 2 | 6 | 6 | 0 |
-| Sections | 70 | 65 | — | 5 | — | 0 |
-| Section parts (sub-rows) | 4 | — | — | 2 | 2 | 0 |
-| Interaction contracts | 88 | 85 | — | 3 | — | 0 |
-| Flows (journeys) | 19 | 19 | — | — | — | 0 |
-| Flow parts (sub-rows) | 3 | — | — | 2 | 1 | 0 |
+| Area                     | Total | Built | In progress | Specified | Deferred | Verified |
+| ------------------------ | ----- | ----- | ----------- | --------- | -------- | -------- |
+| Pages                    | 46    | 46    | —           | —         | —        | 0        |
+| Page parts (sub-rows)    | 14    | —     | 2           | 6         | 6        | 0        |
+| Sections                 | 70    | 65    | —           | 5         | —        | 0        |
+| Section parts (sub-rows) | 4     | —     | —           | 2         | 2        | 0        |
+| Interaction contracts    | 88    | 85    | —           | 3         | —        | 0        |
+| Flows (journeys)         | 19    | 19    | —           | —         | —        | 0        |
+| Flow parts (sub-rows)    | 3     | —     | —           | 2         | 1        | 0        |
 
 Nothing is **Verified** because no Phase 9 sign-off is recorded. Nothing is **Scheduled** because no sprint currently assigns remaining work.
 
@@ -204,19 +204,19 @@ Nothing is **Verified** because no Phase 9 sign-off is recorded. Nothing is **Sc
 
 ## Quick Reference
 
-| Need                    | Document     | File                                                |
-| ----------------------- | ------------ | --------------------------------------------------- |
-| **Binding code rules**  | **—**        | **`.claude/CLAUDE.md`**                             |
-| Business Strategy       | Phase 1      | `CORE-PHASES/phase-1-product-vision.md`             |
-| User Flows              | Phase 2      | `CORE-PHASES/phase-2-experience-maps.md`            |
-| Navigation/Routes       | Phase 3      | `CORE-PHASES/phase-3-information-architecture.md`   |
-| **Page Specs**          | **Phase 4**  | **`CORE-PHASES/phase-4-page-blueprints.md`**        |
-| Section Specs           | Phase 5      | `CORE-PHASES/phase-5-section-blueprints.md`         |
-| Control Behaviour       | Phase 6      | `CORE-PHASES/phase-6-interaction-contracts.md`      |
-| **Codebase Structure**  | **Phase 7**  | **`CORE-PHASES/phase-7-frontend-architecture.md`**  |
-| **Plan and Status**     | **Phase 8**  | **`CORE-PHASES/phase-8-implementation-roadmap.md`** |
-| **QA Checklist**        | **Phase 9**  | **`CORE-PHASES/phase-9-qa-checklist.md`**           |
-| Sprint Guide            | Master       | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`           |
+| Need                   | Document    | File                                                |
+| ---------------------- | ----------- | --------------------------------------------------- |
+| **Binding code rules** | **—**       | **`.claude/CLAUDE.md`**                             |
+| Business Strategy      | Phase 1     | `CORE-PHASES/phase-1-product-vision.md`             |
+| User Flows             | Phase 2     | `CORE-PHASES/phase-2-experience-maps.md`            |
+| Navigation/Routes      | Phase 3     | `CORE-PHASES/phase-3-information-architecture.md`   |
+| **Page Specs**         | **Phase 4** | **`CORE-PHASES/phase-4-page-blueprints.md`**        |
+| Section Specs          | Phase 5     | `CORE-PHASES/phase-5-section-blueprints.md`         |
+| Control Behaviour      | Phase 6     | `CORE-PHASES/phase-6-interaction-contracts.md`      |
+| **Codebase Structure** | **Phase 7** | **`CORE-PHASES/phase-7-frontend-architecture.md`**  |
+| **Plan and Status**    | **Phase 8** | **`CORE-PHASES/phase-8-implementation-roadmap.md`** |
+| **QA Checklist**       | **Phase 9** | **`CORE-PHASES/phase-9-qa-checklist.md`**           |
+| Sprint Guide           | Master      | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`           |
 
 **Bold = Most important for engineering**
 

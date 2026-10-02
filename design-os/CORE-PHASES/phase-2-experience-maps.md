@@ -23,13 +23,13 @@ Experience maps describe intent, behaviour and feeling. They never describe what
 
 Nineteen user journey maps. Journeys 1–13 are carried from version 1 unchanged in scope; Journeys 14–19 are added in this regeneration to cover the role dashboards and supporting flows the master prompt requires (see [Regeneration Notes](#regeneration-notes)).
 
-| Group                   | Journeys | Actors                         | Register                               |
-| ----------------------- | -------- | ------------------------------ | -------------------------------------- |
-| Primary flows           | 1–4      | Buyer, agent/seller            | Hope, focus, commitment                |
-| Supporting flows        | 5–7, 17–19 | All roles                    | Reassurance, control                   |
-| Role dashboards         | 8, 14, 15 | Admin, buyer, agent/seller    | Orientation — "what needs me now?"     |
-| Operator flows          | 8–13, 18 | Admin                          | Vigilance and accountability           |
-| Listing supply          | 16       | Agent/seller                   | Care, completeness                     |
+| Group            | Journeys   | Actors                     | Register                           |
+| ---------------- | ---------- | -------------------------- | ---------------------------------- |
+| Primary flows    | 1–4        | Buyer, agent/seller        | Hope, focus, commitment            |
+| Supporting flows | 5–7, 17–19 | All roles                  | Reassurance, control               |
+| Role dashboards  | 8, 14, 15  | Admin, buyer, agent/seller | Orientation — "what needs me now?" |
+| Operator flows   | 8–13, 18   | Admin                      | Vigilance and accountability       |
+| Listing supply   | 16         | Agent/seller               | Care, completeness                 |
 
 Journeys 1-7 are marketplace-facing (buyer, agent, seller). Journeys 8-13 are operator-facing (admin) — the emotional register there is vigilance and accountability rather than hope and excitement.
 
@@ -53,15 +53,15 @@ Each journey carries an **Experience frame** (intent, trigger, entry points, dec
 
 ### Steps
 
-| Step | User Action            | Emotional State | System Behavior                             | Success Criteria     |
-| ---- | ---------------------- | --------------- | ------------------------------------------- | -------------------- |
-| 1    | Opens app              | Curious/hopeful | Show search entry + featured listings       | Fast load (<1s)      |
-| 2    | Enters search criteria | Focused         | Auto-complete, show filters                 | Filters feel natural |
+| Step | User Action            | Emotional State | System Behavior                                     | Success Criteria     |
+| ---- | ---------------------- | --------------- | --------------------------------------------------- | -------------------- |
+| 1    | Opens app              | Curious/hopeful | Show search entry + featured listings               | Fast load (<1s)      |
+| 2    | Enters search criteria | Focused         | Auto-complete, show filters                         | Filters feel natural |
 | 3    | Views results          | Scanning        | 20 results, on a map if wanted, in the chosen order | Results match intent |
-| 4    | Refines filters        | Deliberate      | Live filter updates                         | <500ms response      |
-| 5    | Sees saved count       | Encouraged      | Saved count updates ("Saved 3")             | Clear feedback       |
-| 6    | Scrolls/pages results  | Browsing        | Pagination or infinite scroll               | Feels fast           |
-| 7    | Saves listing          | Satisfied       | Confirms "Saved"; listing marked as saved   | Permanent save       |
+| 4    | Refines filters        | Deliberate      | Live filter updates                                 | <500ms response      |
+| 5    | Sees saved count       | Encouraged      | Saved count updates ("Saved 3")                     | Clear feedback       |
+| 6    | Scrolls/pages results  | Browsing        | Pagination or infinite scroll                       | Feels fast           |
+| 7    | Saves listing          | Satisfied       | Confirms "Saved"; listing marked as saved           | Permanent save       |
 
 ### Failure Paths
 
@@ -92,16 +92,16 @@ Hopeful → Focused → Satisfied (or frustrated if results miss mark)
 
 ### Steps
 
-| Step | User Action         | Emotional State | System Behavior                                 | Success Criteria          |
-| ---- | ------------------- | --------------- | ----------------------------------------------- | ------------------------- |
-| 1    | Opens listing       | Intrigued       | Load photos, description, map                   | Primary photo loads fast  |
-| 2    | Steps through photos | Evaluating     | Moves through photos; full-screen on request    | Photos load quickly       |
-| 3    | Reads details       | Investigating   | Description, beds/baths, price, tax             | Facts easy to scan        |
-| 4    | Checks neighborhood | Curious         | Map, nearby schools, transit, walkability       | Interactive map works     |
-| 5    | Sees comps          | Confident       | 3-5 similar recent sales                        | Data is transparent       |
-| 6    | Reads agent bio     | Trusting        | Photo, name, reviews, response time             | Feels human, credible     |
-| 7    | Schedules viewing   | Committed       | Calendar, time slots, easy confirmation         | Instant confirmation      |
-| 8    | Or makes offer      | Serious         | Pre-filled buyer info, offer amount, conditions | Form is fast              |
+| Step | User Action          | Emotional State | System Behavior                                 | Success Criteria         |
+| ---- | -------------------- | --------------- | ----------------------------------------------- | ------------------------ |
+| 1    | Opens listing        | Intrigued       | Load photos, description, map                   | Primary photo loads fast |
+| 2    | Steps through photos | Evaluating      | Moves through photos; full-screen on request    | Photos load quickly      |
+| 3    | Reads details        | Investigating   | Description, beds/baths, price, tax             | Facts easy to scan       |
+| 4    | Checks neighborhood  | Curious         | Map, nearby schools, transit, walkability       | Interactive map works    |
+| 5    | Sees comps           | Confident       | 3-5 similar recent sales                        | Data is transparent      |
+| 6    | Reads agent bio      | Trusting        | Photo, name, reviews, response time             | Feels human, credible    |
+| 7    | Schedules viewing    | Committed       | Calendar, time slots, easy confirmation         | Instant confirmation     |
+| 8    | Or makes offer       | Serious         | Pre-filled buyer info, offer amount, conditions | Form is fast             |
 
 ### Failure Paths
 
@@ -364,14 +364,14 @@ Confident (taking control) → Personalized (preferences saved)
 
 ### Steps
 
-| Step | User Action                | Emotional State | System Behavior                                     | Success Criteria               |
-| ---- | -------------------------- | --------------- | --------------------------------------------------- | ------------------------------ |
-| 1    | Opens admin console        | Vigilant        | Navigation shows the pending count                  | Count accurate on first load   |
-| 2    | Scans volume metrics       | Assessing       | Volume metrics with trend                           | Direction readable at once     |
-| 3    | Reads system health        | Alert           | Uptime, error rate, per-system state                | Degraded system stands out     |
-| 4    | Scans alert list           | Prioritising    | Alerts ordered by recency, severity stated          | Severity obvious               |
-| 5    | Reads moderation queue     | Deciding        | Pending verifications, review queue, flagged        | Counts link to their route     |
-| 6    | Goes to the worst item     | Committed       | Deep-links to the filtered queue                    | Lands in context, not a list   |
+| Step | User Action            | Emotional State | System Behavior                              | Success Criteria             |
+| ---- | ---------------------- | --------------- | -------------------------------------------- | ---------------------------- |
+| 1    | Opens admin console    | Vigilant        | Navigation shows the pending count           | Count accurate on first load |
+| 2    | Scans volume metrics   | Assessing       | Volume metrics with trend                    | Direction readable at once   |
+| 3    | Reads system health    | Alert           | Uptime, error rate, per-system state         | Degraded system stands out   |
+| 4    | Scans alert list       | Prioritising    | Alerts ordered by recency, severity stated   | Severity obvious             |
+| 5    | Reads moderation queue | Deciding        | Pending verifications, review queue, flagged | Counts link to their route   |
+| 6    | Goes to the worst item | Committed       | Deep-links to the filtered queue             | Lands in context, not a list |
 
 ### Failure Paths
 
@@ -404,14 +404,14 @@ Vigilant → Assessing → Decisive (or overwhelmed if severity is not ranked)
 
 ### Steps
 
-| Step | User Action                 | Emotional State | System Behavior                                                                   | Success Criteria              |
-| ---- | --------------------------- | --------------- | --------------------------------------------------------------------------------- | ----------------------------- |
-| 1    | Filters to Pending/Flagged  | Focused         | Status filters with counts, selection resets                                      | Queue narrows instantly       |
-| 2    | Scans compliance            | Screening       | Pass/warn/fail per listing                                                        | Problem listings stand out at once |
-| 3    | Opens a listing             | Investigating   | Photos, description, flag reason, compliance checklist and agent contact to hand  | Everything needed without leaving the queue |
-| 4    | Approves clean listing      | Confident       | Status flips, listing leaves the pending count                                    | One step, no confirmation     |
-| 5    | Rejects or requests changes | Deliberate      | A note is required before the decision is sent                                    | Cannot act without a reason   |
-| 6    | Selects a batch             | Efficient       | Bulk actions: Approve / Request Changes / Reject                                  | Same rules apply in bulk      |
+| Step | User Action                 | Emotional State | System Behavior                                                                  | Success Criteria                            |
+| ---- | --------------------------- | --------------- | -------------------------------------------------------------------------------- | ------------------------------------------- |
+| 1    | Filters to Pending/Flagged  | Focused         | Status filters with counts, selection resets                                     | Queue narrows instantly                     |
+| 2    | Scans compliance            | Screening       | Pass/warn/fail per listing                                                       | Problem listings stand out at once          |
+| 3    | Opens a listing             | Investigating   | Photos, description, flag reason, compliance checklist and agent contact to hand | Everything needed without leaving the queue |
+| 4    | Approves clean listing      | Confident       | Status flips, listing leaves the pending count                                   | One step, no confirmation                   |
+| 5    | Rejects or requests changes | Deliberate      | A note is required before the decision is sent                                   | Cannot act without a reason                 |
+| 6    | Selects a batch             | Efficient       | Bulk actions: Approve / Request Changes / Reject                                 | Same rules apply in bulk                    |
 
 ### Failure Paths
 
@@ -442,13 +442,13 @@ Focused → Investigating → Decisive → Accountable (the note is the audit tr
 
 ### Steps
 
-| Step | User Action              | Emotional State | System Behavior                                            | Success Criteria          |
-| ---- | ------------------------ | --------------- | ---------------------------------------------------------- | ------------------------- |
-| 1    | Notices the pending count | Prompted       | Navigation shows pending total                             | Matches the page count    |
-| 2    | Reads the request        | Evaluating      | Name, email, current → requested tier, doc count           | Upgrade path obvious      |
-| 3    | Reviews documents        | Diligent        | Review Docs opens the submitted evidence                   | Documents load in context |
-| 4    | Approves or rejects      | Judging         | Request moves status, counts update                        | Immediate, visible change |
-| 5    | Revisits a past decision | Accountable     | Approved → Revoke; Rejected → View Reason / Allow Resubmit | Decisions are reversible  |
+| Step | User Action               | Emotional State | System Behavior                                            | Success Criteria          |
+| ---- | ------------------------- | --------------- | ---------------------------------------------------------- | ------------------------- |
+| 1    | Notices the pending count | Prompted        | Navigation shows pending total                             | Matches the page count    |
+| 2    | Reads the request         | Evaluating      | Name, email, current → requested tier, doc count           | Upgrade path obvious      |
+| 3    | Reviews documents         | Diligent        | Review Docs opens the submitted evidence                   | Documents load in context |
+| 4    | Approves or rejects       | Judging         | Request moves status, counts update                        | Immediate, visible change |
+| 5    | Revisits a past decision  | Accountable     | Approved → Revoke; Rejected → View Reason / Allow Resubmit | Decisions are reversible  |
 
 ### Failure Paths
 
@@ -479,13 +479,13 @@ Prompted → Diligent → Judging → Accountable
 
 ### Steps
 
-| Step | User Action           | Emotional State | System Behavior                                           | Success Criteria           |
-| ---- | --------------------- | --------------- | --------------------------------------------------------- | -------------------------- |
-| 1    | Opens user management | Purposeful      | States active vs total                                    | Standing visible at once   |
-| 2    | Sorts or filters      | Searching       | Sort by any attribute, default by name                    | Target found fast          |
-| 3    | Reads a user's standing | Assessing       | Role, tier, join date, deal count, status                 | Context without opening    |
-| 4    | Suspends the account  | Resolute        | Status flips, user marked suspended, action becomes Reactivate | Reversible, visibly marked |
-| 5    | Suspends in bulk      | Efficient       | Bulk actions: Reactivate / Suspend                        | Page counts update         |
+| Step | User Action             | Emotional State | System Behavior                                                | Success Criteria           |
+| ---- | ----------------------- | --------------- | -------------------------------------------------------------- | -------------------------- |
+| 1    | Opens user management   | Purposeful      | States active vs total                                         | Standing visible at once   |
+| 2    | Sorts or filters        | Searching       | Sort by any attribute, default by name                         | Target found fast          |
+| 3    | Reads a user's standing | Assessing       | Role, tier, join date, deal count, status                      | Context without opening    |
+| 4    | Suspends the account    | Resolute        | Status flips, user marked suspended, action becomes Reactivate | Reversible, visibly marked |
+| 5    | Suspends in bulk        | Efficient       | Bulk actions: Reactivate / Suspend                             | Page counts update         |
 
 ### Failure Paths
 
@@ -516,15 +516,15 @@ Purposeful → Assessing → Resolute (with reversal always one click away)
 
 ### Steps
 
-| Step | User Action                 | Emotional State | System Behavior                                          | Success Criteria              |
-| ---- | --------------------------- | --------------- | -------------------------------------------------------- | ----------------------------- |
-| 1    | Opens transactions          | Analytical      | Volume, commission and completed stats                   | Totals reconcile with table   |
-| 2    | Inspects deals in escrow    | Watchful        | Deals in escrow flagged by status                        | Stuck deals stand out         |
-| 3    | Moves to payments           | Focused         | Revenue stats, monthly trend, commission/fee breakdown   | Trend legible at a glance     |
-| 4    | Reads the pending warning   | Concerned       | Pending payouts warning with outstanding amount          | Amount and cause both stated  |
-| 5    | Releases payouts            | Decisive        | Process action, average processing time shown            | Expectation set before action |
-| 6    | Opens reports for the story | Reflective      | GMV, growth, region ranking, user mix                    | Explains the numbers above    |
-| 7    | Exports                     | Satisfied       | Downloads a report or builds a custom one                | Figures match on-screen       |
+| Step | User Action                 | Emotional State | System Behavior                                        | Success Criteria              |
+| ---- | --------------------------- | --------------- | ------------------------------------------------------ | ----------------------------- |
+| 1    | Opens transactions          | Analytical      | Volume, commission and completed stats                 | Totals reconcile with table   |
+| 2    | Inspects deals in escrow    | Watchful        | Deals in escrow flagged by status                      | Stuck deals stand out         |
+| 3    | Moves to payments           | Focused         | Revenue stats, monthly trend, commission/fee breakdown | Trend legible at a glance     |
+| 4    | Reads the pending warning   | Concerned       | Pending payouts warning with outstanding amount        | Amount and cause both stated  |
+| 5    | Releases payouts            | Decisive        | Process action, average processing time shown          | Expectation set before action |
+| 6    | Opens reports for the story | Reflective      | GMV, growth, region ranking, user mix                  | Explains the numbers above    |
+| 7    | Exports                     | Satisfied       | Downloads a report or builds a custom one              | Figures match on-screen       |
 
 ### Failure Paths
 
@@ -555,14 +555,14 @@ Analytical → Watchful → Decisive → Satisfied
 
 ### Steps
 
-| Step | User Action                | Emotional State | System Behavior                                                            | Success Criteria             |
-| ---- | -------------------------- | --------------- | -------------------------------------------------------------------------- | ---------------------------- |
-| 1    | Opens settings             | Cautious        | Config grouped: Platform, Marketplace, Moderation, Operations, Maintenance | Blast radius grouped by area |
-| 2    | Edits a marketplace value  | Careful         | Saved state clears; the page reads as unsaved again                         | Unsaved work is obvious      |
-| 3    | Saves                      | Relieved        | Success confirmation; the page reads as saved                               | Confirmation is explicit     |
-| 4    | Reads the scope note       | Reassured       | "Applies to listings and payouts created from now on"                      | Retroactivity clarified      |
-| 5    | Toggles a policy           | Deliberate      | Each toggle states its consequence                                         | No guessing at the effect    |
-| 6    | Discards a change          | Safe            | Reset restores stored values and clears saved                              | Escape hatch always present  |
+| Step | User Action                | Emotional State | System Behavior                                                              | Success Criteria             |
+| ---- | -------------------------- | --------------- | ---------------------------------------------------------------------------- | ---------------------------- |
+| 1    | Opens settings             | Cautious        | Config grouped: Platform, Marketplace, Moderation, Operations, Maintenance   | Blast radius grouped by area |
+| 2    | Edits a marketplace value  | Careful         | Saved state clears; the page reads as unsaved again                          | Unsaved work is obvious      |
+| 3    | Saves                      | Relieved        | Success confirmation; the page reads as saved                                | Confirmation is explicit     |
+| 4    | Reads the scope note       | Reassured       | "Applies to listings and payouts created from now on"                        | Retroactivity clarified      |
+| 5    | Toggles a policy           | Deliberate      | Each toggle states its consequence                                           | No guessing at the effect    |
+| 6    | Discards a change          | Safe            | Reset restores stored values and clears saved                                | Escape hatch always present  |
 | 7    | Enters maintenance actions | Wary            | Destructive actions kept apart from ordinary settings, confirmation required | Hard to trigger by accident  |
 
 ### Failure Paths
@@ -701,35 +701,35 @@ _Added in version 2.0 — the notifications supporting flow (Pages 13 and topbar
 
 ### Marketplace Journeys
 
-| Journey   | Hopeful | Focused | Confident | Committed | Satisfied |
-| --------- | ------- | ------- | --------- | --------- | --------- |
-| Search    | ✓       | ✓       | ✓         |           | ✓         |
-| Detail    | ✓       | ✓       | ✓         | ✓         | ✓         |
-| Viewing   |         | ✓       | ✓         |           |           |
-| Offer     |         | ✓       |           | ✓         | ✓         |
-| Messaging | ✓       | ✓       | ✓         |           |           |
-| Auth      | ✓       |         |           |           | ✓         |
-| Profile   |         |         | ✓         |           | ✓         |
-| Dashboard (14) |    | ✓       | ✓         |           | ✓         |
-| Agent desk (15) |   | ✓       | ✓         | ✓         | ✓         |
-| Listing (16) |      | ✓       | ✓         | ✓         |           |
-| Deposit (17) | ✓    |         | ✓         | ✓         | ✓         |
-| Notifications (19) | | ✓     |           |           | ✓         |
+| Journey            | Hopeful | Focused | Confident | Committed | Satisfied |
+| ------------------ | ------- | ------- | --------- | --------- | --------- |
+| Search             | ✓       | ✓       | ✓         |           | ✓         |
+| Detail             | ✓       | ✓       | ✓         | ✓         | ✓         |
+| Viewing            |         | ✓       | ✓         |           |           |
+| Offer              |         | ✓       |           | ✓         | ✓         |
+| Messaging          | ✓       | ✓       | ✓         |           |           |
+| Auth               | ✓       |         |           |           | ✓         |
+| Profile            |         |         | ✓         |           | ✓         |
+| Dashboard (14)     |         | ✓       | ✓         |           | ✓         |
+| Agent desk (15)    |         | ✓       | ✓         | ✓         | ✓         |
+| Listing (16)       |         | ✓       | ✓         | ✓         |           |
+| Deposit (17)       | ✓       |         | ✓         | ✓         | ✓         |
+| Notifications (19) |         | ✓       |           |           | ✓         |
 
 ### Admin Journeys
 
 Operators do not arrive hopeful — they arrive vigilant. The arc that matters is
 whether the console converts vigilance into a defensible decision.
 
-| Journey       | Vigilant | Investigating | Decisive | Accountable | Reassured |
-| ------------- | -------- | ------------- | -------- | ----------- | --------- |
-| Health Triage | ✓        | ✓             | ✓        |             |           |
-| Moderation    | ✓        | ✓             | ✓        | ✓           |           |
-| Verification  |          | ✓             | ✓        | ✓           |           |
-| Enforcement   | ✓        |               | ✓        | ✓           | ✓         |
-| Revenue       | ✓        | ✓             | ✓        |             | ✓         |
-| Configuration |          |               | ✓        | ✓           | ✓         |
-| Report & Dispute (18) | ✓ | ✓          | ✓        | ✓           |           |
+| Journey               | Vigilant | Investigating | Decisive | Accountable | Reassured |
+| --------------------- | -------- | ------------- | -------- | ----------- | --------- |
+| Health Triage         | ✓        | ✓             | ✓        |             |           |
+| Moderation            | ✓        | ✓             | ✓        | ✓           |           |
+| Verification          |          | ✓             | ✓        | ✓           |           |
+| Enforcement           | ✓        |               | ✓        | ✓           | ✓         |
+| Revenue               | ✓        | ✓             | ✓        |             | ✓         |
+| Configuration         |          |               | ✓        | ✓           | ✓         |
+| Report & Dispute (18) | ✓        | ✓             | ✓        | ✓           |           |
 
 ---
 

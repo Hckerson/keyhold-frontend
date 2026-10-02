@@ -254,14 +254,14 @@ Serves both the Modern Agent and the Seller persona (ADR 0018).
 
 **Added rows (version 2.0)** — actions that ship and had no row:
 
-| Action                          | Anonymous | Buyer        | Agent / Seller         | Admin             |
-| ------------------------------- | --------- | ------------ | ---------------------- | ----------------- |
-| Report a listing, agent or message | -      | ✓            | ✓                      | -                 |
-| Triage flags, resolve disputes  | -         | -            | -                      | ✓                 |
-| Pay a deposit                   | -         | ✓            | -                      | -                 |
-| Release escrow                  | -         | ✓ (any time) | ✓ (after inspection window) | ✓ (any time; refund with reason) |
-| Submit identity verification    | -         | ✓            | ✓                      | -                 |
-| Subscribe to newsletter         | ✓         | ✓            | ✓                      | ✓                 |
+| Action                             | Anonymous | Buyer        | Agent / Seller              | Admin                            |
+| ---------------------------------- | --------- | ------------ | --------------------------- | -------------------------------- |
+| Report a listing, agent or message | -         | ✓            | ✓                           | -                                |
+| Triage flags, resolve disputes     | -         | -            | -                           | ✓                                |
+| Pay a deposit                      | -         | ✓            | -                           | -                                |
+| Release escrow                     | -         | ✓ (any time) | ✓ (after inspection window) | ✓ (any time; refund with reason) |
+| Submit identity verification       | -         | ✓            | ✓                           | -                                |
+| Subscribe to newsletter            | ✓         | ✓            | ✓                           | ✓                                |
 
 > **Ratified divergence (Phase 1 · Core Personas).** Agent and Seller are one system role (`SELLER`); the two columns describe one permission set. Portal access is enforced server-side per role, never by hiding navigation alone (Phase 9).
 
@@ -308,15 +308,15 @@ Serves both the Modern Agent and the Seller persona (ADR 0018).
 
 The app's enums (`lib/enums/enums.ts`, mirrored from the backend schema) use a different vocabulary. This is **not yet recorded** in RATIFIED_DIVERGENCES as ratified or deferred — an open question for the owner.
 
-| Taxonomy        | In the code                                                                                         |
-| --------------- | --------------------------------------------------------------------------------------------------- |
-| Property types  | Estate, Villa, Penthouse, House, Apartment, Condo, Townhouse, Land, Other (search lists all but Land and Other) |
-| Price bands     | Under $1M · $1M–$2M · $2M–$5M · $5M and above                                                        |
-| Listing status  | Draft, Available, Pending, Sold, Expired                                                            |
-| Offer status    | Pending, Countered, Accepted, Rejected, Expired                                                     |
-| Lead status     | Pending, Accepted, Declined (ratified — Page 17, ADR 0016)                                          |
-| Viewing         | Modes: in person, virtual, open house · Status: pending, confirmed, completed, cancelled            |
-| Transaction     | Pending, In progress, Completed, Cancelled                                                          |
+| Taxonomy       | In the code                                                                                                     |
+| -------------- | --------------------------------------------------------------------------------------------------------------- |
+| Property types | Estate, Villa, Penthouse, House, Apartment, Condo, Townhouse, Land, Other (search lists all but Land and Other) |
+| Price bands    | Under $1M · $1M–$2M · $2M–$5M · $5M and above                                                                   |
+| Listing status | Draft, Available, Pending, Sold, Expired                                                                        |
+| Offer status   | Pending, Countered, Accepted, Rejected, Expired                                                                 |
+| Lead status    | Pending, Accepted, Declined (ratified — Page 17, ADR 0016)                                                      |
+| Viewing        | Modes: in person, virtual, open house · Status: pending, confirmed, completed, cancelled                        |
+| Transaction    | Pending, In progress, Completed, Cancelled                                                                      |
 
 ---
 
@@ -434,14 +434,14 @@ Filters are reflected in the URL so any result set is shareable and survives rel
 
 ## SEO Hierarchy
 
-| Priority | Routes                                             | Indexing                                             |
-| -------- | -------------------------------------------------- | ---------------------------------------------------- |
-| 1.0      | `/`                                                | Indexed                                              |
-| 0.8–0.7  | `/search`, `/map`                                  | Indexed                                              |
-| weekly   | `/listing/:id` for every available listing         | Indexed, structured data (JSON-LD), canonical URL    |
-| 0.5–0.4  | `/about`, `/contact`, `/help`, `/blog`             | Indexed                                              |
-| 0.2      | `/privacy`, `/terms`, `/accessibility`             | Indexed                                              |
-| —        | `/dashboard/*`, `/agent/*`, `/admin/*`, auth routes, newsletter tokens | Not indexed                          |
+| Priority | Routes                                                                 | Indexing                                          |
+| -------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| 1.0      | `/`                                                                    | Indexed                                           |
+| 0.8–0.7  | `/search`, `/map`                                                      | Indexed                                           |
+| weekly   | `/listing/:id` for every available listing                             | Indexed, structured data (JSON-LD), canonical URL |
+| 0.5–0.4  | `/about`, `/contact`, `/help`, `/blog`                                 | Indexed                                           |
+| 0.2      | `/privacy`, `/terms`, `/accessibility`                                 | Indexed                                           |
+| —        | `/dashboard/*`, `/agent/*`, `/admin/*`, auth routes, newsletter tokens | Not indexed                                       |
 
 ## Empty Routes and Fallback Routes
 
