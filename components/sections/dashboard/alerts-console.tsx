@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { AlertReadAllModal } from "@/components/features/dashboard/alert-read-all-modal";
 import { AlertsHeader } from "@/components/sections/dashboard/alerts-header";
 import { AlertsMain } from "@/components/sections/dashboard/alerts-main";
 import { AlertsRail } from "@/components/sections/dashboard/alerts-rail";
@@ -24,6 +25,7 @@ import {
     type ReadFilter,
     type TypeFilter,
 } from "@/lib/data/alerts";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import {
     useMarkAllNotificationsRead,
     useMarkNotificationRead,
@@ -43,7 +45,9 @@ export function AlertsConsole() {
     const storedPreferences = useNotificationPreferences();
     const updatePreferences = useUpdateNotificationPreferences();
     const markRead = useMarkNotificationRead();
-    const markAllRead = useMarkAllNotificationsRead();
+    const markAllRead = useConfirmation<void, true>(
+        useMarkAllNotificationsRead(),
+    );
 
     const [readFilter, setReadFilter] = useState<ReadFilter>("all");
     const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
@@ -80,8 +84,6 @@ export function AlertsConsole() {
         [markRead],
     );
 
-    const onMarkAllRead = () => markAllRead.mutate();
-
     const savePreferences = useCallback(
         (next: Record<AlertType, AlertPreference>) =>
             updatePreferences.mutate({ preferences: toPreferenceList(next) }),
@@ -112,10 +114,10 @@ export function AlertsConsole() {
             <AlertsHeader
                 summary={alertsSummary(alerts)}
                 unread={unreadCount(alerts)}
-                onMarkAllRead={onMarkAllRead}
+                onMarkAllRead={() => markAllRead.request(true)}
             />
 
-            <AlertsStatBand stats={stats} />
+            <AlertsStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <AlertsMain
@@ -136,6 +138,15 @@ export function AlertsConsole() {
                 />
                 <AlertsRail alerts={alerts} />
             </div>
+
+            <AlertReadAllModal
+                open={markAllRead.open}
+                unread={unreadCount(alerts)}
+                pending={markAllRead.pending}
+                failed={markAllRead.failed}
+                onClose={markAllRead.dismiss}
+                onConfirm={() => markAllRead.confirm()}
+            />
         </div>
     );
 }

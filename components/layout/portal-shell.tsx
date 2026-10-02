@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { Sidebar, type SidebarProps } from "@/components/layout/sidebar";
+import { SignOutModal } from "@/components/layout/sign-out-modal";
 import { Topbar, type TopbarProps } from "@/components/layout/topbar";
 import { useSession } from "@/lib/hooks/use-session";
 import { useSignOut } from "@/lib/hooks/use-sign-out";
@@ -26,14 +27,11 @@ export function PortalShell({
 }: PortalShellProps) {
     const pathname = usePathname();
     const { user } = useSession();
-    const signOut = useSignOut();
-    const [navOpen, setNavOpen] = useState(false);
+    const { signOut, signingOut, confirmation } = useSignOut();
+    const [navOpenedOn, setNavOpenedOn] = useState<string | null>(null);
+    const navOpen = navOpenedOn === pathname;
 
     const routes = useMemo(() => routesFrom(sections), [sections]);
-
-    useEffect(() => setNavOpen(false), [pathname]);
-
-    const handleLogout = () => void signOut();
 
     return (
         <div className="bg-background-alt flex h-screen">
@@ -42,9 +40,10 @@ export function PortalShell({
                 sections={sections}
                 status={status}
                 user={user}
-                onLogout={handleLogout}
+                onLogout={signOut}
+                signingOut={signingOut}
                 open={navOpen}
-                onClose={() => setNavOpen(false)}
+                onClose={() => setNavOpenedOn(null)}
             />
 
             <main className="scroll-page min-w-0 flex-1">
@@ -53,8 +52,9 @@ export function PortalShell({
                     rootLabel={rootLabel}
                     rootHref={rootHref}
                     user={user}
-                    onNavOpen={() => setNavOpen(true)}
-                    onLogout={handleLogout}
+                    onNavOpen={() => setNavOpenedOn(pathname)}
+                    onLogout={signOut}
+                    signingOut={signingOut}
                 />
 
                 <div className="py-4 md:py-6">
@@ -65,6 +65,8 @@ export function PortalShell({
                     </Container>
                 </div>
             </main>
+
+            <SignOutModal confirmation={confirmation} />
         </div>
     );
 }

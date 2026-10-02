@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { SearchHeader } from "@/components/sections/search/search-header";
 import { SearchFilterAside } from "@/components/sections/search/search-filter-aside";
@@ -65,10 +65,12 @@ export function SearchExperience() {
 
     const appliedKey = JSON.stringify(applied);
     const [draft, setDraft] = useState<SearchFilters>(applied);
+    const [draftSource, setDraftSource] = useState(appliedKey);
 
-    useEffect(() => {
-        setDraft(JSON.parse(appliedKey) as SearchFilters);
-    }, [appliedKey]);
+    if (draftSource !== appliedKey) {
+        setDraftSource(appliedKey);
+        setDraft(applied);
+    }
 
     const query = useMemo(
         () => toPropertyQuery(applied, sort, page),
@@ -127,7 +129,7 @@ export function SearchExperience() {
         <div className="flex w-full flex-col gap-4">
             <SearchHeader location={applied.location} />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
+            <div className="filter-split gap-4">
                 <SearchFilterAside
                     draft={draft}
                     counts={counts}

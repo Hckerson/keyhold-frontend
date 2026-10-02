@@ -17,6 +17,29 @@ export interface AbuseReport {
     waitingDays: number;
 }
 
+export interface FlagDecision {
+    mode: FlagSettleMode;
+    id: string;
+}
+
+export const FLAG_DECISION_COPY: Record<
+    FlagSettleMode,
+    { title: string; effect: string; submit: string; tone: "accent" | "error" }
+> = {
+    resolve: {
+        title: "Uphold this report",
+        effect: "The report is closed as upheld and its record becomes read-only.",
+        submit: "Uphold report",
+        tone: "accent",
+    },
+    dismiss: {
+        title: "Dismiss this report",
+        effect: "The report is closed with no finding and its record becomes read-only.",
+        submit: "Dismiss report",
+        tone: "error",
+    },
+};
+
 export interface FlagSettleAction {
     label: string;
     destructive?: boolean;

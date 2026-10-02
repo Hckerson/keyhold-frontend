@@ -33,12 +33,16 @@ export const trailFor = ({
     rootLabel,
     rootHref,
 }: TrailInput): TrailCrumb[] => {
-    const branch = routes
-        .filter(
-            (route) =>
-                route.href !== rootHref && holdsRoute(route.href, pathname),
-        )
-        .sort((a, b) => b.href.length - a.href.length)[0];
+    const branch =
+        routes
+            .filter(
+                (route) =>
+                    route.href !== rootHref && holdsRoute(route.href, pathname),
+            )
+            .sort((a, b) => b.href.length - a.href.length)[0] ??
+        (pathname === rootHref
+            ? routes.find((route) => route.href === rootHref)
+            : undefined);
 
     if (!branch)
         return [

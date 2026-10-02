@@ -65,7 +65,10 @@ export function AdminPaymentsConsole() {
         <div className="flex flex-col gap-4">
             <AdminPaymentsHeader summary={paymentsSummary(payouts)} />
 
-            <AdminPaymentsStatBand stats={paymentStats(payouts)} />
+            <AdminPaymentsStatBand
+                stats={paymentStats(payouts)}
+                pending={holds.isPending}
+            />
 
             <div className="console-split gap-3">
                 <AdminPaymentsMain
@@ -91,6 +94,7 @@ export function AdminPaymentsConsole() {
                 mode={settle.mode}
                 reason={settle.reason}
                 pending={settle.pending}
+                failed={settle.failed}
                 onModeChange={settle.changeMode}
                 onReasonChange={settle.changeReason}
                 onClose={settle.close}

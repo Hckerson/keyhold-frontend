@@ -87,6 +87,14 @@ Today that is three situations:
 Those modals still declare `success`, because the modal closes without confirming anything.
 That asymmetry is exactly why the flag is `silentError` and not `silent`.
 
+**An inline failure only works if the modal is still open to show it.** A `silentError` mutation
+behind a modal that can be dismissed mid-flight fails in silence. Confirmations therefore lock
+while pending — `ConfirmModal` does it for you, and any other modal passes `locked={pending}` to
+`Modal`. See [ADR 0021](../adr/0021-writes-are-sent-once-and-confirmations-lock.md).
+
+**Writes are never retried.** A failed mutation is reported once and retried by the person, from
+the control still in front of them — never re-sent automatically.
+
 **Error copy names what failed, in the app's voice, without blaming.** "We couldn't cancel the
 viewing." — not "Error", not "Request failed", not "You entered something wrong". The backend's
 own message is appended as the description when it differs, so the copy is the human frame and

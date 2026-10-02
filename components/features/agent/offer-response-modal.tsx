@@ -42,40 +42,62 @@ export function OfferResponseModal({
     onClose,
     onSubmit,
 }: OfferResponseModalProps) {
+    const open = action !== null && request !== undefined;
+    const [wasOpen, setWasOpen] = useState(open);
     const [amount, setAmount] = useState("");
     const [note, setNote] = useState("");
 
+    if (open !== wasOpen) {
+        setWasOpen(open);
+        if (open) {
+            setAmount("");
+            setNote("");
+        }
+    }
+
     const copy = action ? OFFER_RESPONSE_COPY[action] : null;
+    const lede = copy && request ? copy.lede(request.address) : undefined;
     const counterValue = Number(toDigits(amount));
     const ready = action !== "counter" || counterValue > 0;
 
-    const close = () => {
-        setAmount("");
-        setNote("");
-        onClose();
-    };
-
     return (
         <Modal
-            open={action !== null && request !== undefined}
+            open={open}
+            locked={pending}
             onOpenChange={(next) => {
-                if (!next) close();
+                if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{copy?.title}</ModalTitle>
+                {request && (
+                    <p className="text-text-secondary mt-1 truncate text-xs">
+                        {request.address}, {request.locality}
+                    </p>
+                )}
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
-                <div>
-                    <p className="text-text text-xs font-semibold">
-                        {request?.buyerName} ·{" "}
-                        {formatUsd(request?.offeredPrice ?? 0)}
-                    </p>
-                    <p className="text-text-secondary mt-0.5 text-xs">
-                        {copy?.lede}
-                    </p>
-                </div>
+            <ModalBody className="space-y-3">
+                <p className="text-text text-xs font-semibold">
+                    {request?.buyerName} ·{" "}
+                    {formatUsd(request?.offeredPrice ?? 0)}
+                </p>
+
+                {failed ? (
+                    <Callout
+                        variant="error"
+                        title={FIELDS.failed}
+                        description={FIELDS.retry}
+                    />
+                ) : copy?.final ? (
+                    <Callout
+                        variant="warning"
+                        title={copy.final}
+                        description={lede}
+                    />
+                ) : (
+                    <p className="text-text-secondary text-xs">{lede}</p>
+                )}
 
                 {action === "counter" && (
                     <FormField
@@ -85,6 +107,7 @@ export function OfferResponseModal({
                         inputMode="numeric"
                         value={amount && formatUsd(counterValue)}
                         placeholder={formatUsd(request?.listPrice ?? 0)}
+                        disabled={pending}
                         onChange={(event) => setAmount(event.target.value)}
                     />
                 )}
@@ -95,26 +118,19 @@ export function OfferResponseModal({
                     rows={3}
                     value={note}
                     placeholder={FIELDS.notePlaceholder}
+                    disabled={pending}
                     onChange={(event) => setNote(event.target.value)}
                 />
-
-                {failed && (
-                    <Callout
-                        variant="error"
-                        title={FIELDS.failed}
-                        description={FIELDS.retry}
-                    />
-                )}
             </ModalBody>
 
-            <ModalFooter className="p-4">
-                <Button type="button" onClick={close}>
+            <ModalFooter>
+                <Button type="button" disabled={pending} onClick={onClose}>
                     {FIELDS.cancel}
                 </Button>
                 <Button
                     type="button"
                     emphasis="solid"
-                    tone={action === "decline" ? "error" : "accent"}
+                    tone={action === "counter" ? "accent" : "error"}
                     isLoading={pending}
                     disabled={!ready}
                     onClick={() =>

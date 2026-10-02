@@ -1,5 +1,6 @@
 "use client";
 
+import { PortalGuard } from "@/components/features/auth/portal-guard";
 import { PortalShell } from "@/components/layout/portal-shell";
 import { useAgentNav } from "@/lib/hooks/use-agent-nav";
 
@@ -11,13 +12,15 @@ export default function AgentLayout({
     const sections = useAgentNav();
 
     return (
-        <PortalShell
-            brand={{ full: "Agent Pro", tagline: "Premium" }}
-            sections={sections}
-            rootLabel="Agent"
-            rootHref="/agent"
-        >
-            {children}
-        </PortalShell>
+        <PortalGuard role="SELLER">
+            <PortalShell
+                brand={{ full: "Agent Pro", tagline: "Premium" }}
+                sections={sections}
+                rootLabel="Agent"
+                rootHref="/agent"
+            >
+                {children}
+            </PortalShell>
+        </PortalGuard>
     );
 }

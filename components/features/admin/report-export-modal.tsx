@@ -52,11 +52,11 @@ export function ReportExportModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
+            <ModalBody className="space-y-3">
                 <p className="text-text-secondary text-xs">{COPY.hint}</p>
 
                 <LabelledBlock label={COPY.period}>
@@ -78,7 +78,7 @@ export function ReportExportModal({
                 </LabelledBlock>
             </ModalBody>
 
-            <ModalFooter className="p-4">
+            <ModalFooter className="gap-4">
                 <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>

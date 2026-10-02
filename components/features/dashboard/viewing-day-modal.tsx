@@ -44,7 +44,7 @@ export function ViewingDayModal({
 }: ViewingDayModalProps) {
     return (
         <Modal open={open} onOpenChange={onOpenChange} className="max-w-lg">
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <p className="micro-label">
                     {viewings.length}{" "}
                     {viewings.length === 1 ? SINGULAR_NOUN : PLURAL_NOUN}
@@ -55,7 +55,7 @@ export function ViewingDayModal({
                         : dayLabel(year, month, selectedDay)}
                 </ModalTitle>
             </ModalHeader>
-            <ModalBody className="scroll-y space-y-2 p-4">
+            <ModalBody className="scroll-y space-y-2">
                 {viewings.map((viewing) => (
                     <article
                         key={viewing.id}
@@ -93,7 +93,7 @@ export function ViewingDayModal({
                     </article>
                 ))}
             </ModalBody>
-            <ModalFooter className="p-4">
+            <ModalFooter className="gap-4">
                 <Button type="button" onClick={() => onOpenChange(false)}>
                     {CLOSE_ACTION}
                 </Button>

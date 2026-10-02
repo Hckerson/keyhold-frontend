@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { SearchFilterAside } from "@/components/sections/search/search-filter-aside";
 import { SearchResultsMap } from "@/components/sections/search/search-results-map";
 import { SearchResultsError } from "@/components/sections/search/search-results-error";
@@ -14,6 +14,7 @@ import {
     type FilterGroupKey,
     type SearchFilters,
 } from "@/lib/config/search-filters";
+import type { MapBounds } from "@/lib/config/map";
 import { useUrlState } from "@/lib/hooks/use-url-state";
 import { SEARCH_URL_CODEC } from "@/lib/utils/search-url";
 import { useProperties, usePropertyFacets } from "@/lib/hooks/use-properties";
@@ -54,17 +55,24 @@ export function MapExperience() {
     const [urlState, setUrlState] = useUrlState(SEARCH_URL_CODEC);
     const { filters: applied, sort } = urlState;
 
+    const [bounds, setBounds] = useState<MapBounds>();
     const [panelOpen, setPanelOpen] = useState(false);
     const appliedKey = JSON.stringify(applied);
     const [draft, setDraft] = useState<SearchFilters>(applied);
+    const [draftSource, setDraftSource] = useState(appliedKey);
 
-    useEffect(() => {
-        setDraft(JSON.parse(appliedKey) as SearchFilters);
-    }, [appliedKey]);
+    if (draftSource !== appliedKey) {
+        setDraftSource(appliedKey);
+        setDraft(applied);
+    }
 
     const query = useMemo(
-        () => ({ ...toPropertyQuery(applied, sort, 1), limit: MAP_PAGE_SIZE }),
-        [applied, sort],
+        () => ({
+            ...toPropertyQuery(applied, sort, 1),
+            ...bounds,
+            limit: MAP_PAGE_SIZE,
+        }),
+        [applied, sort, bounds],
     );
 
     const { data, isPending, isError, refetch } = useProperties(query);
@@ -99,7 +107,7 @@ export function MapExperience() {
                 summary={`${data?.total ?? 0} placed`}
             />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
+            <div className="filter-split gap-4">
                 <SearchFilterAside
                     draft={draft}
                     counts={facets ?? EMPTY_COUNTS}
@@ -118,14 +126,21 @@ export function MapExperience() {
                         <Skeleton className="h-[32rem] w-full rounded-md" />
                     ) : isError ? (
                         <SearchResultsError onRetry={() => void refetch()} />
-                    ) : listings.length === 0 ? (
+                    ) : listings.length === 0 && !bounds ? (
                         <SearchEmpty
                             activeFilters={activeFilters}
                             onRemove={removeFilter}
                             onReset={reset}
                         />
                     ) : (
-                        <SearchResultsMap listings={listings} />
+                        <SearchResultsMap
+                            listings={listings}
+                            fit={!bounds}
+                            onSearchArea={setBounds}
+                            onClearArea={
+                                bounds ? () => setBounds(undefined) : undefined
+                            }
+                        />
                     )}
                 </div>
             </div>

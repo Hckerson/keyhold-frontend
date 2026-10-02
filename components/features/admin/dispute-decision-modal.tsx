@@ -1,28 +1,28 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
-import {
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalTitle,
-    ModalBody,
-    ModalFooter,
-} from "@/components/ui/modal";
 import {
     DISPUTE_DECISION_COPY,
     type DisputeDecision,
 } from "@/lib/data/admin-disputes";
 
-const CANCEL_LABEL = "Cancel";
 const NOTE_HINT = "Required. Both parties see this on the dispute record.";
+const WARNING = {
+    title: "This decision is final",
+    body: "The dispute is settled and its record becomes read-only. It cannot be reopened.",
+};
+const FAILURE = {
+    title: "The decision was not recorded",
+    body: "The dispute is still open and neither party was notified. Try again in a moment.",
+};
 
 export interface DisputeDecisionModalProps {
     decision: DisputeDecision | null;
     subjectTitle: string;
     note: string;
     pending: boolean;
+    failed: boolean;
     onNoteChange: (value: string) => void;
     onClose: () => void;
     onSubmit: () => void;
@@ -33,67 +33,43 @@ export function DisputeDecisionModal({
     subjectTitle,
     note,
     pending,
+    failed,
     onNoteChange,
     onClose,
     onSubmit,
 }: DisputeDecisionModalProps) {
-    const copy = decision ? DISPUTE_DECISION_COPY[decision.mode] : null;
+    const mode = decision?.mode ?? "resolve";
+    const copy = DISPUTE_DECISION_COPY[mode];
 
     return (
-        <Modal
+        <ConfirmModal
             open={decision !== null}
-            onOpenChange={(open) => {
-                if (!open) onClose();
-            }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="dispute-decision-title"
+            title={copy.title}
+            subject={subjectTitle}
+            warning={WARNING}
+            failure={FAILURE}
+            confirmLabel={copy.submit}
+            tone={mode === "dismiss" ? "error" : "accent"}
+            pending={pending}
+            failed={failed}
+            confirmDisabled={note.trim().length === 0}
+            onClose={onClose}
+            onConfirm={onSubmit}
         >
-            {copy && decision && (
-                <ModalContent>
-                    <ModalHeader>
-                        <ModalTitle id="dispute-decision-title">
-                            {copy.title}
-                        </ModalTitle>
-                        <p className="text-text-secondary mt-1 text-xs">
-                            {subjectTitle}
-                        </p>
-                    </ModalHeader>
-                    <ModalBody>
-                        <TextareaField
-                            id="dispute-note"
-                            name="disputeNote"
-                            label={copy.label}
-                            rows={4}
-                            value={note}
-                            onChange={(event) =>
-                                onNoteChange(event.target.value)
-                            }
-                            placeholder={copy.placeholder}
-                        />
-                        <p className="text-text-muted mt-1.5 text-xs">
-                            {NOTE_HINT}
-                        </p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={onClose} disabled={pending}>
-                            {CANCEL_LABEL}
-                        </Button>
-                        <Button
-                            emphasis="solid"
-                            tone={
-                                decision.mode === "dismiss" ? "error" : "accent"
-                            }
-                            disabled={note.trim().length === 0}
-                            isLoading={pending}
-                            onClick={onSubmit}
-                        >
-                            {copy.submit}
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            )}
-        </Modal>
+            <div>
+                <TextareaField
+                    id="dispute-note"
+                    name="disputeNote"
+                    label={copy.label}
+                    rows={4}
+                    value={note}
+                    disabled={pending}
+                    onChange={(event) => onNoteChange(event.target.value)}
+                    placeholder={copy.placeholder}
+                />
+                <p className="text-text-muted mt-1.5 text-xs">{NOTE_HINT}</p>
+            </div>
+        </ConfirmModal>
     );
 }
 

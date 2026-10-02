@@ -37,8 +37,8 @@ export default function OfferDetailPage({
                 canCounter={offer.canCounter}
                 canPurchase={offer.canPurchase}
                 purchasePending={offer.checkout.preparing}
-                onAccept={() => offer.setConfirming("accept")}
-                onCounter={() => offer.setConfirming("counter")}
+                onAccept={() => offer.requestConfirm("accept")}
+                onCounter={() => offer.requestConfirm("counter")}
                 onPurchase={offer.startPurchase}
             />
 
@@ -54,13 +54,10 @@ export default function OfferDetailPage({
                 canSubmitCounter={offer.canCounter}
                 onCounterAmountChange={offer.setCounterAmount}
                 onCounterNoteChange={offer.setCounterNote}
-                onSubmitCounter={() => offer.setConfirming("counter")}
+                onSubmitCounter={() => offer.requestConfirm("counter")}
                 onSendMessage={offer.addUserMessage}
+                sendingMessage={offer.sendingMessage}
                 milestones={offer.milestones}
-                milestonesBusy={offer.milestonesBusy}
-                onMilestoneDate={offer.onMilestoneDate}
-                onMilestoneToggle={offer.onMilestoneToggle}
-                onMilestoneAttach={offer.onMilestoneAttach}
             />
 
             <OfferConfirmModal
@@ -68,7 +65,9 @@ export default function OfferDetailPage({
                 address={offer.detail.address}
                 counterPrice={offer.detail.counterPrice}
                 counterValue={offer.counterValue}
-                onClose={() => offer.setConfirming(null)}
+                pending={offer.confirmPending}
+                failed={offer.confirmFailed}
+                onClose={offer.dismissConfirm}
                 onAccept={offer.confirmAccept}
                 onCounter={offer.confirmCounter}
             />

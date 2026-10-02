@@ -10,6 +10,7 @@ export interface AdminUsersFocusHeroProps {
     directoryVolume: number;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -18,6 +19,7 @@ export function AdminUsersFocusHero({
     directoryVolume,
     onOpen,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: AdminUsersFocusHeroProps) {
     return (
@@ -28,6 +30,7 @@ export function AdminUsersFocusHero({
                     user={user}
                     onOpen={onOpen}
                     onSuspend={onSuspend}
+                    reactivatingId={reactivatingId}
                     onReactivate={onReactivate}
                 />
             </div>

@@ -1,11 +1,5 @@
-export type SignalSeverity = "critical" | "elevated" | "routine";
-
-export type SignalDomain =
-    | "verification"
-    | "moderation"
-    | "transaction"
-    | "payout"
-    | "infrastructure";
+import type { DotTone } from "@/components/patterns/status-dot";
+import type { Trend } from "@/lib/types/ui";
 
 export type ModerationQueueId =
     | "verifications"
@@ -15,22 +9,59 @@ export type ModerationQueueId =
 
 export type ServiceState = "operational" | "degraded" | "down";
 
-export interface PlatformSignal {
-    id: string;
-    severity: SignalSeverity;
-    domain: SignalDomain;
-    title: string;
-    subject: string;
-    exposure?: number;
-    ageMinutes: number;
-    href: string;
-}
-
 export interface ModerationQueueLoad {
     id: ModerationQueueId;
     backlog: number;
-    capacity: number;
     oldestMinutes: number;
+}
+
+export type QueueReadiness = "pending" | "error" | "ready";
+
+export type DecisionLaneId = ModerationQueueId | "accounts";
+
+export interface DecisionLane {
+    id: DecisionLaneId;
+    backlog: number;
+    oldestMinutes: number | null;
+    share: number;
+}
+
+export interface SystemsReading {
+    figure: string;
+    belowSlo: boolean;
+    reading: string;
+}
+
+export interface MonthDelta {
+    label: string;
+    direction: Trend;
+}
+
+export interface BusinessFigure {
+    id: "members" | "listings" | "deals";
+    label: string;
+    href: string;
+    latest: string;
+    delta: MonthDelta | null;
+    points: number[];
+    total: string;
+    ratio: { percent: number; label: string };
+}
+
+export interface LifetimeVolume {
+    settled: string;
+    averageDeal: string | null;
+}
+
+export interface AuditEvent {
+    id: string;
+    action: string;
+    tone: DotTone;
+    security: boolean;
+    actor: string;
+    initials: string;
+    subject: string;
+    ageMinutes: number;
 }
 
 export interface ServiceHealth {

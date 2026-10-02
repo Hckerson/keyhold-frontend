@@ -15,39 +15,60 @@ export function useEscrowSettle() {
     const [mode, setMode] = useState<SettleMode>(DEFAULT_MODE);
     const [reason, setReason] = useState("");
 
+    const pending = release.isPending || refund.isPending;
+    const failed = mode === "release" ? release.isError : refund.isError;
+
+    const resetAttempts = () => {
+        release.reset();
+        refund.reset();
+    };
+
+    const clear = () => {
+        setPayout(null);
+        setReason("");
+    };
+
     const open = (next: Payout) => {
+        if (pending) return;
+        resetAttempts();
         setPayout(next);
         setMode(DEFAULT_MODE);
         setReason("");
     };
 
     const close = () => {
-        setPayout(null);
-        setReason("");
+        if (!pending) clear();
+    };
+
+    const changeMode = (next: SettleMode) => {
+        if (pending) return;
+        resetAttempts();
+        setMode(next);
     };
 
     const submit = () => {
-        if (!payout) return;
+        if (!payout || pending) return;
 
         if (mode === "release") {
-            release.mutate(payout.id, { onSuccess: close });
+            release.mutate(payout.id, { onSuccess: clear });
             return;
         }
 
         const trimmed = reason.trim();
         if (!trimmed) return;
-        refund.mutate({ id: payout.id, reason: trimmed }, { onSuccess: close });
+        refund.mutate({ id: payout.id, reason: trimmed }, { onSuccess: clear });
     };
 
     return {
         payout,
         mode,
         reason,
-        pending: release.isPending || refund.isPending,
+        pending,
+        failed,
         open,
         close,
         submit,
-        changeMode: setMode,
+        changeMode,
         changeReason: setReason,
     };
 }

@@ -4,7 +4,8 @@ import { useState } from "react";
 import type { OfferConfirmAction } from "@/components/features/offers/offer-confirm-modal";
 import { toOfferDetail } from "@/lib/data/offer-details";
 import { useConnection } from "@/lib/hooks/use-connections";
-import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
+import { useConversation } from "@/lib/hooks/use-messages";
+import { useOfferMessage } from "@/lib/hooks/use-offer-message";
 import {
     useAcceptCounter,
     useCreateOffer,
@@ -12,8 +13,11 @@ import {
 } from "@/lib/hooks/use-offers";
 import { useDealMilestones } from "@/lib/hooks/use-deal-milestones";
 import { useCheckout } from "@/lib/hooks/use-checkout";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
+import { usePurchaseEligibility } from "@/lib/hooks/use-purchase-eligibility";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
+import type { CreateOfferInput } from "@/lib/validations/offer";
 
 const COUNTER_WINDOW_DAYS = 7;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -32,13 +36,25 @@ export function useOfferDetail(id: string) {
     const checkout = useCheckout();
     const acceptCounter = useAcceptCounter();
     const createOffer = useCreateOffer();
-    const sendMessage = useSendMessage();
+    const message = useOfferMessage(offer?.connectionId);
+    const counterConfirmation = useConfirmation<CreateOfferInput, string>(
+        createOffer,
+    );
+    const acceptConfirmation = useConfirmation<string>(acceptCounter);
 
     const [counterAmount, setCounterAmount] = useState("");
     const [counterNote, setCounterNote] = useState("");
-    const [confirming, setConfirming] = useState<OfferConfirmAction | null>(
-        null,
-    );
+
+    const confirmations = {
+        accept: acceptConfirmation,
+        counter: counterConfirmation,
+    };
+    const confirming: OfferConfirmAction | null = acceptConfirmation.open
+        ? "accept"
+        : counterConfirmation.open
+          ? "counter"
+          : null;
+    const activeConfirmation = confirmations[confirming ?? "counter"];
 
     const detail = offer
         ? toOfferDetail(
@@ -57,20 +73,24 @@ export function useOfferDetail(id: string) {
 
     const isBuyer =
         Boolean(user?.id) && connectionQuery.data?.buyerId === user?.id;
-    const canPurchase = status === "accepted" && isBuyer;
+    const canPurchase = usePurchaseEligibility({
+        accepted: status === "accepted",
+        isBuyer,
+        propertyId: offer?.propertyId,
+    });
 
     const counterValue = Number(toDigits(counterAmount));
     const canCounter = Boolean(offer) && !closed && counterValue > 0;
     const canAccept = status === "countered";
 
-    const addUserMessage = (content: string) => {
-        if (!offer) return;
-        sendMessage.mutate({ connectionId: offer.connectionId, content });
+    const requestConfirm = (action: OfferConfirmAction) => {
+        if (offer && !activeConfirmation.pending)
+            confirmations[action].request(offer.id);
     };
 
     const confirmCounter = () => {
         if (!offer || !canCounter) return;
-        createOffer.mutate(
+        counterConfirmation.confirm(
             {
                 connectionId: offer.connectionId,
                 offeredPrice: counterValue,
@@ -79,12 +99,9 @@ export function useOfferDetail(id: string) {
                     Date.now() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
                 ).toISOString(),
             },
-            {
-                onSuccess: () => {
-                    setCounterAmount("");
-                    setCounterNote("");
-                    setConfirming(null);
-                },
+            () => {
+                setCounterAmount("");
+                setCounterNote("");
             },
         );
     };
@@ -100,25 +117,21 @@ export function useOfferDetail(id: string) {
 
     const confirmAccept = () => {
         if (!offer || !canAccept) return;
-        acceptCounter.mutate(offer.id, {
-            onSuccess: () => setConfirming(null),
-        });
+        acceptConfirmation.confirm(offer.id);
     };
 
     return {
         detail,
         status,
-        milestones: milestones.milestones,
-        milestonesBusy: milestones.busy,
-        onMilestoneDate: milestones.onDateChange,
-        onMilestoneToggle: milestones.onToggleComplete,
-        onMilestoneAttach: milestones.onAttach,
+        milestones,
         offerPrice: offer?.offeredPrice ?? 0,
         timeline: detail?.timeline ?? [],
         messages: detail?.messages ?? [],
         counterAmount,
         counterNote,
         confirming,
+        confirmPending: activeConfirmation.pending,
+        confirmFailed: activeConfirmation.failed,
         closed,
         counterValue,
         canCounter,
@@ -130,8 +143,10 @@ export function useOfferDetail(id: string) {
         refetch: offerQuery.refetch,
         setCounterAmount,
         setCounterNote,
-        setConfirming,
-        addUserMessage,
+        requestConfirm,
+        dismissConfirm: activeConfirmation.dismiss,
+        addUserMessage: message.send,
+        sendingMessage: message.sending,
         confirmCounter,
         confirmAccept,
         startPurchase,

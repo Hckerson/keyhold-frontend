@@ -1,12 +1,12 @@
 # Ratified Divergences
 
-**Real Estate Platform | Companion to Phases 1–10 | Last reviewed 12 September 2026**
+**Keyhold | Companion to Phases 1–9 | Last reviewed 29 September 2026**
 
 ---
 
 ## What this file is
 
-The ten phase documents in `CORE-PHASES/` are the design record. They are **not edited when the code disagrees with them** — a blueprint that is quietly rewritten to match whatever shipped stops being a specification and becomes a changelog.
+The nine phase documents in `CORE-PHASES/` are the design record. (Until 29 September 2026 there were ten; see [Design OS 2.0 regeneration](#design-os-20-regeneration--29-september-2026). Page, section and phase references below are unchanged by it.) They are **not edited when the code disagrees with them** — a blueprint that is quietly rewritten to match whatever shipped stops being a specification and becomes a changelog.
 
 So divergences land here instead. Every entry names the phase text it departs from, states what the app does instead, and says whether that is a **ratified** decision (the code is right, the spec has fallen behind) or a **deferral** (the spec is right, the work is scheduled behind a stated precondition).
 
@@ -28,7 +28,7 @@ The spec has fallen behind these. Each is a considered decision that predates or
 | Page 1 · How It Works        | Four steps: Search → View → Offer → Close                           | The Concierge scroll-narrative                                                                                                                  | —                                                                           |
 | Page 17 · Leads              | Status New / Contacted / Qualified / Lost                           | `pending / accepted / declined`, mapped from `ConnectionStatus`                                                                                 | [ADR 0016](../../docs/adr/0016-lead-temperature-is-derived.md)              |
 | Page 15 · Agent Dashboard    | Route `/agent/dashboard`                                            | Route `/agent`                                                                                                                                  | —                                                                           |
-| Section 48 · Footer content  | Named only as footer link text                                      | Seven pages written without a Phase 4 blueprint                                                                                                 | —                                                                           |
+| Section 48 · Site-wide links | Named only as footer link text                                      | Seven pages written without a Phase 4 blueprint                                                                                                 | —                                                                           |
 | Section 48 · Privacy         | Named only as footer link text                                      | A contents rail that tracks the reader's position as they scroll                                                                                | [ADR 0017](../../docs/adr/0017-screen-classes-are-named-by-state-source.md) |
 | Phase 1 · Core Personas      | Four personas; the Modern Agent and the Seller are different people | Three roles — `SELLER` carries both personas, and `/agent` serves both                                                                          | [ADR 0018](../../docs/adr/0018-the-seller-is-the-agent.md)                  |
 | Phase 1 · Principle 5        | Mobile-first, "works offline where possible"                        | Marketing surfaces are responsive; the portals are a deliberately desktop-dense application register, and there is no offline capability at all | Density rule, `.claude/CLAUDE.md`                                           |
@@ -43,7 +43,7 @@ The spec has fallen behind these. Each is a considered decision that predates or
 
 **Token link over OTP on password reset.** A single-use link in the mailbox proves the same thing a six-digit code proves, with one fewer thing to transcribe. This is _not_ the same decision as signup verification — see the deferral below, where OTP is still owed.
 
-**The seven footer pages.** design-os names About, Help, Blog, Privacy, Terms and Accessibility as footer link text in Section 48 but never blueprints any of them as a page, so there was no spec to build to and the audit was right that the spec was complicit in the dead links. They are now written, and the content is grounded in what the platform actually does rather than in boilerplate — the privacy page names the real processors (Stripe, Cloudinary, SendGrid, Twilio, OpenFreeMap) and the real retention behaviour, and the accessibility page states the keyboard gap on the pipeline drag rather than claiming full conformance.
+**The seven footer pages.** design-os names About, Help, Blog, Privacy, Terms and Accessibility as footer link text in Section 48 (Site-wide links, built as `layout/footer*`) but never blueprints any of them as a page, so there was no spec to build to and the audit was right that the spec was complicit in the dead links. They are now written, and the content is grounded in what the platform actually does rather than in boilerplate — the privacy page names the real processors (Stripe, Cloudinary, SendGrid, Twilio, OpenFreeMap) and the real retention behaviour, and the accessibility page states the keyboard gap on the pipeline drag rather than claiming full conformance.
 
 `/privacy` has since gained a contents rail that marks the section the reader has reached — the first instance of the reactive-document class outside the home Concierge, and the reason [ADR 0017](../../docs/adr/0017-screen-classes-are-named-by-state-source.md) exists. The page stays a server tree; only the rail is a client leaf.
 
@@ -83,7 +83,7 @@ These are **not** ratified. The blueprint stands, and each is blocked on a state
 
 Section 10's place markers render too, and they are not invented. `GET /properties/:id/nearby` asks OpenStreetMap's Overpass API for named schools, railway stations, parks and restaurants within 1.5 km of the listing's coordinates, and caches the answer for 24 hours per coordinate cell of roughly 100 m. The neighbourhood tab fetches only when it opens, plots the places beside the listing's own pin, and carries a four-way toggle that is also the colour key and the count per kind. A listing without coordinates, or an area OpenStreetMap has not mapped, shows no places — the line ADR 0015 drew against fabricating positions.
 
-One weakness is carried forward rather than hidden: a failed or timed-out Overpass call returns an empty list, and that empty list is cached for the same 24 hours, so a single slow response can blank an area's places for a day.
+A failed lookup is told apart from a genuinely empty one. `fetchNearby` returns `null` when Overpass errors or times out and an array when it answers, so a real "nothing within 1.5 km" is cached for the full 24 hours while a failure is cached for five minutes and then retried. The visitor still sees no places either way; the difference is that an outage costs one map, not a day of them.
 
 **Signup OTP shipped.** `AuthService.register` now mints a six-digit `EMAIL` code and emails it, and `/verify-email` confirms or resends it — the send and verify endpoints this note once listed as missing.
 
@@ -171,7 +171,7 @@ Everything below was in the conformance ledger's "built, modules short" bucket a
 | Page 20 module 7                   | Quick Actions on the admin overview                                  |
 | Page 27 module 3                   | Reporting Timezone on the platform panel                             |
 | Page 27 modules 5 & 6 · Section 69 | Moderation Policy and Operations toggle groups — all eight switches  |
-| Page 27 module 7 · Section 70      | Maintenance Panel                                                    |
+| Page 27 module 7 · Section 70      | Maintenance operations (Section 70), built as `maintenance-panel`    |
 | Page 18 · Section 42               | Pipeline drag-to-change-stage and the per-deal detail modal          |
 | Page 19                            | Create event on the agent calendar                                   |
 | Page 17                            | hot / warm / cold scoring on leads                                   |
@@ -200,6 +200,93 @@ Overdue is derived, never stored: a `SCHEDULED` milestone whose `dueAt` has pass
 **Section 42 drag semantics.** The blueprint says "Drag → change status (column)". On this domain a deal stage is _derived_ — from whether an offer exists and whether a transaction has opened — and the agent is not the actor at most of those boundaries. Only the buyer can submit an offer; only the buyer completes payment.
 
 So a drop is treated as a request to advance, resolved against what the agent can actually do. Dragging out of **Offers** accepts or declines the live offer, which are real mutations the agent owns. Every other drop is refused with a reason naming who must act — "Only _{buyer}_ can submit an offer on this property." The rules live in `dealMove` in `lib/data/agent-pipeline.ts`, and the same accept/decline actions are available from the detail modal, so the board is operable without a pointer.
+
+---
+
+## Admin overview rebuild — 22 September 2026
+
+Page 20 was rebuilt from its primitives up. Three modules now diverge from the blueprint, and the code is right in each case.
+
+| Phase reference  | Blueprint says                                                                  | App does                                                                                                    | Why                                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page 20 module 4 | System Alerts panel beside a separate Moderation Queue panel (module 6)         | One "Needs a Decision" panel: each queue's open count and oldest-item age, oldest first                     | With no alert feed in the API, both panels were derived from the same four queue counts and showed the same facts twice. The age tone carries the severity the alert rows were meant to show. |
+| Page 20 module 5 | Revenue Breakdown: commissions YTD, GMV YTD, take rate, avg commission per deal | Folded into the revenue hero as one line: estimated commission on the latest month at the default take rate | Commission is volume × `DEFAULT_COMMISSION_RATE`, not a ledger figure, so it is labelled an estimate. Take rate is a config constant, not a measurement. GMV already sits in the stat band.   |
+| Page 20 module 7 | Quick Actions panel                                                             | Removed                                                                                                     | All four links duplicate the sidebar and the panel-header links on the same screen. This reopens the row closed on 8 September.                                                               |
+
+The moderation queue no longer shows a load meter. It divided each backlog by a fixed reviewer capacity of 12 that no data backs. The flagged-content queue now counts only user and message flags, since listing flags already have their own row and were counted twice in the open total.
+
+---
+
+## Landing page — 24 September 2026
+
+Page 1 was audited against Phase 4 and Sections 1–5 and reworked so that every figure and label on it comes from the API. The Concierge entry above still stands.
+
+| Phase reference             | Blueprint says                                              | App does                                                                                                                                                 | Why                                                                                                                                                                                                              |
+| --------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page 1 module 1 · Section 1 | Headline "Find Your Next Home", lifestyle background        | "Find the home that finds you.", a framed decorative image, and popular-neighbourhood chips ranked by live listing count                                 | The chips were a hardcoded list of five cities; a chip for a place with no listings sends the visitor to an empty search. The image carries no caption, because the caption named a property that did not exist. |
+| Page 1 module 2 · Section 2 | Six featured cards in a grid                                | One premier listing, then a six-tile gallery. Promoted listings (`featuredUntil` in the future) fill it first, most-viewed listings fill the rest        | Promotion promised agents a featured placement that nothing read. The badge says "Featured" only on a promoted listing and "Most viewed" otherwise, so a promoted placement is never passed off as editorial.    |
+| Page 1 module 4 · Section 3 | "10k+ buyers", "$500M+ in transactions", 3–4 testimonials   | Live counts of homes on the market, homes sold and neighbourhoods; the band hides when fewer than two are non-zero. Trust is carried by the guarantees   | The previous figures ($8.5B closed, 2,500+ listings, 27 years, 95% referral, 10,000+ buyers) were invented. Small true numbers beat large false ones.                                                            |
+| Page 1 module 4             | Reviews/testimonials                                        | None                                                                                                                                                     | Reviews exist per user, but there is no public feed and the payload carries the reviewer's full name. Quoting buyers needs their consent first.                                                                  |
+| Page 1 · new                | —                                                           | A browse index: by type and price band (facet counts) and by neighbourhood (`GET /properties/localities`), each row linking into `/search`               | Gives a visitor who does not yet have a search in mind a way in, using only counts the API returns.                                                                                                              |
+| Page 1 · new                | —                                                           | A "Just listed" strip of the four newest listings not already shown                                                                                      | Freshness is the one signal a young marketplace can show honestly.                                                                                                                                               |
+| Page 1 · States             | Error: "fallback featured listings (hardcoded or cached)"   | When both listing queries fail, a visible "Listings are unavailable right now" state with a link to search                                               | Hardcoded fallback listings would be fabricated inventory. Silently hiding the sections made an outage look like a quiet market.                                                                                 |
+| Page 1 · order              | Hero → Featured → How it works → Trust → Latest sales → CTA | Hero → Premier → Gallery → Browse → Just listed → Concierge → Stats → Guarantees → Latest sales → CTA                                                    | Inventory first, then the service, then trust, while the visitor is still browsing.                                                                                                                              |
+| Page 1 module 3             | Four steps: Search → View → Offer → Close                   | The Concierge narrative is kept but retold as "How it works": saved search, saved shortlist, bridged viewings, escrow and the four deal milestones       | The earlier narrative sold a service nobody delivers — a 90-minute brief, off-market shortlists, a "31 days median brief to keys" with no data behind it. Each step now names a feature that ships.              |
+| Page 1 module 7             | Footer newsletter signup, social icons                      | Both removed                                                                                                                                             | The form said "You are on the list" and discarded the address; nothing stores or sends it. The icons linked to the networks' home pages, not to any account.                                                     |
+| Page 2 · sort               | —                                                           | `/search` defaults to "Featured first": running promotions ahead of the rest, then newest. Promoted cards carry the same Featured badge as the home page | Promotion's copy promises "featured ahead of the rest of the market". The explicit sorts are untouched, so a buyer who picks price order gets price order.                                                       |
+
+**Deferred with it:** the newsletter returns when there is a subscriber store with consent and a sender behind it, and the social icons return when the accounts exist. Saved-search alerts are in the same position — `SavedSearch.notify` is stored and never read, so no copy may promise them until a matcher sends them.
+
+---
+
+## Corrections to earlier entries
+
+Entries above are not rewritten when they drift. A correction lands here, dated, and names the line it supersedes.
+
+**21 September 2026 — the privacy page no longer names SendGrid.** The footer-pages entry says the privacy page names "Stripe, Cloudinary, SendGrid, Twilio, OpenFreeMap" as processors. Since `0833ca1` (10 September) it has said "Our SMTP email provider" instead (`lib/data/privacy-page.ts`), following the move to SMTP for transactional email. The page is right; the entry is stale. The rest of that entry — processors named from what the platform actually uses, not from boilerplate — still holds.
+
+**21 September 2026 — POI markers on listing detail are built.** The map table lists Page 3 module 5 · Section 10 as a placed map with "POI markers still owed". They are no longer owed: `listing-neighborhood.tsx` draws school, transit, park and restaurant pins from live Overpass data through `neighbourhoodPins`, with a four-way toggle that doubles as the colour key.
+
+**26 September 2026 — the footer newsletter is back, on a real list.** The home-page entry for Page 1 module 7 says the newsletter signup was removed, and the note under it defers its return "until there is a subscriber store with consent and a sender behind it". The store now exists: `POST /newsletter/subscribe` records the address with the exact consent wording, and nothing is added to the list until the person confirms from the email (double opt-in, [ADR 0023](../../docs/adr/0023-newsletter-uses-double-opt-in.md)). The form says "Check your inbox to confirm", never "You are on the list". The sender is still owed: nothing sends newsletters yet, so no copy may promise an issue on a schedule. The social icons stay removed.
+
+**2 October 2026 — Changed: sections are cited by job, not by presentation.** Phase 5 renamed 42 section headings and one group heading that named a presentation or a container; numbers, content and status are untouched, so every "Section N" reference on this page still resolves. Three citations above were updated in place because they named the section: "Section 48 · Footer content" → "Section 48 · Site-wide links"; the Section 70 row "Maintenance Panel" → "Maintenance operations (Section 70), built as `maintenance-panel`"; and the footer-pages note now reads "Section 48 (Site-wide links, built as `layout/footer*`)". Words on this page that quote version 1 ("Hero → Featured → …", "Price range slider", "footer link text") or describe the built code ("the revenue hero", "document cards", "thread panel", "the per-deal detail modal") are left as written — they record what the old spec said and what the code is. Where an entry sets a section beside a built file the names no longer mirror each other, and the pairing is: Start a property search (Section 1), built as `home/hero*`; Featured listings (Section 2), built as `premier-listing` and `featured-gallery`; Narrow by price (Section 35), built as price-band chips; Pipeline deal (Section 42), built as `deal-row` and `pipeline-stage-column`; Site-wide links (Section 48), built as `layout/footer*` and `newsletter-form`; Maintenance operations (Section 70), built as `maintenance-panel`. The full old → new table is in [Phase 5 › Regeneration Notes](../CORE-PHASES/phase-5-section-blueprints.md#regeneration-notes).
+
+---
+
+## Design OS 2.0 regeneration — 29 September 2026
+
+The design OS was regenerated under `docs/MASTER_PROMPT_COMPLETE.md` (nine phases, no visual prescription) as a merge. No entry above was rewritten. This section records what the regeneration means for them.
+
+**References still resolve.** Page numbers 1–27, Section numbers 1–70 and Phase 1 principle/JTBD numbers are unchanged. "Page N module M" names module M of Page N as numbered in versions 1 and 2.0. Since 30 September 2026 [Phase 4](../CORE-PHASES/phase-4-page-blueprints.md) no longer lists page content, so the number is kept as an identifier ([Phase 4 › How to Read a Blueprint](../CORE-PHASES/phase-4-page-blueprints.md#how-to-read-a-blueprint)) and the requirement it concerns is carried by that page's primary tasks, data, rules or states; every row here also names its subject. Phase 4 and Phase 5 carry inline pointers back to the entries here. The routes that had no blueprint — the seven footer pages, the map and the per-entity routes this file counts in "44 routes against 27 pages" — are now Pages 28–46. Build status for every entry now lives in [Phase 8](../CORE-PHASES/phase-8-implementation-roadmap.md#per-feature-build-status), and the Deferred table above is carried there as the Deferred Register.
+
+**Nothing in `CORE-PHASES/` was reworded to accommodate an entry here.** The regeneration dropped visual prescription throughout (listed in each phase's Regeneration Notes) for its own reason, not to close a gap recorded on this page.
+
+**Visual entries.** The design OS no longer governs how anything looks, so an entry that is purely about presentation is kept as a record but no longer describes a gap between code and spec:
+
+| Entry                                                                              | Classification                                                                                                                                 |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page 9 · Saved Listings — card grid vs dense table                                 | **Visual — governed by the code, not this design OS.** Phase 4 no longer prescribes cards or a table.                                          |
+| Phase 1 · Principle 5 — the "desktop-dense application register" half              | **Visual — governed by the code, not this design OS.** The product halves stand: portals are desktop-first and there is no offline capability. |
+| Page 1 · How It Works — the _scroll-narrative_ presentation of the Concierge       | **Visual — governed by the code, not this design OS.** The content change (a narrative of shipping features instead of four steps) stands.     |
+| Page 1 module 1 — "a framed decorative image"                                      | **Visual — governed by the code, not this design OS.** Headline copy and neighbourhood chips ranked by live count stand.                       |
+| Page 1 module 2 — "One premier listing, then a six-tile gallery" as an arrangement | **Visual — governed by the code, not this design OS.** The promotion rule and the Featured / Most viewed labels stand.                         |
+| Page 1 · order — screen order of the home sections                                 | **Visual — governed by the code, not this design OS.** The added browse index and "Just listed" rows stand as content.                         |
+| Section 48 · Privacy — the contents rail                                           | **Not visual.** Tracking the reader's position is navigation behaviour; its presentation is governed by the code.                              |
+
+Every other entry is about content, data, behaviour or scope and is unaffected.
+
+**Stale pointer.** Two entries cite "Density rule, `.claude/CLAUDE.md`" as their record. The current `.claude/CLAUDE.md` contains no density rule. Owner to decide whether the rule moved, was retired, or should be restored.
+
+**Found during the regeneration, not yet recorded here.** Listed for the owner to ratify, defer or fix — they are not entries until the owner says so:
+
+- Phase 3 taxonomy (property types, price bands, listing and offer statuses) differs from the code's enums; see Phase 3 › Vocabulary in the code.
+- Page 14 · Account — "Delete account" is not wired, while the Privacy page tells users they can delete their account from settings.
+- Page 26 · Revoke and Allow Resubmit — not found in the admin verification surface.
+- Page 16 · Import CSV — not built.
+- Section 37 / Page 2 — no location autocomplete.
+- `/admin/flags` collects no decision note, unlike moderation and disputes.
+- `/agent/concierge` is read-only while its empty state asks the agent to add a client.
+- A two-factor dialog exists, unwired, and appears in no blueprint.
 
 ---
 

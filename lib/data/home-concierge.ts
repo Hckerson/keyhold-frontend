@@ -15,7 +15,6 @@ export interface ShortlistItem {
     address: string;
     note: string;
     imageSeed: number;
-    offMarket: boolean;
 }
 
 export interface ItinerarySlot {
@@ -50,57 +49,45 @@ export const CONCIERGE_STEPS: ConciergeStep[] = [
     {
         idx: "01",
         icon: FileText,
-        title: "A private brief",
+        title: "A saved brief",
         description:
-            "We begin with a conversation — your life, your patterns, and what home should feel like.",
-        focal: "90 min",
-        focalLabel: "The first conversation",
+            "Save the search you keep running — place, price, bedrooms — and come back to it in one click.",
+        focal: "1 click",
+        focalLabel: "Back to your search",
         artifact: {
             kind: "brief",
             lines: [
-                {
-                    label: "Locale",
-                    value: "Coastal Montecito — or quiet Bel-Air",
-                },
-                {
-                    label: "Timeline",
-                    value: "Unhurried. Fall at the earliest.",
-                },
-                {
-                    label: "Non-negotiable",
-                    value: "A walled garden, and no through road",
-                },
+                { label: "Locale", value: "Montecito or Bel Air" },
+                { label: "Price", value: "$5M and above" },
+                { label: "Bedrooms", value: "4 or more" },
             ],
         },
     },
     {
         idx: "02",
         icon: Search,
-        title: "A curated shortlist",
+        title: "A shortlist you keep",
         description:
-            "A tailored selection, including off-market properties you won't find elsewhere.",
-        focal: "4 of 9",
-        focalLabel: "Never publicly listed",
+            "Save the homes worth a second look and compare them side by side in one table.",
+        focal: "Saved",
+        focalLabel: "On every device you sign in from",
         artifact: {
             kind: "shortlist",
             items: [
                 {
-                    address: "Cypress Point, Montecito",
+                    address: "Estate · Montecito",
                     note: "6 bd · 11 acres",
                     imageSeed: 2,
-                    offMarket: true,
                 },
                 {
-                    address: "The Lantern, Bel-Air",
+                    address: "Villa · Bel Air",
                     note: "4 bd · canyon aspect",
                     imageSeed: 5,
-                    offMarket: false,
                 },
                 {
-                    address: "Stone Fold, Napa",
+                    address: "House · Napa",
                     note: "5 bd · vineyard parcel",
                     imageSeed: 7,
-                    offMarket: true,
                 },
             ],
         },
@@ -110,28 +97,28 @@ export const CONCIERGE_STEPS: ConciergeStep[] = [
         icon: CalendarDays,
         title: "Private viewings",
         description:
-            "Discreet, unhurried tours arranged around your schedule and privacy.",
-        focal: "21:00",
-        focalLabel: "Latest viewing arranged",
+            "Request a time and the agent confirms or proposes another. Calls run through our number, so neither side sees the other's.",
+        focal: "Bridged",
+        focalLabel: "Calls, never direct numbers",
         artifact: {
             kind: "itinerary",
             slots: [
                 {
                     when: "Thu 18:30",
-                    address: "Cypress Point",
+                    address: "Estate · Montecito",
                     state: "Confirmed",
                     tone: "settled",
                 },
                 {
                     when: "Sat 09:00",
-                    address: "Stone Fold",
+                    address: "House · Napa",
                     state: "Confirmed",
                     tone: "settled",
                 },
                 {
-                    when: "Sun 21:00",
-                    address: "The Lantern",
-                    state: "Held",
+                    when: "Sun 11:00",
+                    address: "Villa · Bel Air",
+                    state: "Requested",
                     tone: "pending",
                 },
             ],
@@ -142,16 +129,16 @@ export const CONCIERGE_STEPS: ConciergeStep[] = [
         icon: KeyRound,
         title: "To the keys",
         description:
-            "Negotiation, closing, and handover — managed end to end, seamlessly.",
-        focal: "31 days",
-        focalLabel: "Median brief to keys",
+            "An accepted offer opens a checklist with a date for each milestone, and your funds stay in escrow until release.",
+        focal: "4",
+        focalLabel: "Milestones to closing",
         artifact: {
             kind: "completion",
             milestones: [
-                { label: "Offer accepted, under ask", done: true },
-                { label: "Survey and title cleared", done: true },
-                { label: "Contracts exchanged", done: true },
-                { label: "Keys released — Cypress Point", done: false },
+                { label: "Inspection", done: true },
+                { label: "Appraisal", done: true },
+                { label: "Financing", done: true },
+                { label: "Closing — keys released", done: false },
             ],
         },
     },

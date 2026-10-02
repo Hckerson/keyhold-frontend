@@ -9,21 +9,10 @@ import {
 import { suspensionsAPI } from "@/lib/api/suspensions";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
-import type {
-    CreateSuspensionInput,
-    SuspensionQuery,
-} from "@/lib/validations/suspension";
+import type { CreateSuspensionInput } from "@/lib/validations/suspension";
 import { FEEDBACK } from "@/lib/config/feedback";
 
-export function useSuspensions(input: SuspensionQuery = {}, enabled = true) {
-    return useQuery({
-        queryKey: queryKeys.suspensions.list(input),
-        queryFn: () => suspensionsAPI.list(input),
-        enabled,
-        staleTime: STALE_TIME,
-        gcTime: CACHE_TIME,
-    });
-}
+const NO_ACTIVE_SUSPENSION = "This account has no active suspension to lift.";
 
 export function useUserSuspensions(userId: string | undefined) {
     return useQuery({
@@ -58,11 +47,18 @@ export function useSuspendUser() {
     });
 }
 
-export function useLiftSuspension() {
+export function useReactivateUser() {
     const client = useQueryClient();
     return useMutation({
         meta: FEEDBACK.liftSuspension,
-        mutationFn: (id: string) => suspensionsAPI.lift(id),
+        mutationFn: async (userId: string) => {
+            const suspensions = await suspensionsAPI.byUser(userId);
+            const active = suspensions.find(
+                (suspension) => suspension.liftedAt === null,
+            );
+            if (!active) throw new Error(NO_ACTIVE_SUSPENSION);
+            return suspensionsAPI.lift(active.id);
+        },
         onSuccess: () => refreshDirectory(client),
     });
 }

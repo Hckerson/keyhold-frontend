@@ -12,6 +12,7 @@ export interface TopbarActionsProps {
     settingsHref: string;
     user?: AuthUser | null;
     onLogout?: () => void;
+    signingOut?: boolean;
 }
 
 export function TopbarActions({
@@ -19,25 +20,31 @@ export function TopbarActions({
     settingsHref,
     user,
     onLogout,
+    signingOut,
 }: TopbarActionsProps) {
     const palette = useCommandPalette(routes);
 
     return (
-        <div className="flex shrink-0 items-center gap-2">
-            <div className="border-border bg-background-alt flex h-8 items-center overflow-hidden rounded-lg border">
-                <TopbarSearch
-                    isAppleDevice={palette.isAppleDevice}
-                    onOpen={palette.openWith}
-                />
-                <TopbarAlerts routes={routes.filter((route) => route.badge)} />
-            </div>
+        <div className="flex shrink-0 items-center gap-1">
+            <TopbarSearch
+                isAppleDevice={palette.isAppleDevice}
+                onOpen={palette.openWith}
+            />
+            <TopbarAlerts routes={routes.filter((route) => route.badge)} />
 
             {user && (
-                <TopbarAccount
-                    user={user}
-                    settingsHref={settingsHref}
-                    onLogout={onLogout}
-                />
+                <>
+                    <span
+                        aria-hidden="true"
+                        className="bg-border mx-1.5 h-5 w-px shrink-0"
+                    />
+                    <TopbarAccount
+                        user={user}
+                        settingsHref={settingsHref}
+                        onLogout={onLogout}
+                        signingOut={signingOut}
+                    />
+                </>
             )}
 
             <CommandPalette

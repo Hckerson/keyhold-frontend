@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { UserCreateModal } from "@/components/features/admin/user-create-modal";
 import { UserDetailModal } from "@/components/features/admin/user-detail-modal";
+import { UserReactivateModal } from "@/components/features/admin/user-reactivate-modal";
 import { UserSuspendModal } from "@/components/features/admin/user-suspend-modal";
 import { AdminUsersHeader } from "@/components/sections/admin/admin-users-header";
 import { AdminUsersMain } from "@/components/sections/admin/admin-users-main";
@@ -21,25 +22,11 @@ import {
     userStats,
     userSummary,
 } from "@/lib/data/admin-users";
-import { useCreateUser, useUsers } from "@/lib/hooks/use-users";
-import {
-    useLiftSuspension,
-    useSuspendUser,
-    useSuspensions,
-} from "@/lib/hooks/use-suspensions";
-import {
-    EMPTY_SUSPENSION_DRAFT,
-    isSuspensionReady,
-} from "@/lib/config/suspension";
-import {
-    EMPTY_USER_INVITE_DRAFT,
-    type UserInviteDraft,
-} from "@/lib/config/user-invite";
-import { createUserSchema } from "@/lib/validations/user";
-import { toFieldErrors, type FieldErrors } from "@/lib/validations/auth";
+import { useUserInvite } from "@/lib/hooks/use-user-invite";
+import { useUsers } from "@/lib/hooks/use-users";
+import { useUserSuspension } from "@/lib/hooks/use-user-suspension";
 import { toManagedUser } from "@/lib/utils/to-managed-user";
 import type {
-    SuspensionDraft,
     UserRoleFilter,
     UserSortKey,
     UserStatusFilter,
@@ -52,37 +39,18 @@ const FIRST_PAGE = 1;
 
 export function AdminUsersConsole() {
     const { data, isPending, isError, refetch } = useUsers();
-    const createUser = useCreateUser();
-    const activeSuspensions = useSuspensions({ active: true });
-    const suspendUser = useSuspendUser();
-    const liftSuspension = useLiftSuspension();
+    const invite = useUserInvite();
 
     const [query, setQuery] = useState("");
     const [status, setStatus] = useState<UserStatusFilter>(EVERY_STATUS);
     const [role, setRole] = useState<UserRoleFilter>(EVERY_ROLE);
     const [sort, setSort] = useState<UserSortKey>(DEFAULT_SORT);
     const [detailId, setDetailId] = useState<string | null>(null);
-    const [suspendId, setSuspendId] = useState<string | null>(null);
-    const [draft, setDraft] = useState<SuspensionDraft>(EMPTY_SUSPENSION_DRAFT);
     const [page, setPage] = useState(FIRST_PAGE);
-    const [inviting, setInviting] = useState(false);
-    const [invite, setInvite] = useState<UserInviteDraft>(
-        EMPTY_USER_INVITE_DRAFT,
-    );
-    const [inviteErrors, setInviteErrors] = useState<FieldErrors>({});
 
     const users = useMemo(() => (data ?? []).map(toManagedUser), [data]);
 
-    const suspensionByUser = useMemo(
-        () =>
-            new Map(
-                (activeSuspensions.data?.items ?? []).map((suspension) => [
-                    suspension.userId,
-                    suspension.id,
-                ]),
-            ),
-        [activeSuspensions.data],
-    );
+    const suspension = useUserSuspension();
 
     const counts = useMemo(() => countUsersByStatus(users), [users]);
     const stats = useMemo(() => userStats(users), [users]);
@@ -138,65 +106,16 @@ export function AdminUsersConsole() {
 
     const onOpen = useCallback((id: string) => setDetailId(id), []);
 
-    const onOpenInvite = useCallback(() => {
-        createUser.reset();
-        setInvite(EMPTY_USER_INVITE_DRAFT);
-        setInviteErrors({});
-        setInviting(true);
-    }, [createUser]);
-
-    const onCloseInvite = useCallback(() => setInviting(false), []);
-
-    const onSubmitInvite = () => {
-        const parsed = createUserSchema.safeParse({
-            ...invite,
-            phoneNumber: invite.phoneNumber.trim() || undefined,
-        });
-
-        if (!parsed.success) {
-            setInviteErrors(toFieldErrors(parsed.error));
-            return;
-        }
-
-        setInviteErrors({});
-        createUser.mutate(parsed.data, {
-            onSuccess: () => setInviting(false),
-        });
-    };
-
     const onCloseDetail = useCallback(() => setDetailId(null), []);
 
-    const onReactivate = useCallback(
-        (id: string) => {
-            setDetailId(null);
-            const suspensionId = suspensionByUser.get(id);
-            if (suspensionId) liftSuspension.mutate(suspensionId);
-        },
-        [liftSuspension, suspensionByUser],
-    );
-
-    const onSuspend = useCallback((id: string) => {
+    const onSuspend = (id: string) => {
         setDetailId(null);
-        setDraft(EMPTY_SUSPENSION_DRAFT);
-        setSuspendId(id);
-    }, []);
+        suspension.open(id);
+    };
 
-    const onCloseSuspend = useCallback(() => {
-        setSuspendId(null);
-        setDraft(EMPTY_SUSPENSION_DRAFT);
-    }, []);
-
-    const onSubmitSuspend = () => {
-        if (!suspendId || !isSuspensionReady(draft)) return;
-        suspendUser.mutate(
-            {
-                userId: suspendId,
-                reason: draft.reason.trim(),
-                duration: draft.duration ? Number(draft.duration) : undefined,
-                notes: draft.notes.trim() || undefined,
-            },
-            { onSuccess: onCloseSuspend },
-        );
+    const onReactivate = (id: string) => {
+        setDetailId(null);
+        suspension.reactivation.request(id);
     };
 
     if (isError)
@@ -211,10 +130,10 @@ export function AdminUsersConsole() {
         <div className="flex flex-col gap-4">
             <AdminUsersHeader
                 summary={userSummary(users)}
-                onAdd={onOpenInvite}
+                onAdd={invite.start}
             />
 
-            <AdminUsersStatBand stats={stats} />
+            <AdminUsersStatBand stats={stats} pending={isPending} />
 
             <div className="console-split gap-3">
                 <AdminUsersMain
@@ -236,6 +155,7 @@ export function AdminUsersConsole() {
                     onRoleChange={onRoleChange}
                     onSortChange={onSortChange}
                     onPageChange={setPage}
+                    reactivatingId={suspension.reactivatingId}
                     onOpen={onOpen}
                     onSuspend={onSuspend}
                     onReactivate={onReactivate}
@@ -246,29 +166,41 @@ export function AdminUsersConsole() {
             <UserDetailModal
                 user={users.find((user) => user.id === detailId)}
                 peak={peak}
+                reactivatingId={suspension.reactivatingId}
                 onClose={onCloseDetail}
                 onSuspend={onSuspend}
                 onReactivate={onReactivate}
             />
 
             <UserCreateModal
-                open={inviting}
-                draft={invite}
-                errors={inviteErrors}
-                pending={createUser.isPending}
-                failed={createUser.isError}
-                onDraftChange={setInvite}
-                onClose={onCloseInvite}
-                onSubmit={onSubmitInvite}
+                open={invite.open}
+                draft={invite.draft}
+                errors={invite.errors}
+                pending={invite.pending}
+                failed={invite.failed}
+                onDraftChange={invite.setDraft}
+                onClose={invite.close}
+                onSubmit={invite.submit}
+            />
+
+            <UserReactivateModal
+                user={users.find(
+                    (user) => user.id === suspension.reactivation.target,
+                )}
+                pending={suspension.reactivation.pending}
+                failed={suspension.reactivation.failed}
+                onClose={suspension.reactivation.dismiss}
+                onConfirm={suspension.confirmReactivation}
             />
 
             <UserSuspendModal
-                user={users.find((user) => user.id === suspendId)}
-                draft={draft}
-                pending={suspendUser.isPending}
-                onDraftChange={setDraft}
-                onClose={onCloseSuspend}
-                onSubmit={onSubmitSuspend}
+                user={users.find((user) => user.id === suspension.suspendingId)}
+                draft={suspension.draft}
+                pending={suspension.pending}
+                failed={suspension.failed}
+                onDraftChange={suspension.setDraft}
+                onClose={suspension.dismiss}
+                onSubmit={suspension.submit}
             />
         </div>
     );

@@ -1,81 +1,86 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, type ComponentProps, type HTMLAttributes } from "react";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Icon } from "@/components/ui/icon";
 
-interface BreadcrumbProps extends HTMLAttributes<HTMLElement> {
-    children: ReactNode;
-}
-
-interface BreadcrumbListProps extends HTMLAttributes<HTMLOListElement> {
-    children: ReactNode;
-}
-
-interface BreadcrumbItemProps extends HTMLAttributes<HTMLLIElement> {
-    children: ReactNode;
-}
-
-interface BreadcrumbLinkProps extends HTMLAttributes<HTMLAnchorElement> {
-    href?: string;
-    children: ReactNode;
-}
-
-type BreadcrumbSeparatorProps = HTMLAttributes<HTMLLIElement>;
+const BREADCRUMB_LABEL = "Breadcrumb";
 
 const breadcrumbLinkClass =
-    "text-text-secondary hover:text-accent ease-smooth text-xs font-medium transition-colors duration-200";
+    "text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth rounded-xs text-xs font-medium transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
-const Breadcrumb = forwardRef<HTMLElement, BreadcrumbProps>(
-    ({ className, ...props }, ref) => (
-        <nav ref={ref} className={cn("", className)} {...props} />
+const Breadcrumb = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
+    ({ "aria-label": label = BREADCRUMB_LABEL, ...props }, ref) => (
+        <nav ref={ref} aria-label={label} {...props} />
     ),
 );
 
 Breadcrumb.displayName = "Breadcrumb";
 
-const BreadcrumbList = forwardRef<HTMLOListElement, BreadcrumbListProps>(
-    ({ className, ...props }, ref) => (
-        <ol
-            ref={ref}
-            className={cn("flex items-center gap-2", className)}
-            {...props}
-        />
-    ),
-);
+const BreadcrumbList = forwardRef<
+    HTMLOListElement,
+    HTMLAttributes<HTMLOListElement>
+>(({ className, ...props }, ref) => (
+    <ol
+        ref={ref}
+        className={cn("flex min-w-0 items-center gap-1.5", className)}
+        {...props}
+    />
+));
 
 BreadcrumbList.displayName = "BreadcrumbList";
 
-const BreadcrumbItem = forwardRef<HTMLLIElement, BreadcrumbItemProps>(
+const BreadcrumbItem = forwardRef<HTMLLIElement, HTMLAttributes<HTMLLIElement>>(
     ({ className, ...props }, ref) => (
-        <li ref={ref} className={cn("", className)} {...props} />
+        <li
+            ref={ref}
+            className={cn("flex min-w-0 items-center", className)}
+            {...props}
+        />
     ),
 );
 
 BreadcrumbItem.displayName = "BreadcrumbItem";
 
-const BreadcrumbLink = forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
-    ({ href = "#", className, ...props }, ref) => (
-        <a
-            ref={ref}
-            href={href}
-            className={cn(breadcrumbLinkClass, className)}
-            {...props}
-        />
-    ),
-);
+const BreadcrumbLink = forwardRef<
+    HTMLAnchorElement,
+    ComponentProps<typeof Link>
+>(({ className, ...props }, ref) => (
+    <Link ref={ref} className={cn(breadcrumbLinkClass, className)} {...props} />
+));
 
 BreadcrumbLink.displayName = "BreadcrumbLink";
 
-const BreadcrumbSeparator = forwardRef<HTMLLIElement, BreadcrumbSeparatorProps>(
-    ({ className, ...props }, ref) => (
-        <li
-            ref={ref}
-            className={cn("text-text-muted flex items-center", className)}
-            {...props}
-        >
-            <Icon name="ChevronRight" size={14} />
-        </li>
-    ),
-);
+const BreadcrumbPage = forwardRef<
+    HTMLSpanElement,
+    HTMLAttributes<HTMLSpanElement>
+>(({ className, ...props }, ref) => (
+    <span
+        ref={ref}
+        aria-current="page"
+        className={cn(
+            "text-text max-w-[40ch] truncate text-xs font-medium",
+            className,
+        )}
+        {...props}
+    />
+));
+
+BreadcrumbPage.displayName = "BreadcrumbPage";
+
+const BreadcrumbSeparator = forwardRef<
+    HTMLLIElement,
+    HTMLAttributes<HTMLLIElement>
+>(({ className, ...props }, ref) => (
+    <li
+        ref={ref}
+        role="presentation"
+        aria-hidden="true"
+        className={cn("text-text-muted flex items-center", className)}
+        {...props}
+    >
+        <ChevronRight className="size-3" strokeWidth={1.5} />
+    </li>
+));
 
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
 
@@ -84,6 +89,7 @@ export {
     BreadcrumbList,
     BreadcrumbItem,
     BreadcrumbLink,
+    BreadcrumbPage,
     BreadcrumbSeparator,
     breadcrumbLinkClass,
 };

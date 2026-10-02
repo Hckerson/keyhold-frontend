@@ -5,10 +5,14 @@ const BAND_LABEL = "Book of business";
 
 export interface AgentOverviewStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function AgentOverviewStatBand({ stats }: AgentOverviewStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function AgentOverviewStatBand({
+    stats,
+    pending,
+}: AgentOverviewStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 AgentOverviewStatBand.displayName = "AgentOverviewStatBand";

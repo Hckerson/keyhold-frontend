@@ -38,15 +38,16 @@ export function PasswordModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{MODAL_TITLE}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="p-4">
+            <ModalBody>
                 {sent ? (
                     <Callout
                         variant="success"
@@ -62,8 +63,8 @@ export function PasswordModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="gap-2 p-4">
-                <Button type="button" onClick={onClose}>
+            <ModalFooter>
+                <Button type="button" disabled={pending} onClick={onClose}>
                     {CANCEL_ACTION}
                 </Button>
                 {!sent && (

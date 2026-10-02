@@ -90,17 +90,18 @@ export function MakeOfferModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) close();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>
                     {reviewing ? COPY.reviewTitle : COPY.title}
                 </ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="scroll-y max-h-[60vh] space-y-3 p-4">
+            <ModalBody className="scroll-y max-h-[60vh] space-y-3">
                 <div>
                     <p className="text-text text-xs font-semibold">{address}</p>
                     <p className="text-text-secondary mt-0.5 text-xs">
@@ -196,9 +197,10 @@ export function MakeOfferModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="gap-2 p-4">
+            <ModalFooter>
                 <Button
                     type="button"
+                    disabled={pending}
                     onClick={reviewing ? () => setReviewing(false) : close}
                 >
                     {reviewing ? COPY.back : COPY.cancel}

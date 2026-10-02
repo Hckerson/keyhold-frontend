@@ -6,7 +6,7 @@ export const PRIVACY_PAGE: ProsePage = {
     eyebrow: "Legal",
     title: "Privacy",
     lede: `What ${BRAND_NAME} collects, why it collects it, and what you can do about it. Written to describe how the platform actually behaves rather than to cover every theoretical case.`,
-    updated: "8 September 2026",
+    updated: "26 September 2026",
     blocks: [
         {
             id: "collect",
@@ -36,9 +36,18 @@ export const PRIVACY_PAGE: ProsePage = {
             bullets: [
                 "Stripe — card payments and escrow. Card details go to Stripe directly; we never hold them.",
                 "Cloudinary — storage for listing photography, verification documents, message attachments and generated agreements.",
-                "Our SMTP email provider — transactional email, including password resets, verification codes and advisor correspondence.",
+                "Our SMTP email provider — transactional email, including password resets, verification codes, advisor correspondence and newsletter confirmations.",
                 "Twilio — SMS notifications, and call bridging so neither party learns the other's number.",
                 "OpenFreeMap — map tiles. Your viewport is requested from their servers when a map renders.",
+            ],
+        },
+        {
+            id: "newsletter",
+            heading: "The newsletter",
+            paragraphs: [
+                "Signing up in the footer stores your email address, the exact consent wording you saw, where you signed up and when. Nothing else is attached to it, and it is not linked to an account.",
+                "You are not on the list until you confirm from the email we send. An address that is never confirmed is deleted after its three-day confirmation link expires.",
+                "Every newsletter email carries an unsubscribe link, and so does the confirmation email. When you unsubscribe we keep your address marked as unsubscribed, so it is never sent to again; if you want it erased entirely, write to us.",
             ],
         },
         {

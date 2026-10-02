@@ -30,9 +30,6 @@ export const toListingPins = (listings: Listing[]): MapPin[] =>
         href: PUBLIC_ROUTES.listing(listing.id),
     }));
 
-export const unmappableCount = (listings: Listing[]) =>
-    listings.length - listings.filter(hasCoordinates).length;
-
 export const toPoiPins = (places: NearbyPlace[]): MapPin[] =>
     places.map((place) => ({
         id: place.id,

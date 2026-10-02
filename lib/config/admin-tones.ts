@@ -1,60 +1,30 @@
 import {
-    ArrowLeftRight,
     ClipboardCheck,
     Flag,
     Gavel,
-    Server,
     ShieldCheck,
-    Wallet,
+    UserCheck,
     type LucideIcon,
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
+import { ADMIN_ROUTES } from "@/lib/constants";
 import type {
+    DecisionLaneId,
     ModerationQueueId,
-    PayoutState,
     ServiceState,
-    SignalDomain,
-    SignalSeverity,
 } from "@/lib/types";
 
-interface ToneBand {
+export interface ToneBand {
     ceiling: number;
     tone: ChartTone;
 }
 
-const bandTone = (bands: ToneBand[], value: number, fallback: ChartTone) =>
-    bands.find((band) => value < band.ceiling)?.tone ?? fallback;
-
-export interface SignalSeverityMeta {
-    label: string;
-    tone: DotTone;
-    rank: number;
-}
-
-export const SIGNAL_SEVERITIES: Record<SignalSeverity, SignalSeverityMeta> = {
-    critical: { label: "Critical", tone: "error", rank: 2 },
-    elevated: { label: "Elevated", tone: "warning", rank: 1 },
-    routine: { label: "Routine", tone: "info", rank: 0 },
-};
-
-export interface SignalDomainMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const SIGNAL_DOMAINS: Record<SignalDomain, SignalDomainMeta> = {
-    verification: { label: "Verification", icon: ShieldCheck, tone: "accent" },
-    moderation: { label: "Moderation", icon: Flag, tone: "warning" },
-    transaction: {
-        label: "Transaction",
-        icon: ArrowLeftRight,
-        tone: "highlight",
-    },
-    payout: { label: "Payout", icon: Wallet, tone: "info" },
-    infrastructure: { label: "Platform", icon: Server, tone: "neutral" },
-};
+export const bandTone = (
+    bands: ToneBand[],
+    value: number,
+    fallback: ChartTone,
+) => bands.find((band) => value < band.ceiling)?.tone ?? fallback;
 
 export interface ModerationQueueMeta {
     label: string;
@@ -68,28 +38,38 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
         verifications: {
             label: "Verifications",
             icon: ShieldCheck,
-            href: "/admin/verifications",
+            href: ADMIN_ROUTES.verifications,
             tone: "accent",
         },
         listings: {
             label: "Listing review",
             icon: ClipboardCheck,
-            href: "/admin/listings",
+            href: ADMIN_ROUTES.listings,
             tone: "info",
         },
         flags: {
-            label: "Flagged content",
+            label: "Flagged accounts & messages",
             icon: Flag,
-            href: "/admin/listings",
+            href: ADMIN_ROUTES.flags,
             tone: "warning",
         },
         disputes: {
             label: "Disputes",
             icon: Gavel,
-            href: "/admin/transactions",
+            href: ADMIN_ROUTES.disputes,
             tone: "error",
         },
     };
+
+export const DECISION_LANES: Record<DecisionLaneId, ModerationQueueMeta> = {
+    ...MODERATION_QUEUES,
+    accounts: {
+        label: "Account approvals",
+        icon: UserCheck,
+        href: ADMIN_ROUTES.users,
+        tone: "highlight",
+    },
+};
 
 export interface ServiceStateMeta {
     label: string;
@@ -106,63 +86,6 @@ export const SERVICE_STATES: Record<ServiceState, ServiceStateMeta> = {
     degraded: { label: "Degraded", tone: "warning", chartTone: "warning" },
     down: { label: "Down", tone: "error", chartTone: "error" },
 };
-
-export interface PayoutStateMeta {
-    label: string;
-    tone: DotTone;
-    chartTone: ChartTone;
-    rank: number;
-    held: boolean;
-}
-
-export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
-    DISPUTED: {
-        label: "Disputed",
-        tone: "error",
-        chartTone: "error",
-        rank: 4,
-        held: true,
-    },
-    HELD: {
-        label: "Held",
-        tone: "warning",
-        chartTone: "warning",
-        rank: 3,
-        held: true,
-    },
-    REFUNDED: {
-        label: "Refunded",
-        tone: "neutral",
-        chartTone: "neutral",
-        rank: 2,
-        held: false,
-    },
-    RELEASED: {
-        label: "Released",
-        tone: "success",
-        chartTone: "success",
-        rank: 1,
-        held: false,
-    },
-};
-
-export const PAYOUT_PIPELINE_ORDER: PayoutState[] = [
-    "DISPUTED",
-    "HELD",
-    "REFUNDED",
-    "RELEASED",
-];
-
-export const PAYOUT_SLA_MINUTES = 4_320;
-
-const PAYOUT_AGE_BANDS: ToneBand[] = [
-    { ceiling: 1_440, tone: "neutral" },
-    { ceiling: PAYOUT_SLA_MINUTES, tone: "info" },
-    { ceiling: 10_080, tone: "warning" },
-];
-
-export const payoutAgeTone = (minutes: number) =>
-    bandTone(PAYOUT_AGE_BANDS, minutes, "error");
 
 const AGE_BANDS: ToneBand[] = [
     { ceiling: 60, tone: "neutral" },

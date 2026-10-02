@@ -80,6 +80,7 @@ export function useDashboardSettings() {
     const [resetSent, setResetSent] = useState(false);
     const [saved, setSaved] = useState(false);
 
+    const saving = updateUser.isPending || updatePreferences.isPending;
     const pending = changedFieldCount(form, baseline);
     const dirty =
         pending > 0 || arePreferencesDirty(preferences, preferenceBaseline);
@@ -104,7 +105,7 @@ export function useDashboardSettings() {
 
     const submit = (event: FormEvent) => {
         event.preventDefault();
-        if (!user) return;
+        if (!user || saving) return;
         updateUser.mutate(
             {
                 fullName: form.fullName,
@@ -157,7 +158,9 @@ export function useDashboardSettings() {
         onSuccess: (data) => downloadJson(data, DATA_EXPORT_FILENAME),
     });
 
-    const exportData = () => exportMine.mutate();
+    const exportData = () => {
+        if (!exportMine.isPending) exportMine.mutate();
+    };
 
     return {
         form,
@@ -165,9 +168,11 @@ export function useDashboardSettings() {
         dialog,
         resetSent,
         failed: queries.some((query) => query.isError),
+        loading: queries.some((query) => query.isPending),
         retry: () => queries.forEach((query) => void query.refetch()),
         resettingPassword: requestReset.isPending,
         saved,
+        saving,
         dirty,
         pending,
         stats: buildDashboardSettingsStats(

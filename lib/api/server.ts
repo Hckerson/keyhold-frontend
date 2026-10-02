@@ -1,9 +1,13 @@
+import type { z } from "zod";
 import { config } from "@/lib/constants";
 import type { ApiEnvelope } from "@/lib/api/client";
-import type {
-    Property,
-    PropertyPage,
-    PropertyQuery,
+import type { FacetOptions } from "@/lib/api/properties";
+import {
+    facetCountsSchema,
+    localityCountsSchema,
+    type Property,
+    type PropertyPage,
+    type PropertyQuery,
 } from "@/lib/validations/property";
 
 const REVALIDATE_SECONDS = 60;
@@ -23,9 +27,13 @@ const toSearchParams = (input: PropertyQuery) => {
     return params;
 };
 
-async function serverGet<T>(path: string): Promise<T | null> {
+async function serverFetch<T>(
+    path: string,
+    init?: RequestInit,
+): Promise<T | null> {
     try {
         const response = await fetch(`${config.api.base}${path}`, {
+            ...init,
             headers: { "Content-Type": "application/json" },
             next: { revalidate: REVALIDATE_SECONDS },
         });
@@ -39,12 +47,30 @@ async function serverGet<T>(path: string): Promise<T | null> {
     }
 }
 
+async function serverParse<S extends z.ZodType>(
+    schema: S,
+    path: string,
+    init?: RequestInit,
+): Promise<z.infer<S> | null> {
+    const parsed = schema.safeParse(await serverFetch<unknown>(path, init));
+    return parsed.success ? parsed.data : null;
+}
+
 export const propertiesServerAPI = {
     detail: (id: string) =>
-        serverGet<Property>(`${config.api.properties.detail(id)}`),
+        serverFetch<Property>(`${config.api.properties.detail(id)}`),
 
     list: (input: PropertyQuery = {}) =>
-        serverGet<PropertyPage>(
+        serverFetch<PropertyPage>(
             `${config.api.properties.list}?${toSearchParams(input)}`,
         ),
+
+    facets: (filters: PropertyQuery, options: FacetOptions) =>
+        serverParse(facetCountsSchema, config.api.properties.facets, {
+            method: "POST",
+            body: JSON.stringify({ filters, options }),
+        }),
+
+    localities: () =>
+        serverParse(localityCountsSchema, config.api.properties.localities),
 };

@@ -1,6 +1,7 @@
 "use client";
 
 import { RescheduleViewingModal } from "@/components/features/shared/reschedule-viewing-modal";
+import { CancelViewingModal } from "@/components/features/dashboard/cancel-viewing-modal";
 import { ViewingDayModal } from "@/components/features/dashboard/viewing-day-modal";
 import { ViewingsHeader } from "@/components/sections/dashboard/viewings-header";
 import { ViewingsMain } from "@/components/sections/dashboard/viewings-main";
@@ -8,11 +9,26 @@ import { ViewingsRail } from "@/components/sections/dashboard/viewings-rail";
 import { ViewingsStatBand } from "@/components/sections/dashboard/viewings-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
+import { useCancelViewing } from "@/lib/hooks/use-viewings";
 import { useViewingsConsole } from "@/lib/hooks/use-viewings-console";
 import { RESCHEDULE_HINT } from "@/lib/data/viewings";
 
 export function ViewingsConsole() {
     const view = useViewingsConsole();
+    const cancelViewing = useCancelViewing();
+    const cancellation = useConfirmation(cancelViewing);
+
+    const cancelling = view.viewings.find(
+        (viewing) => viewing.id === cancellation.target,
+    );
+    const cancellingId = cancelViewing.isPending
+        ? (cancelViewing.variables ?? null)
+        : null;
+
+    const onConfirmCancel = () => {
+        if (cancellation.target) cancellation.confirm(cancellation.target);
+    };
 
     if (view.failed)
         return (
@@ -26,7 +42,7 @@ export function ViewingsConsole() {
         <div className="flex flex-col gap-4">
             <ViewingsHeader summary={view.summary} />
 
-            <ViewingsStatBand stats={view.stats} />
+            <ViewingsStatBand stats={view.stats} pending={view.pending} />
 
             <div className="console-split gap-3">
                 <ViewingsMain
@@ -43,7 +59,8 @@ export function ViewingsConsole() {
                     onModeFilterChange={view.setModeFilter}
                     onClearDay={view.clearDay}
                     onReschedule={view.startReschedule}
-                    onCancel={view.cancel}
+                    cancellingId={cancellingId}
+                    onCancel={cancellation.request}
                 />
                 <ViewingsRail
                     year={view.calendar.year}
@@ -72,6 +89,14 @@ export function ViewingsConsole() {
                 onDraftChange={view.setDraft}
                 onClose={view.closeReschedule}
                 onConfirm={view.confirmReschedule}
+            />
+
+            <CancelViewingModal
+                viewing={cancelling}
+                pending={cancellation.pending}
+                failed={cancellation.failed}
+                onClose={cancellation.dismiss}
+                onConfirm={onConfirmCancel}
             />
         </div>
     );

@@ -23,9 +23,11 @@ export interface ListingsMainProps {
     peak: number;
     filter: StatusFilter;
     counts: Record<StatusFilter, number>;
+    selected: ManagedListing[];
     selectedIds: string[];
     allSelected: boolean;
     pending?: boolean;
+    bulkPending: boolean;
     onFilterChange: (filter: StatusFilter) => void;
     onToggleAll: () => void;
     onSelectedChange: (id: string, selected: boolean) => void;
@@ -40,9 +42,11 @@ export function ListingsMain({
     peak,
     filter,
     counts,
+    selected,
     selectedIds,
     allSelected,
     pending = false,
+    bulkPending,
     onFilterChange,
     onToggleAll,
     onSelectedChange,
@@ -71,7 +75,8 @@ export function ListingsMain({
                 <ListingsToolbar
                     filter={filter}
                     counts={counts}
-                    selectedCount={selectedIds.length}
+                    selected={selected}
+                    busy={bulkPending}
                     onFilterChange={onFilterChange}
                     onClearSelection={onClearSelection}
                     onBulkAction={onBulkAction}

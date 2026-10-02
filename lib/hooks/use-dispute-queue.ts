@@ -9,19 +9,23 @@ import {
     type DisputeDecisionMode,
     type DisputeFilterKey,
 } from "@/lib/data/admin-disputes";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useDisputes, useSettleDispute } from "@/lib/hooks/use-disputes";
 import { toDisputeQueue } from "@/lib/utils/to-dispute-case";
+import type { ResolveDisputeInput } from "@/lib/validations/dispute";
 
 const ALL_FILTER: DisputeFilterKey = "all";
 const QUEUE_PAGE_SIZE = 100;
 
 export function useDisputeQueue() {
     const queue = useDisputes({ limit: QUEUE_PAGE_SIZE });
-    const settle = useSettleDispute();
+    const settle = useConfirmation<
+        { id: string; dismiss: boolean } & ResolveDisputeInput,
+        DisputeDecision
+    >(useSettleDispute());
 
     const [filter, setFilter] = useState<DisputeFilterKey>(ALL_FILTER);
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [decision, setDecision] = useState<DisputeDecision | null>(null);
     const [note, setNote] = useState("");
 
     const disputes = useMemo(
@@ -42,52 +46,47 @@ export function useDisputeQueue() {
         null;
 
     const openDecision = (mode: DisputeDecisionMode, id: string) => {
-        setDecision({ mode, id });
+        if (settle.pending) return;
         setNote("");
-    };
-
-    const closeDecision = () => {
-        setDecision(null);
-        setNote("");
+        settle.request({ mode, id });
     };
 
     const submitDecision = () => {
         const trimmed = note.trim();
-        if (!decision || !trimmed) return;
-        settle.mutate(
-            {
-                id: decision.id,
-                dismiss: decision.mode === "dismiss",
-                resolutionNotes: trimmed,
-            },
-            { onSuccess: closeDecision },
-        );
+        if (!settle.target || !trimmed) return;
+        settle.confirm({
+            id: settle.target.id,
+            dismiss: settle.target.mode === "dismiss",
+            resolutionNotes: trimmed,
+        });
     };
 
     const changeFilter = (key: DisputeFilterKey) => {
         setFilter(key);
-        setDecision(null);
+        settle.dismiss();
     };
 
     const subjectTitle =
-        disputes.find((dispute) => dispute.id === decision?.id)?.title ?? "";
+        disputes.find((dispute) => dispute.id === settle.target?.id)?.title ??
+        "";
 
     return {
         filter,
         counts,
         visible,
         active,
-        decision,
+        decision: settle.target,
         note,
         subjectTitle,
         pending: queue.isPending,
-        settling: settle.isPending,
+        settling: settle.pending,
+        settleFailed: settle.failed,
         failed: queue.isError,
         refetch: queue.refetch,
         setSelectedId,
         setNote,
         openDecision,
-        closeDecision,
+        closeDecision: settle.dismiss,
         submitDecision,
         changeFilter,
     };

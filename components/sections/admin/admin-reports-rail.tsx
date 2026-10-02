@@ -16,14 +16,12 @@ export interface AdminReportsRailProps {
     signals: ReportSignal[];
     roles: DonutSegment[];
     tiers: DonutSegment[];
-    totalLabel: string;
 }
 
 export function AdminReportsRail({
     signals,
     roles,
     tiers,
-    totalLabel,
 }: AdminReportsRailProps) {
     return (
         <div className="flex flex-col gap-3">
@@ -46,7 +44,6 @@ export function AdminReportsRail({
                 <AudienceMix
                     roles={roles}
                     tiers={tiers}
-                    total={totalLabel}
                     tierLabel={TIER_LABEL}
                 />
             </Panel>

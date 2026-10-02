@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { Select as BaseSelect } from "@base-ui/react/select";
 import { Check, ChevronDown, type LucideIcon } from "lucide-react";
 import { cva, type VariantProps } from "class-variance-authority";
+import {
+    FLOATING_ITEM,
+    FLOATING_POSITIONER,
+    FLOATING_SIDE_OFFSET,
+    FLOATING_SURFACE,
+} from "@/lib/config/floating";
 import { cn } from "@/lib/utils";
 
-const OPEN_KEYS = ["ArrowDown", "ArrowUp", "Enter", " "];
-
 const triggerVariants = cva(
-    "text-text focus-visible:ring-accent/40 ease-smooth flex w-full items-center gap-2 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+    "text-text focus-visible:ring-accent/40 ease-smooth flex w-full items-center gap-2 text-left transition-colors duration-200 select-none focus-visible:ring-2 focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
     {
         variants: {
             size: {
@@ -16,8 +20,8 @@ const triggerVariants = cva(
                 lg: "h-11 px-3 text-sm",
             },
             variant: {
-                boxed: "border-border bg-background-alt hover:border-border-dark focus-visible:border-accent rounded-md border",
-                bare: "text-text-secondary hover:text-text h-auto rounded-sm bg-transparent px-0 text-xs",
+                boxed: "border-border bg-background-alt hover:border-border-dark focus-visible:border-accent data-popup-open:border-accent rounded-md border",
+                bare: "text-text-secondary hover:text-text data-popup-open:text-text h-auto rounded-sm bg-transparent px-0 text-xs",
             },
         },
         defaultVariants: { size: "sm", variant: "boxed" },
@@ -25,11 +29,11 @@ const triggerVariants = cva(
 );
 
 const optionVariants = cva(
-    "ease-smooth flex cursor-pointer items-center justify-between gap-2 rounded-md transition-colors duration-200",
+    "text-text-secondary data-selected:text-text data-selected:font-medium justify-between",
     {
         variants: {
             size: {
-                sm: "h-8 px-2 text-sm",
+                sm: "text-sm",
                 lg: "h-9 px-2.5 text-sm",
             },
         },
@@ -64,180 +68,80 @@ export function Select<T extends string>({
     align = "start",
     disabled,
     size,
-    variant = "boxed",
+    variant,
     className,
 }: SelectProps<T>) {
-    const listId = useId();
-    const rootRef = useRef<HTMLDivElement | null>(null);
-    const listRef = useRef<HTMLUListElement | null>(null);
-    const [open, setOpen] = useState(false);
-    const [shown, setShown] = useState(false);
-
-    const selectedIndex = options.findIndex((option) => option.value === value);
-    const [activeIndex, setActiveIndex] = useState(Math.max(selectedIndex, 0));
-    const selected = options[selectedIndex];
-
-    useEffect(() => {
-        if (!open) {
-            setShown(false);
-            return;
-        }
-        const frame = requestAnimationFrame(() => setShown(true));
-        return () => cancelAnimationFrame(frame);
-    }, [open]);
-
-    useEffect(() => {
-        if (!open) return;
-        const onPointerDown = (event: PointerEvent) => {
-            const target = event.target;
-            if (target instanceof Node && rootRef.current?.contains(target))
-                return;
-            setOpen(false);
-        };
-        document.addEventListener("pointerdown", onPointerDown);
-        return () => document.removeEventListener("pointerdown", onPointerDown);
-    }, [open]);
-
-    useEffect(() => {
-        if (!open) return;
-        listRef.current
-            ?.querySelector('[data-active="true"]')
-            ?.scrollIntoView({ block: "nearest" });
-    }, [open, activeIndex]);
-
-    const optionId = (index: number) => `${listId}-option-${index}`;
-
-    const openList = () => {
-        setActiveIndex(Math.max(selectedIndex, 0));
-        setOpen(true);
-    };
-
-    const commit = (index: number) => {
-        const option = options[index];
-        if (!option) return;
-        onChange(option.value);
-        setOpen(false);
-    };
-
-    const move = (delta: number) => {
-        setActiveIndex((current) => {
-            const next = current + delta;
-            if (next < 0) return options.length - 1;
-            if (next >= options.length) return 0;
-            return next;
-        });
-    };
-
-    const onKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-        if (event.key === "Escape" || event.key === "Tab") {
-            setOpen(false);
-            return;
-        }
-
-        if (!open) {
-            if (!OPEN_KEYS.includes(event.key)) return;
-            event.preventDefault();
-            openList();
-            return;
-        }
-
-        if (event.key === "ArrowDown") {
-            event.preventDefault();
-            move(1);
-        } else if (event.key === "ArrowUp") {
-            event.preventDefault();
-            move(-1);
-        } else if (event.key === "Home") {
-            event.preventDefault();
-            setActiveIndex(0);
-        } else if (event.key === "End") {
-            event.preventDefault();
-            setActiveIndex(options.length - 1);
-        } else if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            commit(activeIndex);
-        }
-    };
-
     return (
-        <div ref={rootRef} className={cn("relative shrink-0", className)}>
-            <button
-                type="button"
-                role="combobox"
-                aria-label={label}
-                aria-haspopup="listbox"
-                aria-expanded={open}
-                aria-controls={listId}
-                aria-activedescendant={open ? optionId(activeIndex) : undefined}
+        <div className={cn("relative shrink-0", className)}>
+            <BaseSelect.Root
+                items={options}
+                value={value}
                 disabled={disabled}
-                onClick={() => (open ? setOpen(false) : openList())}
-                onKeyDown={onKeyDown}
-                className={cn(
-                    triggerVariants({ size, variant }),
-                    open && variant === "boxed" && "border-accent",
-                )}
+                onValueChange={(next) => {
+                    if (next !== null) onChange(next);
+                }}
             >
-                {Icon && (
-                    <Icon
-                        size={12}
-                        strokeWidth={1.5}
-                        className="text-text-muted shrink-0"
-                    />
-                )}
-                <span className="flex-1 truncate">{selected?.label}</span>
-                <ChevronDown
-                    size={12}
-                    strokeWidth={1.5}
-                    className={cn(
-                        "text-text-muted ease-smooth shrink-0 transition-transform duration-200",
-                        open && "rotate-180",
-                    )}
-                />
-            </button>
-
-            {open && (
-                <ul
-                    ref={listRef}
-                    id={listId}
-                    role="listbox"
+                <BaseSelect.Trigger
                     aria-label={label}
-                    className={cn(
-                        "border-border bg-background-alt ease-smooth absolute top-full z-30 mt-1 max-h-64 w-max max-w-64 min-w-full overflow-y-auto rounded-lg border p-1 shadow-lg transition duration-200",
-                        align === "end" ? "right-0" : "left-0",
-                        shown
-                            ? "translate-y-0 opacity-100"
-                            : "-translate-y-1 opacity-0",
-                    )}
+                    className={cn(triggerVariants({ size, variant }))}
                 >
-                    {options.map((option, index) => (
-                        <li
-                            key={option.value}
-                            id={optionId(index)}
-                            role="option"
-                            aria-selected={option.value === value}
-                            data-active={index === activeIndex}
-                            onMouseEnter={() => setActiveIndex(index)}
-                            onClick={() => commit(index)}
+                    {Icon && (
+                        <Icon
+                            className="text-text-muted size-3 shrink-0"
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                    )}
+                    <BaseSelect.Value className="flex-1 truncate" />
+                    <BaseSelect.Icon className="text-text-muted ease-smooth shrink-0 transition-transform duration-200 data-popup-open:rotate-180">
+                        <ChevronDown
+                            className="size-3"
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                    </BaseSelect.Icon>
+                </BaseSelect.Trigger>
+
+                <BaseSelect.Portal>
+                    <BaseSelect.Positioner
+                        align={align}
+                        sideOffset={FLOATING_SIDE_OFFSET}
+                        alignItemWithTrigger={false}
+                        className={FLOATING_POSITIONER}
+                    >
+                        <BaseSelect.Popup
                             className={cn(
-                                optionVariants({ size }),
-                                index === activeIndex
-                                    ? "bg-background-muted text-text"
-                                    : "text-text-secondary",
-                                option.value === value && "font-medium",
+                                FLOATING_SURFACE,
+                                "max-w-64 min-w-(--anchor-width)",
                             )}
                         >
-                            <span className="truncate">{option.label}</span>
-                            {option.value === value && (
-                                <Check
-                                    size={12}
-                                    strokeWidth={1.5}
-                                    className="text-accent shrink-0"
-                                />
-                            )}
-                        </li>
-                    ))}
-                </ul>
-            )}
+                            <BaseSelect.List className="max-h-[min(16rem,var(--available-height))] overflow-y-auto p-1">
+                                {options.map((option) => (
+                                    <BaseSelect.Item
+                                        key={option.value}
+                                        value={option.value}
+                                        className={cn(
+                                            FLOATING_ITEM,
+                                            optionVariants({ size }),
+                                        )}
+                                    >
+                                        <BaseSelect.ItemText className="truncate">
+                                            {option.label}
+                                        </BaseSelect.ItemText>
+                                        <BaseSelect.ItemIndicator className="text-accent shrink-0">
+                                            <Check
+                                                className="size-3"
+                                                strokeWidth={1.5}
+                                                aria-hidden="true"
+                                            />
+                                        </BaseSelect.ItemIndicator>
+                                    </BaseSelect.Item>
+                                ))}
+                            </BaseSelect.List>
+                        </BaseSelect.Popup>
+                    </BaseSelect.Positioner>
+                </BaseSelect.Portal>
+            </BaseSelect.Root>
         </div>
     );
 }

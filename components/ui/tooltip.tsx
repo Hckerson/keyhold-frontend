@@ -1,38 +1,46 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+"use client";
+
+import type { ReactElement, ReactNode } from "react";
+import { Tooltip as BaseTooltip } from "@base-ui/react/tooltip";
+import { FLOATING_ENTRANCE } from "@/lib/config/floating";
 import { cn } from "@/lib/utils";
 
-interface TooltipProps extends HTMLAttributes<HTMLDivElement> {
-    content: string;
+const TOOLTIP_OFFSET = 6;
+
+interface TooltipProps {
+    content: ReactNode;
     side?: "top" | "right" | "bottom" | "left";
-    children: ReactNode;
+    children: ReactElement;
+    className?: string;
 }
 
-const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
-    ({ content, side = "top", className, children, ...props }, ref) => {
-        const positionClasses = {
-            top: "bottom-full mb-2 left-1/2 -translate-x-1/2",
-            right: "left-full ml-2 top-1/2 -translate-y-1/2",
-            bottom: "top-full mt-2 left-1/2 -translate-x-1/2",
-            left: "right-full mr-2 top-1/2 -translate-y-1/2",
-        };
-
-        return (
-            <div ref={ref} className="group relative inline-block" {...props}>
-                {children}
-                <div
-                    className={cn(
-                        "bg-text text-background-alt absolute z-50 hidden rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap shadow-lg group-hover:block",
-                        positionClasses[side],
-                        className,
-                    )}
+function Tooltip({ content, side = "top", children, className }: TooltipProps) {
+    return (
+        <BaseTooltip.Root>
+            <BaseTooltip.Trigger render={children} />
+            <BaseTooltip.Portal>
+                <BaseTooltip.Positioner
+                    side={side}
+                    sideOffset={TOOLTIP_OFFSET}
+                    className="z-tooltip"
                 >
-                    {content}
-                </div>
-            </div>
-        );
-    },
-);
+                    <BaseTooltip.Popup
+                        className={cn(
+                            "bg-text text-background-alt max-w-64 rounded-md px-2 py-1 text-xs font-medium shadow-lg",
+                            FLOATING_ENTRANCE,
+                            className,
+                        )}
+                    >
+                        {content}
+                    </BaseTooltip.Popup>
+                </BaseTooltip.Positioner>
+            </BaseTooltip.Portal>
+        </BaseTooltip.Root>
+    );
+}
 
 Tooltip.displayName = "Tooltip";
 
-export { Tooltip };
+const TooltipProvider = BaseTooltip.Provider;
+
+export { Tooltip, TooltipProvider };

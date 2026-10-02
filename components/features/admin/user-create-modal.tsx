@@ -47,15 +47,16 @@ export function UserCreateModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="scroll-y max-h-[60vh] space-y-3 p-4">
+            <ModalBody className="scroll-y max-h-[60vh] space-y-3">
                 <p className="text-text-secondary text-xs">{COPY.hint}</p>
 
                 <FormField
@@ -118,7 +119,7 @@ export function UserCreateModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="gap-2 p-4">
+            <ModalFooter>
                 <Button type="button" onClick={onClose}>
                     {COPY.cancel}
                 </Button>
