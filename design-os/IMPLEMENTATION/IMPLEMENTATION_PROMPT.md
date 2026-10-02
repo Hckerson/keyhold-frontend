@@ -173,7 +173,7 @@ The foundation, primitives and all portals exist in the tree today. Treat the ta
 - Admin Revoke and Allow Resubmit (26.3a)
 - Root error boundary and support error ID (46.a)
 - Delete/snooze from the conversation list (24a); unnamed messaging Section 29
-- General multi-step form (Section 39); price range slider (Section 35, C23 — ratified alternative in use); avatar group (C28)
+- General multi-step form (Section 39); narrowing by price (Section 35; contract C23, Price Range Slider — ratified alternative in use); avatar group (C28)
 - Offline / no-connection handling (Section 55)
 - Viewing reminders (J3a); phone and SMS opt-in at sign-up (J6a)
 - E2E runner, visual regression, component stories (dependency approval needed)
@@ -569,3 +569,4 @@ pnpm test && pnpm type-check && pnpm lint && pnpm enums:check && pnpm contract:c
 - **Added:** the verbatim **Visual Design Hand-off**; overview and how-to-use; required-reading table; exact folder and route maps; providers, hooks and component organisation; pages and flows per sprint; milestones; "What remains" drawn from Phase 8; QA category table; page, console and hook templates; error, loading and empty patterns; integration priorities; E2E scenarios; deployment readiness; `@base-ui/react`, `maplibre-gl`, `@sentry/nextjs`, `jiti` in the stack.
 - **Changed — screen content removed (30 September 2026, seed-prompt Self-Audit):** the Required Reading row for Phase 4 no longer points at "content requirements in priority order" (the field is gone); Phase 4 is read for primary tasks, data, permissions, rules and states, and Phase 5 for each section's job rather than "sections a page is composed of". File paths under Phase 7 Implementation and in "What remains" are records of code and are unchanged.
 - **Changed:** "synthesis of Phases 8-10" → "all nine phases"; phase file names and numbers updated to the 9-phase layout; `react-day-picker` removed from the stack table (not in `package.json`); the gates section corrected — hooks are disabled, and the push gate includes `enums:check` and `contract:check`. **Dropped as visual prescription:** the Styling subsection's named scale classes (`.pad`, `.gap`, `.micro-label`, `.rail-label`…), "Inline responsive utility chains are forbidden", "Colors, typography, spacing and motion are theme tokens", the Tailwind `@theme` note, "Design system (tokens only, no hardcoded values)" from the QA list, the "Design token?" question and the Phase 7 Design Tokens reference row — styling is governed by `.claude/CLAUDE.md` and the code.
+- **Changed (2 October 2026, section-name pass):** "What remains" cites Section 35 by its job ("narrowing by price") and names the slider only as contract C23, following the Phase 5 section renames. No item was added or removed.

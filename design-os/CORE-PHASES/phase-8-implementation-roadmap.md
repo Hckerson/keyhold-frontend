@@ -357,82 +357,84 @@ Status lives here and nowhere else. It is recorded against a feature, never used
 
 ### Sections
 
-| #   | Section                       | Status    | Evidence / note                                                                 |
-| --- | ----------------------------- | --------- | ------------------------------------------------------------------------------- |
-| 1   | Hero Search                   | Built     | `home/hero*`, `city-chips`                                                      |
-| 2   | Featured Carousel             | Built     | `premier-listing`, `featured-gallery`                                           |
-| 3   | Trust Signals                 | Built     | `stats-band`, `guarantees` (ratified)                                           |
-| 4   | How It Works                  | Built     | `concierge*` (ratified)                                                         |
-| 5   | CTA Banner                    | Built     | `cta-banner`                                                                    |
-| 6   | Listing Gallery               | Built     | `listing-gallery`, `listing-lightbox`                                           |
-| 7   | Listing Price Bar             | Built     | `listing-price-bar`                                                             |
-| 8   | Listing Key Facts             | Built     | `listing-key-facts`                                                             |
-| 9   | Listing Description           | Built     | `listing-description`, `listing-features`                                       |
-| 9a  | Video tour                    | Specified | —                                                                               |
-| 10  | Neighborhood Map              | Built     | `listing-neighborhood`, `nearby-kind-toggles`                                   |
-| 11  | Comparables                   | Built     | Active listings, not sold                                                       |
-| 11a | Sold comparables              | Deferred  | Market understanding — see register                                             |
-| 12  | Agent Card                    | Built     | `listing-agent-card`                                                            |
-| 13  | Listing Card                  | Built     | `search-result-card`                                                            |
-| 14  | Listing Status Timeline       | Built     | `deal-progress` (stages), milestones                                            |
-| 15  | Listing Moderation Queue      | Built     | Extended by 63                                                                  |
-| 16  | Offer Form                    | Built     | `make-offer-modal`, `offer-contingency-list`                                    |
-| 17  | Offer Status Card             | Built     | `offer-row`                                                                     |
-| 18  | Offer Timeline                | Built     | `timeline-list`                                                                 |
-| 19  | Counter Offer Form            | Built     | `counter-offer-panel`                                                           |
-| 20  | Offer Comparison              | Built     | `comparison-columns`                                                            |
-| 21  | Inspection/Appraisal Tracker  | Built     | `milestone-*`                                                                   |
-| 22  | Message Thread                | Built     | `thread-messages`, `message-bubble`                                             |
-| 23  | Message Input                 | Built     | `message-composer`, attachments                                                 |
-| 24  | Message Notification          | Built     | `conversation-item`                                                             |
-| 24a | Delete / snooze from the list | Specified | —                                                                               |
-| 25  | Document Share                | Built     | `document-card`, `document-list`                                                |
-| 26  | Typing Indicator              | Built     | Shows the sender's own pending send only                                        |
-| 26a | Other party typing            | Deferred  | Real-time transport                                                             |
-| 27  | Thread Header                 | Built     | `thread-header`                                                                 |
-| 28  | Conversation List             | Built     | `conversation-list`                                                             |
-| 29  | Unnamed messaging section     | Specified | Owner to name                                                                   |
-| 30  | Input Field                   | Built     | `forms/form-field`, `input`                                                     |
-| 31  | Checkbox Group                | Built     | `forms/checkbox`                                                                |
-| 32  | Radio Button Group            | Built     | `auth-role-choice` (single instance)                                            |
-| 33  | Dropdown/Select               | Built     | `forms/select`                                                                  |
-| 34  | Date Picker                   | Built     | Native date input in viewing, offer, appointment modals                         |
-| 35  | Price Slider                  | Specified | Ratified alternative (price-band chips) is built                                |
-| 36  | Toggle/Switch                 | Built     | `forms/switch`, `toggle-row`                                                    |
-| 37  | Search Input (Autocomplete)   | Specified | Command palette searches routes; no location suggestions                        |
-| 38  | File Upload                   | Built     | `forms/file-upload`                                                             |
-| 39  | Multi-Step Form               | Specified | Stepwise flows exist (reset password, offer review) without a general step form |
-| 40  | Stat Card                     | Built     | `ui/stat-card`, `patterns/stat-cell`                                            |
-| 41  | Data Table                    | Built     | `patterns/data-table*`                                                          |
-| 42  | Pipeline Card                 | Built     | `deal-row`, `pipeline-stage-column`                                             |
-| 43  | Activity Feed                 | Built     | `shared/activity-list`                                                          |
-| 44  | Quick Stats Widget            | Built     | `patterns/stat-band`                                                            |
-| 45  | Calendar Widget               | Built     | `shared/mini-calendar`                                                          |
-| 46  | Chart/Graph                   | Built     | `ui/charts/*`                                                                   |
-| 47  | Header                        | Built     | `layout/header*`                                                                |
-| 48  | Footer                        | Built     | `layout/footer*`, `newsletter-form`                                             |
-| 49  | Sidebar Navigation            | Built ✎   | `layout/sidebar*`                                                               |
-| 50  | Toast Notification            | Built     | `ui/toast`, `toast-viewport`                                                    |
-| 51  | Modal/Dialog                  | Built     | `ui/modal`, `patterns/confirm-modal`                                            |
-| 52  | Empty State                   | Built     | `ui/empty-state`                                                                |
-| 53  | 404 Not Found                 | Built     | `app/not-found.tsx`                                                             |
-| 54  | 500 Server Error              | Built     | Segment `error.tsx`; error ID not shown (46.a)                                  |
-| 55  | Offline/No Connection         | Specified | No offline handling (Principle 5 ratified)                                      |
-| 56  | Admin Console Shell           | Built ✎   | `portal-shell`, `sidebar*`, `topbar*`                                           |
-| 57  | Volume Metrics Grid           | Built ✎   | Admin overview                                                                  |
-| 58  | Revenue Trend Panel           | Built     | Overview, payments                                                              |
-| 59  | Revenue Breakdown Panel       | Built ✎   | Folded into one estimated line (ratified)                                       |
-| 60  | System Health List            | Built ✎   | `service-health-table`                                                          |
-| 61  | System Alert List             | Built ✎   | Merged into "Needs a Decision" (ratified)                                       |
-| 62  | Moderation Queue Summary      | Built ✎   | Merged into "Needs a Decision" (ratified)                                       |
-| 63  | Moderation Listings Table     | Built     | `moderation-listing-table`                                                      |
-| 64  | Moderation Decision Modal     | Built     | `moderation-decision-modal`                                                     |
-| 65  | User Management Table         | Built     | `user-table`                                                                    |
-| 66  | Transaction Ledger Table      | Built     | `transaction-ledger-table`                                                      |
-| 67  | Verification Request List     | Built     | Revoke / Allow Resubmit: 26.3a                                                  |
-| 68  | Platform Config Panel         | Built     | `shared/config-panel`, `patterns/config-field-grid`                             |
-| 69  | Policy Toggle Panel           | Built     | `policy-switch-table`                                                           |
-| 70  | Maintenance Panel             | Built     | `maintenance-panel`, `maintenance-confirm-modal`                                |
+Section names are the job-based names in [Phase 5](phase-5-section-blueprints.md). The last column records what the built code is called; since 2 October 2026 the two no longer mirror each other, and the row is the pairing — read it as "Prompt to act (Section 5), built as `cta-banner`" or "Listing agent contact (Section 12), built as `listing-agent-card`". The code names are facts about the code and prescribe nothing; the earlier section names are listed in Phase 5 › Regeneration Notes.
+
+| #   | Section                          | Status    | Built as (code name, kept verbatim) / note                                      |
+| --- | -------------------------------- | --------- | ------------------------------------------------------------------------------- |
+| 1   | Start a property search          | Built     | `home/hero*`, `city-chips`                                                      |
+| 2   | Featured listings                | Built     | `premier-listing`, `featured-gallery`                                           |
+| 3   | Trust Signals                    | Built     | `stats-band`, `guarantees` (ratified)                                           |
+| 4   | How It Works                     | Built     | `concierge*` (ratified)                                                         |
+| 5   | Prompt to act                    | Built     | `cta-banner`                                                                    |
+| 6   | Listing photos                   | Built     | `listing-gallery`, `listing-lightbox`                                           |
+| 7   | Listing price and actions        | Built     | `listing-price-bar`                                                             |
+| 8   | Listing Key Facts                | Built     | `listing-key-facts`                                                             |
+| 9   | Listing Description              | Built     | `listing-description`, `listing-features`                                       |
+| 9a  | Video tour                       | Specified | —                                                                               |
+| 10  | Neighborhood Map                 | Built     | `listing-neighborhood`, `nearby-kind-toggles`                                   |
+| 11  | Comparables                      | Built     | Active listings, not sold                                                       |
+| 11a | Sold comparables                 | Deferred  | Market understanding — see register                                             |
+| 12  | Listing agent contact            | Built     | `listing-agent-card`                                                            |
+| 13  | Listing summary                  | Built     | `search-result-card`                                                            |
+| 14  | Listing deal history             | Built     | `deal-progress` (stages), milestones                                            |
+| 15  | Listing Moderation Queue         | Built     | Extended by 63                                                                  |
+| 16  | Offer Form                       | Built     | `make-offer-modal`, `offer-contingency-list`                                    |
+| 17  | Offer status                     | Built     | `offer-row`                                                                     |
+| 18  | Negotiation history              | Built     | `timeline-list`                                                                 |
+| 19  | Counter Offer Form               | Built     | `counter-offer-panel`                                                           |
+| 20  | Offer Comparison                 | Built     | `comparison-columns`                                                            |
+| 21  | Inspection/Appraisal Tracker     | Built     | `milestone-*`                                                                   |
+| 22  | Message Thread                   | Built     | `thread-messages`, `message-bubble`                                             |
+| 23  | Compose a message                | Built     | `message-composer`, attachments                                                 |
+| 24  | Message Notification             | Built     | `conversation-item`                                                             |
+| 24a | Delete / snooze from the list    | Specified | —                                                                               |
+| 25  | Document Share                   | Built     | `document-card`, `document-list`                                                |
+| 26  | Typing Indicator                 | Built     | Shows the sender's own pending send only                                        |
+| 26a | Other party typing               | Deferred  | Real-time transport                                                             |
+| 27  | Conversation details and actions | Built     | `thread-header`                                                                 |
+| 28  | Conversation List                | Built     | `conversation-list`                                                             |
+| 29  | Unnamed messaging section        | Specified | Owner to name                                                                   |
+| 30  | Enter a value                    | Built     | `forms/form-field`, `input`                                                     |
+| 31  | Choose several options           | Built     | `forms/checkbox`                                                                |
+| 32  | Choose one option                | Built     | `auth-role-choice` (single instance)                                            |
+| 33  | Choose from a long set           | Built     | `forms/select`                                                                  |
+| 34  | Choose a date                    | Built     | Native date input in viewing, offer, appointment modals                         |
+| 35  | Narrow by price                  | Specified | Ratified alternative (price-band chips) is built                                |
+| 36  | Switch a setting on or off       | Built     | `forms/switch`, `toggle-row`                                                    |
+| 37  | Search with suggestions          | Specified | Command palette searches routes; no location suggestions                        |
+| 38  | File Upload                      | Built     | `forms/file-upload`                                                             |
+| 39  | Multi-Step Form                  | Specified | Stepwise flows exist (reset password, offer review) without a general step form |
+| 40  | Headline figure                  | Built     | `ui/stat-card`, `patterns/stat-cell`                                            |
+| 41  | Sortable records                 | Built     | `patterns/data-table*`                                                          |
+| 42  | Pipeline deal                    | Built     | `deal-row`, `pipeline-stage-column`                                             |
+| 43  | Activity Feed                    | Built     | `shared/activity-list`                                                          |
+| 44  | Key metrics for a role           | Built     | `patterns/stat-band`                                                            |
+| 45  | Events by date                   | Built     | `shared/mini-calendar`                                                          |
+| 46  | Trend or distribution            | Built     | `ui/charts/*`                                                                   |
+| 47  | Global navigation                | Built     | `layout/header*`                                                                |
+| 48  | Site-wide links                  | Built     | `layout/footer*`, `newsletter-form`                                             |
+| 49  | Portal navigation                | Built ✎   | `layout/sidebar*`                                                               |
+| 50  | Outcome confirmation             | Built     | `ui/toast`, `toast-viewport`                                                    |
+| 51  | Focused task or confirmation     | Built     | `ui/modal`, `patterns/confirm-modal`                                            |
+| 52  | Empty State                      | Built     | `ui/empty-state`                                                                |
+| 53  | 404 Not Found                    | Built     | `app/not-found.tsx`                                                             |
+| 54  | 500 Server Error                 | Built     | Segment `error.tsx`; error ID not shown (46.a)                                  |
+| 55  | Offline/No Connection            | Specified | No offline handling (Principle 5 ratified)                                      |
+| 56  | Admin navigation and identity    | Built ✎   | `portal-shell`, `sidebar*`, `topbar*`                                           |
+| 57  | Platform volume metrics          | Built ✎   | Admin overview                                                                  |
+| 58  | Revenue trend                    | Built     | Overview, payments                                                              |
+| 59  | Revenue breakdown                | Built ✎   | Folded into one estimated line (ratified)                                       |
+| 60  | System Health List               | Built ✎   | `service-health-table`                                                          |
+| 61  | System Alert List                | Built ✎   | Merged into "Needs a Decision" (ratified)                                       |
+| 62  | Moderation Queue Summary         | Built ✎   | Merged into "Needs a Decision" (ratified)                                       |
+| 63  | Moderation listing records       | Built     | `moderation-listing-table`                                                      |
+| 64  | Moderation decision              | Built     | `moderation-decision-modal`                                                     |
+| 65  | User accounts and standing       | Built     | `user-table`                                                                    |
+| 66  | Transaction ledger               | Built     | `transaction-ledger-table`                                                      |
+| 67  | Verification Request List        | Built     | Revoke / Allow Resubmit: 26.3a                                                  |
+| 68  | Platform configuration values    | Built     | `shared/config-panel`, `patterns/config-field-grid`                             |
+| 69  | Policy settings                  | Built     | `policy-switch-table`                                                           |
+| 70  | Maintenance operations           | Built     | `maintenance-panel`, `maintenance-confirm-modal`                                |
 
 ### Interaction Contracts
 
@@ -530,6 +532,7 @@ Carried from RATIFIED_DIVERGENCES › Deferred. Each carries a reason and a revi
 - **Added:** development phases and priority order, dependencies, three risks, technical debt prevention, the Build Status Vocabulary, per-feature build status for 46 pages, 70 sections, 88 contracts and 19 flows (with sub-rows for unbuilt parts), cross-cutting status, the Deferred Register.
 - **Changed — screen content removed (30 September 2026, seed-prompt Self-Audit):** Sprint 2-3 component list ("Primitives: Button, Input, Select, Checkbox, Badge, Icon, Image, Skeleton", "Patterns: Modal, Toast, Banner, Tabs, Date Picker, Multi-Step Form") → contract ranges C1–C12 and C13–C30; Sprint 3-4 page-content lists ("with search entry, featured, trending, trust signals", "with photos, description, map, comps, agent") → page and journey references; Sprint 5-6, 6-7 and 7-8 "quick stats", "stats", "health stats, alerts" → what the user learns; "trust surfaces" → "trust features"; Deferred Register entries name their subject beside the module number. Build-status evidence (file paths such as `cta-banner`, `listing-agent-card`, `ui/modal`) is a record of code and is unchanged.
 - **Changed:** file renamed `phase-9-implementation-roadmap.md` → `phase-8-implementation-roadmap.md`; Sprint 1 "Design tokens (CSS variables + TS exports)" → "Styling foundation per the host repo's conventions"; Sprint 2-3 "Component Library / Implement Phase 6 components" → "Interaction Contracts / … contracts"; milestone "design system" → "styling foundation", "Component Library" → "Contracts Ready"; "My Saved (grid, …)", "My Offers (table, …)", "My Listings (grid, …)" drop the presentation word; "Home with hero" → "with search entry"; "Transforms Phases 1-8" → "Phases 1-7"; FID target → INP (FID was retired as a Core Web Vital); the hook-based push gate statement corrected (hooks disabled).
+- **Changed (2 October 2026, section-name pass):** the Sections table now uses the job-based section names from Phase 5 (42 rows renamed, e.g. "Hero Search" → "Start a property search", "Agent Card" → "Listing agent contact"); the evidence column is retitled "Built as" and an introductory note makes the section-to-code pairing explicit, because the names no longer mirror the file names. Every row, number, sub-row, status and code path is unchanged.
 
 ---
 

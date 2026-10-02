@@ -1,17 +1,17 @@
 # Phase 5: Section Blueprints
 
-**Keyhold Design Operating System** · Phase 5 of 9 · Version 2.0 · 29 September 2026 · screen-content pass 30 September 2026
+**Keyhold Design Operating System** · Phase 5 of 9 · Version 2.0 · 29 September 2026 · screen-content pass 30 September 2026 · section-name pass 2 October 2026
 
 Every page in [Phase 4](phase-4-page-blueprints.md) broken into sections by the job each one does. Next: [Phase 6 — Interaction Contracts](phase-6-interaction-contracts.md).
 
-Sections describe behaviour only — never what a section shows, which components or controls it uses, layout, order on screen, sizing, imagery, animation or wireframes. Section numbers and headings are stable identifiers: RATIFIED_DIVERGENCES, Phase 4 and Phase 8 cite them, so a heading that still carries a version 1 presentational name ("Hero", "Banner", "Card", "Panel", "Modal", "Shell", "Header", "Sidebar") is kept as an identifier only and prescribes nothing. Build status lives in [Phase 8](phase-8-implementation-roadmap.md#sections).
+Sections describe behaviour only — never what a section shows, which components or controls it uses, layout, order on screen, sizing, imagery, animation or wireframes. Section numbers are the stable identifiers: RATIFIED_DIVERGENCES, Phase 4 and Phase 8 cite sections by number. A heading names the job the section does, never a presentation or a container; the version 1 presentational names were replaced on 2 October 2026 and each old name is recorded against its number in [Regeneration Notes](#regeneration-notes). Built files that still carry an old name are facts about the code, paired with their section in Phase 8. Build status lives in [Phase 8](phase-8-implementation-roadmap.md#sections).
 
 ---
 
 ## Contents
 
 1. [Section Defaults](#section-defaults)
-2. [Hero Sections (1–5)](#hero-sections-5)
+2. [Discovery Sections (1–5)](#discovery-sections-5)
 3. [Listing Sections (6–15)](#listing-sections-10)
 4. [Offer Sections (16–21)](#offer-sections-6)
 5. [Messaging Sections (22–29)](#messaging-sections-8)
@@ -41,9 +41,9 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-## HERO SECTIONS (5)
+## DISCOVERY SECTIONS (5)
 
-### Section 1: Hero Search
+### Section 1: Start a property search
 
 **Purpose:** Start a search from the first screen. · **Used on:** Home, potentially dashboard
 
@@ -65,7 +65,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-### Section 2: Featured Carousel
+### Section 2: Featured listings
 
 **Purpose:** Show promoted and popular inventory. · **Used on:** Home, dashboard
 
@@ -113,7 +113,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-### Section 5: CTA Banner
+### Section 5: Prompt to act
 
 **Purpose:** Convert an engaged visitor. · **Used on:** Home and many other pages
 
@@ -127,7 +127,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ## LISTING SECTIONS (10)
 
-### Section 6: Listing Gallery
+### Section 6: Listing photos
 
 **Purpose:** Let the buyer see the property. · **Used on:** Listing detail
 
@@ -146,7 +146,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-### Section 7: Listing Price Bar
+### Section 7: Listing price and actions
 
 **Purpose:** Keep price, status and the main actions available while reading. · **Used on:** Listing detail
 
@@ -219,7 +219,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-### Section 12: Agent Card
+### Section 12: Listing agent contact
 
 **Purpose:** Who is selling and how to reach them. · **Used on:** Listing detail
 
@@ -234,7 +234,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-### Section 13: Listing Card (Search Results)
+### Section 13: Listing summary
 
 **Purpose:** One listing, enough to decide whether to open it. · **Used on:** Search results, saved listings, featured sections
 
@@ -248,7 +248,7 @@ Every section inherits these unless its entry overrides them. They satisfy the m
 
 ---
 
-### Section 14: Listing Status Timeline
+### Section 14: Listing deal history
 
 **Purpose:** The history of a listing's deal. · **Used on:** Offer detail, CRM
 
@@ -298,7 +298,7 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 ---
 
-### Section 17: Offer Status Card
+### Section 17: Offer status
 
 **Purpose:** Where one offer stands. · **Used on:** My offers, agent pipeline
 
@@ -311,7 +311,7 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 ---
 
-### Section 18: Offer Timeline
+### Section 18: Negotiation history
 
 **Purpose:** Every round of the negotiation. · **Used on:** Offer detail
 
@@ -384,7 +384,7 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 
 ---
 
-### Section 23: Message Input
+### Section 23: Compose a message
 
 **Purpose:** Compose and send. · **Used on:** Messages page, chat sections
 
@@ -432,7 +432,7 @@ The earlier run headed this group "(10)" but specified six sections (16–21). T
 Version 1 named these as one line: "Typing Indicator, Thread Header, Conversation List Sidebar, etc." They are split here with a note, per Scope Preservation.
 
 - **Section 26: Typing Indicator** — tells the user the other party is composing; announced politely. _(Real-time dependency deferred — see Phase 8.)_
-- **Section 27: Thread Header** — who the conversation is with, the property it concerns, and what can be done with the whole thread.
+- **Section 27: Conversation details and actions** — who the conversation is with, the property it concerns, and what can be done with the whole thread.
 - **Section 28: Conversation List** — every conversation, searchable and filterable, unread first.
 - **Section 29: Unnamed ("etc.")** — reserved; version 1 did not specify it. Owner to name or confirm as the thread's context (property and agent).
 
@@ -440,7 +440,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ## FORM SECTIONS (10)
 
-### Section 30: Input Field
+### Section 30: Enter a value
 
 **Purpose:** One labelled value. · **Used on:** All forms
 
@@ -454,7 +454,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 31: Checkbox Group
+### Section 31: Choose several options
 
 **Purpose:** Several independent choices. · **Used on:** Offer form, search filters
 
@@ -467,7 +467,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 32: Radio Button Group
+### Section 32: Choose one option
 
 **Purpose:** One choice from a set. · **Used on:** Filters, forms (single selection)
 
@@ -480,7 +480,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 33: Dropdown/Select
+### Section 33: Choose from a long set
 
 **Purpose:** One choice from a long set. · **Used on:** Forms, filters
 
@@ -495,7 +495,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 34: Date Picker
+### Section 34: Choose a date
 
 **Purpose:** Choose a date. · **Used on:** Viewing scheduling, offer form
 
@@ -509,7 +509,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 35: Price Slider
+### Section 35: Narrow by price
 
 **Purpose:** Narrow by price. · **Used on:** Search filters
 
@@ -525,7 +525,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 36: Toggle/Switch
+### Section 36: Switch a setting on or off
 
 **Purpose:** An on/off setting that applies immediately. · **Used on:** Settings, notification preferences
 
@@ -538,7 +538,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 37: Search Input (Autocomplete)
+### Section 37: Search with suggestions
 
 **Purpose:** Free text with suggestions. · **Used on:** Location search, listing search
 
@@ -586,7 +586,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ## DASHBOARD & DATA SECTIONS (7)
 
-### Section 40: Stat Card
+### Section 40: Headline figure
 
 **Purpose:** One headline figure. · **Used on:** Dashboards
 
@@ -599,7 +599,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 41: Data Table
+### Section 41: Sortable records
 
 **Purpose:** Many records, comparable by column. · **Used on:** Offers, listings, admin, agent dashboard
 
@@ -617,7 +617,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 42: Pipeline Card (CRM-style)
+### Section 42: Pipeline deal
 
 **Purpose:** One deal in the agent's pipeline. · **Used on:** Agent pipeline
 
@@ -649,7 +649,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 44: Quick Stats Widget
+### Section 44: Key metrics for a role
 
 **Purpose:** A role's few key numbers. · **Used on:** Dashboard, admin overview
 
@@ -661,7 +661,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 45: Calendar Widget
+### Section 45: Events by date
 
 **Purpose:** Events by date. · **Used on:** Viewing calendar, agent calendar
 
@@ -675,7 +675,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 ---
 
-### Section 46: Chart/Graph
+### Section 46: Trend or distribution
 
 **Purpose:** A trend or distribution. · **Used on:** Agent analytics, admin reports
 
@@ -694,7 +694,7 @@ Version 1 named these as one line: "Typing Indicator, Thread Header, Conversatio
 
 Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe navigation, not layout.
 
-### Section 47: Header
+### Section 47: Global navigation
 
 **Purpose:** Global navigation. · **Used on:** All pages
 
@@ -706,7 +706,7 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 ---
 
-### Section 48: Footer
+### Section 48: Site-wide links
 
 **Purpose:** Site-wide links. · **Used on:** All pages (public pages)
 
@@ -722,7 +722,7 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 ---
 
-### Section 49: Sidebar Navigation
+### Section 49: Portal navigation
 
 **Purpose:** Portal navigation. · **Used on:** Dashboard, agent, admin
 
@@ -738,7 +738,7 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 ## STATE & FEEDBACK SECTIONS (3)
 
-### Section 50: Toast Notification
+### Section 50: Outcome confirmation
 
 **Purpose:** Confirm an outcome that is not otherwise visible. · **Used on:** Everywhere (save, send, error, etc.)
 
@@ -754,7 +754,7 @@ Version 1 headed these "LAYOUT SECTIONS". Renamed because the sections describe 
 
 ---
 
-### Section 51: Modal/Dialog
+### Section 51: Focused task or confirmation
 
 **Purpose:** A focused task or confirmation. · **Used on:** Confirmations, forms, details
 
@@ -823,7 +823,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ## ADMIN SECTIONS (15)
 
-### Section 56: Admin Console Shell
+### Section 56: Admin navigation and identity
 
 **Purpose:** Admin navigation and identity. · **Used on:** Every /admin route
 
@@ -841,7 +841,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 57: Volume Metrics Grid
+### Section 57: Platform volume metrics
 
 **Purpose:** Platform volume at a glance. · **Used on:** Admin overview
 
@@ -855,7 +855,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 58: Revenue Trend Panel
+### Section 58: Revenue trend
 
 **Purpose:** Revenue over time. · **Used on:** Admin overview, admin payments
 
@@ -870,7 +870,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 59: Revenue Breakdown Panel
+### Section 59: Revenue breakdown
 
 **Purpose:** Where revenue comes from. · **Used on:** Admin overview
 
@@ -920,7 +920,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 63: Moderation Listings Table
+### Section 63: Moderation listing records
 
 **Purpose:** The moderation queue as records. · **Used on:** Admin listings · **Extends:** Section 15
 
@@ -938,7 +938,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 64: Moderation Decision Modal
+### Section 64: Moderation decision
 
 **Purpose:** Record a reasoned decision. · **Used on:** Admin listings
 
@@ -955,7 +955,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 65: User Management Table
+### Section 65: User accounts and standing
 
 **Purpose:** Every account and its standing. · **Used on:** Admin users
 
@@ -973,7 +973,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 66: Transaction Ledger Table
+### Section 66: Transaction ledger
 
 **Purpose:** Every deal's money. · **Used on:** Admin transactions
 
@@ -1003,7 +1003,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 68: Platform Config Panel
+### Section 68: Platform configuration values
 
 **Purpose:** Platform and marketplace values. · **Used on:** Admin settings
 
@@ -1019,7 +1019,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 69: Policy Toggle Panel
+### Section 69: Policy settings
 
 **Purpose:** Moderation and operations policies. · **Used on:** Admin settings
 
@@ -1031,7 +1031,7 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
 
 ---
 
-### Section 70: Maintenance Panel
+### Section 70: Maintenance operations
 
 **Purpose:** Operational and destructive maintenance. · **Used on:** Admin settings
 
@@ -1052,6 +1052,53 @@ Version 1 headed these "ERROR PAGES"; they are sections used by Pages 45–46.
     - **Field removed:** every "Content Model" block (Sections 1–25, 30–46, 47–70). Data in it moved to **Data requirements**; behaviour to **Interactions**; requirements to **Rules** or **Accessibility**. Blocks that were pure inventories (Sections 4, 5, 47–55) were replaced by what the section must let the user do or know. No section had a "Controls" field or a component-building technical note; the Section Defaults' data default was reworded from "receive rows as props from their route's console" to data ownership.
     - **Relocated as requirements:** Sections 1, 3 and 5 — marketplace figures must be true and reviews quoted with consent (Rules, BR15); Section 48 — copyright stated (Rules); Section 54 — error description stays vague, no internal detail disclosed (Rules, security); Section 63 — flagged/rejected listings identifiable without colour moved from interactions to Accessibility, and "Approve hidden when already approved" (from Page 21) added as a rule; Section 65 and 66 — "identifiable without colour" moved to Accessibility; Section 68 — unit stated in the label or accessible name.
     - **Dropped as screen content:** headline and CTA copy ("Find Your Next Home", "Search 10k+ properties", "Ready to get started?", "Join 10k+ buyers today", "Something went wrong", "Page not found", "Check your internet" as prescribed headings — the messages survive as what the user is told); "CTA buttons", "Search input", "Drop zone", "'Choose file' button", "Step indicator (1/3…)", "Next, Back, Submit", "Text input field", "Send", "Placeholder text", "Month/year controls", "Column headers (sortable)", "Brand block: 'Admin' / 'Console'", "Brand", "Menu items", "Panel title and description", "Title / Content / Actions (OK, Cancel, Delete) / Close" for dialogs, "Headline / Description / Next action" for empty states, "Data points, legend", "Label (required indicator)"; placement words in interactions ("Click", "Button →", "Header →", "Row actions", "Footer totals", "Legend → toggle series", "Photo → full profile"); "Used on" wording "bottom of many pages", "Make offer dialog/page", "search card", "filter panel".
+- **Changed — sections renamed by job (2 October 2026, No Visual Prescription):** 42 section headings and one group heading named a presentation or a container (hero, carousel, banner, card, bar, timeline, header, footer, sidebar, toast, modal, shell, grid, panel, table, widget) or the control a section was assumed to be built from (input field, checkbox group, radio button group, dropdown, date picker, slider, toggle). Each now names the job it does. Only names changed: every section keeps its number, purpose, data requirements, interactions, rules, divergence notes and Phase 8 status, and no section was added, merged or removed. The intro's statement that presentational headings are "kept as an identifier only" is superseded — numbers are the identifiers. Built files and Phase 6 contracts keep their own names (e.g. Section 5 is built as `cta-banner`; C13 is still "Modal / Dialog"). The record, per Scope Preservation:
+
+| #         | Was                           | Now                              |
+| --------- | ----------------------------- | -------------------------------- |
+| Group 1–5 | HERO SECTIONS (5)             | DISCOVERY SECTIONS (5)           |
+| 1         | Hero Search                   | Start a property search          |
+| 2         | Featured Carousel             | Featured listings                |
+| 5         | CTA Banner                    | Prompt to act                    |
+| 6         | Listing Gallery               | Listing photos                   |
+| 7         | Listing Price Bar             | Listing price and actions        |
+| 12        | Agent Card                    | Listing agent contact            |
+| 13        | Listing Card (Search Results) | Listing summary                  |
+| 14        | Listing Status Timeline       | Listing deal history             |
+| 17        | Offer Status Card             | Offer status                     |
+| 18        | Offer Timeline                | Negotiation history              |
+| 23        | Message Input                 | Compose a message                |
+| 27        | Thread Header                 | Conversation details and actions |
+| 30        | Input Field                   | Enter a value                    |
+| 31        | Checkbox Group                | Choose several options           |
+| 32        | Radio Button Group            | Choose one option                |
+| 33        | Dropdown/Select               | Choose from a long set           |
+| 34        | Date Picker                   | Choose a date                    |
+| 35        | Price Slider                  | Narrow by price                  |
+| 36        | Toggle/Switch                 | Switch a setting on or off       |
+| 37        | Search Input (Autocomplete)   | Search with suggestions          |
+| 40        | Stat Card                     | Headline figure                  |
+| 41        | Data Table                    | Sortable records                 |
+| 42        | Pipeline Card (CRM-style)     | Pipeline deal                    |
+| 44        | Quick Stats Widget            | Key metrics for a role           |
+| 45        | Calendar Widget               | Events by date                   |
+| 46        | Chart/Graph                   | Trend or distribution            |
+| 47        | Header                        | Global navigation                |
+| 48        | Footer                        | Site-wide links                  |
+| 49        | Sidebar Navigation            | Portal navigation                |
+| 50        | Toast Notification            | Outcome confirmation             |
+| 51        | Modal/Dialog                  | Focused task or confirmation     |
+| 56        | Admin Console Shell           | Admin navigation and identity    |
+| 57        | Volume Metrics Grid           | Platform volume metrics          |
+| 58        | Revenue Trend Panel           | Revenue trend                    |
+| 59        | Revenue Breakdown Panel       | Revenue breakdown                |
+| 63        | Moderation Listings Table     | Moderation listing records       |
+| 64        | Moderation Decision Modal     | Moderation decision              |
+| 65        | User Management Table         | User accounts and standing       |
+| 66        | Transaction Ledger Table      | Transaction ledger               |
+| 68        | Platform Config Panel         | Platform configuration values    |
+| 69        | Policy Toggle Panel           | Policy settings                  |
+| 70        | Maintenance Panel             | Maintenance operations           |
 
 ---
 
