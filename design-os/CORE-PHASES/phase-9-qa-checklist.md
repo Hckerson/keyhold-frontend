@@ -304,7 +304,7 @@ in as a buyer and as an agent.
 - [ ] Logout clears auth state and token, then redirects to /
 - [ ] Expired token mid-session redirects rather than rendering an empty console
 
-### Console Shell
+### Admin Navigation and Identity (Section 56)
 
 - [ ] All six nav groups render with labels (Overview, Marketplace, Finance, Insights, Trust & Safety, System)
 - [ ] Current route indicated, and marked `aria-current`
@@ -452,6 +452,7 @@ in as a buyer and as an agent.
 - **Added:** non-text contrast, keyboard equivalents for pointer-only interactions, motion and target-size checks; behavioural consistency; content honesty; trust-queue checks; scalability, maintainability and developer experience; enum/contract gate items; the reduced-motion and divider-contrast rules moved from old Phase 7.
 - **Changed:** file renamed `phase-10-qa-checklist.md` → `phase-9-qa-checklist.md`. FID replaced by INP. The **Design System Compliance** section (no hardcoded colours / spacing / typography / motion, token names) dropped — styling is governed by the code and checked by lint. Responsive section recast as functional checks — dropped: breakpoint bands "320-479px / 480-1023px / 1024px+", "Touch targets ≥48px / ≥44px", "Text readable without zoom (14-16px minimum)", "2-column layout works (sidebar + content)", "3-column layout optimized (not stretched)", "Max content width ~1200px", "Hover states visible", "Whitespace adequate", "No fixed widths (use %)", "Images responsive (max-width: 100%)". Cross-browser "Layout renders correctly", "CSS variables working", "Flexbox/Grid renders as expected", "Modals display correctly", "Scrolling smooth", "Sticky headers work" recast functionally. "Tab order is logical (left-to-right, top-to-bottom)" → "follows reading order". "Numeric columns use tabular figures and right alignment" dropped. "404/500 page styled and helpful" → "helpful". "Loading states use skeletons (not spinners)" → "preserve structure". "Success feedback clear (toast or banner)" → "clear". "Hero image optimized" → "LCP image prioritised". "Row tinting", "badge", "sidebar", "callout" → neutral terms. "WebP with JPEG fallback" → "modern formats with fallback".
 - **Changed (30 September 2026, screen-content pass):** the save/unsave consistency item names where saving happens (search results, listing detail, saved list) instead of "cards".
+- **Changed (2 October 2026, section-name pass):** the Admin Console QA sub-heading "Console Shell" → "Admin Navigation and Identity (Section 56)", following the Phase 5 rename of Section 56. Its checklist items are unchanged.
 
 ---
 

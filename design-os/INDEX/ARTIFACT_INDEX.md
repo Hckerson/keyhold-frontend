@@ -176,11 +176,13 @@ Phases 1-7 of the version 1 set were also published as browser-viewable artifact
 | 2     | journey, J1–J19, trigger, entry point, decision point, emotional arc, failure path, recovery, triage, moderation, dispute                                                            |
 | 3     | sitemap, route, navigation, permission, taxonomy, label, empty state copy, breadcrumb, SEO, fallback, filter hierarchy                                                               |
 | 4     | page, Page N, module, primary task, required data, rules, device needs, loading, empty, error, success, admin, portal                                                                |
-| 5     | section, Section N, data requirements, interactions, defaults, Hero Search, Listing Card, Offer Form, Message Thread, Data Table, Admin Console Shell (headings kept as identifiers) |
+| 5     | section, Section N, data requirements, interactions, defaults, Start a property search, Listing summary, Offer Form, Message Thread, Sortable records, Admin navigation and identity |
 | 6     | contract, C1–C88, keyboard, ARIA, validation, confirm modal, focus, toast, combobox, switch                                                                                          |
 | 7     | folder, route group, layout, provider, store, console, hook, query key, mapper, API client, contract, splitting, lazy                                                                |
 | 8     | sprint, milestone, risk, dependency, status, Specified, Built, Verified, Deferred, register                                                                                          |
 | 9     | QA, WCAG, contrast, reflow, LCP, INP, CLS, bundle, security, admin QA, sign-off                                                                                                      |
+
+**Changed (2 October 2026):** the Phase 5 keywords use the job-based section names ("Hero Search" → "Start a property search", "Listing Card" → "Listing summary", "Data Table" → "Sortable records", "Admin Console Shell" → "Admin navigation and identity"); headings are no longer "kept as identifiers" — section numbers are. Old names: Phase 5 › Regeneration Notes.
 
 ---
 
