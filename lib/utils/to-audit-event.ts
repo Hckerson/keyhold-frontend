@@ -21,7 +21,7 @@ export const toAuditEvent = (log: AuditLog): AuditEvent => {
         security: SECURITY_ACTIONS.includes(log.action),
         actor,
         initials: initialsOf(actor),
-        subject: AUDIT_SUBJECTS[log.entityType] ?? log.entityType,
+        subject: AUDIT_SUBJECTS[log.entityType.toUpperCase()] ?? log.entityType,
         ageMinutes: minutesSince(log.createdAt),
     };
 };
