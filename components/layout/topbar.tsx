@@ -55,7 +55,7 @@ export function Topbar({
                             aria-label="Open navigation"
                             className={cn(
                                 TOPBAR_ICON_BUTTON,
-                                "-ml-1 lg:hidden",
+                                "desk-hidden -ml-1",
                             )}
                         >
                             <Menu

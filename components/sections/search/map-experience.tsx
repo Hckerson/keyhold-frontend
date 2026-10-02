@@ -107,7 +107,7 @@ export function MapExperience() {
                 summary={`${data?.total ?? 0} placed`}
             />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
+            <div className="filter-split gap-4">
                 <SearchFilterAside
                     draft={draft}
                     counts={facets ?? EMPTY_COUNTS}

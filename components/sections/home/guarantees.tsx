@@ -27,7 +27,7 @@ export function GuaranteesSection() {
                     ))}
                 </div>
 
-                <ul className="border-border mt-8 grid gap-4 border-t pt-6 sm:grid-cols-3">
+                <ul className="border-border trio-grid mt-8 gap-4 border-t pt-6">
                     {PLATFORM_SAFEGUARDS.map((badge) => (
                         <li
                             key={badge.label}

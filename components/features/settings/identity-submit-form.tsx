@@ -45,7 +45,7 @@ export function IdentitySubmitForm({
 }: IdentitySubmitFormProps) {
     return (
         <div className="flex flex-col gap-3">
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="trio-grid gap-3">
                 <Select
                     label={IDENTITY_COPY.typeLabel}
                     options={IDENTITY_DOCUMENT_TYPES}

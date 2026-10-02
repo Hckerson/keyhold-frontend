@@ -129,7 +129,7 @@ export function SearchExperience() {
         <div className="flex w-full flex-col gap-4">
             <SearchHeader location={applied.location} />
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[240px_1fr]">
+            <div className="filter-split gap-4">
                 <SearchFilterAside
                     draft={draft}
                     counts={counts}
