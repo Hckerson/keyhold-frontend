@@ -20,7 +20,7 @@
 
 Tick them off as you read. Phases live in `CORE-PHASES/`, engineering guides in `IMPLEMENTATION/`, navigation in `INDEX/`.
 
-**One thing to know first:** this design OS says what every page must *do*. It never says how anything *looks* — that is decided page by page, with the owner, when the page is built.
+**One thing to know first:** this design OS says what every page must _do_. It never says how anything _looks_ — that is decided page by page, with the owner, when the page is built.
 
 ---
 
@@ -32,28 +32,28 @@ Tick them off as you read. Phases live in `CORE-PHASES/`, engineering guides in 
 
 ## Files
 
-| File | Purpose | Action |
-| ---- | ------- | ------ |
-| **INDEX/START_HERE.md** | This file — orientation | You're reading it |
-| **INDEX/README.md** | Five-minute overview | Read next if new |
-| **INDEX/DESIGN-OS-COMPLETE.md** | Master index of all 17 documents | Use as the map |
-| **INDEX/ARTIFACT_INDEX.md** | Deep description of each of the 9 phases, status roll-up | Bookmark for reference |
-| **INDEX/\_FOLDER_STRUCTURE.md** | How `design-os/` is laid out, per-role reading | Read if navigating blind |
-| **INDEX/RATIFIED_DIVERGENCES.md** | Owner decisions where code departs from the spec | Read before changing shipped behaviour |
-| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md** | The engineering prompt | Copy into your next session |
-| **IMPLEMENTATION/SETUP-CHECKLIST.md** | Clone to verified environment | Follow once |
+| File                                        | Purpose                                                  | Action                                 |
+| ------------------------------------------- | -------------------------------------------------------- | -------------------------------------- |
+| **INDEX/START_HERE.md**                     | This file — orientation                                  | You're reading it                      |
+| **INDEX/README.md**                         | Five-minute overview                                     | Read next if new                       |
+| **INDEX/DESIGN-OS-COMPLETE.md**             | Master index of all 17 documents                         | Use as the map                         |
+| **INDEX/ARTIFACT_INDEX.md**                 | Deep description of each of the 9 phases, status roll-up | Bookmark for reference                 |
+| **INDEX/\_FOLDER_STRUCTURE.md**             | How `design-os/` is laid out, per-role reading           | Read if navigating blind               |
+| **INDEX/RATIFIED_DIVERGENCES.md**           | Owner decisions where code departs from the spec         | Read before changing shipped behaviour |
+| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md** | The engineering prompt                                   | Copy into your next session            |
+| **IMPLEMENTATION/SETUP-CHECKLIST.md**       | Clone to verified environment                            | Follow once                            |
 
-| Phase | File | Purpose |
-| ----- | ---- | ------- |
-| 1 | [`phase-1-product-vision.md`](../CORE-PHASES/phase-1-product-vision.md) | Strategy, personas, roles, business rules, KPIs |
-| 2 | [`phase-2-experience-maps.md`](../CORE-PHASES/phase-2-experience-maps.md) | 19 journeys, decision points, failure paths |
-| 3 | [`phase-3-information-architecture.md`](../CORE-PHASES/phase-3-information-architecture.md) | Sitemap, navigation, permissions |
-| 4 | [`phase-4-page-blueprints.md`](../CORE-PHASES/phase-4-page-blueprints.md) | 46 page specs |
-| 5 | [`phase-5-section-blueprints.md`](../CORE-PHASES/phase-5-section-blueprints.md) | 70 sections |
-| 6 | [`phase-6-interaction-contracts.md`](../CORE-PHASES/phase-6-interaction-contracts.md) | 88 behaviour contracts |
-| 7 | [`phase-7-frontend-architecture.md`](../CORE-PHASES/phase-7-frontend-architecture.md) | Folder structure, routes, data flow |
-| 8 | [`phase-8-implementation-roadmap.md`](../CORE-PHASES/phase-8-implementation-roadmap.md) | 16-week plan, build status, deferrals |
-| 9 | [`phase-9-qa-checklist.md`](../CORE-PHASES/phase-9-qa-checklist.md) | Accessibility, performance, security |
+| Phase | File                                                                                        | Purpose                                         |
+| ----- | ------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| 1     | [`phase-1-product-vision.md`](../CORE-PHASES/phase-1-product-vision.md)                     | Strategy, personas, roles, business rules, KPIs |
+| 2     | [`phase-2-experience-maps.md`](../CORE-PHASES/phase-2-experience-maps.md)                   | 19 journeys, decision points, failure paths     |
+| 3     | [`phase-3-information-architecture.md`](../CORE-PHASES/phase-3-information-architecture.md) | Sitemap, navigation, permissions                |
+| 4     | [`phase-4-page-blueprints.md`](../CORE-PHASES/phase-4-page-blueprints.md)                   | 46 page specs                                   |
+| 5     | [`phase-5-section-blueprints.md`](../CORE-PHASES/phase-5-section-blueprints.md)             | 70 sections                                     |
+| 6     | [`phase-6-interaction-contracts.md`](../CORE-PHASES/phase-6-interaction-contracts.md)       | 88 behaviour contracts                          |
+| 7     | [`phase-7-frontend-architecture.md`](../CORE-PHASES/phase-7-frontend-architecture.md)       | Folder structure, routes, data flow             |
+| 8     | [`phase-8-implementation-roadmap.md`](../CORE-PHASES/phase-8-implementation-roadmap.md)     | 16-week plan, build status, deferrals           |
+| 9     | [`phase-9-qa-checklist.md`](../CORE-PHASES/phase-9-qa-checklist.md)                         | Accessibility, performance, security            |
 
 ---
 
@@ -81,21 +81,21 @@ Start the next session by pasting `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`, the
 
 ## Quick Reference
 
-| I want to... | Go to... |
-| ------------ | -------- |
-| Know the binding rules | `.claude/CLAUDE.md` |
-| Understand the strategy | `CORE-PHASES/phase-1-product-vision.md` |
-| Check a business rule | `CORE-PHASES/phase-1-product-vision.md#business-rules` |
-| See a user flow | `CORE-PHASES/phase-2-experience-maps.md` |
-| See page specifications | `CORE-PHASES/phase-4-page-blueprints.md` |
-| Find how a control behaves | `CORE-PHASES/phase-6-interaction-contracts.md` |
-| Decide how a page looks | Run a visual concept with the owner — `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md#visual-design-hand-off` |
-| Know what to build | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md` |
-| Know whether it is built | `CORE-PHASES/phase-8-implementation-roadmap.md` |
-| Understand codebase setup | `CORE-PHASES/phase-7-frontend-architecture.md` |
-| Set up my machine | `IMPLEMENTATION/SETUP-CHECKLIST.md` |
-| See where code and spec differ | `INDEX/RATIFIED_DIVERGENCES.md` |
-| Verify before shipping | `CORE-PHASES/phase-9-qa-checklist.md` |
+| I want to...                   | Go to...                                                                                               |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Know the binding rules         | `.claude/CLAUDE.md`                                                                                    |
+| Understand the strategy        | `CORE-PHASES/phase-1-product-vision.md`                                                                |
+| Check a business rule          | `CORE-PHASES/phase-1-product-vision.md#business-rules`                                                 |
+| See a user flow                | `CORE-PHASES/phase-2-experience-maps.md`                                                               |
+| See page specifications        | `CORE-PHASES/phase-4-page-blueprints.md`                                                               |
+| Find how a control behaves     | `CORE-PHASES/phase-6-interaction-contracts.md`                                                         |
+| Decide how a page looks        | Run a visual concept with the owner — `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md#visual-design-hand-off` |
+| Know what to build             | `IMPLEMENTATION/IMPLEMENTATION_PROMPT.md`                                                              |
+| Know whether it is built       | `CORE-PHASES/phase-8-implementation-roadmap.md`                                                        |
+| Understand codebase setup      | `CORE-PHASES/phase-7-frontend-architecture.md`                                                         |
+| Set up my machine              | `IMPLEMENTATION/SETUP-CHECKLIST.md`                                                                    |
+| See where code and spec differ | `INDEX/RATIFIED_DIVERGENCES.md`                                                                        |
+| Verify before shipping         | `CORE-PHASES/phase-9-qa-checklist.md`                                                                  |
 
 ---
 

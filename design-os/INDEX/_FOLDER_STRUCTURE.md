@@ -42,14 +42,14 @@ The seed's file names are used inside the folders. `design-os/generated/` is not
 
 **Purpose:** Start here. Navigation and reference documents that help you understand the design OS.
 
-| File                        | Purpose                                                         |
-| --------------------------- | --------------------------------------------------------------- |
-| **START_HERE.md**           | 🚀 Quick entry point for first-time users. Read this first.     |
-| **README.md**               | 5-minute overview. What is this design OS?                      |
-| **DESIGN-OS-COMPLETE.md**   | Master index of all 17 documents.                               |
+| File                        | Purpose                                                           |
+| --------------------------- | ----------------------------------------------------------------- |
+| **START_HERE.md**           | 🚀 Quick entry point for first-time users. Read this first.       |
+| **README.md**               | 5-minute overview. What is this design OS?                        |
+| **DESIGN-OS-COMPLETE.md**   | Master index of all 17 documents.                                 |
 | **ARTIFACT_INDEX.md**       | Detailed index with deep descriptions and a build status roll-up. |
-| **RATIFIED_DIVERGENCES.md** | Owner decisions where the code departs from Phases 1–7.         |
-| **\_FOLDER_STRUCTURE.md**   | This file. Explains the folder layout.                          |
+| **RATIFIED_DIVERGENCES.md** | Owner decisions where the code departs from Phases 1–7.           |
+| **\_FOLDER_STRUCTURE.md**   | This file. Explains the folder layout.                            |
 
 **When to use:** Start with START_HERE.md, then read README.md for context. Use DESIGN-OS-COMPLETE.md as the master reference.
 
@@ -59,17 +59,17 @@ The seed's file names are used inside the folders. `design-os/generated/` is not
 
 **Purpose:** The design operating system, organized by phase.
 
-| File                                    | What It Covers                                                             | Was (v1)                            |
-| --------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------- |
-| **phase-1-product-vision.md**           | Vision, personas, roles, business rules, KPIs, principles.                 | same                                |
-| **phase-2-experience-maps.md**          | 19 user journeys (search, offer, messaging, admin, escrow, disputes…).     | same                                |
-| **phase-3-information-architecture.md** | Navigation, sitemap, taxonomy, permissions, hierarchies.                   | same                                |
-| **phase-4-page-blueprints.md**          | 46 pages — user goals, data, device needs, states, rules.                  | same                                |
-| **phase-5-section-blueprints.md**       | 70 sections by job.                                                        | same                                |
-| **phase-6-interaction-contracts.md**    | 88 behaviour contracts.                                                    | `phase-6-component-library.md`      |
-| **phase-7-frontend-architecture.md**    | Folder structure, routing, layouts, data flow, performance.                | `phase-8-frontend-architecture.md`  |
-| **phase-8-implementation-roadmap.md**   | 16-week plan, milestones, per-feature build status.                        | `phase-9-implementation-roadmap.md` |
-| **phase-9-qa-checklist.md**             | 213 functional QA items.                                                   | `phase-10-qa-checklist.md`          |
+| File                                    | What It Covers                                                         | Was (v1)                            |
+| --------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------- |
+| **phase-1-product-vision.md**           | Vision, personas, roles, business rules, KPIs, principles.             | same                                |
+| **phase-2-experience-maps.md**          | 19 user journeys (search, offer, messaging, admin, escrow, disputes…). | same                                |
+| **phase-3-information-architecture.md** | Navigation, sitemap, taxonomy, permissions, hierarchies.               | same                                |
+| **phase-4-page-blueprints.md**          | 46 pages — user goals, data, device needs, states, rules.              | same                                |
+| **phase-5-section-blueprints.md**       | 70 sections by job.                                                    | same                                |
+| **phase-6-interaction-contracts.md**    | 88 behaviour contracts.                                                | `phase-6-component-library.md`      |
+| **phase-7-frontend-architecture.md**    | Folder structure, routing, layouts, data flow, performance.            | `phase-8-frontend-architecture.md`  |
+| **phase-8-implementation-roadmap.md**   | 16-week plan, milestones, per-feature build status.                    | `phase-9-implementation-roadmap.md` |
+| **phase-9-qa-checklist.md**             | 213 functional QA items.                                               | `phase-10-qa-checklist.md`          |
 
 Version 1's `phase-7-design-tokens.md` was removed after its non-visual rules were merged into Phases 6, 7 and 9; it remains in git history.
 
@@ -83,9 +83,9 @@ Version 1's `phase-7-design-tokens.md` was removed after its non-visual rules we
 
 **Purpose:** Actionable guides for engineers. Synthesizes all 9 phases into concrete steps.
 
-| File                         | Purpose                                                                                     |
-| ---------------------------- | ------------------------------------------------------------------------------------------- |
-| **SETUP-CHECKLIST.md**       | From clone to verified environment: Node, pnpm, env vars, tests, gates.                     |
+| File                         | Purpose                                                                                            |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- |
+| **SETUP-CHECKLIST.md**       | From clone to verified environment: Node, pnpm, env vars, tests, gates.                            |
 | **IMPLEMENTATION_PROMPT.md** | The engineering prompt: architecture, sprints, what remains, patterns, the Visual Design Hand-off. |
 
 **When to use:** After reading CORE-PHASES 1, 3 and 7, follow SETUP-CHECKLIST.md once. Then use IMPLEMENTATION_PROMPT.md as your working brief.

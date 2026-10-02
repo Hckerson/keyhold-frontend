@@ -58,14 +58,14 @@ Four things about this document:
 
 ## Required Reading: Phases 1–6
 
-| Phase | File | Read it for |
-| ----- | ---- | ----------- |
-| 1 | [Product Vision](../CORE-PHASES/phase-1-product-vision.md) | Personas, roles, **business rules BR1–BR18**, principles, non-goals |
-| 2 | [Experience Maps](../CORE-PHASES/phase-2-experience-maps.md) | The journey a feature serves; its failure and recovery paths |
-| 3 | [Information Architecture](../CORE-PHASES/phase-3-information-architecture.md) | Routes, permissions, labels, empty/fallback routes |
-| 4 | [Page Blueprints](../CORE-PHASES/phase-4-page-blueprints.md) | **Every page you build** — primary tasks (user goals), data, permissions, rules, states. What the page contains is decided with the owner at build time |
-| 5 | [Section Blueprints](../CORE-PHASES/phase-5-section-blueprints.md) | The jobs a page is split into — data, behaviour, accessibility; Section Defaults |
-| 6 | [Interaction Contracts](../CORE-PHASES/phase-6-interaction-contracts.md) | How every control behaves — keyboard, ARIA, validation, loading, error |
+| Phase | File                                                                           | Read it for                                                                                                                                             |
+| ----- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | [Product Vision](../CORE-PHASES/phase-1-product-vision.md)                     | Personas, roles, **business rules BR1–BR18**, principles, non-goals                                                                                     |
+| 2     | [Experience Maps](../CORE-PHASES/phase-2-experience-maps.md)                   | The journey a feature serves; its failure and recovery paths                                                                                            |
+| 3     | [Information Architecture](../CORE-PHASES/phase-3-information-architecture.md) | Routes, permissions, labels, empty/fallback routes                                                                                                      |
+| 4     | [Page Blueprints](../CORE-PHASES/phase-4-page-blueprints.md)                   | **Every page you build** — primary tasks (user goals), data, permissions, rules, states. What the page contains is decided with the owner at build time |
+| 5     | [Section Blueprints](../CORE-PHASES/phase-5-section-blueprints.md)             | The jobs a page is split into — data, behaviour, accessibility; Section Defaults                                                                        |
+| 6     | [Interaction Contracts](../CORE-PHASES/phase-6-interaction-contracts.md)       | How every control behaves — keyboard, ARIA, validation, loading, error                                                                                  |
 
 Also: [RATIFIED_DIVERGENCES](../INDEX/RATIFIED_DIVERGENCES.md) — owner decisions where the code departs from Phases 1–7. They win over the blueprint text they cite.
 
@@ -83,33 +83,33 @@ This design OS defines what each page must do, not how it looks. The look of eac
 
 ### Folder structure (exact paths)
 
-| Kind of code | Path |
-| ------------ | ---- |
-| Route | `app/(public)/…`, `app/(auth)/…`, `app/dashboard/…`, `app/agent/…`, `app/admin/…` |
-| Primitive | `components/ui/` (`charts/`, `forms/`) |
-| Generic composition | `components/patterns/` |
-| Domain leaf (row, table, mark, modal) | `components/features/<consuming portal>/` or `shared/` |
-| Route section | `components/sections/<route>/<route>-{console,header,main,rail,stat-band,toolbar}.tsx` |
-| Chrome | `components/layout/` |
-| Endpoint | `lib/constants.ts` → `config.api.*` |
-| Resource call | `lib/api/<resource>.ts` |
-| Hook | `lib/hooks/use-<resource>.ts`, keys in `lib/hooks/query-keys.ts` |
-| Mapper | `lib/utils/to-<entity>.ts` |
-| Per-screen derivation, options, copy | `lib/data/<route>.ts` |
-| Feature config and copy | `lib/config/<feature>.ts` |
-| Schema | `lib/validations/<domain>.ts` |
-| Shared type | `lib/types/<domain>.ts`, re-exported by `lib/types/index.ts` |
-| Test fixture | `lib/data/__fixtures__/` |
+| Kind of code                          | Path                                                                                   |
+| ------------------------------------- | -------------------------------------------------------------------------------------- |
+| Route                                 | `app/(public)/…`, `app/(auth)/…`, `app/dashboard/…`, `app/agent/…`, `app/admin/…`      |
+| Primitive                             | `components/ui/` (`charts/`, `forms/`)                                                 |
+| Generic composition                   | `components/patterns/`                                                                 |
+| Domain leaf (row, table, mark, modal) | `components/features/<consuming portal>/` or `shared/`                                 |
+| Route section                         | `components/sections/<route>/<route>-{console,header,main,rail,stat-band,toolbar}.tsx` |
+| Chrome                                | `components/layout/`                                                                   |
+| Endpoint                              | `lib/constants.ts` → `config.api.*`                                                    |
+| Resource call                         | `lib/api/<resource>.ts`                                                                |
+| Hook                                  | `lib/hooks/use-<resource>.ts`, keys in `lib/hooks/query-keys.ts`                       |
+| Mapper                                | `lib/utils/to-<entity>.ts`                                                             |
+| Per-screen derivation, options, copy  | `lib/data/<route>.ts`                                                                  |
+| Feature config and copy               | `lib/config/<feature>.ts`                                                              |
+| Schema                                | `lib/validations/<domain>.ts`                                                          |
+| Shared type                           | `lib/types/<domain>.ts`, re-exported by `lib/types/index.ts`                           |
+| Test fixture                          | `lib/data/__fixtures__/`                                                               |
 
 ### Route structure (exact routes)
 
-| Portal | Routes |
-| ------ | ------ |
-| Public | `/`, `/search`, `/listing/:id`, `/map`, `/about`, `/help`, `/blog`, `/contact`, `/privacy`, `/terms`, `/accessibility`, `/newsletter/confirm`, `/newsletter/unsubscribe` |
-| Auth | `/signup`, `/login`, `/reset-password`, `/verify-email` |
-| Buyer (`BUYER`) | `/dashboard`, `/dashboard/{saved,interests,offers,offers/:id,viewings,messages,transactions,alerts,settings}` |
-| Agent (`SELLER`) | `/agent`, `/agent/{listings,listings/new,listings/:id/edit,requests,leads,pipeline,calendar,concierge,analytics,settings}` |
-| Admin (`ADMIN`) | `/admin`, `/admin/{listings,flags,disputes,users,users/:id,transactions,payments,reports,verifications,settings}` |
+| Portal           | Routes                                                                                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Public           | `/`, `/search`, `/listing/:id`, `/map`, `/about`, `/help`, `/blog`, `/contact`, `/privacy`, `/terms`, `/accessibility`, `/newsletter/confirm`, `/newsletter/unsubscribe` |
+| Auth             | `/signup`, `/login`, `/reset-password`, `/verify-email`                                                                                                                  |
+| Buyer (`BUYER`)  | `/dashboard`, `/dashboard/{saved,interests,offers,offers/:id,viewings,messages,transactions,alerts,settings}`                                                            |
+| Agent (`SELLER`) | `/agent`, `/agent/{listings,listings/new,listings/:id/edit,requests,leads,pipeline,calendar,concierge,analytics,settings}`                                               |
+| Admin (`ADMIN`)  | `/admin`, `/admin/{listings,flags,disputes,users,users/:id,transactions,payments,reports,verifications,settings}`                                                        |
 
 Page numbers for each route: [Phase 4 › Page Index](../CORE-PHASES/phase-4-page-blueprints.md#page-index).
 
@@ -137,16 +137,16 @@ One resource or concern per file; every query keyed through `query-keys.ts`; mut
 
 ### The original 16-week plan
 
-| Sprint | Weeks | Focus                                               | Pages and flows                          | Owner    | Hours |
-| ------ | ----- | --------------------------------------------------- | ---------------------------------------- | -------- | ----- |
-| 1-2    | 1-2   | Foundation, architecture, tooling                   | Root layout, providers, API layer        | Lead Eng | 80    |
-| 2-3    | 3-4   | Interaction contracts (primitives + patterns)       | C1–C30                                   | Frontend | 120   |
-| 3-4    | 5-6   | Search & discovery                                  | Pages 1–4 · J1, J2                        | 2-3 Eng  | 160   |
-| 4-5    | 7-8   | Authentication (signup, login, reset, OAuth)        | Pages 5–7, 35 · J6                        | 1-2 Eng  | 100   |
-| 5-6    | 9-10  | Buyer dashboard (saved, offers, viewings, messages) | Pages 8–14, 38, 39 · J3, J4, J5, J7, J14, J17, J19 | 2-3 Eng | 200 |
-| 6-7    | 11-12 | Agent dashboard (listings, leads, pipeline)         | Pages 15–19, 40–42 · J15, J16             | 2-3 Eng  | 180   |
-| 7-8    | 13-14 | Admin dashboard (moderation, users, transactions)   | Pages 20–27, 43, 44 · J8–J13, J18         | 1-2 Eng  | 120   |
-| 8      | 15-16 | QA, accessibility, deployment                       | Pages 28–34, 45, 46 · Phase 9             | QA + Eng | 160   |
+| Sprint | Weeks | Focus                                               | Pages and flows                                    | Owner    | Hours |
+| ------ | ----- | --------------------------------------------------- | -------------------------------------------------- | -------- | ----- |
+| 1-2    | 1-2   | Foundation, architecture, tooling                   | Root layout, providers, API layer                  | Lead Eng | 80    |
+| 2-3    | 3-4   | Interaction contracts (primitives + patterns)       | C1–C30                                             | Frontend | 120   |
+| 3-4    | 5-6   | Search & discovery                                  | Pages 1–4 · J1, J2                                 | 2-3 Eng  | 160   |
+| 4-5    | 7-8   | Authentication (signup, login, reset, OAuth)        | Pages 5–7, 35 · J6                                 | 1-2 Eng  | 100   |
+| 5-6    | 9-10  | Buyer dashboard (saved, offers, viewings, messages) | Pages 8–14, 38, 39 · J3, J4, J5, J7, J14, J17, J19 | 2-3 Eng  | 200   |
+| 6-7    | 11-12 | Agent dashboard (listings, leads, pipeline)         | Pages 15–19, 40–42 · J15, J16                      | 2-3 Eng  | 180   |
+| 7-8    | 13-14 | Admin dashboard (moderation, users, transactions)   | Pages 20–27, 43, 44 · J8–J13, J18                  | 1-2 Eng  | 120   |
+| 8      | 15-16 | QA, accessibility, deployment                       | Pages 28–34, 45, 46 · Phase 9                      | QA + Eng | 160   |
 
 **Total:** ~1120 hours, 4-5 engineers, 16 weeks.
 
@@ -188,19 +188,19 @@ The foundation, primitives and all portals exist in the tree today. Treat the ta
 
 **File:** [phase-9-qa-checklist.md](../CORE-PHASES/phase-9-qa-checklist.md) — 200+ items. A feature passing it moves to **Verified** in Phase 8.
 
-| Category | Key items |
-| -------- | --------- |
-| Accessibility | WCAG 2.2 AA; contrast (1.4.3, 1.4.11); keyboard equivalents for drag and map pins; labelled inputs; announced errors and updates; reduced motion; target size (2.5.8) |
-| Performance | Lighthouse >90; LCP <2.5s; INP <200ms; CLS <0.1; JS <250kb gzipped; MapLibre only where a map shows |
-| Browsers | Chrome, Firefox, Safari, Edge (latest + 1); iOS Safari; Chrome Android |
-| Responsive behaviour | Reflow from 320 CSS px; 200% zoom; every task on touch; portal tables scroll within themselves |
-| Behavioural consistency | One confirmation pattern; no automatic write retries; note-required decisions identical; counts agree |
-| State coverage | Loading, empty, error, success on every page and section; an outage never looks like an empty market |
-| Content honesty | BR15, BR17; no promise of unshipped features |
-| Interaction contract completeness | Every control meets its Phase 6 contract (inputs, states, keyboard, ARIA, validation, loading, error) |
-| Admin | Server-enforced access; tables; moderation; verifications; trust queues; settings; charts; data integrity |
-| Security | `pnpm audit`; no secrets client-side; CSP; OAuth linking per BR12 |
-| SEO | Metadata, JSON-LD, sitemap, robots, canonical |
+| Category                          | Key items                                                                                                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accessibility                     | WCAG 2.2 AA; contrast (1.4.3, 1.4.11); keyboard equivalents for drag and map pins; labelled inputs; announced errors and updates; reduced motion; target size (2.5.8) |
+| Performance                       | Lighthouse >90; LCP <2.5s; INP <200ms; CLS <0.1; JS <250kb gzipped; MapLibre only where a map shows                                                                   |
+| Browsers                          | Chrome, Firefox, Safari, Edge (latest + 1); iOS Safari; Chrome Android                                                                                                |
+| Responsive behaviour              | Reflow from 320 CSS px; 200% zoom; every task on touch; portal tables scroll within themselves                                                                        |
+| Behavioural consistency           | One confirmation pattern; no automatic write retries; note-required decisions identical; counts agree                                                                 |
+| State coverage                    | Loading, empty, error, success on every page and section; an outage never looks like an empty market                                                                  |
+| Content honesty                   | BR15, BR17; no promise of unshipped features                                                                                                                          |
+| Interaction contract completeness | Every control meets its Phase 6 contract (inputs, states, keyboard, ARIA, validation, loading, error)                                                                 |
+| Admin                             | Server-enforced access; tables; moderation; verifications; trust queues; settings; charts; data integrity                                                             |
+| Security                          | `pnpm audit`; no secrets client-side; CSP; OAuth linking per BR12                                                                                                     |
+| SEO                               | Metadata, JSON-LD, sitemap, robots, canonical                                                                                                                         |
 
 ---
 
@@ -297,7 +297,12 @@ export function AdminFlagsConsole() {
     if (queue.visible.length === 0)
         return <EmptyState title={EMPTY_TITLE} description={EMPTY_LEDE} />;
 
-    return <AdminFlagsMain reports={queue.visible} onSettle={queue.requestSettle} />;
+    return (
+        <AdminFlagsMain
+            reports={queue.visible}
+            onSettle={queue.requestSettle}
+        />
+    );
 }
 ```
 
@@ -320,9 +325,16 @@ export function useSettleFlag() {
     const client = useQueryClient();
     return useMutation({
         meta: FEEDBACK.settleFlag,
-        mutationFn: ({ id, dismiss, note }: { id: string; dismiss?: boolean } & ResolveFlagInput) =>
-            dismiss ? flagsAPI.dismiss(id, { note }) : flagsAPI.resolve(id, { note }),
-        onSuccess: () => client.invalidateQueries({ queryKey: queryKeys.flags.all }),
+        mutationFn: ({
+            id,
+            dismiss,
+            note,
+        }: { id: string; dismiss?: boolean } & ResolveFlagInput) =>
+            dismiss
+                ? flagsAPI.dismiss(id, { note })
+                : flagsAPI.resolve(id, { note }),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.flags.all }),
     });
 }
 ```
@@ -395,7 +407,7 @@ Components consume hooks. They never call `lib/api/*` and never touch `fetch` di
 
 ### Unit test coverage targets
 
-- >80% on `lib/` — utilities, validators, formatters, mappers, selectors, hooks
+- > 80% on `lib/` — utilities, validators, formatters, mappers, selectors, hooks
 - All Zod schemas (validation logic)
 - Mock at the `lib/api/<resource>.ts` boundary, never the hook
 - Test-only fixtures live in `lib/data/__fixtures__/`
@@ -408,6 +420,7 @@ Components consume hooks. They never call `lib/api/*` and never touch `fetch` di
 3. Deal stage moves and milestone seeding (BR6, BR7)
 4. Auth and portal guards
 5. Consoles: fallback on failure, empty vs filtered-empty
+
 - Component behaviour via `@testing-library/react` — behaviour, not snapshots; >60% on `components/`
 
 ### E2E test scenarios

@@ -37,54 +37,54 @@ Blueprints never describe what a page contains, how it looks or where anything s
 
 **Total Pages:** 46 — 27 carried from version 1, 19 added in version 2.0.
 
-| #   | Page                         | Route                                              | Role      |
-| --- | ---------------------------- | -------------------------------------------------- | --------- |
-| 1   | Home                         | `/`                                                | Anyone    |
-| 2   | Search Results               | `/search`                                          | Anyone    |
-| 3   | Listing Detail               | `/listing/:id`                                     | Anyone    |
-| 4   | Map View                     | `/map`                                             | Anyone    |
-| 5   | Sign Up                      | `/signup`                                          | Anonymous |
-| 6   | Sign In                      | `/login`                                           | Anonymous |
-| 7   | Reset Password               | `/reset-password`                                  | Anonymous |
-| 8   | Buyer Dashboard Overview     | `/dashboard`                                       | Buyer     |
-| 9   | Saved Listings               | `/dashboard/saved`                                 | Buyer     |
-| 10  | My Offers (+ offer detail)   | `/dashboard/offers`, `/dashboard/offers/:id`       | Buyer     |
-| 11  | Viewings                     | `/dashboard/viewings`                              | Buyer     |
-| 12  | Messages                     | `/dashboard/messages`                              | Buyer     |
-| 13  | Alerts                       | `/dashboard/alerts`                                | Buyer     |
-| 14  | Settings                     | `/dashboard/settings`                              | Buyer     |
-| 15  | Agent Dashboard              | `/agent/dashboard` (served at `/agent`, ratified)  | Agent     |
-| 16  | Listings                     | `/agent/listings`                                  | Agent     |
-| 17  | Leads                        | `/agent/leads`                                     | Agent     |
-| 18  | Pipeline                     | `/agent/pipeline`                                  | Agent     |
-| 19  | Calendar                     | `/agent/calendar`                                  | Agent     |
-| 20  | Admin Overview               | `/admin`                                           | Admin     |
-| 21  | Listings Moderation          | `/admin/listings`                                  | Admin     |
-| 22  | User Management (+ profile)  | `/admin/users`, `/admin/users/:id`                 | Admin     |
-| 23  | Transactions                 | `/admin/transactions`                              | Admin     |
-| 24  | Payments & Revenue           | `/admin/payments`                                  | Admin     |
-| 25  | Analytics & Reports          | `/admin/reports`                                   | Admin     |
-| 26  | Tier Verifications           | `/admin/verifications`                             | Admin     |
-| 27  | System Settings              | `/admin/settings`                                  | Admin     |
-| 28  | About                        | `/about`                                           | Anyone    |
-| 29  | Help                         | `/help`                                            | Anyone    |
-| 30  | Blog (Journal)               | `/blog`                                            | Anyone    |
-| 31  | Contact                      | `/contact`                                         | Anyone    |
-| 32  | Privacy                      | `/privacy`                                         | Anyone    |
-| 33  | Terms                        | `/terms`                                           | Anyone    |
-| 34  | Accessibility                | `/accessibility`                                   | Anyone    |
-| 35  | Verify Email                 | `/verify-email`                                    | Anyone    |
-| 36  | Newsletter Confirm           | `/newsletter/confirm`                              | Anyone    |
-| 37  | Newsletter Unsubscribe       | `/newsletter/unsubscribe`                          | Anyone    |
-| 38  | Enquiries (Introductions)    | `/dashboard/interests`                             | Buyer     |
-| 39  | Purchases & Escrow           | `/dashboard/transactions`                          | Buyer     |
-| 40  | Listing Submission           | `/agent/listings/new`, `/agent/listings/:id/edit`  | Agent     |
-| 41  | Requests                     | `/agent/requests`                                  | Agent     |
-| 42  | VIP Concierge                | `/agent/concierge`                                 | Agent     |
-| 43  | Disputes                     | `/admin/disputes`                                  | Admin     |
-| 44  | Reported Members & Messages  | `/admin/flags`                                     | Admin     |
-| 45  | Not Found (404)              | any unknown route                                  | Anyone    |
-| 46  | Error (500)                  | segment error boundaries                           | Anyone    |
+| #   | Page                        | Route                                             | Role      |
+| --- | --------------------------- | ------------------------------------------------- | --------- |
+| 1   | Home                        | `/`                                               | Anyone    |
+| 2   | Search Results              | `/search`                                         | Anyone    |
+| 3   | Listing Detail              | `/listing/:id`                                    | Anyone    |
+| 4   | Map View                    | `/map`                                            | Anyone    |
+| 5   | Sign Up                     | `/signup`                                         | Anonymous |
+| 6   | Sign In                     | `/login`                                          | Anonymous |
+| 7   | Reset Password              | `/reset-password`                                 | Anonymous |
+| 8   | Buyer Dashboard Overview    | `/dashboard`                                      | Buyer     |
+| 9   | Saved Listings              | `/dashboard/saved`                                | Buyer     |
+| 10  | My Offers (+ offer detail)  | `/dashboard/offers`, `/dashboard/offers/:id`      | Buyer     |
+| 11  | Viewings                    | `/dashboard/viewings`                             | Buyer     |
+| 12  | Messages                    | `/dashboard/messages`                             | Buyer     |
+| 13  | Alerts                      | `/dashboard/alerts`                               | Buyer     |
+| 14  | Settings                    | `/dashboard/settings`                             | Buyer     |
+| 15  | Agent Dashboard             | `/agent/dashboard` (served at `/agent`, ratified) | Agent     |
+| 16  | Listings                    | `/agent/listings`                                 | Agent     |
+| 17  | Leads                       | `/agent/leads`                                    | Agent     |
+| 18  | Pipeline                    | `/agent/pipeline`                                 | Agent     |
+| 19  | Calendar                    | `/agent/calendar`                                 | Agent     |
+| 20  | Admin Overview              | `/admin`                                          | Admin     |
+| 21  | Listings Moderation         | `/admin/listings`                                 | Admin     |
+| 22  | User Management (+ profile) | `/admin/users`, `/admin/users/:id`                | Admin     |
+| 23  | Transactions                | `/admin/transactions`                             | Admin     |
+| 24  | Payments & Revenue          | `/admin/payments`                                 | Admin     |
+| 25  | Analytics & Reports         | `/admin/reports`                                  | Admin     |
+| 26  | Tier Verifications          | `/admin/verifications`                            | Admin     |
+| 27  | System Settings             | `/admin/settings`                                 | Admin     |
+| 28  | About                       | `/about`                                          | Anyone    |
+| 29  | Help                        | `/help`                                           | Anyone    |
+| 30  | Blog (Journal)              | `/blog`                                           | Anyone    |
+| 31  | Contact                     | `/contact`                                        | Anyone    |
+| 32  | Privacy                     | `/privacy`                                        | Anyone    |
+| 33  | Terms                       | `/terms`                                          | Anyone    |
+| 34  | Accessibility               | `/accessibility`                                  | Anyone    |
+| 35  | Verify Email                | `/verify-email`                                   | Anyone    |
+| 36  | Newsletter Confirm          | `/newsletter/confirm`                             | Anyone    |
+| 37  | Newsletter Unsubscribe      | `/newsletter/unsubscribe`                         | Anyone    |
+| 38  | Enquiries (Introductions)   | `/dashboard/interests`                            | Buyer     |
+| 39  | Purchases & Escrow          | `/dashboard/transactions`                         | Buyer     |
+| 40  | Listing Submission          | `/agent/listings/new`, `/agent/listings/:id/edit` | Agent     |
+| 41  | Requests                    | `/agent/requests`                                 | Agent     |
+| 42  | VIP Concierge               | `/agent/concierge`                                | Agent     |
+| 43  | Disputes                    | `/admin/disputes`                                 | Admin     |
+| 44  | Reported Members & Messages | `/admin/flags`                                    | Admin     |
+| 45  | Not Found (404)             | any unknown route                                 | Anyone    |
+| 46  | Error (500)                 | segment error boundaries                          | Anyone    |
 
 The seed's generic page list maps as follows: Home → 1; Search → 2; Entity Details → 3; List/Map View → 2, 4; Saved → 9; Favorites → 9 (one concept, labelled "Saved" per Phase 3); Compare → Section 20 inside Page 10 (listing-to-listing compare is not specified — open question); Role Profile → 22 profile, Section 12; Role Dashboards → 8, 15, 20; Messages → 12; Notifications → 13; Settings → 14, 27 and agent settings (Page 15 family); Profile → 14; Domain Tool → not specified (open question); Entity Submission → 40; Authentication → 5–7, 35; Transaction / Payment → 10 (checkout), 39; Help Center → 29; 404 → 45; 500 → 46.
 
@@ -585,15 +585,15 @@ Added in version 2.0. Each route shipped without a Phase 4 blueprint (RATIFIED_D
 
 Shared: **Purpose** — answer the questions a visitor or member asks before trusting the platform; **Permissions** — anyone; **Required data** — static prose from `lib/data/*-page.ts` unless noted; **Device needs** — readable on every device, contents navigable by keyboard; **States** — static (no loading or error) unless noted; **Dependencies** — Section 48 reaches all seven; **Rules** — content grounded in what the platform actually does (BR15).
 
-| Page | Route           | Primary tasks                                                                                                                                                                               | Notes |
-| ---- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----- |
-| 28   | `/about`        | Understand why Keyhold was built, how it works, what it offers advisors and what it holds itself to                                                                                          | —     |
-| 29   | `/help`         | Find out how to find a property, arrange a viewing, make an offer, send documents, manage alerts and notifications, and manage my account; reach a person when still stuck                  | Help Center |
-| 30   | `/blog`         | Read journal entries; when none exist, be told "Nothing published yet" and be sent on to listings; see the newest available listings and how many are available                            | Entries are content, not code. Loading/error for the listings |
-| 31   | `/contact`      | Get help by the right channel — support email, my advisor (messages), a specific home (search) — and reach the right people for press and partnerships, listing with us or reporting a problem | No form — routes to the right channel |
-| 32   | `/privacy`      | Understand what is collected about me and why, who else processes it, how the newsletter uses it, how long it is kept, my choices and how it is secured; keep my place while reading      | Ratified (ADR 0017). **Legal:** must cover collection, purpose, processors, the newsletter, retention, the reader's choices and security. Legal review owed. "Your choices" promises account deletion, which is not wired (Page 14) |
-| 33   | `/terms`        | Understand the terms for accounts, what the platform is and is not, listings and conduct, offers and transactions, availability and liability, and changes and contact                     | **Legal:** must cover each of those terms. Legal review owed; consented to at sign-up |
-| 34   | `/accessibility`| Understand what Keyhold aims for, what is in place, where it falls short (including the pipeline drag keyboard gap and the provider-rendered payment form) and how to report a failure       | Honest, not a conformance claim |
+| Page | Route            | Primary tasks                                                                                                                                                                                  | Notes                                                                                                                                                                                                                               |
+| ---- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 28   | `/about`         | Understand why Keyhold was built, how it works, what it offers advisors and what it holds itself to                                                                                            | —                                                                                                                                                                                                                                   |
+| 29   | `/help`          | Find out how to find a property, arrange a viewing, make an offer, send documents, manage alerts and notifications, and manage my account; reach a person when still stuck                     | Help Center                                                                                                                                                                                                                         |
+| 30   | `/blog`          | Read journal entries; when none exist, be told "Nothing published yet" and be sent on to listings; see the newest available listings and how many are available                                | Entries are content, not code. Loading/error for the listings                                                                                                                                                                       |
+| 31   | `/contact`       | Get help by the right channel — support email, my advisor (messages), a specific home (search) — and reach the right people for press and partnerships, listing with us or reporting a problem | No form — routes to the right channel                                                                                                                                                                                               |
+| 32   | `/privacy`       | Understand what is collected about me and why, who else processes it, how the newsletter uses it, how long it is kept, my choices and how it is secured; keep my place while reading           | Ratified (ADR 0017). **Legal:** must cover collection, purpose, processors, the newsletter, retention, the reader's choices and security. Legal review owed. "Your choices" promises account deletion, which is not wired (Page 14) |
+| 33   | `/terms`         | Understand the terms for accounts, what the platform is and is not, listings and conduct, offers and transactions, availability and liability, and changes and contact                         | **Legal:** must cover each of those terms. Legal review owed; consented to at sign-up                                                                                                                                               |
+| 34   | `/accessibility` | Understand what Keyhold aims for, what is in place, where it falls short (including the pipeline drag keyboard gap and the provider-rendered payment form) and how to report a failure         | Honest, not a conformance claim                                                                                                                                                                                                     |
 
 ### Page 35: Verify Email (/verify-email)
 

@@ -46,25 +46,25 @@ This folder is the **design record** — the product's intent and the reasoning 
 
 Paths are relative to `design-os/`.
 
-| File                                                | Purpose                                         | Read This If...                        |
-| --------------------------------------------------- | ----------------------------------------------- | -------------------------------------- |
-| **INDEX/START_HERE.md**                             | Orientation, 2-minute entry point               | You're new to this folder              |
-| **INDEX/README.md**                                 | This overview                                   | You want the 5-minute picture          |
-| **INDEX/DESIGN-OS-COMPLETE.md**                     | Master index + summary                          | You want the map                       |
-| **INDEX/ARTIFACT_INDEX.md**                         | Deep description of each phase, status roll-up  | You want to know what's in a phase     |
-| **INDEX/\_FOLDER_STRUCTURE.md**                     | Folder layout, per-role reading order           | You're navigating blind                |
-| **INDEX/RATIFIED_DIVERGENCES.md**                   | Owner decisions where code departs from spec    | The code and a phase disagree          |
-| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md**         | How to execute all nine phases                  | You're building the code               |
-| **IMPLEMENTATION/SETUP-CHECKLIST.md**               | Environment to verified build                   | You're setting up                      |
-| **CORE-PHASES/phase-1-product-vision.md**           | Strategy, personas, roles, business rules, KPIs | You need strategy alignment            |
-| **CORE-PHASES/phase-2-experience-maps.md**          | 19 journeys, decision points, flows             | You're designing a flow                |
-| **CORE-PHASES/phase-3-information-architecture.md** | Sitemap, navigation, permissions                | You're setting up routing/auth         |
-| **CORE-PHASES/phase-4-page-blueprints.md**          | 46 page specs                                   | You're building a page (START HERE)    |
-| **CORE-PHASES/phase-5-section-blueprints.md**       | 70 section specs                                | You're composing pages into sections   |
-| **CORE-PHASES/phase-6-interaction-contracts.md**    | 88 behaviour contracts                          | You're implementing a control          |
-| **CORE-PHASES/phase-7-frontend-architecture.md**    | Codebase structure, folder layout               | You're placing a new file              |
+| File                                                | Purpose                                         | Read This If...                           |
+| --------------------------------------------------- | ----------------------------------------------- | ----------------------------------------- |
+| **INDEX/START_HERE.md**                             | Orientation, 2-minute entry point               | You're new to this folder                 |
+| **INDEX/README.md**                                 | This overview                                   | You want the 5-minute picture             |
+| **INDEX/DESIGN-OS-COMPLETE.md**                     | Master index + summary                          | You want the map                          |
+| **INDEX/ARTIFACT_INDEX.md**                         | Deep description of each phase, status roll-up  | You want to know what's in a phase        |
+| **INDEX/\_FOLDER_STRUCTURE.md**                     | Folder layout, per-role reading order           | You're navigating blind                   |
+| **INDEX/RATIFIED_DIVERGENCES.md**                   | Owner decisions where code departs from spec    | The code and a phase disagree             |
+| **IMPLEMENTATION/IMPLEMENTATION_PROMPT.md**         | How to execute all nine phases                  | You're building the code                  |
+| **IMPLEMENTATION/SETUP-CHECKLIST.md**               | Environment to verified build                   | You're setting up                         |
+| **CORE-PHASES/phase-1-product-vision.md**           | Strategy, personas, roles, business rules, KPIs | You need strategy alignment               |
+| **CORE-PHASES/phase-2-experience-maps.md**          | 19 journeys, decision points, flows             | You're designing a flow                   |
+| **CORE-PHASES/phase-3-information-architecture.md** | Sitemap, navigation, permissions                | You're setting up routing/auth            |
+| **CORE-PHASES/phase-4-page-blueprints.md**          | 46 page specs                                   | You're building a page (START HERE)       |
+| **CORE-PHASES/phase-5-section-blueprints.md**       | 70 section specs                                | You're composing pages into sections      |
+| **CORE-PHASES/phase-6-interaction-contracts.md**    | 88 behaviour contracts                          | You're implementing a control             |
+| **CORE-PHASES/phase-7-frontend-architecture.md**    | Codebase structure, folder layout               | You're placing a new file                 |
 | **CORE-PHASES/phase-8-implementation-roadmap.md**   | 16-week plan, build status                      | You're planning, or asking "is it built?" |
-| **CORE-PHASES/phase-9-qa-checklist.md**             | Accessibility, performance, security            | You're verifying before launch         |
+| **CORE-PHASES/phase-9-qa-checklist.md**             | Accessibility, performance, security            | You're verifying before launch            |
 
 ---
 

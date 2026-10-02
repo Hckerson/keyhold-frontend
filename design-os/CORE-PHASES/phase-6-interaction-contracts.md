@@ -27,15 +27,15 @@ Contracts describe behaviour, never appearance. Which components exist, how they
 
 Every contract inherits these. An entry lists only what differs.
 
-| Field               | Default                                                                                                                                                                                         |
-| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Accessibility**   | WCAG 2.2 AA. Operable by keyboard alone with a visible focus indicator; target size meets WCAG 2.5.8; status never by colour alone; meaningful icons have an accessible name, decorative ones are hidden. |
-| **Keyboard**        | Tab / Shift+Tab move between controls in reading order; Enter activates; Space toggles; Escape dismisses the innermost overlay and returns focus to its trigger.                                |
-| **Loading**         | A control whose action is in flight is disabled and announces busy; it is never activated twice (BR10).                                                                                         |
-| **Error**           | A failure you can retry in place is reported next to the control; otherwise it is reported globally ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)). Writes are never retried automatically. |
-| **Motion**          | Any animation honours `prefers-reduced-motion`. (How anything moves is a build-time decision.)                                                                                                   |
-| **Content**         | Labels are verbs for actions and nouns for places; destructive labels state their effect ("Delete listing", not "OK"); copy follows Phase 1 › Brand Voice.                                         |
-| **Dependencies**    | Primitives depend on nothing domain-specific; composed contracts depend on hooks, never on the API client directly (Phase 7).                                                                  |
+| Field             | Default                                                                                                                                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Accessibility** | WCAG 2.2 AA. Operable by keyboard alone with a visible focus indicator; target size meets WCAG 2.5.8; status never by colour alone; meaningful icons have an accessible name, decorative ones are hidden.                |
+| **Keyboard**      | Tab / Shift+Tab move between controls in reading order; Enter activates; Space toggles; Escape dismisses the innermost overlay and returns focus to its trigger.                                                         |
+| **Loading**       | A control whose action is in flight is disabled and announces busy; it is never activated twice (BR10).                                                                                                                  |
+| **Error**         | A failure you can retry in place is reported next to the control; otherwise it is reported globally ([ADR 0013](../../docs/adr/0013-mutation-feedback-is-global-by-default.md)). Writes are never retried automatically. |
+| **Motion**        | Any animation honours `prefers-reduced-motion`. (How anything moves is a build-time decision.)                                                                                                                           |
+| **Content**       | Labels are verbs for actions and nouns for places; destructive labels state their effect ("Delete listing", not "OK"); copy follows Phase 1 › Brand Voice.                                                               |
+| **Dependencies**  | Primitives depend on nothing domain-specific; composed contracts depend on hooks, never on the API client directly (Phase 7).                                                                                            |
 
 ---
 
@@ -257,96 +257,96 @@ Domain contracts built from the primitives and patterns above. Each inherits the
 
 ### Listing
 
-| #   | Contract           | Purpose / inputs                                | Behaviour and rules                                                                    |
-| --- | ------------------ | ----------------------------------------------- | -------------------------------------------------------------------------------------- |
-| C31 | ListingCard        | One listing: image, price, address, save state  | Whole card opens the listing; Save is a separate control; promoted label per BR15       |
-| C32 | ListingGallery     | Photo set with position                         | Next/prev, direct choice, full-screen; arrow keys; position announced                   |
-| C33 | ListingDetails     | Description, facts, neighbourhood               | Long text expands; facts explain themselves on demand                                   |
-| C34 | ListingComparables | Nearby comparable listings                      | Sortable; opens a comparable only if still available                                    |
-| C35 | AgentCard          | Agent identity, rating, response time, contact  | Call and email run through the platform (BR9); "View all listings"                     |
+| #   | Contract           | Purpose / inputs                               | Behaviour and rules                                                               |
+| --- | ------------------ | ---------------------------------------------- | --------------------------------------------------------------------------------- |
+| C31 | ListingCard        | One listing: image, price, address, save state | Whole card opens the listing; Save is a separate control; promoted label per BR15 |
+| C32 | ListingGallery     | Photo set with position                        | Next/prev, direct choice, full-screen; arrow keys; position announced             |
+| C33 | ListingDetails     | Description, facts, neighbourhood              | Long text expands; facts explain themselves on demand                             |
+| C34 | ListingComparables | Nearby comparable listings                     | Sortable; opens a comparable only if still available                              |
+| C35 | AgentCard          | Agent identity, rating, response time, contact | Call and email run through the platform (BR9); "View all listings"                |
 
 ### Search
 
-| #   | Contract      | Purpose / inputs                         | Behaviour and rules                                                              |
-| --- | ------------- | ---------------------------------------- | -------------------------------------------------------------------------------- |
-| C36 | SearchFilters | Location, price, beds, baths, type       | Filters live in the URL; each option shows its facet count; Reset clears all     |
-| C37 | SearchResults | Result set over the current query        | Count announced on change; pagination preserves filters                          |
-| C38 | MapView       | Listings located on a map                | Pan/zoom constrains the query by bounding box; pin → preview → detail; keyboard-reachable list equivalent |
-| C39 | SortDropdown  | Sort order                               | Default "Featured first"; choice persists in the URL                             |
+| #   | Contract      | Purpose / inputs                   | Behaviour and rules                                                                                       |
+| --- | ------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| C36 | SearchFilters | Location, price, beds, baths, type | Filters live in the URL; each option shows its facet count; Reset clears all                              |
+| C37 | SearchResults | Result set over the current query  | Count announced on change; pagination preserves filters                                                   |
+| C38 | MapView       | Listings located on a map          | Pan/zoom constrains the query by bounding box; pin → preview → detail; keyboard-reachable list equivalent |
+| C39 | SortDropdown  | Sort order                         | Default "Featured first"; choice persists in the URL                                                      |
 
 ### Offer
 
-| #   | Contract         | Purpose / inputs                            | Behaviour and rules                                                                   |
-| --- | ---------------- | ------------------------------------------- | ------------------------------------------------------------------------------------- |
-| C40 | OfferForm        | Amount, move-in date, contingencies, notes  | Review step before submit; validation per Section 16; locks while sending (BR10)       |
-| C41 | OfferStatus      | Current status and next step                | Status stated in text; next step named                                                |
-| C42 | OfferTimeline    | Every round                                 | Chronological; each round opens its detail                                            |
-| C43 | CounterOfferForm | New amount + message                        | Shows original and counter for reference; confirmation before sending                 |
+| #   | Contract         | Purpose / inputs                           | Behaviour and rules                                                              |
+| --- | ---------------- | ------------------------------------------ | -------------------------------------------------------------------------------- |
+| C40 | OfferForm        | Amount, move-in date, contingencies, notes | Review step before submit; validation per Section 16; locks while sending (BR10) |
+| C41 | OfferStatus      | Current status and next step               | Status stated in text; next step named                                           |
+| C42 | OfferTimeline    | Every round                                | Chronological; each round opens its detail                                       |
+| C43 | CounterOfferForm | New amount + message                       | Shows original and counter for reference; confirmation before sending            |
 
 ### Messaging
 
-| #   | Contract         | Purpose / inputs                   | Behaviour and rules                                                                |
-| --- | ---------------- | ---------------------------------- | ---------------------------------------------------------------------------------- |
-| C44 | MessageThread    | Messages, typing state             | Older messages load on demand; new messages announced politely; report per message |
-| C45 | MessageInput     | Text, attachments                  | Enter sends, Shift+Enter new line; failed send keeps the draft                     |
-| C46 | ConversationList | Conversations with unread state    | Unread first; searchable; opening clears unread                                    |
-| C47 | DocumentShare    | Document preview, download, share  | Download names the file; share copies a link or sends a message                    |
+| #   | Contract         | Purpose / inputs                  | Behaviour and rules                                                                |
+| --- | ---------------- | --------------------------------- | ---------------------------------------------------------------------------------- |
+| C44 | MessageThread    | Messages, typing state            | Older messages load on demand; new messages announced politely; report per message |
+| C45 | MessageInput     | Text, attachments                 | Enter sends, Shift+Enter new line; failed send keeps the draft                     |
+| C46 | ConversationList | Conversations with unread state   | Unread first; searchable; opening clears unread                                    |
+| C47 | DocumentShare    | Document preview, download, share | Download names the file; share copies a link or sends a message                    |
 
 ### Dashboard
 
-| #   | Contract          | Purpose / inputs                | Behaviour and rules                                     |
-| --- | ----------------- | ------------------------------- | ------------------------------------------------------- |
-| C48 | DashboardStats    | Role's key counts               | Each count links to its list; counts share its source    |
-| C49 | RecentActivity    | Recent events                   | Newest first; each event links to its item              |
-| C50 | UpcomingViewings  | Next viewings                   | Reschedule and cancel (confirmed) from each item        |
-| C51 | SavedListingsGrid | Saved listings                  | Remove save; "View offer" when an offer exists          |
-| C52 | MyOffers          | The buyer's offers              | Filter by status; withdraw with confirmation            |
+| #   | Contract          | Purpose / inputs   | Behaviour and rules                                   |
+| --- | ----------------- | ------------------ | ----------------------------------------------------- |
+| C48 | DashboardStats    | Role's key counts  | Each count links to its list; counts share its source |
+| C49 | RecentActivity    | Recent events      | Newest first; each event links to its item            |
+| C50 | UpcomingViewings  | Next viewings      | Reschedule and cancel (confirmed) from each item      |
+| C51 | SavedListingsGrid | Saved listings     | Remove save; "View offer" when an offer exists        |
+| C52 | MyOffers          | The buyer's offers | Filter by status; withdraw with confirmation          |
 
 ### Agent
 
-| #   | Contract     | Purpose / inputs                 | Behaviour and rules                                                                      |
-| --- | ------------ | -------------------------------- | ---------------------------------------------------------------------------------------- |
-| C53 | ListingGrid  | Agent's listings with actions    | Bulk select; bulk status and delete confirm (BR10); filter by status                     |
-| C54 | LeadsList    | Leads with temperature           | Temperature derived (BR8); email/call through the platform (BR9); accept/decline connection |
-| C55 | PipelineCard | One deal, movable                | Drag is a request resolved by BR6; every move also available from the detail by keyboard |
-| C56 | Calendar     | Showings and events              | Create event; month navigation; optional Google Calendar push with reconnect on revoke   |
+| #   | Contract     | Purpose / inputs              | Behaviour and rules                                                                         |
+| --- | ------------ | ----------------------------- | ------------------------------------------------------------------------------------------- |
+| C53 | ListingGrid  | Agent's listings with actions | Bulk select; bulk status and delete confirm (BR10); filter by status                        |
+| C54 | LeadsList    | Leads with temperature        | Temperature derived (BR8); email/call through the platform (BR9); accept/decline connection |
+| C55 | PipelineCard | One deal, movable             | Drag is a request resolved by BR6; every move also available from the detail by keyboard    |
+| C56 | Calendar     | Showings and events           | Create event; month navigation; optional Google Calendar push with reconnect on revoke      |
 
 ### Admin
 
-| #   | Contract                                         | Purpose / inputs                                         | Behaviour and rules                                                                 |
-| --- | ------------------------------------------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| C57 | ModerationQueueList                              | Queue counts linking to their route                      | Each row names count and queue; oldest first (ratified, Page 20)                    |
-| C58 | ModerationListingColumns / ModerationTableCells  | Moderation table configuration                           | Default sort by status; action columns have screen-reader headers                   |
-| C59 | ModerationListingDetail                          | Photos, description, compliance, agent contact           | Approve hidden when approved; Reject hidden when rejected                           |
-| C60 | ModerationDecisionModal                          | Reject / request-changes with required note              | Submit disabled until the note is non-blank (BR4); applies to bulk identically      |
-| C61 | ComplianceList                                   | Pass / warn / fail checks                                | State stated in text per check                                                      |
-| C62 | UserTableColumns / UserTableCells                | Users with role, tier, status, actions                   | Default sort by name; suspend/reactivate confirm and are reversible                 |
-| C63 | TransactionTableColumns / TransactionTableCells  | Deals with commission and status                         | Totals recompute from visible rows; commission labelled estimate (BR17)             |
-| C64 | VerificationList / VerificationCard              | Tier requests with status-dependent actions              | Action set per status (Section 67); decisions update the navigation count           |
-| C65 | SystemHealthList                                 | Uptime, error rate, operational state                    | State in text; degraded systems reported first                                      |
-| C66 | SystemAlertList                                  | Platform alerts by severity                              | Severity in text; each alert names what to do next                                  |
-| C67 | RevenueBreakdown                                 | Headline metric plus supporting figures                  | Description list; estimates labelled                                                |
-| C68 | AgentContact                                     | Submitting agent's name, email, phone                    | Contact links labelled with the agent's name                                        |
-| C69 | AdminMaintenancePanel                            | Destructive and operational actions                      | Confirmation for every destructive action; maintenance mode shows a global indicator |
+| #   | Contract                                        | Purpose / inputs                               | Behaviour and rules                                                                  |
+| --- | ----------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------ |
+| C57 | ModerationQueueList                             | Queue counts linking to their route            | Each row names count and queue; oldest first (ratified, Page 20)                     |
+| C58 | ModerationListingColumns / ModerationTableCells | Moderation table configuration                 | Default sort by status; action columns have screen-reader headers                    |
+| C59 | ModerationListingDetail                         | Photos, description, compliance, agent contact | Approve hidden when approved; Reject hidden when rejected                            |
+| C60 | ModerationDecisionModal                         | Reject / request-changes with required note    | Submit disabled until the note is non-blank (BR4); applies to bulk identically       |
+| C61 | ComplianceList                                  | Pass / warn / fail checks                      | State stated in text per check                                                       |
+| C62 | UserTableColumns / UserTableCells               | Users with role, tier, status, actions         | Default sort by name; suspend/reactivate confirm and are reversible                  |
+| C63 | TransactionTableColumns / TransactionTableCells | Deals with commission and status               | Totals recompute from visible rows; commission labelled estimate (BR17)              |
+| C64 | VerificationList / VerificationCard             | Tier requests with status-dependent actions    | Action set per status (Section 67); decisions update the navigation count            |
+| C65 | SystemHealthList                                | Uptime, error rate, operational state          | State in text; degraded systems reported first                                       |
+| C66 | SystemAlertList                                 | Platform alerts by severity                    | Severity in text; each alert names what to do next                                   |
+| C67 | RevenueBreakdown                                | Headline metric plus supporting figures        | Description list; estimates labelled                                                 |
+| C68 | AgentContact                                    | Submitting agent's name, email, phone          | Contact links labelled with the agent's name                                         |
+| C69 | AdminMaintenancePanel                           | Destructive and operational actions            | Confirmation for every destructive action; maintenance mode shows a global indicator |
 
 ### Auth
 
-| #   | Contract              | Purpose / inputs          | Behaviour and rules                                                                  |
-| --- | --------------------- | ------------------------- | ------------------------------------------------------------------------------------ |
-| C70 | SignUpForm            | Email, password, role     | Existing email → sign-in path; consent links to Terms and Privacy; social providers per configuration |
-| C71 | SignInForm            | Email, password           | Generic failure message (no account enumeration); returns to the gated action         |
-| C72 | OTPInput              | 6-digit code              | Paste fills all digits; resend with cooldown; attempt limit (Journey 6)               |
-| C73 | PasswordStrengthMeter | Password                  | Strength described in text, not only by a bar; requirements listed                    |
+| #   | Contract              | Purpose / inputs      | Behaviour and rules                                                                                   |
+| --- | --------------------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
+| C70 | SignUpForm            | Email, password, role | Existing email → sign-in path; consent links to Terms and Privacy; social providers per configuration |
+| C71 | SignInForm            | Email, password       | Generic failure message (no account enumeration); returns to the gated action                         |
+| C72 | OTPInput              | 6-digit code          | Paste fills all digits; resend with cooldown; attempt limit (Journey 6)                               |
+| C73 | PasswordStrengthMeter | Password              | Strength described in text, not only by a bar; requirements listed                                    |
 
 ### Layout
 
-| #   | Contract        | Purpose / inputs                    | Behaviour and rules                                                  |
-| --- | --------------- | ----------------------------------- | -------------------------------------------------------------------- |
-| C74 | Header          | Global navigation                   | Skip link to main content; user menu is a C29 menu                   |
-| C75 | Footer          | Site-wide links, newsletter         | Newsletter per C81                                                   |
-| C76 | Sidebar         | Portal navigation                   | Current page `aria-current`; collapsible with focus management       |
-| C77 | AppLayout       | Public shell: header, main, footer  | One `main` landmark; skip link target                                 |
-| C78 | DashboardLayout | Portal shell: navigation and main   | Role-guarded; unauthenticated → sign-in; wrong role → own portal     |
+| #   | Contract        | Purpose / inputs                   | Behaviour and rules                                              |
+| --- | --------------- | ---------------------------------- | ---------------------------------------------------------------- |
+| C74 | Header          | Global navigation                  | Skip link to main content; user menu is a C29 menu               |
+| C75 | Footer          | Site-wide links, newsletter        | Newsletter per C81                                               |
+| C76 | Sidebar         | Portal navigation                  | Current page `aria-current`; collapsible with focus management   |
+| C77 | AppLayout       | Public shell: header, main, footer | One `main` landmark; skip link target                            |
+| C78 | DashboardLayout | Portal shell: navigation and main  | Role-guarded; unauthenticated → sign-in; wrong role → own portal |
 
 Version 1 announced "80 components" and "31-80" but named 78; numbers C79–C80 were never assigned. The contracts below start at C79.
 
@@ -356,18 +356,18 @@ Version 1 announced "80 components" and "31-80" but named 78; numbers C79–C80 
 
 Interactive elements that ship and had no contract in version 1. Added in version 2.0.
 
-| #   | Contract                       | Purpose / inputs                                          | Behaviour and rules                                                                                                              |
-| --- | ------------------------------ | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| C79 | ReportControl                  | Target (listing, agent, message), reason, details         | Reason required from a fixed set; states that the other party is never told who reported; confirmation on send (Journey 18)      |
-| C80 | CommandPalette                 | Query over routes and records the role may see            | Opens with a keyboard shortcut; `combobox` semantics; Escape closes and restores focus                                             |
-| C81 | NewsletterSignup               | Email, consent                                            | Double opt-in (BR14); success copy says "Check your inbox to confirm", never "You are on the list"                               |
-| C82 | CheckoutPayment                | Deposit amount, payment details                           | Provider-hosted card entry; single submission (BR10); failure stated in place; success leads to the transaction                  |
-| C83 | ViewingRequest                 | Date, time, mode (in person, virtual, open house), note   | Past dates disabled; timezone stated; request state shown back (pending, confirmed, declined)                                   |
-| C84 | ListingEditor                  | Identity, place, specs, extras, media, lifecycle          | Sections validate independently; media and lifecycle only once saved; unsaved changes warn (C86)                                 |
-| C85 | ConfirmModal                   | Target, effect, reversible?                               | Names target and effect; warns when irreversible; effect-stating destructive label; locks while pending; inline failure (ADR 0021) |
-| C86 | UnsavedChangesGuard            | Dirty state                                               | Warns before navigation or unload discards edits                                                                                |
-| C87 | DisputeDecision                | Dispute, outcome (resolve / dismiss), note                | Outcome note required (BR5); evidence reviewable before deciding                                                                 |
-| C88 | EscrowSettle                   | Hold, action (release / refund), reason                   | Authorisation per BR2; refund requires a reason (BR3); confirmation names amount and recipient                                  |
+| #   | Contract            | Purpose / inputs                                        | Behaviour and rules                                                                                                                |
+| --- | ------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| C79 | ReportControl       | Target (listing, agent, message), reason, details       | Reason required from a fixed set; states that the other party is never told who reported; confirmation on send (Journey 18)        |
+| C80 | CommandPalette      | Query over routes and records the role may see          | Opens with a keyboard shortcut; `combobox` semantics; Escape closes and restores focus                                             |
+| C81 | NewsletterSignup    | Email, consent                                          | Double opt-in (BR14); success copy says "Check your inbox to confirm", never "You are on the list"                                 |
+| C82 | CheckoutPayment     | Deposit amount, payment details                         | Provider-hosted card entry; single submission (BR10); failure stated in place; success leads to the transaction                    |
+| C83 | ViewingRequest      | Date, time, mode (in person, virtual, open house), note | Past dates disabled; timezone stated; request state shown back (pending, confirmed, declined)                                      |
+| C84 | ListingEditor       | Identity, place, specs, extras, media, lifecycle        | Sections validate independently; media and lifecycle only once saved; unsaved changes warn (C86)                                   |
+| C85 | ConfirmModal        | Target, effect, reversible?                             | Names target and effect; warns when irreversible; effect-stating destructive label; locks while pending; inline failure (ADR 0021) |
+| C86 | UnsavedChangesGuard | Dirty state                                             | Warns before navigation or unload discards edits                                                                                   |
+| C87 | DisputeDecision     | Dispute, outcome (resolve / dismiss), note              | Outcome note required (BR5); evidence reviewable before deciding                                                                   |
+| C88 | EscrowSettle        | Hold, action (release / refund), reason                 | Authorisation per BR2; refund requires a reason (BR3); confirmation names amount and recipient                                     |
 
 ---
 
