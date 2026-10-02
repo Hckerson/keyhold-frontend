@@ -62,12 +62,21 @@ export function useRecordLead() {
     });
 }
 
-export function useRespondToConnection() {
+export function useAcceptConnection() {
     const client = useQueryClient();
     return useMutation({
-        meta: FEEDBACK.respondToConnection,
-        mutationFn: ({ id, accept }: { id: string; accept: boolean }) =>
-            accept ? connectionsAPI.accept(id) : connectionsAPI.reject(id),
+        meta: FEEDBACK.acceptConnection,
+        mutationFn: (id: string) => connectionsAPI.accept(id),
+        onSuccess: () =>
+            client.invalidateQueries({ queryKey: queryKeys.connections.all }),
+    });
+}
+
+export function useDeclineConnection() {
+    const client = useQueryClient();
+    return useMutation({
+        meta: FEEDBACK.declineConnection,
+        mutationFn: (id: string) => connectionsAPI.reject(id),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.connections.all }),
     });

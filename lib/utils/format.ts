@@ -40,10 +40,13 @@ export const formatWeekdayAndTime = (value: Date) =>
 
 export const formatUsd = (value: number) => `$${wholeNumber.format(value)}`;
 
-export const formatCompactUsd = (value: number) =>
-    value >= MILLION
+export const formatCompactUsd = (value: number) => {
+    if (value === 0) return "$0";
+
+    return value >= MILLION
         ? `$${(value / MILLION).toFixed(2)}M`
         : `$${Math.round(value / 1_000)}K`;
+};
 
 export const formatMillions = (value: number, fractionDigits = 1) =>
     `$${(value / MILLION).toFixed(fractionDigits)}M`;

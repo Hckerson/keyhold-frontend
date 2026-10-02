@@ -3,42 +3,83 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { MapView } from "@/components/ui/map-view";
+import { Button } from "@/components/ui/button";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { LISTING_STATUSES } from "@/lib/config/listing-tones";
-import { toListingPins, unmappableCount } from "@/lib/data/listing-map";
+import { MAP_AREA_COPY, type MapBounds } from "@/lib/config/map";
+import { toListingPins } from "@/lib/data/listing-map";
 import { MANAGED_STATUS_BY_PROPERTY } from "@/lib/utils/to-managed-listing";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import { formatMillions } from "@/lib/utils";
 import type { Listing } from "@/lib/types";
 
 const MAP_LABEL = "Search results on a map";
-const UNMAPPED_SUFFIX = "without a location are not shown";
 
 export interface SearchResultsMapProps {
     listings: Listing[];
+    fit?: boolean;
+    onSearchArea?: (bounds: MapBounds) => void;
+    onClearArea?: () => void;
 }
 
-export function SearchResultsMap({ listings }: SearchResultsMapProps) {
+export function SearchResultsMap({
+    listings,
+    fit,
+    onSearchArea,
+    onClearArea,
+}: SearchResultsMapProps) {
     const pins = useMemo(() => toListingPins(listings), [listings]);
     const [selectedId, setSelectedId] = useState<string>();
+    const [bounds, setBounds] = useState<MapBounds>();
 
     const selected = listings.find((listing) => listing.id === selectedId);
-    const unmapped = unmappableCount(listings);
     const status =
         selected &&
         LISTING_STATUSES[MANAGED_STATUS_BY_PROPERTY[selected.status]];
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="h-[32rem]">
+            <div className="relative h-[32rem]">
                 <MapView
                     pins={pins}
                     selectedId={selectedId}
+                    fit={fit}
+                    cooperative={false}
                     label={MAP_LABEL}
                     onSelect={setSelectedId}
+                    onBoundsChange={onSearchArea ? setBounds : undefined}
                 />
+
+                {onSearchArea && (
+                    <div className="bg-background border-border z-dropdown absolute top-2 left-2 flex gap-1 rounded-md border p-1 shadow-md">
+                        <Button
+                            type="button"
+                            emphasis="solid"
+                            tone="neutral"
+                            disabled={!bounds}
+                            onClick={() => bounds && onSearchArea(bounds)}
+                        >
+                            {MAP_AREA_COPY.search}
+                        </Button>
+
+                        {onClearArea && (
+                            <Button
+                                type="button"
+                                emphasis="quiet"
+                                tone="neutral"
+                                onClick={onClearArea}
+                            >
+                                {MAP_AREA_COPY.clear}
+                            </Button>
+                        )}
+                    </div>
+                )}
             </div>
+
+            {listings.length === 0 && (
+                <p className="micro-label">{MAP_AREA_COPY.emptyView}</p>
+            )}
 
             {selected && status && (
                 <Link
@@ -62,12 +103,6 @@ export function SearchResultsMap({ listings }: SearchResultsMapProps) {
                         {formatMillions(selected.price, 2)}
                     </span>
                 </Link>
-            )}
-
-            {unmapped > 0 && (
-                <p className="micro-label">
-                    {unmapped} {UNMAPPED_SUFFIX}
-                </p>
             )}
         </div>
     );

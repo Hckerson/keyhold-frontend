@@ -82,7 +82,7 @@ export function AbuseReportPane({
                             key={action.mode}
                             emphasis={action.destructive ? "outline" : "solid"}
                             tone={action.destructive ? "error" : "accent"}
-                            isLoading={pending}
+                            disabled={pending}
                             onClick={() => onAction(action.mode)}
                         >
                             {action.label}

@@ -7,16 +7,11 @@ const MODERATION_LEDE =
     "What is waiting on a decision, what the compliance scan caught, and who keeps sending it";
 const QUEUE_ACTION = "Verifications";
 
-export interface ModerationHeaderProps {
-    summary: string;
-}
-
-export function ModerationHeader({ summary }: ModerationHeaderProps) {
+export function ModerationHeader() {
     return (
         <PortalHeader
             title={MODERATION_TITLE}
             lede={MODERATION_LEDE}
-            summary={summary}
             action={
                 <Link
                     href="/admin/verifications"

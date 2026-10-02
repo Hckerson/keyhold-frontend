@@ -13,6 +13,7 @@ export interface UserTableProps {
     peak: number;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -21,6 +22,7 @@ export function UserTable({
     peak,
     onOpen,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: UserTableProps) {
     return (
@@ -69,6 +71,7 @@ export function UserTable({
                             peak={peak}
                             onOpen={onOpen}
                             onSuspend={onSuspend}
+                            reactivatingId={reactivatingId}
                             onReactivate={onReactivate}
                         />
                     ))}

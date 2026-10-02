@@ -1,14 +1,11 @@
 import Link from "next/link";
 import { propertiesServerAPI } from "@/lib/api/server";
 import { PUBLIC_ROUTES } from "@/lib/constants";
-import { toLocalityIndex } from "@/lib/data/localities";
 
-const LOCALITY_SAMPLE = 200;
 const HEADING = "Where we work";
 
 export async function FooterLocalityIndex() {
-    const page = await propertiesServerAPI.list({ limit: LOCALITY_SAMPLE });
-    const localities = toLocalityIndex(page?.items ?? []);
+    const localities = (await propertiesServerAPI.localities()) ?? [];
 
     if (localities.length === 0) return null;
 
@@ -35,13 +32,13 @@ export async function FooterLocalityIndex() {
 
             <ul className="grid grid-cols-2 gap-x-8 sm:grid-cols-3 lg:grid-cols-4">
                 {localities.map((locality) => (
-                    <li key={`${locality.name}-${locality.region}`}>
+                    <li key={`${locality.locality}-${locality.region}`}>
                         <Link
-                            href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(locality.name)}`}
+                            href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(locality.locality)}`}
                             className="group border-sidebar-border focus-visible:ring-highlight flex items-baseline justify-between gap-3 border-b py-2.5 focus-visible:ring-2 focus-visible:outline-none"
                         >
                             <span className="text-sidebar-text group-hover:text-sidebar-text-active ease-smooth truncate text-xs transition-colors duration-200">
-                                {locality.name}
+                                {locality.locality}
                             </span>
                             <span className="text-sidebar-text-muted group-hover:text-highlight ease-smooth shrink-0 font-mono text-[10px] tabular-nums transition-colors duration-200">
                                 {locality.count}

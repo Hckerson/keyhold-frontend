@@ -110,7 +110,6 @@ export function ResetRequestStep() {
                             label="Send reset link"
                             pendingLabel="Sending link"
                             pending={pending}
-                            disabled={!parsed.success}
                         />
                     </form>
 

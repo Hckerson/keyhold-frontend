@@ -1,5 +1,5 @@
 import { OverviewLeadRow } from "@/components/features/agent/overview-lead-row";
-import type { RecentLead } from "@/lib/data/agent-overview";
+import type { RecentLead } from "@/lib/types";
 
 export interface OverviewLeadListProps {
     leads: RecentLead[];

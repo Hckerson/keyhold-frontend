@@ -88,6 +88,7 @@ export function AdminUserProfileConsole({
             <StatBand
                 label={COPY.lede}
                 stats={profileStats(managed, credentials, history)}
+                pending={user.isPending}
             />
 
             <div className="console-split gap-3">

@@ -9,7 +9,11 @@ import {
     readOneOf,
     type UrlStateCodec,
 } from "@/lib/hooks/use-url-state";
-import { TOOLBAR_SORTS, type SortValue } from "@/lib/utils/search";
+import {
+    DEFAULT_SEARCH_SORT,
+    TOOLBAR_SORTS,
+    type SortValue,
+} from "@/lib/utils/search";
 
 export const VIEW_MODES = ["grid", "list", "map"] as const;
 
@@ -40,7 +44,7 @@ const priceFrom = (params: URLSearchParams): string[] => {
 
 export const EMPTY_SEARCH_URL_STATE: SearchUrlState = {
     filters: EMPTY_FILTERS,
-    sort: "newest",
+    sort: DEFAULT_SEARCH_SORT,
     view: "grid",
     page: 1,
 };
@@ -54,7 +58,7 @@ export const SEARCH_URL_CODEC: UrlStateCodec<SearchUrlState> = {
             baths: readList(params, "baths"),
             type: readList(params, "type").map((value) => value.toUpperCase()),
         },
-        sort: readOneOf(params, "sort", TOOLBAR_SORTS, "newest"),
+        sort: readOneOf(params, "sort", TOOLBAR_SORTS, DEFAULT_SEARCH_SORT),
         view: readOneOf(params, "view", VIEW_MODES, "grid"),
         page: readNumber(params, "page", 1),
     }),
@@ -65,7 +69,7 @@ export const SEARCH_URL_CODEC: UrlStateCodec<SearchUrlState> = {
         beds: filters.beds,
         baths: filters.baths,
         type: filters.type,
-        sort: sort === "newest" ? undefined : sort,
+        sort: sort === DEFAULT_SEARCH_SORT ? undefined : sort,
         view: view === "grid" ? undefined : view,
         page: page > 1 ? page : undefined,
     }),

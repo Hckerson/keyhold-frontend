@@ -1,28 +1,18 @@
-import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
+import { forwardRef, type ComponentProps, type HTMLAttributes } from "react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-interface PaginationProps extends HTMLAttributes<HTMLDivElement> {
-    children: ReactNode;
-}
+const PAGINATION_LABEL = "Pagination";
 
-interface PaginationListProps extends HTMLAttributes<HTMLUListElement> {
-    children: ReactNode;
-}
-
-interface PaginationItemProps extends HTMLAttributes<HTMLLIElement> {
-    children: ReactNode;
-}
-
-interface PaginationLinkProps extends HTMLAttributes<HTMLAnchorElement> {
+interface PaginationLinkProps extends ComponentProps<typeof Link> {
     isActive?: boolean;
-    href?: string;
-    children: ReactNode;
 }
 
-const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
-    ({ className, ...props }, ref) => (
-        <div
+const Pagination = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(
+    ({ "aria-label": label = PAGINATION_LABEL, className, ...props }, ref) => (
+        <nav
             ref={ref}
+            aria-label={label}
             className={cn("flex justify-center", className)}
             {...props}
         />
@@ -31,32 +21,35 @@ const Pagination = forwardRef<HTMLDivElement, PaginationProps>(
 
 Pagination.displayName = "Pagination";
 
-const PaginationList = forwardRef<HTMLUListElement, PaginationListProps>(
-    ({ className, ...props }, ref) => (
-        <ul ref={ref} className={cn("flex gap-1.5", className)} {...props} />
-    ),
-);
+const PaginationList = forwardRef<
+    HTMLUListElement,
+    HTMLAttributes<HTMLUListElement>
+>(({ className, ...props }, ref) => (
+    <ul
+        ref={ref}
+        className={cn("flex items-center gap-1", className)}
+        {...props}
+    />
+));
 
 PaginationList.displayName = "PaginationList";
 
-const PaginationItem = forwardRef<HTMLLIElement, PaginationItemProps>(
-    ({ className, ...props }, ref) => (
-        <li ref={ref} className={cn("", className)} {...props} />
-    ),
+const PaginationItem = forwardRef<HTMLLIElement, HTMLAttributes<HTMLLIElement>>(
+    (props, ref) => <li ref={ref} {...props} />,
 );
 
 PaginationItem.displayName = "PaginationItem";
 
 const PaginationLink = forwardRef<HTMLAnchorElement, PaginationLinkProps>(
-    ({ isActive, href = "#", className, ...props }, ref) => (
-        <a
+    ({ isActive, className, ...props }, ref) => (
+        <Link
             ref={ref}
-            href={href}
+            aria-current={isActive ? "page" : undefined}
             className={cn(
-                "border-border ease-smooth grid h-8 min-w-8 place-items-center rounded-md border px-2 text-xs font-medium tabular-nums transition-colors duration-200",
+                "focus-visible:ring-accent ease-smooth grid h-8 min-w-8 place-items-center rounded-md border px-2 text-xs font-medium tabular-nums transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                 isActive
                     ? "bg-accent text-text-inverse border-accent"
-                    : "text-text-secondary hover:border-border-dark hover:bg-background-muted hover:text-text",
+                    : "border-border text-text-secondary hover:border-border-dark hover:bg-background-muted hover:text-text",
                 className,
             )}
             {...props}

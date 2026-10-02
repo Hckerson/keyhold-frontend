@@ -63,7 +63,7 @@ export function SavedConsole() {
         <div className="flex flex-col gap-4">
             <SavedHeader summary={savedSummary(listings)} />
 
-            <SavedStatBand stats={savedStats(listings)} />
+            <SavedStatBand stats={savedStats(listings)} pending={isPending} />
 
             <div className="console-split gap-3">
                 <SavedMain

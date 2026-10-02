@@ -1,5 +1,5 @@
 import { StatusDot, type DotTone } from "@/components/patterns/status-dot";
-import type { ShowingTiming, UpcomingShowing } from "@/lib/data/agent-overview";
+import type { ShowingTiming, UpcomingShowing } from "@/lib/types";
 
 const timingTone: Record<ShowingTiming, DotTone> = {
     today: "warning",

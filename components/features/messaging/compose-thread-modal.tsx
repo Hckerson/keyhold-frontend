@@ -35,11 +35,11 @@ export function ComposeThreadModal({
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="scroll-y max-h-[60vh] space-y-3 p-4">
+            <ModalBody className="scroll-y max-h-[60vh] space-y-3">
                 <p className="text-text-secondary text-xs">{COPY.hint}</p>
 
                 {conversations.length > 0 ? (

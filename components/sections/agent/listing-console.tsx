@@ -1,13 +1,15 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ListingsHeader } from "@/components/sections/agent/listings-header";
 import { ListingsMain } from "@/components/sections/agent/listings-main";
 import { ListingsRail } from "@/components/sections/agent/listings-rail";
 import { ListingsStatBand } from "@/components/sections/agent/listings-stat-band";
 import { ListingPromoteModal } from "@/components/features/agent/listing-promote-modal";
+import { ListingBulkModals } from "@/components/features/agent/listing-bulk-modals";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import {
+    bulkStatusTarget,
     countByStatus,
     featuredUntilLabel,
     listingStats,
@@ -15,24 +17,20 @@ import {
     peakViews,
     rankListings,
     type BulkAction,
-    type StatusFilter,
+    type BulkStatusChange,
+    type BulkStatusTarget,
 } from "@/lib/data/agent-listings";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useSession } from "@/lib/hooks/use-session";
+import { useConfirmation } from "@/lib/hooks/use-confirmation";
+import { useListingSelection } from "@/lib/hooks/use-listing-selection";
 import {
-    useDeleteProperty,
+    useBulkDeleteProperties,
+    useBulkUpdatePropertyStatus,
     usePromoteProperty,
     useSellerProperties,
-    useUpdatePropertyStatus,
 } from "@/lib/hooks/use-properties";
 import { toManagedListing } from "@/lib/utils/to-managed-listing";
-import type { PropertyStatus } from "@/lib/enums/enums";
-
-const BULK_STATUS: Record<Exclude<BulkAction, "delete">, PropertyStatus> = {
-    publish: "AVAILABLE",
-    draft: "DRAFT",
-    renew: "AVAILABLE",
-};
 
 const SELLER_QUERY = { limit: 100 } as const;
 
@@ -42,13 +40,16 @@ export function ListingConsole() {
         user?.id,
         SELLER_QUERY,
     );
-    const updateStatus = useUpdatePropertyStatus();
-    const removeProperty = useDeleteProperty();
+    const bulkStatus = useBulkUpdatePropertyStatus();
+    const bulkDelete = useBulkDeleteProperties();
     const promoteProperty = usePromoteProperty();
-
-    const [filter, setFilter] = useState<StatusFilter>("all");
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
-    const [promoteId, setPromoteId] = useState<string | null>(null);
+    const deletion = useConfirmation<readonly string[]>(bulkDelete);
+    const statusChange = useConfirmation<BulkStatusChange, BulkStatusTarget>(
+        bulkStatus,
+    );
+    const promotion = useConfirmation<{ id: string; days: number }, string>(
+        promoteProperty,
+    );
 
     const listings = useMemo(
         () => (data?.items ?? []).map(toManagedListing),
@@ -59,55 +60,26 @@ export function ListingConsole() {
     const peers = useMemo(() => ranked.slice(1), [ranked]);
     const counts = useMemo(() => countByStatus(peers), [peers]);
     const peak = useMemo(() => peakViews(listings), [listings]);
+    const selection = useListingSelection(peers);
 
-    const visible = useMemo(
-        () =>
-            filter === "all"
-                ? peers
-                : peers.filter((listing) => listing.status === filter),
-        [peers, filter],
-    );
-
-    const visibleSelected = visible.filter((listing) =>
-        selectedIds.includes(listing.id),
-    );
-    const allSelected =
-        visible.length > 0 && visibleSelected.length === visible.length;
-
-    const toggleOne = useCallback(
-        (id: string, selected: boolean) =>
-            setSelectedIds((current) =>
-                selected
-                    ? [...current, id]
-                    : current.filter((item) => item !== id),
-            ),
-        [],
-    );
-
-    const toggleAll = () =>
-        setSelectedIds(allSelected ? [] : visible.map((listing) => listing.id));
-
-    const clearSelection = useCallback(() => setSelectedIds([]), []);
+    const bulkPending = statusChange.pending || deletion.pending;
 
     const runBulkAction = (action: BulkAction) => {
-        const targets = [...selectedIds];
-        setSelectedIds([]);
-
-        targets.forEach((id) =>
-            action === "delete"
-                ? removeProperty.mutate(id)
-                : updateStatus.mutate({ id, status: BULK_STATUS[action] }),
-        );
+        if (bulkPending || selection.selected.length === 0) return;
+        if (action === "delete") {
+            deletion.request(selection.selectedIds);
+            return;
+        }
+        const target = bulkStatusTarget(selection.selected, action);
+        if (target.ids.length > 0) statusChange.request(target);
     };
 
-    const promoteTarget = listings.find((listing) => listing.id === promoteId);
+    const promoteTarget = listings.find(
+        (listing) => listing.id === promotion.target,
+    );
 
     const confirmPromotion = (days: number) => {
-        if (!promoteId) return;
-        promoteProperty.mutate(
-            { id: promoteId, days },
-            { onSuccess: () => setPromoteId(null) },
-        );
+        if (promoteTarget) promotion.confirm({ id: promoteTarget.id, days });
     };
 
     if (isError)
@@ -122,36 +94,48 @@ export function ListingConsole() {
         <div className="flex flex-col gap-4">
             <ListingsHeader summary={listingsSummary(listings)} />
 
-            <ListingsStatBand stats={listingStats(listings)} />
+            <ListingsStatBand
+                stats={listingStats(listings)}
+                pending={isPending}
+            />
 
             <div className="console-split gap-3">
                 <ListingsMain
                     top={ranked[0]}
-                    listings={visible}
+                    listings={selection.visible}
                     peak={peak}
-                    filter={filter}
+                    filter={selection.filter}
                     counts={counts}
-                    selectedIds={visibleSelected.map((listing) => listing.id)}
-                    allSelected={allSelected}
+                    selected={selection.selected}
+                    selectedIds={selection.selectedIds}
+                    allSelected={selection.allSelected}
                     pending={isPending}
-                    onFilterChange={setFilter}
-                    onToggleAll={toggleAll}
-                    onSelectedChange={toggleOne}
-                    onClearSelection={clearSelection}
-                    onBulkAction={(action) => void runBulkAction(action)}
-                    onPromote={setPromoteId}
+                    bulkPending={bulkPending}
+                    onFilterChange={selection.changeFilter}
+                    onToggleAll={selection.toggleAll}
+                    onSelectedChange={selection.toggleOne}
+                    onClearSelection={selection.clear}
+                    onBulkAction={runBulkAction}
+                    onPromote={promotion.request}
                 />
                 <ListingsRail listings={listings} />
             </div>
+
+            <ListingBulkModals
+                listings={listings}
+                deletion={deletion}
+                statusChange={statusChange}
+                onDone={selection.clear}
+            />
 
             <ListingPromoteModal
                 address={promoteTarget?.address}
                 featuredUntil={
                     promoteTarget && featuredUntilLabel(promoteTarget)
                 }
-                pending={promoteProperty.isPending}
-                failed={promoteProperty.isError}
-                onClose={() => setPromoteId(null)}
+                pending={promotion.pending}
+                failed={promotion.failed}
+                onClose={promotion.dismiss}
                 onConfirm={confirmPromotion}
             />
         </div>

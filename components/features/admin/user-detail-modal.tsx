@@ -35,6 +35,7 @@ export interface UserDetailModalProps {
     peak: number;
     onClose: () => void;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
@@ -43,6 +44,7 @@ export function UserDetailModal({
     peak,
     onClose,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: UserDetailModalProps) {
     const status = user ? USER_STATUSES[user.status] : null;
@@ -58,7 +60,7 @@ export function UserDetailModal({
         >
             {user && status && (
                 <>
-                    <ModalHeader className="p-4">
+                    <ModalHeader>
                         <ModalTitle>{user.name}</ModalTitle>
                         <div className="mt-1 flex items-center gap-2">
                             <UserStatusMark status={user.status} />
@@ -68,7 +70,7 @@ export function UserDetailModal({
                         </div>
                     </ModalHeader>
 
-                    <ModalBody className="scroll-y max-h-[60vh] space-y-4 p-4">
+                    <ModalBody className="scroll-y max-h-[60vh] space-y-4">
                         <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
                             <MetricCell label={VOLUME_LABEL}>
                                 <UserVolumeMeter
@@ -106,7 +108,7 @@ export function UserDetailModal({
                         </div>
                     </ModalBody>
 
-                    <ModalFooter className="gap-2 p-4">
+                    <ModalFooter>
                         <Button
                             type="button"
                             emphasis="quiet"
@@ -128,6 +130,8 @@ export function UserDetailModal({
                                     type="button"
                                     emphasis="solid"
                                     tone="accent"
+                                    isLoading={reactivatingId === user.id}
+                                    disabled={reactivatingId !== undefined}
                                     onClick={() => onReactivate(user.id)}
                                 >
                                     {REACTIVATE_ACTION}

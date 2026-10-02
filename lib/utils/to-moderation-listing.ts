@@ -3,6 +3,7 @@ import type {
     ComplianceReport,
     ModerationListing,
     ModerationStatus,
+    ModerationTarget,
 } from "@/lib/types/moderation";
 import type { Flag, FlagPropertyTarget } from "@/lib/validations/flag";
 import { minutesSince } from "@/lib/utils/elapsed";
@@ -88,3 +89,12 @@ export const toModerationQueue = (flags: Flag[]): ModerationListing[] => {
         toModerationListing(flag, reportsById[flag.target.id] ?? 1),
     );
 };
+
+export const toModerationTargets = (
+    listings: ModerationListing[],
+): ModerationTarget[] =>
+    listings.map(({ id, listingId, status }) => ({
+        flagId: id,
+        listingId,
+        flagActive: status === "flagged",
+    }));

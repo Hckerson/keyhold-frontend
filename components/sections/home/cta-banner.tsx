@@ -14,15 +14,14 @@ export function CtaBanner() {
 
             <SectionShell>
                 <div className="mx-auto flex max-w-[52ch] flex-col items-center gap-5 text-center">
-                    <SectionEyebrow>Join 10,000+ buyers</SectionEyebrow>
+                    <SectionEyebrow>Free to join</SectionEyebrow>
                     <h2 className="font-display text-text text-h3 leading-[1.08] font-light tracking-tight">
                         Ready to get{" "}
                         <span className="text-accent italic">started?</span>
                     </h2>
                     <p className="text-text-secondary text-xs leading-[1.9]">
-                        Create an account to save listings, track offers and be
-                        told first when something off-market comes up in a
-                        neighbourhood you follow.
+                        Create an account to save listings and searches, request
+                        private viewings and follow every offer to closing.
                     </p>
 
                     <div className="mt-1 flex flex-wrap items-center justify-center gap-3">

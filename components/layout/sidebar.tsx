@@ -18,6 +18,7 @@ export interface SidebarProps {
     status?: JourneyStatus | null;
     user?: AuthUser | null;
     onLogout?: () => void;
+    signingOut?: boolean;
     open?: boolean;
     onClose?: () => void;
     className?: string;
@@ -56,7 +57,7 @@ function Brand({
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation"
-                className="text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active focus-visible:ring-highlight ease-smooth ml-auto grid size-8 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none lg:hidden"
+                className="desk-hidden text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active focus-visible:ring-highlight ease-smooth ml-auto grid size-8 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
             >
                 <X size={16} strokeWidth={1.5} />
             </button>
@@ -70,6 +71,7 @@ export function Sidebar({
     status,
     user,
     onLogout,
+    signingOut,
     open = false,
     onClose,
     className,
@@ -156,6 +158,7 @@ export function Sidebar({
                 <SidebarFooter
                     user={user}
                     onLogout={onLogout}
+                    signingOut={signingOut}
                     collapsed={collapsed}
                 />
             </aside>

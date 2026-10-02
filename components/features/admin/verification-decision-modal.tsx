@@ -1,24 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
-import {
-    Modal,
-    ModalContent,
-    ModalHeader,
-    ModalTitle,
-    ModalBody,
-    ModalFooter,
-} from "@/components/ui/modal";
 import {
     DECISION_COPY,
     type VerificationDecision,
 } from "@/lib/data/admin-verifications";
 
+const NOTE_HINT =
+    "Required. The agent receives this message with the decision.";
+const WARNING = {
+    title: "This decision is final",
+    body: "The submission is closed as rejected. The agent has to submit new documents to be verified.",
+};
+const FAILURE = {
+    title: "The rejection was not recorded",
+    body: "The submission is still pending and the agent was not notified. Try again in a moment.",
+};
+
 export interface VerificationDecisionModalProps {
     decision: VerificationDecision | null;
     applicantName: string;
     note: string;
+    pending: boolean;
+    failed: boolean;
     onNoteChange: (value: string) => void;
     onClose: () => void;
     onSubmit: () => void;
@@ -28,63 +33,42 @@ export function VerificationDecisionModal({
     decision,
     applicantName,
     note,
+    pending,
+    failed,
     onNoteChange,
     onClose,
     onSubmit,
 }: VerificationDecisionModalProps) {
-    const copy = decision ? DECISION_COPY[decision.mode] : null;
+    const copy = DECISION_COPY[decision?.mode ?? "reject"];
 
     return (
-        <Modal
+        <ConfirmModal
             open={decision !== null}
-            onOpenChange={(open) => {
-                if (!open) onClose();
-            }}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="verification-decision-title"
+            title={copy.title}
+            subject={applicantName}
+            warning={WARNING}
+            failure={FAILURE}
+            confirmLabel={copy.submit}
+            pending={pending}
+            failed={failed}
+            confirmDisabled={note.trim().length === 0}
+            onClose={onClose}
+            onConfirm={onSubmit}
         >
-            {copy && decision && (
-                <ModalContent>
-                    <ModalHeader>
-                        <ModalTitle id="verification-decision-title">
-                            {copy.title}
-                        </ModalTitle>
-                        <p className="text-text-secondary mt-1 text-xs">
-                            {applicantName}
-                        </p>
-                    </ModalHeader>
-                    <ModalBody>
-                        <TextareaField
-                            id="verification-note"
-                            name="verificationNote"
-                            label={copy.label}
-                            rows={4}
-                            value={note}
-                            onChange={(event) =>
-                                onNoteChange(event.target.value)
-                            }
-                            placeholder={copy.placeholder}
-                        />
-                        <p className="text-text-muted mt-1.5 text-xs">
-                            Required. The agent receives this message with the
-                            decision.
-                        </p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={onClose}>Cancel</Button>
-                        <Button
-                            emphasis="solid"
-                            tone="error"
-                            disabled={note.trim().length === 0}
-                            onClick={onSubmit}
-                        >
-                            {copy.submit}
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            )}
-        </Modal>
+            <div>
+                <TextareaField
+                    id="verification-note"
+                    name="verificationNote"
+                    label={copy.label}
+                    rows={4}
+                    value={note}
+                    disabled={pending}
+                    onChange={(event) => onNoteChange(event.target.value)}
+                    placeholder={copy.placeholder}
+                />
+                <p className="text-text-muted mt-1.5 text-xs">{NOTE_HINT}</p>
+            </div>
+        </ConfirmModal>
     );
 }
 

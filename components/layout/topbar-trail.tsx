@@ -1,12 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import type { TrailCrumb } from "@/lib/types";
-import { cn } from "@/lib/utils";
-
-const linkBase =
-    "hover:text-accent focus-visible:ring-accent ease-smooth rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
 
 export interface TopbarTrailProps {
     crumbs: TrailCrumb[];
@@ -15,34 +10,32 @@ export interface TopbarTrailProps {
 export function TopbarTrail({ crumbs }: TopbarTrailProps) {
     return (
         <nav aria-label="Breadcrumb" className="min-w-0 select-none">
-            <ol className="flex min-w-0 items-center gap-2">
+            <ol className="flex min-w-0 items-center gap-1.5 text-xs">
                 {crumbs.map((crumb, index) => (
                     <li
-                        key={crumb.href}
-                        className="flex min-w-0 items-center gap-2"
+                        key={`${index}-${crumb.href}`}
+                        className="flex min-w-0 items-center gap-1.5"
                     >
                         {index > 0 && (
-                            <ChevronRight
-                                size={12}
-                                strokeWidth={1.5}
+                            <span
                                 aria-hidden="true"
-                                className="text-text-muted shrink-0"
-                            />
+                                className="text-border-dark shrink-0"
+                            >
+                                /
+                            </span>
                         )}
 
                         {crumb.current ? (
-                            <span className="text-text truncate text-xs font-semibold">
+                            <span
+                                aria-current="page"
+                                className="text-text truncate font-medium"
+                            >
                                 {crumb.label}
                             </span>
                         ) : (
                             <Link
                                 href={crumb.href}
-                                className={cn(
-                                    linkBase,
-                                    index === 0
-                                        ? "micro-label shrink-0"
-                                        : "text-text-secondary truncate text-xs",
-                                )}
+                                className="text-text-muted hover:text-text focus-visible:ring-accent ease-smooth truncate rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                             >
                                 {crumb.label}
                             </Link>

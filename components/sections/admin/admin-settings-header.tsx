@@ -14,12 +14,14 @@ const SAVED_ACTION = "Saved";
 export interface AdminSettingsHeaderProps {
     dirty: boolean;
     saved: boolean;
+    saving: boolean;
     onReset: () => void;
 }
 
 export function AdminSettingsHeader({
     dirty,
     saved,
+    saving,
     onReset,
 }: AdminSettingsHeaderProps) {
     return (
@@ -38,6 +40,7 @@ export function AdminSettingsHeader({
                         tone="accent"
                         form={SETTINGS_FORM_ID}
                         disabled={!dirty}
+                        isLoading={saving}
                     >
                         {saved ? SAVED_ACTION : SAVE_ACTION}
                     </Button>

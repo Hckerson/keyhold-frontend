@@ -24,7 +24,9 @@ export function ProgressBar({
     label,
     className,
 }: ProgressBarProps) {
-    const clamped = Math.max(0, Math.min(100, value));
+    const clamped = Number.isFinite(value)
+        ? Math.max(0, Math.min(100, value))
+        : 0;
     return (
         <div
             role={label ? "progressbar" : undefined}
@@ -33,13 +35,13 @@ export function ProgressBar({
             aria-valuemin={label ? 0 : undefined}
             aria-valuemax={label ? 100 : undefined}
             className={cn(
-                "bg-background-alt h-1.5 w-full overflow-hidden rounded-full",
+                "bg-background-muted h-1.5 w-full overflow-hidden rounded-full",
                 className,
             )}
         >
             <div
                 className={cn(
-                    "ease-smooth h-full rounded-full transition-all duration-500",
+                    "ease-smooth h-full rounded-full transition-[width] duration-300",
                     toneFill[tone],
                 )}
                 style={{ width: `${clamped}%` }}

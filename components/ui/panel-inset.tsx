@@ -17,7 +17,7 @@ export function PanelInset({
     return (
         <div
             className={cn(
-                "bg-background border-border-light rounded-md border",
+                "bg-background-alt border-border-light rounded-md border",
                 scroll ? "scroll-x" : flush ? "overflow-hidden" : "px-3",
                 className,
             )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { Callout } from "@/components/ui/callout";
 import { Spinner } from "@/components/ui/spinner";
@@ -49,15 +49,17 @@ export function CheckoutModal({
                 : undefined,
         [clientSecret],
     );
+    const [charging, setCharging] = useState(false);
 
     return (
         <Modal
             open={open}
+            locked={charging || settling}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{STRIPE_COPY.title}</ModalTitle>
                 <p className="text-text-secondary mt-1 truncate text-xs">
                     {address} · {STRIPE_COPY.amountLabel}{" "}
@@ -67,7 +69,7 @@ export function CheckoutModal({
                 </p>
             </ModalHeader>
 
-            <ModalBody className="flex flex-col gap-3 p-4">
+            <ModalBody className="flex flex-col gap-3">
                 {!STRIPE_ENABLED && (
                     <Callout
                         variant="warning"
@@ -101,7 +103,9 @@ export function CheckoutModal({
                 {STRIPE_ENABLED && !settled && options && (
                     <Elements stripe={getStripe()} options={options}>
                         <CheckoutPaymentForm
+                            charging={charging}
                             settling={settling}
+                            onChargingChange={setCharging}
                             onPaid={onPaid}
                             onFail={onFail}
                             onCancel={onClose}

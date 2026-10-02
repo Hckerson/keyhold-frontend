@@ -1,28 +1,28 @@
 "use client";
 
 import { useMemo } from "react";
+import { AdminOverviewActivity } from "@/components/sections/admin/admin-overview-activity";
+import { AdminOverviewBusiness } from "@/components/sections/admin/admin-overview-business";
 import { AdminOverviewHeader } from "@/components/sections/admin/admin-overview-header";
-import { AdminOverviewMain } from "@/components/sections/admin/admin-overview-main";
-import { AdminOverviewRail } from "@/components/sections/admin/admin-overview-rail";
-import { AdminOverviewStatBand } from "@/components/sections/admin/admin-overview-stat-band";
+import { AdminOverviewHealth } from "@/components/sections/admin/admin-overview-health";
+import { AdminOverviewPeople } from "@/components/sections/admin/admin-overview-people";
+import { AdminOverviewTriage } from "@/components/sections/admin/admin-overview-triage";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { moderationLoad } from "@/lib/data/admin-overview";
+import { businessDeck } from "@/lib/data/admin-overview-business";
 import {
-    commissionsLabel,
-    gmvGrowthLabel,
-    gmvLatest,
-    gmvMonths,
-    moderationLoad,
-    overviewSummary,
-    platformSignals,
-    platformStatBand,
-    revenueMetrics,
-    integrationSummary,
-    serviceSummary,
-    signalExposureLabel,
-    toIntegrationRows,
-    toServiceRows,
-} from "@/lib/data/admin-overview";
+    coverageReading,
+    RECORD_WINDOW,
+    recordReading,
+    statusShares,
+} from "@/lib/data/admin-overview-people";
+import { systemsDeck } from "@/lib/data/admin-overview-systems";
+import {
+    decisionLanes,
+    queueReadiness,
+} from "@/lib/data/admin-overview-triage";
+import { useAuditLogs } from "@/lib/hooks/use-audit-logs";
 import { useDisputeCounts } from "@/lib/hooks/use-disputes";
 import { useFlagCounts } from "@/lib/hooks/use-flags";
 import { useKycCounts } from "@/lib/hooks/use-kyc";
@@ -33,7 +33,8 @@ import {
     useUserStats,
 } from "@/lib/hooks/use-stats";
 import { useUsers } from "@/lib/hooks/use-users";
-import { toRoleSegments, toStatusSegments } from "@/lib/utils/to-user-segments";
+import { toAuditEvents } from "@/lib/utils/to-audit-event";
+import { toRoleSegments } from "@/lib/utils/to-user-segments";
 
 const HEALTH_WINDOW_HOURS = 24;
 const TREND_FILTER = "month";
@@ -47,32 +48,39 @@ export function AdminOverviewConsole() {
     const kyc = useKycCounts();
     const disputes = useDisputeCounts();
     const health = useServiceHealth(HEALTH_WINDOW_HOURS);
+    const audit = useAuditLogs({ limit: RECORD_WINDOW });
 
-    const stats = useMemo(
-        () => platformStatBand(platform.data, users.data),
-        [platform.data, users.data],
+    const readiness = queueReadiness([flags, kyc, disputes]);
+
+    const lanes = useMemo(
+        () =>
+            decisionLanes(
+                moderationLoad(flags.data, kyc.data, disputes.data),
+                users.data,
+            ),
+        [flags.data, kyc.data, disputes.data, users.data],
     );
 
-    const roles = useMemo(
-        () => toRoleSegments(directory.data ?? []),
-        [directory.data],
+    const business = useMemo(
+        () => businessDeck(trend.data, platform.data, users.data),
+        [trend.data, platform.data, users.data],
     );
 
-    const statuses = useMemo(() => toStatusSegments(users.data), [users.data]);
+    const systems = useMemo(() => systemsDeck(health.data), [health.data]);
 
-    const queues = useMemo(
-        () => moderationLoad(flags.data, kyc.data, disputes.data),
-        [flags.data, kyc.data, disputes.data],
+    const people = useMemo(
+        () => ({
+            statuses: statusShares(users.data),
+            roles: toRoleSegments(directory.data ?? []),
+            coverage: coverageReading(directory.data ?? []),
+        }),
+        [users.data, directory.data],
     );
 
-    const signals = useMemo(() => platformSignals(queues), [queues]);
-
-    const services = useMemo(() => toServiceRows(health.data), [health.data]);
-
-    const integrations = useMemo(
-        () => toIntegrationRows(health.data),
-        [health.data],
-    );
+    const activity = useMemo(() => {
+        const events = toAuditEvents(audit.data?.items ?? []);
+        return { events, summary: recordReading(events) };
+    }, [audit.data]);
 
     if (platform.isError || users.isError)
         return (
@@ -87,32 +95,45 @@ export function AdminOverviewConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AdminOverviewHeader
-                summary={overviewSummary(platform.data, users.data)}
-            />
-
-            <AdminOverviewStatBand stats={stats} />
+            <AdminOverviewHeader />
 
             <div className="console-split gap-3">
-                <AdminOverviewMain
-                    gmv={gmvLatest(trend.data)}
-                    growthLabel={gmvGrowthLabel(trend.data)}
-                    commissionsLabel={commissionsLabel(platform.data)}
-                    months={gmvMonths(trend.data)}
-                    metrics={revenueMetrics(trend.data, platform.data)}
-                    signals={signals}
-                    exposureLabel={signalExposureLabel(platform.data)}
-                    services={services}
-                    serviceSummary={serviceSummary(health.data)}
-                    integrations={integrations}
-                    integrationSummary={integrationSummary(health.data)}
+                <div className="console-span-3">
+                    <AdminOverviewTriage lanes={lanes} readiness={readiness} />
+                </div>
+                <div className="console-span-2">
+                    <AdminOverviewBusiness
+                        reading={business.reading}
+                        months={business.months}
+                        figures={business.figures}
+                        lifetime={business.lifetime}
+                        pending={trend.isPending || platform.isPending}
+                        failed={trend.isError}
+                    />
+                </div>
+                <AdminOverviewHealth
+                    systems={systems.reading}
+                    services={systems.services}
+                    integrations={systems.integrations}
+                    integrationSummary={systems.summary}
+                    pending={health.isPending}
+                    failed={health.isError}
                 />
-                <AdminOverviewRail
-                    roles={roles}
-                    statuses={statuses}
-                    total={users.data?.total ?? 0}
-                    queues={queues}
+                <AdminOverviewPeople
+                    users={users.data}
+                    statuses={people.statuses}
+                    roles={people.roles}
+                    coverage={people.coverage}
+                    pending={users.isPending}
                 />
+                <div className="console-span-2">
+                    <AdminOverviewActivity
+                        events={activity.events}
+                        summary={activity.summary}
+                        pending={audit.isPending}
+                        failed={audit.isError}
+                    />
+                </div>
             </div>
         </div>
     );

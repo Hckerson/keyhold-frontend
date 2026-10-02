@@ -52,7 +52,29 @@ export function DataTable<T>({
     const baseId = useId();
     const revealing = reveal !== undefined && renderDetail !== undefined;
 
-    const table = useDataTable({
+    const {
+        allOnPageSelected,
+        applySelection,
+        currentKeys,
+        currentOpen,
+        currentPage,
+        firstIndex,
+        onRowClick,
+        onTableKeyDown,
+        openRow,
+        pageRows,
+        selectedRows,
+        setOpen,
+        setPage,
+        sort,
+        sortedData,
+        tableRef,
+        toggleOpen,
+        togglePage,
+        toggleRow,
+        toggleSort,
+        totalPages,
+    } = useDataTable({
         columns,
         data,
         rowKey,
@@ -92,18 +114,18 @@ export function DataTable<T>({
                     className,
                 )}
             >
-                {selectable && table.selectedRows.length > 0 && (
+                {selectable && selectedRows.length > 0 && (
                     <DataTableSelectionBar
-                        count={table.selectedRows.length}
-                        actions={bulkActions?.(table.selectedRows)}
-                        onClear={() => table.applySelection([])}
+                        count={selectedRows.length}
+                        actions={bulkActions?.(selectedRows)}
+                        onClear={() => applySelection([])}
                     />
                 )}
 
                 <div className="scroll-x">
                     <table
-                        ref={table.tableRef}
-                        onKeyDown={table.onTableKeyDown}
+                        ref={tableRef}
+                        onKeyDown={onTableKeyDown}
                         className={cn(
                             "w-full text-xs leading-tight",
                             fixed && "table-fixed",
@@ -113,18 +135,18 @@ export function DataTable<T>({
 
                         <DataTableHead
                             columns={columns}
-                            sort={table.sort}
-                            onSort={table.toggleSort}
+                            sort={sort}
+                            onSort={toggleSort}
                             bare={bare}
                             selectable={selectable}
                             revealing={revealing}
-                            allOnPageSelected={table.allOnPageSelected}
-                            onTogglePage={table.togglePage}
+                            allOnPageSelected={allOnPageSelected}
+                            onTogglePage={togglePage}
                         />
 
                         <DataTableBody
-                            rows={table.pageRows}
-                            isEmpty={table.sortedData.length === 0}
+                            rows={pageRows}
+                            isEmpty={sortedData.length === 0}
                             emptyMessage={emptyMessage}
                             baseId={baseId}
                             rowKey={rowKey}
@@ -132,22 +154,22 @@ export function DataTable<T>({
                             columnCount={columnCount}
                             emphasisOf={emphasisOf}
                             selectable={selectable}
-                            selectedKeys={table.currentKeys}
-                            onToggleSelect={table.toggleRow}
+                            selectedKeys={currentKeys}
+                            onToggleSelect={toggleRow}
                             revealing={revealing}
                             reveal={reveal}
-                            openKey={table.currentOpen}
-                            onToggleOpen={table.toggleOpen}
-                            onRowClick={table.onRowClick}
+                            openKey={currentOpen}
+                            onToggleOpen={toggleOpen}
+                            onRowClick={onRowClick}
                             rowLabel={rowLabel}
                             renderDetail={renderDetail}
                             rowClassName={rowClassName}
                         />
 
-                        {hasFooter && table.sortedData.length > 0 && (
+                        {hasFooter && sortedData.length > 0 && (
                             <DataTableFoot
                                 columns={columns}
-                                rows={table.sortedData}
+                                rows={sortedData}
                                 bare={bare}
                                 selectable={selectable}
                                 revealing={revealing}
@@ -156,23 +178,23 @@ export function DataTable<T>({
                     </table>
                 </div>
 
-                {pageSize && table.sortedData.length > pageSize && (
+                {pageSize && sortedData.length > pageSize && (
                     <DataTablePager
-                        firstIndex={table.firstIndex}
-                        shownCount={table.pageRows.length}
-                        totalCount={table.sortedData.length}
-                        currentPage={table.currentPage}
-                        totalPages={table.totalPages}
-                        onPageChange={table.setPage}
+                        firstIndex={firstIndex}
+                        shownCount={pageRows.length}
+                        totalCount={sortedData.length}
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setPage}
                     />
                 )}
             </div>
 
             {revealing && reveal === "panel" && (
                 <DataTablePanel
-                    row={table.openRow}
+                    row={openRow}
                     size={panelSize}
-                    onClose={() => table.setOpen(null)}
+                    onClose={() => setOpen(null)}
                     rowLabel={rowLabel}
                     panelTitle={panelTitle}
                     panelFooter={panelFooter}

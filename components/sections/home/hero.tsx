@@ -10,12 +10,7 @@ import { Image } from "@/components/ui/image";
 
 const HERO_IMAGE = propertyImage(0);
 
-const HERO_CAPTION = {
-    place: "Bel Air · Off-market",
-    name: "The Ridge House",
-};
-
-export function HeroSection() {
+export function HeroSection({ cities }: { cities: string[] }) {
     return (
         <section className="section-padb bg-background-alt relative isolate -mt-[88px] flex min-h-[70vh] items-center overflow-hidden pt-[112px]">
             <div
@@ -36,8 +31,8 @@ export function HeroSection() {
                             </h1>
                             <p className="text-text-secondary max-w-[46ch] text-xs leading-[1.9]">
                                 A quiet, considered approach to extraordinary
-                                property. Off-market estates and architectural
-                                landmarks, presented with discretion.
+                                property. Estates, villas and penthouses,
+                                presented with discretion.
                             </p>
                         </div>
 
@@ -58,7 +53,7 @@ export function HeroSection() {
                             </span>
                         </div>
 
-                        <CityChips />
+                        {cities.length > 0 && <CityChips cities={cities} />}
                     </div>
 
                     <div className="desk-only relative justify-self-end">
@@ -77,14 +72,6 @@ export function HeroSection() {
                             aria-hidden="true"
                             className="relative h-130 w-102 translate-x-3.5 rounded-xl object-cover shadow-2xl"
                         />
-                        <div className="bg-sidebar/80 border-sidebar-border absolute right-1 bottom-5 flex flex-col gap-1 rounded-xl border px-3.5 py-2.5 shadow-lg backdrop-blur-md">
-                            <span className="text-highlight-light font-mono text-[10px] tracking-[0.14em] uppercase">
-                                {HERO_CAPTION.place}
-                            </span>
-                            <span className="text-text-inverse text-xs font-semibold">
-                                {HERO_CAPTION.name}
-                            </span>
-                        </div>
                     </div>
                 </div>
             </SectionShell>

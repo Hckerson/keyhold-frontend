@@ -44,25 +44,6 @@ export const GALLERY_FRAME_MOTION: MotionPresence = {
     transition: NORMAL,
 };
 
-export const LIGHTBOX_BACKDROP_MOTION: MotionPresence = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-    transition: FAST,
-};
-
-export const LIGHTBOX_PLATE_MOTION: MotionPresence = {
-    initial: { opacity: 0, scale: 0.96 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.96 },
-    transition: NORMAL,
-};
-
-export const TAB_PANEL_MOTION: Variants = {
-    hidden: { opacity: 0, y: 4 },
-    visible: { opacity: 1, y: 0, transition: NORMAL },
-};
-
 export const REVEAL_MOTION: Variants = {
     hidden: { opacity: 0, y: 16 },
     visible: { opacity: 1, y: 0, transition: NORMAL },

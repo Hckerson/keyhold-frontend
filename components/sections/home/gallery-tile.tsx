@@ -1,29 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Heart, Star } from "lucide-react";
+import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Image } from "@/components/ui/image";
+import { FeaturedBadge } from "@/components/features/shared/featured-badge";
 import { PUBLIC_ROUTES } from "@/lib/constants";
+import type { GalleryTileData } from "@/lib/types";
+import { useSavedToggle } from "@/lib/hooks/use-saved-toggle";
 
-export interface GalleryTileData {
-    id: string;
-    imageUrl: string;
-    price: string;
-    address: string;
-    specs: string;
-    agentName: string;
-    featured?: boolean;
-}
-
-function SaveTileButton({ address }: { address: string }) {
-    const [saved, setSaved] = useState(false);
+function SaveTileButton({ id, address }: { id: string; address: string }) {
+    const { isSaved, toggle, pending } = useSavedToggle();
+    const saved = isSaved(id);
 
     return (
         <button
             type="button"
-            onClick={() => setSaved((previous) => !previous)}
+            onClick={() => toggle(id)}
+            disabled={pending}
             aria-pressed={saved}
             aria-label={saved ? `Unsave ${address}` : `Save ${address}`}
             className="bg-sidebar/70 text-text-inverse ring-sidebar-border hover:text-highlight focus-visible:ring-highlight ease-smooth absolute top-3.5 right-3.5 z-20 grid size-8 place-items-center rounded-full ring-1 backdrop-blur-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
@@ -113,18 +107,9 @@ export function GalleryTile({
                 className="focus-visible:ring-accent absolute inset-0 z-10 rounded-xl focus-visible:ring-2 focus-visible:outline-none"
             />
 
-            {tile.featured && (
-                <span className="bg-sidebar/75 text-text-inverse ring-highlight/30 pointer-events-none absolute top-4 left-4 z-10 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase ring-1 backdrop-blur-md">
-                    <Star
-                        size={11}
-                        strokeWidth={1.5}
-                        className="text-highlight"
-                    />
-                    Featured
-                </span>
-            )}
+            {tile.featured && <FeaturedBadge />}
 
-            <SaveTileButton address={tile.address} />
+            <SaveTileButton id={tile.id} address={tile.address} />
 
             {large ? (
                 <FeaturedCaption tile={tile} />

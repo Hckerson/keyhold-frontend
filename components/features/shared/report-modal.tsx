@@ -56,15 +56,14 @@ export function ReportModal({ open, targets, onClose }: ReportModalProps) {
     return (
         <Modal
             open={open}
+            locked={createFlag.isPending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
-            role="dialog"
-            aria-modal="true"
             aria-labelledby="report-title"
         >
             <ModalContent>
-                <ModalHeader>
+                <ModalHeader className="p-6">
                     <ModalTitle id="report-title">
                         {REPORT_COPY.title}
                     </ModalTitle>
@@ -72,7 +71,7 @@ export function ReportModal({ open, targets, onClose }: ReportModalProps) {
                         {REPORT_COPY.lede}
                     </p>
                 </ModalHeader>
-                <ModalBody className="space-y-3">
+                <ModalBody className="space-y-3 p-6">
                     {targets.length > 1 && (
                         <Select
                             label={REPORT_COPY.targetLabel}
@@ -102,7 +101,7 @@ export function ReportModal({ open, targets, onClose }: ReportModalProps) {
                         placeholder={REPORT_COPY.detailsPlaceholder}
                     />
                 </ModalBody>
-                <ModalFooter>
+                <ModalFooter className="gap-4 p-6">
                     <Button onClick={onClose} disabled={createFlag.isPending}>
                         {REPORT_COPY.cancel}
                     </Button>

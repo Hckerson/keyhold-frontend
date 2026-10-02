@@ -32,25 +32,25 @@ export function Panel({
         <section
             id={id}
             className={cn(
-                "bg-background-muted border-border-light rounded-xl border p-4 pt-3 shadow-sm",
+                "bg-background border-border rounded-xl border p-4 pt-3 shadow-sm",
                 className,
             )}
         >
             {hasHeader && (
-                <header className="border-border-light bg-background-alt -mx-4 -mt-3 rounded-t-xl border-b px-4">
+                <header className="border-border-light -mx-4 -mt-3 border-b px-4">
                     <div className="flex min-h-11 items-center justify-between gap-3 py-2">
                         {(title || description) && (
                             <div className="min-w-0">
                                 <div className="flex items-baseline gap-2">
                                     {title && (
-                                        <h3 className="text-h6 font-display text-text truncate font-light">
+                                        <h2 className="text-text truncate text-xs font-semibold">
                                             {title}
-                                        </h3>
+                                        </h2>
                                     )}
                                     {count !== undefined && (
                                         <span
                                             className={cn(
-                                                "border-border-light bg-background shrink-0 rounded-md border px-1.5 py-px font-mono text-[10px] tabular-nums",
+                                                "border-border-light bg-background-alt shrink-0 rounded-md border px-1.5 py-px font-mono text-[10px] tabular-nums",
                                                 countQuiet
                                                     ? "text-text-muted"
                                                     : "text-text-secondary",

@@ -19,12 +19,14 @@ const SAVED_ACTION = "Saved";
 export interface DashboardSettingsHeaderProps {
     dirty: boolean;
     saved: boolean;
+    saving: boolean;
     onReset: () => void;
 }
 
 export function DashboardSettingsHeader({
     dirty,
     saved,
+    saving,
     onReset,
 }: DashboardSettingsHeaderProps) {
     return (
@@ -43,6 +45,7 @@ export function DashboardSettingsHeader({
                         tone="accent"
                         form={DASHBOARD_SETTINGS_FORM_ID}
                         disabled={!dirty}
+                        isLoading={saving}
                     >
                         {saved ? SAVED_ACTION : SAVE_ACTION}
                     </Button>

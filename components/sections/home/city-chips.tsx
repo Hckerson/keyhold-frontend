@@ -1,15 +1,7 @@
 import Link from "next/link";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 
-const CITIES = [
-    "Beverly Hills",
-    "Malibu",
-    "Bel Air",
-    "Santa Monica",
-    "Pacific Heights",
-];
-
-export function CityChips({ cities = CITIES }: { cities?: string[] }) {
+export function CityChips({ cities }: { cities: string[] }) {
     return (
         <div className="flex flex-wrap items-center gap-2">
             <span className="text-text-muted mr-1 font-mono text-[10px] tracking-[0.14em] uppercase">

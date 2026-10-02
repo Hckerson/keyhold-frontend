@@ -43,6 +43,11 @@ export function usePropertyJourney(propertyId: string) {
         createConnection.mutate({ propertyId });
     }, [saved, createConnection, propertyId]);
 
+    const resetRequests = useCallback(() => {
+        requestViewing.reset();
+        createOffer.reset();
+    }, [requestViewing, createOffer]);
+
     const bookViewing = useCallback(
         async (input: ViewingRequest) => {
             const connectionId = journey.connectionId;
@@ -87,6 +92,7 @@ export function usePropertyJourney(propertyId: string) {
         offerFailed: createOffer.isError,
         toggleSave: () => saved.toggle(propertyId),
         registerInterest,
+        resetRequests,
         bookViewing,
         placeOffer,
     };

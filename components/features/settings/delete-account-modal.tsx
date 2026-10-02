@@ -45,10 +45,10 @@ export function DeleteAccountModal({
                 if (!next) close();
             }}
         >
-            <ModalHeader>
+            <ModalHeader className="p-6">
                 <ModalTitle>Delete Account</ModalTitle>
             </ModalHeader>
-            <ModalBody className="space-y-3">
+            <ModalBody className="space-y-3 p-6">
                 <Callout
                     variant="error"
                     title="This removes everything"
@@ -64,7 +64,7 @@ export function DeleteAccountModal({
                     placeholder={DELETE_CONFIRMATION}
                 />
             </ModalBody>
-            <ModalFooter>
+            <ModalFooter className="gap-4 p-6">
                 <Button onClick={close}>Cancel</Button>
                 <Button
                     emphasis="solid"

@@ -10,12 +10,14 @@ const REACTIVATE_LABEL = "Reactivate";
 export interface UserRowActionsProps {
     user: ManagedUser;
     onSuspend: (id: string) => void;
+    reactivatingId?: string;
     onReactivate: (id: string) => void;
 }
 
 export function UserRowActions({
     user,
     onSuspend,
+    reactivatingId,
     onReactivate,
 }: UserRowActionsProps) {
     if (user.status === "deleted") {
@@ -29,6 +31,7 @@ export function UserRowActions({
                     tone="success"
                     icon={RotateCcw}
                     label={`${REACTIVATE_LABEL} ${user.name}`}
+                    disabled={reactivatingId !== undefined}
                     onClick={() => onReactivate(user.id)}
                 />
             </span>
@@ -38,7 +41,7 @@ export function UserRowActions({
     return (
         <span className="flex items-center justify-end">
             <IconButton
-                tone="danger"
+                tone="error"
                 icon={Ban}
                 label={`${SUSPEND_LABEL} ${user.name}`}
                 onClick={() => onSuspend(user.id)}

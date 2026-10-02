@@ -28,12 +28,14 @@ const CANCEL_ACTION = "Cancel";
 
 export interface ViewingsNextHeroProps {
     viewing: Viewing;
+    cancelling: boolean;
     onReschedule: (id: string) => void;
     onCancel: (id: string) => void;
 }
 
 export function ViewingsNextHero({
     viewing,
+    cancelling,
     onReschedule,
     onCancel,
 }: ViewingsNextHeroProps) {
@@ -95,6 +97,7 @@ export function ViewingsNextHero({
                     <Button
                         type="button"
                         emphasis="quiet"
+                        disabled={cancelling}
                         onClick={() => onCancel(viewing.id)}
                     >
                         {CANCEL_ACTION}

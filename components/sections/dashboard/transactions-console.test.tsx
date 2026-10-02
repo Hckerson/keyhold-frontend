@@ -65,8 +65,11 @@ const wrapper = ({ children }: { children: ReactNode }) => {
 const draw = () => render(<TransactionsConsole />, { wrapper });
 
 const releaseButtons = async () => {
-    const table = await screen.findByRole("table");
-    return within(table).getAllByRole("button", { name: /release funds/i });
+    const table = await screen.findByRole("table", { hidden: true });
+    return within(table).getAllByRole("button", {
+        name: /release funds/i,
+        hidden: true,
+    });
 };
 
 const dialog = () => screen.getByRole("dialog");
@@ -198,7 +201,7 @@ describe("TransactionsConsole · while a release is in flight", () => {
         pending.settle(RELEASED);
     });
 
-    it("4.3 cannot be started a second time after the confirmation is dismissed", async () => {
+    it("4.3 cannot be started a second time while it is in flight", async () => {
         const pending = deferred();
         release.mockReturnValue(pending.promise);
         draw();
@@ -208,12 +211,13 @@ describe("TransactionsConsole · while a release is in flight", () => {
         await userEvent.keyboard("{Escape}");
         const [row] = await releaseButtons();
 
+        expect(dialog()).toBeInTheDocument();
         expect(row).toBeDisabled();
         pending.settle(RELEASED);
         await waitFor(() => expect(release).toHaveBeenCalledTimes(1));
     });
 
-    it("4.4 keeps the release visible after the confirmation is dismissed", async () => {
+    it("4.4 cannot be dismissed until the release has an answer", async () => {
         const pending = deferred();
         release.mockReturnValue(pending.promise);
         draw();
@@ -221,7 +225,13 @@ describe("TransactionsConsole · while a release is in flight", () => {
         await userEvent.click(confirmButton());
         await userEvent.keyboard("{Escape}");
 
-        expect((await releaseButtons())[0]).toBeDisabled();
+        expect(dialog()).toBeInTheDocument();
+        expect(
+            within(dialog()).getByRole("button", { name: /keep it held/i }),
+        ).toBeDisabled();
+        expect(
+            within(dialog()).getByRole("button", { name: /close dialog/i }),
+        ).toBeDisabled();
 
         pending.settle(RELEASED);
     });
@@ -249,7 +259,7 @@ describe("TransactionsConsole · when the release fails", () => {
         await userEvent.click((await releaseButtons())[0]);
         await userEvent.click(confirmButton());
 
-        const table = await screen.findByRole("table");
+        const table = await screen.findByRole("table", { hidden: true });
         await waitFor(() =>
             expect(within(table).getByText(/in escrow/i)).toBeInTheDocument(),
         );

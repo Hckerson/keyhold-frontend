@@ -5,10 +5,14 @@ const BAND_LABEL = "Money earned and money owed at a glance";
 
 export interface AdminPaymentsStatBandProps {
     stats: StatDatum[];
+    pending?: boolean;
 }
 
-export function AdminPaymentsStatBand({ stats }: AdminPaymentsStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} />;
+export function AdminPaymentsStatBand({
+    stats,
+    pending,
+}: AdminPaymentsStatBandProps) {
+    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
 }
 
 AdminPaymentsStatBand.displayName = "AdminPaymentsStatBand";

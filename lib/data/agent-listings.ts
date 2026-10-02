@@ -11,6 +11,7 @@ import {
     type AgeBand,
     type DemandBand,
 } from "@/lib/config/listing-tones";
+import type { PropertyStatus } from "@/lib/enums/enums";
 import type { ManagedListing, ManagedListingStatus } from "@/lib/types";
 import {
     dateFormatter,
@@ -19,6 +20,7 @@ import {
     percentOf,
     sum,
 } from "@/lib/utils";
+import { isPromotionActive } from "@/lib/utils/promotion";
 
 export const FEATURED_DATE_FORMAT = "MMM d, yyyy";
 
@@ -32,23 +34,63 @@ export const FILTERS: { id: StatusFilter; label: string }[] = [
     })),
 ];
 
-export const BULK_ACTIONS = ["publish", "draft", "renew", "delete"] as const;
+export const BULK_STATUS_ACTIONS = ["publish", "draft"] as const;
+
+export type BulkStatusAction = (typeof BULK_STATUS_ACTIONS)[number];
+
+export const BULK_ACTIONS = [...BULK_STATUS_ACTIONS, "delete"] as const;
 
 export type BulkAction = (typeof BULK_ACTIONS)[number];
 
 export const BULK_LABELS: Record<BulkAction, string> = {
     publish: "Publish",
     draft: "Move to Draft",
-    renew: "Renew",
     delete: "Delete",
 };
+
+export interface BulkTransition {
+    from: readonly ManagedListingStatus[];
+    to: PropertyStatus;
+}
+
+export const BULK_TRANSITIONS: Record<BulkStatusAction, BulkTransition> = {
+    publish: { from: ["draft"], to: "AVAILABLE" },
+    draft: { from: ["active"], to: "DRAFT" },
+};
+
+export interface BulkStatusChange {
+    ids: readonly string[];
+    status: PropertyStatus;
+}
+
+export interface BulkStatusTarget {
+    action: BulkStatusAction;
+    ids: readonly string[];
+    skipped: number;
+}
+
+export const allowsBulk = (listing: ManagedListing, action: BulkAction) =>
+    action === "delete" ||
+    BULK_TRANSITIONS[action].from.includes(listing.status);
+
+export const bulkStatusTarget = (
+    listings: ManagedListing[],
+    action: BulkStatusAction,
+): BulkStatusTarget => {
+    const ids = listings
+        .filter((listing) => allowsBulk(listing, action))
+        .map((listing) => listing.id);
+    return { action, ids, skipped: listings.length - ids.length };
+};
+
+export const matchesStatus = (listing: ManagedListing, filter: StatusFilter) =>
+    filter === "all" || listing.status === filter;
 
 export const saveRate = (listing: ManagedListing) =>
     percentOf(listing.saves, listing.views);
 
 export const isFeatured = (listing: ManagedListing) =>
-    listing.featuredUntil !== null &&
-    new Date(listing.featuredUntil) > new Date();
+    isPromotionActive(listing.featuredUntil);
 
 export const featuredUntilLabel = (listing: ManagedListing) =>
     listing.featuredUntil

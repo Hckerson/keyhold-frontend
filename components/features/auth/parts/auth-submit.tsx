@@ -10,7 +10,7 @@ export interface AuthSubmitProps {
     label: string;
     pendingLabel: string;
     pending: boolean;
-    disabled: boolean;
+    disabled?: boolean;
 }
 
 export function AuthSubmit({
@@ -42,6 +42,7 @@ export function AuthSubmit({
                                 <Spinner
                                     size="sm"
                                     tone="current"
+                                    aria-hidden="true"
                                     className="size-3"
                                 />
                             </m.span>

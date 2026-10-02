@@ -73,15 +73,16 @@ export function RequestViewingModal({
     return (
         <Modal
             open={open}
+            locked={pending}
             onOpenChange={(next) => {
                 if (!next) onClose();
             }}
         >
-            <ModalHeader className="p-4">
+            <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
             </ModalHeader>
 
-            <ModalBody className="space-y-3 p-4">
+            <ModalBody className="space-y-3">
                 <div>
                     <p className="text-text text-xs font-semibold">{address}</p>
                     <p className="text-text-secondary mt-0.5 text-xs">
@@ -125,8 +126,8 @@ export function RequestViewingModal({
                 )}
             </ModalBody>
 
-            <ModalFooter className="p-4">
-                <Button type="button" onClick={onClose}>
+            <ModalFooter className="gap-4">
+                <Button type="button" disabled={pending} onClick={onClose}>
                     {COPY.cancel}
                 </Button>
                 <Button

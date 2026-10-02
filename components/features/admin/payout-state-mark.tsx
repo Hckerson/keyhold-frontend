@@ -1,5 +1,5 @@
 import { StatusDot } from "@/components/patterns/status-dot";
-import { PAYOUT_STATES } from "@/lib/config/admin-tones";
+import { PAYOUT_STATES } from "@/lib/config/payout-tones";
 import { cn } from "@/lib/utils";
 import type { PayoutState } from "@/lib/types";
 

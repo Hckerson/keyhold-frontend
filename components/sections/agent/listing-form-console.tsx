@@ -7,8 +7,8 @@ import { ListingFormFields } from "@/components/features/agent/listing-form-fiel
 import { ListingFormNav } from "@/components/features/agent/listing-form-nav";
 import { ListingMediaPanel } from "@/components/features/agent/listing-media-panel";
 import { ListingLifecyclePanel } from "@/components/features/agent/listing-lifecycle-panel";
-import { ListingPromoteModal } from "@/components/features/agent/listing-promote-modal";
-import { ListingDeleteModal } from "@/components/features/agent/listing-delete-modal";
+import { ListingLifecycleModals } from "@/components/features/agent/listing-lifecycle-modals";
+import { ListingImageRemoveModal } from "@/components/features/agent/listing-image-remove-modal";
 import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
 import { dirtySummary, featuredLabel } from "@/lib/data/listing-form";
 import { useListingForm } from "@/lib/hooks/use-listing-form";
@@ -77,7 +77,7 @@ export function ListingFormConsole({ property }: ListingFormConsoleProps) {
                             uploadProgress={images.uploadProgress}
                             onUpload={images.upload}
                             onReorder={images.reorder}
-                            onRemove={images.remove}
+                            onRemove={images.removal.request}
                         />
                     )}
                 </div>
@@ -89,43 +89,38 @@ export function ListingFormConsole({ property }: ListingFormConsoleProps) {
                         <ListingLifecyclePanel
                             id="lifecycle"
                             status={form.draft.status}
+                            storedStatus={property.status}
                             featuredUntil={featuredLabel(property)}
-                            soldPending={lifecycle.soldPending}
                             onPatch={(change) =>
                                 form.setDraft({ ...form.draft, ...change })
                             }
                             onPromote={lifecycle.openPromote}
-                            onMarkSold={lifecycle.markSold}
+                            onMarkSold={lifecycle.openSale}
                             onDelete={lifecycle.openRemove}
                         />
                     )}
                 </div>
             </div>
 
-            <ListingPromoteModal
-                address={
-                    lifecycle.promoting && property
-                        ? property.address
-                        : undefined
-                }
-                featuredUntil={property && featuredLabel(property)}
-                pending={lifecycle.promotePending}
-                failed={lifecycle.promoteFailed}
-                onClose={lifecycle.closePromote}
-                onConfirm={lifecycle.promote}
-            />
+            {property && (
+                <>
+                    <ListingLifecycleModals
+                        address={property.address}
+                        featuredUntil={featuredLabel(property)}
+                        lifecycle={lifecycle}
+                    />
 
-            <ListingDeleteModal
-                address={
-                    lifecycle.removing && property
-                        ? property.address
-                        : undefined
-                }
-                pending={lifecycle.removePending}
-                failed={lifecycle.removeFailed}
-                onClose={lifecycle.closeRemove}
-                onConfirm={lifecycle.remove}
-            />
+                    <ListingImageRemoveModal
+                        address={property.address}
+                        images={property.images}
+                        imageId={images.removal.target}
+                        pending={images.removal.pending}
+                        failed={images.removal.failed}
+                        onClose={images.removal.dismiss}
+                        onConfirm={images.confirmRemove}
+                    />
+                </>
+            )}
         </div>
     );
 }

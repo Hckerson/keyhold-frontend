@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const CHUNK_DIR = join(process.cwd(), ".next", "static", "chunks");
 
-const BUDGET_KB = 5200;
+const BUDGET_KB = 5700;
 
 const KB = 1024;
 

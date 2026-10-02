@@ -23,6 +23,7 @@ import {
     withRedirect,
 } from "@/lib/constants";
 import {
+    clearFieldError,
     fieldErrorFor,
     signupSchema,
     toFieldErrors,
@@ -72,7 +73,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
         (event: ChangeEvent<HTMLInputElement>) => {
             const { value } = event.target;
             setValues((current) => ({ ...current, [field]: value }));
-            setErrors((current) => ({ ...current, [field]: undefined }));
+            setErrors((current) => clearFieldError(current, field));
             register.clearError();
         };
 
@@ -163,7 +164,6 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                     label="Create account"
                     pendingLabel="Creating account"
                     pending={pending}
-                    disabled={!parsed.success}
                 />
             </form>
 

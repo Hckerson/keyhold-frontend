@@ -1,33 +1,22 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
+import { ADMIN_ROUTES } from "@/lib/constants";
 
 const OVERVIEW_TITLE = "Admin Console";
 const OVERVIEW_LEDE =
-    "What the marketplace moved, what it owes a decision, and what is holding it up";
+    "What waits on a decision, what is holding the platform up, what it moved and who is on it";
 const REPORTS_ACTION = "Platform Reports";
 
-export interface AdminOverviewHeaderProps {
-    summary: string;
-}
-
-export function AdminOverviewHeader({ summary }: AdminOverviewHeaderProps) {
+export function AdminOverviewHeader() {
     return (
         <PortalHeader
             title={OVERVIEW_TITLE}
             lede={OVERVIEW_LEDE}
-            summary={summary}
             action={
-                <Link
-                    href="/admin/reports"
-                    className={buttonVariants({
-                        emphasis: "solid",
-                        tone: "accent",
-                        size: "sm",
-                    })}
-                >
-                    {REPORTS_ACTION}
-                </Link>
+                <Button asChild emphasis="solid" tone="accent">
+                    <Link href={ADMIN_ROUTES.reports}>{REPORTS_ACTION}</Link>
+                </Button>
             }
         />
     );

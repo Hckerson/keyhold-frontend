@@ -6,16 +6,16 @@ const calloutVariants = cva("rounded-lg border p-3", {
     variants: {
         variant: {
             neutral: "bg-background-muted border-border-light",
-            success: "bg-success/10 border-success/20",
-            info: "bg-info/10 border-info/20",
-            warning: "bg-warning/10 border-warning/20",
-            error: "bg-error/10 border-error/20",
+            success: "bg-success-light border-success/20",
+            info: "bg-info-light border-info/20",
+            warning: "bg-warning-light border-warning/20",
+            error: "bg-error-light border-error/20",
         },
     },
     defaultVariants: { variant: "neutral" },
 });
 
-const titleColor: Record<string, string> = {
+const titleColor: Record<CalloutVariant, string> = {
     neutral: "text-text",
     success: "text-success",
     info: "text-info",
@@ -41,25 +41,23 @@ export function Callout({
     variant = "neutral",
     className,
 }: CalloutProps) {
+    const tone = variant ?? "neutral";
+
     return (
         <div
+            role={tone === "error" ? "alert" : "status"}
             className={cn(
-                calloutVariants({ variant }),
+                calloutVariants({ variant: tone }),
                 "flex items-center justify-between gap-3",
                 className,
             )}
         >
             <div className="min-w-0">
-                <p
-                    className={cn(
-                        "text-xs font-medium",
-                        titleColor[variant ?? "neutral"],
-                    )}
-                >
+                <p className={cn("text-xs font-medium", titleColor[tone])}>
                     {title}
                 </p>
                 {description && (
-                    <p className="text-text-secondary mt-1 text-xs">
+                    <p className="text-text-secondary mt-0.5 text-xs">
                         {description}
                     </p>
                 )}
