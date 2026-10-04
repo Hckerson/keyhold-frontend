@@ -59,7 +59,7 @@ export function Sparkline({
                                 />
                             </linearGradient>
                         </defs>
-                        <YAxis hide domain={["dataMin", "dataMax"]} />
+                        <YAxis hide domain={[0, "dataMax"]} />
                         <Area
                             type="monotone"
                             dataKey="value"

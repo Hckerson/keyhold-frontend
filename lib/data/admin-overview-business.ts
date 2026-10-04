@@ -1,5 +1,6 @@
 import { ADMIN_ROUTES, NO_READING } from "@/lib/constants";
 import {
+    fillMonths,
     gmvMonths,
     gmvReading,
     monthLabel,
@@ -28,13 +29,17 @@ const figureOf = (
     base: FigureBase,
     points: GrowthPoint[] | undefined,
     total: number | undefined,
-): BusinessFigure => ({
-    ...base,
-    latest: latestOf(points),
-    delta: monthOverMonth(points ?? []),
-    points: (points ?? []).map((point) => point.value),
-    total: total === undefined ? NO_READING : formatCount(total),
-});
+): BusinessFigure => {
+    const months = fillMonths(points ?? []);
+
+    return {
+        ...base,
+        latest: latestOf(points),
+        delta: monthOverMonth(months),
+        points: months.map((point) => point.value),
+        total: total === undefined ? NO_READING : formatCount(total),
+    };
+};
 
 export const businessFigures = (
     trend: TrendStats | undefined,
