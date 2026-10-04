@@ -7,8 +7,8 @@ const TABLE_CAPTION =
 
 const COLUMNS = [
     { id: "service", label: "Service", className: "text-left" },
-    { id: "budget", label: "Budget", className: "w-28 pl-3 text-right" },
-    { id: "p95", label: "p95", className: "w-16 pl-3 text-right" },
+    { id: "budget", label: "Budget", className: "w-16 pl-3 text-right" },
+    { id: "p95", label: "p95", className: "w-18 pl-3 text-right" },
     { id: "errors", label: "Errors", className: "w-18 pl-3 text-right" },
 ];
 
@@ -18,7 +18,7 @@ export interface ServiceHealthTableProps {
 
 export function ServiceHealthTable({ services }: ServiceHealthTableProps) {
     return (
-        <table className="table-flush w-full min-w-sm table-fixed">
+        <table className="table-flush w-full table-fixed">
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border-light h-9 border-b">

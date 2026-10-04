@@ -68,7 +68,7 @@ export function AdminOverviewHealth({
                     {pending ? (
                         <SkeletonRows rows={SKELETON_SERVICES} />
                     ) : services.length > 0 ? (
-                        <PanelInset scroll>
+                        <PanelInset flush className="flex-1">
                             <ServiceHealthTable services={services} />
                         </PanelInset>
                     ) : (
@@ -79,7 +79,7 @@ export function AdminOverviewHealth({
                         />
                     )}
 
-                    <div>
+                    <div className="mt-auto">
                         {pending ? (
                             <Skeleton className="h-14 w-full" />
                         ) : integrations.length > 0 ? (

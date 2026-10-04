@@ -114,16 +114,14 @@ export function AdminOverviewConsole() {
                         failed={trend.isError}
                     />
                 </div>
-                <div className="self-start">
-                    <AdminOverviewHealth
-                        systems={systems.reading}
-                        services={systems.services}
-                        integrations={systems.integrations}
-                        integrationSummary={systems.summary}
-                        pending={health.isPending}
-                        failed={health.isError}
-                    />
-                </div>
+                <AdminOverviewHealth
+                    systems={systems.reading}
+                    services={systems.services}
+                    integrations={systems.integrations}
+                    integrationSummary={systems.summary}
+                    pending={health.isPending}
+                    failed={health.isError}
+                />
                 <AdminOverviewPeople
                     users={users.data}
                     statuses={people.statuses}
