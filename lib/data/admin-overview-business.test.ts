@@ -65,6 +65,43 @@ describe("businessFigures", () => {
         expect(deals?.delta).toBeNull();
     });
 
+    it("draws a month with no activity as zero instead of skipping it", () => {
+        const listings = figureOf(
+            businessFigures(
+                aTrend({
+                    listings: [
+                        { name: "2025-11", value: 2 },
+                        { name: "2026-02", value: 5 },
+                    ],
+                }),
+                undefined,
+                undefined,
+            ),
+            "listings",
+        );
+
+        expect(listings?.points).toEqual([2, 0, 0, 5]);
+        expect(listings?.delta).toBeNull();
+    });
+
+    it("shows no change when the latest month matches the one before", () => {
+        const deals = figureOf(
+            businessFigures(
+                aTrend({
+                    deals: [
+                        { name: "2026-08", value: 11 },
+                        { name: "2026-09", value: 11 },
+                    ],
+                }),
+                undefined,
+                undefined,
+            ),
+            "deals",
+        );
+
+        expect(deals?.delta).toBeNull();
+    });
+
     it("measures the member ratio as active over all accounts", () => {
         const members = figureOf(
             businessFigures(

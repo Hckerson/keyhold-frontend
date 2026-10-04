@@ -26,6 +26,24 @@ const MONTH_LABELS = [
 export const monthLabel = (key: string) =>
     MONTH_LABELS[Number(key.slice(5, 7)) - 1];
 
+const monthIndex = (key: string) =>
+    Number(key.slice(0, 4)) * MONTH_LABELS.length + Number(key.slice(5, 7)) - 1;
+
+const monthKey = (index: number) =>
+    `${Math.floor(index / MONTH_LABELS.length)}-${String((index % MONTH_LABELS.length) + 1).padStart(2, "0")}`;
+
+export const fillMonths = (points: GrowthPoint[]): GrowthPoint[] => {
+    if (points.length === 0) return points;
+    const values = new Map(points.map((point) => [point.name, point.value]));
+    const first = monthIndex(points[0].name);
+    const span = monthIndex(points[points.length - 1].name) - first + 1;
+
+    return Array.from({ length: span }, (_, offset) => {
+        const name = monthKey(first + offset);
+        return { name, value: values.get(name) ?? 0 };
+    });
+};
+
 const ageOf = (iso: string | null | undefined) =>
     iso ? minutesSince(iso) : null;
 
@@ -79,7 +97,7 @@ export interface GmvReading {
 export const monthOverMonth = (points: GrowthPoint[]): MonthDelta | null => {
     const latest = points[points.length - 1]?.value ?? 0;
     const previous = points[points.length - 2]?.value ?? 0;
-    if (previous <= 0) return null;
+    if (previous <= 0 || latest === previous) return null;
 
     const change = Math.round(((latest - previous) / previous) * 100);
 
