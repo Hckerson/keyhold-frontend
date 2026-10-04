@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
+import { IconChip } from "@/components/ui/icon-chip";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
-import { cn } from "@/lib/utils";
+import type { ChartTone } from "@/lib/config/chart-tones";
 
 export interface ShareDatum {
     id: string;
@@ -17,15 +17,9 @@ export interface ShareRowProps {
 }
 
 export function ShareRow({ share }: ShareRowProps) {
-    const Icon = share.icon;
-
     return (
         <li className="flex h-9 items-center gap-2">
-            <Icon
-                aria-hidden="true"
-                strokeWidth={1.5}
-                className={cn("size-3 shrink-0", chartToneText[share.tone])}
-            />
+            <IconChip icon={share.icon} tone={share.tone} />
             <span className="text-text min-w-0 flex-1 truncate text-xs">
                 {share.label}
             </span>
