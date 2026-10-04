@@ -7,6 +7,7 @@ import { MessagesHeader } from "@/components/sections/dashboard/messages-header"
 import { MessagesStatBand } from "@/components/sections/dashboard/messages-stat-band";
 import { ThreadContextRail } from "@/components/sections/dashboard/thread-context-rail";
 import { ThreadPanel } from "@/components/sections/dashboard/thread-panel";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
@@ -99,6 +100,8 @@ export function MessagesConsole() {
                 onRetry={() => void interests.refetch()}
             />
         );
+
+    if (interests.isPending) return <ConsoleSkeleton variant="thread" />;
 
     return (
         <div className="flex flex-col gap-4">

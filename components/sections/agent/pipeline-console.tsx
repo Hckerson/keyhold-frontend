@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { PortalHeader } from "@/components/patterns/portal-header";
 import { PipelineStageColumn } from "@/components/features/agent/pipeline-stage-column";
 import { PipelineHealthPanel } from "@/components/features/agent/pipeline-health-panel";
@@ -92,6 +93,8 @@ export function PipelineConsole() {
                 onRetry={pipeline.refetch}
             />
         );
+
+    if (pipeline.pending) return <ConsoleSkeleton variant="board" />;
 
     return (
         <div className="space-y-3">

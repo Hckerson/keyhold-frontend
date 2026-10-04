@@ -28,7 +28,7 @@ export function RequestsConsole() {
             />
         );
 
-    if (queue.pending) return <ConsoleSkeleton />;
+    if (queue.pending) return <ConsoleSkeleton variant="stack" />;
 
     const submit = (response: OfferResponse) => {
         if (!answer.target) return;

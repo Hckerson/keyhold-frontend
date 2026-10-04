@@ -1,6 +1,15 @@
-import { ADMIN_ROUTES } from "@/lib/constants";
+import { ADMIN_ROUTES, AGENT_ROUTES, BUYER_ROUTES } from "@/lib/constants";
 
-export type ConsoleSkeletonVariant = "split" | "tiles" | "deck" | "review";
+export type ConsoleSkeletonVariant =
+    | "split"
+    | "tiles"
+    | "deck"
+    | "review"
+    | "board"
+    | "quarters"
+    | "thread"
+    | "form"
+    | "stack";
 
 const DEFAULT_VARIANT: ConsoleSkeletonVariant = "split";
 
@@ -10,7 +19,27 @@ const ROUTE_VARIANTS: Record<string, ConsoleSkeletonVariant> = {
     [ADMIN_ROUTES.verifications]: "review",
     [ADMIN_ROUTES.disputes]: "review",
     [ADMIN_ROUTES.flags]: "review",
+    [AGENT_ROUTES.pipeline]: "board",
+    [AGENT_ROUTES.calendar]: "quarters",
+    [AGENT_ROUTES.requests]: "stack",
+    [BUYER_ROUTES.messages]: "thread",
 };
 
-export const consoleSkeletonFor = (pathname: string) =>
-    ROUTE_VARIANTS[pathname] ?? DEFAULT_VARIANT;
+const DETAIL_VARIANTS: Record<string, ConsoleSkeletonVariant> = {
+    [AGENT_ROUTES.listings]: "form",
+    [BUYER_ROUTES.offers]: "form",
+};
+
+const SECTION_DEPTH = 3;
+
+const sectionOf = (pathname: string) =>
+    pathname.split("/").slice(0, SECTION_DEPTH).join("/");
+
+export const consoleSkeletonFor = (pathname: string) => {
+    const section = sectionOf(pathname);
+    return (
+        ROUTE_VARIANTS[pathname] ??
+        (section === pathname ? undefined : DETAIL_VARIANTS[section]) ??
+        DEFAULT_VARIANT
+    );
+};

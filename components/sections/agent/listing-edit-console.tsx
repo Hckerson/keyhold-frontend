@@ -21,7 +21,7 @@ export function ListingEditConsole({ listingId }: ListingEditConsoleProps) {
             />
         );
 
-    if (!property.data) return <ConsoleSkeleton />;
+    if (!property.data) return <ConsoleSkeleton variant="form" />;
 
     return <ListingFormConsole property={property.data} />;
 }

@@ -1,5 +1,1 @@
-import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
-
-export default function DashboardLoading() {
-    return <ConsoleSkeleton />;
-}
+export { RouteSkeleton as default } from "@/components/patterns/route-skeleton";
