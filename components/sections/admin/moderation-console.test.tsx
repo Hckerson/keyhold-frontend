@@ -165,6 +165,13 @@ describe("ModerationConsole · reading the queue", () => {
         draw();
 
         await queue();
+        await userEvent.click(
+            screen.getByRole("button", { name: /^decided/i }),
+        );
+
+        expect(
+            await screen.findByRole("button", { name: `Review ${MILL}` }),
+        ).toBeInTheDocument();
         expect(
             screen.queryByRole("button", { name: `Approve ${MILL}` }),
         ).not.toBeInTheDocument();
@@ -403,7 +410,13 @@ describe("ModerationConsole · reviewing", () => {
 
     it("offers no approval when reviewing a listing that is already approved", async () => {
         draw();
-        await userEvent.click(await rowButton(`Review ${MILL}`));
+        await queue();
+        await userEvent.click(
+            screen.getByRole("button", { name: /^decided/i }),
+        );
+        await userEvent.click(
+            await screen.findByRole("button", { name: `Review ${MILL}` }),
+        );
 
         expect(
             within(await dialog(MILL)).queryByRole("button", {

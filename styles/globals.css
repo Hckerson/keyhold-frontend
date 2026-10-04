@@ -218,6 +218,41 @@ svg.lucide * {
     vector-effect: non-scaling-stroke;
 }
 
+.reveal {
+    opacity: 0;
+    transition: opacity var(--durations-fast) var(--timing-functions-smooth);
+}
+
+.reveal-fold {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--durations-fast)
+        var(--timing-functions-smooth);
+}
+
+.reveal-fold > * {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.reveal-scope:is(:hover, :focus-within) .reveal {
+    opacity: 1;
+}
+
+.reveal-scope:is(:hover, :focus-within) .reveal-fold {
+    grid-template-rows: 1fr;
+}
+
+@media (hover: none) {
+    .reveal {
+        opacity: 1;
+    }
+
+    .reveal-fold {
+        grid-template-rows: 1fr;
+    }
+}
+
 .rail-label {
     color: var(--color-sidebar-text-muted);
     font-family: var(--font-mono);
@@ -305,11 +340,9 @@ svg.lucide * {
     display: none;
 }
 
-@container queue (min-width: 46rem) {
+@container queue (min-width: 36rem) {
     .queue-grid {
-        grid-template-columns:
-            minmax(0, 1fr)
-            6rem 4.5rem 3rem 2.5rem 4.5rem 6rem;
+        grid-template-columns: minmax(0, 1fr) 4.5rem 3.5rem 2.5rem 4.5rem 6rem;
     }
 
     .queue-grid__wide {
@@ -320,11 +353,6 @@ svg.lucide * {
 .console-split--sixths {
     --split-columns: 6;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.console-split--fifths {
-    --split-columns: 5;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 @container console (min-width: 56rem) {
