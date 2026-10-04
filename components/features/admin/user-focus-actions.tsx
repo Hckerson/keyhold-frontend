@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { userActionOf } from "@/lib/data/admin-users";
+import { cn } from "@/lib/utils";
 import type { ManagedUser } from "@/lib/types";
 
 const REVIEW_ACTION = "Review";
@@ -14,6 +15,7 @@ export interface UserFocusActionsProps {
     onSuspend: (id: string) => void;
     reactivatingId?: string;
     onReactivate: (id: string) => void;
+    className?: string;
 }
 
 export function UserFocusActions({
@@ -22,11 +24,12 @@ export function UserFocusActions({
     onSuspend,
     reactivatingId,
     onReactivate,
+    className,
 }: UserFocusActionsProps) {
     const action = userActionOf(user);
 
     return (
-        <div className="flex shrink-0 items-center gap-2">
+        <div className={cn("flex shrink-0 items-center gap-2", className)}>
             <Button type="button" onClick={() => onOpen(user.id)}>
                 {REVIEW_ACTION}
             </Button>

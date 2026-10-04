@@ -1,3 +1,7 @@
+import type { ChartTone } from "@/lib/config/chart-tones";
+import type { MonthDelta } from "./admin";
+import type { FilterTileDatum } from "./ui";
+
 export type ManagedUserRole = "buyer" | "agent" | "admin";
 export type UserTier = "standard" | "premium" | "platinum";
 export type UserStatus = "active" | "pending" | "suspended" | "deleted";
@@ -33,10 +37,21 @@ export interface UserDirectoryFilters {
     role: UserRoleFilter;
 }
 
-export interface UserBreakdown {
+export type UserStatusTile = FilterTileDatum<UserStatusFilter>;
+
+export type UserRoleTile = FilterTileDatum<ManagedUserRole>;
+
+export interface UserRecencyBand {
     id: string;
     label: string;
-    accounts: number;
-    deals: number;
-    volume: number;
+    count: number;
+    percent: number;
+    tone: ChartTone;
+}
+
+export interface UserSignupTrend {
+    months: number[];
+    latest: number;
+    latestLabel: string;
+    delta: MonthDelta | null;
 }

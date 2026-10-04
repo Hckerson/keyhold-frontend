@@ -68,14 +68,8 @@ const wrapper = ({ children }: { children: ReactNode }) => {
 
 const draw = () => render(<AdminUsersConsole />, { wrapper });
 
-const FIRST_RENDER_TIMEOUT = 5_000;
-
 const directory = () =>
-    screen.findByRole(
-        "table",
-        { name: /^platform accounts/i },
-        { timeout: FIRST_RENDER_TIMEOUT },
-    );
+    screen.findByRole("list", { name: /^platform accounts/i });
 
 const rowButton = async (name: string) =>
     within(await directory()).getByRole("button", { name });
@@ -478,5 +472,276 @@ describe("AdminUsersConsole · reviewing", () => {
                 name: "View profile",
             }),
         ).toHaveAttribute("href", "/admin/users/usr_1");
+    });
+});
+
+const EVE = aMemberRecord({
+    id: "usr_5",
+    fullName: "Eve Stone",
+    email: "eve@keyhol.me",
+    role: "BUYER",
+    status: "SUSPENDED",
+});
+
+const hold = <T,>() => {
+    let release: (value: T) => void = () => {};
+    const promise = new Promise<T>((resolve) => {
+        release = resolve;
+    });
+    return { promise, release: (value: T) => release(value) };
+};
+
+const directoryNames = async () =>
+    within(await directory())
+        .getAllByRole("listitem")
+        .map((row) => row.textContent ?? "");
+
+describe("AdminUsersConsole · while a decision is in flight", () => {
+    it("keeps the suspension modal open and its cancel locked until the request settles", async () => {
+        const call = hold<ReturnType<typeof aSuspension>>();
+        suspend.mockReturnValue(call.promise);
+        draw();
+        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        const modal = within(await dialog("Suspend account"));
+
+        await userEvent.type(
+            modal.getByLabelText("Reason for suspension"),
+            "Fake listings",
+        );
+        await userEvent.click(
+            modal.getByRole("button", { name: "Suspend account" }),
+        );
+        await userEvent.click(
+            modal.getByRole("button", { name: "Suspend account" }),
+        );
+
+        expect(modal.getByRole("button", { name: "Cancel" })).toBeDisabled();
+        expect(suspend).toHaveBeenCalledTimes(1);
+
+        call.release(aSuspension());
+        await gone("Suspend account");
+    });
+
+    it("disables every other reactivation while one is being confirmed", async () => {
+        list.mockResolvedValue([ADA, BEN, EVE]);
+        const call = hold<ReturnType<typeof aSuspension>>();
+        lift.mockReturnValue(call.promise);
+        draw();
+        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
+
+        await userEvent.click(
+            within(await dialog("Reactivate account")).getByRole("button", {
+                name: "Reactivate account",
+            }),
+        );
+
+        await waitFor(() =>
+            expect(
+                screen.getByRole("button", {
+                    name: "Reactivate Eve Stone",
+                    hidden: true,
+                }),
+            ).toBeDisabled(),
+        );
+
+        call.release(aSuspension({ id: "sus_live" }));
+        await gone("Reactivate account");
+    });
+
+    it("does not close the new account form while it is being created", async () => {
+        const call = hold<typeof ADA>();
+        create.mockReturnValue(call.promise);
+        draw();
+        await userEvent.click(
+            await screen.findByRole("button", { name: "Add User" }),
+        );
+        const form = await fillInvite({
+            "Full name": "Eve Stone",
+            "Email address": "eve@keyhol.me",
+            "Starting password": "s3cure-pass",
+        });
+
+        await userEvent.click(
+            form.getByRole("button", { name: "Create account" }),
+        );
+        await userEvent.click(form.getByRole("button", { name: "Cancel" }));
+
+        expect(
+            screen.getByRole("dialog", { name: "Add a user" }),
+        ).toBeVisible();
+
+        call.release(ADA);
+        await gone("Add a user");
+    });
+});
+
+const waitingLane = () =>
+    screen.findByRole("list", { name: "Accounts waiting on a decision" });
+
+describe("AdminUsersConsole · the waiting lane", () => {
+    it("lists only suspended and pending accounts", async () => {
+        draw();
+
+        const lane = await waitingLane();
+
+        expect(within(lane).getByText("Ben Ortiz")).toBeInTheDocument();
+        expect(within(lane).queryByText("Ada Vance")).not.toBeInTheDocument();
+        expect(within(lane).queryByText("Dev Patel")).not.toBeInTheDocument();
+    });
+
+    it("reactivates a suspended account through the confirmation", async () => {
+        draw();
+
+        await userEvent.click(
+            within(await waitingLane()).getByRole("button", {
+                name: "Reactivate",
+            }),
+        );
+
+        expect(await dialog("Reactivate account")).toHaveTextContent(
+            "Ben Ortiz",
+        );
+    });
+
+    it("opens the review of an account it lists", async () => {
+        draw();
+
+        await userEvent.click(
+            within(await waitingLane()).getByRole("button", { name: "Review" }),
+        );
+
+        expect(await dialog("Ben Ortiz")).toBeInTheDocument();
+    });
+
+    it("offers suspension on a pending account through the suspension modal", async () => {
+        list.mockResolvedValue([{ ...ADA, status: "PENDING" }, CARA]);
+        draw();
+
+        await userEvent.click(
+            within(await waitingLane()).getByRole("button", {
+                name: "Suspend",
+            }),
+        );
+
+        expect(await dialog("Suspend account")).toHaveTextContent("Ada Vance");
+    });
+});
+
+describe("AdminUsersConsole · acting from the review", () => {
+    it("hands a reactivation started in the review over to its confirmation", async () => {
+        draw();
+        await userEvent.click(within(await directory()).getByText("Ben Ortiz"));
+
+        await userEvent.click(
+            within(await dialog("Ben Ortiz")).getByRole("button", {
+                name: "Reactivate",
+            }),
+        );
+
+        expect(await dialog("Reactivate account")).toBeInTheDocument();
+        await gone("Ben Ortiz");
+    });
+
+    it("starts every new account form empty", async () => {
+        draw();
+        await userEvent.click(
+            await screen.findByRole("button", { name: "Add User" }),
+        );
+        const first = await fillInvite({ "Full name": "Half typed" });
+        await userEvent.click(first.getByRole("button", { name: "Cancel" }));
+        await gone("Add a user");
+
+        await userEvent.click(screen.getByRole("button", { name: "Add User" }));
+
+        expect(
+            within(await dialog("Add a user")).getByLabelText("Full name"),
+        ).toHaveValue("");
+    });
+});
+
+describe("AdminUsersConsole · browsing", () => {
+    it("narrows the directory to the role that was picked", async () => {
+        draw();
+        await directory();
+
+        await userEvent.click(
+            within(
+                screen.getByRole("group", { name: "Filter by role" }),
+            ).getByRole("button", { name: /^admins/i }),
+        );
+
+        await waitFor(async () =>
+            expect(await directoryNames()).toEqual([
+                expect.stringContaining("Cara Lin"),
+            ]),
+        );
+    });
+
+    it("orders the directory by name when that sort is picked", async () => {
+        draw();
+        await directory();
+
+        await userEvent.click(
+            screen.getByRole("combobox", { name: "Sort the directory" }),
+        );
+        await userEvent.click(
+            await screen.findByRole("option", { name: "Name" }),
+        );
+
+        await waitFor(async () => {
+            const names = await directoryNames();
+            expect(names[0]).toContain("Ada Vance");
+            expect(names[3]).toContain("Dev Patel");
+        });
+    });
+
+    it("moves to the next page of accounts", async () => {
+        list.mockResolvedValue(
+            Array.from({ length: 12 }, (_, index) =>
+                aMemberRecord({
+                    id: `usr_${index}`,
+                    fullName: `Member ${String(index).padStart(2, "0")}`,
+                    email: `m${index}@keyhol.me`,
+                }),
+            ),
+        );
+        draw();
+        await userEvent.click(
+            screen.getByRole("combobox", { name: "Sort the directory" }),
+        );
+        await userEvent.click(
+            await screen.findByRole("option", { name: "Name" }),
+        );
+
+        await userEvent.click(
+            screen.getByRole("button", { name: "Next page" }),
+        );
+
+        await waitFor(async () =>
+            expect(await directoryNames()).toEqual([
+                expect.stringContaining("Member 10"),
+                expect.stringContaining("Member 11"),
+            ]),
+        );
+    });
+});
+
+describe("AdminUsersConsole · what needs a decision", () => {
+    it("ranks deleted accounts last when ordering by what needs attention", async () => {
+        draw();
+
+        await waitFor(async () => {
+            const names = await directoryNames();
+            expect(names[0]).toContain("Ben Ortiz");
+            expect(names.at(-1)).toContain("Dev Patel");
+        });
+    });
+
+    it("counts only accounts with a decision waiting, not deleted ones", async () => {
+        draw();
+
+        expect(
+            await screen.findByText(/1 need a decision/),
+        ).toBeInTheDocument();
     });
 });

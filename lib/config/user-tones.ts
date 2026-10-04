@@ -13,7 +13,7 @@ import type { CalloutVariant } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { ManagedUserRole, UserStatus, UserTier } from "@/lib/types";
 
-interface ToneBand {
+export interface ToneBand {
     ceiling: number;
     tone: ChartTone;
 }
@@ -124,14 +124,14 @@ export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
         icon: UserRoundX,
         tone: "neutral",
         chartTone: "neutral",
-        risk: 3,
+        risk: -1,
         note: "This account has been deleted. It is retained for audit only and cannot be reactivated.",
         noteTitle: "Why this account is deleted",
         noteTone: "neutral",
     },
 };
 
-const RECENCY_BANDS: ToneBand[] = [
+export const RECENCY_BANDS: ToneBand[] = [
     { ceiling: 8, tone: "success" },
     { ceiling: 31, tone: "info" },
     { ceiling: 91, tone: "warning" },

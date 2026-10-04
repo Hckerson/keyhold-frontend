@@ -22,23 +22,27 @@ export function UserRowActions({
     onReactivate,
 }: UserRowActionsProps) {
     const action = userActionOf(user);
+    if (!action) return null;
 
     return (
-        <span className="flex items-center justify-end">
-            {action === "reactivate" && (
+        <span className="reveal bg-background-muted absolute inset-y-0 right-0 flex items-center rounded-r-md px-1">
+            {action === "reactivate" ? (
                 <IconButton
+                    size="md"
                     tone="success"
                     icon={RotateCcw}
                     label={`${REACTIVATE_LABEL} ${user.name}`}
                     disabled={reactivatingId !== undefined}
+                    className="text-success"
                     onClick={() => onReactivate(user.id)}
                 />
-            )}
-            {action === "suspend" && (
+            ) : (
                 <IconButton
+                    size="md"
                     tone="error"
                     icon={Ban}
                     label={`${SUSPEND_LABEL} ${user.name}`}
+                    className="text-error"
                     onClick={() => onSuspend(user.id)}
                 />
             )}
