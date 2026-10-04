@@ -1,4 +1,4 @@
-import { ADMIN_ROUTES } from "@/lib/constants";
+import { ADMIN_ROUTES, NO_READING } from "@/lib/constants";
 import {
     gmvMonths,
     gmvReading,
@@ -16,23 +16,25 @@ import type {
 
 type FigureBase = Pick<BusinessFigure, "id" | "label" | "href" | "ratio">;
 
+const latestOf = (points: GrowthPoint[] | undefined) => {
+    if (!points) return NO_READING;
+    const latest = points[points.length - 1];
+    return latest
+        ? `${formatCount(latest.value)} in ${monthLabel(latest.name)}`
+        : "No months yet";
+};
+
 const figureOf = (
     base: FigureBase,
-    points: GrowthPoint[],
-    total: number,
-): BusinessFigure => {
-    const latest = points[points.length - 1];
-
-    return {
-        ...base,
-        latest: latest
-            ? `${formatCount(latest.value)} in ${monthLabel(latest.name)}`
-            : "No months yet",
-        delta: monthOverMonth(points),
-        points: points.map((point) => point.value),
-        total: formatCount(total),
-    };
-};
+    points: GrowthPoint[] | undefined,
+    total: number | undefined,
+): BusinessFigure => ({
+    ...base,
+    latest: latestOf(points),
+    delta: monthOverMonth(points ?? []),
+    points: (points ?? []).map((point) => point.value),
+    total: total === undefined ? NO_READING : formatCount(total),
+});
 
 export const businessFigures = (
     trend: TrendStats | undefined,
@@ -53,8 +55,8 @@ export const businessFigures = (
                     label: "close rate",
                 },
             },
-            trend?.deals ?? [],
-            completed,
+            trend?.deals,
+            platform?.completedTransactions,
         ),
         figureOf(
             {
@@ -66,8 +68,8 @@ export const businessFigures = (
                     label: "of stock live",
                 },
             },
-            trend?.listings ?? [],
-            stock,
+            trend?.listings,
+            platform?.properties,
         ),
         figureOf(
             {
@@ -79,24 +81,27 @@ export const businessFigures = (
                     label: "active",
                 },
             },
-            trend?.users ?? [],
-            platform?.users ?? 0,
+            trend?.users,
+            platform?.users,
         ),
     ];
 };
 
 export const lifetimeVolume = (
     platform: PlatformStats | undefined,
-): LifetimeVolume => {
-    const volume = platform?.volume ?? 0;
-    const completed = platform?.completedTransactions ?? 0;
-
-    return {
-        settled: formatMillions(volume, 1),
-        averageDeal:
-            completed > 0 ? formatMillions(volume / completed, 1) : null,
-    };
-};
+): LifetimeVolume | null =>
+    platform
+        ? {
+              settled: formatMillions(platform.volume, 1),
+              averageDeal:
+                  platform.completedTransactions > 0
+                      ? formatMillions(
+                            platform.volume / platform.completedTransactions,
+                            1,
+                        )
+                      : null,
+          }
+        : null;
 
 export const businessDeck = (
     trend: TrendStats | undefined,

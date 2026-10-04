@@ -1,14 +1,16 @@
 import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import { chartToneVar } from "@/lib/config/chart-tones";
+import { NO_READING } from "@/lib/constants";
 import { formatCount } from "@/lib/utils";
 
 const TITLE = "Accounts by role";
 
 export interface RoleTallyProps {
     roles: DonutSegment[];
+    unknown?: boolean;
 }
 
-export function RoleTally({ roles }: RoleTallyProps) {
+export function RoleTally({ roles, unknown }: RoleTallyProps) {
     return (
         <dl
             aria-label={TITLE}
@@ -28,7 +30,7 @@ export function RoleTally({ roles }: RoleTallyProps) {
                         <span className="truncate">{role.name}</span>
                     </dt>
                     <dd className="text-text text-xs font-semibold tabular-nums">
-                        {formatCount(role.value)}
+                        {unknown ? NO_READING : formatCount(role.value)}
                     </dd>
                 </div>
             ))}

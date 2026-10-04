@@ -85,7 +85,7 @@ describe("AdminOverviewConsole · navigating", () => {
     it.each([
         ["Verifications", ADMIN_ROUTES.verifications],
         ["Listing review", ADMIN_ROUTES.listings],
-        ["Flagged accounts & messages", ADMIN_ROUTES.flags],
+        ["Flagged content", ADMIN_ROUTES.flags],
         ["Disputes", ADMIN_ROUTES.disputes],
         ["Account approvals", ADMIN_ROUTES.users],
     ])("opens the %s queue from its tile", async (label, href) => {
@@ -215,7 +215,7 @@ describe("AdminOverviewConsole · a failing source stays contained", () => {
                 /a queue did not report/i,
             ),
         ).toBeInTheDocument();
-        const flags = await tile("Flagged accounts & messages");
+        const flags = await tile("Flagged content");
         expect(within(flags!).getAllByText("—").length).toBeGreaterThan(0);
         expect(within(flags!).queryByText("Clear")).not.toBeInTheDocument();
     });

@@ -16,7 +16,7 @@ export function AuditEventRow({ event }: AuditEventRowProps) {
                 initials={event.initials}
                 alt={event.actor}
             />
-            <span className="flex w-32 shrink-0 items-center gap-2">
+            <span className="flex w-36 shrink-0 items-center gap-2">
                 <StatusDot tone={event.tone} />
                 <span className="text-text truncate text-xs font-semibold">
                     {event.action}
