@@ -1,14 +1,17 @@
 import { formatAge, formatCount, percentOf } from "@/lib/utils";
-import type { DecisionLane, DecisionLaneId, QueueReadiness } from "@/lib/types";
-import type { UserStats } from "@/lib/validations/stats";
+import type {
+    DecisionLane,
+    ModerationQueueId,
+    QueueReadiness,
+} from "@/lib/types";
 
 type QueryState = { isError: boolean; isPending: boolean };
-type LaneReadiness = Record<DecisionLaneId, QueueReadiness>;
+type LaneReadiness = Record<ModerationQueueId, QueueReadiness>;
 
 const readinessOf = (query: QueryState): QueueReadiness =>
     query.isError ? "error" : query.isPending ? "pending" : "ready";
 
-export const laneReadiness = (sources: Record<DecisionLaneId, QueryState>) =>
+export const laneReadiness = (sources: Record<ModerationQueueId, QueryState>) =>
     Object.fromEntries(
         Object.entries(sources).map(([id, query]) => [id, readinessOf(query)]),
     ) as LaneReadiness;
@@ -25,15 +28,10 @@ const byUrgency = (a: DecisionLane, b: DecisionLane) =>
 
 export const decisionLanes = (
     queues: Omit<DecisionLane, "share">[],
-    users: UserStats | undefined,
 ): DecisionLane[] => {
-    const loads: Omit<DecisionLane, "share">[] = [
-        ...queues,
-        { id: "accounts", backlog: users?.pending ?? 0, oldestMinutes: null },
-    ];
-    const open = loads.reduce((total, lane) => total + lane.backlog, 0);
+    const open = queues.reduce((total, lane) => total + lane.backlog, 0);
 
-    return loads
+    return queues
         .map(
             (lane): DecisionLane => ({
                 ...lane,

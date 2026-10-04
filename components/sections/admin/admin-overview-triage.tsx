@@ -1,13 +1,17 @@
 import { DeckPanel } from "@/components/patterns/deck-panel";
 import { QueueDeck } from "@/components/features/admin/queue-deck";
 import { deckReadiness, triageReading } from "@/lib/data/admin-overview-triage";
-import type { DecisionLane, DecisionLaneId, QueueReadiness } from "@/lib/types";
+import type {
+    DecisionLane,
+    ModerationQueueId,
+    QueueReadiness,
+} from "@/lib/types";
 
 const TITLE = "Decisions";
 
 export interface AdminOverviewTriageProps {
     lanes: DecisionLane[];
-    readiness: Record<DecisionLaneId, QueueReadiness>;
+    readiness: Record<ModerationQueueId, QueueReadiness>;
 }
 
 export function AdminOverviewTriage({
