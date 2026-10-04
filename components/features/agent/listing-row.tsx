@@ -4,7 +4,7 @@ import { m } from "motion/react";
 import { Checkbox } from "@/components/ui/forms/checkbox";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { ListingExposureMeter } from "@/components/features/agent/listing-exposure-meter";
+import { ListingExposureMark } from "@/components/features/agent/listing-exposure-mark";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { AGE_BANDS, LISTING_STATUSES } from "@/lib/config/listing-tones";
 import { ageBandOf, exposureOf } from "@/lib/data/agent-listings";
@@ -83,7 +83,7 @@ export function ListingRow({
                 {DAYS_SUFFIX}
             </td>
             <td className="py-0 pl-3 text-right">
-                <ListingExposureMeter percent={exposureOf(listing, peak)} />
+                <ListingExposureMark percent={exposureOf(listing, peak)} />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
                 {listing.showings}

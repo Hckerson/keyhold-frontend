@@ -1,6 +1,7 @@
-import { chartToneText } from "@/lib/config/chart-tones";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import { matchTone } from "@/lib/config/saved-tones";
-import { cn } from "@/lib/utils";
+
+const MATCH_NOUN = "match";
 
 export interface SavedMatchMarkProps {
     score: number;
@@ -9,15 +10,12 @@ export interface SavedMatchMarkProps {
 
 export function SavedMatchMark({ score, className }: SavedMatchMarkProps) {
     return (
-        <span
-            className={cn(
-                "text-xs font-medium tabular-nums",
-                chartToneText[matchTone(score)],
-                className,
-            )}
-        >
-            {score}%
-        </span>
+        <ToneReading
+            value={`${score}%`}
+            tone={matchTone(score)}
+            label={`${score}% ${MATCH_NOUN}`}
+            className={className}
+        />
     );
 }
 

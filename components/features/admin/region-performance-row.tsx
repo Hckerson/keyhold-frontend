@@ -1,5 +1,5 @@
 import { RegionRankMark } from "@/components/features/admin/region-rank-mark";
-import { RegionShareMeter } from "@/components/features/admin/region-share-meter";
+import { RegionShareMark } from "@/components/features/admin/region-share-mark";
 import { formatCount, formatMillions } from "@/lib/utils";
 import type { RegionPerformance } from "@/lib/types";
 
@@ -23,7 +23,7 @@ export function RegionPerformanceRow({ region }: RegionPerformanceRowProps) {
                 {formatMillions(region.avgPrice, 1)}
             </td>
             <td className="py-0 pl-3">
-                <RegionShareMeter
+                <RegionShareMark
                     share={region.share}
                     rank={region.rank}
                     label={region.region}

@@ -1,24 +1,24 @@
-import { ShareMeter } from "@/components/patterns/share-meter";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import { reachTone } from "@/lib/config/settings-tones";
 
-export interface PolicyReachMeterProps {
+export interface PolicyReachMarkProps {
     reach: number;
     enabled: boolean;
     label: string;
 }
 
-export function PolicyReachMeter({
+export function PolicyReachMark({
     reach,
     enabled,
     label,
-}: PolicyReachMeterProps) {
+}: PolicyReachMarkProps) {
     return (
-        <ShareMeter
-            percent={reach}
+        <ToneReading
+            value={`${reach}%`}
             tone={enabled ? reachTone(reach) : "neutral"}
             label={`${label} reaches ${reach}% of the marketplace`}
         />
     );
 }
 
-PolicyReachMeter.displayName = "PolicyReachMeter";
+PolicyReachMark.displayName = "PolicyReachMark";

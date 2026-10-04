@@ -8,7 +8,6 @@ import {
     type KeyboardEvent,
 } from "react";
 import { UploadCloud } from "lucide-react";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { FieldShell, errorIdFor } from "@/components/ui/forms/field-shell";
 import { formatBytes, screenFiles } from "@/lib/data/file-upload";
 import { cn } from "@/lib/utils";
@@ -16,7 +15,7 @@ import { cn } from "@/lib/utils";
 const ACTIVATION_KEYS = ["Enter", " "];
 const PROMPT = "Drop files here, or choose from your device";
 const BROWSE = "Choose files";
-const PROGRESS_LABEL = "Upload progress";
+const PROGRESS_LABEL = "Uploading";
 
 export interface FileUploadProps {
     label: string;
@@ -144,7 +143,12 @@ export function FileUpload({
             />
 
             {progress !== undefined && (
-                <ProgressBar value={progress} label={PROGRESS_LABEL} />
+                <p
+                    role="status"
+                    className="text-info text-xs font-medium tabular-nums"
+                >
+                    {PROGRESS_LABEL} {progress}%
+                </p>
             )}
         </FieldShell>
     );

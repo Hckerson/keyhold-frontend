@@ -1,6 +1,7 @@
-import { chartToneText } from "@/lib/config/chart-tones";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import { allocationTone } from "@/lib/config/concierge-tones";
-import { cn } from "@/lib/utils";
+
+const ALLOCATED_NOUN = "allocated";
 
 export interface ConciergeAllocationProps {
     percent: number;
@@ -12,15 +13,12 @@ export function ConciergeAllocation({
     className,
 }: ConciergeAllocationProps) {
     return (
-        <span
-            className={cn(
-                "text-xs font-medium tabular-nums",
-                chartToneText[allocationTone(percent)],
-                className,
-            )}
-        >
-            {percent}%
-        </span>
+        <ToneReading
+            value={`${percent}%`}
+            tone={allocationTone(percent)}
+            label={`${percent}% ${ALLOCATED_NOUN}`}
+            className={className}
+        />
     );
 }
 

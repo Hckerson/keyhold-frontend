@@ -15,7 +15,7 @@ import { UserAccountList } from "@/components/features/admin/user-account-list";
 import { UserActivityMark } from "@/components/features/admin/user-activity-mark";
 import { UserDealMark } from "@/components/features/admin/user-deal-mark";
 import { UserStatusMark } from "@/components/features/admin/user-status-mark";
-import { UserVolumeMeter } from "@/components/features/admin/user-volume-meter";
+import { UserVolumeMark } from "@/components/features/admin/user-volume-mark";
 import { USER_ROLES, USER_STATUSES } from "@/lib/config/user-tones";
 import {
     idleDays,
@@ -79,7 +79,7 @@ export function UserDetailModal({
                     <ModalBody className="scroll-y max-h-[60vh] space-y-4">
                         <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
                             <MetricCell label={VOLUME_LABEL}>
-                                <UserVolumeMeter
+                                <UserVolumeMark
                                     volume={user.volume}
                                     peak={peak}
                                     className="justify-start"

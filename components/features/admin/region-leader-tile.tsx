@@ -1,5 +1,5 @@
 import { MetricCell } from "@/components/patterns/metric-cell";
-import { RegionShareMeter } from "@/components/features/admin/region-share-meter";
+import { RegionShareMark } from "@/components/features/admin/region-share-mark";
 import { formatCount, formatMillions } from "@/lib/utils";
 import type { RegionPerformance } from "@/lib/types";
 
@@ -39,7 +39,7 @@ export function RegionLeaderTile({ region }: RegionLeaderTileProps) {
                     </span>
                 </MetricCell>
                 <MetricCell label="Share of volume">
-                    <RegionShareMeter
+                    <RegionShareMark
                         share={region.share}
                         rank={region.rank}
                         label={region.region}

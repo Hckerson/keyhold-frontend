@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { ReviewMetricStrip } from "@/components/patterns/review-metric-strip";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import { EscrowMeter } from "@/components/features/admin/escrow-meter";
+import { EscrowMark } from "@/components/features/admin/escrow-mark";
 import { dealAgeTone } from "@/lib/config/transaction-tones";
 import {
     COMMISSION_RATE_LABEL,
@@ -40,7 +40,7 @@ export function TransactionReviewMetrics({
                 </span>
             </MetricCell>
             <MetricCell label={ESCROW_LABEL}>
-                <EscrowMeter
+                <EscrowMark
                     cleared={transaction.cleared.length}
                     label={transaction.property}
                     className="justify-start"

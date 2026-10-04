@@ -1,3 +1,10 @@
+import {
+    CircleAlert,
+    CircleCheck,
+    TriangleAlert,
+    type LucideIcon,
+} from "lucide-react";
+
 export type ChartTone =
     | "accent"
     | "info"
@@ -50,4 +57,10 @@ export const chartToneFill: Record<ChartTone, string> = {
     success: "bg-success",
     warning: "bg-warning",
     error: "bg-error",
+};
+
+export const chartToneGlyph: Partial<Record<ChartTone, LucideIcon>> = {
+    success: CircleCheck,
+    warning: TriangleAlert,
+    error: CircleAlert,
 };

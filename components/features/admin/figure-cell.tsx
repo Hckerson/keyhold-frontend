@@ -2,7 +2,7 @@ import Link from "next/link";
 import { DeltaChip } from "@/components/ui/delta-chip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sparkline } from "@/components/ui/charts/sparkline";
-import { ShareMeter } from "@/components/patterns/share-meter";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import { NO_READING } from "@/lib/constants";
 import type { BusinessFigure } from "@/lib/types";
 
@@ -57,8 +57,8 @@ export function FigureCell({ figure, pending }: FigureCellProps) {
                 {pending ? (
                     <Skeleton className="bg-background-alt h-1.5 flex-1" />
                 ) : (
-                    <ShareMeter
-                        percent={figure.ratio.percent}
+                    <ToneReading
+                        value={`${figure.ratio.percent}%`}
                         tone="accent"
                         label={`${figure.label}: ${figure.ratio.percent}% ${figure.ratio.label}`}
                     />
