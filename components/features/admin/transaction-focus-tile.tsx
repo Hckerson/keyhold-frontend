@@ -3,7 +3,7 @@
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { MetricCell } from "@/components/patterns/metric-cell";
-import { EscrowMeter } from "@/components/features/admin/escrow-meter";
+import { EscrowMark } from "@/components/features/admin/escrow-mark";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
 import { commissionOf } from "@/lib/data/admin-transactions";
 import { formatMillions, formatThousands, parseLocalDate } from "@/lib/utils";
@@ -51,7 +51,7 @@ export function TransactionFocusTile({
                     </span>
                 </MetricCell>
                 <MetricCell label={ESCROW_LABEL}>
-                    <EscrowMeter
+                    <EscrowMark
                         cleared={transaction.cleared.length}
                         label={transaction.property}
                         className="justify-start"

@@ -3,7 +3,7 @@
 import { Switch } from "@/components/ui/forms/switch";
 import { PolicyDomainMark } from "@/components/features/admin/policy-domain-mark";
 import { PolicyEnforcementMark } from "@/components/features/admin/policy-enforcement-mark";
-import { PolicyReachMeter } from "@/components/features/admin/policy-reach-meter";
+import { PolicyReachMark } from "@/components/features/admin/policy-reach-mark";
 import type { PolicySwitch, PolicySwitchId } from "@/lib/types";
 
 export interface PolicySwitchRowProps {
@@ -44,7 +44,7 @@ export function PolicySwitchRow({
                 />
             </td>
             <td className="py-0 pl-3">
-                <PolicyReachMeter
+                <PolicyReachMark
                     reach={policy.reach}
                     enabled={enabled}
                     label={policy.title}

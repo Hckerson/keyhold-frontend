@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { ReviewMetricStrip } from "@/components/patterns/review-metric-strip";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import { ComplianceMeter } from "@/components/features/admin/compliance-meter";
+import { ComplianceMark } from "@/components/features/admin/compliance-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
 import { complianceScore, submittedAt } from "@/lib/data/admin-listings";
 import { formatMillions } from "@/lib/utils";
@@ -30,7 +30,7 @@ export function ModerationReviewMetrics({
                 </span>
             </MetricCell>
             <MetricCell label={COMPLIANCE_LABEL}>
-                <ComplianceMeter
+                <ComplianceMark
                     score={complianceScore(listing)}
                     label={listing.address}
                     className="justify-start"

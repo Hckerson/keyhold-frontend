@@ -1,4 +1,4 @@
-import { ShareMeter } from "@/components/patterns/share-meter";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
 import { TRANSACTION_STATUSES } from "@/lib/config/transaction-tones";
 import { stageShare } from "@/lib/data/admin-transactions";
@@ -32,8 +32,8 @@ export function TransactionStageRow({
                 {formatCompactUsd(stage.volume)}
             </td>
             <td className="py-0 pl-3">
-                <ShareMeter
-                    percent={share}
+                <ToneReading
+                    value={`${share}%`}
                     tone={meta.chartTone}
                     label={`${meta.label} ${SHARE_LABEL} ${share}% ${VOLUME_NOUN}`}
                 />

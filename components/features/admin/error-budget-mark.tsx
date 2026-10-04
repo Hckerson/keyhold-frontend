@@ -1,25 +1,25 @@
-import { ShareMeter } from "@/components/patterns/share-meter";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import {
     errorBudgetUsed,
     loadTone,
     UPTIME_SLO,
 } from "@/lib/config/admin-tones";
 
-export interface ErrorBudgetMeterProps {
+export interface ErrorBudgetMarkProps {
     uptime: number;
     label: string;
 }
 
-export function ErrorBudgetMeter({ uptime, label }: ErrorBudgetMeterProps) {
+export function ErrorBudgetMark({ uptime, label }: ErrorBudgetMarkProps) {
     const used = errorBudgetUsed(uptime);
 
     return (
-        <ShareMeter
-            percent={used}
+        <ToneReading
+            value={`${used}%`}
             tone={loadTone(used)}
             label={`${label} has spent ${used}% of its ${UPTIME_SLO}% uptime budget`}
         />
     );
 }
 
-ErrorBudgetMeter.displayName = "ErrorBudgetMeter";
+ErrorBudgetMark.displayName = "ErrorBudgetMark";

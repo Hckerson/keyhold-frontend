@@ -3,7 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import { m } from "motion/react";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import { EscrowMeter } from "@/components/features/admin/escrow-meter";
+import { EscrowMark } from "@/components/features/admin/escrow-mark";
 import { TransactionStatusMark } from "@/components/features/admin/transaction-status-mark";
 import {
     dealAgeTone,
@@ -47,7 +47,7 @@ export function TransactionLedgerRow({
                 {formatMillions(transaction.price, 2)}
             </td>
             <td className="py-0 pl-3">
-                <EscrowMeter
+                <EscrowMark
                     cleared={transaction.cleared.length}
                     label={transaction.property}
                 />
