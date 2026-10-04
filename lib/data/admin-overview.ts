@@ -32,6 +32,15 @@ const monthIndex = (key: string) =>
 const monthKey = (index: number) =>
     `${Math.floor(index / MONTH_LABELS.length)}-${String((index % MONTH_LABELS.length) + 1).padStart(2, "0")}`;
 
+export const completeMonths = (
+    points: GrowthPoint[],
+    today = new Date(),
+): GrowthPoint[] => {
+    const current =
+        today.getUTCFullYear() * MONTH_LABELS.length + today.getUTCMonth();
+    return points.filter((point) => monthIndex(point.name) < current);
+};
+
 export const fillMonths = (points: GrowthPoint[]): GrowthPoint[] => {
     if (points.length === 0) return points;
     const values = new Map(points.map((point) => [point.name, point.value]));

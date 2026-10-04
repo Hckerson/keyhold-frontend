@@ -102,6 +102,28 @@ describe("businessFigures", () => {
         expect(deals?.delta).toBeNull();
     });
 
+    it("leaves the unfinished month out of the reading, the change and the line", () => {
+        const listings = figureOf(
+            businessFigures(
+                aTrend({
+                    listings: [
+                        { name: "2026-08", value: 6 },
+                        { name: "2026-09", value: 9 },
+                        { name: "2026-10", value: 1 },
+                    ],
+                }),
+                undefined,
+                undefined,
+                new Date("2026-10-04T12:00:00Z"),
+            ),
+            "listings",
+        );
+
+        expect(listings?.latest).toBe("9 in Sep");
+        expect(listings?.delta).toEqual({ label: "+50%", direction: "up" });
+        expect(listings?.points).toEqual([6, 9]);
+    });
+
     it("measures the member ratio as active over all accounts", () => {
         const members = figureOf(
             businessFigures(
