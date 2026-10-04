@@ -96,3 +96,17 @@ export interface TrustBadge {
     label: string;
     detail: string;
 }
+
+export interface FilterTileDatum<T extends string> {
+    id: T;
+    label: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+    count: number;
+    percent: number;
+}
+
+export type SegmentOption<T extends string> = Pick<
+    FilterTileDatum<T>,
+    "id" | "label" | "count"
+>;
