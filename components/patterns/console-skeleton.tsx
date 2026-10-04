@@ -1,55 +1,81 @@
+import type { ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { StatCellSkeleton } from "@/components/patterns/stat-cell-skeleton";
-import { cn } from "@/lib/utils";
+import { PanelSkeleton } from "@/components/patterns/panel-skeleton";
+import { StatBand } from "@/components/patterns/stat-band";
+import type { ConsoleSkeletonVariant } from "@/lib/config/console-skeletons";
 
-const STAT_SLOTS = [0, 1, 2, 3];
-const ROW_SLOTS = [0, 1, 2, 3, 4, 5];
-const RAIL_SLOTS = [0, 1, 2, 3];
-const PANEL = "bg-background border-border rounded-xl border shadow-sm";
+const BUSY_LABEL = "Loading";
+const TILE_SLOTS = [0, 1, 2, 3, 4, 5];
+const PILL_SLOTS = [0, 1, 2, 3];
+const HERO_ROWS = 2;
+const RAIL_ROWS = 4;
 
-function PanelSkeleton({
-    rows,
-    className,
-}: {
-    rows: number[];
-    className?: string;
-}) {
-    return (
-        <div className={cn(PANEL, "min-w-0", className)}>
-            <div className="border-border-light flex h-11 items-center border-b px-4">
-                <Skeleton className="h-3 w-32" />
-            </div>
-            <div className="flex flex-col gap-2 p-4">
-                {rows.map((slot) => (
-                    <Skeleton key={slot} className="h-9 w-full" />
+const SPLIT = (
+    <div className="console-split gap-3">
+        <div className="console-span-2 flex flex-col gap-3">
+            <PanelSkeleton rows={HERO_ROWS} />
+            <PanelSkeleton />
+        </div>
+        <div className="flex flex-col gap-3">
+            <PanelSkeleton rows={RAIL_ROWS} />
+            <PanelSkeleton rows={RAIL_ROWS} />
+        </div>
+    </div>
+);
+
+const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
+    split: (
+        <>
+            <StatBand label={BUSY_LABEL} stats={[]} pending />
+            {SPLIT}
+        </>
+    ),
+    tiles: (
+        <>
+            <div className="console-split console-split--sixths gap-2">
+                {TILE_SLOTS.map((slot) => (
+                    <Skeleton key={slot} className="h-20 rounded-lg" />
                 ))}
             </div>
+            {SPLIT}
+        </>
+    ),
+    deck: (
+        <div className="console-split gap-3">
+            <PanelSkeleton rows={RAIL_ROWS} className="console-span-3" />
+            <PanelSkeleton className="console-span-2" />
+            <PanelSkeleton />
+            <PanelSkeleton />
+            <PanelSkeleton className="console-span-2" />
         </div>
-    );
+    ),
+    review: (
+        <>
+            <div className="flex flex-wrap gap-2">
+                {PILL_SLOTS.map((slot) => (
+                    <Skeleton key={slot} className="h-8 w-20 rounded-lg" />
+                ))}
+            </div>
+            <div className="review-split items-start gap-3">
+                <PanelSkeleton tall />
+                <PanelSkeleton />
+            </div>
+        </>
+    ),
+};
+
+export interface ConsoleSkeletonProps {
+    variant?: ConsoleSkeletonVariant;
 }
 
-PanelSkeleton.displayName = "PanelSkeleton";
-
-export function ConsoleSkeleton() {
+export function ConsoleSkeleton({ variant = "split" }: ConsoleSkeletonProps) {
     return (
         <div className="flex w-full flex-col gap-4" aria-busy="true">
-            <div className="flex flex-col gap-1.5">
-                <Skeleton className="h-6 w-56" />
+            <div className="flex flex-col gap-2">
+                <Skeleton className="h-7 w-56" />
                 <Skeleton className="h-3 w-full max-w-md" />
             </div>
-
-            <div className={cn(PANEL, "overflow-hidden")}>
-                <div className="stat-band">
-                    {STAT_SLOTS.map((slot) => (
-                        <StatCellSkeleton key={slot} />
-                    ))}
-                </div>
-            </div>
-
-            <div className="console-split gap-3">
-                <PanelSkeleton rows={ROW_SLOTS} className="console-span-2" />
-                <PanelSkeleton rows={RAIL_SLOTS} />
-            </div>
+            {BODIES[variant]}
         </div>
     );
 }

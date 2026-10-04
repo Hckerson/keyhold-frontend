@@ -2,6 +2,8 @@ import { MapPin } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PanelSkeleton } from "@/components/patterns/panel-skeleton";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { RegionLeaderTile } from "@/components/features/admin/region-leader-tile";
 import { RegionPerformanceTable } from "@/components/features/admin/region-performance-table";
@@ -20,6 +22,7 @@ export interface AdminReportsMainProps {
     metrics: ReportTrendMetric[];
     months: Record<string, string | number>[];
     period: string;
+    pending?: boolean;
 }
 
 export function AdminReportsMain({
@@ -27,14 +30,19 @@ export function AdminReportsMain({
     metrics,
     months,
     period,
+    pending,
 }: AdminReportsMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
-            <AdminReportsChart
-                metrics={metrics}
-                months={months}
-                period={period}
-            />
+            {pending ? (
+                <PanelSkeleton />
+            ) : (
+                <AdminReportsChart
+                    metrics={metrics}
+                    months={months}
+                    period={period}
+                />
+            )}
 
             <Panel
                 title={REGION_TITLE}
@@ -53,6 +61,8 @@ export function AdminReportsMain({
                             />
                         </PanelInset>
                     </>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={MapPin}

@@ -7,6 +7,7 @@ import { FilterPills } from "@/components/patterns/filter-pills";
 import { AbuseReportDecisionModal } from "@/components/features/admin/abuse-report-decision-modal";
 import { AbuseReportPane } from "@/components/features/admin/abuse-report-pane";
 import { AbuseReportRail } from "@/components/features/admin/abuse-report-rail";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { ABUSE_FILTERS } from "@/lib/data/admin-flags";
@@ -27,6 +28,8 @@ export function AdminFlagsConsole() {
                 onRetry={() => void queue.refetch()}
             />
         );
+
+    if (queue.pending) return <ConsoleSkeleton variant="review" />;
 
     return (
         <div className="space-y-3">

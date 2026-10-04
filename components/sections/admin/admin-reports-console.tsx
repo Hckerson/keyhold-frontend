@@ -6,7 +6,6 @@ import { AdminReportsHeader } from "@/components/sections/admin/admin-reports-he
 import { AdminReportsMain } from "@/components/sections/admin/admin-reports-main";
 import { AdminReportsRail } from "@/components/sections/admin/admin-reports-rail";
 import { AdminReportsStatBand } from "@/components/sections/admin/admin-reports-stat-band";
-import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
@@ -108,7 +107,7 @@ export function AdminReportsConsole() {
             />
         );
 
-    if (queries.some((entry) => entry.isPending)) return <ConsoleSkeleton />;
+    const pending = queries.some((entry) => entry.isPending);
 
     return (
         <div className="flex flex-col gap-4">
@@ -120,6 +119,7 @@ export function AdminReportsConsole() {
 
             <AdminReportsStatBand
                 stats={reportStats(platform.data, users.data)}
+                pending={pending}
             />
 
             <div className="console-split gap-3">
@@ -128,6 +128,7 @@ export function AdminReportsConsole() {
                     metrics={reportTrendMetrics(trend.data)}
                     months={months}
                     period={reportPeriodLabel(trend.data)}
+                    pending={pending}
                 />
                 <AdminReportsRail
                     signals={reportSignals(
@@ -138,6 +139,7 @@ export function AdminReportsConsole() {
                     )}
                     roles={roles}
                     tiers={tierSegments}
+                    pending={pending}
                 />
             </div>
 

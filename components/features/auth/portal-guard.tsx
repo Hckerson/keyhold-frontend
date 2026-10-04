@@ -3,7 +3,8 @@
 import { useEffect, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
-import { Container } from "@/components/ui/container";
+import { PortalShellSkeleton } from "@/components/layout/portal-shell-skeleton";
+import { consoleSkeletonFor } from "@/lib/config/console-skeletons";
 import { loginWithRedirect, portalForRole } from "@/lib/constants";
 import { useMounted } from "@/lib/hooks/use-mounted";
 import { useSession } from "@/lib/hooks/use-session";
@@ -32,11 +33,9 @@ export function PortalGuard({ role, children }: PortalGuardProps) {
     if (allowed) return <>{children}</>;
 
     return (
-        <div className="bg-background-alt min-h-screen py-6">
-            <Container>
-                <ConsoleSkeleton />
-            </Container>
-        </div>
+        <PortalShellSkeleton>
+            <ConsoleSkeleton variant={consoleSkeletonFor(pathname)} />
+        </PortalShellSkeleton>
     );
 }
 

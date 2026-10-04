@@ -7,6 +7,7 @@ import { FilterPills } from "@/components/patterns/filter-pills";
 import { DisputeDecisionModal } from "@/components/features/admin/dispute-decision-modal";
 import { DisputeQueueRail } from "@/components/features/admin/dispute-queue-rail";
 import { DisputeReviewPane } from "@/components/features/admin/dispute-review-pane";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { DISPUTE_FILTERS } from "@/lib/data/admin-disputes";
@@ -27,6 +28,8 @@ export function AdminDisputesConsole() {
                 onRetry={() => void queue.refetch()}
             />
         );
+
+    if (queue.pending) return <ConsoleSkeleton variant="review" />;
 
     return (
         <div className="space-y-3">
