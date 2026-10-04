@@ -7,16 +7,14 @@ const USERS_LEDE =
 const ADD_ACTION = "Add User";
 
 export interface AdminUsersHeaderProps {
-    summary: string;
     onAdd: () => void;
 }
 
-export function AdminUsersHeader({ summary, onAdd }: AdminUsersHeaderProps) {
+export function AdminUsersHeader({ onAdd }: AdminUsersHeaderProps) {
     return (
         <PortalHeader
             title={USERS_TITLE}
             lede={USERS_LEDE}
-            summary={summary}
             action={
                 <Button
                     type="button"
