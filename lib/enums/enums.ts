@@ -348,7 +348,7 @@ export const SERVICE_STATES = [
 export const INTEGRATION_IDS = [
     "stripe",
     "stripeWebhook",
-    "sendgrid",
+    "smtp",
     "cloudinary",
     "twilio",
 ] as const;

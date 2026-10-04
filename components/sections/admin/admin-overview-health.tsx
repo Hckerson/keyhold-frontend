@@ -79,7 +79,7 @@ export function AdminOverviewHealth({
                         />
                     )}
 
-                    <div className="mt-auto">
+                    <div>
                         {pending ? (
                             <Skeleton className="h-14 w-full" />
                         ) : integrations.length > 0 ? (
@@ -88,11 +88,17 @@ export function AdminOverviewHealth({
                                 summary={integrationSummary}
                             />
                         ) : (
-                            <EmptyState
-                                icon={PlugZap}
-                                title={CREDENTIALS_UNAVAILABLE}
-                                description={CREDENTIALS_EMPTY_LEDE}
-                            />
+                            <p
+                                title={CREDENTIALS_EMPTY_LEDE}
+                                className="text-text-muted flex items-center gap-2 text-xs"
+                            >
+                                <PlugZap
+                                    aria-hidden="true"
+                                    strokeWidth={1.5}
+                                    className="size-3 shrink-0"
+                                />
+                                {CREDENTIALS_UNAVAILABLE}
+                            </p>
                         )}
                     </div>
                 </>
