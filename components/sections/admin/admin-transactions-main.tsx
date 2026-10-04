@@ -3,6 +3,7 @@
 import { ArrowLeftRight } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { TransactionFocusTile } from "@/components/features/admin/transaction-focus-tile";
@@ -16,8 +17,6 @@ const LEDGER_LEDE =
     "Ranked by settlement risk, then by value — the focus deal sits above";
 const EMPTY_TITLE = "No deals in this view";
 const EMPTY_LEDE = "Widen the stage filter to see the full ledger.";
-const LOADING_TITLE = "Loading the ledger";
-const LOADING_LEDE = "Fetching every transaction on the platform.";
 
 export interface AdminTransactionsMainProps {
     transactions: LedgerTransaction[];
@@ -56,7 +55,13 @@ export function AdminTransactionsMain({
                 />
 
                 <PresenceSwap
-                    swapKey={transactions.length > 0 ? "rows" : "empty"}
+                    swapKey={
+                        transactions.length > 0
+                            ? "rows"
+                            : pending
+                              ? "pending"
+                              : "empty"
+                    }
                 >
                     {transactions.length > 0 ? (
                         <PanelInset scroll>
@@ -65,11 +70,13 @@ export function AdminTransactionsMain({
                                 onOpen={onOpen}
                             />
                         </PanelInset>
+                    ) : pending ? (
+                        <SkeletonRows />
                     ) : (
                         <EmptyState
                             icon={ArrowLeftRight}
-                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
                     )}
                 </PresenceSwap>

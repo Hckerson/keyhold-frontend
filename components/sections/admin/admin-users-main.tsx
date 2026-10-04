@@ -5,6 +5,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { Pager } from "@/components/patterns/pager";
 import { PageSwap } from "@/components/patterns/page-swap";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
@@ -26,8 +27,6 @@ const DIRECTORY_ACTION = "Verifications";
 const EMPTY_TITLE = "No account matches this view";
 const EMPTY_LEDE =
     "Clear the search or widen the status and role filters to see the full directory.";
-const LOADING_TITLE = "Loading the directory";
-const LOADING_LEDE = "Fetching every managed account on the platform.";
 
 export interface AdminUsersMainProps {
     focus?: ManagedUser;
@@ -116,7 +115,15 @@ export function AdminUsersMain({
                     onSortChange={onSortChange}
                 />
 
-                <PresenceSwap swapKey={users.length > 0 ? "rows" : "empty"}>
+                <PresenceSwap
+                    swapKey={
+                        users.length > 0
+                            ? "rows"
+                            : pending
+                              ? "pending"
+                              : "empty"
+                    }
+                >
                     {users.length > 0 ? (
                         <PanelInset
                             scroll
@@ -133,11 +140,13 @@ export function AdminUsersMain({
                                 />
                             </PageSwap>
                         </PanelInset>
+                    ) : pending ? (
+                        <SkeletonRows />
                     ) : (
                         <EmptyState
                             icon={Users}
-                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
                     )}
                 </PresenceSwap>

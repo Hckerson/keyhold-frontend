@@ -1,6 +1,7 @@
 import { Wallet } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { PayoutTable } from "@/components/features/admin/payout-table";
@@ -13,8 +14,6 @@ const QUEUE_TITLE = "Escrow Queue";
 const QUEUE_LEDE = "Every hold between a funded sale and a settled seller";
 const EMPTY_TITLE = "No holds in this view";
 const EMPTY_LEDE = "Widen the escrow state to see the full queue.";
-const LOADING_TITLE = "Loading escrow holds";
-const LOADING_LEDE = "Fetching every hold on the platform.";
 
 export interface AdminPaymentsMainProps {
     payouts: Payout[];
@@ -58,7 +57,15 @@ export function AdminPaymentsMain({
                     onStateFilterChange={onStateFilterChange}
                 />
 
-                <PresenceSwap swapKey={payouts.length > 0 ? "rows" : "empty"}>
+                <PresenceSwap
+                    swapKey={
+                        payouts.length > 0
+                            ? "rows"
+                            : pending
+                              ? "pending"
+                              : "empty"
+                    }
+                >
                     {payouts.length > 0 ? (
                         <PanelInset scroll>
                             <PayoutTable
@@ -66,11 +73,13 @@ export function AdminPaymentsMain({
                                 onSettle={onSettle}
                             />
                         </PanelInset>
+                    ) : pending ? (
+                        <SkeletonRows />
                     ) : (
                         <EmptyState
                             icon={Wallet}
-                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
                     )}
                 </PresenceSwap>

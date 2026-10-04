@@ -8,6 +8,7 @@ import { VerificationApproveModal } from "@/components/features/admin/verificati
 import { VerificationDecisionModal } from "@/components/features/admin/verification-decision-modal";
 import { VerificationQueueRail } from "@/components/features/admin/verification-queue-rail";
 import { VerificationReviewPane } from "@/components/features/admin/verification-review-pane";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useVerificationQueue } from "@/lib/hooks/use-verification-queue";
@@ -26,6 +27,8 @@ export function AdminVerificationConsole() {
                 onRetry={() => void queue.refetch()}
             />
         );
+
+    if (queue.pending) return <ConsoleSkeleton variant="review" />;
 
     return (
         <div className="space-y-3">
