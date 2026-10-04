@@ -8,14 +8,13 @@ import { FilterPills } from "@/components/patterns/filter-pills";
 import { PurchaseTable } from "@/components/features/dashboard/purchase-table";
 import { PURCHASE_FILTERS, type PurchaseFilter } from "@/lib/utils/purchases";
 import type { Purchase } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const LEDGER_TITLE = "Your Purchases";
 const LEDGER_LEDE = "Every sale you have funded and where the money sits";
 const EMPTY_TITLE = "No purchases yet";
 const EMPTY_LEDE =
     "Once an accepted offer is paid, the sale and its escrow appear here.";
-const LOADING_TITLE = "Loading your purchases";
-const LOADING_LEDE = "Fetching every sale and its escrow position.";
 
 export interface TransactionsMainProps {
     purchases: Purchase[];
@@ -60,11 +59,13 @@ export function TransactionsMain({
                             onRelease={onRelease}
                         />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={Receipt}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>

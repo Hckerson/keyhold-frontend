@@ -69,6 +69,7 @@ export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
                     className="console-span-3"
                     view={calendar.view}
                     appointments={calendar.visible}
+                    pending={calendar.pending}
                     selectedIso={calendar.selectedIso}
                     rangeLabel={calendar.rangeLabel}
                     dayCount={calendar.dayCount}

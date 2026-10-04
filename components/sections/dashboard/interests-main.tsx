@@ -9,6 +9,7 @@ import { InterestsTopHero } from "@/components/sections/dashboard/interests-top-
 import { BUYER_ROUTES } from "@/lib/constants";
 import type { StageFilter, StatusFilter } from "@/lib/data/interests";
 import type { Interest } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Introductions";
 const BOOK_LEDE = "Every enquiry behind the one that has moved furthest";
@@ -18,8 +19,6 @@ const EMPTY_LEDE = "Widen the stage or status filter to see more enquiries.";
 const NONE_TITLE = "No interest registered yet";
 const NONE_LEDE =
     "Register your interest on a residence and the listing office appears here.";
-const LOADING_TITLE = "Loading your enquiries";
-const LOADING_LEDE = "Fetching every introduction on your book.";
 
 export interface InterestsMainProps {
     top?: Interest;
@@ -71,11 +70,13 @@ export function InterestsMain({
                     <PanelInset scroll>
                         <InterestTable interests={interests} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={Handshake}
-                        title={pending ? LOADING_TITLE : emptyTitle}
-                        description={pending ? LOADING_LEDE : emptyLede}
+                        title={emptyTitle}
+                        description={emptyLede}
                     />
                 )}
             </Panel>

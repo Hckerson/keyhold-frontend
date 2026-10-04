@@ -1,6 +1,7 @@
 import { BellOff } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { OverviewTaskList } from "@/components/features/dashboard/overview-task-list";
@@ -22,11 +23,13 @@ const ACTIONS_TITLE = "Quick Links";
 export interface DashboardOverviewRailProps {
     tasks: JourneyTask[];
     alerts: Alert[];
+    pending?: boolean;
 }
 
 export function DashboardOverviewRail({
     tasks,
     alerts,
+    pending,
 }: DashboardOverviewRailProps) {
     return (
         <div className="flex flex-col gap-3">
@@ -48,6 +51,8 @@ export function DashboardOverviewRail({
                     <PanelInset>
                         <OverviewAlertList alerts={alerts} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={BellOff}

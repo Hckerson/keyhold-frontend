@@ -6,6 +6,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterPills } from "@/components/patterns/filter-pills";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { CalendarNextCard } from "@/components/features/agent/calendar-next-card";
 import { AppointmentList } from "@/components/features/agent/appointment-list";
@@ -34,6 +35,7 @@ export interface CalendarScheduleProps {
     weekCount: number;
     onViewChange: (view: CalendarViewMode) => void;
     onReschedule: (id: string) => void;
+    pending?: boolean;
     className?: string;
 }
 
@@ -46,6 +48,7 @@ export function CalendarSchedule({
     weekCount,
     onViewChange,
     onReschedule,
+    pending,
     className,
 }: CalendarScheduleProps) {
     const isDayView = view === "month";
@@ -74,7 +77,7 @@ export function CalendarSchedule({
                 }
             >
                 <PresenceSwap
-                    swapKey={`${view}-${selectedIso}-${rest.length > 0 ? "list" : "empty"}`}
+                    swapKey={`${view}-${selectedIso}-${rest.length > 0 ? "list" : pending ? "pending" : "empty"}`}
                 >
                     {rest.length > 0 ? (
                         <PanelInset>
@@ -97,6 +100,8 @@ export function CalendarSchedule({
                                 </div>
                             )}
                         </PanelInset>
+                    ) : pending ? (
+                        <SkeletonRows />
                     ) : (
                         <EmptyState
                             icon={CalendarX2}
