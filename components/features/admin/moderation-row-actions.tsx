@@ -20,7 +20,7 @@ export function ModerationRowActions({
     const target = `${listing.address}, ${listing.locality}`;
 
     return (
-        <span className="reveal flex items-center justify-end gap-1">
+        <span className="reveal reveal-overlay bg-background-muted absolute inset-y-0 right-0 flex items-center gap-1 rounded-r-md px-1">
             {MODERATION_ACTIONS.map((action) =>
                 action.hiddenFor === listing.status ? (
                     <span

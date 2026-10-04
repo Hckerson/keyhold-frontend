@@ -86,7 +86,7 @@ export function ModerationMain({
                     )}
                 </PresenceSwap>
             </Panel>
-            <ModerationAgents loads={loads} />
+            <ModerationAgents loads={loads} pending={pending} />
         </div>
     );
 }

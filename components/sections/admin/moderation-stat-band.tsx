@@ -1,40 +1,25 @@
 "use client";
 
-import { ModerationStatusTile } from "@/components/features/admin/moderation-status-tile";
+import { FilterTileBand } from "@/components/patterns/filter-tile-band";
 import type { ModerationStatusFilter } from "@/lib/data/admin-listings";
-import type { ModerationStatusTile as ModerationStatusTileData } from "@/lib/types";
+import type { ModerationStatusTile } from "@/lib/types";
 
 const BAND_LABEL = "Filter the queue by review status";
 
 export interface ModerationStatBandProps {
-    tiles: ModerationStatusTileData[];
+    tiles: ModerationStatusTile[];
     active: ModerationStatusFilter;
     pending?: boolean;
     onChange: (filter: ModerationStatusFilter) => void;
 }
 
-export function ModerationStatBand({
-    tiles,
-    active,
-    pending,
-    onChange,
-}: ModerationStatBandProps) {
+export function ModerationStatBand(props: ModerationStatBandProps) {
     return (
-        <section
-            aria-label={BAND_LABEL}
-            aria-busy={pending || undefined}
-            className="console-split console-split--sixths gap-2"
-        >
-            {tiles.map((tile) => (
-                <ModerationStatusTile
-                    key={tile.id}
-                    tile={tile}
-                    active={tile.id === active}
-                    pending={pending}
-                    onSelect={() => onChange(tile.id)}
-                />
-            ))}
-        </section>
+        <FilterTileBand
+            label={BAND_LABEL}
+            className="console-split--sixths"
+            {...props}
+        />
     );
 }
 

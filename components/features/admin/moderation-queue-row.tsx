@@ -1,14 +1,12 @@
 "use client";
 
 import { m } from "motion/react";
-import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { CheckPips } from "@/components/features/admin/check-pips";
 import { ModerationRowActions } from "@/components/features/admin/moderation-row-actions";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
 import { LIST_ROW_MOTION } from "@/lib/config/motion";
-import { MODERATION_STATUSES } from "@/lib/config/moderation-tones";
 import { isOpen } from "@/lib/data/admin-listings";
 import { cn, formatMillions } from "@/lib/utils";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
@@ -30,13 +28,12 @@ export function ModerationQueueRow({
     onApprove,
     onDecide,
 }: ModerationQueueRowProps) {
-    const status = MODERATION_STATUSES[listing.status];
     const open = isOpen(listing);
     const settled = !open && "opacity-60";
 
     return (
         <m.li {...LIST_ROW_MOTION} className="overflow-hidden">
-            <div className="queue-grid reveal-scope hover:bg-background-muted ease-smooth h-11 rounded-md px-2 transition-colors duration-200">
+            <div className="queue-grid reveal-scope hover:bg-background-muted ease-smooth relative h-11 rounded-md px-2 transition-colors duration-200">
                 <button
                     type="button"
                     aria-label={`${REVIEW_PREFIX} ${listing.address}, ${listing.locality}`}
@@ -51,10 +48,6 @@ export function ModerationQueueRow({
                         alt=""
                         className="aspect-video h-8 w-auto"
                     />
-                    <span title={status.label} className="flex shrink-0">
-                        <StatusDot tone={status.tone} />
-                        <span className="sr-only">{status.label}</span>
-                    </span>
                     <span className="min-w-0 truncate">
                         <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
                             {listing.address}

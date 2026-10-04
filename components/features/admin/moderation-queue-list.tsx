@@ -19,7 +19,6 @@ const COLUMNS = [
     { id: "reports", label: "Reports", wide: true, end: true },
     { id: "age", label: "Age", wide: true, end: true },
     { id: "asking", label: "Asking", end: true },
-    { id: "actions", label: "" },
 ];
 
 export interface ModerationQueueListProps {

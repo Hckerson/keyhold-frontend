@@ -1,32 +1,35 @@
 "use client";
 
 import { IconChip } from "@/components/ui/icon-chip";
-import { ShareMeter } from "@/components/patterns/share-meter";
 import { cn } from "@/lib/utils";
-import type { ModerationStatusTile as ModerationStatusTileData } from "@/lib/types";
+import type { FilterTileDatum } from "@/lib/types";
 
 const UNKNOWN = "—";
 
-export interface ModerationStatusTileProps {
-    tile: ModerationStatusTileData;
+export interface FilterTileProps<T extends string> {
+    tile: FilterTileDatum<T>;
     active: boolean;
     pending?: boolean;
+    showShare?: boolean;
     onSelect: () => void;
 }
 
-export function ModerationStatusTile({
+export function FilterTile<T extends string>({
     tile,
     active,
     pending,
+    showShare,
     onSelect,
-}: ModerationStatusTileProps) {
+}: FilterTileProps<T>) {
+    const empty = tile.count === 0;
+
     return (
         <button
             type="button"
             aria-pressed={active}
             onClick={onSelect}
             className={cn(
-                "reveal-scope focus-visible:ring-accent ease-smooth flex h-20 min-w-0 flex-col justify-between rounded-lg border p-3 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                "focus-visible:ring-accent ease-smooth flex h-20 min-w-0 flex-col justify-between rounded-lg border p-3 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                 active
                     ? "border-accent bg-accent-light"
                     : "border-border-light bg-background-muted hover:bg-background-alt",
@@ -35,7 +38,7 @@ export function ModerationStatusTile({
             <span className="flex items-center gap-2">
                 <IconChip
                     icon={tile.icon}
-                    tone={tile.count === 0 ? "neutral" : tile.tone}
+                    tone={empty ? "neutral" : tile.tone}
                 />
                 <span
                     className={cn(
@@ -46,26 +49,23 @@ export function ModerationStatusTile({
                     {tile.label}
                 </span>
             </span>
-            <span className="flex items-end justify-between gap-2">
+            <span className="flex items-baseline justify-between gap-2">
                 <span
                     className={cn(
                         "font-display text-h5 leading-none font-light tabular-nums",
-                        tile.count === 0 ? "text-text-muted" : "text-text",
+                        empty ? "text-text-muted" : "text-text",
                     )}
                 >
                     {pending ? UNKNOWN : tile.count}
                 </span>
-                {tile.id !== "all" && (
-                    <ShareMeter
-                        percent={pending ? 0 : tile.percent}
-                        tone={tile.count === 0 ? "neutral" : tile.tone}
-                        label={`${tile.label}: ${tile.percent}% of the queue`}
-                        className="reveal"
-                    />
+                {showShare && !pending && (
+                    <span className="text-text-muted text-xs tabular-nums">
+                        {tile.percent}%
+                    </span>
                 )}
             </span>
         </button>
     );
 }
 
-ModerationStatusTile.displayName = "ModerationStatusTile";
+FilterTile.displayName = "FilterTile";

@@ -251,6 +251,10 @@ svg.lucide * {
     .reveal-fold {
         grid-template-rows: 1fr;
     }
+
+    .reveal-overlay {
+        display: none;
+    }
 }
 
 .rail-label {
@@ -330,10 +334,17 @@ svg.lucide * {
 }
 
 .queue-grid {
+    --queue-columns: minmax(0, 1fr) 6rem;
+    --queue-columns-wide: minmax(0, 1fr) 4.5rem 3.5rem 2.5rem 6rem;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 4.5rem 6rem;
+    grid-template-columns: var(--queue-columns);
     align-items: center;
     column-gap: var(--spacing-3);
+}
+
+.queue-grid--accounts {
+    --queue-columns: minmax(0, 1fr) 5rem;
+    --queue-columns-wide: minmax(0, 1fr) 4rem 3rem 3.5rem 5rem;
 }
 
 .queue-grid__wide {
@@ -342,7 +353,7 @@ svg.lucide * {
 
 @container queue (min-width: 36rem) {
     .queue-grid {
-        grid-template-columns: minmax(0, 1fr) 4.5rem 3.5rem 2.5rem 4.5rem 6rem;
+        grid-template-columns: var(--queue-columns-wide);
     }
 
     .queue-grid__wide {
