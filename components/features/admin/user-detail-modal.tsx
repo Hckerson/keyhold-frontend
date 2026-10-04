@@ -17,7 +17,12 @@ import { UserDealMark } from "@/components/features/admin/user-deal-mark";
 import { UserStatusMark } from "@/components/features/admin/user-status-mark";
 import { UserVolumeMeter } from "@/components/features/admin/user-volume-meter";
 import { USER_ROLES, USER_STATUSES } from "@/lib/config/user-tones";
-import { idleDays, joinedLabel, userNote } from "@/lib/data/admin-users";
+import {
+    idleDays,
+    joinedLabel,
+    userActionOf,
+    userNote,
+} from "@/lib/data/admin-users";
 import type { ManagedUser } from "@/lib/types";
 
 const VOLUME_LABEL = "Lifetime volume";
@@ -49,6 +54,7 @@ export function UserDetailModal({
 }: UserDetailModalProps) {
     const status = user ? USER_STATUSES[user.status] : null;
     const note = user ? userNote(user) : undefined;
+    const action = user ? userActionOf(user) : undefined;
 
     return (
         <Modal
@@ -124,27 +130,27 @@ export function UserDetailModal({
                         >
                             {PROFILE_ACTION}
                         </Link>
-                        {user.status !== "deleted" &&
-                            (user.status === "suspended" ? (
-                                <Button
-                                    type="button"
-                                    emphasis="solid"
-                                    tone="accent"
-                                    isLoading={reactivatingId === user.id}
-                                    disabled={reactivatingId !== undefined}
-                                    onClick={() => onReactivate(user.id)}
-                                >
-                                    {REACTIVATE_ACTION}
-                                </Button>
-                            ) : (
-                                <Button
-                                    type="button"
-                                    tone="error"
-                                    onClick={() => onSuspend(user.id)}
-                                >
-                                    {SUSPEND_ACTION}
-                                </Button>
-                            ))}
+                        {action === "reactivate" && (
+                            <Button
+                                type="button"
+                                emphasis="solid"
+                                tone="accent"
+                                isLoading={reactivatingId === user.id}
+                                disabled={reactivatingId !== undefined}
+                                onClick={() => onReactivate(user.id)}
+                            >
+                                {REACTIVATE_ACTION}
+                            </Button>
+                        )}
+                        {action === "suspend" && (
+                            <Button
+                                type="button"
+                                tone="error"
+                                onClick={() => onSuspend(user.id)}
+                            >
+                                {SUSPEND_ACTION}
+                            </Button>
+                        )}
                     </ModalFooter>
                 </>
             )}

@@ -39,5 +39,5 @@ export const USER_INVITE_COPY = {
     cancel: "Cancel",
     submit: "Create account",
     failed: "That account could not be created.",
-    retry: "Check the details — the email may already be registered.",
+    retry: "Check the details and try again.",
 } as const;

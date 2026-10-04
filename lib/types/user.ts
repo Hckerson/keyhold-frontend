@@ -3,6 +3,8 @@ export type UserTier = "standard" | "premium" | "platinum";
 export type UserStatus = "active" | "pending" | "suspended" | "deleted";
 
 export type UserStatusFilter = UserStatus | "all";
+
+export type UserAction = "suspend" | "reactivate";
 export type UserRoleFilter = ManagedUserRole | "all";
 export type UserSortKey = "priority" | "volume" | "deals" | "recent" | "name";
 

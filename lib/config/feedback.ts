@@ -161,7 +161,7 @@ export const FEEDBACK = {
         error: "We couldn't submit your review.",
     },
 
-    createUser: { success: "Invitation sent", silentError: true },
+    createUser: { success: "Account created", silentError: true },
     updateUser: { error: "We couldn't save your changes." },
     setUserTier: {
         success: "Tier updated",
