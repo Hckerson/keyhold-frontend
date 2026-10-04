@@ -84,11 +84,11 @@ describe("lifetimeVolume", () => {
         expect(
             lifetimeVolume(
                 aPlatform({ volume: 12_000_000, completedTransactions: 4 }),
-            ).averageDeal,
+            )?.averageDeal,
         ).toBe("$3.0M");
     });
 
     it("leaves the per-deal average out until a deal has settled", () => {
-        expect(lifetimeVolume(aPlatform()).averageDeal).toBeNull();
+        expect(lifetimeVolume(aPlatform())?.averageDeal).toBeNull();
     });
 });

@@ -1,6 +1,6 @@
 import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
-import type { ModerationQueueLoad, MonthDelta } from "@/lib/types";
+import type { DecisionLane, MonthDelta } from "@/lib/types";
 import type { DisputeCounts } from "@/lib/validations/dispute";
 import type { FlagCounts } from "@/lib/validations/flag";
 import type { KycCounts } from "@/lib/validations/kyc";
@@ -26,32 +26,33 @@ const MONTH_LABELS = [
 export const monthLabel = (key: string) =>
     MONTH_LABELS[Number(key.slice(5, 7)) - 1];
 
-const ageOf = (iso: string | null) => (iso ? minutesSince(iso) : 0);
+const ageOf = (iso: string | null | undefined) =>
+    iso ? minutesSince(iso) : null;
 
 export const moderationLoad = (
     flags: FlagCounts | undefined,
     kyc: KycCounts | undefined,
     disputes: DisputeCounts | undefined,
-): ModerationQueueLoad[] => [
+): Omit<DecisionLane, "share">[] => [
     {
         id: "verifications",
         backlog: kyc?.pending ?? 0,
-        oldestMinutes: ageOf(kyc?.oldestPendingAt ?? null),
+        oldestMinutes: ageOf(kyc?.oldestPendingAt),
     },
     {
         id: "listings",
         backlog: flags?.byType.properties ?? 0,
-        oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
+        oldestMinutes: null,
     },
     {
         id: "flags",
         backlog: (flags?.byType.users ?? 0) + (flags?.byType.messages ?? 0),
-        oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
+        oldestMinutes: ageOf(flags?.oldestActiveAt),
     },
     {
         id: "disputes",
         backlog: disputes?.byStatus.OPEN ?? 0,
-        oldestMinutes: ageOf(disputes?.oldestOpenAt ?? null),
+        oldestMinutes: ageOf(disputes?.oldestOpenAt),
     },
 ];
 

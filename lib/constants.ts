@@ -337,6 +337,8 @@ export const ADMIN_ROUTES = {
     settings: "/admin/settings",
 } as const;
 
+export const NO_READING = "—";
+
 export const OFFER_WINDOW_DAYS = 14;
 export const VIEWING_SLOT_COUNT = 3;
 export const VIEWING_LEAD_DAYS = 2;

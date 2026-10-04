@@ -5,7 +5,7 @@ import type {
     ServiceHealth as ServiceHealthReadout,
 } from "@/lib/validations/service-health";
 
-const NO_READING = "—";
+export const CREDENTIALS_UNAVAILABLE = "Credential state unavailable";
 
 export const toServiceRows = (
     health: ServiceHealthReadout | undefined,
@@ -47,14 +47,14 @@ export const integrationSummary = (
         (integration) => integration.required && !integration.configured,
     );
 
-    if (rows.length === 0) return "Credential state unavailable";
+    if (rows.length === 0) return CREDENTIALS_UNAVAILABLE;
     if (missing.length === 0) return "Every required credential is in place";
     return `${missing.length} required credential${missing.length === 1 ? "" : "s"} missing`;
 };
 
 export const systemsReading = (
     health: ServiceHealthReadout | undefined,
-): SystemsReading => {
+): SystemsReading | null => {
     const measured = (health?.services ?? []).filter(
         (service) => service.samples > 0,
     );
@@ -62,12 +62,7 @@ export const systemsReading = (
         (service) => service.state !== "operational",
     ).length;
 
-    if (!health || measured.length === 0)
-        return {
-            figure: NO_READING,
-            belowSlo: false,
-            reading: "No traffic recorded yet",
-        };
+    if (!health || measured.length === 0) return null;
 
     return {
         figure: `${health.averageUptime.toFixed(2)}%`,

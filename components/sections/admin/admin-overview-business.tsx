@@ -7,7 +7,7 @@ import { DeckFigure } from "@/components/patterns/deck-figure";
 import { DeckPanel } from "@/components/patterns/deck-panel";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { FigureCell } from "@/components/features/admin/figure-cell";
-import { ADMIN_ROUTES } from "@/lib/constants";
+import { ADMIN_ROUTES, NO_READING } from "@/lib/constants";
 import { GMV_SERIES, type GmvReading } from "@/lib/data/admin-overview";
 import { formatMillions } from "@/lib/utils";
 import type { BusinessFigure, LifetimeVolume } from "@/lib/types";
@@ -18,9 +18,7 @@ const EMPTY_TITLE = "No settled volume yet";
 const EMPTY_LEDE = "Monthly GMV charts once the first deal settles.";
 const ERROR_TITLE = "Monthly volume unavailable";
 const ERROR_LEDE = "The trend service did not answer this time.";
-const NO_VOLUME = "$0";
 const LOADING_READING = "Reading monthly volume";
-const NO_MONTH = "No month has settled yet";
 const CHART_HEIGHT = 160;
 const MILLIONS = 1_000_000;
 
@@ -33,7 +31,7 @@ export interface AdminOverviewBusinessProps {
     reading: GmvReading | null;
     months: Record<string, string | number>[];
     figures: BusinessFigure[];
-    lifetime: LifetimeVolume;
+    lifetime: LifetimeVolume | null;
     pending?: boolean;
     failed?: boolean;
 }
@@ -49,31 +47,31 @@ export function AdminOverviewBusiness({
     return (
         <DeckPanel
             title={TITLE}
-            summary={volumeLine(lifetime)}
+            summary={lifetime && !pending ? volumeLine(lifetime) : undefined}
             action={<PanelLink href={ADMIN_ROUTES.payments} label={ACTION} />}
             pending={pending}
         >
-            <DeckFigure
-                value={reading ? formatMillions(reading.value, 1) : NO_VOLUME}
-                caption={
-                    reading
-                        ? `${reading.month} GMV · est. commissions ${reading.commissionEstimate} at ${reading.commissionRate}`
-                        : failed
-                          ? ERROR_TITLE
-                          : pending
-                            ? LOADING_READING
-                            : NO_MONTH
-                }
-                aside={
-                    reading?.delta && (
-                        <DeltaChip
-                            value={reading.delta.label}
-                            direction={reading.delta.direction}
-                        />
-                    )
-                }
-                pending={pending}
-            />
+            {(reading || pending) && (
+                <DeckFigure
+                    value={
+                        reading ? formatMillions(reading.value, 1) : NO_READING
+                    }
+                    caption={
+                        reading
+                            ? `${reading.month} GMV · est. commissions ${reading.commissionEstimate} at ${reading.commissionRate}`
+                            : LOADING_READING
+                    }
+                    aside={
+                        reading?.delta && (
+                            <DeltaChip
+                                value={reading.delta.label}
+                                direction={reading.delta.direction}
+                            />
+                        )
+                    }
+                    pending={pending}
+                />
+            )}
 
             {months.length > 0 ? (
                 <ColumnChart
@@ -96,9 +94,13 @@ export function AdminOverviewBusiness({
                 />
             )}
 
-            <div className="bg-background-muted divide-border-light grid auto-cols-fr grid-flow-col divide-x overflow-hidden rounded-lg">
+            <div className="bg-background-muted divide-border-light mt-auto grid auto-cols-fr grid-flow-col divide-x overflow-hidden rounded-lg">
                 {figures.map((figure) => (
-                    <FigureCell key={figure.id} figure={figure} />
+                    <FigureCell
+                        key={figure.id}
+                        figure={figure}
+                        pending={pending}
+                    />
                 ))}
             </div>
         </DeckPanel>

@@ -97,8 +97,7 @@ describe("systemsReading", () => {
             }),
         );
 
-        expect(reading.figure).toBe("—");
-        expect(reading.belowSlo).toBe(false);
+        expect(reading).toBeNull();
     });
 
     it("flags uptime that falls under the SLO", () => {
@@ -109,8 +108,8 @@ describe("systemsReading", () => {
             }),
         );
 
-        expect(reading.figure).toBe("99.50%");
-        expect(reading.belowSlo).toBe(true);
+        expect(reading?.figure).toBe("99.50%");
+        expect(reading?.belowSlo).toBe(true);
     });
 
     it("counts degradation only among services that saw traffic", () => {
@@ -128,6 +127,6 @@ describe("systemsReading", () => {
             }),
         );
 
-        expect(reading.reading).toContain("1 of 2 services degraded");
+        expect(reading?.reading).toContain("1 of 2 services degraded");
     });
 });

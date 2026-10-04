@@ -48,7 +48,7 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
             tone: "info",
         },
         flags: {
-            label: "Flagged accounts & messages",
+            label: "Flagged content",
             icon: Flag,
             href: ADMIN_ROUTES.flags,
             tone: "warning",
