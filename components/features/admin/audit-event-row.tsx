@@ -9,7 +9,7 @@ export interface AuditEventRowProps {
 
 export function AuditEventRow({ event }: AuditEventRowProps) {
     return (
-        <li className="flex h-11 items-center gap-3">
+        <li className="reveal-scope flex h-11 items-center gap-3">
             <Avatar
                 size="sm"
                 elevated={false}
@@ -22,10 +22,10 @@ export function AuditEventRow({ event }: AuditEventRowProps) {
                     {event.action}
                 </span>
             </span>
-            <span className="text-text-secondary min-w-0 flex-1 truncate text-xs">
+            <span className="reveal text-text-secondary min-w-0 flex-1 truncate text-xs">
                 {event.actor}
             </span>
-            <span className="micro-label w-20 shrink-0 truncate text-right">
+            <span className="reveal micro-label w-20 shrink-0 truncate text-right">
                 {event.subject}
             </span>
             <AgeMark

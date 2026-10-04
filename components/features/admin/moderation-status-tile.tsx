@@ -1,7 +1,7 @@
 "use client";
 
 import { IconChip } from "@/components/ui/icon-chip";
-import { ProgressBar } from "@/components/ui/progress-bar";
+import { ShareMeter } from "@/components/patterns/share-meter";
 import { cn } from "@/lib/utils";
 import type { ModerationStatusTile as ModerationStatusTileData } from "@/lib/types";
 
@@ -26,7 +26,7 @@ export function ModerationStatusTile({
             aria-pressed={active}
             onClick={onSelect}
             className={cn(
-                "focus-visible:ring-accent ease-smooth flex h-20 min-w-0 flex-col justify-between rounded-lg border p-3 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                "reveal-scope focus-visible:ring-accent ease-smooth flex h-20 min-w-0 flex-col justify-between rounded-lg border p-3 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                 active
                     ? "border-accent bg-accent-light"
                     : "border-border-light bg-background-muted hover:bg-background-alt",
@@ -55,11 +55,14 @@ export function ModerationStatusTile({
                 >
                     {pending ? UNKNOWN : tile.count}
                 </span>
-                <ProgressBar
-                    value={tile.percent}
-                    tone={tile.tone}
-                    className="mb-1 w-12"
-                />
+                {tile.id !== "all" && (
+                    <ShareMeter
+                        percent={pending ? 0 : tile.percent}
+                        tone={tile.count === 0 ? "neutral" : tile.tone}
+                        label={`${tile.label}: ${tile.percent}% of the queue`}
+                        className="reveal"
+                    />
+                )}
             </span>
         </button>
     );

@@ -1,5 +1,4 @@
 import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { ModerationAgentTable } from "@/components/features/admin/moderation-agent-table";
 import { ADMIN_ROUTES } from "@/lib/constants";
@@ -23,9 +22,7 @@ export function ModerationAgents({ loads }: ModerationAgentsProps) {
                 <PanelLink href={ADMIN_ROUTES.users} label={AGENTS_ACTION} />
             }
         >
-            <PanelInset scroll>
-                <ModerationAgentTable loads={loads} />
-            </PanelInset>
+            <ModerationAgentTable loads={loads} />
         </Panel>
     );
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import { CircleCheckBig, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CircleCheckBig } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LabelledBlock } from "@/components/patterns/labelled-block";
@@ -9,9 +8,9 @@ import { MetricCell } from "@/components/patterns/metric-cell";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ComplianceCheckList } from "@/components/features/admin/compliance-check-list";
+import { ModerationInspectorActions } from "@/components/features/admin/moderation-inspector-actions";
 import { ModerationStatusMark } from "@/components/features/admin/moderation-status-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
-import { MODERATION_ACTION } from "@/lib/config/moderation-actions";
 import { MODERATION_STATUSES } from "@/lib/config/moderation-tones";
 import { formatMillions } from "@/lib/utils";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
@@ -21,7 +20,6 @@ const ASKING_LABEL = "Asking";
 const REPORTS_LABEL = "Reports";
 const QUEUE_LABEL = "In queue";
 const AGENT_LABEL = "Agent";
-const REVIEW_ACTION = "Review";
 const CLEAR_TITLE = "Queue is clear";
 const CLEAR_LEDE = "Every submitted listing has a decision.";
 
@@ -103,9 +101,12 @@ export function ModerationInspector({
                             </LabelledBlock>
                         )}
 
-                        <ComplianceCheckList compliance={listing.compliance} />
+                        <ComplianceCheckList
+                            compliance={listing.compliance}
+                            openOnly
+                        />
 
-                        <div className="metric-strip bg-background-muted gap-3 rounded-lg p-3">
+                        <div className="bg-background-muted grid grid-cols-3 gap-3 rounded-lg p-3">
                             <MetricCell label={REPORTS_LABEL}>
                                 <ReportCountMark reports={listing.reports} />
                             </MetricCell>
@@ -120,41 +121,13 @@ export function ModerationInspector({
                         </div>
                     </div>
 
-                    <footer className="border-border-light grid grid-cols-2 gap-2 border-t p-3">
-                        <Button
-                            type="button"
-                            icon={Eye}
-                            onClick={() => onOpen(listing.id)}
-                        >
-                            {REVIEW_ACTION}
-                        </Button>
-                        <Button
-                            type="button"
-                            emphasis="solid"
-                            tone="accent"
-                            icon={MODERATION_ACTION.approve.icon}
-                            isLoading={approvingId === listing.id}
-                            disabled={approvingId !== undefined}
-                            onClick={() => onApprove(listing.id)}
-                        >
-                            {MODERATION_ACTION.approve.label}
-                        </Button>
-                        <Button
-                            type="button"
-                            icon={MODERATION_ACTION.changes.icon}
-                            onClick={() => onDecide("changes", listing.id)}
-                        >
-                            {MODERATION_ACTION.changes.label}
-                        </Button>
-                        <Button
-                            type="button"
-                            tone="error"
-                            icon={MODERATION_ACTION.reject.icon}
-                            onClick={() => onDecide("reject", listing.id)}
-                        >
-                            {MODERATION_ACTION.reject.label}
-                        </Button>
-                    </footer>
+                    <ModerationInspectorActions
+                        listing={listing}
+                        approvingId={approvingId}
+                        onOpen={onOpen}
+                        onApprove={onApprove}
+                        onDecide={onDecide}
+                    />
                 </>
             )}
         </aside>

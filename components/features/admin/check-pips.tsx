@@ -15,17 +15,27 @@ const describe = (compliance: ComplianceReport) =>
 
 export interface CheckPipsProps {
     compliance: ComplianceReport;
+    openOnly?: boolean;
     className?: string;
 }
 
-export function CheckPips({ compliance, className }: CheckPipsProps) {
+export function CheckPips({ compliance, openOnly, className }: CheckPipsProps) {
+    const shown = COMPLIANCE_CHECK_KEYS.filter(
+        (id) => !openOnly || compliance[id] !== "pass",
+    );
+
     return (
         <span
             role="img"
             aria-label={describe(compliance)}
             className={cn("flex items-center gap-1", className)}
         >
-            {COMPLIANCE_CHECK_KEYS.map((id) => {
+            {shown.length === 0 && (
+                <span className="text-text-muted text-xs">
+                    {CHECK_STATES.pass.label}
+                </span>
+            )}
+            {shown.map((id) => {
                 const Icon = COMPLIANCE_CHECKS[id].icon;
                 const state = CHECK_STATES[compliance[id]];
 
