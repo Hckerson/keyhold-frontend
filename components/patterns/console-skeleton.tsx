@@ -7,6 +7,7 @@ import type { ConsoleSkeletonVariant } from "@/lib/config/console-skeletons";
 const BUSY_LABEL = "Loading";
 const TILE_SLOTS = [0, 1, 2, 3, 4, 5];
 const PILL_SLOTS = [0, 1, 2, 3];
+const STAGE_ROWS = 3;
 const HERO_ROWS = 2;
 const RAIL_ROWS = 4;
 
@@ -23,11 +24,39 @@ const SPLIT = (
     </div>
 );
 
+const BAND = <StatBand label={BUSY_LABEL} stats={[]} pending />;
+
 const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
     split: (
         <>
-            <StatBand label={BUSY_LABEL} stats={[]} pending />
+            {BAND}
             {SPLIT}
+        </>
+    ),
+    form: SPLIT,
+    stack: (
+        <>
+            {BAND}
+            <PanelSkeleton />
+        </>
+    ),
+    quarters: (
+        <>
+            {BAND}
+            <div className="console-split console-split--quarters gap-3">
+                <PanelSkeleton />
+                <PanelSkeleton className="console-span-3" />
+            </div>
+        </>
+    ),
+    thread: (
+        <>
+            {BAND}
+            <div className="console-split console-split--quarters gap-3">
+                <PanelSkeleton tall />
+                <PanelSkeleton className="console-span-2" />
+                <PanelSkeleton rows={RAIL_ROWS} />
+            </div>
         </>
     ),
     tiles: (
@@ -47,6 +76,13 @@ const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
             <PanelSkeleton />
             <PanelSkeleton />
             <PanelSkeleton className="console-span-2" />
+        </div>
+    ),
+    board: (
+        <div className="card-grid gap-3">
+            {PILL_SLOTS.map((slot) => (
+                <PanelSkeleton key={slot} rows={STAGE_ROWS} tall />
+            ))}
         </div>
     ),
     review: (
