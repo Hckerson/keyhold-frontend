@@ -23,6 +23,7 @@ import type {
     UserBreakdown,
     UserDirectoryFilters,
     UserRoleFilter,
+    UserAction,
     UserSortKey,
     UserStatus,
     UserStatusFilter,
@@ -70,6 +71,11 @@ export const statusRisk = (user: ManagedUser) =>
     USER_STATUSES[user.status].risk;
 
 export const isAtRisk = (user: ManagedUser) => statusRisk(user) > 0;
+
+export const userActionOf = (user: ManagedUser): UserAction | undefined => {
+    if (user.status === "deleted" || user.role === "admin") return undefined;
+    return user.status === "suspended" ? "reactivate" : "suspend";
+};
 
 export const userNote = (user: ManagedUser) =>
     user.note ?? USER_STATUSES[user.status].note;

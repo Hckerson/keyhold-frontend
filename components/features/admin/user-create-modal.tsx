@@ -25,7 +25,7 @@ export interface UserCreateModalProps {
     draft: UserInviteDraft;
     errors: FieldErrors;
     pending: boolean;
-    failed: boolean;
+    failure?: string;
     onDraftChange: (draft: UserInviteDraft) => void;
     onClose: () => void;
     onSubmit: () => void;
@@ -36,7 +36,7 @@ export function UserCreateModal({
     draft,
     errors,
     pending,
-    failed,
+    failure,
     onDraftChange,
     onClose,
     onSubmit,
@@ -110,11 +110,11 @@ export function UserCreateModal({
                     />
                 </LabelledBlock>
 
-                {failed && (
+                {failure && (
                     <Callout
                         variant="error"
                         title={COPY.failed}
-                        description={COPY.retry}
+                        description={failure}
                     />
                 )}
             </ModalBody>

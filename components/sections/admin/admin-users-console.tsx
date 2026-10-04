@@ -177,7 +177,7 @@ export function AdminUsersConsole() {
                 draft={invite.draft}
                 errors={invite.errors}
                 pending={invite.pending}
-                failed={invite.failed}
+                failure={invite.failure}
                 onDraftChange={invite.setDraft}
                 onClose={invite.close}
                 onSubmit={invite.submit}

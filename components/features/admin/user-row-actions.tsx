@@ -2,6 +2,7 @@
 
 import { Ban, RotateCcw } from "lucide-react";
 import { IconButton } from "@/components/ui/icon-button";
+import { userActionOf } from "@/lib/data/admin-users";
 import type { ManagedUser } from "@/lib/types";
 
 const SUSPEND_LABEL = "Suspend";
@@ -20,13 +21,11 @@ export function UserRowActions({
     reactivatingId,
     onReactivate,
 }: UserRowActionsProps) {
-    if (user.status === "deleted") {
-        return <span className="flex items-center justify-end" />;
-    }
+    const action = userActionOf(user);
 
-    if (user.status === "suspended") {
-        return (
-            <span className="flex items-center justify-end">
+    return (
+        <span className="flex items-center justify-end">
+            {action === "reactivate" && (
                 <IconButton
                     tone="success"
                     icon={RotateCcw}
@@ -34,18 +33,15 @@ export function UserRowActions({
                     disabled={reactivatingId !== undefined}
                     onClick={() => onReactivate(user.id)}
                 />
-            </span>
-        );
-    }
-
-    return (
-        <span className="flex items-center justify-end">
-            <IconButton
-                tone="error"
-                icon={Ban}
-                label={`${SUSPEND_LABEL} ${user.name}`}
-                onClick={() => onSuspend(user.id)}
-            />
+            )}
+            {action === "suspend" && (
+                <IconButton
+                    tone="error"
+                    icon={Ban}
+                    label={`${SUSPEND_LABEL} ${user.name}`}
+                    onClick={() => onSuspend(user.id)}
+                />
+            )}
         </span>
     );
 }
