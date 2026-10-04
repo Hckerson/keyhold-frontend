@@ -2,7 +2,7 @@
 
 import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
-import { MODERATION_DECISIONS } from "@/lib/config/moderation-tones";
+import { MODERATION_DECISIONS } from "@/lib/config/moderation-decisions";
 import type { ModerationDecision, ModerationListing } from "@/lib/types";
 
 const NOTE_ID = "moderation-note";

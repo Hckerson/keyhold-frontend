@@ -1,4 +1,7 @@
-import { CHECK_STATES, COMPLIANCE_CHECKS } from "@/lib/config/moderation-tones";
+import {
+    CHECK_STATES,
+    COMPLIANCE_CHECKS,
+} from "@/lib/config/compliance-checks";
 import { chartToneSoft, chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { CheckState, ComplianceCheckId } from "@/lib/types";
