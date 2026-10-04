@@ -8,14 +8,13 @@ import { OffersToolbar } from "@/components/sections/dashboard/offers-toolbar";
 import { OffersTopHero } from "@/components/sections/dashboard/offers-top-hero";
 import type { StageFilter, StatusFilter } from "@/lib/data/offers";
 import type { Offer } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Offer Book";
 const BOOK_LEDE = "Every position behind the one carrying the most weight";
 const BOOK_ACTION = "Saved properties";
 const EMPTY_TITLE = "Nothing matches this filter";
 const EMPTY_LEDE = "Widen the stage or status filter to see more positions.";
-const LOADING_TITLE = "Loading your offers";
-const LOADING_LEDE = "Fetching every position on your book.";
 
 export interface OffersMainProps {
     top?: Offer;
@@ -62,11 +61,13 @@ export function OffersMain({
                     <PanelInset scroll>
                         <OfferTable offers={offers} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={FileText}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>

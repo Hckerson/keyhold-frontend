@@ -8,14 +8,13 @@ import { LeadTable } from "@/components/features/agent/lead-table";
 import { LeadsTopProspectHero } from "@/components/sections/agent/leads-top-prospect-hero";
 import { LEAD_STAGE_FILTERS } from "@/lib/data/agent-leads";
 import type { Lead, LeadStageFilter } from "@/lib/types/lead";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const PIPELINE_TITLE = "Working Set";
 const PIPELINE_LEDE = "Every enquiry behind your top opportunity";
 const PIPELINE_ACTION = "Open pipeline";
 const EMPTY_TITLE = "No enquiries in this stage";
 const EMPTY_LEDE = "Change the filter, or publish a listing to attract buyers.";
-const LOADING_TITLE = "Loading your enquiries";
-const LOADING_LEDE = "Fetching the buyers who reached out about your listings.";
 
 export interface LeadsMainProps {
     top?: Lead;
@@ -82,11 +81,13 @@ export function LeadsMain({
                             onRespond={onRespond}
                         />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={UserSearch}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>

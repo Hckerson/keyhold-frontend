@@ -8,13 +8,12 @@ import type {
     MonthlyProduction,
     ProductionSummary,
 } from "@/lib/data/agent-analytics";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const LEDGER_TITLE = "Monthly Ledger";
 const LEDGER_LEDE = "Volume closed, with month-over-month change";
 const EMPTY_TITLE = "No closed sales yet";
 const EMPTY_LEDE = "Monthly production appears once a sale settles.";
-const LOADING_TITLE = "Loading your production";
-const LOADING_LEDE = "Fetching closed sales and market benchmarks.";
 
 export interface AnalyticsMainProps {
     period: string;
@@ -48,11 +47,13 @@ export function AnalyticsMain({
                     <PanelInset flush>
                         <AnalyticsMonthTable months={months} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={LineChart}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>

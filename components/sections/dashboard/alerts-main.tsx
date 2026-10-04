@@ -14,14 +14,13 @@ import type {
     AlertPreference,
     AlertType,
 } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const STREAM_TITLE = "Alert Stream";
 const STREAM_LEDE = "Every signal behind the one that needs you most";
 const STREAM_ACTION = "Saved properties";
 const EMPTY_TITLE = "Nothing matches this filter";
 const EMPTY_LEDE = "Widen the signal or read state to see more alerts.";
-const LOADING_TITLE = "Loading alerts";
-const LOADING_LEDE = "Fetching the signals across your saved book.";
 
 export interface AlertsMainProps {
     top?: Alert;
@@ -80,11 +79,13 @@ export function AlertsMain({
                     <PanelInset scroll>
                         <AlertTable alerts={alerts} onMarkRead={onMarkRead} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={BellOff}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>

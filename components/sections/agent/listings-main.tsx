@@ -8,14 +8,13 @@ import { ListingsToolbar } from "@/components/sections/agent/listings-toolbar";
 import { ListingsTopHero } from "@/components/sections/agent/listings-top-hero";
 import type { BulkAction, StatusFilter } from "@/lib/data/agent-listings";
 import type { ManagedListing } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Listing Book";
 const BOOK_LEDE = "Every property behind your strongest performer";
 const BOOK_ACTION = "Open analytics";
 const EMPTY_TITLE = "No listings in this status";
 const EMPTY_LEDE = "Change the filter or list a new property.";
-const LOADING_TITLE = "Loading your listings";
-const LOADING_LEDE = "Fetching the latest performance for your portfolio.";
 
 export interface ListingsMainProps {
     top?: ManagedListing;
@@ -93,11 +92,13 @@ export function ListingsMain({
                             onSelectedChange={onSelectedChange}
                         />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={Home}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>
