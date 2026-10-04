@@ -18,6 +18,8 @@ export function ListingThumb({
     variant = "thumbnail",
     className,
 }: ListingThumbProps) {
+    const thumbnail = variant === "thumbnail";
+
     if (!src)
         return (
             <span
@@ -29,7 +31,10 @@ export function ListingThumb({
                     className,
                 )}
             >
-                <ImageOff className="size-3.5" strokeWidth={1.5} />
+                <ImageOff
+                    className={thumbnail ? "size-3" : "size-5"}
+                    strokeWidth={1.5}
+                />
             </span>
         );
 
@@ -38,7 +43,7 @@ export function ListingThumb({
             variant={variant}
             src={src}
             alt={alt}
-            loading="lazy"
+            loading={thumbnail ? "lazy" : "eager"}
             className={cn(THUMB_SHAPE, className)}
         />
     );

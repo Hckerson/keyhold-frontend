@@ -87,6 +87,7 @@ export function ModerationConsole() {
             <div className="console-split gap-3">
                 <ModerationMain
                     listings={visible}
+                    total={listings.length}
                     reading={desk.reading}
                     checks={desk.checks}
                     checkFilter={checkFilter}

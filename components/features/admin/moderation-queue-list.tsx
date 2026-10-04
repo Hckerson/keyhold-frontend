@@ -31,7 +31,7 @@ export function ModerationQueueList({
     ...actions
 }: ModerationQueueListProps) {
     return (
-        <div className="scroll-y -mx-2 max-h-(--queue-max-height)">
+        <div className="queue-frame scroll-y -mx-2">
             <div
                 aria-hidden="true"
                 className="queue-grid bg-background border-border-light sticky top-0 z-10 h-9 border-b px-2"

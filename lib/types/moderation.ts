@@ -55,7 +55,7 @@ export interface ModerationTarget {
 export interface ModerationAgentLoad {
     id: string;
     name: string;
-    firm: string;
+    email: string;
     submissions: number;
     open: number;
     reports: number;

@@ -59,8 +59,6 @@ export const isOpen = (listing: ModerationListing) =>
 export const submittedAt = (listing: ModerationListing) =>
     new Date(Date.now() - listing.queuedMinutes * MS_PER_MINUTE);
 
-export const agentFirm = (email: string) => email.slice(email.indexOf("@") + 1);
-
 export const rankListings = (listings: ModerationListing[]) =>
     [...listings].sort(
         (a, b) =>
@@ -144,7 +142,7 @@ export const agentLoads = (
         const load = byAgent.get(email) ?? {
             id: email,
             name,
-            firm: agentFirm(email),
+            email,
             submissions: 0,
             open: 0,
             reports: 0,
