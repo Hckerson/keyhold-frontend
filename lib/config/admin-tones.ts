@@ -3,17 +3,12 @@ import {
     Flag,
     Gavel,
     ShieldCheck,
-    UserCheck,
     type LucideIcon,
 } from "lucide-react";
 import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import { ADMIN_ROUTES } from "@/lib/constants";
-import type {
-    DecisionLaneId,
-    ModerationQueueId,
-    ServiceState,
-} from "@/lib/types";
+import type { ModerationQueueId, ServiceState } from "@/lib/types";
 
 export interface ToneBand {
     ceiling: number;
@@ -60,16 +55,6 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
             tone: "error",
         },
     };
-
-export const DECISION_LANES: Record<DecisionLaneId, ModerationQueueMeta> = {
-    ...MODERATION_QUEUES,
-    accounts: {
-        label: "Account approvals",
-        icon: UserCheck,
-        href: ADMIN_ROUTES.users,
-        tone: "highlight",
-    },
-};
 
 export interface ServiceStateMeta {
     label: string;

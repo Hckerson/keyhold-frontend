@@ -52,16 +52,12 @@ export function AdminOverviewConsole() {
         listings: flags,
         flags,
         disputes,
-        accounts: users,
     });
 
     const lanes = useMemo(
         () =>
-            decisionLanes(
-                moderationLoad(flags.data, kyc.data, disputes.data),
-                users.data,
-            ),
-        [flags.data, kyc.data, disputes.data, users.data],
+            decisionLanes(moderationLoad(flags.data, kyc.data, disputes.data)),
+        [flags.data, kyc.data, disputes.data],
     );
 
     const business = useMemo(
@@ -118,14 +114,16 @@ export function AdminOverviewConsole() {
                         failed={trend.isError}
                     />
                 </div>
-                <AdminOverviewHealth
-                    systems={systems.reading}
-                    services={systems.services}
-                    integrations={systems.integrations}
-                    integrationSummary={systems.summary}
-                    pending={health.isPending}
-                    failed={health.isError}
-                />
+                <div className="self-start">
+                    <AdminOverviewHealth
+                        systems={systems.reading}
+                        services={systems.services}
+                        integrations={systems.integrations}
+                        integrationSummary={systems.summary}
+                        pending={health.isPending}
+                        failed={health.isError}
+                    />
+                </div>
                 <AdminOverviewPeople
                     users={users.data}
                     statuses={people.statuses}

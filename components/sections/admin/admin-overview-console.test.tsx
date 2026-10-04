@@ -21,6 +21,7 @@ import {
     aTrend,
     aUserCount,
     anAuditLog,
+    anIntegration,
     anAuditPage,
 } from "@/lib/data/__fixtures__/admin";
 
@@ -71,7 +72,7 @@ const tile = async (label: string) =>
 
 beforeEach(() => {
     platform.mockResolvedValue(aPlatform());
-    userCount.mockResolvedValue(aUserCount({ total: 4, pending: 3 }));
+    userCount.mockResolvedValue(aUserCount({ total: 4 }));
     trend.mockResolvedValue(aTrend());
     directory.mockResolvedValue([]);
     flagCount.mockResolvedValue(aFlagCount());
@@ -87,7 +88,6 @@ describe("AdminOverviewConsole · navigating", () => {
         ["Listing review", ADMIN_ROUTES.listings],
         ["Flagged content", ADMIN_ROUTES.flags],
         ["Disputes", ADMIN_ROUTES.disputes],
-        ["Account approvals", ADMIN_ROUTES.users],
     ])("opens the %s queue from its tile", async (label, href) => {
         draw();
 
@@ -159,6 +159,44 @@ describe("AdminOverviewConsole · recovering", () => {
             expect(userCount).toHaveBeenCalledTimes(2);
         },
     );
+});
+
+describe("AdminOverviewConsole · reporting credentials", () => {
+    it("names each external service and flags the required one that is missing", async () => {
+        health.mockResolvedValue(
+            aHealthReadout({
+                integrations: [
+                    anIntegration({ id: "stripe" }),
+                    anIntegration({
+                        id: "smtp",
+                        label: "SMTP",
+                        configured: false,
+                    }),
+                ],
+            }),
+        );
+        draw();
+        const credentials = await within(await panel("health")).findByRole(
+            "region",
+            { name: "Credentials" },
+        );
+
+        expect(within(credentials).getByText("Stripe")).toBeInTheDocument();
+        expect(within(credentials).getByText("SMTP")).toBeInTheDocument();
+        expect(
+            within(credentials).getByText("1 required credential missing"),
+        ).toBeInTheDocument();
+    });
+
+    it("says the credential state is unavailable when the API reports none", async () => {
+        draw();
+
+        expect(
+            await within(await panel("health")).findByText(
+                "Credential state unavailable",
+            ),
+        ).toBeInTheDocument();
+    });
 });
 
 describe("AdminOverviewConsole · a failing source stays contained", () => {
@@ -233,11 +271,13 @@ describe("AdminOverviewConsole · a failing source stays contained", () => {
         expect(within(verifications!).queryByText("0")).not.toBeInTheDocument();
     });
 
-    it("still counts account approvals while the queues are reporting", async () => {
-        kycCount.mockImplementation(never);
+    it("offers only the four moderation queues, with no account approval queue to clear", async () => {
         draw();
 
-        const accounts = await tile("Account approvals");
-        expect(await within(accounts!).findByText("3")).toBeInTheDocument();
+        const links = within(await panel("decisions")).getAllByRole("link");
+        expect(links.map((link) => link.getAttribute("href"))).toEqual(
+            expect.not.arrayContaining([ADMIN_ROUTES.users]),
+        );
+        expect(links).toHaveLength(4);
     });
 });

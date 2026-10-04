@@ -17,10 +17,8 @@ export interface ModerationQueueLoad {
 
 export type QueueReadiness = "pending" | "error" | "ready";
 
-export type DecisionLaneId = ModerationQueueId | "accounts";
-
 export interface DecisionLane {
-    id: DecisionLaneId;
+    id: ModerationQueueId;
     backlog: number;
     oldestMinutes: number | null;
     share: number;
