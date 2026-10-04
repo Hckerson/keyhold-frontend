@@ -1,7 +1,7 @@
 "use client";
 
+import { IconChip } from "@/components/ui/icon-chip";
 import { ProgressBar } from "@/components/ui/progress-bar";
-import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { ModerationStatusTile as ModerationStatusTileData } from "@/lib/types";
 
@@ -20,8 +20,6 @@ export function ModerationStatusTile({
     pending,
     onSelect,
 }: ModerationStatusTileProps) {
-    const Icon = tile.icon;
-
     return (
         <button
             type="button"
@@ -34,7 +32,11 @@ export function ModerationStatusTile({
                     : "border-border-light bg-background-muted hover:bg-background-alt",
             )}
         >
-            <span className="flex items-center justify-between gap-2">
+            <span className="flex items-center gap-2">
+                <IconChip
+                    icon={tile.icon}
+                    tone={tile.count === 0 ? "neutral" : tile.tone}
+                />
                 <span
                     className={cn(
                         "truncate text-xs font-medium",
@@ -43,11 +45,6 @@ export function ModerationStatusTile({
                 >
                     {tile.label}
                 </span>
-                <Icon
-                    aria-hidden="true"
-                    strokeWidth={1.5}
-                    className={cn("size-3 shrink-0", chartToneText[tile.tone])}
-                />
             </span>
             <span className="flex items-end justify-between gap-2">
                 <span
