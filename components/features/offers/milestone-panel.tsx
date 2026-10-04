@@ -5,12 +5,10 @@ import { ListChecks } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { MilestoneChecklist } from "@/components/features/offers/milestone-checklist";
 import { MilestoneDetailModal } from "@/components/features/offers/milestone-detail-modal";
 import {
     MILESTONE_COPY as COPY,
-    milestoneProgress,
     settledCount,
 } from "@/lib/data/offer-milestones";
 import type { DealMilestoneControls } from "@/lib/types";
@@ -32,19 +30,12 @@ export function MilestonePanel({ controls }: MilestonePanelProps) {
             count={`${settled}/${milestones.length}`}
         >
             {milestones.length > 0 ? (
-                <>
-                    <ProgressBar
-                        value={milestoneProgress(milestones)}
-                        tone="accent"
-                        label={COPY.title}
+                <PanelInset scroll>
+                    <MilestoneChecklist
+                        controls={controls}
+                        onEdit={setEditing}
                     />
-                    <PanelInset scroll>
-                        <MilestoneChecklist
-                            controls={controls}
-                            onEdit={setEditing}
-                        />
-                    </PanelInset>
-                </>
+                </PanelInset>
             ) : (
                 <EmptyState
                     icon={ListChecks}
@@ -54,11 +45,12 @@ export function MilestonePanel({ controls }: MilestonePanelProps) {
             )}
 
             {progress !== undefined && (
-                <ProgressBar
-                    value={progress}
-                    tone="info"
-                    label={COPY.uploading}
-                />
+                <p
+                    role="status"
+                    className="text-info text-xs font-medium tabular-nums"
+                >
+                    {COPY.uploading} {progress}%
+                </p>
             )}
 
             {rejected && (

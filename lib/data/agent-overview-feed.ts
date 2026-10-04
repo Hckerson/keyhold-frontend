@@ -12,7 +12,6 @@ import { daysBetween, minutesSince } from "@/lib/utils/elapsed";
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
 import type { Transaction } from "@/lib/validations/transaction";
 
-export const DAYS_ON_MARKET_BENCHMARK = 60;
 export const FAST_SALE_DAYS = 21;
 export const SLOW_SALE_DAYS = 40;
 

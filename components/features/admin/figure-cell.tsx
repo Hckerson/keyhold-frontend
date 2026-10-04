@@ -17,7 +17,7 @@ export function FigureCell({ figure, pending }: FigureCellProps) {
     return (
         <Link
             href={figure.href}
-            className="hover:bg-background-alt focus-visible:ring-accent ease-smooth flex min-w-0 flex-col gap-2 p-3 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
+            className="reveal-scope hover:bg-background-alt focus-visible:ring-accent ease-smooth flex min-w-0 flex-col gap-2 p-3 transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
         >
             <span className="flex items-center justify-between gap-2">
                 <span className="micro-label truncate">{figure.label}</span>
@@ -53,7 +53,7 @@ export function FigureCell({ figure, pending }: FigureCellProps) {
                     {figure.total}
                 </span>
             </span>
-            <span className="flex items-center gap-2">
+            <span className="reveal flex items-center gap-2">
                 {pending ? (
                     <Skeleton className="bg-background-alt h-1.5 flex-1" />
                 ) : (
@@ -61,8 +61,6 @@ export function FigureCell({ figure, pending }: FigureCellProps) {
                         percent={figure.ratio.percent}
                         tone="accent"
                         label={`${figure.label}: ${figure.ratio.percent}% ${figure.ratio.label}`}
-                        className="min-w-0 flex-1"
-                        barClassName="w-auto flex-1"
                     />
                 )}
                 <span className="text-text-muted shrink-0 truncate text-xs">

@@ -15,7 +15,7 @@ export function AnalyticsMonthTable({ months }: AnalyticsMonthTableProps) {
             <caption className="sr-only">{TABLE_CAPTION}</caption>
             <thead>
                 <tr className="border-border h-9 border-b">
-                    <th scope="col" className="micro-label w-10 text-left">
+                    <th scope="col" className="micro-label text-left">
                         Month
                     </th>
                     <th
@@ -24,7 +24,10 @@ export function AnalyticsMonthTable({ months }: AnalyticsMonthTableProps) {
                     >
                         Sold
                     </th>
-                    <th scope="col" className="micro-label pl-3 text-left">
+                    <th
+                        scope="col"
+                        className="micro-label w-24 pl-3 text-right"
+                    >
                         Share of peak
                     </th>
                     <th

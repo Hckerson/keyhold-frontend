@@ -28,7 +28,10 @@ export function ConciergeClientTable({ clients }: ConciergeClientTableProps) {
                     >
                         Mandate
                     </th>
-                    <th scope="col" className="micro-label w-24 pl-3 text-left">
+                    <th
+                        scope="col"
+                        className="micro-label w-20 pl-3 text-right"
+                    >
                         Allocated
                     </th>
                     <th

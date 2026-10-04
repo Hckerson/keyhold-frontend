@@ -47,7 +47,7 @@ export function ConciergeClientRow({ client }: ConciergeClientRowProps) {
             <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
                 {formatMillions(client.budget)}
             </td>
-            <td className="py-0 pl-3">
+            <td className="py-0 pl-3 text-right">
                 <ConciergeAllocation percent={allocationPct(client)} />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">

@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import { IconChip } from "@/components/ui/icon-chip";
-import { ProgressBar } from "@/components/ui/progress-bar";
-import type { ChartTone } from "@/lib/config/chart-tones";
+import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
+import { cn } from "@/lib/utils";
 
 export interface ShareDatum {
     id: string;
@@ -23,12 +23,12 @@ export function ShareRow({ share }: ShareRowProps) {
             <span className="text-text min-w-0 flex-1 truncate text-xs">
                 {share.label}
             </span>
-            <ProgressBar
-                value={share.percent}
-                tone={share.tone}
-                className="w-10 shrink-0"
-            />
-            <span className="text-text-secondary w-10 shrink-0 text-right text-xs tabular-nums">
+            <span
+                className={cn(
+                    "w-10 shrink-0 text-right text-xs font-medium tabular-nums",
+                    chartToneText[share.tone],
+                )}
+            >
                 {share.value}
             </span>
         </li>

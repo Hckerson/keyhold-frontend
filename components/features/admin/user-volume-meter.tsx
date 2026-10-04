@@ -1,4 +1,3 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { volumeTone } from "@/lib/config/user-tones";
 import { cn, formatCompactUsd, percentOf } from "@/lib/utils";
@@ -31,13 +30,13 @@ export function UserVolumeMeter({
 
     return (
         <span
+            role="img"
             className={cn("flex items-center justify-end gap-1.5", className)}
             aria-label={`${formatCompactUsd(volume)} ${VOLUME_NOUN}, ${share}% ${LEADER_NOUN}`}
         >
-            <ProgressBar value={share} tone={tone} className="w-8" />
             <span
                 className={cn(
-                    "w-14 shrink-0 text-right text-xs font-semibold tabular-nums",
+                    "shrink-0 text-right text-xs font-semibold tabular-nums",
                     chartToneText[tone],
                 )}
             >

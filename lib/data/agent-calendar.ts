@@ -36,16 +36,12 @@ export interface AppointmentTypeShare {
     type: AppointmentType;
     label: string;
     count: number;
-    share: number;
 }
 
 const MINUTES_PER_HOUR = 60;
 const HOURS_PER_HALF_DAY = 12;
-const FULL_PERCENT = 100;
 const CONFIRMED: AppointmentStatus = "confirmed";
 const EMPTY_VALUE = "—";
-
-export const DURATION_SCALE_MINUTES = 180;
 
 export const SCHEDULE_ACTION = "Propose a viewing";
 
@@ -119,9 +115,6 @@ export const formatHours = (minutes: number) => {
     return `${Number.isInteger(hours) ? hours : hours.toFixed(1)}h`;
 };
 
-export const durationShare = (minutes: number) =>
-    Math.min(FULL_PERCENT, (minutes / DURATION_SCALE_MINUTES) * FULL_PERCENT);
-
 const byStart = (a: Appointment, b: Appointment) =>
     startMinutes(a.start) - startMinutes(b.start);
 
@@ -172,19 +165,12 @@ export const appointmentDays = (
 
 export const appointmentTypeMix = (
     items: Appointment[],
-): AppointmentTypeShare[] => {
-    const counts = APPOINTMENT_TYPE_KEYS.map((type) => ({
+): AppointmentTypeShare[] =>
+    APPOINTMENT_TYPE_KEYS.map((type) => ({
         type,
         label: APPOINTMENT_TYPES[type].label,
         count: items.filter((item) => item.type === type).length,
     }));
-    const peak = counts.reduce((max, entry) => Math.max(max, entry.count), 0);
-
-    return counts.map((entry) => ({
-        ...entry,
-        share: peak ? (entry.count / peak) * FULL_PERCENT : 0,
-    }));
-};
 
 export const calendarLoadStats = (items: Appointment[]): StatDatum[] => {
     const bookedMinutes = items.reduce(

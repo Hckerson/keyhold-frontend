@@ -82,7 +82,7 @@ export function ListingRow({
                 {listing.listedDaysAgo}
                 {DAYS_SUFFIX}
             </td>
-            <td className="py-0 pl-3">
+            <td className="py-0 pl-3 text-right">
                 <ListingExposureMeter percent={exposureOf(listing, peak)} />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
