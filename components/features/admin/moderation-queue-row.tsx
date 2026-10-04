@@ -29,19 +29,19 @@ export function ModerationQueueRow({
     onApprove,
     onDecide,
 }: ModerationQueueRowProps) {
+    const settled = !isOpen(listing) && "opacity-60";
+
     return (
         <m.li {...LIST_ROW_MOTION} className="overflow-hidden">
-            <div
-                className={cn(
-                    "queue-grid group hover:bg-background-muted ease-smooth h-11 rounded-md px-2 transition-colors duration-200",
-                    !isOpen(listing) && "opacity-60",
-                )}
-            >
+            <div className="queue-grid hover:bg-background-muted ease-smooth h-11 rounded-md px-2 transition-colors duration-200">
                 <button
                     type="button"
                     aria-label={`${REVIEW_PREFIX} ${listing.address}, ${listing.locality}`}
                     onClick={() => onOpen(listing.id)}
-                    className="focus-visible:ring-accent flex min-w-0 items-center gap-2.5 rounded-sm text-left text-xs focus-visible:ring-2 focus-visible:outline-none"
+                    className={cn(
+                        "group focus-visible:ring-accent flex min-w-0 items-center gap-2.5 rounded-sm text-left text-xs focus-visible:ring-2 focus-visible:outline-none",
+                        settled,
+                    )}
                 >
                     <ListingThumb src={listing.photos[0] ?? null} alt="" />
                     <span className="min-w-0 truncate">
@@ -57,22 +57,27 @@ export function ModerationQueueRow({
 
                 <ModerationStatusMark
                     status={listing.status}
-                    className="queue-grid__wide"
+                    className={cn("queue-grid__wide", settled)}
                 />
                 <CheckPips
                     compliance={listing.compliance}
-                    className="queue-grid__wide"
+                    className={cn("queue-grid__wide", settled)}
                 />
                 <ReportCountMark
                     reports={listing.reports}
-                    className="queue-grid__wide justify-end"
+                    className={cn("queue-grid__wide justify-end", settled)}
                 />
                 <AgeMark
                     minutes={listing.queuedMinutes}
-                    className="queue-grid__wide justify-end"
+                    className={cn("queue-grid__wide justify-end", settled)}
                 />
 
-                <span className="text-text text-right text-xs font-semibold tabular-nums">
+                <span
+                    className={cn(
+                        "text-text text-right text-xs font-semibold tabular-nums",
+                        settled,
+                    )}
+                >
                     {formatMillions(listing.price, 2)}
                 </span>
 

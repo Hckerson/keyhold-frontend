@@ -4,6 +4,7 @@ import { ClipboardCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Panel } from "@/components/ui/panel";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { CheckBreakdown } from "@/components/features/admin/check-breakdown";
 import { ModerationQueueList } from "@/components/features/admin/moderation-queue-list";
 import { ModerationAgents } from "@/components/sections/admin/moderation-agents";
@@ -19,11 +20,10 @@ const QUEUE_TITLE = "Review Queue";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
     "Widen the status filter or drop the check filter to see the full queue.";
-const LOADING_TITLE = "Loading the queue";
-const LOADING_LEDE = "Fetching reported listings.";
 
 export interface ModerationMainProps {
     listings: ModerationListing[];
+    total: number;
     reading: string;
     checks: CheckBreakdownData[];
     checkFilter: ModerationCheckFilter;
@@ -38,6 +38,7 @@ export interface ModerationMainProps {
 
 export function ModerationMain({
     listings,
+    total,
     reading,
     checks,
     checkFilter,
@@ -51,7 +52,11 @@ export function ModerationMain({
             <Panel
                 title={QUEUE_TITLE}
                 description={reading}
-                count={listings.length}
+                count={
+                    listings.length === total
+                        ? total
+                        : `${listings.length} / ${total}`
+                }
                 bodyClassName="space-y-3"
             >
                 <CheckBreakdown
@@ -59,14 +64,24 @@ export function ModerationMain({
                     active={checkFilter}
                     onChange={onCheckFilterChange}
                 />
-                <PresenceSwap swapKey={listings.length > 0 ? "rows" : "empty"}>
+                <PresenceSwap
+                    swapKey={
+                        listings.length > 0
+                            ? "rows"
+                            : pending
+                              ? "pending"
+                              : "empty"
+                    }
+                >
                     {listings.length > 0 ? (
                         <ModerationQueueList listings={listings} {...actions} />
+                    ) : pending ? (
+                        <SkeletonRows tall />
                     ) : (
                         <EmptyState
                             icon={ClipboardCheck}
-                            title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                            description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                            title={EMPTY_TITLE}
+                            description={EMPTY_LEDE}
                         />
                     )}
                 </PresenceSwap>

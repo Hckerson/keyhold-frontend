@@ -1,12 +1,8 @@
 "use client";
 
-import { Check, PenLine, X } from "lucide-react";
 import { IconButton } from "@/components/ui/icon-button";
+import { MODERATION_ACTIONS } from "@/lib/config/moderation-actions";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
-
-const APPROVE_LABEL = "Approve";
-const CHANGES_LABEL = "Request changes on";
-const REJECT_LABEL = "Reject";
 
 export interface ModerationRowActionsProps {
     listing: ModerationListing;
@@ -25,28 +21,32 @@ export function ModerationRowActions({
 
     return (
         <span className="flex items-center justify-end gap-1">
-            {listing.status !== "approved" && (
-                <IconButton
-                    tone="success"
-                    icon={Check}
-                    label={`${APPROVE_LABEL} ${target}`}
-                    disabled={approvingId !== undefined}
-                    onClick={() => onApprove(listing.id)}
-                />
-            )}
-            <IconButton
-                tone="warning"
-                icon={PenLine}
-                label={`${CHANGES_LABEL} ${target}`}
-                onClick={() => onDecide("changes", listing.id)}
-            />
-            {listing.status !== "rejected" && (
-                <IconButton
-                    tone="error"
-                    icon={X}
-                    label={`${REJECT_LABEL} ${target}`}
-                    onClick={() => onDecide("reject", listing.id)}
-                />
+            {MODERATION_ACTIONS.map((action) =>
+                action.hiddenFor === listing.status ? (
+                    <span
+                        key={action.mode}
+                        aria-hidden="true"
+                        className="size-7"
+                    />
+                ) : (
+                    <IconButton
+                        key={action.mode}
+                        size="md"
+                        tone={action.tone}
+                        icon={action.icon}
+                        label={`${action.rowLabel} ${target}`}
+                        disabled={
+                            action.mode === "approve" &&
+                            approvingId !== undefined
+                        }
+                        className={action.restTone}
+                        onClick={() =>
+                            action.mode === "approve"
+                                ? onApprove(listing.id)
+                                : onDecide(action.mode, listing.id)
+                        }
+                    />
+                ),
             )}
         </span>
     );

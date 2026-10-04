@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheckBig } from "lucide-react";
+import { CircleCheckBig, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,6 +11,7 @@ import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ComplianceCheckList } from "@/components/features/admin/compliance-check-list";
 import { ModerationStatusMark } from "@/components/features/admin/moderation-status-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
+import { MODERATION_ACTION } from "@/lib/config/moderation-actions";
 import { MODERATION_STATUSES } from "@/lib/config/moderation-tones";
 import { formatMillions } from "@/lib/utils";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
@@ -21,9 +22,6 @@ const REPORTS_LABEL = "Reports";
 const QUEUE_LABEL = "In queue";
 const AGENT_LABEL = "Agent";
 const REVIEW_ACTION = "Review";
-const APPROVE_ACTION = "Approve";
-const CHANGES_ACTION = "Request Changes";
-const REJECT_ACTION = "Reject";
 const CLEAR_TITLE = "Queue is clear";
 const CLEAR_LEDE = "Every submitted listing has a decision.";
 
@@ -125,6 +123,7 @@ export function ModerationInspector({
                     <footer className="border-border-light grid grid-cols-2 gap-2 border-t p-3">
                         <Button
                             type="button"
+                            icon={Eye}
                             onClick={() => onOpen(listing.id)}
                         >
                             {REVIEW_ACTION}
@@ -133,24 +132,27 @@ export function ModerationInspector({
                             type="button"
                             emphasis="solid"
                             tone="accent"
+                            icon={MODERATION_ACTION.approve.icon}
                             isLoading={approvingId === listing.id}
                             disabled={approvingId !== undefined}
                             onClick={() => onApprove(listing.id)}
                         >
-                            {APPROVE_ACTION}
+                            {MODERATION_ACTION.approve.label}
                         </Button>
                         <Button
                             type="button"
+                            icon={MODERATION_ACTION.changes.icon}
                             onClick={() => onDecide("changes", listing.id)}
                         >
-                            {CHANGES_ACTION}
+                            {MODERATION_ACTION.changes.label}
                         </Button>
                         <Button
                             type="button"
                             tone="error"
+                            icon={MODERATION_ACTION.reject.icon}
                             onClick={() => onDecide("reject", listing.id)}
                         >
-                            {REJECT_ACTION}
+                            {MODERATION_ACTION.reject.label}
                         </Button>
                     </footer>
                 </>
