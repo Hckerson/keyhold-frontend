@@ -1,14 +1,11 @@
 import { Avatar } from "@/components/ui/avatar";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { ConversationStatusMark } from "@/components/features/messaging/conversation-status-mark";
-import {
-    RESPONSE_BANDS,
-    responsePercent,
-} from "@/lib/config/conversation-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
+import { RESPONSE_BANDS } from "@/lib/config/conversation-tones";
 import { responseBandOf } from "@/lib/data/messages";
 import type { Conversation } from "@/lib/types";
-import { formatAge } from "@/lib/utils";
+import { cn, formatAge } from "@/lib/utils";
 
 const STATUS_LABEL = "Thread state";
 const REPLY_LABEL = "Median reply";
@@ -54,15 +51,13 @@ export function ThreadAgentCard({
                     {replyMinutes === null ? (
                         <span className="text-text-secondary">{NO_REPLY}</span>
                     ) : (
-                        <span className="flex items-center gap-1.5">
-                            <ProgressBar
-                                value={responsePercent(replyMinutes)}
-                                tone={band.tone}
-                                className="w-10 shrink-0"
-                            />
-                            <span className="text-text-secondary shrink-0 tabular-nums">
-                                {formatAge(replyMinutes)}
-                            </span>
+                        <span
+                            className={cn(
+                                "font-medium tabular-nums",
+                                chartToneText[band.tone],
+                            )}
+                        >
+                            {formatAge(replyMinutes)}
                         </span>
                     )}
                 </MetricCell>

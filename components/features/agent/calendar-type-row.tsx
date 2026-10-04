@@ -1,7 +1,8 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
 import { APPOINTMENT_TYPES } from "@/lib/config/appointment-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import type { AppointmentTypeShare } from "@/lib/data/agent-calendar";
+import { cn } from "@/lib/utils";
 
 export interface CalendarTypeRowProps {
     share: AppointmentTypeShare;
@@ -14,12 +15,12 @@ export function CalendarTypeRow({ share }: CalendarTypeRowProps) {
             <span className="text-text-secondary min-w-0 flex-1 truncate text-xs">
                 {share.label}
             </span>
-            <ProgressBar
-                value={share.share}
-                tone={APPOINTMENT_TYPES[share.type].tone}
-                className="w-12 shrink-0"
-            />
-            <span className="text-text w-4 shrink-0 text-right text-xs font-semibold tabular-nums">
+            <span
+                className={cn(
+                    "w-4 shrink-0 text-right text-xs font-semibold tabular-nums",
+                    chartToneText[APPOINTMENT_TYPES[share.type].tone],
+                )}
+            >
                 {share.count}
             </span>
         </li>

@@ -1,8 +1,6 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import { strengthTone } from "@/lib/config/account-tones";
 import { ALERT_TYPE_COUNT } from "@/lib/data/alerts";
 import { minutesSince } from "@/lib/utils/elapsed";
 
@@ -18,7 +16,6 @@ const VERIFIED_LABEL = "Verified";
 const ALERTS_LABEL = "Signals on";
 const UPDATED_LABEL = "Last updated";
 const OF_LABEL = "of";
-const STRENGTH_METER_LABEL = "Search profile strength";
 
 export interface DashboardSettingsProfileHeroProps {
     pending: number;
@@ -58,13 +55,6 @@ export function DashboardSettingsProfileHero({
             <p className="text-text-secondary mt-0.5 truncate text-xs">
                 {dirty ? PENDING_LEDE : SYNCED_LEDE}
             </p>
-
-            <span
-                className="mt-3 block"
-                aria-label={`${STRENGTH_METER_LABEL} ${strength}%`}
-            >
-                <ProgressBar value={strength} tone={strengthTone(strength)} />
-            </span>
 
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
                 <MetricCell label={VERIFIED_LABEL}>

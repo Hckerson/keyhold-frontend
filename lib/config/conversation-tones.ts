@@ -96,16 +96,6 @@ export const RESPONSE_BANDS: Record<ResponseBand, ResponseBandMeta> = {
     },
 };
 
-const RESPONSE_CAP = 240;
-
-export const responsePercent = (minutes: number) =>
-    Math.max(
-        0,
-        Math.round(
-            100 - (Math.min(minutes, RESPONSE_CAP) / RESPONSE_CAP) * 100,
-        ),
-    );
-
 export interface DocumentKindMeta {
     label: string;
     icon: LucideIcon;

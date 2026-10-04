@@ -1,14 +1,13 @@
 import { Avatar } from "@/components/ui/avatar";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
-import { initialsOf } from "@/lib/utils";
+import { cn, initialsOf } from "@/lib/utils";
+import { chartToneText } from "@/lib/config/chart-tones";
 import {
     APPOINTMENT_STATUSES,
     APPOINTMENT_TYPES,
 } from "@/lib/config/appointment-tones";
 import {
-    durationShare,
     formatDuration,
     formatGroupDay,
     formatTime,
@@ -64,12 +63,12 @@ export function CalendarNextCard({ appointment }: CalendarNextCardProps) {
                 </div>
                 <div className="flex w-20 shrink-0 flex-col items-end gap-1">
                     <span className="micro-label">{type.label}</span>
-                    <ProgressBar
-                        value={durationShare(appointment.durationMinutes)}
-                        tone={type.tone}
-                        className="w-16"
-                    />
-                    <span className="text-text text-xs font-medium tabular-nums">
+                    <span
+                        className={cn(
+                            "text-xs font-medium tabular-nums",
+                            chartToneText[type.tone],
+                        )}
+                    >
                         {formatDuration(appointment.durationMinutes)}
                     </span>
                 </div>

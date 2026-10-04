@@ -1,7 +1,7 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { coverageTone } from "@/lib/config/concierge-tones";
 import type { ConciergePractice } from "@/lib/data/agent-concierge";
-import { percentOf } from "@/lib/utils";
+import { cn, percentOf } from "@/lib/utils";
 
 export interface ConciergePracticeRowProps {
     practice: ConciergePractice;
@@ -22,12 +22,12 @@ export function ConciergePracticeRow({
             <span className="text-text min-w-0 flex-1 truncate text-xs">
                 {practice.label}
             </span>
-            <ProgressBar
-                value={coverage}
-                tone={coverageTone(coverage)}
-                className="w-10 shrink-0"
-            />
-            <span className="text-text-secondary w-8 shrink-0 text-right text-xs tabular-nums">
+            <span
+                className={cn(
+                    "w-8 shrink-0 text-right text-xs font-medium tabular-nums",
+                    chartToneText[coverageTone(coverage)],
+                )}
+            >
                 {practice.covered}/{total}
             </span>
         </li>

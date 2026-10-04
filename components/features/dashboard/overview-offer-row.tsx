@@ -1,5 +1,4 @@
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { OFFER_STATUSES } from "@/lib/config/offer-tones";
 import {
@@ -7,8 +6,8 @@ import {
     OFFER_STRONG_RATIO,
     type OfferPosition,
 } from "@/lib/data/dashboard-overview";
-import type { ChartTone } from "@/lib/config/chart-tones";
-import { formatCompactUsd } from "@/lib/utils";
+import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
+import { cn, formatCompactUsd } from "@/lib/utils";
 
 function askTone(ratio: number): ChartTone {
     if (ratio >= OFFER_STRONG_RATIO) return "success";
@@ -29,12 +28,12 @@ export function OverviewOfferRow({ offer }: OverviewOfferRowProps) {
             <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
                 {offer.address}
             </span>
-            <ProgressBar
-                value={ratio * 100}
-                tone={askTone(ratio)}
-                className="w-12 shrink-0"
-            />
-            <span className="micro-label w-14 shrink-0 text-right">
+            <span
+                className={cn(
+                    "w-16 shrink-0 text-right text-xs font-medium tabular-nums",
+                    chartToneText[askTone(ratio)],
+                )}
+            >
                 {Math.round(ratio * 100)}% ask
             </span>
             <span className="text-text w-16 shrink-0 text-right text-xs font-semibold tabular-nums">

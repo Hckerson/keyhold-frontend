@@ -55,7 +55,10 @@ export function ListingTable({
                     >
                         Days
                     </th>
-                    <th scope="col" className="micro-label w-24 pl-3 text-left">
+                    <th
+                        scope="col"
+                        className="micro-label w-20 pl-3 text-right"
+                    >
                         Exposure
                     </th>
                     <th

@@ -1,4 +1,3 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { escrowTone, MILESTONE_ORDER } from "@/lib/config/transaction-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { cn, percentOf } from "@/lib/utils";
@@ -18,13 +17,13 @@ export function EscrowMeter({ cleared, label, className }: EscrowMeterProps) {
 
     return (
         <span
+            role="img"
             className={cn("flex items-center justify-end gap-1.5", className)}
             aria-label={`${label} ${cleared} of ${total} ${CLEARED_LABEL}`}
         >
-            <ProgressBar value={percent} tone={tone} className="w-10" />
             <span
                 className={cn(
-                    "w-6 shrink-0 text-right text-xs font-medium tabular-nums",
+                    "shrink-0 text-right text-xs font-medium tabular-nums",
                     chartToneText[tone],
                 )}
             >

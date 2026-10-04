@@ -1,4 +1,4 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { complianceTone } from "@/lib/config/moderation-tones";
 import { cn } from "@/lib/utils";
 
@@ -17,15 +17,16 @@ export function ComplianceMeter({
 }: ComplianceMeterProps) {
     return (
         <span
+            role="img"
             className={cn("flex items-center justify-end gap-1.5", className)}
             aria-label={`${label} ${score}% ${CLEAR_LABEL}`}
         >
-            <ProgressBar
-                value={score}
-                tone={complianceTone(score)}
-                className="w-10"
-            />
-            <span className="text-text w-8 shrink-0 text-right text-xs font-medium tabular-nums">
+            <span
+                className={cn(
+                    "shrink-0 text-right text-xs font-medium tabular-nums",
+                    chartToneText[complianceTone(score)],
+                )}
+            >
                 {score}%
             </span>
         </span>

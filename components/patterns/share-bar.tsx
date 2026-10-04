@@ -12,9 +12,6 @@ export interface ShareBarProps {
 
 export function ShareBar({ label, segments }: ShareBarProps) {
     const total = segments.reduce((sum, segment) => sum + segment.value, 0);
-    const reading = segments
-        .map((segment) => `${segment.name} ${shareOf(segment.value, total)}%`)
-        .join(", ");
 
     return (
         <figure className="flex flex-col gap-2">
@@ -24,25 +21,6 @@ export function ShareBar({ label, segments }: ShareBarProps) {
                     {formatCount(total)}
                 </span>
             </figcaption>
-
-            <div
-                role="img"
-                aria-label={`${label}: ${reading}`}
-                className="bg-background-muted flex h-2 gap-0.5 overflow-hidden rounded-full"
-            >
-                {segments
-                    .filter((segment) => segment.value > 0)
-                    .map((segment) => (
-                        <span
-                            key={segment.name}
-                            className="h-full basis-0"
-                            style={{
-                                flexGrow: segment.value,
-                                background: chartToneVar[segment.tone],
-                            }}
-                        />
-                    ))}
-            </div>
 
             <ul className="divide-border-light divide-y">
                 {segments.map((segment) => (

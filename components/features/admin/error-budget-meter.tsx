@@ -18,7 +18,6 @@ export function ErrorBudgetMeter({ uptime, label }: ErrorBudgetMeterProps) {
             percent={used}
             tone={loadTone(used)}
             label={`${label} has spent ${used}% of its ${UPTIME_SLO}% uptime budget`}
-            barClassName="w-14"
         />
     );
 }

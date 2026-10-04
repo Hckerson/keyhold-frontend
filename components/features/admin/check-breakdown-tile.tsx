@@ -6,7 +6,7 @@ import {
     CHECK_STATE_KEYS,
     COMPLIANCE_CHECKS,
 } from "@/lib/config/moderation-tones";
-import { chartToneFill, chartToneText } from "@/lib/config/chart-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { CheckBreakdown } from "@/lib/types";
 
@@ -37,15 +37,16 @@ export function CheckBreakdownTile({
         <button
             type="button"
             aria-pressed={active}
+            title={reading}
             onClick={onSelect}
             className={cn(
-                "focus-visible:ring-accent ease-smooth flex h-16 min-w-0 flex-col justify-between rounded-lg border p-2.5 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                "focus-visible:ring-accent ease-smooth flex h-11 min-w-0 items-center rounded-lg border px-2.5 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                 active
                     ? "border-accent bg-accent-light"
                     : "border-border-light bg-background-muted hover:bg-background-alt",
             )}
         >
-            <span className="flex min-w-0 items-center gap-2">
+            <span className="flex min-w-0 flex-1 items-center gap-2">
                 <IconChip icon={check.icon} tone={tone} />
                 <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
                     {check.label}
@@ -59,25 +60,7 @@ export function CheckBreakdownTile({
                     {open} {OPEN_SUFFIX}
                 </span>
             </span>
-            <span
-                role="img"
-                aria-label={reading}
-                className="bg-background flex h-1.5 gap-px overflow-hidden rounded-full"
-            >
-                {CHECK_STATE_KEYS.map(
-                    (state) =>
-                        row[state] > 0 && (
-                            <span
-                                key={state}
-                                className={cn(
-                                    "h-full basis-0",
-                                    chartToneFill[CHECK_STATES[state].tone],
-                                )}
-                                style={{ flexGrow: row[state] }}
-                            />
-                        ),
-                )}
-            </span>
+            <span className="sr-only">{reading}</span>
         </button>
     );
 }

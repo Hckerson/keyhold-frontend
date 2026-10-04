@@ -1,9 +1,10 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { strengthTone } from "@/lib/config/account-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { NOTIFICATION_RULE_COUNT } from "@/lib/data/agent-account";
+import { cn } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
 
 const HERO_EYEBROW = "Public profile";
@@ -18,7 +19,7 @@ const ALERTS_LABEL = "Alerts on";
 const CREDENTIALS_LABEL = "Credentials";
 const PUBLISHED_METRIC_LABEL = "Last published";
 const OF_LABEL = "of";
-const STRENGTH_METER_LABEL = "Profile strength";
+const STRENGTH_LABEL = "Strength";
 
 export interface AgentSettingsProfileHeroProps {
     pending: number;
@@ -63,14 +64,17 @@ export function AgentSettingsProfileHero({
                 {dirty ? PENDING_LEDE : PUBLISHED_LEDE}
             </p>
 
-            <span
-                className="mt-3 block"
-                aria-label={`${STRENGTH_METER_LABEL} ${strength}%`}
-            >
-                <ProgressBar value={strength} tone={strengthTone(strength)} />
-            </span>
-
             <div className="metric-strip bg-background-muted border-border-light mt-3 gap-3 rounded-md border p-3">
+                <MetricCell label={STRENGTH_LABEL}>
+                    <span
+                        className={cn(
+                            "tabular-nums",
+                            chartToneText[strengthTone(strength)],
+                        )}
+                    >
+                        {strength}%
+                    </span>
+                </MetricCell>
                 <MetricCell label={ALERTS_LABEL}>
                     <span className="tabular-nums">
                         {enabledAlerts} {OF_LABEL} {NOTIFICATION_RULE_COUNT}
