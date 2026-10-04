@@ -3,7 +3,7 @@ import { ComplianceCheckMark } from "@/components/features/admin/compliance-chec
 import {
     CHECK_STATES,
     COMPLIANCE_CHECK_KEYS,
-} from "@/lib/config/moderation-tones";
+} from "@/lib/config/compliance-checks";
 import { CHECK_COUNT_LABEL } from "@/lib/data/admin-listings";
 import type { ComplianceReport } from "@/lib/types";
 

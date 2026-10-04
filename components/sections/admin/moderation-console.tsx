@@ -12,10 +12,10 @@ import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     matchesModerationFilters,
-    moderationDesk,
     type ModerationCheckFilter,
     type ModerationStatusFilter,
 } from "@/lib/data/admin-listings";
+import { moderationDesk } from "@/lib/data/admin-listings-desk";
 import { useFlags } from "@/lib/hooks/use-flags";
 import { useModerationActions } from "@/lib/hooks/use-moderation-actions";
 import { toModerationQueue } from "@/lib/utils/to-moderation-listing";

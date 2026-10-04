@@ -4,7 +4,7 @@ import {
     checkBreakdown,
     queueReading,
     statusTiles,
-} from "@/lib/data/admin-listings";
+} from "@/lib/data/admin-listings-desk";
 
 const aQueue = () => [
     aModerationListing({

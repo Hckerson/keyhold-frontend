@@ -2,7 +2,7 @@ import {
     CHECK_STATES,
     COMPLIANCE_CHECKS,
     COMPLIANCE_CHECK_KEYS,
-} from "@/lib/config/moderation-tones";
+} from "@/lib/config/compliance-checks";
 import { chartToneSoft } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { ComplianceReport } from "@/lib/types";

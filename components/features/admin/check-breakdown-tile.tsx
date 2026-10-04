@@ -5,7 +5,7 @@ import {
     CHECK_STATES,
     CHECK_STATE_KEYS,
     COMPLIANCE_CHECKS,
-} from "@/lib/config/moderation-tones";
+} from "@/lib/config/compliance-checks";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import type { CheckBreakdown } from "@/lib/types";
