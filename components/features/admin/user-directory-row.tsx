@@ -9,7 +9,7 @@ import { UserStatusMark } from "@/components/features/admin/user-status-mark";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { LIST_ROW_MOTION } from "@/lib/config/motion";
 import { USER_ROLES } from "@/lib/config/user-tones";
-import { idleDays } from "@/lib/data/admin-users";
+import { idleDays, joinedLabel } from "@/lib/data/admin-users";
 import { cn, initialsOf } from "@/lib/utils";
 import type { ManagedUser } from "@/lib/types";
 
@@ -42,13 +42,21 @@ export function UserDirectoryRow({
                 >
                     <Avatar
                         size="sm"
-                        tone="accent"
                         elevated={false}
                         initials={initialsOf(user.name)}
                     />
                     <span className="flex min-w-0 flex-col gap-0.5">
-                        <span className="text-text group-hover:text-accent ease-smooth truncate font-medium transition-colors">
-                            {user.name}
+                        <span className="flex min-w-0 items-baseline gap-2">
+                            <span className="text-text group-hover:text-accent ease-smooth truncate font-medium transition-colors">
+                                {user.name}
+                            </span>
+                            {user.volume > 0 && (
+                                <UserBookMark
+                                    deals={user.transactions}
+                                    volume={user.volume}
+                                    className="shrink-0 justify-start"
+                                />
+                            )}
                         </span>
                         <span className="text-text-muted truncate">
                             <span className={chartToneText[role.tone]}>
@@ -67,11 +75,14 @@ export function UserDirectoryRow({
                     days={idleDays(user)}
                     className={cn("queue-grid__wide justify-end", muted)}
                 />
-                <UserBookMark
-                    deals={user.transactions}
-                    volume={user.volume}
-                    className={cn("justify-end text-right", muted)}
-                />
+                <span
+                    className={cn(
+                        "text-text-secondary text-right text-xs tabular-nums",
+                        muted,
+                    )}
+                >
+                    {joinedLabel(user)}
+                </span>
                 <UserRowActions user={user} {...actions} />
             </div>
         </m.li>

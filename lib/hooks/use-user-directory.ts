@@ -17,7 +17,7 @@ const EVERY_ACCOUNT: UserDirectoryFilters = {
     role: "all",
 };
 
-const DEFAULT_SORT: UserSortKey = "priority";
+const DEFAULT_SORT: UserSortKey = "recent";
 
 export function useUserDirectory(users: ManagedUser[]) {
     const [filters, setFilters] = useState(EVERY_ACCOUNT);

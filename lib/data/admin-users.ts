@@ -16,10 +16,10 @@ const EVERY_STATUS: UserStatusFilter = "all";
 const EVERY_ROLE: UserRoleFilter = "all";
 
 export const USER_SORT_OPTIONS: SelectOption<UserSortKey>[] = [
+    { value: "recent", label: "Recently active" },
     { value: "priority", label: "Needs attention" },
     { value: "volume", label: "Lifetime volume" },
     { value: "deals", label: "Closed deals" },
-    { value: "recent", label: "Recently active" },
     { value: "name", label: "Name" },
 ];
 
