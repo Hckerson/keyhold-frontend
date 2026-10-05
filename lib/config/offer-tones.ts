@@ -9,8 +9,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { OfferStatus } from "@/lib/types";
+import type { OfferStatus, StatusTone } from "@/lib/types";
 
 export const OFFER_STATUS_KEYS: OfferStatus[] = [
     "countered",
@@ -23,7 +22,7 @@ export const OFFER_STATUS_KEYS: OfferStatus[] = [
 export interface OfferStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;

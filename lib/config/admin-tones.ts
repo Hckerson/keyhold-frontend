@@ -5,10 +5,9 @@ import {
     ShieldCheck,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import { ADMIN_ROUTES } from "@/lib/constants";
-import type { ModerationQueueId, ServiceState } from "@/lib/types";
+import type { ModerationQueueId, ServiceState, StatusTone } from "@/lib/types";
 
 export interface ToneBand {
     ceiling: number;
@@ -58,7 +57,7 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
 
 export interface ServiceStateMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 

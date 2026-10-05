@@ -1,8 +1,7 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-
-export type SwitchSize = "sm" | "md";
+import type { SwitchSize } from "@/lib/types";
 
 interface SwitchProps extends Omit<
     InputHTMLAttributes<HTMLInputElement>,

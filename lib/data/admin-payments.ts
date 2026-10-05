@@ -1,12 +1,17 @@
 import { Banknote, CircleCheck, ShieldAlert, Wallet } from "lucide-react";
-import type { FilterPill } from "@/components/patterns/filter-pills";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     PAYOUT_PIPELINE_ORDER,
     PAYOUT_STATES,
 } from "@/lib/config/payout-tones";
 import { PLATFORM_PAYOUT_FEE_RATE } from "@/lib/constants";
-import type { MetricItem, Payout, PayoutStage, PayoutState } from "@/lib/types";
+import type {
+    FilterPill,
+    MetricItem,
+    Payout,
+    PayoutStage,
+    PayoutState,
+    StatDatum,
+} from "@/lib/types";
 import type { EscrowStage } from "@/lib/validations/escrow";
 import { formatCompactUsd, formatUsd, sum } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";

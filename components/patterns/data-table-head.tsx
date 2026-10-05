@@ -6,10 +6,9 @@ import {
     alignClass,
     headCell,
     sortIcon,
-    type DataTableColumn,
-    type DataTableSort,
 } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
+import type { DataTableColumn, DataTableSort } from "@/lib/types";
 
 function HeadCell<T>({
     column,

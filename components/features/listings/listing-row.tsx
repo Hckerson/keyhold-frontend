@@ -3,15 +3,7 @@ import type { ReactNode } from "react";
 import { Image } from "@/components/ui/image";
 import { PropertySpecs } from "@/components/features/listings/property-specs";
 import { cn, formatMillions } from "@/lib/utils";
-
-export interface ListingRowData {
-    imageUrl: string;
-    address: string;
-    price: number;
-    beds: number;
-    baths: number;
-    sqft: number;
-}
+import type { ListingRowData } from "@/lib/types";
 
 export interface ListingRowProps {
     listing: ListingRowData;

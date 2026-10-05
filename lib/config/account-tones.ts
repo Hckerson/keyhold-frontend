@@ -6,9 +6,13 @@ import {
     UserRound,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { CredentialState, PrivacyScope, SecurityState } from "@/lib/types";
+import type {
+    CredentialState,
+    PrivacyScope,
+    SecurityState,
+    StatusTone,
+} from "@/lib/types";
 
 export const NOTIFICATION_CHANNEL_KEYS = ["push", "email", "sms"] as const;
 export type NotificationChannel = (typeof NOTIFICATION_CHANNEL_KEYS)[number];
@@ -37,7 +41,7 @@ export type NotificationCadence = (typeof NOTIFICATION_CADENCE_KEYS)[number];
 
 export interface NotificationCadenceMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 
@@ -54,7 +58,7 @@ export const NOTIFICATION_MUTED_LABEL = "Muted";
 
 export interface CredentialStateMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
 }
 
 export const CREDENTIAL_STATES: Record<CredentialState, CredentialStateMeta> = {
@@ -65,7 +69,7 @@ export const CREDENTIAL_STATES: Record<CredentialState, CredentialStateMeta> = {
 
 export interface SecurityStateMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     danger: boolean;
 }
 

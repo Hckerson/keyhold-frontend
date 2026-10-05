@@ -72,3 +72,12 @@ export interface ManagedListing {
     offers: number;
     featuredUntil: string | null;
 }
+
+export interface ListingRowData {
+    imageUrl: string;
+    address: string;
+    price: number;
+    beds: number;
+    baths: number;
+    sqft: number;
+}

@@ -6,10 +6,8 @@ import {
     XCircle,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { CalloutVariant } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { ModerationStatus } from "@/lib/types";
+import type { ModerationStatus, StatusTone } from "@/lib/types";
 
 export const MODERATION_STATUS_KEYS: ModerationStatus[] = [
     "flagged",
@@ -22,12 +20,12 @@ export const MODERATION_STATUS_KEYS: ModerationStatus[] = [
 export interface ModerationStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;
     noteTitle: string;
-    noteTone: CalloutVariant;
+    noteTone: StatusTone;
 }
 
 export const MODERATION_STATUSES: Record<

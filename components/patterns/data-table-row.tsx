@@ -6,11 +6,9 @@ import { Checkbox } from "@/components/ui/forms/checkbox";
 import {
     alignClass,
     emphasisClass,
-    type ColumnEmphasis,
-    type DataTableColumn,
-    type RevealMode,
 } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
+import type { ColumnEmphasis, DataTableColumn, RevealMode } from "@/lib/types";
 
 export interface DataTableRowProps<T> {
     row: T;

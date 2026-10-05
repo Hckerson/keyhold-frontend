@@ -1,10 +1,8 @@
 import { CalendarDays, CheckCircle2, Clock, Flame, Users } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { parseLocalDate } from "@/lib/utils";
-import type { RescheduleDraft } from "@/lib/types";
-import type { SelectOption } from "@/components/ui/forms/select";
+import type { RescheduleDraft, SelectOption, StatDatum } from "@/lib/types";
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     APPOINTMENT_TYPES,
     APPOINTMENT_TYPE_KEYS,

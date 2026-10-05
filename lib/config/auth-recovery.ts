@@ -1,6 +1,5 @@
-import type { AuthStep } from "@/components/features/auth/parts/auth-form-header";
-import type { AuthTitleBlockEntry } from "@/components/features/auth/parts/auth-title-block";
 import { AUTH_ROUTES } from "@/lib/constants";
+import type { AuthStep, AuthTitleBlockEntry } from "@/lib/types";
 
 export const AUTH_FAILURES = {
     register:

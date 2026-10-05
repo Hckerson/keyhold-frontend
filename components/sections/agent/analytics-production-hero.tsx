@@ -1,13 +1,11 @@
 import { DeltaChip } from "@/components/ui/delta-chip";
-import {
-    ColumnChart,
-    type ColumnSeries,
-} from "@/components/ui/charts/column-chart";
+import { ColumnChart } from "@/components/ui/charts/column-chart";
 import { formatMillions } from "@/lib/utils";
 import type {
     MonthlyProduction,
     ProductionSummary,
 } from "@/lib/data/agent-analytics";
+import type { ColumnSeries } from "@/lib/types";
 
 const MILLION = 1_000_000;
 const CHART_HEIGHT = 172;

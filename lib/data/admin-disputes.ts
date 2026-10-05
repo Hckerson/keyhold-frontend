@@ -1,4 +1,4 @@
-import type { BadgeTone } from "@/lib/types";
+import type { StatusTone } from "@/lib/types";
 import type {
     DisputeEvidenceType,
     DisputeStatus as ApiDisputeStatus,
@@ -52,7 +52,7 @@ export interface DisputeDecision {
 
 export const disputeStatusMeta: Record<
     DisputeStatus,
-    { tone: BadgeTone; label: string; open: boolean }
+    { tone: StatusTone; label: string; open: boolean }
 > = {
     OPEN: { tone: "error", label: "Open", open: true },
     PENDING_REVIEW: { tone: "warning", label: "In review", open: true },

@@ -10,18 +10,10 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
-import {
-    chartToneVar as toneVar,
-    type ChartTone,
-} from "@/lib/config/chart-tones";
+import { chartToneVar as toneVar } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import { formatScaled } from "@/lib/utils/format";
-
-export interface ColumnSeries {
-    key: string;
-    name: string;
-    tone: ChartTone;
-}
+import type { ColumnSeries } from "@/lib/types";
 
 export interface ColumnChartProps {
     data: Record<string, string | number>[];

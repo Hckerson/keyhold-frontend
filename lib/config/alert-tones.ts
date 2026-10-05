@@ -15,8 +15,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { AlertChannel, AlertType } from "@/lib/types";
+import type { AlertChannel, AlertType, StatusTone } from "@/lib/types";
 
 export const ALERT_TYPE_KEYS: AlertType[] = [
     "PRICE_DROP",
@@ -32,7 +31,7 @@ export const ALERT_TYPE_KEYS: AlertType[] = [
 export interface AlertTypeMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
 }

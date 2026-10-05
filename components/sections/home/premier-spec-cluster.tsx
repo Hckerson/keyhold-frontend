@@ -1,10 +1,4 @@
-import type { LucideIcon } from "lucide-react";
-
-export interface PremierSpec {
-    icon: LucideIcon;
-    value: string;
-    label: string;
-}
+import type { PremierSpec } from "@/lib/types";
 
 export function PremierSpecCluster({ specs }: { specs: PremierSpec[] }) {
     return (

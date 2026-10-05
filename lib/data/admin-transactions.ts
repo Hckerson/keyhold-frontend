@@ -1,15 +1,15 @@
 import { ArrowLeftRight, Clock, Landmark, Percent, Wallet } from "lucide-react";
-import type { FilterPill } from "@/components/patterns/filter-pills";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     TRANSACTION_PIPELINE_ORDER,
     TRANSACTION_STATUSES,
 } from "@/lib/config/transaction-tones";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import type {
+    FilterPill,
     LedgerStatus,
     LedgerTransaction,
     MetricItem,
+    StatDatum,
     TransactionStage,
 } from "@/lib/types";
 import type { TransactionStage as ApiTransactionStage } from "@/lib/validations/transaction";

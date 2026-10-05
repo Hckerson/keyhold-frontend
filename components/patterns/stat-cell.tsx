@@ -1,16 +1,7 @@
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
-import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
-
-export interface StatDatum {
-    id: string;
-    icon: LucideIcon;
-    label: string;
-    value: string;
-    tone: ChartTone;
-    href?: string;
-}
+import type { StatDatum } from "@/lib/types";
 
 export interface StatCellProps {
     stat: StatDatum;

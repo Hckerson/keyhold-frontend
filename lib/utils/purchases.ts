@@ -1,6 +1,4 @@
 import { Banknote, Clock, ShieldCheck, Wallet } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     ESCROW_STATES,
     ESCROW_STATUS_KEYS,
@@ -8,7 +6,7 @@ import {
     PURCHASE_STATES,
 } from "@/lib/config/escrow-tones";
 import { TRANSACTION_STATUSES } from "@/lib/enums/enums";
-import type { Purchase } from "@/lib/types";
+import type { Purchase, ShareDatum, StatDatum } from "@/lib/types";
 import { formatCompactUsd } from "@/lib/utils/format";
 import { percentOf, sum } from "@/lib/utils/math";
 

@@ -8,10 +8,13 @@ import {
     UserRound,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { CalloutVariant } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { ManagedUserRole, UserStatus, UserTier } from "@/lib/types";
+import type {
+    ManagedUserRole,
+    StatusTone,
+    UserStatus,
+    UserTier,
+} from "@/lib/types";
 
 export interface ToneBand {
     ceiling: number;
@@ -79,13 +82,13 @@ export const USER_STATUS_KEYS: UserStatus[] = [
 export interface UserStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     risk: number;
     rowTone?: string;
     note?: string;
     noteTitle: string;
-    noteTone: CalloutVariant;
+    noteTone: StatusTone;
 }
 
 export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {

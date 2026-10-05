@@ -1,13 +1,12 @@
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import { DeckFigure } from "@/components/patterns/deck-figure";
 import { DeckPanel } from "@/components/patterns/deck-panel";
 import { ShareList } from "@/components/patterns/share-list";
-import type { ShareDatum } from "@/components/patterns/share-row";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { RoleTally } from "@/components/features/admin/role-tally";
 import { ADMIN_ROUTES, NO_READING } from "@/lib/constants";
 import { formatCount } from "@/lib/utils";
 import type { UserStats } from "@/lib/validations/stats";
+import type { DonutSegment, ShareDatum } from "@/lib/types";
 
 const TITLE = "Members";
 const ACTION = "Users";

@@ -11,18 +11,12 @@ import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
 import { buttonVariants } from "@/components/ui/button";
 import { formatUsd } from "@/lib/utils";
-import type { Listing } from "@/lib/types";
+import type { Listing, PremierMediaView, PremierSpec } from "@/lib/types";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import { formatCount } from "@/lib/utils/format";
 import { PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
-import {
-    PremierListingMedia,
-    type PremierMediaView,
-} from "@/components/sections/home/premier-listing-media";
-import {
-    PremierSpecCluster,
-    type PremierSpec,
-} from "@/components/sections/home/premier-spec-cluster";
+import { PremierListingMedia } from "@/components/sections/home/premier-listing-media";
+import { PremierSpecCluster } from "@/components/sections/home/premier-spec-cluster";
 
 interface PremierListingProps {
     listing: Listing;

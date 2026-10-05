@@ -7,13 +7,16 @@ import {
     ShieldCheck,
     type LucideIcon,
 } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
 import {
     signalTone,
     type NotificationCadence,
     type NotificationChannel,
 } from "@/lib/config/account-tones";
-import type { AccountCredential, SecurityControl } from "@/lib/types";
+import type {
+    AccountCredential,
+    SecurityControl,
+    ShareDatum,
+} from "@/lib/types";
 import { percentOf, sum } from "@/lib/utils";
 import type { User } from "@/lib/validations/user";
 import type { NotificationPreference } from "@/lib/validations/notification";

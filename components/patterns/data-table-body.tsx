@@ -2,11 +2,7 @@
 
 import type { MouseEvent, ReactNode } from "react";
 import { DataTableRow } from "@/components/patterns/data-table-row";
-import type {
-    ColumnEmphasis,
-    DataTableColumn,
-    RevealMode,
-} from "@/components/patterns/data-table-types";
+import type { ColumnEmphasis, DataTableColumn, RevealMode } from "@/lib/types";
 
 export interface DataTableBodyProps<T> {
     rows: T[];

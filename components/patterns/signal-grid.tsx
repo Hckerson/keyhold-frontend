@@ -1,7 +1,4 @@
-export interface Signal {
-    label: string;
-    value: string;
-}
+import type { Signal } from "@/lib/types";
 
 export interface SignalGridProps {
     signals: Signal[];

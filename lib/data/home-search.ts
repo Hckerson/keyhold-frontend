@@ -1,9 +1,9 @@
-import type { SelectOption } from "@/components/ui/forms/select";
 import {
     LISTABLE_TYPE_OPTIONS,
     PRICE_BANDS,
     type FilterOption,
 } from "@/lib/config/search-filters";
+import type { SelectOption } from "@/lib/types";
 
 export const HERO_ANY_VALUE = "";
 

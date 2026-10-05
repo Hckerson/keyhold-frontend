@@ -1,6 +1,4 @@
 import { Bell, Home, Radio, TrendingDown } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     ALERT_CHANNELS,
     ALERT_CHANNEL_KEYS,
@@ -15,6 +13,8 @@ import type {
     AlertChannel,
     AlertPreference,
     AlertType,
+    ShareDatum,
+    StatDatum,
 } from "@/lib/types";
 import type { NotificationPreference } from "@/lib/validations/notification";
 import { percentOf, sum } from "@/lib/utils";

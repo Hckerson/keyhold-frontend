@@ -2,6 +2,7 @@ import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { StatusTone } from "@/lib/types";
 
 const statusBadgeVariants = cva(
     "ease-smooth inline-flex shrink-0 select-none items-center rounded-full align-middle text-[10px] leading-none font-medium tracking-wide whitespace-nowrap transition-colors duration-200",
@@ -17,7 +18,7 @@ const statusBadgeVariants = cva(
                 warning: "",
                 error: "",
                 info: "",
-            },
+            } satisfies Record<StatusTone, string>,
             variant: {
                 subtle: "",
                 solid: "",

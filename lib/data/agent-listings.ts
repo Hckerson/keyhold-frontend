@@ -1,6 +1,4 @@
 import { CalendarCheck, Eye, Handshake, Store, Wallet } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     AGE_BANDS,
     AGE_BAND_KEYS,
@@ -12,7 +10,12 @@ import {
     type DemandBand,
 } from "@/lib/config/listing-tones";
 import type { PropertyStatus } from "@/lib/enums/enums";
-import type { ManagedListing, ManagedListingStatus } from "@/lib/types";
+import type {
+    ManagedListing,
+    ManagedListingStatus,
+    ShareDatum,
+    StatDatum,
+} from "@/lib/types";
 import {
     dateFormatter,
     formatCompactUsd,

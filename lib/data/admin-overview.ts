@@ -1,6 +1,5 @@
-import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
-import type { DecisionLane, MonthDelta } from "@/lib/types";
+import type { ColumnSeries, DecisionLane, MonthDelta } from "@/lib/types";
 import type { DisputeCounts } from "@/lib/validations/dispute";
 import type { FlagCounts } from "@/lib/validations/flag";
 import type { KycCounts } from "@/lib/validations/kyc";

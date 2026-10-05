@@ -5,16 +5,14 @@ import { StatBand } from "@/components/patterns/stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { RequestsMain } from "@/components/sections/agent/requests-main";
-import {
-    OfferResponseModal,
-    type OfferResponse,
-} from "@/components/features/agent/offer-response-modal";
+import { OfferResponseModal } from "@/components/features/agent/offer-response-modal";
 import { ViewingConfirmModal } from "@/components/features/agent/viewing-confirm-modal";
 import { ViewingDeclineModal } from "@/components/features/agent/viewing-decline-modal";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { OFFER_RESPONSE_STATUS } from "@/lib/config/offer-response";
 import { REQUESTS_COPY as COPY } from "@/lib/data/agent-requests";
 import { useAgentRequests } from "@/lib/hooks/use-agent-requests";
+import type { OfferResponse } from "@/lib/types";
 
 export function RequestsConsole() {
     const queue = useAgentRequests();

@@ -1,7 +1,4 @@
 import { Coins, FileText, Handshake, Percent, Wallet } from "lucide-react";
-import type { OfferAgentShare } from "@/components/features/dashboard/offer-agent-row";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     GAP_BANDS,
     GAP_BAND_KEYS,
@@ -9,7 +6,13 @@ import {
     OFFER_STATUS_KEYS,
     gapBandOf,
 } from "@/lib/config/offer-tones";
-import type { Offer, OfferStatus } from "@/lib/types";
+import type {
+    Offer,
+    OfferAgentShare,
+    OfferStatus,
+    ShareDatum,
+    StatDatum,
+} from "@/lib/types";
 import { averageOf, formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
 export type StageFilter = "all" | "open" | "closed";

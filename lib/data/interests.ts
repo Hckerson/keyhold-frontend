@@ -1,6 +1,4 @@
 import { CircleCheck, Clock, Handshake, Home, Wallet } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     INTEREST_STATUSES,
     INTEREST_STATUS_KEYS,
@@ -8,7 +6,12 @@ import {
     TRACTION_KEYS,
     type Traction,
 } from "@/lib/config/interest-tones";
-import type { Interest, InterestStatus } from "@/lib/types";
+import type {
+    Interest,
+    InterestStatus,
+    ShareDatum,
+    StatDatum,
+} from "@/lib/types";
 import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
 export type StageFilter = "all" | "open" | "closed";

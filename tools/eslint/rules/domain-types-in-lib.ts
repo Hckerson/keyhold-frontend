@@ -3,6 +3,7 @@ import {
     ESLintUtils,
     TSESTree,
 } from "@typescript-eslint/utils";
+import { baseName, kebabCase } from "../ast";
 
 type Options = [];
 type MessageIds = "exportedType";
@@ -31,6 +32,12 @@ const exportedName = (node: TSESTree.ExportNamedDeclaration): string => {
         .join(", ");
 };
 
+const PROPS_SUFFIX = "Props";
+
+const isOwnProps = (name: string, filename: string): boolean =>
+    name.endsWith(PROPS_SUFFIX) &&
+    kebabCase(name.slice(0, -PROPS_SUFFIX.length)) === baseName(filename);
+
 export const domainTypesInLib = ESLintUtils.RuleCreator.withoutDocs<
     Options,
     MessageIds
@@ -55,12 +62,17 @@ export const domainTypesInLib = ESLintUtils.RuleCreator.withoutDocs<
                     node.declaration !== null &&
                     TYPE_DECLARATIONS.includes(node.declaration.type);
 
+                if (node.source) return;
                 if (node.exportKind !== "type" && !declaresType) return;
+
+                const name = exportedName(node);
+
+                if (isOwnProps(name, context.filename)) return;
 
                 context.report({
                     node,
                     messageId: "exportedType",
-                    data: { name: exportedName(node) },
+                    data: { name },
                 });
             },
         };

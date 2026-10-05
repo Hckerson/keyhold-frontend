@@ -1,6 +1,6 @@
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import { chartToneVar } from "@/lib/config/chart-tones";
 import { formatCount } from "@/lib/utils";
+import type { DonutSegment } from "@/lib/types";
 
 const shareOf = (value: number, total: number) =>
     total > 0 ? Math.round((value / total) * 100) : 0;

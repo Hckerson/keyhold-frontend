@@ -2,18 +2,10 @@
 
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
-import {
-    chartToneVar as toneVar,
-    type ChartTone,
-} from "@/lib/config/chart-tones";
+import { chartToneVar as toneVar } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
 import { formatCount } from "@/lib/utils/format";
-
-export interface DonutSegment {
-    name: string;
-    value: number;
-    tone: ChartTone;
-}
+import type { DonutSegment } from "@/lib/types";
 
 export interface DonutChartProps {
     data: DonutSegment[];

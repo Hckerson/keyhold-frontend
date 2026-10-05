@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { SignalGrid, type Signal } from "@/components/patterns/signal-grid";
+import { SignalGrid } from "@/components/patterns/signal-grid";
 import {
     flagActionsByStatus,
     flagStatusMeta,
@@ -10,6 +10,7 @@ import {
     type AbuseReport,
     type FlagSettleMode,
 } from "@/lib/data/admin-flags";
+import type { Signal } from "@/lib/types";
 
 const REPORTED_LABEL = "What was reported";
 const DETAILS_LABEL = "Reporter's account";

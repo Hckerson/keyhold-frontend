@@ -1,4 +1,5 @@
-import { ShareRow, type ShareDatum } from "@/components/patterns/share-row";
+import { ShareRow } from "@/components/patterns/share-row";
+import type { ShareDatum } from "@/lib/types";
 
 export interface ShareListProps {
     shares: ShareDatum[];

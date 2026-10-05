@@ -1,11 +1,10 @@
-import type { DotTone } from "@/components/patterns/status-dot";
 import { bandTone, type ToneBand } from "@/lib/config/admin-tones";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { PayoutState } from "@/lib/types";
+import type { PayoutState, StatusTone } from "@/lib/types";
 
 export interface PayoutStateMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     held: boolean;

@@ -8,10 +8,13 @@ import {
     Wallet,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { CalloutProps } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { LedgerStatus, TransactionMilestoneId } from "@/lib/types";
+import type {
+    CalloutNote,
+    LedgerStatus,
+    StatusTone,
+    TransactionMilestoneId,
+} from "@/lib/types";
 
 interface ToneBand {
     ceiling: number;
@@ -24,11 +27,11 @@ const bandTone = (bands: ToneBand[], value: number, fallback: ChartTone) =>
 export interface TransactionStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;
-    note?: CalloutProps;
+    note?: CalloutNote;
     rowTone?: string;
 }
 

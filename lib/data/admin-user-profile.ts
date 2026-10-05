@@ -1,6 +1,5 @@
 import { BadgeCheck, Home, ShieldAlert, Wallet } from "lucide-react";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { AccountCredential, ManagedUser } from "@/lib/types";
+import type { AccountCredential, ManagedUser, StatDatum } from "@/lib/types";
 import type { Suspension } from "@/lib/validations/suspension";
 import type { User } from "@/lib/validations/user";
 import { formatCount, formatMillions } from "@/lib/utils";

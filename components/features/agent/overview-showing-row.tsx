@@ -1,7 +1,7 @@
-import { StatusDot, type DotTone } from "@/components/patterns/status-dot";
-import type { ShowingTiming, UpcomingShowing } from "@/lib/types";
+import { StatusDot } from "@/components/patterns/status-dot";
+import type { ShowingTiming, StatusTone, UpcomingShowing } from "@/lib/types";
 
-const timingTone: Record<ShowingTiming, DotTone> = {
+const timingTone: Record<ShowingTiming, StatusTone> = {
     today: "warning",
     tomorrow: "info",
     later: "neutral",

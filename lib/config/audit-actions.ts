@@ -1,9 +1,9 @@
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { AuditActionType } from "@/lib/enums/enums";
+import type { StatusTone } from "@/lib/types";
 
 export interface AuditActionMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
 }
 
 export const AUDIT_ACTIONS: Record<AuditActionType, AuditActionMeta> = {

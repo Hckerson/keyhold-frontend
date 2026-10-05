@@ -1,7 +1,4 @@
 import { Power, Server, ShieldCheck, UserPlus } from "lucide-react";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { SelectOption } from "@/components/ui/forms/select";
 import {
     POLICY_COUNT,
     POLICY_SETTING_KEY,
@@ -9,7 +6,12 @@ import {
     enabledPolicyCount,
     isPolicyOn,
 } from "@/lib/data/admin-policies";
-import type { PolicyState } from "@/lib/types";
+import type {
+    ConfigField,
+    PolicyState,
+    SelectOption,
+    StatDatum,
+} from "@/lib/types";
 import type {
     PlatformSetting,
     UpdateSettingsInput,

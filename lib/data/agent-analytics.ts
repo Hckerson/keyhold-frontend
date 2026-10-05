@@ -1,6 +1,5 @@
 import { Award, Clock, Gauge, TrendingUp } from "lucide-react";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { Trend } from "@/lib/types";
+import type { StatDatum, Trend } from "@/lib/types";
 import type { AgentAnalytics, GrowthPoint } from "@/lib/validations/stats";
 import { formatMillions, formatUsd } from "@/lib/utils";
 

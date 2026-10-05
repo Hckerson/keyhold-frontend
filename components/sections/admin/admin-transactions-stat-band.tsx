@@ -1,5 +1,5 @@
 import { StatBand } from "@/components/patterns/stat-band";
-import type { StatDatum } from "@/components/patterns/stat-cell";
+import type { StatDatum } from "@/lib/types";
 
 const BAND_LABEL = "Deal flow at a glance";
 

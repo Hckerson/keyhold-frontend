@@ -1,5 +1,5 @@
-import type { Choice } from "@/components/patterns/choice-chips";
 import { TIME_FILTERS, type TimeFilter } from "@/lib/enums/enums";
+import type { Choice } from "@/lib/types";
 
 export const DEFAULT_REPORT_PERIOD: TimeFilter = "month";
 

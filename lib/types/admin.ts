@@ -1,4 +1,4 @@
-import type { DotTone } from "@/components/patterns/status-dot";
+import type { StatusTone } from "./ui";
 import type { Trend } from "@/lib/types/ui";
 
 export type ModerationQueueId =
@@ -54,7 +54,7 @@ export interface LifetimeVolume {
 export interface AuditEvent {
     id: string;
     action: string;
-    tone: DotTone;
+    tone: StatusTone;
     security: boolean;
     actor: string;
     initials: string;

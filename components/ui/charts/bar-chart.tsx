@@ -15,13 +15,7 @@ import {
     type ChartTone,
 } from "@/lib/config/chart-tones";
 import { formatCount } from "@/lib/utils/format";
-
-export interface BarDatum {
-    label: string;
-    value: number;
-    display?: string;
-    tone?: ChartTone;
-}
+import type { BarDatum } from "@/lib/types";
 
 export interface BarChartProps {
     data: BarDatum[];

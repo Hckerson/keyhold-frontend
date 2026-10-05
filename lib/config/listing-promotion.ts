@@ -1,4 +1,4 @@
-import type { Choice } from "@/components/patterns/choice-chips";
+import type { Choice } from "@/lib/types";
 
 export const MIN_PROMOTION_DAYS = 1;
 export const MAX_PROMOTION_DAYS = 90;

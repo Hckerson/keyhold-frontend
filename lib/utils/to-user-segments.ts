@@ -1,10 +1,10 @@
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import { USER_ROLES, USER_ROLE_KEYS } from "@/lib/config/user-tones";
 import type { UserRole } from "@/lib/enums/enums";
 import type { ManagedUserRole } from "@/lib/types/user";
 import type { TierDistribution, User } from "@/lib/validations/user";
 import type { UserTier } from "@/lib/enums/enums";
+import type { DonutSegment } from "@/lib/types";
 
 export const MANAGED_ROLE_BY_USER: Record<UserRole, ManagedUserRole> = {
     BUYER: "buyer",

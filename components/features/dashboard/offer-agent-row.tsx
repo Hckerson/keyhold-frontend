@@ -1,16 +1,7 @@
 import { Avatar } from "@/components/ui/avatar";
-import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { cn, initialsOf } from "@/lib/utils";
-
-export interface OfferAgentShare {
-    id: string;
-    name: string;
-    portrait: string | null;
-    value: string;
-    count: number;
-    percent: number;
-    tone: ChartTone;
-}
+import type { OfferAgentShare } from "@/lib/types";
 
 export interface OfferAgentRowProps {
     share: OfferAgentShare;

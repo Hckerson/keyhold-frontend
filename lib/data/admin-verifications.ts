@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock3, XCircle, type LucideIcon } from "lucide-react";
-import type { BadgeTone } from "@/lib/types";
+import type { StatusTone } from "@/lib/types";
 import type { VerificationStatus as ApiVerificationStatus } from "@/lib/enums/enums";
 
 export type VerificationStatus = ApiVerificationStatus;
@@ -47,7 +47,7 @@ export interface VerificationDecision {
 
 export const statusMeta: Record<
     VerificationStatus,
-    { tone: BadgeTone; label: string }
+    { tone: StatusTone; label: string }
 > = {
     PENDING: { tone: "warning", label: "Pending" },
     VERIFIED: { tone: "success", label: "Verified" },

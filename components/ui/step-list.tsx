@@ -1,9 +1,5 @@
 import { cn } from "@/lib/utils";
-
-export interface Step {
-    title: string;
-    description?: string;
-}
+import type { Step } from "@/lib/types";
 
 export function StepList({
     steps,
