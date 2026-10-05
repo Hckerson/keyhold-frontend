@@ -49,6 +49,14 @@ export interface UserRecencyBand {
     tone: ChartTone;
 }
 
+export interface LeaderConcentration {
+    share: number;
+    volume: number;
+    total: number;
+    leaders: number;
+    accounts: number;
+}
+
 export interface UserSignupTrend {
     months: number[];
     latest: number;

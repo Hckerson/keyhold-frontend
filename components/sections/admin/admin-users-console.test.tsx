@@ -147,7 +147,7 @@ describe("AdminUsersConsole · reading the directory", () => {
         expect(within(table).getByText("Ben Ortiz")).toBeInTheDocument();
     });
 
-    it("narrows the directory to the status pill that was picked", async () => {
+    it("narrows the directory to the status tile that was picked", async () => {
         draw();
         await directory();
 
@@ -575,53 +575,22 @@ describe("AdminUsersConsole · while a decision is in flight", () => {
     });
 });
 
-const waitingLane = () =>
-    screen.findByRole("list", { name: "Accounts waiting on a decision" });
-
-describe("AdminUsersConsole · the waiting lane", () => {
-    it("lists only suspended and pending accounts", async () => {
-        draw();
-
-        const lane = await waitingLane();
-
-        expect(within(lane).getByText("Ben Ortiz")).toBeInTheDocument();
-        expect(within(lane).queryByText("Ada Vance")).not.toBeInTheDocument();
-        expect(within(lane).queryByText("Dev Patel")).not.toBeInTheDocument();
-    });
-
+describe("AdminUsersConsole · acting from a row", () => {
     it("reactivates a suspended account through the confirmation", async () => {
         draw();
 
-        await userEvent.click(
-            within(await waitingLane()).getByRole("button", {
-                name: "Reactivate",
-            }),
-        );
+        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
 
         expect(await dialog("Reactivate account")).toHaveTextContent(
             "Ben Ortiz",
         );
     });
 
-    it("opens the review of an account it lists", async () => {
-        draw();
-
-        await userEvent.click(
-            within(await waitingLane()).getByRole("button", { name: "Review" }),
-        );
-
-        expect(await dialog("Ben Ortiz")).toBeInTheDocument();
-    });
-
     it("offers suspension on a pending account through the suspension modal", async () => {
         list.mockResolvedValue([{ ...ADA, status: "PENDING" }, CARA]);
         draw();
 
-        await userEvent.click(
-            within(await waitingLane()).getByRole("button", {
-                name: "Suspend",
-            }),
-        );
+        await userEvent.click(await rowButton("Suspend Ada Vance"));
 
         expect(await dialog("Suspend account")).toHaveTextContent("Ada Vance");
     });
@@ -665,9 +634,10 @@ describe("AdminUsersConsole · browsing", () => {
         await directory();
 
         await userEvent.click(
-            within(
-                screen.getByRole("group", { name: "Filter by role" }),
-            ).getByRole("button", { name: /^admins/i }),
+            screen.getByRole("combobox", { name: "Filter by role" }),
+        );
+        await userEvent.click(
+            await screen.findByRole("option", { name: /^admins/i }),
         );
 
         await waitFor(async () =>
@@ -735,13 +705,5 @@ describe("AdminUsersConsole · what needs a decision", () => {
             expect(names[0]).toContain("Ben Ortiz");
             expect(names.at(-1)).toContain("Dev Patel");
         });
-    });
-
-    it("counts only accounts with a decision waiting, not deleted ones", async () => {
-        draw();
-
-        expect(
-            await screen.findByText(/1 need a decision/),
-        ).toBeInTheDocument();
     });
 });

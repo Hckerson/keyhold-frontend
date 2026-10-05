@@ -25,7 +25,7 @@ export function UserRowActions({
     if (!action) return null;
 
     return (
-        <span className="reveal bg-background-muted absolute inset-y-0 right-0 flex items-center rounded-r-md px-1">
+        <span className="reveal reveal-overlay bg-background-muted absolute inset-y-0 right-0 flex items-center rounded-r-md px-1">
             {action === "reactivate" ? (
                 <IconButton
                     size="md"

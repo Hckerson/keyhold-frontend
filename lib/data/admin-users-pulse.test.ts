@@ -2,11 +2,10 @@ import { subDays } from "date-fns";
 import { describe, expect, it } from "vitest";
 import { aMemberRecord } from "@/lib/data/__fixtures__/users";
 import {
+    leaderConcentration,
     leadingAccounts,
     recencyBands,
     signupTrend,
-    waitingAccounts,
-    waitingReading,
 } from "@/lib/data/admin-users-pulse";
 import { toManagedUser } from "@/lib/utils/to-managed-user";
 import type { User } from "@/lib/validations/user";
@@ -23,19 +22,20 @@ const seenDaysAgo = (days: number, overrides: Partial<User> = {}) =>
     });
 
 describe("signupTrend", () => {
-    it("counts sign-ups in each of the last twelve months, ending with the current one", () => {
+    it("counts sign-ups in the last twelve complete months and leaves the month in progress out", () => {
         const trend = signupTrend(
             [
                 anAccount({ createdAt: "2026-09-02T09:00:00.000Z" }),
-                anAccount({ createdAt: "2026-09-10T09:00:00.000Z" }),
-                anAccount({ createdAt: "2026-08-20T09:00:00.000Z" }),
+                anAccount({ createdAt: "2026-08-02T09:00:00.000Z" }),
+                anAccount({ createdAt: "2026-08-10T09:00:00.000Z" }),
+                anAccount({ createdAt: "2026-07-20T09:00:00.000Z" }),
             ],
             NOW,
         );
 
         expect(trend.months).toHaveLength(12);
         expect(trend.months.slice(-2)).toEqual([1, 2]);
-        expect(trend).toMatchObject({ latest: 2, latestLabel: "Sep" });
+        expect(trend).toMatchObject({ latest: 2, latestLabel: "Aug" });
     });
 
     it("leaves the change unstated when the prior month had no sign-ups", () => {
@@ -70,21 +70,22 @@ describe("leadingAccounts", () => {
     });
 });
 
-describe("waitingAccounts", () => {
-    it("holds only suspended and pending accounts, suspended first", () => {
-        const waiting = waitingAccounts([
-            anAccount({ id: "active" }),
-            anAccount({ id: "pending", status: "PENDING" }),
-            anAccount({ id: "gone", status: "DELETED" }),
-            anAccount({ id: "held", status: "SUSPENDED" }),
-        ]);
+describe("leaderConcentration", () => {
+    it("measures how much of all lifetime volume the leading accounts carry", () => {
+        const users = [
+            anAccount({ id: "a", volume: 6_000 }),
+            anAccount({ id: "b", volume: 2_000 }),
+            anAccount({ id: "c", volume: 2_000 }),
+        ];
 
-        expect(waiting.map((user) => user.id)).toEqual(["held", "pending"]);
-    });
-
-    it("says nothing is waiting rather than listing zero counts", () => {
-        expect(waitingReading([anAccount()])).toBe(
-            "No account is waiting on a decision",
-        );
+        expect(
+            leaderConcentration(leadingAccounts(users).slice(0, 2), users),
+        ).toEqual({
+            share: 80,
+            volume: 8_000,
+            total: 10_000,
+            leaders: 2,
+            accounts: 3,
+        });
     });
 });

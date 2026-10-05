@@ -3,16 +3,15 @@ import { RECENCY_BANDS } from "@/lib/config/user-tones";
 import { monthLabel, monthOverMonth } from "@/lib/data/admin-overview";
 import { idleDays, sortUsers } from "@/lib/data/admin-users";
 import {
-    countUsersByStatus,
     directoryVolume,
     peakVolume,
-    userRoleSegments,
-    userRoleTiles,
+    rolesReading,
+    userRoleOptions,
     userStatusTiles,
-    directoryReading,
 } from "@/lib/data/admin-users-totals";
-import { formatCount, parseLocalDate, percentOf } from "@/lib/utils";
+import { parseLocalDate, percentOf, sum } from "@/lib/utils";
 import type {
+    LeaderConcentration,
     ManagedUser,
     UserRecencyBand,
     UserSignupTrend,
@@ -21,18 +20,17 @@ import type {
 const TREND_MONTHS = 12;
 const MONTH_KEY = "yyyy-MM";
 const LEADER_COUNT = 5;
-const DECISION_LIMIT = 6;
 const RECENCY_LABELS = ["This week", "This month", "This quarter", "Dormant"];
 const DORMANT_TONE = "error";
-const WAITING_STATUSES = new Set(["suspended", "pending"]);
 
 export const signupTrend = (
     users: ManagedUser[],
     now = new Date(),
 ): UserSignupTrend => {
+    const lastFullMonth = subMonths(startOfMonth(now), 1);
     const points = Array.from({ length: TREND_MONTHS }, (_, index) => {
         const name = format(
-            subMonths(startOfMonth(now), TREND_MONTHS - 1 - index),
+            subMonths(lastFullMonth, TREND_MONTHS - 1 - index),
             MONTH_KEY,
         );
         return {
@@ -83,35 +81,30 @@ export const leadingAccounts = (users: ManagedUser[]) =>
         "volume",
     ).slice(0, LEADER_COUNT);
 
-export const waitingAccounts = (users: ManagedUser[]) =>
-    sortUsers(
-        users.filter((user) => WAITING_STATUSES.has(user.status)),
-        "priority",
-    );
-
-export const waitingReading = (users: ManagedUser[]) => {
-    const counts = countUsersByStatus(users);
-
-    if (counts.suspended + counts.pending === 0)
-        return "No account is waiting on a decision";
-    return `${formatCount(counts.suspended)} suspended · ${formatCount(counts.pending)} pending verification`;
-};
-
-export const userDesk = (users: ManagedUser[]) => {
-    const waiting = waitingAccounts(users);
+export const leaderConcentration = (
+    leaders: ManagedUser[],
+    users: ManagedUser[],
+): LeaderConcentration => {
+    const volume = sum(leaders.map((user) => user.volume));
+    const total = directoryVolume(users);
 
     return {
-        tiles: userStatusTiles(users),
-        roles: userRoleTiles(users),
-        roleSegments: userRoleSegments(users),
-        reading: directoryReading(users),
-        signups: signupTrend(users),
-        recency: recencyBands(users),
-        leaders: leadingAccounts(users),
-        waiting: waiting.slice(0, DECISION_LIMIT),
-        waitingTotal: waiting.length,
-        waitingReading: waitingReading(users),
-        peak: peakVolume(users),
-        volume: directoryVolume(users),
+        share: percentOf(volume, total),
+        volume,
+        total,
+        leaders: leaders.length,
+        accounts: users.length,
     };
 };
+
+export const userDesk = (users: ManagedUser[]) => ({
+    tiles: userStatusTiles(users),
+    roleOptions: userRoleOptions(users),
+    rolesReading: rolesReading(users),
+    signups: signupTrend(users),
+    recency: recencyBands(users),
+    leaders: leadingAccounts(users),
+    concentration: leaderConcentration(leadingAccounts(users), users),
+    peak: peakVolume(users),
+    volume: directoryVolume(users),
+});

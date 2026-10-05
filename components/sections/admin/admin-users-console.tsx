@@ -8,8 +8,7 @@ import { UserSuspendModal } from "@/components/features/admin/user-suspend-modal
 import { AdminUsersHeader } from "@/components/sections/admin/admin-users-header";
 import { AdminUsersMain } from "@/components/sections/admin/admin-users-main";
 import { AdminUsersRail } from "@/components/sections/admin/admin-users-rail";
-import { AdminUsersStatBand } from "@/components/sections/admin/admin-users-stat-band";
-import { AdminUsersWaiting } from "@/components/sections/admin/admin-users-waiting";
+import { AdminUsersStatusBand } from "@/components/sections/admin/admin-users-status-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { userDesk } from "@/lib/data/admin-users-pulse";
@@ -63,44 +62,34 @@ export function AdminUsersConsole() {
         <div className="flex flex-col gap-4">
             <AdminUsersHeader onAdd={invite.start} />
 
-            <AdminUsersStatBand
-                total={users.length}
-                reading={desk.reading}
-                roles={desk.roles}
-                signups={desk.signups}
+            <AdminUsersStatusBand
+                tiles={desk.tiles}
+                active={directory.status}
                 pending={isPending}
+                onChange={(status) => directory.filter({ status })}
             />
 
             <div className="console-split gap-3">
-                <div className="console-span-2 flex min-w-0 flex-col gap-3">
-                    <AdminUsersWaiting
-                        users={desk.waiting}
-                        total={desk.waitingTotal}
-                        reading={desk.waitingReading}
-                        pending={isPending}
-                        {...decisions}
-                    />
-                    <AdminUsersMain
-                        users={directory.rows}
-                        visible={directory.total}
-                        total={users.length}
-                        reading={desk.reading}
-                        filters={directory}
-                        statuses={desk.tiles}
-                        roles={desk.roleSegments}
-                        onFilter={directory.filter}
-                        onSortChange={directory.changeSort}
-                        page={directory.page}
-                        pageCount={directory.pageCount}
-                        peak={desk.peak}
-                        pending={isPending}
-                        onPageChange={directory.setPage}
-                        {...decisions}
-                    />
-                </div>
+                <AdminUsersMain
+                    users={directory.rows}
+                    visible={directory.total}
+                    total={users.length}
+                    reading={desk.rolesReading}
+                    filters={directory}
+                    roles={desk.roleOptions}
+                    onFilter={directory.filter}
+                    onSortChange={directory.changeSort}
+                    page={directory.page}
+                    pageCount={directory.pageCount}
+                    pending={isPending}
+                    onPageChange={directory.setPage}
+                    {...decisions}
+                />
                 <AdminUsersRail
                     leaders={desk.leaders}
+                    concentration={desk.concentration}
                     recency={desk.recency}
+                    signups={desk.signups}
                     directoryVolume={desk.volume}
                     onOpen={onOpen}
                 />

@@ -5,18 +5,19 @@ import {
     USER_STATUSES,
     USER_STATUS_KEYS,
 } from "@/lib/config/user-tones";
-import { isAtRisk } from "@/lib/data/admin-users";
-import { formatCompactUsd, formatCount, percentOf, sum } from "@/lib/utils";
+import { formatCount, percentOf, sum } from "@/lib/utils";
 import type {
     ManagedUser,
     ManagedUserRole,
-    SegmentOption,
+    SelectOption,
     UserRoleFilter,
     UserRoleTile,
     UserStatus,
     UserStatusFilter,
     UserStatusTile,
 } from "@/lib/types";
+
+const ALL_ROLES = "All roles";
 
 const ZERO_STATUS_COUNTS: Record<UserStatus, number> = {
     active: 0,
@@ -81,14 +82,20 @@ export const userRoleTiles = (users: ManagedUser[]): UserRoleTile[] =>
         };
     });
 
-export const userRoleSegments = (
+export const userRoleOptions = (
     users: ManagedUser[],
-): SegmentOption<UserRoleFilter>[] => [
-    { id: "all", label: "All roles", count: users.length },
-    ...userRoleTiles(users),
+): SelectOption<UserRoleFilter>[] => [
+    { value: "all", label: `${ALL_ROLES} · ${formatCount(users.length)}` },
+    ...userRoleTiles(users).map((role) => ({
+        value: role.id,
+        label: `${role.label} · ${formatCount(role.count)}`,
+    })),
 ];
 
-export const directoryReading = (users: ManagedUser[]) => {
-    const counts = countUsersByStatus(users);
-    return `${formatCount(counts.active)} active · ${formatCount(users.filter(isAtRisk).length)} need a decision · ${formatCompactUsd(directoryVolume(users))} lifetime volume`;
-};
+export const rolesReading = (users: ManagedUser[]) =>
+    userRoleTiles(users)
+        .map(
+            (role) =>
+                `${formatCount(role.count)} ${(role.count === 1 ? USER_ROLES[role.id].label : role.label).toLowerCase()}`,
+        )
+        .join(" · ");
