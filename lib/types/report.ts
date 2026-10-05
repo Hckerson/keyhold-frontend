@@ -1,4 +1,4 @@
-import type { ColumnSeries } from "@/components/ui/charts/column-chart";
+import type { ColumnSeries } from "./chart";
 import type { MetricItem, Trend } from "@/lib/types/ui";
 
 export type ReportMetricKey = "gmv" | "deals" | "users";

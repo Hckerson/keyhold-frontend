@@ -1,11 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-
-export interface PortalHeaderBack {
-    label: string;
-    href: string;
-}
+import type { PortalHeaderBack } from "@/lib/types";
 
 export interface PortalHeaderProps {
     title: string;

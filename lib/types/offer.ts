@@ -1,3 +1,4 @@
+import type { ChartTone } from "@/lib/config/chart-tones";
 import type { MilestoneKind } from "@/lib/enums/enums";
 import type {
     DealMilestone,
@@ -42,4 +43,21 @@ export interface DealMilestoneControls {
     onToggleComplete: (milestone: DealMilestone) => void;
     onAttach: (kind: MilestoneKind, file: File) => void;
     onSaveDetails: (kind: MilestoneKind, input: MilestoneDetailsInput) => void;
+}
+
+export type OfferConfirmAction = "counter" | "accept";
+
+export interface OfferResponse {
+    responsePrice?: number;
+    responseFeedback?: string;
+}
+
+export interface OfferAgentShare {
+    id: string;
+    name: string;
+    portrait: string | null;
+    value: string;
+    count: number;
+    percent: number;
+    tone: ChartTone;
 }

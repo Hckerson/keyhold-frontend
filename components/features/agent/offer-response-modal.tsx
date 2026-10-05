@@ -17,13 +17,8 @@ import {
     OFFER_RESPONSE_FIELDS as FIELDS,
     type OfferResponseAction,
 } from "@/lib/config/offer-response";
-import type { OfferRequestItem } from "@/lib/types";
+import type { OfferRequestItem, OfferResponse } from "@/lib/types";
 import { formatUsd, toDigits } from "@/lib/utils";
-
-export interface OfferResponse {
-    responsePrice?: number;
-    responseFeedback?: string;
-}
 
 export interface OfferResponseModalProps {
     action: OfferResponseAction | null;

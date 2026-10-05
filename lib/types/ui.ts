@@ -41,7 +41,7 @@ export interface TrailCrumb {
     current: boolean;
 }
 
-export type BadgeTone = "neutral" | "success" | "warning" | "error" | "info";
+export type StatusTone = "neutral" | "success" | "warning" | "error" | "info";
 
 export interface StatItem {
     label: string;

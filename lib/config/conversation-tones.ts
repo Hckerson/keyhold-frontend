@@ -12,8 +12,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { ConversationStatus } from "@/lib/types";
+import type { ConversationStatus, StatusTone } from "@/lib/types";
 
 export const CONVERSATION_STATUS_KEYS: ConversationStatus[] = [
     "awaiting-you",
@@ -25,7 +24,7 @@ export const CONVERSATION_STATUS_KEYS: ConversationStatus[] = [
 export interface ConversationStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
 }

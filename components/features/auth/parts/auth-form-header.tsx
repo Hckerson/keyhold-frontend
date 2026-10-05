@@ -1,10 +1,6 @@
 import { cn } from "@/lib/utils";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
-
-export interface AuthStep {
-    current: number;
-    total: number;
-}
+import type { AuthStep } from "@/lib/types";
 
 export interface AuthFormHeaderProps {
     kicker: string;

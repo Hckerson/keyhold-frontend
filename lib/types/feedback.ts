@@ -1,6 +1,6 @@
-import type { BadgeTone } from "./ui";
+import type { StatusTone } from "./ui";
 
-export type ToastTone = Extract<BadgeTone, "success" | "error" | "info">;
+export type ToastTone = Extract<StatusTone, "success" | "error" | "info">;
 
 export interface Toast {
     id: string;

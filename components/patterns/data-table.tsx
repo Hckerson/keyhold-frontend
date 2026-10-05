@@ -7,23 +7,13 @@ import { DataTableHead } from "@/components/patterns/data-table-head";
 import { DataTablePager } from "@/components/patterns/data-table-pager";
 import { DataTablePanel } from "@/components/patterns/data-table-panel";
 import { DataTableSelectionBar } from "@/components/patterns/data-table-selection-bar";
+import { useDataTable } from "@/lib/hooks/use-data-table";
+import { cn } from "@/lib/utils";
 import type {
     ColumnEmphasis,
     DataTableColumn,
     DataTableProps,
-} from "@/components/patterns/data-table-types";
-import { useDataTable } from "@/lib/hooks/use-data-table";
-import { cn } from "@/lib/utils";
-
-export type {
-    ColumnEmphasis,
-    DataTableColumn,
-    DataTableConfig,
-    DataTableProps,
-    DataTableSort,
-    RevealMode,
-    SortDirection,
-} from "@/components/patterns/data-table-types";
+} from "@/lib/types";
 
 export function DataTable<T>({
     columns,

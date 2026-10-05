@@ -11,7 +11,6 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     CONCIERGE_TIERS,
     type ConciergeStatus,
@@ -23,6 +22,7 @@ import type {
     ConciergeServiceEntry,
 } from "@/lib/validations/concierge";
 import { formatMillions, percentOf } from "@/lib/utils";
+import type { StatDatum } from "@/lib/types";
 
 export interface VIPClient {
     id: string;

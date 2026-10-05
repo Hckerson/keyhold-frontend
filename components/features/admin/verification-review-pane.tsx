@@ -6,7 +6,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { VerificationContactLinks } from "@/components/features/admin/verification-contact-links";
 import { VerificationDecisionBar } from "@/components/features/admin/verification-decision-bar";
 import { VerificationDocumentList } from "@/components/features/admin/verification-document-list";
-import { SignalGrid, type Signal } from "@/components/patterns/signal-grid";
+import { SignalGrid } from "@/components/patterns/signal-grid";
 import {
     noteMeta,
     statusMeta,
@@ -14,6 +14,7 @@ import {
     type VerificationRequest,
 } from "@/lib/data/admin-verifications";
 import { initialsOf } from "@/lib/utils";
+import type { Signal } from "@/lib/types";
 
 export interface VerificationReviewPaneProps {
     request: VerificationRequest;

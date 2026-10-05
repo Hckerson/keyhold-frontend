@@ -16,8 +16,8 @@ import {
     LEAD_CAPTURE_COPY as COPY,
     type LeadDraft,
 } from "@/lib/config/lead-capture";
-import type { SelectOption } from "@/components/ui/forms/select";
 import type { FieldErrors } from "@/lib/validations/auth";
+import type { SelectOption } from "@/lib/types";
 
 export interface LeadCreateModalProps {
     open: boolean;

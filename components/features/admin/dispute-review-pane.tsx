@@ -2,7 +2,7 @@
 
 import { Callout } from "@/components/ui/callout";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { SignalGrid, type Signal } from "@/components/patterns/signal-grid";
+import { SignalGrid } from "@/components/patterns/signal-grid";
 import { DisputeDecisionBar } from "@/components/features/admin/dispute-decision-bar";
 import { DisputeEvidenceList } from "@/components/features/admin/dispute-evidence-list";
 import {
@@ -11,6 +11,7 @@ import {
     type DisputeDecisionMode,
 } from "@/lib/data/admin-disputes";
 import { formatUsd } from "@/lib/utils";
+import type { Signal } from "@/lib/types";
 
 const OUTCOME_TITLE = "Outcome";
 const EVIDENCE_LABEL = "Evidence";

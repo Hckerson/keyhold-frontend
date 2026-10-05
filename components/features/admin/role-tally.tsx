@@ -1,7 +1,7 @@
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import { chartToneVar } from "@/lib/config/chart-tones";
 import { NO_READING } from "@/lib/constants";
 import { formatCount } from "@/lib/utils";
+import type { DonutSegment } from "@/lib/types";
 
 const TITLE = "Accounts by role";
 

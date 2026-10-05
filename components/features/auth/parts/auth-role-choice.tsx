@@ -1,12 +1,10 @@
 "use client";
 
 import { AnimatePresence, m } from "motion/react";
-import type { UserRole } from "@/lib/types/auth";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { AUTH_COLLAPSE_MOTION } from "@/lib/config/auth-motion";
 import { cn } from "@/lib/utils";
-
-export type SignupRole = Extract<UserRole, "BUYER" | "SELLER">;
+import type { SignupRole } from "@/lib/types";
 
 const ROLE_OPTIONS: {
     value: SignupRole;

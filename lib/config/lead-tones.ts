@@ -7,16 +7,16 @@ import {
     Thermometer,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { LeadStage, LeadTemperature } from "@/lib/types/lead";
+import type { StatusTone } from "@/lib/types";
 
 export const LEAD_STAGE_KEYS: LeadStage[] = ["pending", "accepted", "declined"];
 
 export interface LeadStageMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     nextAction: string;
@@ -52,7 +52,7 @@ export const LEAD_STAGES: Record<LeadStage, LeadStageMeta> = {
 export interface LeadTemperatureMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     floor: number;
 }

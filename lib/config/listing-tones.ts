@@ -13,8 +13,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { ManagedListingStatus } from "@/lib/types";
+import type { ManagedListingStatus, StatusTone } from "@/lib/types";
 
 export const LISTING_STATUS_KEYS: ManagedListingStatus[] = [
     "active",
@@ -27,7 +26,7 @@ export const LISTING_STATUS_KEYS: ManagedListingStatus[] = [
 export interface ListingStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     onMarket: boolean;

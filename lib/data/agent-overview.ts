@@ -7,8 +7,12 @@ import {
     CalendarPlus,
 } from "lucide-react";
 import { countByStage } from "@/lib/data/agent-leads";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { PipelineStage, PipelineSummary, QuickAction } from "@/lib/types";
+import type {
+    PipelineStage,
+    PipelineSummary,
+    QuickAction,
+    StatDatum,
+} from "@/lib/types";
 import type { Lead } from "@/lib/types/lead";
 import { formatCompactUsd } from "@/lib/utils";
 import type { ConnectionListItem } from "@/lib/validations/connection-list";

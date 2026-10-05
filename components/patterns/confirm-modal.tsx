@@ -10,13 +10,9 @@ import {
     ModalHeader,
     ModalTitle,
 } from "@/components/ui/modal";
+import type { ConfirmNotice } from "@/lib/types";
 
 const DEFAULT_CANCEL = "Cancel";
-
-export interface ConfirmNotice {
-    title: string;
-    body?: string;
-}
 
 export interface ConfirmModalProps {
     open: boolean;

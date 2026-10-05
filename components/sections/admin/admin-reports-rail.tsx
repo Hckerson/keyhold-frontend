@@ -4,8 +4,7 @@ import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { AudienceMix } from "@/components/features/admin/audience-mix";
 import { ReportSignalTable } from "@/components/features/admin/report-signal-table";
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
-import type { ReportSignal } from "@/lib/types";
+import type { DonutSegment, ReportSignal } from "@/lib/types";
 
 const SIGNALS_TITLE = "Platform Signals";
 const SIGNALS_LEDE = "Month over month movement";

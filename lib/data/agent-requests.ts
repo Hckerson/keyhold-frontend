@@ -1,10 +1,10 @@
 import { CalendarClock, FileSignature, Hourglass, Timer } from "lucide-react";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import { GAP_BANDS, gapBandOf } from "@/lib/config/offer-tones";
 import { askGapPercent } from "@/lib/data/offer-request";
 import type {
     OfferRequestItem,
     RequestBook,
+    StatDatum,
     ViewingRequestItem,
 } from "@/lib/types";
 import { formatAge } from "@/lib/utils/format";

@@ -12,8 +12,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { SavedStatus } from "@/lib/types";
+import type { SavedStatus, StatusTone } from "@/lib/types";
 
 export const SAVED_STATUS_KEYS: SavedStatus[] = [
     "available",
@@ -25,7 +24,7 @@ export const SAVED_STATUS_KEYS: SavedStatus[] = [
 export interface SavedStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     live: boolean;
 }

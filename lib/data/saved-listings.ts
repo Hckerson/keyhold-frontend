@@ -5,8 +5,6 @@ import {
     TrendingDown,
     Wallet,
 } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     MATCH_BANDS,
     MATCH_BAND_KEYS,
@@ -17,7 +15,12 @@ import {
     matchBandOf,
     watchBandOf,
 } from "@/lib/config/saved-tones";
-import type { SavedListing, SavedStatus } from "@/lib/types";
+import type {
+    SavedListing,
+    SavedStatus,
+    ShareDatum,
+    StatDatum,
+} from "@/lib/types";
 import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
 
 export type SavedStatusFilter = SavedStatus | "all";

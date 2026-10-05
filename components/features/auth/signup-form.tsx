@@ -9,12 +9,8 @@ import {
     AuthSubmit,
     AuthTitleBlock,
     SocialAuthRow,
-    type SignupRole,
 } from "@/components/features/auth/parts";
-import {
-    SignupFields,
-    type SignupFieldValues,
-} from "@/components/features/auth/signup-fields";
+import { SignupFields } from "@/components/features/auth/signup-fields";
 import { useRegister } from "@/lib/hooks/use-register";
 import {
     AUTH_ROUTES,
@@ -29,6 +25,7 @@ import {
     toFieldErrors,
     type FieldErrors,
 } from "@/lib/validations/auth";
+import type { SignupFieldValues, SignupRole } from "@/lib/types";
 
 const INITIAL_VALUES: SignupFieldValues = {
     fullName: "",

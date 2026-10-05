@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/forms/form-field";
-import { Select, type SelectOption } from "@/components/ui/forms/select";
+import { Select } from "@/components/ui/forms/select";
 import {
     Modal,
     ModalHeader,
@@ -24,7 +24,7 @@ import { VIEWING_MODES } from "@/lib/config/viewing-tones";
 import { CREATE_EVENT_COPY as COPY } from "@/lib/data/agent-calendar";
 import { toDateInput, toProposedTimes } from "@/lib/data/viewing-request";
 import { API_VIEWING_MODE } from "@/lib/utils/status-maps";
-import type { ViewingMode } from "@/lib/types";
+import type { SelectOption, ViewingMode } from "@/lib/types";
 import type { CreateViewingInput } from "@/lib/validations/viewing";
 
 const MODE_PILLS = REQUESTABLE_MODES.map((id) => ({

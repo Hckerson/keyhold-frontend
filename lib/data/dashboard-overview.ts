@@ -7,13 +7,13 @@ import {
     Users,
 } from "lucide-react";
 import { format, isToday, isTomorrow } from "date-fns";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import type {
     ActivityEntry,
     Alert,
     AlertType,
     OfferStatus,
     QuickAction,
+    StatDatum,
     ViewingStatus,
 } from "@/lib/types";
 import { formatAge, formatCompactUsd } from "@/lib/utils";

@@ -1,10 +1,10 @@
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { DealStage } from "@/lib/types/deal";
+import type { StatusTone } from "@/lib/types";
 
 export interface DealStageMeta {
     id: DealStage;
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
 }
 
 export const DEAL_STAGES: DealStageMeta[] = [

@@ -2,8 +2,7 @@
 
 import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { formatUsd } from "@/lib/utils";
-
-export type OfferConfirmAction = "counter" | "accept";
+import type { OfferConfirmAction } from "@/lib/types";
 
 const COPY = {
     accept: {

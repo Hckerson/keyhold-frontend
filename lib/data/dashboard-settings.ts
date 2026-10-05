@@ -1,13 +1,16 @@
 import { BadgeCheck, BellRing, Radio, UserCheck, Wallet } from "lucide-react";
-import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import { strengthTone } from "@/lib/config/account-tones";
 import {
     ALERT_TYPE_COUNT,
     alertDeliveryCount,
     enabledAlertCount,
 } from "@/lib/data/alerts";
-import type { AlertPreference, AlertType } from "@/lib/types";
+import type {
+    AlertPreference,
+    AlertType,
+    ConfigField,
+    StatDatum,
+} from "@/lib/types";
 import { formatCount, percentOf } from "@/lib/utils";
 import type { User } from "@/lib/validations/user";
 

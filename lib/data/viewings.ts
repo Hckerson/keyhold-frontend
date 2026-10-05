@@ -5,8 +5,6 @@ import {
     Footprints,
     Wallet,
 } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     TIMING_BANDS,
     TIMING_BAND_KEYS,
@@ -15,7 +13,7 @@ import {
     VIEWING_STATUS_KEYS,
     timingBandOf,
 } from "@/lib/config/viewing-tones";
-import type { Viewing, ViewingMode } from "@/lib/types";
+import type { ShareDatum, StatDatum, Viewing, ViewingMode } from "@/lib/types";
 import { formatCompactUsd, parseLocalDate, percentOf, sum } from "@/lib/utils";
 import { formatDayAndMonth } from "@/lib/utils/format";
 

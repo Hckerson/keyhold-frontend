@@ -9,8 +9,8 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { InterestStatus } from "@/lib/types/interest";
+import type { StatusTone } from "@/lib/types";
 
 export const INTEREST_STATUS_KEYS: InterestStatus[] = [
     "pending",
@@ -21,7 +21,7 @@ export const INTEREST_STATUS_KEYS: InterestStatus[] = [
 export interface InterestStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;

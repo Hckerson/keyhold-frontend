@@ -1,6 +1,4 @@
 import { MessageSquare, Reply, Timer, Users } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     CONVERSATION_STATUSES,
     CONVERSATION_STATUS_KEYS,
@@ -8,7 +6,7 @@ import {
     RESPONSE_BAND_KEYS,
     type ResponseBand,
 } from "@/lib/config/conversation-tones";
-import type { Conversation } from "@/lib/types";
+import type { Conversation, ShareDatum, StatDatum } from "@/lib/types";
 import { percentOf, sum } from "@/lib/utils";
 
 export type ConversationFilter = "all" | "unread" | "awaiting-you";

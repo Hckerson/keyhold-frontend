@@ -1,6 +1,10 @@
 import { ArrowLeftRight, Home, Layers, Users, Wallet } from "lucide-react";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { RegionPerformance, ReportSignal, Trend } from "@/lib/types";
+import type {
+    RegionPerformance,
+    ReportSignal,
+    StatDatum,
+    Trend,
+} from "@/lib/types";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import type { RegionMetric } from "@/lib/validations/stats";
 import type {

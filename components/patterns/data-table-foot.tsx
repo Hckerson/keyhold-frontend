@@ -1,11 +1,8 @@
 "use client";
 
-import {
-    alignClass,
-    footCell,
-    type DataTableColumn,
-} from "@/components/patterns/data-table-types";
+import { alignClass, footCell } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
+import type { DataTableColumn } from "@/lib/types";
 
 export interface DataTableFootProps<T> {
     columns: DataTableColumn<T>[];

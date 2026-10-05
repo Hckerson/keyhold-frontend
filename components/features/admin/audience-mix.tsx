@@ -1,5 +1,5 @@
-import type { DonutSegment } from "@/components/ui/charts/donut-chart";
 import { ShareBar } from "@/components/patterns/share-bar";
+import type { DonutSegment } from "@/lib/types";
 
 const ROLE_LABEL = "By role";
 

@@ -7,19 +7,18 @@ import { cn } from "@/lib/utils";
 
 import type { SearchViewMode } from "@/lib/utils/search-url";
 
-export type ViewMode = SearchViewMode;
-
 const VIEW_INDICATOR_ID = "search-view-indicator";
 
-const VIEW_OPTIONS: { id: ViewMode; label: string; icon: LucideIcon }[] = [
-    { id: "grid", label: "Grid", icon: LayoutGrid },
-    { id: "list", label: "List", icon: List },
-    { id: "map", label: "Map", icon: MapIcon },
-];
+const VIEW_OPTIONS: { id: SearchViewMode; label: string; icon: LucideIcon }[] =
+    [
+        { id: "grid", label: "Grid", icon: LayoutGrid },
+        { id: "list", label: "List", icon: List },
+        { id: "map", label: "Map", icon: MapIcon },
+    ];
 
 export interface SearchViewToggleProps {
-    view: ViewMode;
-    onChange: (next: ViewMode) => void;
+    view: SearchViewMode;
+    onChange: (next: SearchViewMode) => void;
 }
 
 export function SearchViewToggle({ view, onChange }: SearchViewToggleProps) {

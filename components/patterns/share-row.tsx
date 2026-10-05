@@ -1,16 +1,7 @@
-import type { LucideIcon } from "lucide-react";
 import { IconChip } from "@/components/ui/icon-chip";
-import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
-
-export interface ShareDatum {
-    id: string;
-    icon: LucideIcon;
-    label: string;
-    value: string;
-    percent: number;
-    tone: ChartTone;
-}
+import type { ShareDatum } from "@/lib/types";
 
 export interface ShareRowProps {
     share: ShareDatum;

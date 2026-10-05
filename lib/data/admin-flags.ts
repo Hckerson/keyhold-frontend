@@ -1,4 +1,4 @@
-import type { BadgeTone } from "@/lib/types";
+import type { StatusTone } from "@/lib/types";
 import type { FlagStatus, FlagType } from "@/lib/enums/enums";
 
 export type FlagFilterKey = "all" | FlagType;
@@ -48,7 +48,7 @@ export interface FlagSettleAction {
 
 export const flagStatusMeta: Record<
     FlagStatus,
-    { tone: BadgeTone; label: string; open: boolean }
+    { tone: StatusTone; label: string; open: boolean }
 > = {
     ACTIVE: { tone: "error", label: "Active", open: true },
     RESOLVED: { tone: "success", label: "Resolved", open: false },

@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 
-export interface ProviderMarkProps {
+interface ProviderMarkProps {
     className?: string;
 }
 

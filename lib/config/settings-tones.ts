@@ -6,9 +6,13 @@ import {
     Wallet,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { PolicyDomain, PolicyEnforcement, PolicyGroup } from "@/lib/types";
+import type {
+    PolicyDomain,
+    PolicyEnforcement,
+    PolicyGroup,
+    StatusTone,
+} from "@/lib/types";
 
 export interface PolicyDomainMeta {
     label: string;
@@ -26,7 +30,7 @@ export const POLICY_DOMAINS: Record<PolicyDomain, PolicyDomainMeta> = {
 
 export interface PolicyEnforcementMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 

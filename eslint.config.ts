@@ -49,17 +49,26 @@ type RestrictedImports = [
 
 const ID_SOURCE = "IDs come from nanoid — never uuid or Date.now().";
 
-const restrictedImports = (...paths: RestrictedPath[]): RestrictedImports => [
+const DEEP_RELATIVE = {
+    group: ["../*", "../**"],
+    message:
+        "Import through the '@/' alias. Deep-relative paths break when a file moves.",
+};
+
+const LIB_ABOVE_COMPONENTS = {
+    group: ["@/components/*", "@/components/**"],
+    message:
+        "lib/ sits below components/. Move the shared type to lib/types or the value to lib/constants and import it from there.",
+};
+
+const restrictedImports = (
+    paths: RestrictedPath[] = [],
+    patterns = [DEEP_RELATIVE],
+): RestrictedImports => [
     "error",
     {
         paths: [{ name: "uuid", message: ID_SOURCE }, ...paths],
-        patterns: [
-            {
-                group: ["../*", "../**"],
-                message:
-                    "Import through the '@/' alias. Deep-relative paths break when a file moves.",
-            },
-        ],
+        patterns,
     },
 ];
 
@@ -156,13 +165,24 @@ const starterConfig: ConfigArray = [
         files: VIEWS,
         rules: {
             "starter/application-register-density": ADOPTING,
-            "starter/domain-types-in-lib": ADOPTING,
+            "starter/domain-types-in-lib": "error",
             "starter/token-first-classnames": ADOPTING,
-            "no-restricted-imports": restrictedImports({
-                name: TRANSPORT_MODULE,
-                message:
-                    "Components consume hooks. Import a use-<resource> hook from @/lib/hooks instead.",
-            }),
+            "no-restricted-imports": restrictedImports([
+                {
+                    name: TRANSPORT_MODULE,
+                    message:
+                        "Components consume hooks. Import a use-<resource> hook from @/lib/hooks instead.",
+                },
+            ]),
+        },
+    },
+    {
+        files: ["lib/**/*.{ts,tsx}"],
+        rules: {
+            "no-restricted-imports": restrictedImports(
+                [],
+                [DEEP_RELATIVE, LIB_ABOVE_COMPONENTS],
+            ),
         },
     },
     {

@@ -12,8 +12,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { ViewingMode, ViewingStatus } from "@/lib/types";
+import type { StatusTone, ViewingMode, ViewingStatus } from "@/lib/types";
 
 export const VIEWING_STATUS_KEYS: ViewingStatus[] = [
     "confirmed",
@@ -25,7 +24,7 @@ export const VIEWING_STATUS_KEYS: ViewingStatus[] = [
 export interface ViewingStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     active: boolean;
     scheduled: boolean;

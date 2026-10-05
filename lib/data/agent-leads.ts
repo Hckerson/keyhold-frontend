@@ -1,16 +1,14 @@
 import { CalendarClock, Handshake, Inbox, Users, Wallet } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     LEAD_STAGES,
     LEAD_STAGE_KEYS,
     LEAD_TEMPERATURES,
     LEAD_TEMPERATURE_KEYS,
 } from "@/lib/config/lead-tones";
-import type { SelectOption } from "@/components/ui/forms/select";
 import type { Property } from "@/lib/validations/property";
 import type { Lead, LeadStageFilter, LeadTemperature } from "@/lib/types/lead";
 import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
+import type { SelectOption, ShareDatum, StatDatum } from "@/lib/types";
 
 export const LEAD_STAGE_FILTERS: { id: LeadStageFilter; label: string }[] = [
     { id: "all", label: "All" },

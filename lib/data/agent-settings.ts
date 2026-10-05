@@ -1,6 +1,4 @@
 import { BadgeCheck, BellRing, UserCheck } from "lucide-react";
-import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import { strengthTone } from "@/lib/config/account-tones";
 import {
     enabledNotificationCount,
@@ -8,6 +6,7 @@ import {
     type NotificationState,
 } from "@/lib/data/agent-account";
 import type { User } from "@/lib/validations/user";
+import type { ConfigField, StatDatum } from "@/lib/types";
 
 export const AGENT_SETTINGS_FORM_ID = "agent-settings-form";
 

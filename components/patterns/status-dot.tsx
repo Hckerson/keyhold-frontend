@@ -1,8 +1,7 @@
 import { cn } from "@/lib/utils";
+import type { StatusTone } from "@/lib/types";
 
-export type DotTone = "success" | "warning" | "error" | "info" | "neutral";
-
-const toneClass: Record<DotTone, string> = {
+const toneClass: Record<StatusTone, string> = {
     success: "bg-success",
     warning: "bg-warning",
     error: "bg-error",
@@ -14,7 +13,7 @@ export function StatusDot({
     tone,
     className,
 }: {
-    tone: DotTone;
+    tone: StatusTone;
     className?: string;
 }) {
     return (

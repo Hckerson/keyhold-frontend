@@ -1,13 +1,12 @@
 import { cn } from "@/lib/utils";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import type { AuthNoticeTone } from "@/lib/types";
 
 const NOTICE_TONES = {
     error: { rule: "bg-error", title: "text-error" },
     success: { rule: "bg-success", title: "text-success" },
     info: { rule: "bg-info", title: "text-info" },
-} as const;
-
-export type AuthNoticeTone = keyof typeof NOTICE_TONES;
+} as const satisfies Record<AuthNoticeTone, { rule: string; title: string }>;
 
 export interface AuthNoticeProps {
     tone: AuthNoticeTone;
