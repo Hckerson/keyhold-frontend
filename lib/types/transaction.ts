@@ -1,3 +1,6 @@
+import type { LucideIcon } from "lucide-react";
+import type { ChartTone } from "@/lib/config/chart-tones";
+
 export type LedgerStatus =
     | "PENDING"
     | "IN_PROGRESS"
@@ -28,4 +31,22 @@ export interface TransactionStage {
     id: LedgerStatus;
     count: number;
     volume: number;
+}
+
+export interface DealFlowStage {
+    id: LedgerStatus;
+    label: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+    open: boolean;
+    count: number;
+    volume: number;
+    commission: number;
+    note: string;
+}
+
+export interface LedgerTotals {
+    count: number;
+    volume: number;
+    commission: number;
 }

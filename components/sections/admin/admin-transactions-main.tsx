@@ -1,87 +1,83 @@
 "use client";
 
 import { ArrowLeftRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { TransactionFocusTile } from "@/components/features/admin/transaction-focus-tile";
-import { TransactionLedgerTable } from "@/components/features/admin/transaction-ledger-table";
-import { AdminTransactionsToolbar } from "@/components/sections/admin/admin-transactions-toolbar";
-import type { TransactionStatusFilter } from "@/lib/data/admin-transactions";
-import type { LedgerTransaction } from "@/lib/types";
+import { DealLedgerList } from "@/components/features/admin/deal-ledger-list";
+import type { LedgerTotals, LedgerTransaction } from "@/lib/types";
 
-const LEDGER_TITLE = "Deal Ledger";
-const LEDGER_LEDE =
-    "Ranked by settlement risk, then by value — the focus deal sits above";
-const EMPTY_TITLE = "No deals in this view";
-const EMPTY_LEDE = "Widen the stage filter to see the full ledger.";
+const LEDGER_TITLE = "Deals";
+const CLEAR_ACTION = "Show every stage";
+const EMPTY_TITLE = "No deals in this stage";
+const EMPTY_LEDE = "Pick another stage above, or show every stage.";
 
 export interface AdminTransactionsMainProps {
     transactions: LedgerTransaction[];
-    focus?: LedgerTransaction;
-    statusFilter: TransactionStatusFilter;
-    counts: Record<TransactionStatusFilter, number>;
+    total: number;
+    totals: LedgerTotals;
+    reading: string;
+    filtered: boolean;
     pending?: boolean;
-    onStatusFilterChange: (filter: TransactionStatusFilter) => void;
+    onClearFilter: () => void;
     onOpen: (id: string) => void;
 }
 
 export function AdminTransactionsMain({
     transactions,
-    focus,
-    statusFilter,
-    counts,
+    total,
+    totals,
+    reading,
+    filtered,
     pending,
-    onStatusFilterChange,
+    onClearFilter,
     onOpen,
 }: AdminTransactionsMainProps) {
     return (
-        <div className="console-span-2 flex flex-col gap-3">
-            {focus && (
-                <TransactionFocusTile transaction={focus} onOpen={onOpen} />
-            )}
-
-            <Panel
-                title={LEDGER_TITLE}
-                description={LEDGER_LEDE}
-                count={transactions.length}
+        <Panel
+            title={LEDGER_TITLE}
+            description={reading}
+            count={filtered ? `${transactions.length} / ${total}` : total}
+            action={
+                filtered && (
+                    <Button
+                        type="button"
+                        emphasis="quiet"
+                        onClick={onClearFilter}
+                    >
+                        {CLEAR_ACTION}
+                    </Button>
+                )
+            }
+        >
+            <PresenceSwap
+                swapKey={
+                    transactions.length > 0
+                        ? "rows"
+                        : pending
+                          ? "pending"
+                          : "empty"
+                }
             >
-                <AdminTransactionsToolbar
-                    statusFilter={statusFilter}
-                    counts={counts}
-                    onStatusFilterChange={onStatusFilterChange}
-                />
-
-                <PresenceSwap
-                    swapKey={
-                        transactions.length > 0
-                            ? "rows"
-                            : pending
-                              ? "pending"
-                              : "empty"
-                    }
-                >
-                    {transactions.length > 0 ? (
-                        <PanelInset scroll>
-                            <TransactionLedgerTable
-                                transactions={transactions}
-                                onOpen={onOpen}
-                            />
-                        </PanelInset>
-                    ) : pending ? (
-                        <SkeletonRows />
-                    ) : (
-                        <EmptyState
-                            icon={ArrowLeftRight}
-                            title={EMPTY_TITLE}
-                            description={EMPTY_LEDE}
-                        />
-                    )}
-                </PresenceSwap>
-            </Panel>
-        </div>
+                {transactions.length > 0 ? (
+                    <DealLedgerList
+                        transactions={transactions}
+                        totals={totals}
+                        onOpen={onOpen}
+                    />
+                ) : pending ? (
+                    <SkeletonRows tall />
+                ) : (
+                    <EmptyState
+                        icon={ArrowLeftRight}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
+                    />
+                )}
+            </PresenceSwap>
+        </Panel>
     );
 }
 

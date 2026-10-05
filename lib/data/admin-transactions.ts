@@ -1,19 +1,17 @@
-import { ArrowLeftRight, Clock, Landmark, Percent, Wallet } from "lucide-react";
 import {
     TRANSACTION_PIPELINE_ORDER,
     TRANSACTION_STATUSES,
 } from "@/lib/config/transaction-tones";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import type {
-    FilterPill,
+    DealFlowStage,
     LedgerStatus,
+    LedgerTotals,
     LedgerTransaction,
-    MetricItem,
-    StatDatum,
     TransactionStage,
 } from "@/lib/types";
 import type { TransactionStage as ApiTransactionStage } from "@/lib/validations/transaction";
-import { formatCompactUsd, formatUsd, sum } from "@/lib/utils";
+import { formatCompactUsd, sum } from "@/lib/utils";
 
 const FULL_PERCENT = 100;
 
@@ -26,9 +24,6 @@ export const commissionOf = (transaction: LedgerTransaction) =>
 
 const volumeOf = (transactions: LedgerTransaction[]) =>
     sum(transactions.map((transaction) => transaction.price));
-
-const byStatus = (transactions: LedgerTransaction[], status: LedgerStatus) =>
-    transactions.filter((transaction) => transaction.status === status);
 
 export const openTransactions = (transactions: LedgerTransaction[]) =>
     transactions.filter(
@@ -43,9 +38,6 @@ export const rankTransactions = (transactions: LedgerTransaction[]) =>
             b.ageMinutes - a.ageMinutes,
     );
 
-export const focusTransaction = (transactions: LedgerTransaction[]) =>
-    rankTransactions(openTransactions(transactions))[0];
-
 export const toTransactionStages = (
     stages: ApiTransactionStage[],
 ): TransactionStage[] =>
@@ -58,121 +50,42 @@ export const toTransactionStages = (
         };
     });
 
-export const stageShare = (
-    stage: TransactionStage,
-    stages: TransactionStage[],
-) => {
-    const total = sum(stages.map((entry) => entry.count));
-    return total ? Math.round((stage.count / total) * FULL_PERCENT) : 0;
-};
-
-export const TRANSACTION_FILTERS: readonly FilterPill<TransactionStatusFilter>[] =
-    [
-        { id: "all", label: "All" },
-        ...TRANSACTION_PIPELINE_ORDER.map((id) => ({
-            id,
-            label: TRANSACTION_STATUSES[id].label,
-        })),
-    ];
-
-export const transactionCounts = (
-    transactions: LedgerTransaction[],
-): Record<TransactionStatusFilter, number> =>
-    TRANSACTION_PIPELINE_ORDER.reduce<Record<TransactionStatusFilter, number>>(
-        (counts, id) => ({
-            ...counts,
-            [id]: byStatus(transactions, id).length,
-        }),
-        { all: transactions.length } as Record<TransactionStatusFilter, number>,
-    );
-
 export const matchesTransactionFilters = (
     transaction: LedgerTransaction,
     status: TransactionStatusFilter,
 ) => status === "all" || transaction.status === status;
 
-export const transactionStats = (
-    transactions: LedgerTransaction[],
-): StatDatum[] => [
-    {
-        id: "open",
-        icon: ArrowLeftRight,
-        label: "In flight",
-        value: `${openTransactions(transactions).length}`,
-        tone: "accent",
-    },
-    {
-        id: "open-volume",
-        icon: Wallet,
-        label: "Open volume",
-        value: formatCompactUsd(volumeOf(openTransactions(transactions))),
-        tone: "warning",
-    },
-    {
-        id: "escrow",
-        icon: Landmark,
-        label: "In escrow",
-        value: formatCompactUsd(
-            volumeOf(byStatus(transactions, "IN_PROGRESS")),
-        ),
-        tone: "info",
-    },
-    {
-        id: "settled",
-        icon: Clock,
-        label: "Settled volume",
-        value: formatCompactUsd(volumeOf(byStatus(transactions, "COMPLETED"))),
-        tone: "success",
-    },
-    {
-        id: "commission",
-        icon: Percent,
-        label: "Commission",
-        value: formatCompactUsd(
-            volumeOf(byStatus(transactions, "COMPLETED")) *
-                DEFAULT_COMMISSION_RATE,
-        ),
-        tone: "highlight",
-    },
-];
+export const dealFlow = (stages: TransactionStage[]): DealFlowStage[] =>
+    stages.map((stage) => {
+        const meta = TRANSACTION_STATUSES[stage.id];
+        return {
+            ...stage,
+            label: meta.label,
+            icon: meta.icon,
+            tone: meta.chartTone,
+            open: meta.open,
+            commission:
+                stage.id === "CANCELLED"
+                    ? 0
+                    : stage.volume * DEFAULT_COMMISSION_RATE,
+            note: meta.flowNote,
+        };
+    });
 
-export const commissionMetrics = (
+export const ledgerTotals = (
     transactions: LedgerTransaction[],
-): MetricItem[] => {
-    const settled = byStatus(transactions, "COMPLETED");
-    const settledVolume = volumeOf(settled);
+): LedgerTotals => ({
+    count: transactions.length,
+    volume: volumeOf(transactions),
+    commission: sum(transactions.map(commissionOf)),
+});
 
-    return [
-        { label: "Take rate", value: COMMISSION_RATE_LABEL },
-        {
-            label: "Earned on settled",
-            value: formatUsd(settledVolume * DEFAULT_COMMISSION_RATE),
-        },
-        {
-            label: "Pending on open",
-            value: formatUsd(
-                volumeOf(openTransactions(transactions)) *
-                    DEFAULT_COMMISSION_RATE,
-            ),
-        },
-        {
-            label: "Avg per deal",
-            value: settled.length
-                ? formatUsd(
-                      (settledVolume * DEFAULT_COMMISSION_RATE) /
-                          settled.length,
-                  )
-                : formatUsd(0),
-        },
-    ];
+export const ledgerReading = (transactions: LedgerTransaction[]) => {
+    const open = openTransactions(transactions);
+
+    if (transactions.length === 0) return "No deals on the ledger yet";
+    return `${open.length} in flight worth ${formatCompactUsd(volumeOf(open))} · ranked by settlement risk`;
 };
-
-export const transactionsSummary = (transactions: LedgerTransaction[]) =>
-    `${byStatus(transactions, "CANCELLED").length} cancelled · ${
-        openTransactions(transactions).length
-    } in flight · ${formatCompactUsd(
-        volumeOf(openTransactions(transactions)),
-    )} open volume`;
 
 export const TRANSACTION_EXPORT_FILENAME = "transactions.csv";
 

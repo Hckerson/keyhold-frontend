@@ -32,6 +32,7 @@ export interface TransactionStatusMeta {
     rank: number;
     open: boolean;
     note?: CalloutNote;
+    flowNote: string;
     rowTone?: string;
 }
 
@@ -44,6 +45,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             chartTone: "warning",
             rank: 3,
             open: true,
+            flowNote: "due on payment",
         },
         IN_PROGRESS: {
             label: "In escrow",
@@ -52,6 +54,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             chartTone: "info",
             rank: 4,
             open: true,
+            flowNote: "held",
         },
         COMPLETED: {
             label: "Settled",
@@ -60,6 +63,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             chartTone: "success",
             rank: 1,
             open: false,
+            flowNote: "earned",
         },
         CANCELLED: {
             label: "Cancelled",
@@ -68,6 +72,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             chartTone: "neutral",
             rank: 2,
             open: false,
+            flowNote: "fell through",
         },
     };
 

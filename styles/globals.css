@@ -328,6 +328,11 @@ svg.lucide * {
     --split-columns: 4;
 }
 
+.console-split--flow {
+    --split-columns: 4;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
 .queue-frame {
     container: queue / inline-size;
     max-height: var(--queue-max-height);
@@ -345,6 +350,11 @@ svg.lucide * {
 .queue-grid--accounts {
     --queue-columns: minmax(0, 1fr) 7.5rem;
     --queue-columns-wide: minmax(0, 1fr) 5.5rem 3rem 7.5rem;
+}
+
+.queue-grid--deals {
+    --queue-columns: minmax(0, 1fr) 5rem;
+    --queue-columns-wide: minmax(0, 1fr) 6rem 7.5rem 5rem 3rem;
 }
 
 .queue-grid__wide {
