@@ -58,7 +58,7 @@ export type ComponentTracker = {
     listeners: TSESLint.RuleListener;
 };
 
-export const componentTracker = (): ComponentTracker => {
+export const componentTracker = (filename?: string): ComponentTracker => {
     const stack: FunctionNode[] = [];
     const components = new Map<string, FunctionNode>();
     let defaultExport: string | null = null;
@@ -89,8 +89,13 @@ export const componentTracker = (): ComponentTracker => {
 
     const primary = (): Component | undefined => {
         const all = declared();
+        const file = filename ? baseName(filename) : null;
 
-        return all.find(([name]) => name === defaultExport) ?? all.at(0);
+        return (
+            all.find(([name]) => kebabCase(name) === file) ??
+            all.find(([name]) => name === defaultExport) ??
+            all.at(0)
+        );
     };
 
     return {

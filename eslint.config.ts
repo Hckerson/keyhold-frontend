@@ -18,6 +18,7 @@ const SOURCE = [...VIEWS, "lib/**/*.{ts,tsx}"];
 const RESOURCE_LAYER = ["lib/api/**"];
 const ROUTES = ["app/**/page.tsx"];
 const COMPONENTS = ["components/**/*.tsx"];
+const PRIMITIVES = ["components/ui/**/*.tsx"];
 const TESTS = ["**/*.test.{ts,tsx}"];
 const LENGTH_EXEMPT = ["lib/enums/enums.ts"];
 const EDITORIAL = [
@@ -48,6 +49,21 @@ type RestrictedImports = [
 ];
 
 const ID_SOURCE = "IDs come from nanoid — never uuid or Date.now().";
+
+const DATE_NOW =
+    "CallExpression[callee.object.name='Date'][callee.property.name='now']";
+
+const ID_SYNTAX = [
+    `TemplateLiteral > ${DATE_NOW}`,
+    `CallExpression[callee.name='String'] > ${DATE_NOW}`,
+    `MemberExpression[property.name='toString'] > ${DATE_NOW}`,
+    `Property[key.name=/^id$|Id$/] > ${DATE_NOW}`,
+].map((selector) => ({ selector, message: ID_SOURCE }));
+
+const BREAKPOINT_SYNTAX = [
+    "Literal[value=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
+    "TemplateElement[value.raw=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
+].map((selector) => ({ selector, message: BREAKPOINT_MESSAGE }));
 
 const DEEP_RELATIVE = {
     group: ["../*", "../**"],
@@ -96,23 +112,6 @@ const projectConfig: ConfigArray = tseslint.config(
         rules: { "@typescript-eslint/no-empty-object-type": "off" },
     },
     {
-        files: BREAKPOINT_OWNERS,
-        rules: {
-            "no-restricted-syntax": [
-                "error",
-                {
-                    selector: "Literal[value=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
-                    message: BREAKPOINT_MESSAGE,
-                },
-                {
-                    selector:
-                        "TemplateElement[value.raw=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
-                    message: BREAKPOINT_MESSAGE,
-                },
-            ],
-        },
-    },
-    {
         rules: {
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/no-explicit-any": "off",
@@ -145,9 +144,16 @@ const starterConfig: ConfigArray = [
             ],
             "no-console": "error",
             "@typescript-eslint/no-explicit-any": "error",
-            "no-restricted-properties": [
-                ADOPTING,
-                { object: "Date", property: "now", message: ID_SOURCE },
+            "no-restricted-syntax": ["error", ...ID_SYNTAX],
+        },
+    },
+    {
+        files: BREAKPOINT_OWNERS,
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                ...BREAKPOINT_SYNTAX,
+                ...ID_SYNTAX,
             ],
         },
     },
@@ -166,7 +172,6 @@ const starterConfig: ConfigArray = [
         rules: {
             "starter/application-register-density": ADOPTING,
             "starter/domain-types-in-lib": "error",
-            "starter/token-first-classnames": ADOPTING,
             "no-restricted-imports": restrictedImports([
                 {
                     name: TRANSPORT_MODULE,
@@ -191,7 +196,13 @@ const starterConfig: ConfigArray = [
     },
     {
         files: COMPONENTS,
-        rules: { "starter/one-component-per-file": ADOPTING },
+        rules: { "starter/one-component-per-file": "error" },
+    },
+    {
+        files: PRIMITIVES,
+        rules: {
+            "starter/one-component-per-file": ["error", { compound: true }],
+        },
     },
     {
         files: ROUTES,

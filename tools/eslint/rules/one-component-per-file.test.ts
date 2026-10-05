@@ -34,6 +34,18 @@ ruleTester.run("one-component-per-file", oneComponentPerFile, {
             code: `const label = (value: string) => value.trim();\nexport const Button = () => <button>{label("go")}</button>;`,
         },
         {
+            name: "a compound family whose parts carry the primary's name",
+            filename: "components/ui/menu.tsx",
+            code: `export const Menu = () => <div />;\nexport function MenuContent() {\n    return <div />;\n}`,
+            options: [{ compound: true }],
+        },
+        {
+            name: "a compound primitive whose root is a re-exported base part",
+            filename: "components/ui/popover.tsx",
+            code: `const Popover = Base.Root;\nexport function PopoverContent() {\n    return <div />;\n}\nexport { Popover };`,
+            options: [{ compound: true }],
+        },
+        {
             name: "a file declaring no component at all",
             filename: "components/common/tokens.ts",
             code: `export const sizes = ["sm", "md"];`,
@@ -74,6 +86,34 @@ ruleTester.run("one-component-per-file", oneComponentPerFile, {
                 {
                     messageId: "multipleComponents",
                     data: { name: "Spinner", expected: "spinner.tsx" },
+                },
+            ],
+        },
+        {
+            name: "a helper declared above the named export the file is named after",
+            filename: "components/features/sale-row.tsx",
+            code: `const OverAskChip = () => <span />;\nexport const SaleRow = () => <div><OverAskChip /></div>;`,
+            errors: [
+                {
+                    messageId: "multipleComponents",
+                    data: {
+                        name: "OverAskChip",
+                        expected: "over-ask-chip.tsx",
+                    },
+                },
+            ],
+        },
+        {
+            name: "a prefixed helper outside a compound primitive",
+            filename: "components/layout/sidebar.tsx",
+            code: `export const Sidebar = () => <nav />;\nexport const SidebarBrand = () => <div />;`,
+            errors: [
+                {
+                    messageId: "multipleComponents",
+                    data: {
+                        name: "SidebarBrand",
+                        expected: "sidebar-brand.tsx",
+                    },
                 },
             ],
         },
