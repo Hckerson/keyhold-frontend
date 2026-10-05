@@ -29,9 +29,7 @@ ruleTester.run("domain-types-in-lib", domainTypesInLib, {
         {
             name: "a component exporting the props named after its own file",
             filename: "components/common/status-badge.tsx",
-            code: `export interface StatusBadgeProps {
-    label: string;
-}`,
+            code: `export interface StatusBadgeProps {\n    label: string;\n}`,
         },
         {
             name: "a barrel re-exporting types from their home module",
