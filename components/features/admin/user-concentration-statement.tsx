@@ -1,8 +1,10 @@
-import { formatCompactUsd, formatCount } from "@/lib/utils";
+import { formatCompactUsd } from "@/lib/utils";
 import type { LeaderConcentration } from "@/lib/types";
 
-const SHARE_NOUN = "of lifetime volume sits with";
-const ACCOUNTS_NOUN = "accounts";
+const TOP_PREFIX = "Together these";
+const HOLD = "hold";
+const OF = "of";
+const SUFFIX = "in lifetime volume.";
 
 export interface UserConcentrationStatementProps {
     concentration: LeaderConcentration;
@@ -11,23 +13,14 @@ export interface UserConcentrationStatementProps {
 export function UserConcentrationStatement({
     concentration,
 }: UserConcentrationStatementProps) {
-    const { share, volume, total, leaders, accounts } = concentration;
+    const { share, total, leaders } = concentration;
 
     return (
-        <div className="bg-background-muted flex flex-col gap-1 rounded-md p-3">
-            <p className="flex items-baseline gap-2">
-                <span className="font-display text-h4 text-text leading-none font-light tabular-nums">
-                    {share}%
-                </span>
-                <span className="text-text-secondary text-xs">
-                    {SHARE_NOUN} {leaders} {ACCOUNTS_NOUN}
-                </span>
-            </p>
-            <p className="text-text-muted text-xs tabular-nums">
-                {formatCompactUsd(volume)} of {formatCompactUsd(total)} across{" "}
-                {formatCount(accounts)} {ACCOUNTS_NOUN}
-            </p>
-        </div>
+        <p className="text-text-secondary pt-2 text-xs tabular-nums">
+            {TOP_PREFIX} {leaders} {HOLD}{" "}
+            <span className="text-text font-semibold">{share}%</span> {OF}{" "}
+            {formatCompactUsd(total)} {SUFFIX}
+        </p>
     );
 }
 

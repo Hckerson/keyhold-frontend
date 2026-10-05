@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils";
 import type { ManagedUser } from "@/lib/types";
 
 const LIST_LABEL =
-    "Platform accounts by role, name, email, account status, days since last sign-in and lifetime book";
+    "Platform accounts by role, name, email, account status, days since last sign-in, lifetime book where there is one, and month joined";
 
 const COLUMNS = [
     { id: "account", label: "Account" },
     { id: "status", label: "Status", wide: true },
     { id: "active", label: "Seen", wide: true, end: true },
-    { id: "book", label: "Book", end: true },
+    { id: "joined", label: "Joined", end: true },
 ];
 
 export interface UserDirectoryListProps {

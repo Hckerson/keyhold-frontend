@@ -3,6 +3,8 @@ import { USER_STATUSES } from "@/lib/config/user-tones";
 import { cn } from "@/lib/utils";
 import type { UserStatus } from "@/lib/types";
 
+const QUIET_STATUS: UserStatus = "active";
+
 export interface UserStatusMarkProps {
     status: UserStatus;
     className?: string;
@@ -17,7 +19,12 @@ export function UserStatusMark({ status, className }: UserStatusMarkProps) {
             <Icon
                 aria-hidden="true"
                 strokeWidth={1.5}
-                className={cn("size-3 shrink-0", chartToneText[meta.chartTone])}
+                className={cn(
+                    "size-3 shrink-0",
+                    status === QUIET_STATUS
+                        ? "text-text-muted"
+                        : chartToneText[meta.chartTone],
+                )}
             />
             <span className="text-text-secondary min-w-0 truncate text-xs">
                 {meta.label}

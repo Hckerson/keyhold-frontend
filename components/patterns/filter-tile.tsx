@@ -32,7 +32,7 @@ export function FilterTile<T extends string>({
                 "focus-visible:ring-accent ease-smooth flex h-20 min-w-0 flex-col justify-between rounded-lg border p-3 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                 active
                     ? "border-accent bg-accent-light"
-                    : "border-border-light bg-background-muted hover:bg-background-alt",
+                    : "border-border bg-background hover:bg-background-muted",
             )}
         >
             <span className="flex items-center gap-2">

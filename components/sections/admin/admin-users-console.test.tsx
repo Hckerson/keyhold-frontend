@@ -699,6 +699,13 @@ describe("AdminUsersConsole · browsing", () => {
 describe("AdminUsersConsole · what needs a decision", () => {
     it("ranks deleted accounts last when ordering by what needs attention", async () => {
         draw();
+        await directory();
+        await userEvent.click(
+            screen.getByRole("combobox", { name: "Sort the directory" }),
+        );
+        await userEvent.click(
+            await screen.findByRole("option", { name: "Needs attention" }),
+        );
 
         await waitFor(async () => {
             const names = await directoryNames();

@@ -22,7 +22,9 @@ export function UserRecencyList({ bands }: UserRecencyListProps) {
                     <span
                         className={cn(
                             "font-semibold",
-                            chartToneText[band.tone],
+                            band.count === 0
+                                ? "text-text-muted"
+                                : chartToneText[band.tone],
                         )}
                     >
                         {formatCount(band.count)}
