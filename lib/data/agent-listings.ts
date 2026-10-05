@@ -92,8 +92,8 @@ export const matchesStatus = (listing: ManagedListing, filter: StatusFilter) =>
 export const saveRate = (listing: ManagedListing) =>
     percentOf(listing.saves, listing.views);
 
-export const isFeatured = (listing: ManagedListing) =>
-    isPromotionActive(listing.featuredUntil);
+export const isFeatured = (listing: ManagedListing, now = new Date()) =>
+    isPromotionActive(listing.featuredUntil, now);
 
 export const featuredUntilLabel = (listing: ManagedListing) =>
     listing.featuredUntil

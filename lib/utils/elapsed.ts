@@ -21,8 +21,8 @@ export const elapsedLabel = (iso: string) => {
     return days < DAYS_PER_MONTH ? `${days}d` : `${monthsSince(iso)}mo`;
 };
 
-export const minutesSince = (iso: string) =>
+export const minutesSince = (iso: string, now = new Date()) =>
     Math.max(
         0,
-        Math.round((Date.now() - new Date(iso).getTime()) / MS_PER_MINUTE),
+        Math.round((now.getTime() - new Date(iso).getTime()) / MS_PER_MINUTE),
     );
