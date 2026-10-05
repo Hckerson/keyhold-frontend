@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { JournalLatestList } from "@/components/sections/site/journal-latest";
+import { JournalLatestList } from "@/components/sections/site/journal-latest-list";
 import { JOURNAL_COPY as COPY, type JournalLatest } from "@/lib/data/journal";
 import { cn } from "@/lib/utils";
 

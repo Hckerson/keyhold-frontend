@@ -2,8 +2,11 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, X } from "lucide-react";
-import { LogoChip } from "@/components/brand/logo-chip";
+import { ChevronLeft } from "lucide-react";
+import {
+    SidebarBrand,
+    type SidebarBrandProps,
+} from "@/components/layout/sidebar-brand";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { SidebarStatus } from "@/components/layout/sidebar-status";
 import { SidebarFooter } from "@/components/layout/sidebar-footer";
@@ -13,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { RAIL_QUERY } from "@/lib/constants";
 
 export interface SidebarProps {
-    brand: { full: string; tagline?: string };
+    brand: SidebarBrandProps["brand"];
     sections: SidebarSection[];
     status?: JourneyStatus | null;
     user?: AuthUser | null;
@@ -22,47 +25,6 @@ export interface SidebarProps {
     open?: boolean;
     onClose?: () => void;
     className?: string;
-}
-
-function Brand({
-    brand,
-    collapsed,
-    onClose,
-}: {
-    brand: SidebarProps["brand"];
-    collapsed: boolean;
-    onClose?: () => void;
-}) {
-    return (
-        <div
-            className={cn(
-                "border-sidebar-border flex h-14 shrink-0 items-center border-b",
-                collapsed ? "justify-center px-0" : "gap-2 px-3",
-            )}
-        >
-            <LogoChip tone="dark" size="sm" />
-            {!collapsed && (
-                <div className="min-w-0">
-                    <p className="text-sidebar-text-active font-display truncate text-xs leading-none font-light">
-                        {brand.full}
-                    </p>
-                    {brand.tagline && (
-                        <p className="rail-label mt-1 truncate">
-                            {brand.tagline}
-                        </p>
-                    )}
-                </div>
-            )}
-            <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close navigation"
-                className="desk-hidden text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active focus-visible:ring-highlight ease-smooth ml-auto grid size-8 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-            >
-                <X size={16} strokeWidth={1.5} />
-            </button>
-        </div>
-    );
 }
 
 export function Sidebar({
@@ -145,7 +107,11 @@ export function Sidebar({
                     />
                 </button>
 
-                <Brand brand={brand} collapsed={collapsed} onClose={onClose} />
+                <SidebarBrand
+                    brand={brand}
+                    collapsed={collapsed}
+                    onClose={onClose}
+                />
 
                 <SidebarNav
                     sections={sections}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
-import { SectionEyebrow } from "@/components/patterns/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-eyebrow";
 import { HeroSearch } from "@/components/sections/home/hero-search";
 import { CityChips } from "@/components/sections/home/city-chips";
 import { Button } from "@/components/ui/button";

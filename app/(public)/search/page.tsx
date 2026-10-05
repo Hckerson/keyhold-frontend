@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Container } from "@/components/ui/container";
 import { SearchExperience } from "@/components/sections/search/search-experience";
-import { SearchResultsSkeleton } from "@/components/sections/search/search-skeleton";
+import { SearchResultsSkeleton } from "@/components/sections/search/search-results-skeleton";
 
 export const metadata = {
     title: "Search Properties | Luxury Real Estate",
