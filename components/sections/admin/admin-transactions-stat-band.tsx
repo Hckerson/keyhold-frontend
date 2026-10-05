@@ -1,18 +1,44 @@
-import { StatBand } from "@/components/patterns/stat-band";
-import type { StatDatum } from "@/lib/types";
+"use client";
 
-const BAND_LABEL = "Deal flow at a glance";
+import { DealFlowCell } from "@/components/features/admin/deal-flow-cell";
+import type { TransactionStatusFilter } from "@/lib/data/admin-transactions";
+import type { DealFlowStage } from "@/lib/types";
+
+const BAND_LABEL = "Deal volume by stage; pick a stage to filter the ledger";
+const EVERY_STAGE: TransactionStatusFilter = "all";
 
 export interface AdminTransactionsStatBandProps {
-    stats: StatDatum[];
+    stages: DealFlowStage[];
+    active: TransactionStatusFilter;
     pending?: boolean;
+    onChange: (next: TransactionStatusFilter) => void;
 }
 
 export function AdminTransactionsStatBand({
-    stats,
+    stages,
+    active,
     pending,
+    onChange,
 }: AdminTransactionsStatBandProps) {
-    return <StatBand label={BAND_LABEL} stats={stats} pending={pending} />;
+    return (
+        <section
+            aria-label={BAND_LABEL}
+            aria-busy={pending || undefined}
+            className="console-split console-split--flow border-border bg-border gap-px overflow-hidden rounded-xl border shadow-sm"
+        >
+            {stages.map((stage) => (
+                <DealFlowCell
+                    key={stage.id}
+                    stage={stage}
+                    active={stage.id === active}
+                    pending={pending}
+                    onSelect={() =>
+                        onChange(stage.id === active ? EVERY_STAGE : stage.id)
+                    }
+                />
+            ))}
+        </section>
+    );
 }
 
 AdminTransactionsStatBand.displayName = "AdminTransactionsStatBand";

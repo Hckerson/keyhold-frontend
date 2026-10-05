@@ -4,21 +4,17 @@ import { useCallback, useMemo, useState } from "react";
 import { TransactionReviewModal } from "@/components/features/admin/transaction-review-modal";
 import { AdminTransactionsHeader } from "@/components/sections/admin/admin-transactions-header";
 import { AdminTransactionsMain } from "@/components/sections/admin/admin-transactions-main";
-import { AdminTransactionsRail } from "@/components/sections/admin/admin-transactions-rail";
 import { AdminTransactionsStatBand } from "@/components/sections/admin/admin-transactions-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    commissionMetrics,
-    focusTransaction,
+    dealFlow,
+    ledgerReading,
+    ledgerTotals,
     matchesTransactionFilters,
-    openTransactions,
     rankTransactions,
     toTransactionExportRows,
     toTransactionStages,
-    transactionCounts,
-    transactionStats,
-    transactionsSummary,
     TRANSACTION_EXPORT_COLUMNS,
     TRANSACTION_EXPORT_FILENAME,
     type TransactionStatusFilter,
@@ -46,25 +42,16 @@ export function AdminTransactionsConsole() {
         [ledger.data?.items],
     );
 
-    const focus = useMemo(() => focusTransaction(transactions), [transactions]);
-
-    const counts = useMemo(
-        () => transactionCounts(transactions),
-        [transactions],
-    );
-
     const visible = useMemo(
         () =>
-            transactions
-                .filter((transaction) => transaction.id !== focus?.id)
-                .filter((transaction) =>
-                    matchesTransactionFilters(transaction, statusFilter),
-                ),
-        [transactions, focus?.id, statusFilter],
+            transactions.filter((transaction) =>
+                matchesTransactionFilters(transaction, statusFilter),
+            ),
+        [transactions, statusFilter],
     );
 
-    const pipeline = useMemo(
-        () => toTransactionStages(stages.data ?? []),
+    const flow = useMemo(
+        () => dealFlow(toTransactionStages(stages.data ?? [])),
         [stages.data],
     );
 
@@ -96,32 +83,25 @@ export function AdminTransactionsConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AdminTransactionsHeader
-                summary={transactionsSummary(transactions)}
-                onExport={onExport}
-            />
+            <AdminTransactionsHeader onExport={onExport} />
 
             <AdminTransactionsStatBand
-                stats={transactionStats(transactions)}
-                pending={ledger.isPending}
+                stages={flow}
+                active={statusFilter}
+                pending={stages.isPending}
+                onChange={setStatusFilter}
             />
 
-            <div className="console-split gap-3">
-                <AdminTransactionsMain
-                    transactions={visible}
-                    focus={focus}
-                    statusFilter={statusFilter}
-                    counts={counts}
-                    pending={ledger.isPending}
-                    onStatusFilterChange={setStatusFilter}
-                    onOpen={onOpen}
-                />
-                <AdminTransactionsRail
-                    stages={pipeline}
-                    openCount={openTransactions(transactions).length}
-                    metrics={commissionMetrics(transactions)}
-                />
-            </div>
+            <AdminTransactionsMain
+                transactions={visible}
+                total={transactions.length}
+                totals={ledgerTotals(visible)}
+                reading={ledgerReading(transactions)}
+                filtered={statusFilter !== EVERY_STATUS}
+                pending={ledger.isPending}
+                onClearFilter={() => setStatusFilter(EVERY_STATUS)}
+                onOpen={onOpen}
+            />
 
             <TransactionReviewModal
                 transaction={transactions.find(
