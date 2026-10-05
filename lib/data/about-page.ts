@@ -1,4 +1,4 @@
-import { BRAND_NAME } from "@/components/brand/wordmark";
+import { BRAND_NAME } from "@/lib/constants";
 import type { ProsePage } from "@/lib/types";
 
 export const ABOUT_PAGE: ProsePage = {

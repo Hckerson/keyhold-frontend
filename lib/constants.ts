@@ -200,6 +200,8 @@ export const config = {
     isDev: process.env.NODE_ENV === "development",
 };
 
+export const BRAND_NAME = "Luxury RE";
+
 export const ACCESS_TOKEN_COOKIE = "access_token";
 export const SESSION_DAYS = 7;
 

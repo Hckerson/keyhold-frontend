@@ -1,4 +1,4 @@
-import { BRAND_NAME } from "@/components/brand/wordmark";
+import { BRAND_NAME } from "@/lib/constants";
 import { SUPPORT_EMAIL } from "@/lib/config/site-contact";
 import type { ProsePage } from "@/lib/types";
 
