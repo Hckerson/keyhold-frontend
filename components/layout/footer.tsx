@@ -2,7 +2,8 @@ import Link from "next/link";
 import { SectionShell } from "@/components/patterns/section-shell";
 import { FooterLocalityIndex } from "@/components/layout/footer-locality-index";
 import { NewsletterForm } from "@/components/layout/newsletter-form";
-import { Wordmark, BRAND_NAME } from "@/components/brand/wordmark";
+import { Wordmark } from "@/components/brand/wordmark";
+import { BRAND_NAME } from "@/lib/constants";
 import { FOOTER_COLUMNS } from "@/lib/config/site-nav";
 import styles from "@/components/layout/footer.module.css";
 

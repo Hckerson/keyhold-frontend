@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { cva, type VariantProps } from "class-variance-authority";
 import { LogoChip } from "@/components/brand/logo-chip";
+import { BRAND_NAME } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-
-export const BRAND_NAME = "Luxury RE";
 
 const wordVariants = cva("font-display leading-none whitespace-nowrap", {
     variants: {
