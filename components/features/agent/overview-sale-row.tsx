@@ -1,33 +1,13 @@
+import { OverAskChip } from "@/components/features/agent/over-ask-chip";
 import { cn, formatCompactUsd } from "@/lib/utils";
-import {
-    chartToneSoft,
-    chartToneText,
-    type ChartTone,
-} from "@/lib/config/chart-tones";
+import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
 import { FAST_SALE_DAYS, SLOW_SALE_DAYS } from "@/lib/data/agent-overview-feed";
 import type { ClosedSale } from "@/lib/types";
-
-const AT_ASK_LABEL = "At ask";
 
 function speedTone(days: number): ChartTone {
     if (days <= FAST_SALE_DAYS) return "success";
     if (days <= SLOW_SALE_DAYS) return "warning";
     return "error";
-}
-
-function OverAskChip({ percent }: { percent: number }) {
-    const tone: ChartTone = percent > 0 ? "success" : "neutral";
-
-    return (
-        <span
-            className={cn(
-                "shrink-0 rounded-md px-1.5 py-0.5 font-mono text-[10px] font-medium tabular-nums",
-                chartToneSoft[tone],
-            )}
-        >
-            {percent > 0 ? `+${percent.toFixed(1)}%` : AT_ASK_LABEL}
-        </span>
-    );
 }
 
 export interface OverviewSaleRowProps {

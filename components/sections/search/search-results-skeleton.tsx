@@ -1,25 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { SearchResultsGridSkeleton } from "@/components/sections/search/search-results-grid-skeleton";
 import { FILTER_GROUPS } from "@/lib/config/search-filters";
-
-const CARD_SLOTS = [0, 1, 2, 3, 4, 5];
-
-function CardSkeleton() {
-    return (
-        <div className="border-border-light bg-background-muted flex flex-col overflow-hidden rounded-xl border pb-2.5 shadow-sm">
-            <Skeleton className="h-48 w-full rounded-none" />
-
-            <div className="border-border-light bg-background relative z-10 mx-2.5 -mt-7 flex flex-col gap-2 rounded-lg border p-3">
-                <Skeleton className="h-2.5 w-24" />
-                <Skeleton className="h-3 w-2/3" />
-                <Skeleton className="h-6 w-32" />
-                <Skeleton className="h-9 w-full rounded-md" />
-                <Skeleton className="h-3 w-1/2" />
-            </div>
-        </div>
-    );
-}
-
-CardSkeleton.displayName = "CardSkeleton";
 
 export function SearchResultsSkeleton() {
     return (
@@ -63,10 +44,8 @@ export function SearchResultsSkeleton() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-3 p-3 sm:grid-cols-2 xl:grid-cols-3">
-                        {CARD_SLOTS.map((card) => (
-                            <CardSkeleton key={card} />
-                        ))}
+                    <div className="p-3">
+                        <SearchResultsGridSkeleton />
                     </div>
 
                     <div className="border-border-dark flex items-center justify-between gap-2 border-t px-3 py-2">
@@ -80,15 +59,3 @@ export function SearchResultsSkeleton() {
 }
 
 SearchResultsSkeleton.displayName = "SearchResultsSkeleton";
-
-export function SearchResultsGridSkeleton() {
-    return (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {CARD_SLOTS.map((slot) => (
-                <CardSkeleton key={slot} />
-            ))}
-        </div>
-    );
-}
-
-SearchResultsGridSkeleton.displayName = "SearchResultsGridSkeleton";

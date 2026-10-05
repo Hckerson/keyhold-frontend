@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
+import { StepMeter } from "@/components/features/auth/parts/step-meter";
 import type { AuthStep } from "@/lib/types";
 
 export interface AuthFormHeaderProps {
@@ -7,28 +8,6 @@ export interface AuthFormHeaderProps {
     title: string;
     description?: string;
     step?: AuthStep;
-}
-
-function StepMeter({ current, total }: AuthStep) {
-    const marks = Array.from({ length: total }, (_, index) => index + 1);
-
-    return (
-        <span
-            role="img"
-            aria-label={`Step ${current} of ${total}`}
-            className="ml-auto flex items-center gap-1"
-        >
-            {marks.map((mark) => (
-                <span
-                    key={mark}
-                    className={cn(
-                        "ease-smooth block h-px w-4 transition-colors duration-300",
-                        mark <= current ? "bg-highlight" : "bg-border-dark",
-                    )}
-                />
-            ))}
-        </span>
-    );
 }
 
 export function AuthFormHeader({

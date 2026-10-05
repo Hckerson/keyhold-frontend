@@ -9,7 +9,7 @@ import { SearchResultsPanel } from "@/components/sections/search/search-results-
 import { SearchResultsGrid } from "@/components/sections/search/search-results-grid";
 import { SearchResultsMap } from "@/components/sections/search/search-results-map";
 import { SearchResultsList } from "@/components/sections/search/search-results-list";
-import { SearchResultsGridSkeleton } from "@/components/sections/search/search-skeleton";
+import { SearchResultsGridSkeleton } from "@/components/sections/search/search-results-grid-skeleton";
 import { SearchResultsError } from "@/components/sections/search/search-results-error";
 import { SearchEmpty } from "@/components/sections/search/search-empty";
 import { SearchActiveFilters } from "@/components/sections/search/search-active-filters";

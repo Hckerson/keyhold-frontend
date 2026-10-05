@@ -1,13 +1,13 @@
 import { Reveal } from "@/components/patterns/reveal";
-import { HeroSection } from "@/components/sections/home/hero";
+import { HeroSection } from "@/components/sections/home/hero-section";
 import { PremierListing } from "@/components/sections/home/premier-listing";
 import { FeaturedGallery } from "@/components/sections/home/featured-gallery";
 import { ListingsUnavailable } from "@/components/sections/home/listings-unavailable";
 import { BrowseIndex } from "@/components/sections/home/browse-index";
 import { JustListed } from "@/components/sections/home/just-listed";
 import { StatsBand } from "@/components/sections/home/stats-band";
-import { GuaranteesSection } from "@/components/sections/home/guarantees";
-import { ConciergeSection } from "@/components/sections/home/concierge";
+import { GuaranteesSection } from "@/components/sections/home/guarantees-section";
+import { ConciergeSection } from "@/components/sections/home/concierge-section";
 import { LatestSales } from "@/components/sections/home/latest-sales";
 import { CtaBanner } from "@/components/sections/home/cta-banner";
 import { propertiesServerAPI } from "@/lib/api/server";

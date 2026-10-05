@@ -37,4 +37,6 @@ export { PasswordStrength } from "./password-strength";
 export type { PasswordStrengthProps } from "./password-strength";
 export type { AuthSubmitProps } from "./auth-submit";
 
-export { GoogleMark, FacebookMark, PROVIDER_MARKS } from "./provider-marks";
+export { GoogleMark } from "./google-mark";
+export { FacebookMark } from "./facebook-mark";
+export { PROVIDER_MARKS } from "./provider-marks";
