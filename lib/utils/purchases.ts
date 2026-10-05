@@ -32,10 +32,10 @@ export const heldPurchases = (purchases: Purchase[]) =>
 export const heldValue = (purchases: Purchase[]) =>
     sum(heldPurchases(purchases).map((purchase) => purchase.escrowAmount ?? 0));
 
-export const inspectionDaysLeft = (purchase: Purchase) => {
+export const inspectionDaysLeft = (purchase: Purchase, now = new Date()) => {
     if (!purchase.inspectionEndsAt) return null;
     const remaining =
-        new Date(purchase.inspectionEndsAt).getTime() - Date.now();
+        new Date(purchase.inspectionEndsAt).getTime() - now.getTime();
     return Math.ceil(remaining / MS_PER_DAY);
 };
 

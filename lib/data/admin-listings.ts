@@ -47,8 +47,8 @@ export const openChecks = (listing: ModerationListing) =>
 export const isOpen = (listing: ModerationListing) =>
     MODERATION_STATUSES[listing.status].open;
 
-export const submittedAt = (listing: ModerationListing) =>
-    new Date(Date.now() - listing.queuedMinutes * MS_PER_MINUTE);
+export const submittedAt = (listing: ModerationListing, now = new Date()) =>
+    new Date(now.getTime() - listing.queuedMinutes * MS_PER_MINUTE);
 
 export const rankListings = (listings: ModerationListing[]) =>
     [...listings].sort(

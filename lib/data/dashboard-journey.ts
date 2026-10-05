@@ -103,7 +103,7 @@ export const buildJourneyStations = (
     },
 ];
 
-const nextViewing = (connections: ConnectionListItem[]) => {
+const nextViewing = (connections: ConnectionListItem[], now = new Date()) => {
     const upcoming = connections
         .flatMap((connection) =>
             connection.viewings
@@ -113,7 +113,7 @@ const nextViewing = (connections: ConnectionListItem[]) => {
                     agent: connection.seller.fullName,
                 })),
         )
-        .filter((entry) => entry.at.getTime() > Date.now())
+        .filter((entry) => entry.at > now)
         .sort((a, b) => a.at.getTime() - b.at.getTime());
 
     return upcoming[0];

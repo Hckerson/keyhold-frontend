@@ -46,10 +46,11 @@ export const rankPayouts = (payouts: Payout[]) =>
             b.gross - a.gross,
     );
 
-export const inspectionLabel = (payout: Payout) => {
+export const inspectionLabel = (payout: Payout, now = new Date()) => {
     if (!payout.inspectionEndsAt) return NO_WINDOW;
     const days = Math.ceil(
-        (new Date(payout.inspectionEndsAt).getTime() - Date.now()) / MS_PER_DAY,
+        (new Date(payout.inspectionEndsAt).getTime() - now.getTime()) /
+            MS_PER_DAY,
     );
     return days <= 0 ? "Window closed" : `${days}d left`;
 };

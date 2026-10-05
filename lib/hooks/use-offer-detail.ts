@@ -96,7 +96,7 @@ export function useOfferDetail(id: string) {
                 offeredPrice: counterValue,
                 offeredTerms: counterNote || offer.offeredTerms,
                 expiresAt: new Date(
-                    Date.now() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
+                    new Date().getTime() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
                 ).toISOString(),
             },
             () => {

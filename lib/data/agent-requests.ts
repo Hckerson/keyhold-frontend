@@ -60,18 +60,21 @@ export const VIEWING_CONFIRM_COPY = {
     confirm: "Confirm viewing",
 } as const;
 
-export const confirmableTimes = (request: ViewingRequestItem) =>
-    request.proposedTimes.filter((at) => new Date(at).getTime() > Date.now());
+export const confirmableTimes = (
+    request: ViewingRequestItem,
+    now = new Date(),
+) => request.proposedTimes.filter((at) => new Date(at) > now);
 
-export const isStale = (request: ViewingRequestItem) =>
-    confirmableTimes(request).length === 0;
+export const isStale = (request: ViewingRequestItem, now = new Date()) =>
+    confirmableTimes(request, now).length === 0;
 
-export const hoursLeft = (request: OfferRequestItem) =>
+export const hoursLeft = (request: OfferRequestItem, now = new Date()) =>
     Math.floor(
-        (new Date(request.expiresAt).getTime() - Date.now()) / MS_PER_HOUR,
+        (new Date(request.expiresAt).getTime() - now.getTime()) / MS_PER_HOUR,
     );
 
-export const isExpired = (request: OfferRequestItem) => hoursLeft(request) <= 0;
+export const isExpired = (request: OfferRequestItem, now = new Date()) =>
+    hoursLeft(request, now) <= 0;
 
 export const isUrgent = (request: OfferRequestItem) => {
     const left = hoursLeft(request);
