@@ -105,8 +105,3 @@ export interface FilterTileDatum<T extends string> {
     count: number;
     percent: number;
 }
-
-export type SegmentOption<T extends string> = Pick<
-    FilterTileDatum<T>,
-    "id" | "label" | "count"
->;

@@ -2,21 +2,19 @@
 
 import { m } from "motion/react";
 import { Avatar } from "@/components/ui/avatar";
-import { StatusDot } from "@/components/patterns/status-dot";
 import { UserActivityMark } from "@/components/features/admin/user-activity-mark";
-import { UserDealMark } from "@/components/features/admin/user-deal-mark";
-import { UserRoleMark } from "@/components/features/admin/user-role-mark";
+import { UserBookMark } from "@/components/features/admin/user-book-mark";
 import { UserRowActions } from "@/components/features/admin/user-row-actions";
-import { UserVolumeMark } from "@/components/features/admin/user-volume-mark";
+import { UserStatusMark } from "@/components/features/admin/user-status-mark";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { LIST_ROW_MOTION } from "@/lib/config/motion";
-import { USER_STATUSES } from "@/lib/config/user-tones";
+import { USER_ROLES } from "@/lib/config/user-tones";
 import { idleDays } from "@/lib/data/admin-users";
 import { cn, initialsOf } from "@/lib/utils";
 import type { ManagedUser } from "@/lib/types";
 
 export interface UserDirectoryRowProps {
     user: ManagedUser;
-    peak: number;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
     reactivatingId?: string;
@@ -25,12 +23,11 @@ export interface UserDirectoryRowProps {
 
 export function UserDirectoryRow({
     user,
-    peak,
     onOpen,
     ...actions
 }: UserDirectoryRowProps) {
-    const status = USER_STATUSES[user.status];
     const muted = user.status === "deleted" && "opacity-60";
+    const role = USER_ROLES[user.role];
 
     return (
         <m.li {...LIST_ROW_MOTION} className="overflow-hidden">
@@ -43,47 +40,37 @@ export function UserDirectoryRow({
                         muted,
                     )}
                 >
-                    <span className="relative flex shrink-0">
-                        <Avatar
-                            size="xs"
-                            tone="accent"
-                            elevated={false}
-                            initials={initialsOf(user.name)}
-                        />
-                        <span
-                            title={status.label}
-                            className="bg-background absolute -right-0.5 -bottom-0.5 grid size-2.5 place-items-center rounded-full"
-                        >
-                            <StatusDot tone={status.tone} />
-                        </span>
-                    </span>
-                    <span className="min-w-0 truncate">
-                        <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
+                    <Avatar
+                        size="sm"
+                        tone="accent"
+                        elevated={false}
+                        initials={initialsOf(user.name)}
+                    />
+                    <span className="flex min-w-0 flex-col gap-0.5">
+                        <span className="text-text group-hover:text-accent ease-smooth truncate font-medium transition-colors">
                             {user.name}
                         </span>
-                        <span className="text-text-muted">
+                        <span className="text-text-muted truncate">
+                            <span className={chartToneText[role.tone]}>
+                                {role.label}
+                            </span>
                             {" · "}
                             {user.email}
                         </span>
-                        <span className="sr-only">, {status.label}</span>
                     </span>
                 </button>
-                <UserRoleMark
-                    role={user.role}
+                <UserStatusMark
+                    status={user.status}
                     className={cn("queue-grid__wide", muted)}
-                />
-                <UserDealMark
-                    deals={user.transactions}
-                    className={cn("queue-grid__wide justify-end", muted)}
                 />
                 <UserActivityMark
                     days={idleDays(user)}
                     className={cn("queue-grid__wide justify-end", muted)}
                 />
-                <UserVolumeMark
+                <UserBookMark
+                    deals={user.transactions}
                     volume={user.volume}
-                    peak={peak}
-                    className={cn("text-right", muted)}
+                    className={cn("justify-end text-right", muted)}
                 />
                 <UserRowActions user={user} {...actions} />
             </div>

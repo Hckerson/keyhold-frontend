@@ -6,19 +6,17 @@ import { cn } from "@/lib/utils";
 import type { ManagedUser } from "@/lib/types";
 
 const LIST_LABEL =
-    "Platform accounts by name, email, account status, role, closed deals, days since last sign-in and lifetime volume";
+    "Platform accounts by role, name, email, account status, days since last sign-in and lifetime book";
 
 const COLUMNS = [
     { id: "account", label: "Account" },
-    { id: "role", label: "Role", wide: true },
-    { id: "deals", label: "Deals", wide: true, end: true },
+    { id: "status", label: "Status", wide: true },
     { id: "active", label: "Seen", wide: true, end: true },
-    { id: "volume", label: "Volume", end: true },
+    { id: "book", label: "Book", end: true },
 ];
 
 export interface UserDirectoryListProps {
     users: ManagedUser[];
-    peak: number;
     onOpen: (id: string) => void;
     onSuspend: (id: string) => void;
     reactivatingId?: string;

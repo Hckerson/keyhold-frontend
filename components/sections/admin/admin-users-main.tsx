@@ -11,14 +11,13 @@ import { AdminUsersToolbar } from "@/components/sections/admin/admin-users-toolb
 import { TABLE_PAGE_SIZE } from "@/lib/constants";
 import type {
     ManagedUser,
-    SegmentOption,
+    SelectOption,
     UserDirectoryFilters,
     UserRoleFilter,
     UserSortKey,
-    UserStatusFilter,
 } from "@/lib/types";
 
-const DIRECTORY_TITLE = "Account Directory";
+const DIRECTORY_TITLE = "Accounts";
 const EMPTY_TITLE = "No account matches this view";
 const EMPTY_LEDE =
     "Clear the search or widen the status and role filters to see the full directory.";
@@ -29,13 +28,11 @@ export interface AdminUsersMainProps {
     total: number;
     reading: string;
     filters: UserDirectoryFilters & { sort: UserSortKey };
-    statuses: SegmentOption<UserStatusFilter>[];
-    roles: SegmentOption<UserRoleFilter>[];
+    roles: SelectOption<UserRoleFilter>[];
     onFilter: (change: Partial<UserDirectoryFilters>) => void;
     onSortChange: (next: UserSortKey) => void;
     page: number;
     pageCount: number;
-    peak: number;
     pending?: boolean;
     onPageChange: (next: number) => void;
     onOpen: (id: string) => void;
@@ -50,7 +47,6 @@ export function AdminUsersMain({
     total,
     reading,
     filters,
-    statuses,
     roles,
     onFilter,
     onSortChange,
@@ -65,18 +61,16 @@ export function AdminUsersMain({
             title={DIRECTORY_TITLE}
             description={reading}
             count={visible === total ? total : `${visible} / ${total}`}
+            className="console-span-2 min-w-0 self-start"
             bodyClassName="space-y-3"
         >
             <AdminUsersToolbar
                 query={filters.query}
                 sort={filters.sort}
-                status={filters.status}
                 role={filters.role}
-                statuses={statuses}
                 roles={roles}
                 onQueryChange={(query) => onFilter({ query })}
                 onSortChange={onSortChange}
-                onStatusChange={(status) => onFilter({ status })}
                 onRoleChange={(role) => onFilter({ role })}
             />
             <PresenceSwap

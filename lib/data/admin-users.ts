@@ -1,12 +1,12 @@
 import { differenceInCalendarDays, format } from "date-fns";
-import type { SelectOption } from "@/components/ui/forms/select";
 import { USER_STATUSES } from "@/lib/config/user-tones";
 import { parseLocalDate } from "@/lib/utils";
 import type {
     ManagedUser,
+    SelectOption,
+    UserAction,
     UserDirectoryFilters,
     UserRoleFilter,
-    UserAction,
     UserSortKey,
     UserStatusFilter,
 } from "@/lib/types";
@@ -28,6 +28,9 @@ export const idleDays = (user: ManagedUser) =>
         0,
         differenceInCalendarDays(new Date(), parseLocalDate(user.lastActive)),
     );
+
+export const dealsLabel = (deals: number) =>
+    `${deals} deal${deals === 1 ? "" : "s"}`;
 
 export const joinedLabel = (user: ManagedUser) =>
     format(parseLocalDate(user.joinDate), JOINED_FORMAT);
