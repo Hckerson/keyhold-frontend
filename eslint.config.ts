@@ -17,20 +17,13 @@ const VIEWS = ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"];
 const SOURCE = [...VIEWS, "lib/**/*.{ts,tsx}"];
 const RESOURCE_LAYER = ["lib/api/**"];
 const ROUTES = ["app/**/page.tsx"];
+const GENERATED_IMAGES = [
+    "app/**/{icon,apple-icon,opengraph-image,twitter-image}.tsx",
+];
 const COMPONENTS = ["components/**/*.tsx"];
 const PRIMITIVES = ["components/ui/**/*.tsx"];
 const TESTS = ["**/*.test.{ts,tsx}"];
 const LENGTH_EXEMPT = ["lib/enums/enums.ts"];
-const EDITORIAL = [
-    "app/(public)/**",
-    "app/(auth)/**",
-    "components/sections/home/**",
-    "components/sections/listing/**",
-    "components/sections/search/**",
-    "components/sections/site/**",
-    "components/features/auth/**",
-    "components/layout/**",
-];
 const BREAKPOINT_OWNERS = [
     "components/ui/**/*.tsx",
     "components/patterns/**/*.tsx",
@@ -170,7 +163,6 @@ const starterConfig: ConfigArray = [
     {
         files: VIEWS,
         rules: {
-            "starter/application-register-density": ADOPTING,
             "starter/domain-types-in-lib": "error",
             "no-restricted-imports": restrictedImports([
                 {
@@ -191,10 +183,6 @@ const starterConfig: ConfigArray = [
         },
     },
     {
-        files: EDITORIAL,
-        rules: { "starter/application-register-density": "off" },
-    },
-    {
         files: COMPONENTS,
         rules: { "starter/one-component-per-file": "error" },
     },
@@ -211,6 +199,10 @@ const starterConfig: ConfigArray = [
     {
         files: [...TESTS, ...LENGTH_EXEMPT],
         rules: { "max-lines": "off" },
+    },
+    {
+        files: GENERATED_IMAGES,
+        rules: { "@next/next/no-img-element": "off" },
     },
 ];
 
