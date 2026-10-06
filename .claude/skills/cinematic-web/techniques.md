@@ -110,7 +110,3 @@ The scene table assigns one device per scene. At least four families per page, n
 A cinematic page usually needs a dark ground the starter's light tokens do not have. Add a theme class in `styles/tokens.css` that redefines the `--colors-*` values (plus `--colors-flow*` or whatever the hero reads) and put it on `<html>` in the layout. The `@theme` mapping resolves on that same element, so every house utility (`bg-background`, `text-text`, `Button` tones) follows without a parallel set of classes. Scoped to a deeper element, the `--color-*` mappings would also have to be redeclared there. The canvas reads its colours from the same tokens with `getComputedStyle`.
 
 Display and scene sizes are `clamp()` tokens, used as `text-(--stage-display)` or through a named class when several elements share them. Layout and breakpoints are Tailwind utilities in the JSX; CSS is for what utilities cannot express: keyframes, sticky tracks, state selectors and the stage itself.
-
-## Lint in this repo
-
-`starter/application-register-density` rejects `text-h1`–`text-h3` and editorial spacing in view files. A cinematic route and its feature folder opt out with a `files` block in `eslint.config.ts`, as the rule's message says. Add that block as part of the build and name it in the report; do not disable the rule inline.
