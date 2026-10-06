@@ -30,7 +30,9 @@ export function DataTableHead<T>({
     return (
         <thead
             className={cn(
-                "border-border-dark border-b",
+                bare
+                    ? "border-border-light border-b"
+                    : "border-border-dark border-b",
                 bare
                     ? "bg-transparent"
                     : "bg-background/80 sticky top-0 z-10 backdrop-blur-md",

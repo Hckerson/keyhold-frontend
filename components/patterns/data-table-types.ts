@@ -15,9 +15,9 @@ export const emphasisClass: Record<ColumnEmphasis, string> = {
     meta: "micro-label tabular-nums",
 };
 
-export const headCell = "px-3 py-2.5 micro-label leading-none";
+export const headCell = "h-9 px-3 py-0 micro-label leading-none";
 
-export const footCell = "px-3 py-2.5 text-xs font-medium tabular-nums";
+export const footCell = "h-10 px-3 py-0 text-xs font-medium tabular-nums";
 
 export const sortIcon = {
     asc: ArrowUp,
