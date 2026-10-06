@@ -50,3 +50,10 @@ export interface LedgerTotals {
     volume: number;
     commission: number;
 }
+
+export interface DealGroup {
+    id: "open" | "closed";
+    label: string;
+    transactions: LedgerTransaction[];
+    volume: number;
+}

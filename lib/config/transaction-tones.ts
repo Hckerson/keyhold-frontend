@@ -85,6 +85,7 @@ export const TRANSACTION_PIPELINE_ORDER: LedgerStatus[] = [
 
 export interface TransactionMilestoneMeta {
     label: string;
+    next: string;
     icon: LucideIcon;
 }
 
@@ -92,10 +93,26 @@ export const TRANSACTION_MILESTONES: Record<
     TransactionMilestoneId,
     TransactionMilestoneMeta
 > = {
-    agreement: { label: "Purchase agreement", icon: FileSignature },
-    deposit: { label: "Escrow deposit", icon: Landmark },
-    inspection: { label: "Inspection window closed", icon: ClipboardCheck },
-    settlement: { label: "Funds released", icon: Wallet },
+    agreement: {
+        label: "Purchase agreement",
+        next: "Agreement to sign",
+        icon: FileSignature,
+    },
+    deposit: {
+        label: "Escrow deposit",
+        next: "Deposit due",
+        icon: Landmark,
+    },
+    inspection: {
+        label: "Inspection window closed",
+        next: "Inspection open",
+        icon: ClipboardCheck,
+    },
+    settlement: {
+        label: "Funds released",
+        next: "Funds to release",
+        icon: Wallet,
+    },
 };
 
 export const MILESTONE_ORDER: TransactionMilestoneId[] = [

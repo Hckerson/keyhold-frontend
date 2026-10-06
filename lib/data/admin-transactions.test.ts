@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
     dealFlow,
+    dealGroups,
+    nextMilestone,
     ledgerReading,
     ledgerTotals,
     toTransactionStages,
@@ -74,5 +76,25 @@ describe("ledgerReading", () => {
 
     it("says the ledger is empty rather than reporting zero in flight", () => {
         expect(ledgerReading([])).toBe("No deals on the ledger yet");
+    });
+});
+
+describe("dealGroups", () => {
+    it("puts open deals in flight and closed ones after, dropping empty groups", () => {
+        const groups = dealGroups([
+            aDeal({ id: "txn_1", status: "COMPLETED", price: 2_000_000 }),
+            aDeal({ id: "txn_2", status: "CANCELLED", price: 1_000_000 }),
+        ]);
+
+        expect(groups.map((group) => group.id)).toEqual(["closed"]);
+        expect(groups[0].volume).toBe(3_000_000);
+    });
+});
+
+describe("nextMilestone", () => {
+    it("names the first milestone the deal has not cleared", () => {
+        expect(
+            nextMilestone(aDeal({ cleared: ["agreement", "deposit"] })),
+        ).toBe("inspection");
     });
 });
