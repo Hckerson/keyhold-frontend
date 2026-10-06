@@ -10,7 +10,6 @@ import { starter } from "./tools/eslint";
 
 const TRANSPORT_MODULE = "@/lib/api/client";
 const MAX_FILE_LINES = 150;
-const ADOPTING = "warn";
 
 const GENERATED = "lib/contract/**";
 const VIEWS = ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"];
@@ -128,7 +127,7 @@ const starterConfig: ConfigArray = [
         rules: {
             "no-restricted-imports": restrictedImports(),
             "max-lines": [
-                ADOPTING,
+                "error",
                 {
                     max: MAX_FILE_LINES,
                     skipBlankLines: true,
@@ -194,7 +193,7 @@ const starterConfig: ConfigArray = [
     },
     {
         files: ROUTES,
-        rules: { "starter/page-composes-only": ADOPTING },
+        rules: { "starter/page-composes-only": "error" },
     },
     {
         files: [...TESTS, ...LENGTH_EXEMPT],
