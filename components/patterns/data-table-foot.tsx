@@ -22,8 +22,9 @@ export function DataTableFoot<T>({
     return (
         <tfoot
             className={cn(
-                "border-border-dark border-t",
-                bare ? "bg-transparent" : "bg-background/60 backdrop-blur-md",
+                bare
+                    ? "border-border-light border-t bg-transparent"
+                    : "border-border-dark bg-background/60 border-t backdrop-blur-md",
             )}
         >
             <tr>

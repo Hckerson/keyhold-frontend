@@ -48,7 +48,7 @@ export function DataTableBody<T>({
     rowClassName,
 }: DataTableBodyProps<T>) {
     return (
-        <tbody className="divide-border divide-y">
+        <tbody className="divide-border-light divide-y">
             {rows.map((row) => {
                 const key = rowKey(row);
 

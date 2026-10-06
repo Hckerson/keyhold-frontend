@@ -46,7 +46,7 @@ export function DataTableHeadCell<T>({
                     type="button"
                     onClick={() => onSort(column.id)}
                     className={cn(
-                        "hover:text-text focus-visible:ring-accent ease-smooth inline-flex items-center gap-1 rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                        "group hover:text-text focus-visible:ring-accent ease-smooth inline-flex items-center gap-1 rounded-xs tracking-wide uppercase transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
                         column.align === "right" && "flex-row-reverse",
                     )}
                 >
@@ -55,7 +55,12 @@ export function DataTableHeadCell<T>({
                         size={12}
                         strokeWidth={1.5}
                         aria-hidden="true"
-                        className={active ? "text-accent" : "text-text-muted"}
+                        className={cn(
+                            "ease-smooth transition-opacity duration-200",
+                            active
+                                ? "text-accent"
+                                : "text-text-muted opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100",
+                        )}
                     />
                 </button>
             ) : (
