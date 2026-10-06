@@ -1,7 +1,7 @@
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
 import { APPOINTMENT_TYPES } from "@/lib/config/appointment-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
-import type { AppointmentTypeShare } from "@/lib/data/agent-calendar";
+import type { AppointmentTypeShare } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export interface CalendarTypeRowProps {

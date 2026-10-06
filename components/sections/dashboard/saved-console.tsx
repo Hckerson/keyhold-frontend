@@ -6,21 +6,15 @@ import { SavedMain } from "@/components/sections/dashboard/saved-main";
 import { SavedRail } from "@/components/sections/dashboard/saved-rail";
 import { SavedStatBand } from "@/components/sections/dashboard/saved-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
-import {
-    countByStatus,
-    rankSaved,
-    savedStats,
-    savedSummary,
-    sortSaved,
-    type SavedSortKey,
-    type SavedStatusFilter,
-} from "@/lib/data/saved-listings";
+import { countByStatus, rankSaved, sortSaved } from "@/lib/data/saved-listings";
+import { savedStats, savedSummary } from "@/lib/data/saved-listings-stats";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     useSavedProperties,
     useToggleSavedProperty,
 } from "@/lib/hooks/use-saved-properties";
 import { toSavedListing } from "@/lib/utils/to-saved-listing";
+import type { SavedSortKey, SavedStatusFilter } from "@/lib/types";
 
 export function SavedConsole() {
     const { data, isPending, isError, refetch } = useSavedProperties();

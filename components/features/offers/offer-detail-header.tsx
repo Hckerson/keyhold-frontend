@@ -2,9 +2,8 @@
 
 import { PortalHeader } from "@/components/patterns/portal-header";
 import { OfferDetailActions } from "@/components/features/offers/offer-detail-actions";
-import type { OfferDetail } from "@/lib/data/offer-details";
 import { formatUsd } from "@/lib/utils";
-import type { OfferStatus } from "@/lib/types";
+import type { OfferStatus, OfferDetail } from "@/lib/types";
 
 const BACK_TO_OFFERS = { label: "Back to offers", href: "/dashboard/offers" };
 

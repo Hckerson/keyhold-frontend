@@ -7,23 +7,17 @@ import { OffersRail } from "@/components/sections/dashboard/offers-rail";
 import { OffersStatBand } from "@/components/sections/dashboard/offers-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
-import {
-    countByStage,
-    matchesFilters,
-    offerStats,
-    offersSummary,
-    rankOffers,
-    type StageFilter,
-    type StatusFilter,
-} from "@/lib/data/offers";
+import { countByStage, matchesFilters, rankOffers } from "@/lib/data/offers";
+import { offerStats, offersSummary } from "@/lib/data/offers-stats";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { toOfferBook } from "@/lib/utils/to-offer";
+import type { OfferStageFilter, OfferStatusFilter } from "@/lib/types";
 
 export function OffersConsole() {
     const { data, isPending, isError, refetch } = useMyInterests();
 
-    const [stageFilter, setStageFilter] = useState<StageFilter>("all");
-    const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+    const [stageFilter, setStageFilter] = useState<OfferStageFilter>("all");
+    const [statusFilter, setStatusFilter] = useState<OfferStatusFilter>("all");
 
     const offers = useMemo(() => toOfferBook(data ?? []), [data]);
 

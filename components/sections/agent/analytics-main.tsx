@@ -4,10 +4,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { AnalyticsProductionHero } from "@/components/sections/agent/analytics-production-hero";
 import { AnalyticsMonthTable } from "@/components/features/agent/analytics-month-table";
-import type {
-    MonthlyProduction,
-    ProductionSummary,
-} from "@/lib/data/agent-analytics";
+import type { MonthlyProduction, ProductionSummary } from "@/lib/types";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const LEDGER_TITLE = "Monthly Ledger";

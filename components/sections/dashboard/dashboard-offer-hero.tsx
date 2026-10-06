@@ -1,7 +1,7 @@
 import { OverviewOfferList } from "@/components/features/dashboard/overview-offer-list";
 import { PanelLink } from "@/components/features/shared/panel-link";
-import type { OfferBook, OfferPosition } from "@/lib/data/dashboard-overview";
 import { formatCompactUsd } from "@/lib/utils";
+import type { OfferBook, OfferPosition } from "@/lib/types";
 
 const OFFERS_LINK_LABEL = "Open offers";
 const LIVE_SUFFIX = "live";

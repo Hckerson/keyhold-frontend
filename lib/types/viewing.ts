@@ -29,3 +29,23 @@ export interface RescheduleDraft {
     date: string;
     time: string;
 }
+
+export type ViewingStatusFilter = ViewingStatus | "all";
+
+export type ViewingModeFilter = ViewingMode | "all";
+
+export interface CalendarMonth {
+    year: number;
+    month: number;
+}
+
+export type ViewingTiming = "today" | "tomorrow" | "later";
+
+export interface OverviewViewing {
+    id: string;
+    address: string;
+    agent: string;
+    when: string;
+    timing: ViewingTiming;
+    status: ViewingStatus;
+}

@@ -1,4 +1,4 @@
-import type { Appointment } from "@/lib/data/agent-calendar";
+import type { Appointment } from "@/lib/types";
 import { APPOINTMENT_TYPES } from "@/lib/config/appointment-tones";
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
 import {

@@ -7,9 +7,8 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { OverviewTaskList } from "@/components/features/dashboard/overview-task-list";
 import { OverviewAlertList } from "@/components/features/dashboard/overview-alert-list";
 import { QuickActionList } from "@/components/features/shared/quick-action-list";
-import { buyerQuickActions } from "@/lib/data/dashboard-overview";
-import type { JourneyTask } from "@/lib/data/dashboard-overview";
-import type { Alert } from "@/lib/types";
+import { buyerQuickActions } from "@/lib/data/dashboard-overview-actions";
+import type { Alert, JourneyTask } from "@/lib/types";
 
 const STEPS_TITLE = "Next Steps";
 const STEPS_LEDE = "Where you stand in the purchase";

@@ -1,7 +1,7 @@
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
-import { ALERT_TYPE_COUNT } from "@/lib/data/alerts";
+import { ALERT_TYPE_COUNT } from "@/lib/data/alerts-preferences";
 import { minutesSince } from "@/lib/utils/elapsed";
 
 const HERO_EYEBROW = "Buyer profile";

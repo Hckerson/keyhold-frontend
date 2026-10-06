@@ -4,11 +4,8 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/forms/input";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { ConversationList } from "@/components/features/messaging/conversation-list";
-import {
-    CONVERSATION_FILTERS,
-    type ConversationFilter,
-} from "@/lib/data/messages";
-import type { Conversation } from "@/lib/types";
+import { CONVERSATION_FILTERS } from "@/lib/data/messages";
+import type { Conversation, ConversationFilter } from "@/lib/types";
 
 const SEARCH_LABEL = "Search conversations";
 const SEARCH_PLACEHOLDER = "Search agents, properties, messages";

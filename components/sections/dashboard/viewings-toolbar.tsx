@@ -3,12 +3,8 @@
 import { Filter, X } from "lucide-react";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { Select } from "@/components/ui/forms/select";
-import {
-    MODE_OPTIONS,
-    VIEWING_FILTERS,
-    type ViewingModeFilter,
-    type ViewingStatusFilter,
-} from "@/lib/data/viewings";
+import { MODE_OPTIONS, VIEWING_FILTERS } from "@/lib/data/viewings";
+import type { ViewingModeFilter, ViewingStatusFilter } from "@/lib/types";
 
 const MODE_LABEL = "Filter by format";
 const CLEAR_PREFIX = "Clear";

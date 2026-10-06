@@ -13,15 +13,13 @@ import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     countByFilter,
     matchesConversation,
-    messageStats,
-    messagesSummary,
     rankConversations,
-    type ConversationFilter,
 } from "@/lib/data/messages";
+import { messageStats, messagesSummary } from "@/lib/data/messages-stats";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
 import { useSession } from "@/lib/hooks/use-session";
-import type { MessageSendHandler } from "@/lib/types";
+import type { MessageSendHandler, ConversationFilter } from "@/lib/types";
 import { toConversationList } from "@/lib/utils/to-conversation";
 import {
     medianReplyMinutes,

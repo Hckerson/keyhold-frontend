@@ -1,20 +1,15 @@
 import {
-    CalendarCheck,
-    CalendarClock,
-    Clock,
-    Footprints,
-    Wallet,
-} from "lucide-react";
-import {
-    TIMING_BANDS,
-    TIMING_BAND_KEYS,
     VIEWING_MODES,
     VIEWING_STATUSES,
     VIEWING_STATUS_KEYS,
-    timingBandOf,
 } from "@/lib/config/viewing-tones";
-import type { ShareDatum, StatDatum, Viewing, ViewingMode } from "@/lib/types";
-import { formatCompactUsd, parseLocalDate, percentOf, sum } from "@/lib/utils";
+import type {
+    CalendarMonth,
+    Viewing,
+    ViewingModeFilter,
+    ViewingStatusFilter,
+} from "@/lib/types";
+import { parseLocalDate, sum } from "@/lib/utils";
 import { formatDayAndMonth } from "@/lib/utils/format";
 
 const MS_PER_DAY = 86_400_000;
@@ -23,11 +18,6 @@ const TIME_PATTERN = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i;
 const TODAY_LABEL = "Today";
 const PAST_SUFFIX = "d ago";
 const DAYS_SUFFIX = "d";
-const NO_VIEWING_LABEL = "—";
-
-export type ViewingStatusFilter = Viewing["status"] | "all";
-
-export type ViewingModeFilter = ViewingMode | "all";
 
 const startOfToday = () => {
     const now = new Date();
@@ -62,11 +52,6 @@ export const MODE_OPTIONS: { value: ViewingModeFilter; label: string }[] = [
     { value: "virtual", label: VIEWING_MODES.virtual.label },
     { value: "open-house", label: VIEWING_MODES["open-house"].label },
 ];
-
-export interface CalendarMonth {
-    year: number;
-    month: number;
-}
 
 export const daysUntil = (viewing: Viewing) =>
     Math.round(
@@ -174,75 +159,3 @@ export const viewingsOnDate = (
     day === null
         ? []
         : viewings.filter((viewing) => isOnDay(viewing, calendar, day));
-
-export const viewingStats = (viewings: Viewing[]): StatDatum[] => {
-    const next = nextViewing(viewings);
-
-    return [
-        {
-            id: "next",
-            icon: Clock,
-            label: "Next up",
-            value: next ? countdownLabel(daysUntil(next)) : NO_VIEWING_LABEL,
-            tone: "accent",
-        },
-        {
-            id: "confirmed",
-            icon: CalendarCheck,
-            label: "Confirmed",
-            value: `${byStatus(viewings, "confirmed").length}`,
-            tone: "success",
-        },
-        {
-            id: "pending",
-            icon: CalendarClock,
-            label: "Awaiting",
-            value: `${byStatus(viewings, "pending").length}`,
-            tone: "warning",
-        },
-        {
-            id: "walked",
-            icon: Footprints,
-            label: "Walked",
-            value: `${walkedViewings(viewings).length}`,
-            tone: "info",
-        },
-        {
-            id: "value",
-            icon: Wallet,
-            label: "Value touring",
-            value: formatCompactUsd(touringValue(viewings)),
-            tone: "highlight",
-        },
-    ];
-};
-
-export const statusShares = (viewings: Viewing[]): ShareDatum[] => {
-    const counts = countByStatus(viewings);
-    return VIEWING_STATUS_KEYS.map((id) => ({
-        id,
-        icon: VIEWING_STATUSES[id].icon,
-        label: VIEWING_STATUSES[id].label,
-        value: `${counts[id]}`,
-        percent: percentOf(counts[id], viewings.length),
-        tone: VIEWING_STATUSES[id].chartTone,
-    }));
-};
-
-export const timingShares = (viewings: Viewing[]): ShareDatum[] =>
-    TIMING_BAND_KEYS.map((id) => {
-        const count = viewings.filter(
-            (viewing) => timingBandOf(daysUntil(viewing)) === id,
-        ).length;
-        return {
-            id,
-            icon: TIMING_BANDS[id].icon,
-            label: TIMING_BANDS[id].label,
-            value: `${count}`,
-            percent: percentOf(count, viewings.length),
-            tone: TIMING_BANDS[id].tone,
-        };
-    });
-
-export const viewingsSummary = (viewings: Viewing[]) =>
-    `${byStatus(viewings, "confirmed").length} confirmed · ${walkedViewings(viewings).length} walked`;

@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { matchesStatus, type StatusFilter } from "@/lib/data/agent-listings";
-import type { ManagedListing } from "@/lib/types";
+import { matchesStatus } from "@/lib/data/agent-listings";
+import type { ListingStatusFilter, ManagedListing } from "@/lib/types";
 
 export function useListingSelection(listings: ManagedListing[]) {
-    const [filter, setFilter] = useState<StatusFilter>("all");
+    const [filter, setFilter] = useState<ListingStatusFilter>("all");
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
     const visible = useMemo(
@@ -22,7 +22,7 @@ export function useListingSelection(listings: ManagedListing[]) {
         visible.length > 0 && selected.length === visible.length;
 
     const changeFilter = useCallback(
-        (next: StatusFilter) => {
+        (next: ListingStatusFilter) => {
             setFilter(next);
             setSelectedIds((current) =>
                 current.filter((id) =>

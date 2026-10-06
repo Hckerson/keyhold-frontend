@@ -6,8 +6,8 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { ListingTable } from "@/components/features/agent/listing-table";
 import { ListingsToolbar } from "@/components/sections/agent/listings-toolbar";
 import { ListingsTopHero } from "@/components/sections/agent/listings-top-hero";
-import type { BulkAction, StatusFilter } from "@/lib/data/agent-listings";
-import type { ManagedListing } from "@/lib/types";
+import type { BulkAction } from "@/lib/config/listing-bulk";
+import type { ListingStatusFilter, ManagedListing } from "@/lib/types";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Listing Book";
@@ -20,14 +20,14 @@ export interface ListingsMainProps {
     top?: ManagedListing;
     listings: ManagedListing[];
     peak: number;
-    filter: StatusFilter;
-    counts: Record<StatusFilter, number>;
+    filter: ListingStatusFilter;
+    counts: Record<ListingStatusFilter, number>;
     selected: ManagedListing[];
     selectedIds: string[];
     allSelected: boolean;
     pending?: boolean;
     bulkPending: boolean;
-    onFilterChange: (filter: StatusFilter) => void;
+    onFilterChange: (filter: ListingStatusFilter) => void;
     onToggleAll: () => void;
     onSelectedChange: (id: string, selected: boolean) => void;
     onClearSelection: () => void;

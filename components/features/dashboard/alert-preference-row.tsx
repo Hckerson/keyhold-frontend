@@ -11,8 +11,12 @@ import {
 } from "@/lib/config/alert-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
-import type { AlertVolume } from "@/lib/data/alerts";
-import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
+import type {
+    AlertChannel,
+    AlertPreference,
+    AlertType,
+    AlertVolume,
+} from "@/lib/types";
 
 export interface AlertPreferenceRowProps {
     type: AlertType;

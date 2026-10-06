@@ -3,10 +3,9 @@ import { strengthTone } from "@/lib/config/account-tones";
 import {
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
-    type NotificationState,
 } from "@/lib/data/agent-account";
-import type { User } from "@/lib/validations/user";
-import type { ConfigField, StatDatum } from "@/lib/types";
+import type { UpdateUserInput, User } from "@/lib/validations/user";
+import type { ConfigField, NotificationState, StatDatum } from "@/lib/types";
 
 export const AGENT_SETTINGS_FORM_ID = "agent-settings-form";
 
@@ -29,6 +28,18 @@ export const toAgentForm = (user: User | undefined): AgentSettingsForm => ({
     brokerage: user?.agencyName ?? "",
     license: user?.licenseNumber ?? "",
     bio: user?.bio ?? "",
+});
+
+export const toAgentUserPayload = (
+    form: AgentSettingsForm,
+): UpdateUserInput => ({
+    fullName: form.fullName,
+    email: form.email,
+    phoneNumber: form.phone,
+    jobTitle: form.jobTitle,
+    agencyName: form.brokerage,
+    licenseNumber: form.license,
+    bio: form.bio,
 });
 
 export const changedFieldCount = (

@@ -4,10 +4,10 @@ import { OFFER_STATUSES } from "@/lib/config/offer-tones";
 import {
     OFFER_FAIR_RATIO,
     OFFER_STRONG_RATIO,
-    type OfferPosition,
 } from "@/lib/data/dashboard-overview";
 import { chartToneText, type ChartTone } from "@/lib/config/chart-tones";
 import { cn, formatCompactUsd } from "@/lib/utils";
+import type { OfferPosition } from "@/lib/types";
 
 function askTone(ratio: number): ChartTone {
     if (ratio >= OFFER_STRONG_RATIO) return "success";

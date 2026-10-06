@@ -5,8 +5,8 @@ import { dashboardNav } from "@/lib/config/dashboard-nav";
 import {
     buildJourneyStations,
     journeyCounts,
-    journeyStatus,
 } from "@/lib/data/dashboard-journey";
+import { journeyStatus } from "@/lib/data/dashboard-journey-status";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useUnreadMessageCount } from "@/lib/hooks/use-messages";
 import { useUnreadNotificationCount } from "@/lib/hooks/use-notifications";

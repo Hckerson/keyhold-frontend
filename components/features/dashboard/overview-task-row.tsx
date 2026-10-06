@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Check, Circle, CircleDot, type LucideIcon } from "lucide-react";
 import { chartToneSoft, type ChartTone } from "@/lib/config/chart-tones";
-import type { JourneyTask, TaskState } from "@/lib/data/dashboard-overview";
 import { cn } from "@/lib/utils";
+import type { JourneyTask, TaskState } from "@/lib/types";
 
 const stateIcon: Record<TaskState, LucideIcon> = {
     done: Check,

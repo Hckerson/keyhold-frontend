@@ -1,5 +1,5 @@
 import { CalendarTypeRow } from "@/components/features/agent/calendar-type-row";
-import type { AppointmentTypeShare } from "@/lib/data/agent-calendar";
+import type { AppointmentTypeShare } from "@/lib/types";
 
 export interface CalendarTypeMixProps {
     shares: AppointmentTypeShare[];

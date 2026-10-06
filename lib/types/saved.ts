@@ -1,5 +1,9 @@
 export type SavedStatus = "available" | "under-offer" | "sold" | "withdrawn";
 
+export type SavedStatusFilter = SavedStatus | "all";
+
+export type SavedSortKey = "rank" | "move" | "match" | "price-asc" | "recent";
+
 export interface SavedListing {
     id: string;
     address: string;

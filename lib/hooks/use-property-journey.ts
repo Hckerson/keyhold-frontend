@@ -10,11 +10,10 @@ import { useCreateOffer } from "@/lib/hooks/use-offers";
 import { useSavedToggle } from "@/lib/hooks/use-saved-toggle";
 import { usePurchases } from "@/lib/hooks/use-transactions";
 import { useRequestViewing } from "@/lib/hooks/use-viewings";
-import type { CreateOfferInput } from "@/lib/validations/offer";
+import type { OfferDraft } from "@/lib/validations/offer";
 import type { CreateViewingInput } from "@/lib/validations/viewing";
 
 type ViewingRequest = Omit<CreateViewingInput, "connectionId">;
-type OfferRequest = Omit<CreateOfferInput, "connectionId">;
 
 export function usePropertyJourney(propertyId: string) {
     const saved = useSavedToggle();
@@ -63,7 +62,7 @@ export function usePropertyJourney(propertyId: string) {
     );
 
     const placeOffer = useCallback(
-        async (input: OfferRequest) => {
+        async (input: OfferDraft) => {
             const connectionId = journey.connectionId;
             if (!connectionId) return false;
             try {

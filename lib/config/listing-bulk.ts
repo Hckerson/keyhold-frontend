@@ -1,4 +1,23 @@
-import type { BulkStatusAction } from "@/lib/data/agent-listings";
+import type { BulkTransition } from "@/lib/types";
+
+export const BULK_STATUS_ACTIONS = ["publish", "draft"] as const;
+
+export type BulkStatusAction = (typeof BULK_STATUS_ACTIONS)[number];
+
+export const BULK_ACTIONS = [...BULK_STATUS_ACTIONS, "delete"] as const;
+
+export type BulkAction = (typeof BULK_ACTIONS)[number];
+
+export const BULK_LABELS: Record<BulkAction, string> = {
+    publish: "Publish",
+    draft: "Move to Draft",
+    delete: "Delete",
+};
+
+export const BULK_TRANSITIONS: Record<BulkStatusAction, BulkTransition> = {
+    publish: { from: ["draft"], to: "AVAILABLE" },
+    draft: { from: ["active"], to: "DRAFT" },
+};
 
 export const BULK_PREVIEW = 5;
 

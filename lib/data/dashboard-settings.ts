@@ -4,7 +4,7 @@ import {
     ALERT_TYPE_COUNT,
     alertDeliveryCount,
     enabledAlertCount,
-} from "@/lib/data/alerts";
+} from "@/lib/data/alerts-preferences";
 import type {
     AlertPreference,
     AlertType,

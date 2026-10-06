@@ -1,7 +1,6 @@
 import { StatusDot } from "@/components/patterns/status-dot";
 import { formatMillions, percentOf } from "@/lib/utils";
-import type { QuarterStatus, QuarterSummary } from "@/lib/data/agent-analytics";
-import type { StatusTone } from "@/lib/types";
+import type { QuarterStatus, QuarterSummary, StatusTone } from "@/lib/types";
 
 const statusTone: Record<QuarterStatus, StatusTone> = {
     complete: "success",

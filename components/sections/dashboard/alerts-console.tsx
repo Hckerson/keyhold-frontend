@@ -12,19 +12,19 @@ import {
     alertStats,
     alertsSummary,
     countByRead,
-    deliverySummary,
-    emptyPreferences,
     matchesFilters,
     rankAlerts,
+    unreadCount,
+} from "@/lib/data/alerts";
+import {
+    deliverySummary,
+    emptyPreferences,
     toggleChannel,
     toggleEnabled,
     toPreferenceList,
     toPreferenceMap,
-    typeVolumes,
-    unreadCount,
-    type ReadFilter,
-    type TypeFilter,
-} from "@/lib/data/alerts";
+} from "@/lib/data/alerts-preferences";
+import { typeVolumes } from "@/lib/data/alerts-shares";
 import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import {
     useMarkAllNotificationsRead,
@@ -34,7 +34,13 @@ import {
     useUpdateNotificationPreferences,
 } from "@/lib/hooks/use-notifications";
 import { toAlert } from "@/lib/utils/to-alert";
-import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
+import type {
+    AlertChannel,
+    AlertPreference,
+    AlertReadFilter,
+    AlertType,
+    AlertTypeFilter,
+} from "@/lib/types";
 
 const ALERT_PAGE_SIZE = 100;
 
@@ -49,8 +55,8 @@ export function AlertsConsole() {
         useMarkAllNotificationsRead(),
     );
 
-    const [readFilter, setReadFilter] = useState<ReadFilter>("all");
-    const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
+    const [readFilter, setReadFilter] = useState<AlertReadFilter>("all");
+    const [typeFilter, setTypeFilter] = useState<AlertTypeFilter>("all");
 
     const alerts = useMemo(
         () => (data?.items ?? []).map(toAlert),

@@ -24,6 +24,7 @@ import {
     type MapPin,
 } from "@/lib/config/map";
 import { cn } from "@/lib/utils";
+import { toMapBounds } from "@/lib/utils/to-map-bounds";
 
 setWorkerUrl(`${MAP_WORKER_BASE}/${getVersion()}/${MAP_WORKER_ENTRY}`);
 
@@ -84,15 +85,9 @@ export function MapCanvas({
 
         instance.addControl(new NavigationControl(), "top-right");
         instance.on("load", () => setReady(true));
-        instance.on("moveend", () => {
-            const box = instance.getBounds();
-            report.current?.({
-                south: box.getSouth(),
-                north: box.getNorth(),
-                west: box.getWest(),
-                east: box.getEast(),
-            });
-        });
+        instance.on("moveend", () =>
+            report.current?.(toMapBounds(instance.getBounds())),
+        );
         map.current = instance;
 
         return () => {

@@ -1,7 +1,6 @@
 "use client";
 
-import type { ComparisonRow } from "@/lib/data/offer-details";
-import type { DataTableConfig } from "@/lib/types";
+import type { DataTableConfig, ComparisonRow } from "@/lib/types";
 
 export function buildComparisonConfig(): DataTableConfig<ComparisonRow> {
     return {

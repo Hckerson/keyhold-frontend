@@ -7,13 +7,12 @@ import { ConfigPanel } from "@/components/features/shared/config-panel";
 import { NotificationRuleTable } from "@/components/features/agent/notification-rule-table";
 import { IdentityVerificationPanel } from "@/components/features/settings/identity-verification-panel";
 import { AgentSettingsProfileHero } from "@/components/sections/agent/agent-settings-profile-hero";
+import { NOTIFICATION_RULES } from "@/lib/config/agent-account";
 import {
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
-    NOTIFICATION_RULES,
-    type NotificationRuleId,
-    type NotificationState,
 } from "@/lib/data/agent-account";
+import type { NotificationRuleId, NotificationState } from "@/lib/types";
 import {
     AGENT_PROFILE_FIELDS,
     AGENT_SETTINGS_FORM_ID,
