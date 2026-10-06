@@ -38,8 +38,6 @@ export const joinedLabel = (user: ManagedUser) =>
 export const statusRisk = (user: ManagedUser) =>
     USER_STATUSES[user.status].risk;
 
-export const isAtRisk = (user: ManagedUser) => statusRisk(user) > 0;
-
 export const userNote = (user: ManagedUser) =>
     user.note ?? USER_STATUSES[user.status].note;
 
@@ -60,9 +58,6 @@ export const userActionOf = (user: ManagedUser): UserAction | undefined => {
 
 export const sortUsers = (users: ManagedUser[], key: UserSortKey) =>
     [...users].sort(SORTERS[key]);
-
-export const focusUser = (users: ManagedUser[]) =>
-    sortUsers(users.filter(userActionOf), "priority")[0];
 
 export const matchesUserFilters = (
     user: ManagedUser,

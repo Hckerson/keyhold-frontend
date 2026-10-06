@@ -23,17 +23,8 @@ import {
     userActionOf,
     userNote,
 } from "@/lib/data/admin-users";
+import { USER_DETAIL_COPY as COPY } from "@/lib/config/user-detail";
 import type { ManagedUser } from "@/lib/types";
-
-const VOLUME_LABEL = "Lifetime volume";
-const DEALS_LABEL = "Closed deals";
-const ACTIVE_LABEL = "Last sign-in";
-const JOINED_LABEL = "Joined";
-const ACCOUNT_LABEL = "Account";
-const CLOSE_ACTION = "Close";
-const PROFILE_ACTION = "View profile";
-const SUSPEND_ACTION = "Suspend";
-const REACTIVATE_ACTION = "Reactivate";
 
 export interface UserDetailModalProps {
     user?: ManagedUser;
@@ -78,20 +69,20 @@ export function UserDetailModal({
 
                     <ModalBody className="scroll-y max-h-[60vh] space-y-4">
                         <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
-                            <MetricCell label={VOLUME_LABEL}>
+                            <MetricCell label={COPY.volume}>
                                 <UserVolumeMark
                                     volume={user.volume}
                                     peak={peak}
                                     className="justify-start"
                                 />
                             </MetricCell>
-                            <MetricCell label={DEALS_LABEL}>
+                            <MetricCell label={COPY.deals}>
                                 <UserDealMark deals={user.transactions} />
                             </MetricCell>
-                            <MetricCell label={ACTIVE_LABEL}>
+                            <MetricCell label={COPY.active}>
                                 <UserActivityMark days={idleDays(user)} />
                             </MetricCell>
-                            <MetricCell label={JOINED_LABEL}>
+                            <MetricCell label={COPY.joined}>
                                 <span className="truncate tabular-nums">
                                     {joinedLabel(user)}
                                 </span>
@@ -107,7 +98,7 @@ export function UserDetailModal({
                         )}
 
                         <div>
-                            <p className="micro-label">{ACCOUNT_LABEL}</p>
+                            <p className="micro-label">{COPY.account}</p>
                             <div className="mt-1.5">
                                 <UserAccountList user={user} />
                             </div>
@@ -120,7 +111,7 @@ export function UserDetailModal({
                             emphasis="quiet"
                             onClick={onClose}
                         >
-                            {CLOSE_ACTION}
+                            {COPY.close}
                         </Button>
                         <Link
                             href={`/admin/users/${user.id}`}
@@ -128,7 +119,7 @@ export function UserDetailModal({
                                 size: "sm",
                             })}
                         >
-                            {PROFILE_ACTION}
+                            {COPY.profile}
                         </Link>
                         {action === "reactivate" && (
                             <Button
@@ -139,7 +130,7 @@ export function UserDetailModal({
                                 disabled={reactivatingId !== undefined}
                                 onClick={() => onReactivate(user.id)}
                             >
-                                {REACTIVATE_ACTION}
+                                {COPY.reactivate}
                             </Button>
                         )}
                         {action === "suspend" && (
@@ -148,7 +139,7 @@ export function UserDetailModal({
                                 tone="error"
                                 onClick={() => onSuspend(user.id)}
                             >
-                                {SUSPEND_ACTION}
+                                {COPY.suspend}
                             </Button>
                         )}
                     </ModalFooter>
