@@ -1,10 +1,12 @@
 import {
+    MILESTONE_ORDER,
     TRANSACTION_PIPELINE_ORDER,
     TRANSACTION_STATUSES,
 } from "@/lib/config/transaction-tones";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
 import type {
     DealFlowStage,
+    DealGroup,
     LedgerStatus,
     LedgerTotals,
     LedgerTransaction,
@@ -111,3 +113,21 @@ export const toTransactionExportRows = (transactions: LedgerTransaction[]) =>
         transaction.initiatedDate,
         transaction.completedDate ?? "",
     ]);
+
+const DEAL_GROUPS: Pick<DealGroup, "id" | "label">[] = [
+    { id: "open", label: "In flight" },
+    { id: "closed", label: "Closed" },
+];
+
+export const dealGroups = (transactions: LedgerTransaction[]): DealGroup[] =>
+    DEAL_GROUPS.map((group) => {
+        const rows = transactions.filter(
+            (transaction) =>
+                TRANSACTION_STATUSES[transaction.status].open ===
+                (group.id === "open"),
+        );
+        return { ...group, transactions: rows, volume: volumeOf(rows) };
+    }).filter((group) => group.transactions.length > 0);
+
+export const nextMilestone = (transaction: LedgerTransaction) =>
+    MILESTONE_ORDER.find((id) => !transaction.cleared.includes(id));

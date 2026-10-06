@@ -354,7 +354,7 @@ svg.lucide * {
 
 .queue-grid--deals {
     --queue-columns: minmax(0, 1fr) 5rem;
-    --queue-columns-wide: minmax(0, 1fr) 6rem 7.5rem 5rem 3rem;
+    --queue-columns-wide: minmax(0, 1.2fr) minmax(0, 1fr) 10rem 5rem 4rem;
 }
 
 .queue-grid__wide {
