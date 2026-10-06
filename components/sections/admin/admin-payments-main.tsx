@@ -1,90 +1,95 @@
-import { Wallet } from "lucide-react";
-import { EmptyState } from "@/components/ui/empty-state";
-import { PresenceSwap } from "@/components/patterns/presence-swap";
-import { SkeletonRows } from "@/components/patterns/skeleton-rows";
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { PayoutTable } from "@/components/features/admin/payout-table";
-import { AdminPaymentsRevenueHero } from "@/components/sections/admin/admin-payments-revenue-hero";
-import { AdminPaymentsToolbar } from "@/components/sections/admin/admin-payments-toolbar";
-import type { PayoutStateFilter } from "@/lib/data/admin-payments";
-import type { MetricItem, Payout } from "@/lib/types";
+"use client";
 
-const QUEUE_TITLE = "Escrow Queue";
-const QUEUE_LEDE = "Every hold between a funded sale and a settled seller";
-const EMPTY_TITLE = "No holds in this view";
-const EMPTY_LEDE = "Widen the escrow state to see the full queue.";
+import { useMemo } from "react";
+import { Search, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Input } from "@/components/ui/forms/input";
+import { Panel } from "@/components/ui/panel";
+import { DataTable } from "@/components/patterns/data-table";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
+import { buildPayoutConfig } from "@/components/features/admin/payout-columns";
+import type { Payout } from "@/lib/types";
+
+const TITLE = "Payouts";
+const CLEAR_ACTION = "Show every state";
+const SEARCH_LABEL = "Search payouts by agent or deal";
+const SEARCH_PLACEHOLDER = "Search agent or deal";
+const EMPTY_TITLE = "No payouts in this state";
+const EMPTY_LEDE = "Pick another state above, or show every state.";
 
 export interface AdminPaymentsMainProps {
     payouts: Payout[];
-    stateFilter: PayoutStateFilter;
-    counts: Record<PayoutStateFilter, number>;
-    held: number;
-    heldLabel: string;
-    metrics: MetricItem[];
+    total: number;
+    reading: string;
+    query: string;
+    filtered: boolean;
     pending?: boolean;
-    onStateFilterChange: (filter: PayoutStateFilter) => void;
+    onQueryChange: (next: string) => void;
+    onClearFilter: () => void;
     onSettle: (payout: Payout) => void;
 }
 
 export function AdminPaymentsMain({
     payouts,
-    stateFilter,
-    counts,
-    held,
-    heldLabel,
-    metrics,
+    total,
+    reading,
+    query,
+    filtered,
     pending,
-    onStateFilterChange,
+    onQueryChange,
+    onClearFilter,
     onSettle,
 }: AdminPaymentsMainProps) {
+    const config = useMemo(() => buildPayoutConfig(onSettle), [onSettle]);
+
     return (
-        <div className="console-span-2 flex flex-col gap-3">
-            <AdminPaymentsRevenueHero
-                held={held}
-                heldLabel={heldLabel}
-                metrics={metrics}
-            />
-
-            <Panel
-                title={QUEUE_TITLE}
-                description={QUEUE_LEDE}
-                count={payouts.length}
-            >
-                <AdminPaymentsToolbar
-                    stateFilter={stateFilter}
-                    counts={counts}
-                    onStateFilterChange={onStateFilterChange}
-                />
-
-                <PresenceSwap
-                    swapKey={
-                        payouts.length > 0
-                            ? "rows"
-                            : pending
-                              ? "pending"
-                              : "empty"
-                    }
-                >
-                    {payouts.length > 0 ? (
-                        <PanelInset scroll>
-                            <PayoutTable
-                                payouts={payouts}
-                                onSettle={onSettle}
-                            />
-                        </PanelInset>
-                    ) : pending ? (
-                        <SkeletonRows />
-                    ) : (
-                        <EmptyState
-                            icon={Wallet}
-                            title={EMPTY_TITLE}
-                            description={EMPTY_LEDE}
-                        />
+        <Panel
+            title={TITLE}
+            description={reading}
+            count={filtered ? `${payouts.length} / ${total}` : total}
+            action={
+                <div className="flex items-center gap-2">
+                    {filtered && (
+                        <Button
+                            type="button"
+                            emphasis="quiet"
+                            onClick={onClearFilter}
+                        >
+                            {CLEAR_ACTION}
+                        </Button>
                     )}
-                </PresenceSwap>
-            </Panel>
-        </div>
+                    <div className="w-56">
+                        <Input
+                            type="search"
+                            value={query}
+                            aria-label={SEARCH_LABEL}
+                            placeholder={SEARCH_PLACEHOLDER}
+                            prefix={<Search size={12} strokeWidth={1.5} />}
+                            onChange={(event) =>
+                                onQueryChange(event.target.value)
+                            }
+                        />
+                    </div>
+                </div>
+            }
+        >
+            {pending ? (
+                <SkeletonRows tall />
+            ) : total === 0 || (payouts.length === 0 && !query) ? (
+                <EmptyState
+                    icon={Wallet}
+                    title={EMPTY_TITLE}
+                    description={EMPTY_LEDE}
+                />
+            ) : (
+                <DataTable
+                    {...config}
+                    data={payouts}
+                    className="-mx-4 -mt-2.5 -mb-4"
+                />
+            )}
+        </Panel>
     );
 }
 

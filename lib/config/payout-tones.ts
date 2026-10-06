@@ -1,9 +1,17 @@
+import {
+    CircleCheck,
+    Lock,
+    ShieldAlert,
+    Undo2,
+    type LucideIcon,
+} from "lucide-react";
 import { bandTone, type ToneBand } from "@/lib/config/admin-tones";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { PayoutState, StatusTone } from "@/lib/types";
 
 export interface PayoutStateMeta {
     label: string;
+    icon: LucideIcon;
     tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
@@ -13,6 +21,7 @@ export interface PayoutStateMeta {
 export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
     DISPUTED: {
         label: "Disputed",
+        icon: ShieldAlert,
         tone: "error",
         chartTone: "error",
         rank: 4,
@@ -20,6 +29,7 @@ export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
     },
     HELD: {
         label: "Held",
+        icon: Lock,
         tone: "warning",
         chartTone: "warning",
         rank: 3,
@@ -27,6 +37,7 @@ export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
     },
     REFUNDED: {
         label: "Refunded",
+        icon: Undo2,
         tone: "neutral",
         chartTone: "neutral",
         rank: 2,
@@ -34,6 +45,7 @@ export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
     },
     RELEASED: {
         label: "Released",
+        icon: CircleCheck,
         tone: "success",
         chartTone: "success",
         rank: 1,
