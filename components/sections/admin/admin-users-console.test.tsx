@@ -714,3 +714,90 @@ describe("AdminUsersConsole · what needs a decision", () => {
         });
     });
 });
+
+const statusBand = () =>
+    screen.findByRole("region", {
+        name: "Filter the directory by account status",
+    });
+
+describe("AdminUsersConsole · reading the numbers", () => {
+    it("counts each status and its share of the directory on its tile", async () => {
+        draw();
+        const band = within(await statusBand());
+
+        await waitFor(() =>
+            expect(
+                band.getByRole("button", { name: /^active/i }),
+            ).toHaveTextContent(/2\s*50%/),
+        );
+        expect(
+            band.getByRole("button", { name: /^suspended/i }),
+        ).toHaveTextContent(/1\s*25%/);
+        expect(band.getByRole("button", { name: /^all/i })).toHaveTextContent(
+            "4",
+        );
+    });
+
+    it("marks the status tile in use as pressed", async () => {
+        draw();
+        const band = within(await statusBand());
+        const suspended = band.getByRole("button", { name: /^suspended/i });
+
+        await userEvent.click(suspended);
+
+        expect(suspended).toHaveAttribute("aria-pressed", "true");
+        expect(band.getByRole("button", { name: /^all/i })).toHaveAttribute(
+            "aria-pressed",
+            "false",
+        );
+    });
+
+    it("claims no count on any tile while the directory is loading", async () => {
+        list.mockReturnValue(new Promise(() => {}));
+        draw();
+        const band = within(await statusBand());
+
+        for (const button of band.getAllByRole("button")) {
+            expect(button).toHaveTextContent("—");
+            expect(button).not.toHaveTextContent("%");
+        }
+    });
+
+    it("labels each role filter with how many accounts it holds", async () => {
+        draw();
+        await directory();
+
+        await userEvent.click(
+            screen.getByRole("combobox", { name: "Filter by role" }),
+        );
+
+        expect(
+            await screen.findByRole("option", { name: "Buyers · 2" }),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByRole("option", { name: "Admins · 1" }),
+        ).toBeInTheDocument();
+    });
+
+    it("ranks the book by lifetime volume and opens an account from it", async () => {
+        list.mockResolvedValue([
+            aMemberRecord({ volume: 2_000_000 }),
+            { ...BEN, volume: 6_000_000 },
+            CARA,
+        ]);
+        draw();
+        const book = within(
+            await screen.findByRole("list", {
+                name: "Accounts ranked by lifetime volume",
+            }),
+        );
+
+        const [first, second] = book.getAllByRole("button");
+        expect(first).toHaveTextContent("Ben Ortiz");
+        expect(second).toHaveTextContent("Ada Vance");
+        expect(book.queryByText("Cara Lin")).not.toBeInTheDocument();
+
+        await userEvent.click(first);
+        expect(await dialog("Ben Ortiz")).toBeInTheDocument();
+    });
+});
