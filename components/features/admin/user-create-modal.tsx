@@ -1,6 +1,5 @@
 "use client";
 
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { FormField } from "@/components/ui/forms/form-field";
@@ -12,13 +11,12 @@ import {
     ModalFooter,
 } from "@/components/ui/modal";
 import { ChoiceChips } from "@/components/patterns/choice-chips";
+import { UserPasswordField } from "@/components/features/admin/user-password-field";
 import {
-    STARTING_PASSWORD_LENGTH,
     USER_INVITE_COPY as COPY,
     USER_ROLE_CHOICES,
     type UserInviteDraft,
 } from "@/lib/config/user-invite";
-import { generatePassword } from "@/lib/utils/password";
 import type { FieldErrors } from "@/lib/validations/auth";
 
 export interface UserCreateModalProps {
@@ -107,40 +105,11 @@ export function UserCreateModal({
                     />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <FormField
-                        name="password"
-                        variant="code"
-                        label={COPY.password}
-                        autoComplete="new-password"
-                        spellCheck={false}
-                        value={draft.password}
-                        error={errors.password}
-                        onChange={(event) =>
-                            patch({ password: event.target.value })
-                        }
-                        endSlot={
-                            <Button
-                                type="button"
-                                emphasis="quiet"
-                                icon={Sparkles}
-                                onClick={() =>
-                                    patch({
-                                        password: generatePassword(
-                                            STARTING_PASSWORD_LENGTH,
-                                        ),
-                                    })
-                                }
-                                className="-mr-1 h-6 px-2"
-                            >
-                                {COPY.generate}
-                            </Button>
-                        }
-                    />
-                    <p className="text-text-muted text-xs">
-                        {COPY.passwordHint}
-                    </p>
-                </div>
+                <UserPasswordField
+                    value={draft.password}
+                    error={errors.password}
+                    onChange={(password) => patch({ password })}
+                />
 
                 {failure && (
                     <Callout
