@@ -70,7 +70,7 @@ A missing schema skips the check rather than failing it, so the gate never block
 Git hooks are **disabled**. `.husky/` is kept but not installed: the `prepare` script unsets `core.hooksPath` on every `pnpm install`, so nothing runs on commit or push.
 
 - **Commit** — `.husky/pre-commit` would run `pnpm lint-staged`: `eslint --fix` then `prettier --write`, over staged files only.
-- **Push** — `.husky/pre-push` would run `pnpm type-check`, then `pnpm lint`, then `pnpm enums:check`. This is the real gate.
+- **Push** — `.husky/pre-push` would run `pnpm type-check`, then `pnpm lint`, then `pnpm enums:check`, then `pnpm contract:check`. This is the real gate.
 
 Run those by hand when you want the gate. To re-enable the hooks, set `prepare` back to `husky` and run `pnpm install`.
 
