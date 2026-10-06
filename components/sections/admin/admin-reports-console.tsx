@@ -8,18 +8,14 @@ import { AdminReportsRail } from "@/components/sections/admin/admin-reports-rail
 import { AdminReportsStatBand } from "@/components/sections/admin/admin-reports-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { regionPerformance, reportStats } from "@/lib/data/admin-reports";
+import { reportSignals } from "@/lib/data/admin-reports-signals";
 import {
-    regionPerformance,
-    reportSignals,
-    reportStats,
     toReportSections,
     REPORT_EXPORT_FILENAME,
-} from "@/lib/data/admin-reports";
-import {
-    reportMonths,
-    reportPeriodLabel,
-    reportTrendMetrics,
-} from "@/lib/data/admin-report-trend";
+} from "@/lib/data/admin-reports-export";
+import { reportMonths, reportPeriodLabel } from "@/lib/data/admin-report-trend";
+import { reportTrendMetrics } from "@/lib/data/admin-report-trend-metrics";
 import {
     DEFAULT_REPORT_PERIOD,
     REPORT_SECTION_IDS,

@@ -3,11 +3,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { VIEWING_STATUSES } from "@/lib/config/viewing-tones";
 import { initialsOf } from "@/lib/utils";
-import type {
-    OverviewViewing,
-    ViewingTiming,
-} from "@/lib/data/dashboard-overview";
-import type { StatusTone } from "@/lib/types";
+import type { StatusTone, OverviewViewing, ViewingTiming } from "@/lib/types";
 
 const timingTone: Record<ViewingTiming, StatusTone> = {
     today: "warning",

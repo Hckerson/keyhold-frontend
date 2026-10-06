@@ -6,8 +6,7 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { OfferTable } from "@/components/features/dashboard/offer-table";
 import { OffersToolbar } from "@/components/sections/dashboard/offers-toolbar";
 import { OffersTopHero } from "@/components/sections/dashboard/offers-top-hero";
-import type { StageFilter, StatusFilter } from "@/lib/data/offers";
-import type { Offer } from "@/lib/types";
+import type { Offer, OfferStageFilter, OfferStatusFilter } from "@/lib/types";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Offer Book";
@@ -19,12 +18,12 @@ const EMPTY_LEDE = "Widen the stage or status filter to see more positions.";
 export interface OffersMainProps {
     top?: Offer;
     offers: Offer[];
-    stageFilter: StageFilter;
-    statusFilter: StatusFilter;
-    counts: Record<StageFilter, number>;
+    stageFilter: OfferStageFilter;
+    statusFilter: OfferStatusFilter;
+    counts: Record<OfferStageFilter, number>;
     pending?: boolean;
-    onStageFilterChange: (filter: StageFilter) => void;
-    onStatusFilterChange: (filter: StatusFilter) => void;
+    onStageFilterChange: (filter: OfferStageFilter) => void;
+    onStatusFilterChange: (filter: OfferStatusFilter) => void;
 }
 
 export function OffersMain({

@@ -1,4 +1,5 @@
 import type { PropertyStatus, PropertyType } from "@/lib/enums/enums";
+import type { BulkStatusAction } from "@/lib/config/listing-bulk";
 
 export type ListingStatus = PropertyStatus;
 
@@ -71,6 +72,24 @@ export interface ManagedListing {
     showings: number;
     offers: number;
     featuredUntil: string | null;
+}
+
+export type ListingStatusFilter = ManagedListingStatus | "all";
+
+export interface BulkTransition {
+    from: readonly ManagedListingStatus[];
+    to: PropertyStatus;
+}
+
+export interface BulkStatusChange {
+    ids: readonly string[];
+    status: PropertyStatus;
+}
+
+export interface BulkStatusTarget {
+    action: BulkStatusAction;
+    ids: readonly string[];
+    skipped: number;
 }
 
 export interface ListingRowData {

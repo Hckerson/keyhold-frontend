@@ -1,7 +1,7 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
-import { recencyShares } from "@/lib/data/alerts";
+import { recencyShares } from "@/lib/data/alerts-shares";
 import type { Alert } from "@/lib/types";
 
 const RECENCY_TITLE = "Recency";

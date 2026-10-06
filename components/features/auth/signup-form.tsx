@@ -18,6 +18,7 @@ import {
     portalForRole,
     withRedirect,
 } from "@/lib/constants";
+import { signupFooterEntries } from "@/lib/config/auth-recovery";
 import {
     clearFieldError,
     fieldErrorFor,
@@ -33,19 +34,6 @@ const INITIAL_VALUES: SignupFieldValues = {
     password: "",
     confirmPassword: "",
 };
-
-const footerEntries = (redirectTo?: string) => [
-    {
-        label: "Already a member",
-        href: withRedirect(AUTH_ROUTES.login, redirectTo),
-        action: "Sign in",
-    },
-    {
-        label: "Your data",
-        href: AUTH_ROUTES.privacy,
-        action: "Privacy policy",
-    },
-];
 
 export interface SignupFormProps {
     redirectTo?: string;
@@ -172,7 +160,7 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
                 disabled={pending}
             />
 
-            <AuthTitleBlock entries={footerEntries(redirectTo)} />
+            <AuthTitleBlock entries={signupFooterEntries(redirectTo)} />
         </AuthPlane>
     );
 }

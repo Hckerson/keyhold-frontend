@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { journeyStatus } from "@/lib/data/dashboard-journey";
+import { journeyStatus } from "@/lib/data/dashboard-journey-status";
 import { aTransaction, anEscrowHold } from "@/lib/data/__fixtures__/purchases";
 
 describe("journeyStatus", () => {

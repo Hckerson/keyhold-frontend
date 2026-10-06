@@ -7,7 +7,7 @@ import {
     gapShares,
     representationSummary,
     statusShares,
-} from "@/lib/data/offers";
+} from "@/lib/data/offers-stats";
 import type { Offer } from "@/lib/types";
 
 const STATUS_TITLE = "Status Mix";

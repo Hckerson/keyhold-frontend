@@ -1,6 +1,6 @@
 import { DeltaChip } from "@/components/ui/delta-chip";
 import { formatMillions } from "@/lib/utils";
-import type { Benchmark, BenchmarkUnit } from "@/lib/data/agent-analytics";
+import type { Benchmark, BenchmarkUnit } from "@/lib/types";
 
 const unitFormat: Record<BenchmarkUnit, (value: number) => string> = {
     usd: (value) => formatMillions(value, 2),

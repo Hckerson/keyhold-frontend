@@ -22,3 +22,12 @@ export interface AlertPreference {
     enabled: boolean;
     channels: Record<AlertChannel, boolean>;
 }
+
+export type AlertReadFilter = "all" | "unread" | "read";
+
+export type AlertTypeFilter = AlertType | "all";
+
+export interface AlertVolume {
+    count: number;
+    percent: number;
+}

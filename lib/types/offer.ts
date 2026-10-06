@@ -1,5 +1,7 @@
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { MilestoneKind } from "@/lib/enums/enums";
+import type { MessageSender, ThreadDocument } from "@/lib/types/message";
+import type { MetricItem } from "@/lib/types/ui";
 import type {
     DealMilestone,
     UpdateMilestoneInput,
@@ -60,4 +62,69 @@ export interface OfferAgentShare {
     count: number;
     percent: number;
     tone: ChartTone;
+}
+
+export type OfferStageFilter = "all" | "open" | "closed";
+
+export type OfferStatusFilter = OfferStatus | "all";
+
+export interface OfferBook {
+    label: string;
+    value: number;
+    liveCount: number;
+    awaitingCount: number;
+    href: string;
+}
+
+export interface OfferPosition {
+    id: string;
+    address: string;
+    image: string;
+    offered: number;
+    list: number;
+    status: OfferStatus;
+}
+
+export type TimelineTone = "neutral" | "success" | "warning" | "info" | "error";
+
+export interface TimelineEntry {
+    id: string;
+    label: string;
+    date: string;
+    time: string;
+    amount?: number;
+    note?: string;
+    tone: TimelineTone;
+}
+
+export interface ComparisonRow {
+    key: string;
+    label: string;
+    yours: string;
+    counter: string;
+    detail: string;
+}
+
+export interface ThreadMessage {
+    id: string;
+    senderRole: MessageSender;
+    author: string;
+    content: string;
+    timestamp: string;
+    documents: ThreadDocument[];
+}
+
+export interface OfferDetail {
+    id: string;
+    connectionId: string;
+    address: string;
+    listPrice: number;
+    offerPrice: number;
+    counterPrice?: number;
+    status: OfferStatus;
+    agent: string;
+    timeline: TimelineEntry[];
+    comparison: ComparisonRow[];
+    messages: ThreadMessage[];
+    terms: MetricItem[];
 }

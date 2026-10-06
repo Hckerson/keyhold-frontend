@@ -7,12 +7,14 @@ import { AlertTable } from "@/components/features/dashboard/alert-table";
 import { AlertsDelivery } from "@/components/sections/dashboard/alerts-delivery";
 import { AlertsToolbar } from "@/components/sections/dashboard/alerts-toolbar";
 import { AlertsTopHero } from "@/components/sections/dashboard/alerts-top-hero";
-import type { AlertVolume, ReadFilter, TypeFilter } from "@/lib/data/alerts";
 import type {
     Alert,
     AlertChannel,
     AlertPreference,
+    AlertReadFilter,
     AlertType,
+    AlertTypeFilter,
+    AlertVolume,
 } from "@/lib/types";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
@@ -28,12 +30,12 @@ export interface AlertsMainProps {
     preferences: Record<AlertType, AlertPreference>;
     volumes: Record<AlertType, AlertVolume>;
     deliverySummary: string;
-    readFilter: ReadFilter;
-    typeFilter: TypeFilter;
-    counts: Record<ReadFilter, number>;
+    readFilter: AlertReadFilter;
+    typeFilter: AlertTypeFilter;
+    counts: Record<AlertReadFilter, number>;
     pending?: boolean;
-    onReadFilterChange: (filter: ReadFilter) => void;
-    onTypeFilterChange: (filter: TypeFilter) => void;
+    onReadFilterChange: (filter: AlertReadFilter) => void;
+    onTypeFilterChange: (filter: AlertTypeFilter) => void;
     onMarkRead: (id: string) => void;
     onToggleEnabled: (type: AlertType) => void;
     onToggleChannel: (type: AlertType, channel: AlertChannel) => void;

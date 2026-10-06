@@ -21,7 +21,7 @@ import {
     VIEWING_SLOTS,
 } from "@/lib/config/viewing-request";
 import { VIEWING_MODES } from "@/lib/config/viewing-tones";
-import { CREATE_EVENT_COPY as COPY } from "@/lib/data/agent-calendar";
+import { CREATE_EVENT_COPY as COPY } from "@/lib/config/agent-calendar";
 import { toDateInput, toProposedTimes } from "@/lib/data/viewing-request";
 import { API_VIEWING_MODE } from "@/lib/utils/status-maps";
 import type { SelectOption, ViewingMode } from "@/lib/types";

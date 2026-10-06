@@ -1,6 +1,6 @@
 import { DeltaChip } from "@/components/ui/delta-chip";
 import { formatMillions, percentOf } from "@/lib/utils";
-import type { MonthlyProduction } from "@/lib/data/agent-analytics";
+import type { MonthlyProduction } from "@/lib/types";
 
 const NO_DELTA = "—";
 

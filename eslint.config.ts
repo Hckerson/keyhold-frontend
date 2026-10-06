@@ -131,7 +131,7 @@ const starterConfig: ConfigArray = [
                 ADOPTING,
                 {
                     max: MAX_FILE_LINES,
-                    skipBlankLines: false,
+                    skipBlankLines: true,
                     skipComments: false,
                 },
             ],

@@ -3,21 +3,17 @@
 import { Filter } from "lucide-react";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { Select } from "@/components/ui/forms/select";
-import {
-    READ_FILTERS,
-    TYPE_OPTIONS,
-    type ReadFilter,
-    type TypeFilter,
-} from "@/lib/data/alerts";
+import { READ_FILTERS, TYPE_OPTIONS } from "@/lib/data/alerts";
+import type { AlertReadFilter, AlertTypeFilter } from "@/lib/types";
 
 const TYPE_LABEL = "Filter by signal";
 
 export interface AlertsToolbarProps {
-    readFilter: ReadFilter;
-    typeFilter: TypeFilter;
-    counts: Record<ReadFilter, number>;
-    onReadFilterChange: (filter: ReadFilter) => void;
-    onTypeFilterChange: (filter: TypeFilter) => void;
+    readFilter: AlertReadFilter;
+    typeFilter: AlertTypeFilter;
+    counts: Record<AlertReadFilter, number>;
+    onReadFilterChange: (filter: AlertReadFilter) => void;
+    onTypeFilterChange: (filter: AlertTypeFilter) => void;
 }
 
 export function AlertsToolbar({
@@ -29,13 +25,13 @@ export function AlertsToolbar({
 }: AlertsToolbarProps) {
     return (
         <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 py-1.5">
-            <FilterPills<ReadFilter>
+            <FilterPills<AlertReadFilter>
                 filters={READ_FILTERS}
                 active={readFilter}
                 onChange={onReadFilterChange}
                 counts={counts}
             />
-            <Select<TypeFilter>
+            <Select<AlertTypeFilter>
                 options={TYPE_OPTIONS}
                 value={typeFilter}
                 onChange={onTypeFilterChange}

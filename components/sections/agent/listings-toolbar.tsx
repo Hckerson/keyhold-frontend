@@ -5,22 +5,20 @@ import { FilterPills } from "@/components/patterns/filter-pills";
 import {
     BULK_ACTIONS,
     BULK_LABELS,
-    FILTERS,
-    allowsBulk,
     type BulkAction,
-    type StatusFilter,
-} from "@/lib/data/agent-listings";
-import type { ManagedListing } from "@/lib/types";
+} from "@/lib/config/listing-bulk";
+import { FILTERS, allowsBulk } from "@/lib/data/agent-listings";
+import type { ListingStatusFilter, ManagedListing } from "@/lib/types";
 
 const SELECTED_SUFFIX = "selected";
 const CLEAR_LABEL = "Clear";
 
 export interface ListingsToolbarProps {
-    filter: StatusFilter;
-    counts: Record<StatusFilter, number>;
+    filter: ListingStatusFilter;
+    counts: Record<ListingStatusFilter, number>;
     selected: ManagedListing[];
     busy: boolean;
-    onFilterChange: (filter: StatusFilter) => void;
+    onFilterChange: (filter: ListingStatusFilter) => void;
     onClearSelection: () => void;
     onBulkAction: (action: BulkAction) => void;
 }
@@ -37,7 +35,7 @@ export function ListingsToolbar({
     if (selected.length === 0) {
         return (
             <div className="flex min-h-11 flex-wrap items-center py-1.5">
-                <FilterPills<StatusFilter>
+                <FilterPills<ListingStatusFilter>
                     filters={FILTERS}
                     active={filter}
                     onChange={onFilterChange}

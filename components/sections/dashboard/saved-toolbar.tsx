@@ -3,12 +3,8 @@
 import { ArrowUpDown } from "lucide-react";
 import { FilterPills } from "@/components/patterns/filter-pills";
 import { Select } from "@/components/ui/forms/select";
-import {
-    SAVED_FILTERS,
-    SAVED_SORTS,
-    type SavedSortKey,
-    type SavedStatusFilter,
-} from "@/lib/data/saved-listings";
+import { SAVED_FILTERS, SAVED_SORTS } from "@/lib/data/saved-listings";
+import type { SavedSortKey, SavedStatusFilter } from "@/lib/types";
 
 const SORT_LABEL = "Sort saved properties";
 

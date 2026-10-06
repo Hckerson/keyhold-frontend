@@ -9,12 +9,11 @@ import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     analyticsPeriod,
-    analyticsStats,
-    benchmarks,
     monthlyProduction,
     production,
     quarters,
 } from "@/lib/data/agent-analytics";
+import { analyticsStats, benchmarks } from "@/lib/data/agent-analytics-stats";
 import { useAgentAnalytics } from "@/lib/hooks/use-stats";
 
 export function AnalyticsConsole() {

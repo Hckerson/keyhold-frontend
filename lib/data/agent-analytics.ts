@@ -1,7 +1,10 @@
-import { Award, Clock, Gauge, TrendingUp } from "lucide-react";
-import type { StatDatum, Trend } from "@/lib/types";
+import type {
+    MonthlyProduction,
+    ProductionSummary,
+    QuarterStatus,
+    QuarterSummary,
+} from "@/lib/types";
 import type { AgentAnalytics, GrowthPoint } from "@/lib/validations/stats";
-import { formatMillions, formatUsd } from "@/lib/utils";
 
 const MONTHS_PER_QUARTER = 3;
 const MONTH_KEY_LENGTH = 7;
@@ -21,42 +24,6 @@ const MONTH_LABELS = [
     "Nov",
     "Dec",
 ];
-
-export interface ProductionSummary {
-    label: string;
-    volume: number;
-    closings: number;
-    change: string;
-    trend: Trend;
-}
-
-export interface MonthlyProduction {
-    id: string;
-    month: string;
-    closings: number;
-    volume: number;
-}
-
-export type QuarterStatus = "complete" | "in-progress";
-
-export interface QuarterSummary {
-    id: string;
-    label: string;
-    status: QuarterStatus;
-    closings: number;
-    volume: number;
-}
-
-export type BenchmarkUnit = "usd" | "days" | "percent" | "score";
-
-export interface Benchmark {
-    id: string;
-    label: string;
-    you: number;
-    market: number;
-    unit: BenchmarkUnit;
-    higherIsBetter: boolean;
-}
 
 const monthIndex = (key: string) => Number(key.slice(5, 7)) - 1;
 
@@ -139,77 +106,3 @@ export const quarters = (analytics: AgentAnalytics): QuarterSummary[] => {
 
     return [...buckets.values()].sort((a, b) => a.id.localeCompare(b.id));
 };
-
-export const benchmarks = (analytics: AgentAnalytics): Benchmark[] => [
-    {
-        id: "avg-price",
-        label: "Average sale price",
-        you: analytics.benchmarks.averagePrice,
-        market: analytics.benchmarks.platformAveragePrice,
-        unit: "usd",
-        higherIsBetter: true,
-    },
-    {
-        id: "days-to-close",
-        label: "Days to close",
-        you: analytics.benchmarks.daysToClose,
-        market: analytics.benchmarks.platformDaysToClose,
-        unit: "days",
-        higherIsBetter: false,
-    },
-    {
-        id: "sale-to-list",
-        label: "Sale-to-list ratio",
-        you: analytics.benchmarks.saleToList,
-        market: analytics.benchmarks.platformSaleToList,
-        unit: "percent",
-        higherIsBetter: true,
-    },
-    {
-        id: "rating",
-        label: "Client rating",
-        you: analytics.benchmarks.rating,
-        market: analytics.benchmarks.platformRating,
-        unit: "score",
-        higherIsBetter: true,
-    },
-];
-
-export const analyticsStats = (analytics: AgentAnalytics): StatDatum[] => [
-    {
-        id: "avg-price",
-        label: "Avg sale price",
-        value: analytics.production.averagePrice
-            ? formatMillions(analytics.production.averagePrice, 2)
-            : NO_VALUE,
-        icon: TrendingUp,
-        tone: "highlight",
-    },
-    {
-        id: "days-to-close",
-        label: "Days to close",
-        value: analytics.benchmarks.daysToClose
-            ? `${analytics.benchmarks.daysToClose}d`
-            : NO_VALUE,
-        icon: Clock,
-        tone: "info",
-    },
-    {
-        id: "volume",
-        label: "Volume closed",
-        value: analytics.production.volume
-            ? formatUsd(analytics.production.volume)
-            : NO_VALUE,
-        icon: Gauge,
-        tone: "accent",
-    },
-    {
-        id: "rating",
-        label: "Client rating",
-        value: analytics.benchmarks.rating
-            ? `${analytics.benchmarks.rating}/5`
-            : NO_VALUE,
-        icon: Award,
-        tone: "success",
-    },
-];

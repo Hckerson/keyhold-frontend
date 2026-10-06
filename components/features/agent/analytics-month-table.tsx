@@ -1,5 +1,5 @@
 import { AnalyticsMonthRow } from "@/components/features/agent/analytics-month-row";
-import type { MonthlyProduction } from "@/lib/data/agent-analytics";
+import type { MonthlyProduction } from "@/lib/types";
 
 const TABLE_CAPTION = "Monthly closings, volume share and change";
 

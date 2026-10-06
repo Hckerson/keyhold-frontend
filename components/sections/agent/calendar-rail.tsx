@@ -13,7 +13,7 @@ import { CalendarSyncPanel } from "@/components/features/agent/calendar-sync-pan
 import type { CalendarOutcome } from "@/lib/config/calendar-sync";
 import type { CalendarStatus } from "@/lib/validations/calendar";
 import { cn } from "@/lib/utils";
-import type { AppointmentTypeShare } from "@/lib/data/agent-calendar";
+import type { AppointmentTypeShare } from "@/lib/types";
 
 const MIX_TITLE = "Appointment Mix";
 

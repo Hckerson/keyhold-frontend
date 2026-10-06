@@ -6,7 +6,7 @@ import { ThreadPropertyCard } from "@/components/features/messaging/thread-prope
 import { DocumentList } from "@/components/features/messaging/document-list";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FileX } from "lucide-react";
-import { statusShares } from "@/lib/data/messages";
+import { statusShares } from "@/lib/data/messages-stats";
 import type { Conversation } from "@/lib/types";
 import type { ThreadDocument } from "@/lib/types/message";
 

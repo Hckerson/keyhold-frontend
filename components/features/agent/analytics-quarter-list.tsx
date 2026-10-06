@@ -1,5 +1,5 @@
 import { AnalyticsQuarterRow } from "@/components/features/agent/analytics-quarter-row";
-import type { QuarterSummary } from "@/lib/data/agent-analytics";
+import type { QuarterSummary } from "@/lib/types";
 
 export interface AnalyticsQuarterListProps {
     quarters: QuarterSummary[];

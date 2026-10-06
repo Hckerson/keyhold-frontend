@@ -8,11 +8,7 @@ import { WalkedViewingTable } from "@/components/features/dashboard/walked-viewi
 import { ViewingsNextHero } from "@/components/sections/dashboard/viewings-next-hero";
 import { ViewingsShares } from "@/components/sections/dashboard/viewings-shares";
 import { ViewingsToolbar } from "@/components/sections/dashboard/viewings-toolbar";
-import type {
-    ViewingModeFilter,
-    ViewingStatusFilter,
-} from "@/lib/data/viewings";
-import type { Viewing } from "@/lib/types";
+import type { Viewing, ViewingModeFilter, ViewingStatusFilter } from "@/lib/types";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const SCHEDULE_TITLE = "Schedule";

@@ -7,13 +7,8 @@ import { OverviewViewingList } from "@/components/features/dashboard/overview-vi
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CalendarDays, History } from "lucide-react";
-import type {
-    OfferBook,
-    OfferPosition,
-    OverviewViewing,
-} from "@/lib/data/dashboard-overview";
 import { ACTIVITY_COPY } from "@/lib/config/activity";
-import type { ActivityEntry } from "@/lib/types";
+import type { ActivityEntry, OfferBook, OfferPosition, OverviewViewing } from "@/lib/types";
 
 const VIEWINGS_TITLE = "Upcoming Viewings";
 const VIEWINGS_LEDE = "Confirmed tours and the agent hosting each one";

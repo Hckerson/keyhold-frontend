@@ -9,11 +9,7 @@ import { SavedTable } from "@/components/features/dashboard/saved-table";
 import { SavedToolbar } from "@/components/sections/dashboard/saved-toolbar";
 import { SavedTopHero } from "@/components/sections/dashboard/saved-top-hero";
 import { PUBLIC_ROUTES } from "@/lib/constants";
-import type {
-    SavedSortKey,
-    SavedStatusFilter,
-} from "@/lib/data/saved-listings";
-import type { SavedListing } from "@/lib/types";
+import type { SavedListing, SavedSortKey, SavedStatusFilter } from "@/lib/types";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Saved Book";

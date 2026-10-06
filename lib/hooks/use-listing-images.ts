@@ -5,7 +5,7 @@ import {
     useDeletePropertyImage,
     useReorderPropertyImages,
     useUploadPropertyImages,
-} from "@/lib/hooks/use-properties";
+} from "@/lib/hooks/use-property-images";
 
 export function useListingImages(propertyId: string) {
     const upload = useUploadPropertyImages(propertyId);

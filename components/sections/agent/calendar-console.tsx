@@ -16,7 +16,7 @@ import {
     useGoogleCalendarStatus,
 } from "@/lib/hooks/use-google-calendar";
 import type { CalendarOutcome } from "@/lib/config/calendar-sync";
-import { RESCHEDULE_HINT } from "@/lib/data/agent-calendar";
+import { RESCHEDULE_HINT } from "@/lib/config/agent-calendar";
 
 export interface CalendarConsoleProps {
     calendarOutcome?: CalendarOutcome;

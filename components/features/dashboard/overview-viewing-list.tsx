@@ -1,5 +1,5 @@
 import { OverviewViewingRow } from "@/components/features/dashboard/overview-viewing-row";
-import type { OverviewViewing } from "@/lib/data/dashboard-overview";
+import type { OverviewViewing } from "@/lib/types";
 
 export interface OverviewViewingListProps {
     viewings: OverviewViewing[];

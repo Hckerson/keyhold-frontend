@@ -13,7 +13,6 @@ import {
     toClientOptions,
     toRescheduleDraft,
     weekBounds,
-    type CalendarViewMode,
 } from "@/lib/data/agent-calendar";
 import { useIncomingConnections } from "@/lib/hooks/use-connections";
 import {
@@ -22,7 +21,7 @@ import {
 } from "@/lib/hooks/use-viewings";
 import { toAppointmentBook } from "@/lib/utils/to-appointment";
 import { draftToIso } from "@/lib/utils/to-viewing";
-import type { RescheduleDraft } from "@/lib/types";
+import type { CalendarViewMode, RescheduleDraft } from "@/lib/types";
 import type { CreateViewingInput } from "@/lib/validations/viewing";
 
 const DEFAULT_VIEW: CalendarViewMode = "month";

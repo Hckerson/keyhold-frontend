@@ -8,8 +8,12 @@ import {
     alertDeliveryGrid,
 } from "@/lib/config/alert-tones";
 import { cn } from "@/lib/utils";
-import type { AlertVolume } from "@/lib/data/alerts";
-import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
+import type {
+    AlertChannel,
+    AlertPreference,
+    AlertType,
+    AlertVolume,
+} from "@/lib/types";
 
 const SIGNAL_HEAD = "Signal";
 const VOLUME_HEAD = "Fired";

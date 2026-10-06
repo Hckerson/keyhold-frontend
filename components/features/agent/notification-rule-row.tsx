@@ -3,10 +3,7 @@
 import { Switch } from "@/components/ui/forms/switch";
 import { NotificationCadenceMark } from "@/components/features/agent/notification-cadence-mark";
 import { NotificationChannelMark } from "@/components/features/agent/notification-channel-mark";
-import type {
-    NotificationRule,
-    NotificationRuleId,
-} from "@/lib/data/agent-account";
+import type { NotificationRule, NotificationRuleId } from "@/lib/types";
 
 export interface NotificationRuleRowProps {
     rule: NotificationRule;

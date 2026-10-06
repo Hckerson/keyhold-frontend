@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
     keepPreviousData,
     useMutation,
@@ -15,8 +14,7 @@ import type {
     PropertyQuery,
     UpdatePropertyInput,
 } from "@/lib/validations/property";
-import type { BulkStatusChange } from "@/lib/data/agent-listings";
-import { FEEDBACK, GENERIC_FAILURE } from "@/lib/config/feedback";
+import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useProperties(input: PropertyQuery = {}) {
     return useQuery({
@@ -101,43 +99,6 @@ export function useDeleteProperty() {
     });
 }
 
-const settleEvery = async (
-    ids: readonly string[],
-    run: (id: string) => Promise<unknown>,
-) => {
-    const results = await Promise.allSettled(ids.map(run));
-    const failure = results.find(
-        (result): result is PromiseRejectedResult =>
-            result.status === "rejected",
-    );
-    if (!failure) return;
-    throw failure.reason instanceof Error
-        ? failure.reason
-        : new Error(GENERIC_FAILURE);
-};
-
-export function useBulkUpdatePropertyStatus() {
-    const client = useQueryClient();
-    return useMutation({
-        meta: FEEDBACK.bulkUpdatePropertyStatus,
-        mutationFn: ({ ids, status }: BulkStatusChange) =>
-            settleEvery(ids, (id) => propertiesAPI.update(id, { status })),
-        onSettled: () =>
-            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
-    });
-}
-
-export function useBulkDeleteProperties() {
-    const client = useQueryClient();
-    return useMutation({
-        meta: FEEDBACK.bulkDeleteProperties,
-        mutationFn: (ids: readonly string[]) =>
-            settleEvery(ids, (id) => propertiesAPI.remove(id)),
-        onSettled: () =>
-            client.invalidateQueries({ queryKey: queryKeys.properties.all }),
-    });
-}
-
 export function usePromoteProperty() {
     const client = useQueryClient();
     return useMutation({
@@ -156,48 +117,6 @@ export function useMarkPropertySold() {
         mutationFn: (id: string) => propertiesAPI.markSold(id),
         onSuccess: () =>
             client.invalidateQueries({ queryKey: queryKeys.properties.all }),
-    });
-}
-
-export function useUploadPropertyImages(id: string) {
-    const client = useQueryClient();
-    const [progress, setProgress] = useState<number>();
-
-    const mutation = useMutation({
-        meta: FEEDBACK.uploadPropertyImages,
-        mutationFn: (files: File[]) =>
-            propertiesAPI.uploadImages(id, files, setProgress),
-        onSettled: () => setProgress(undefined),
-        onSuccess: () =>
-            client.invalidateQueries({
-                queryKey: queryKeys.properties.detail(id),
-            }),
-    });
-
-    return { ...mutation, progress };
-}
-
-export function useDeletePropertyImage(id: string) {
-    const client = useQueryClient();
-    return useMutation({
-        meta: FEEDBACK.deletePropertyImage,
-        mutationFn: (imageId: string) => propertiesAPI.removeImage(id, imageId),
-        onSuccess: () =>
-            client.invalidateQueries({
-                queryKey: queryKeys.properties.detail(id),
-            }),
-    });
-}
-
-export function useReorderPropertyImages(id: string) {
-    const client = useQueryClient();
-    return useMutation({
-        meta: FEEDBACK.reorderPropertyImages,
-        mutationFn: (ids: string[]) => propertiesAPI.reorderImages(id, ids),
-        onSuccess: () =>
-            client.invalidateQueries({
-                queryKey: queryKeys.properties.detail(id),
-            }),
     });
 }
 

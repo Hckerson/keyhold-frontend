@@ -3,11 +3,8 @@ import { IconButton } from "@/components/ui/icon-button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
 import { APPOINTMENT_STATUSES } from "@/lib/config/appointment-tones";
-import {
-    formatDuration,
-    formatTime,
-    type Appointment,
-} from "@/lib/data/agent-calendar";
+import { formatDuration, formatTime } from "@/lib/data/agent-calendar";
+import type { Appointment } from "@/lib/types";
 
 export interface AppointmentRowProps {
     appointment: Appointment;

@@ -1,61 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AnimatePresence, m } from "motion/react";
 import { SearchHeader } from "@/components/sections/search/search-header";
 import { SearchFilterAside } from "@/components/sections/search/search-filter-aside";
 import { SearchToolbar } from "@/components/sections/search/search-toolbar";
 import { SearchResultsPanel } from "@/components/sections/search/search-results-panel";
-import { SearchResultsGrid } from "@/components/sections/search/search-results-grid";
-import { SearchResultsMap } from "@/components/sections/search/search-results-map";
-import { SearchResultsList } from "@/components/sections/search/search-results-list";
-import { SearchResultsGridSkeleton } from "@/components/sections/search/search-results-grid-skeleton";
-import { SearchResultsError } from "@/components/sections/search/search-results-error";
-import { SearchEmpty } from "@/components/sections/search/search-empty";
+import { SearchResultsBody } from "@/components/sections/search/search-results-body";
 import { SearchActiveFilters } from "@/components/sections/search/search-active-filters";
 import { Pager } from "@/components/patterns/pager";
-import { SEARCH_RESULTS_MOTION } from "@/lib/config/public-motion";
-import {
-    EMPTY_FILTERS,
-    FILTER_GROUPS,
-    type FilterGroupKey,
-    type SearchFilters,
-} from "@/lib/config/search-filters";
+import { EMPTY_FILTERS, type SearchFilters } from "@/lib/config/search-filters";
 import { useUrlState } from "@/lib/hooks/use-url-state";
+import { useSearchResults } from "@/lib/hooks/use-search-results";
 import { SEARCH_URL_CODEC, type SearchViewMode } from "@/lib/utils/search-url";
-import { useProperties, usePropertyFacets } from "@/lib/hooks/use-properties";
-import { toListing } from "@/lib/utils/to-listing";
 import {
     buildActiveFilters,
     removeActiveFilter,
-    toPropertyQuery,
     SEARCH_PAGE_SIZE,
     type ActiveFilter,
     type SortValue,
 } from "@/lib/utils/search";
-import type { FacetOptions } from "@/lib/api/properties";
-import type { PropertyType } from "@/lib/enums/enums";
-
-const optionIds = (key: FilterGroupKey) =>
-    FILTER_GROUPS.find((group) => group.key === key)?.options.map(
-        (option) => option.id,
-    ) ?? [];
-
-const FACET_OPTIONS: FacetOptions = {
-    price: optionIds("price"),
-    beds: optionIds("beds"),
-    baths: optionIds("baths"),
-    type: optionIds("type") as PropertyType[],
-};
-
-const EMPTY_COUNTS: Record<FilterGroupKey, Record<string, number>> = {
-    price: {},
-    beds: {},
-    baths: {},
-    type: {},
-};
-
-const CATALOGUE_QUERY = { status: "AVAILABLE", limit: 1 } as const;
 
 export function SearchExperience() {
     const [urlState, setUrlState] = useUrlState(SEARCH_URL_CODEC);
@@ -72,29 +35,8 @@ export function SearchExperience() {
         setDraft(applied);
     }
 
-    const query = useMemo(
-        () => toPropertyQuery(applied, sort, page),
-        [applied, sort, page],
-    );
-
-    const facetQuery = useMemo(
-        () => toPropertyQuery(applied, sort, 1),
-        [applied, sort],
-    );
-
-    const { data, isPending, isError, refetch } = useProperties(query);
-    const { data: facets } = usePropertyFacets(facetQuery, FACET_OPTIONS);
-    const { data: catalogue } = useProperties(CATALOGUE_QUERY);
-
-    const listings = useMemo(
-        () => (data?.items ?? []).map(toListing),
-        [data?.items],
-    );
-
-    const resultCount = data?.total ?? 0;
-    const pageCount = data?.pageCount ?? 1;
-    const currentPage = data?.page ?? page;
-    const counts = facets ?? EMPTY_COUNTS;
+    const results = useSearchResults(applied, sort, page);
+    const { listings, resultCount, pageCount, currentPage } = results;
 
     const dirty = JSON.stringify(draft) !== appliedKey;
     const activeFilters = useMemo(() => buildActiveFilters(applied), [applied]);
@@ -132,7 +74,7 @@ export function SearchExperience() {
             <div className="filter-split gap-4">
                 <SearchFilterAside
                     draft={draft}
-                    counts={counts}
+                    counts={results.counts}
                     dirty={dirty}
                     open={panelOpen}
                     onToggle={() => setPanelOpen((open) => !open)}
@@ -145,7 +87,7 @@ export function SearchExperience() {
                     toolbar={
                         <SearchToolbar
                             resultCount={resultCount}
-                            totalCount={catalogue?.total ?? resultCount}
+                            totalCount={results.totalCount}
                             view={view}
                             onViewChange={changeView}
                             sort={sort}
@@ -173,35 +115,17 @@ export function SearchExperience() {
                         )
                     }
                 >
-                    <AnimatePresence mode="wait">
-                        <m.div
-                            key={isPending ? "loading" : resultsKey}
-                            variants={SEARCH_RESULTS_MOTION}
-                            initial="hidden"
-                            animate="visible"
-                            exit="gone"
-                        >
-                            {isPending ? (
-                                <SearchResultsGridSkeleton />
-                            ) : isError ? (
-                                <SearchResultsError
-                                    onRetry={() => void refetch()}
-                                />
-                            ) : listings.length === 0 ? (
-                                <SearchEmpty
-                                    activeFilters={activeFilters}
-                                    onRemove={removeFilter}
-                                    onReset={reset}
-                                />
-                            ) : view === "grid" ? (
-                                <SearchResultsGrid listings={listings} />
-                            ) : view === "map" ? (
-                                <SearchResultsMap listings={listings} />
-                            ) : (
-                                <SearchResultsList listings={listings} />
-                            )}
-                        </m.div>
-                    </AnimatePresence>
+                    <SearchResultsBody
+                        resultsKey={resultsKey}
+                        view={view}
+                        listings={listings}
+                        isPending={results.isPending}
+                        isError={results.isError}
+                        activeFilters={activeFilters}
+                        onRetry={() => void results.refetch()}
+                        onRemove={removeFilter}
+                        onReset={reset}
+                    />
                 </SearchResultsPanel>
             </div>
         </div>

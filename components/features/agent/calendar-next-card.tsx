@@ -11,8 +11,8 @@ import {
     formatDuration,
     formatGroupDay,
     formatTime,
-    type Appointment,
 } from "@/lib/data/agent-calendar";
+import type { Appointment } from "@/lib/types";
 
 const NEXT_LABEL = "Next up";
 

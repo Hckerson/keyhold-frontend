@@ -12,14 +12,9 @@ import { CalendarNextCard } from "@/components/features/agent/calendar-next-card
 import { AppointmentList } from "@/components/features/agent/appointment-list";
 import { AppointmentDayGroup } from "@/components/features/agent/appointment-day-group";
 import { cn } from "@/lib/utils";
-import {
-    SCHEDULE_ACTION,
-    VIEW_MODES,
-    formatDay,
-    groupAppointmentsByDate,
-    type Appointment,
-    type CalendarViewMode,
-} from "@/lib/data/agent-calendar";
+import { SCHEDULE_ACTION, VIEW_MODES } from "@/lib/config/agent-calendar";
+import { formatDay, groupAppointmentsByDate } from "@/lib/data/agent-calendar";
+import type { Appointment, CalendarViewMode } from "@/lib/types";
 
 const DAY_TITLE = "Schedule";
 const WEEK_TITLE = "Week Schedule";

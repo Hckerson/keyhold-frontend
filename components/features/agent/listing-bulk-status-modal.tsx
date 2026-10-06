@@ -7,8 +7,8 @@ import {
     BULK_STATUS_COPY,
     bulkChangeSubject,
     bulkSkippedNote,
+    type BulkStatusAction,
 } from "@/lib/config/listing-bulk";
-import type { BulkStatusAction } from "@/lib/data/agent-listings";
 import type { ManagedListing } from "@/lib/types";
 
 export interface ListingBulkStatusModalProps {
