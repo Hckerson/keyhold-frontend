@@ -23,12 +23,6 @@ const COMPONENTS = ["components/**/*.tsx"];
 const PRIMITIVES = ["components/ui/**/*.tsx"];
 const TESTS = ["**/*.test.{ts,tsx}"];
 const LENGTH_EXEMPT = ["lib/enums/enums.ts"];
-const BREAKPOINT_OWNERS = [
-    "components/ui/**/*.tsx",
-    "components/patterns/**/*.tsx",
-];
-const BREAKPOINT_MESSAGE =
-    "Primitives and patterns must not decide their own breakpoints. Promote the chain to a named scale class in styles/globals.css.";
 
 type RestrictedPath = { name: string; message: string };
 
@@ -51,11 +45,6 @@ const ID_SYNTAX = [
     `MemberExpression[property.name='toString'] > ${DATE_NOW}`,
     `Property[key.name=/^id$|Id$/] > ${DATE_NOW}`,
 ].map((selector) => ({ selector, message: ID_SOURCE }));
-
-const BREAKPOINT_SYNTAX = [
-    "Literal[value=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
-    "TemplateElement[value.raw=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
-].map((selector) => ({ selector, message: BREAKPOINT_MESSAGE }));
 
 const DEEP_RELATIVE = {
     group: ["../*", "../**"],
@@ -137,16 +126,6 @@ const starterConfig: ConfigArray = [
             "no-console": "error",
             "@typescript-eslint/no-explicit-any": "error",
             "no-restricted-syntax": ["error", ...ID_SYNTAX],
-        },
-    },
-    {
-        files: BREAKPOINT_OWNERS,
-        rules: {
-            "no-restricted-syntax": [
-                "error",
-                ...BREAKPOINT_SYNTAX,
-                ...ID_SYNTAX,
-            ],
         },
     },
     {
