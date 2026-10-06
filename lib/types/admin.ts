@@ -135,3 +135,19 @@ export interface ConfigChange {
     to: string;
     ageMinutes: number;
 }
+
+export interface EscrowPosition {
+    held: number;
+    holds: number;
+    fee: number;
+    net: number;
+}
+
+export type PayoutStepState = "done" | "current" | "waiting" | "blocked";
+
+export interface PayoutStep {
+    id: "escrow" | "inspection" | "release";
+    label: string;
+    detail: string;
+    state: PayoutStepState;
+}

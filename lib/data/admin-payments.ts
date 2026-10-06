@@ -1,23 +1,21 @@
-import { Banknote, CircleCheck, ShieldAlert, Wallet } from "lucide-react";
 import {
     PAYOUT_PIPELINE_ORDER,
     PAYOUT_STATES,
 } from "@/lib/config/payout-tones";
 import { PLATFORM_PAYOUT_FEE_RATE } from "@/lib/constants";
 import type {
-    FilterPill,
-    MetricItem,
+    EscrowPosition,
     Payout,
     PayoutStage,
     PayoutState,
-    StatDatum,
 } from "@/lib/types";
 import type { EscrowStage } from "@/lib/validations/escrow";
-import { formatCompactUsd, formatUsd, sum } from "@/lib/utils";
+import { sum } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const FULL_PERCENT = 100;
+const WINDOW_CLOSED = "Closed";
 const NO_WINDOW = "—";
 
 export type PayoutStateFilter = "all" | PayoutState;
@@ -29,9 +27,6 @@ export const payoutNet = (payout: Payout) => payout.gross - payoutFee(payout);
 
 const sumGross = (payouts: Payout[]) =>
     sum(payouts.map((payout) => payout.gross));
-
-const byState = (payouts: Payout[], state: PayoutState) =>
-    payouts.filter((payout) => payout.state === state);
 
 export const heldPayouts = (payouts: Payout[]) =>
     payouts.filter((payout) => PAYOUT_STATES[payout.state].held);
@@ -46,13 +41,18 @@ export const rankPayouts = (payouts: Payout[]) =>
             b.gross - a.gross,
     );
 
+export const inspectionDaysLeft = (payout: Payout, now = new Date()) =>
+    payout.inspectionEndsAt
+        ? Math.ceil(
+              (new Date(payout.inspectionEndsAt).getTime() - now.getTime()) /
+                  MS_PER_DAY,
+          )
+        : null;
+
 export const inspectionLabel = (payout: Payout, now = new Date()) => {
-    if (!payout.inspectionEndsAt) return NO_WINDOW;
-    const days = Math.ceil(
-        (new Date(payout.inspectionEndsAt).getTime() - now.getTime()) /
-            MS_PER_DAY,
-    );
-    return days <= 0 ? "Window closed" : `${days}d left`;
+    const days = inspectionDaysLeft(payout, now);
+    if (days === null) return NO_WINDOW;
+    return days <= 0 ? WINDOW_CLOSED : `${days}d left`;
 };
 
 export const toPayoutStages = (stages: EscrowStage[]): PayoutStage[] =>
@@ -66,83 +66,50 @@ export const toPayoutStages = (stages: EscrowStage[]): PayoutStage[] =>
         };
     });
 
-export const stageShare = (stage: PayoutStage, stages: PayoutStage[]) => {
-    const total = sum(stages.map((entry) => entry.count));
-    return total ? Math.round((stage.count / total) * FULL_PERCENT) : 0;
-};
-
-export const PAYOUT_FILTERS: readonly FilterPill<PayoutStateFilter>[] = [
-    { id: "all", label: "All" },
-    ...PAYOUT_PIPELINE_ORDER.map((id) => ({
-        id,
-        label: PAYOUT_STATES[id].label,
-    })),
-];
-
 export const matchesPayoutFilters = (
     payout: Payout,
     state: PayoutStateFilter,
 ) => state === "all" || payout.state === state;
 
-export const payoutCounts = (
-    payouts: Payout[],
-): Record<PayoutStateFilter, number> =>
-    PAYOUT_PIPELINE_ORDER.reduce<Record<PayoutStateFilter, number>>(
-        (counts, id) => ({ ...counts, [id]: byState(payouts, id).length }),
-        { all: payouts.length } as Record<PayoutStateFilter, number>,
+export const FEE_RATE_LABEL = `${(PLATFORM_PAYOUT_FEE_RATE * FULL_PERCENT).toFixed(1)}%`;
+
+export const escrowPosition = (stages: PayoutStage[]): EscrowPosition => {
+    const held = stages.filter((stage) => PAYOUT_STATES[stage.id].held);
+    const gross = sum(held.map((stage) => stage.amount));
+    const fee = Math.round(gross * PLATFORM_PAYOUT_FEE_RATE);
+
+    return {
+        held: gross,
+        holds: sum(held.map((stage) => stage.count)),
+        fee,
+        net: gross - fee,
+    };
+};
+
+export function payoutTotals(payouts: Payout[]) {
+    return {
+        count: payouts.length,
+        gross: sumGross(payouts),
+        fee: sum(payouts.map(payoutFee)),
+        net: sum(payouts.map(payoutNet)),
+    };
+}
+
+export const payoutsReading = (payouts: Payout[]) => {
+    const held = heldPayouts(payouts);
+
+    if (payouts.length === 0) return "No payouts on record yet";
+    if (held.length === 0) return "Every payout has been settled";
+    return `${held.length} still held · ranked so disputes come first`;
+};
+
+export const matchesPayoutQuery = (payout: Payout, query: string) => {
+    const needle = query.trim().toLowerCase();
+    return (
+        needle === "" ||
+        payout.recipient.toLowerCase().includes(needle) ||
+        payout.deal.toLowerCase().includes(needle)
     );
+};
 
-export const paymentStats = (payouts: Payout[]): StatDatum[] => [
-    {
-        id: "held",
-        icon: Wallet,
-        label: "Held in escrow",
-        value: formatCompactUsd(outstandingPayout(payouts)),
-        tone: "warning",
-    },
-    {
-        id: "holds",
-        icon: Banknote,
-        label: "Open holds",
-        value: `${heldPayouts(payouts).length}`,
-        tone: "accent",
-    },
-    {
-        id: "released",
-        icon: CircleCheck,
-        label: "Released",
-        value: formatCompactUsd(sumGross(byState(payouts, "RELEASED"))),
-        tone: "success",
-    },
-    {
-        id: "disputed",
-        icon: ShieldAlert,
-        label: "Disputed",
-        value: `${byState(payouts, "DISPUTED").length}`,
-        tone: "error",
-    },
-];
-
-export const settlementMetrics = (payouts: Payout[]): MetricItem[] => [
-    {
-        label: "Gross held",
-        value: formatUsd(outstandingPayout(payouts)),
-    },
-    {
-        label: "Platform fee",
-        value: formatUsd(sum(heldPayouts(payouts).map(payoutFee))),
-    },
-    {
-        label: "Net to sellers",
-        value: formatUsd(sum(heldPayouts(payouts).map(payoutNet))),
-    },
-    {
-        label: "Fee rate",
-        value: `${(PLATFORM_PAYOUT_FEE_RATE * FULL_PERCENT).toFixed(1)}%`,
-    },
-];
-
-export const paymentsSummary = (payouts: Payout[]) =>
-    `${byState(payouts, "DISPUTED").length} disputed · ${
-        heldPayouts(payouts).length
-    } held · ${formatCompactUsd(outstandingPayout(payouts))} awaiting release`;
+export const stateRank = (payout: Payout) => PAYOUT_STATES[payout.state].rank;
