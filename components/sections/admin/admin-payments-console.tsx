@@ -75,7 +75,7 @@ export function AdminPaymentsConsole() {
             <AdminPaymentsMain
                 payouts={visible}
                 total={payouts.length}
-                reading={payoutsReading(payouts)}
+                reading={payoutsReading(payouts, stateFilter)}
                 query={query}
                 filtered={stateFilter !== EVERY_STATE}
                 pending={holds.isPending}

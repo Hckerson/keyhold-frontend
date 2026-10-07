@@ -4,13 +4,14 @@ import {
 } from "@/lib/config/payout-tones";
 import { PLATFORM_PAYOUT_FEE_RATE } from "@/lib/constants";
 import type {
+    DataTableGroupDef,
     EscrowPosition,
     Payout,
     PayoutStage,
     PayoutState,
 } from "@/lib/types";
 import type { EscrowStage } from "@/lib/validations/escrow";
-import { sum } from "@/lib/utils";
+import { formatCompactUsd, sum } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -95,12 +96,25 @@ export function payoutTotals(payouts: Payout[]) {
     };
 }
 
-export const payoutsReading = (payouts: Payout[]) => {
+const plural = (count: number, noun: string) =>
+    `${count} ${noun}${count === 1 ? "" : "s"}`;
+
+export const escrowCountLabel = (stage: PayoutStage) =>
+    plural(stage.count, PAYOUT_STATES[stage.id].held ? "hold" : "payout");
+
+export const payoutsReading = (
+    payouts: Payout[],
+    state: PayoutStateFilter = "all",
+) => {
     const held = heldPayouts(payouts);
 
     if (payouts.length === 0) return "No payouts on record yet";
+    if (state !== "all") {
+        const rows = payouts.filter((payout) => payout.state === state);
+        return `${PAYOUT_STATES[state].label} · ${plural(rows.length, "payout")}, ${formatCompactUsd(sumGross(rows))} gross`;
+    }
     if (held.length === 0) return "Every payout has been settled";
-    return `${held.length} still held · ranked so disputes come first`;
+    return `${held.length} still held · oldest first in each group`;
 };
 
 export const matchesPayoutQuery = (payout: Payout, query: string) => {
@@ -112,4 +126,23 @@ export const matchesPayoutQuery = (payout: Payout, query: string) => {
     );
 };
 
-export const stateRank = (payout: Payout) => PAYOUT_STATES[payout.state].rank;
+export const PAYOUT_GROUPS: DataTableGroupDef[] = [
+    { id: "disputed", label: "Disputed" },
+    { id: "ready", label: "Ready to release" },
+    { id: "inspecting", label: "In inspection" },
+    { id: "paid", label: "Paid out", collapsed: true },
+];
+
+export const payoutGroupOf = (payout: Payout, now = new Date()) => {
+    if (payout.state === "DISPUTED") return "disputed";
+    if (!PAYOUT_STATES[payout.state].held) return "paid";
+    return (inspectionDaysLeft(payout, now) ?? 0) > 0 ? "inspecting" : "ready";
+};
+
+export const oldestHeld = (payouts: Payout[]) =>
+    Math.max(
+        0,
+        ...payouts
+            .filter((payout) => PAYOUT_STATES[payout.state].held)
+            .map((payout) => payout.ageMinutes),
+    );
