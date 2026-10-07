@@ -333,6 +333,10 @@ svg.lucide * {
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 }
 
+.console-split--flow-thirds {
+    --split-columns: 3;
+}
+
 .queue-frame {
     container: queue / inline-size;
     max-height: var(--queue-max-height);
@@ -379,6 +383,32 @@ svg.lucide * {
 .console-split--fifths {
     --split-columns: 5;
     grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+}
+
+.measure-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border-bottom: 1px solid var(--color-border-light);
+    background: var(--color-border-light);
+}
+
+@container console (min-width: 36rem) {
+    .measure-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@container console (min-width: 64rem) {
+    .measure-tabs {
+        grid-template-columns: none;
+        grid-auto-columns: minmax(0, 1fr);
+        grid-auto-flow: column;
+    }
+
+    .measure-tabs > [aria-selected="true"] {
+        margin-bottom: -1px;
+    }
 }
 
 @container console (min-width: 56rem) {

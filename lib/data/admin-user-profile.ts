@@ -1,110 +1,157 @@
-import { BadgeCheck, Home, ShieldAlert, Wallet } from "lucide-react";
-import type { AccountCredential, ManagedUser, StatDatum } from "@/lib/types";
+import { differenceInMonths, format } from "date-fns";
+import {
+    recencyTone,
+    USER_ROLES,
+    USER_STATUSES,
+} from "@/lib/config/user-tones";
+import { dealsLabel, idleDays, joinedLabel } from "@/lib/data/admin-users";
+import { formatCompactUsd, parseLocalDate } from "@/lib/utils";
+import { toLedgerTransaction } from "@/lib/utils/to-ledger-transaction";
+import type {
+    ManagedUser,
+    ProfileCheck,
+    ProfileDetail,
+    ProfileNotice,
+    ProfileRecordCell,
+} from "@/lib/types";
 import type { Suspension } from "@/lib/validations/suspension";
+import type { SettlementTransaction } from "@/lib/validations/transaction";
 import type { User } from "@/lib/validations/user";
-import { formatCount, formatMillions } from "@/lib/utils";
 
-const UNVERIFIED_ISSUER = "Not on file";
-const IDENTITY_ISSUER = "Government-issued document";
-const NO_EXPIRY = 0;
+const MONTHS_PER_YEAR = 12;
+const NOT_ON_FILE = "Not on file";
+const NO_DEALS = "No deals closed yet";
+const SEEN_FORMAT = "MMM d";
 
 export const SUSPENSION_DATE_FORMAT = "MMM d, yyyy";
 
 export const PROFILE_BACK = { label: "Back to users", href: "/admin/users" };
 
 export const PROFILE_COPY = {
-    lede: "Everything the platform holds on this account",
-    credentials: "Verification",
-    credentialsLede: "What this account has proved about itself",
-    credentialsHeading: "Credential",
-    credentialsCaption: "Verification state for each credential on file",
-    account: "Account",
-    accountLede: "Directory record",
-    profile: "Profile",
-    history: "Suspension history",
-    historyLede: "Every restriction placed on this account",
-    historyEmpty: "No suspensions on record",
-    historyEmptyLede: "This account has never been restricted.",
+    deals: "Deals",
+    dealsLede: "Every deal this account is on, as buyer or agent",
+    dealsEmpty: "No deals on record yet",
+    activity: "Recent activity",
+    activityLede: "What this account has done most recently",
+    activityEmpty: "Nothing recorded yet",
+    trust: "Verification",
+    about: "About",
+    restrictions: "Restrictions",
+    neverSuspended: "Never suspended",
+    suspendedUnrecorded: "Suspended, with no reason on record",
     lifted: "Lifted",
     active: "Active",
     indefinite: "Indefinite",
     days: "days",
     missing: "Not provided",
+    email: "Email",
+    suspend: "Suspend",
+    reactivate: "Reactivate",
 } as const;
 
-export const profileCredentials = (
-    user: User | undefined,
-): AccountCredential[] => [
+export const profileChecks = (user: User): ProfileCheck[] => [
     {
         id: "email",
-        label: "Email address",
-        issuer: user?.email ?? UNVERIFIED_ISSUER,
-        state: user?.emailVerified ? "verified" : "missing",
-        expiresInMinutes: NO_EXPIRY,
+        label: "Email",
+        value: user.email ?? NOT_ON_FILE,
+        verified: Boolean(user.emailVerified),
     },
     {
         id: "phone",
-        label: "Phone number",
-        issuer: user?.phoneNumber ?? UNVERIFIED_ISSUER,
-        state: user?.phoneVerified ? "verified" : "missing",
-        expiresInMinutes: NO_EXPIRY,
+        label: "Phone",
+        value: user.phoneNumber ?? NOT_ON_FILE,
+        verified: Boolean(user.phoneVerified),
     },
     {
         id: "identity",
         label: "Identity",
-        issuer: IDENTITY_ISSUER,
-        state: user?.kycVerified ? "verified" : "missing",
-        expiresInMinutes: NO_EXPIRY,
+        value: "Government-issued ID",
+        verified: Boolean(user.kycVerified),
     },
 ];
 
-export const verifiedCount = (credentials: AccountCredential[]) =>
-    credentials.filter((credential) => credential.state === "verified").length;
+const tenureLabel = (user: ManagedUser, now: Date) => {
+    const months = differenceInMonths(now, parseLocalDate(user.joinDate));
+    if (months < 1) return "New this month";
+    if (months < MONTHS_PER_YEAR) return `${months} mo on the platform`;
+    return `${Math.floor(months / MONTHS_PER_YEAR)} yr ${months % MONTHS_PER_YEAR} mo on the platform`;
+};
 
-export const profileStats = (
-    managed: ManagedUser,
-    credentials: AccountCredential[],
-    suspensions: Suspension[],
-): StatDatum[] => [
-    {
-        id: "volume",
-        icon: Wallet,
-        label: "Lifetime volume",
-        value: formatMillions(managed.volume, 2),
-        tone: "success",
-    },
-    {
-        id: "deals",
-        icon: Home,
-        label: "Closed deals",
-        value: formatCount(managed.transactions),
-        tone: "accent",
-    },
-    {
-        id: "verified",
-        icon: BadgeCheck,
-        label: "Credentials verified",
-        value: `${verifiedCount(credentials)}/${credentials.length}`,
-        tone: "info",
-    },
-    {
-        id: "suspensions",
-        icon: ShieldAlert,
-        label: "Suspensions",
-        value: formatCount(suspensions.length),
-        tone: suspensions.length > 0 ? "warning" : "neutral",
-    },
-];
+export const profileRecord = (
+    user: ManagedUser,
+    now = new Date(),
+): ProfileRecordCell[] => {
+    const days = idleDays(user);
 
-export const profileFields = (user: User | undefined) => [
-    { id: "bio", label: "Bio", value: user?.bio },
-    { id: "jobTitle", label: "Job title", value: user?.jobTitle },
-    { id: "agencyName", label: "Agency", value: user?.agencyName },
-    { id: "licenseNumber", label: "Licence", value: user?.licenseNumber },
-];
+    return [
+        {
+            id: "volume",
+            label: "Lifetime volume",
+            value: formatCompactUsd(user.volume),
+            caption:
+                user.transactions > 0
+                    ? `${dealsLabel(user.transactions)} closed`
+                    : NO_DEALS,
+            tone: user.volume > 0 ? undefined : "neutral",
+        },
+        {
+            id: "joined",
+            label: "Member since",
+            value: joinedLabel(user),
+            caption: tenureLabel(user, now),
+        },
+        {
+            id: "seen",
+            label: "Last seen",
+            value: days === 0 ? "Today" : `${days}d ago`,
+            caption: `Signed in ${format(parseLocalDate(user.lastActive), SEEN_FORMAT)}`,
+            tone: recencyTone(days),
+        },
+    ];
+};
+
+export const profileDetails = (user: User): ProfileDetail[] =>
+    [
+        { id: "jobTitle", label: "Title", value: user.jobTitle },
+        { id: "agencyName", label: "Agency", value: user.agencyName },
+        { id: "licenseNumber", label: "Licence", value: user.licenseNumber },
+    ].filter((detail) => Boolean(detail.value));
+
+export const identityLine = (user: User, managed: ManagedUser) =>
+    [USER_ROLES[managed.role].label, user.agencyName, user.email]
+        .filter(Boolean)
+        .join(" · ");
+
+export const userDeals = (
+    transactions: SettlementTransaction[],
+    userId: string,
+) =>
+    transactions
+        .filter(
+            (transaction) =>
+                transaction.buyerId === userId ||
+                transaction.sellerId === userId,
+        )
+        .map(toLedgerTransaction);
 
 export const rankSuspensions = (suspensions: Suspension[]) =>
     [...suspensions].sort(
         (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
+
+export const statusNotice = (
+    user: ManagedUser,
+    suspensions: Suspension[],
+): ProfileNotice | null => {
+    if (user.status === "active") return null;
+    const meta = USER_STATUSES[user.status];
+    const live = suspensions.find((suspension) => !suspension.liftedAt);
+
+    return {
+        tone: meta.noteTone,
+        title: meta.noteTitle,
+        description:
+            user.status === "suspended" && live ? live.reason : meta.note,
+    };
+};

@@ -10,6 +10,7 @@ import {
     TRANSACTION_STATUSES,
 } from "@/lib/config/transaction-tones";
 import { NO_READING } from "@/lib/constants";
+import { counterpartyOf } from "@/lib/data/admin-transactions";
 import { cn, formatCompactUsd, parseLocalDate } from "@/lib/utils";
 import type { LedgerTransaction } from "@/lib/types";
 
@@ -20,9 +21,15 @@ const CLOSED_FORMAT = "MMM d";
 export interface DealLedgerRowProps {
     transaction: LedgerTransaction;
     onOpen: (id: string) => void;
+    subject?: string;
 }
 
-export function DealLedgerRow({ transaction, onOpen }: DealLedgerRowProps) {
+export function DealLedgerRow({
+    transaction,
+    onOpen,
+    subject,
+}: DealLedgerRowProps) {
+    const counterparty = counterpartyOf(transaction, subject);
     const { open } = TRANSACTION_STATUSES[transaction.status];
 
     return (
@@ -37,9 +44,28 @@ export function DealLedgerRow({ transaction, onOpen }: DealLedgerRowProps) {
                     {transaction.property}
                 </span>
                 <span className="queue-grid__wide text-text-secondary min-w-0 gap-1.5">
-                    <span className="truncate">{transaction.buyer}</span>
-                    <span className="text-text-muted shrink-0">{TO}</span>
-                    <span className="truncate">{transaction.agent}</span>
+                    {counterparty ? (
+                        <>
+                            <span className="truncate">
+                                {counterparty.name}
+                            </span>
+                            <span className="text-text-muted shrink-0">
+                                {counterparty.side}
+                            </span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="truncate">
+                                {transaction.buyer}
+                            </span>
+                            <span className="text-text-muted shrink-0">
+                                {TO}
+                            </span>
+                            <span className="truncate">
+                                {transaction.agent}
+                            </span>
+                        </>
+                    )}
                 </span>
                 <DealProgressMark
                     transaction={transaction}

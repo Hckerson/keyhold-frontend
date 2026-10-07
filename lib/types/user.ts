@@ -1,6 +1,6 @@
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { MonthDelta } from "./admin";
-import type { FilterTileDatum } from "./ui";
+import type { FilterTileDatum, StatusTone } from "./ui";
 
 export type ManagedUserRole = "buyer" | "agent" | "admin";
 export type UserTier = "standard" | "premium" | "platinum";
@@ -62,4 +62,31 @@ export interface UserSignupTrend {
     latest: number;
     latestLabel: string;
     delta: MonthDelta | null;
+}
+
+export interface ProfileCheck {
+    id: "email" | "phone" | "identity";
+    label: string;
+    value: string;
+    verified: boolean;
+}
+
+export interface ProfileRecordCell {
+    id: string;
+    label: string;
+    value: string;
+    caption: string;
+    tone?: ChartTone;
+}
+
+export interface ProfileDetail {
+    id: string;
+    label: string;
+    value?: string | null;
+}
+
+export interface ProfileNotice {
+    tone: StatusTone;
+    title: string;
+    description?: string;
 }

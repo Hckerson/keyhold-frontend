@@ -131,3 +131,14 @@ export const dealGroups = (transactions: LedgerTransaction[]): DealGroup[] =>
 
 export const nextMilestone = (transaction: LedgerTransaction) =>
     MILESTONE_ORDER.find((id) => !transaction.cleared.includes(id));
+
+export const counterpartyOf = (
+    transaction: LedgerTransaction,
+    subject?: string,
+) => {
+    if (subject === transaction.agent)
+        return { name: transaction.buyer, side: "buyer" };
+    if (subject === transaction.buyer)
+        return { name: transaction.agent, side: "agent" };
+    return null;
+};
