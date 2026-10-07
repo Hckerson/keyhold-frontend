@@ -24,6 +24,7 @@ export interface DataTableBodyProps<T> {
     rowLabel?: (row: T) => string;
     renderDetail?: (row: T) => ReactNode;
     rowClassName?: (row: T) => string | undefined;
+    header?: ReactNode;
 }
 
 export function DataTableBody<T>({
@@ -46,9 +47,11 @@ export function DataTableBody<T>({
     rowLabel,
     renderDetail,
     rowClassName,
+    header,
 }: DataTableBodyProps<T>) {
     return (
         <tbody className="divide-border-light divide-y">
+            {header}
             {rows.map((row) => {
                 const key = rowKey(row);
 
