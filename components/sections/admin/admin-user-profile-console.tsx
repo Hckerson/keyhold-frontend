@@ -1,32 +1,32 @@
 "use client";
 
 import { useMemo } from "react";
-import { ShieldCheck } from "lucide-react";
-import { Avatar } from "@/components/ui/avatar";
-import { EmptyState } from "@/components/ui/empty-state";
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { PortalHeader } from "@/components/patterns/portal-header";
-import { StatBand } from "@/components/patterns/stat-band";
 import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
-import { CredentialTable } from "@/components/features/shared/credential-table";
-import { UserAccountList } from "@/components/features/admin/user-account-list";
-import { UserStatusMark } from "@/components/features/admin/user-status-mark";
-import { UserSuspensionList } from "@/components/features/admin/user-suspension-list";
+import { UserReactivateModal } from "@/components/features/admin/user-reactivate-modal";
+import { UserSuspendModal } from "@/components/features/admin/user-suspend-modal";
+import { AdminUserProfileHeader } from "@/components/sections/admin/admin-user-profile-header";
+import { AdminUserProfileMain } from "@/components/sections/admin/admin-user-profile-main";
+import { AdminUserProfileRail } from "@/components/sections/admin/admin-user-profile-rail";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
-import { USER_ROLES } from "@/lib/config/user-tones";
 import {
-    PROFILE_BACK,
-    PROFILE_COPY as COPY,
-    profileCredentials,
-    profileFields,
-    profileStats,
+    identityLine,
+    profileChecks,
+    profileDetails,
+    profileRecord,
     rankSuspensions,
+    statusNotice,
+    userDeals,
 } from "@/lib/data/admin-user-profile";
+import { useAuditLogs } from "@/lib/hooks/use-audit-logs";
+import { useUserSuspension } from "@/lib/hooks/use-user-suspension";
 import { useUser } from "@/lib/hooks/use-users";
 import { useUserSuspensions } from "@/lib/hooks/use-suspensions";
+import { useTransactionLedger } from "@/lib/hooks/use-transactions";
+import { toAuditEvents } from "@/lib/utils/to-audit-event";
 import { toManagedUser } from "@/lib/utils/to-managed-user";
+
+const ACTIVITY_WINDOW = 8;
 
 export interface AdminUserProfileConsoleProps {
     userId: string;
@@ -37,15 +37,23 @@ export function AdminUserProfileConsole({
 }: AdminUserProfileConsoleProps) {
     const user = useUser(userId);
     const suspensions = useUserSuspensions(userId);
+    const ledger = useTransactionLedger();
+    const audit = useAuditLogs({ actorId: userId, limit: ACTIVITY_WINDOW });
+    const suspension = useUserSuspension();
 
     const managed = useMemo(
         () => (user.data ? toManagedUser(user.data) : undefined),
         [user.data],
     );
 
-    const credentials = useMemo(
-        () => profileCredentials(user.data),
-        [user.data],
+    const deals = useMemo(
+        () => userDeals(ledger.data ?? [], userId),
+        [ledger.data, userId],
+    );
+
+    const events = useMemo(
+        () => toAuditEvents(audit.data?.items ?? []),
+        [audit.data?.items],
     );
 
     const history = useMemo(
@@ -61,96 +69,55 @@ export function AdminUserProfileConsole({
             />
         );
 
-    if (!managed) return <ConsoleSkeleton />;
-
-    const fields = profileFields(user.data);
+    if (!managed || !user.data) return <ConsoleSkeleton />;
 
     return (
         <div className="flex flex-col gap-4">
-            <PortalHeader
-                title={managed.name}
-                lede={COPY.lede}
-                back={PROFILE_BACK}
-                summary={`${USER_ROLES[managed.role].label} · ${managed.email}`}
-                action={
-                    <div className="flex items-center gap-2">
-                        <UserStatusMark status={managed.status} />
-                        <Avatar
-                            size="sm"
-                            src={user.data?.avatar ?? undefined}
-                            alt={managed.name}
-                            initials={managed.name.charAt(0)}
-                        />
-                    </div>
-                }
-            />
-
-            <StatBand
-                label={COPY.lede}
-                stats={profileStats(managed, credentials, history)}
-                pending={user.isPending}
+            <AdminUserProfileHeader
+                user={managed}
+                avatar={user.data.avatar ?? undefined}
+                identity={identityLine(user.data, managed)}
+                reactivating={suspension.reactivatingId === userId}
+                onSuspend={() => suspension.open(userId)}
+                onReactivate={() => suspension.reactivation.request(userId)}
             />
 
             <div className="console-split gap-3">
-                <div className="console-span-2 flex flex-col gap-3">
-                    <Panel
-                        title={COPY.credentials}
-                        description={COPY.credentialsLede}
-                    >
-                        <PanelInset scroll>
-                            <CredentialTable
-                                credentials={credentials}
-                                heading={COPY.credentialsHeading}
-                                caption={COPY.credentialsCaption}
-                            />
-                        </PanelInset>
-                    </Panel>
-
-                    <Panel
-                        title={COPY.history}
-                        description={COPY.historyLede}
-                        count={history.length}
-                    >
-                        {history.length > 0 ? (
-                            <UserSuspensionList suspensions={history} />
-                        ) : (
-                            <EmptyState
-                                icon={ShieldCheck}
-                                title={COPY.historyEmpty}
-                                description={COPY.historyEmptyLede}
-                            />
-                        )}
-                    </Panel>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                    <Panel title={COPY.account} description={COPY.accountLede}>
-                        <UserAccountList user={managed} />
-                    </Panel>
-
-                    <Panel title={COPY.profile}>
-                        <dl className="divide-border divide-y">
-                            {fields.map((field) => (
-                                <div
-                                    key={field.id}
-                                    className="flex items-start justify-between gap-3 py-2"
-                                >
-                                    <dt className="micro-label shrink-0">
-                                        {field.label}
-                                    </dt>
-                                    <dd className="text-text min-w-0 text-right text-xs font-medium">
-                                        {field.value || (
-                                            <span className="text-text-muted">
-                                                {COPY.missing}
-                                            </span>
-                                        )}
-                                    </dd>
-                                </div>
-                            ))}
-                        </dl>
-                    </Panel>
-                </div>
+                <AdminUserProfileMain
+                    record={profileRecord(managed)}
+                    notice={statusNotice(managed, history)}
+                    subject={managed.name}
+                    deals={deals}
+                    events={events}
+                    dealsPending={ledger.isPending}
+                    eventsPending={audit.isPending}
+                />
+                <AdminUserProfileRail
+                    checks={profileChecks(user.data)}
+                    bio={user.data.bio}
+                    details={profileDetails(user.data)}
+                    suspensions={history}
+                    suspended={managed.status === "suspended"}
+                />
             </div>
+
+            <UserReactivateModal
+                user={suspension.reactivation.target ? managed : undefined}
+                pending={suspension.reactivation.pending}
+                failed={suspension.reactivation.failed}
+                onClose={suspension.reactivation.dismiss}
+                onConfirm={suspension.confirmReactivation}
+            />
+
+            <UserSuspendModal
+                user={suspension.suspendingId ? managed : undefined}
+                draft={suspension.draft}
+                pending={suspension.pending}
+                failed={suspension.failed}
+                onDraftChange={suspension.setDraft}
+                onClose={suspension.dismiss}
+                onSubmit={suspension.submit}
+            />
         </div>
     );
 }

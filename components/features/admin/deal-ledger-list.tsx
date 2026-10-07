@@ -17,12 +17,14 @@ export interface DealLedgerListProps {
     transactions: LedgerTransaction[];
     totals: LedgerTotals;
     onOpen: (id: string) => void;
+    subject?: string;
 }
 
 export function DealLedgerList({
     transactions,
     totals,
     onOpen,
+    subject,
 }: DealLedgerListProps) {
     return (
         <div
@@ -31,7 +33,12 @@ export function DealLedgerList({
             className="queue-frame -mx-2 flex flex-col gap-2"
         >
             {dealGroups(transactions).map((group) => (
-                <DealLedgerGroup key={group.id} group={group} onOpen={onOpen} />
+                <DealLedgerGroup
+                    key={group.id}
+                    group={group}
+                    onOpen={onOpen}
+                    subject={subject}
+                />
             ))}
             <p className="border-border-light text-text-muted flex h-9 items-center justify-between gap-3 border-t px-2 text-xs tabular-nums">
                 <span>

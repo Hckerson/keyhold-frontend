@@ -8,9 +8,14 @@ import type { DealGroup } from "@/lib/types";
 export interface DealLedgerGroupProps {
     group: DealGroup;
     onOpen: (id: string) => void;
+    subject?: string;
 }
 
-export function DealLedgerGroup({ group, onOpen }: DealLedgerGroupProps) {
+export function DealLedgerGroup({
+    group,
+    onOpen,
+    subject,
+}: DealLedgerGroupProps) {
     return (
         <section aria-label={group.label}>
             <h3 className="queue-grid queue-grid--deals h-8 items-end px-2 pb-1.5">
@@ -31,6 +36,7 @@ export function DealLedgerGroup({ group, onOpen }: DealLedgerGroupProps) {
                             key={transaction.id}
                             transaction={transaction}
                             onOpen={onOpen}
+                            subject={subject}
                         />
                     ))}
                 </AnimatePresence>

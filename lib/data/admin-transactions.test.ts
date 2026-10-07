@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+    counterpartyOf,
     dealFlow,
     dealGroups,
     nextMilestone,
@@ -96,5 +97,25 @@ describe("nextMilestone", () => {
         expect(
             nextMilestone(aDeal({ cleared: ["agreement", "deposit"] })),
         ).toBe("inspection");
+    });
+});
+
+describe("counterpartyOf", () => {
+    it("names the buyer when the profile belongs to the deal's agent", () => {
+        expect(counterpartyOf(aDeal(), "Noor Hale")).toEqual({
+            name: "Ada Vance",
+            side: "buyer",
+        });
+    });
+
+    it("names the agent when the profile belongs to the buyer", () => {
+        expect(counterpartyOf(aDeal(), "Ada Vance")).toEqual({
+            name: "Noor Hale",
+            side: "agent",
+        });
+    });
+
+    it("shows both parties when no profile is in focus", () => {
+        expect(counterpartyOf(aDeal())).toBeNull();
     });
 });
