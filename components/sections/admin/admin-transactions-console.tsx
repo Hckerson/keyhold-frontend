@@ -27,10 +27,9 @@ import { toLedger } from "@/lib/utils/to-ledger-transaction";
 import { downloadCsv } from "@/lib/utils/download";
 
 const EVERY_STATUS: TransactionStatusFilter = "all";
-const LEDGER_PAGE_SIZE = 100;
 
 export function AdminTransactionsConsole() {
-    const ledger = useTransactionLedger({ limit: LEDGER_PAGE_SIZE });
+    const ledger = useTransactionLedger();
     const stages = useTransactionStages();
 
     const [statusFilter, setStatusFilter] =
@@ -38,8 +37,8 @@ export function AdminTransactionsConsole() {
     const [reviewId, setReviewId] = useState<string | null>(null);
 
     const transactions = useMemo(
-        () => rankTransactions(toLedger(ledger.data?.items ?? [])),
-        [ledger.data?.items],
+        () => rankTransactions(toLedger(ledger.data ?? [])),
+        [ledger.data],
     );
 
     const visible = useMemo(
@@ -89,6 +88,7 @@ export function AdminTransactionsConsole() {
                 stages={flow}
                 active={statusFilter}
                 pending={stages.isPending}
+                failed={stages.isError}
                 onChange={setStatusFilter}
             />
 
