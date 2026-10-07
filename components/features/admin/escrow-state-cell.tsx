@@ -3,7 +3,8 @@
 import { PAYOUT_STATES } from "@/lib/config/payout-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { NO_READING } from "@/lib/constants";
-import { cn, formatCompactUsd, formatCount } from "@/lib/utils";
+import { escrowCountLabel } from "@/lib/data/admin-payments";
+import { cn, formatCompactUsd } from "@/lib/utils";
 import type { PayoutStage } from "@/lib/types";
 
 export interface EscrowStateCellProps {
@@ -29,7 +30,7 @@ export function EscrowStateCell({
             aria-pressed={active}
             onClick={onSelect}
             className={cn(
-                "focus-visible:ring-accent ease-smooth flex min-w-0 items-center gap-3 px-4 py-3 text-left text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset",
+                "focus-visible:ring-accent ease-smooth flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 px-4 py-3 text-left text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset",
                 active
                     ? "bg-accent-light"
                     : "bg-background hover:bg-background-muted",
@@ -43,7 +44,7 @@ export function EscrowStateCell({
                     empty ? "text-text-muted" : chartToneText[meta.chartTone],
                 )}
             />
-            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+            <span className="flex min-w-0 flex-1 basis-24 flex-col gap-0.5">
                 <span
                     className={cn(
                         "truncate font-medium",
@@ -57,13 +58,17 @@ export function EscrowStateCell({
                     {meta.label}
                 </span>
                 <span className="text-text-muted tabular-nums">
-                    {pending ? NO_READING : formatCount(stage.count)}
+                    {pending ? NO_READING : escrowCountLabel(stage)}
                 </span>
             </span>
             <span
                 className={cn(
                     "font-display text-h6 shrink-0 leading-none font-light tabular-nums",
-                    empty ? "text-text-muted" : "text-text",
+                    empty
+                        ? "text-text-muted"
+                        : meta.held
+                          ? "text-text"
+                          : "text-text-secondary",
                 )}
             >
                 {pending ? NO_READING : formatCompactUsd(stage.amount)}

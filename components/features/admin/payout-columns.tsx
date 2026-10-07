@@ -1,11 +1,12 @@
 "use client";
 
+import { AgeMark } from "@/components/features/shared/age-mark";
 import { PayoutDetail } from "@/components/features/admin/payout-detail";
+import { PayoutAgentMark } from "@/components/features/admin/payout-agent-mark";
 import { PayoutDetailActions } from "@/components/features/admin/payout-detail-actions";
 import { PaidMute } from "@/components/features/admin/paid-mute";
 import { PayoutHeldMark } from "@/components/features/admin/payout-held-mark";
 import { PayoutSettleButton } from "@/components/features/admin/payout-settle-button";
-import { PayoutStateMark } from "@/components/features/admin/payout-state-mark";
 import { SETTLE_TRIGGER_LABEL } from "@/lib/config/escrow-settle";
 import { PAYOUT_STATES } from "@/lib/config/payout-tones";
 import {
@@ -13,15 +14,17 @@ import {
     inspectionLabel,
     payoutNet,
     payoutTotals,
-    stateRank,
+    oldestHeld,
+    PAYOUT_GROUPS,
+    payoutGroupOf,
 } from "@/lib/data/admin-payments";
 import { formatCompactUsd } from "@/lib/utils";
 import type { DataTableConfig, Payout } from "@/lib/types";
 
-const PAGE_SIZE = 10;
+const MIN_WIDTH = "46rem";
 const PAYOUTS_NOUN = "payouts";
 const CAPTION =
-    "Agent payouts by state, agent, deal, inspection window, time held and net to the agent; disputes first. Open a row for gross and platform fee";
+    "Agent payouts grouped by what they need: disputed, ready to release, in inspection and paid out; with agent, deal, inspection window, time held and net. Open a row for gross and platform fee";
 
 export function buildPayoutConfig(
     onSettle: (payout: Payout) => void,
@@ -32,8 +35,12 @@ export function buildPayoutConfig(
         emptyMessage: "No payout matches this search",
         rowKey: (payout) => payout.id,
         rowLabel: (payout) => `${payout.recipient} · ${payout.deal}`,
-        defaultSort: { id: "state", direction: "desc" },
-        pageSize: PAGE_SIZE,
+        defaultSort: { id: "held", direction: "desc" },
+        grouping: {
+            groups: PAYOUT_GROUPS,
+            of: (payout) => payoutGroupOf(payout),
+        },
+        minWidth: MIN_WIDTH,
         rowClassName: () => "reveal-scope",
         reveal: "panel",
         panelSize: "md",
@@ -44,20 +51,11 @@ export function buildPayoutConfig(
         ),
         columns: [
             {
-                id: "state",
-                label: "State",
-                width: "6.5rem",
-                sortValue: stateRank,
-                render: (payout) => <PayoutStateMark state={payout.state} />,
-            },
-            {
                 id: "agent",
                 label: "Agent",
                 emphasis: "identity",
                 sortValue: (payout) => payout.recipient,
-                render: (payout) => (
-                    <span className="block truncate">{payout.recipient}</span>
-                ),
+                render: (payout) => <PayoutAgentMark payout={payout} />,
                 footer: (rows) => `${rows.length} ${PAYOUTS_NOUN}`,
             },
             {
@@ -86,6 +84,18 @@ export function buildPayoutConfig(
                 sortValue: (payout) =>
                     PAYOUT_STATES[payout.state].held ? payout.ageMinutes : -1,
                 render: (payout) => <PayoutHeldMark payout={payout} />,
+                summary: (rows) => {
+                    const oldest = oldestHeld(rows);
+                    return (
+                        oldest > 0 && (
+                            <AgeMark
+                                minutes={oldest}
+                                tone="neutral"
+                                className="font-normal"
+                            />
+                        )
+                    );
+                },
             },
             {
                 id: "net",
@@ -98,6 +108,11 @@ export function buildPayoutConfig(
                     <PaidMute payout={payout}>
                         {formatCompactUsd(payoutNet(payout))}
                     </PaidMute>
+                ),
+                summary: (rows) => (
+                    <span className="text-text-secondary">
+                        {formatCompactUsd(payoutTotals(rows).net)}
+                    </span>
                 ),
                 footer: (rows) => (
                     <span className="text-text font-semibold">
