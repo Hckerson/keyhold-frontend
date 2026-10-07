@@ -11,6 +11,7 @@ export interface AdminTransactionsStatBandProps {
     stages: DealFlowStage[];
     active: TransactionStatusFilter;
     pending?: boolean;
+    failed?: boolean;
     onChange: (next: TransactionStatusFilter) => void;
 }
 
@@ -18,6 +19,7 @@ export function AdminTransactionsStatBand({
     stages,
     active,
     pending,
+    failed,
     onChange,
 }: AdminTransactionsStatBandProps) {
     return (
@@ -31,7 +33,7 @@ export function AdminTransactionsStatBand({
                     key={stage.id}
                     stage={stage}
                     active={stage.id === active}
-                    pending={pending}
+                    pending={pending || failed}
                     onSelect={() =>
                         onChange(stage.id === active ? EVERY_STAGE : stage.id)
                     }

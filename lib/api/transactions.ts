@@ -10,11 +10,28 @@ import type {
     TransactionStage,
 } from "@/lib/validations/transaction";
 
+const LEDGER_PAGE_SIZE = 100;
+const FIRST_PAGE = 1;
+
 export const transactionsAPI = {
     list: (input: TransactionQuery = {}) =>
         query.get<TransactionPage>(config.api.transactions.list, {
             params: input,
         }),
+
+    ledger: async (input: TransactionQuery = {}) => {
+        const params = { limit: LEDGER_PAGE_SIZE, ...input };
+        const first = await transactionsAPI.list({
+            ...params,
+            page: FIRST_PAGE,
+        });
+        const rest = await Promise.all(
+            Array.from({ length: first.pageCount - FIRST_PAGE }, (_, index) =>
+                transactionsAPI.list({ ...params, page: index + 2 }),
+            ),
+        );
+        return [first, ...rest].flatMap((page) => page.items);
+    },
 
     stages: () => query.get<TransactionStage[]>(config.api.transactions.stages),
 
