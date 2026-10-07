@@ -1,99 +1,68 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { ReportExportModal } from "@/components/features/admin/report-export-modal";
+import { AdminReportsChart } from "@/components/sections/admin/admin-reports-chart";
 import { AdminReportsHeader } from "@/components/sections/admin/admin-reports-header";
 import { AdminReportsMain } from "@/components/sections/admin/admin-reports-main";
 import { AdminReportsRail } from "@/components/sections/admin/admin-reports-rail";
-import { AdminReportsStatBand } from "@/components/sections/admin/admin-reports-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
-import { regionPerformance, reportStats } from "@/lib/data/admin-reports";
-import { reportSignals } from "@/lib/data/admin-reports-signals";
-import {
-    toReportSections,
-    REPORT_EXPORT_FILENAME,
-} from "@/lib/data/admin-reports-export";
-import { reportMonths, reportPeriodLabel } from "@/lib/data/admin-report-trend";
-import { reportTrendMetrics } from "@/lib/data/admin-report-trend-metrics";
 import {
     DEFAULT_REPORT_PERIOD,
-    REPORT_SECTION_IDS,
+    reportExportFilename,
     type ReportSectionId,
 } from "@/lib/config/report-export";
+import { DEFAULT_REPORT_MEASURE } from "@/lib/config/report-measures";
+import { reportMonths, reportWindowLabel } from "@/lib/data/admin-reports";
 import {
-    usePlatformStats,
+    membersReading,
+    reportMarkets,
+    reportShares,
+    rolesLine,
+} from "@/lib/data/admin-reports-audience";
+import { toReportSections } from "@/lib/data/admin-reports-csv";
+import { reportMeasures } from "@/lib/data/admin-reports-measures";
+import {
     useRegionMetrics,
     useTrendStats,
     useUserStats,
 } from "@/lib/hooks/use-stats";
 import { useTierDistribution, useUsers } from "@/lib/hooks/use-users";
-import { toRoleSegments, toTierSegments } from "@/lib/utils/to-user-segments";
 import { downloadCsv } from "@/lib/utils/download";
+import { toRoleSegments, toTierSegments } from "@/lib/utils/to-user-segments";
 import type { TimeFilter } from "@/lib/enums/enums";
+import type { ReportMeasureId } from "@/lib/types";
 
 export function AdminReportsConsole() {
     const [period, setPeriod] = useState<TimeFilter>(DEFAULT_REPORT_PERIOD);
-    const [customising, setCustomising] = useState(false);
-    const [queued, setQueued] = useState<readonly ReportSectionId[] | null>(
-        null,
+    const [measure, setMeasure] = useState<ReportMeasureId>(
+        DEFAULT_REPORT_MEASURE,
     );
-    const exported = useRef<readonly ReportSectionId[] | null>(null);
+    const [exporting, setExporting] = useState(false);
 
-    const platform = usePlatformStats();
     const users = useUserStats();
     const directory = useUsers();
     const tiers = useTierDistribution();
     const regions = useRegionMetrics();
     const trend = useTrendStats(period);
 
-    const ranked = useMemo(
-        () => regionPerformance(regions.data ?? []),
+    const months = useMemo(() => reportMonths(trend.data), [trend.data]);
+    const measures = useMemo(() => reportMeasures(months), [months]);
+    const markets = useMemo(
+        () => reportMarkets(regions.data ?? []),
         [regions.data],
     );
-
-    const months = useMemo(() => reportMonths(trend.data), [trend.data]);
-
+    const tierShares = useMemo(
+        () => reportShares(toTierSegments(tiers.data)),
+        [tiers.data],
+    );
     const roles = useMemo(
-        () => toRoleSegments(directory.data ?? []),
+        () => rolesLine(toRoleSegments(directory.data ?? [])),
         [directory.data],
     );
 
-    const tierSegments = useMemo(
-        () => toTierSegments(tiers.data),
-        [tiers.data],
-    );
-
-    const exportReport = useCallback(
-        (chosen: TimeFilter, sections: readonly ReportSectionId[]) =>
-            downloadCsv(
-                toReportSections(sections, ranked, months),
-                REPORT_EXPORT_FILENAME(chosen),
-            ),
-        [ranked, months],
-    );
-
-    const onDownload = useCallback(
-        () => exportReport(period, REPORT_SECTION_IDS),
-        [exportReport, period],
-    );
-
-    const onGenerate = useCallback(
-        (chosen: TimeFilter, sections: ReportSectionId[]) => {
-            setPeriod(chosen);
-            setCustomising(false);
-            setQueued(sections);
-        },
-        [],
-    );
-
-    useEffect(() => {
-        if (!queued || trend.isFetching || exported.current === queued) return;
-        exported.current = queued;
-        exportReport(period, queued);
-    }, [queued, trend.isFetching, exportReport, period]);
-
-    const queries = [platform, users, directory, tiers, regions, trend];
+    const queries = [users, directory, tiers, regions, trend];
 
     if (queries.some((entry) => entry.isError))
         return (
@@ -103,48 +72,53 @@ export function AdminReportsConsole() {
             />
         );
 
-    const pending = queries.some((entry) => entry.isPending);
+    const span = reportWindowLabel(months);
+
+    const onExport = (sections: ReportSectionId[]) => {
+        downloadCsv(
+            toReportSections(sections, months, markets),
+            reportExportFilename(period),
+        );
+        setExporting(false);
+    };
 
     return (
         <div className="flex flex-col gap-4">
             <AdminReportsHeader
-                period={reportPeriodLabel(trend.data)}
-                onDownload={onDownload}
-                onCustomise={() => setCustomising(true)}
+                span={span}
+                period={period}
+                onPeriodChange={setPeriod}
+                onExport={() => setExporting(true)}
             />
 
-            <AdminReportsStatBand
-                stats={reportStats(platform.data, users.data)}
-                pending={pending}
+            <AdminReportsChart
+                months={months}
+                measures={measures}
+                measure={measure}
+                pending={trend.isPending}
+                onMeasureChange={setMeasure}
             />
 
             <div className="console-split gap-3">
                 <AdminReportsMain
-                    regions={ranked}
-                    metrics={reportTrendMetrics(trend.data)}
                     months={months}
-                    period={reportPeriodLabel(trend.data)}
-                    pending={pending}
+                    measure={measure}
+                    pending={trend.isPending}
                 />
                 <AdminReportsRail
-                    signals={reportSignals(
-                        platform.data,
-                        users.data,
-                        regions.data ?? [],
-                        trend.data,
-                    )}
+                    markets={markets}
+                    tiers={tierShares}
                     roles={roles}
-                    tiers={tierSegments}
-                    pending={pending}
+                    members={membersReading(users.data)}
+                    pending={queries.some((entry) => entry.isPending)}
                 />
             </div>
 
             <ReportExportModal
-                key={period}
-                open={customising}
-                period={period}
-                onClose={() => setCustomising(false)}
-                onGenerate={onGenerate}
+                open={exporting}
+                span={span}
+                onClose={() => setExporting(false)}
+                onExport={onExport}
             />
         </div>
     );

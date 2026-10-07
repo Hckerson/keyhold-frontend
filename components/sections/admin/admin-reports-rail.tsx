@@ -1,61 +1,83 @@
+import { MapPin } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { PanelLink } from "@/components/features/shared/panel-link";
-import { AudienceMix } from "@/components/features/admin/audience-mix";
-import { ReportSignalTable } from "@/components/features/admin/report-signal-table";
-import type { DonutSegment, ReportSignal } from "@/lib/types";
+import { ReportMarketList } from "@/components/features/admin/report-market-list";
+import { ReportShareList } from "@/components/features/admin/report-share-list";
+import { ADMIN_ROUTES } from "@/lib/constants";
+import type { ReportMarket, ReportShare } from "@/lib/types";
 
-const SIGNALS_TITLE = "Platform Signals";
-const SIGNALS_LEDE = "Month over month movement";
-const AUDIENCE_TITLE = "Audience Mix";
-const AUDIENCE_ACTION = "Users";
-const TIER_LABEL = "By tier";
-const AUDIENCE_ROWS = 2;
+const MARKETS_TITLE = "Markets";
+const MARKETS_LEDE = "Settled volume by region, all time";
+const MARKETS_ACTION = "Listings";
+const MARKETS_EMPTY = "No regional volume yet";
+const MARKETS_EMPTY_LEDE = "Regions rank here once a deal settles.";
+const MEMBERS_TITLE = "Members";
+const MEMBERS_ACTION = "Users";
+const TIERS_LABEL = "Members by tier";
+const SKELETON_ROWS = 3;
 
 export interface AdminReportsRailProps {
-    signals: ReportSignal[];
-    roles: DonutSegment[];
-    tiers: DonutSegment[];
+    markets: ReportMarket[];
+    tiers: ReportShare[];
+    roles: string;
+    members?: string;
     pending?: boolean;
 }
 
 export function AdminReportsRail({
-    signals,
-    roles,
+    markets,
     tiers,
+    roles,
+    members,
     pending,
 }: AdminReportsRailProps) {
     return (
-        <div className="flex flex-col gap-3">
+        <div className="console-rail flex flex-col gap-3">
             <Panel
-                title={SIGNALS_TITLE}
-                description={SIGNALS_LEDE}
-                count={signals.length}
+                title={MARKETS_TITLE}
+                description={MARKETS_LEDE}
+                count={markets.length}
+                action={
+                    <PanelLink
+                        href={ADMIN_ROUTES.listings}
+                        label={MARKETS_ACTION}
+                    />
+                }
             >
                 {pending ? (
-                    <SkeletonRows rows={signals.length} />
+                    <SkeletonRows rows={SKELETON_ROWS} />
+                ) : markets.length > 0 ? (
+                    <ReportMarketList markets={markets} />
                 ) : (
-                    <PanelInset scroll>
-                        <ReportSignalTable signals={signals} />
-                    </PanelInset>
+                    <EmptyState
+                        icon={MapPin}
+                        title={MARKETS_EMPTY}
+                        description={MARKETS_EMPTY_LEDE}
+                    />
                 )}
             </Panel>
 
             <Panel
-                title={AUDIENCE_TITLE}
+                title={MEMBERS_TITLE}
+                description={members}
                 action={
-                    <PanelLink href="/admin/users" label={AUDIENCE_ACTION} />
+                    <PanelLink
+                        href={ADMIN_ROUTES.users}
+                        label={MEMBERS_ACTION}
+                    />
                 }
             >
                 {pending ? (
-                    <SkeletonRows rows={AUDIENCE_ROWS} />
+                    <SkeletonRows rows={SKELETON_ROWS} />
                 ) : (
-                    <AudienceMix
-                        roles={roles}
-                        tiers={tiers}
-                        tierLabel={TIER_LABEL}
-                    />
+                    <>
+                        <ReportShareList label={TIERS_LABEL} shares={tiers} />
+                        <p className="text-text-muted border-border-light border-t pt-2.5 text-xs tabular-nums">
+                            {roles}
+                        </p>
+                    </>
                 )}
             </Panel>
         </div>

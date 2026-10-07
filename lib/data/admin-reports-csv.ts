@@ -1,54 +1,47 @@
-import type { RegionPerformance } from "@/lib/types";
-import type { CsvSection } from "@/lib/utils/download";
+import {
+    REPORT_MEASURES,
+    REPORT_MEASURE_IDS,
+} from "@/lib/config/report-measures";
+import { measureValue } from "@/lib/data/admin-reports";
 import type { ReportSectionId } from "@/lib/config/report-export";
-import type { TimeFilter } from "@/lib/enums/enums";
+import type { ReportMarket, ReportMonth } from "@/lib/types";
+import type { CsvSection } from "@/lib/utils/download";
 
-export const REPORT_EXPORT_FILENAME = (period: TimeFilter) =>
-    `platform-report-${period}.csv`;
+const MONTH_COLUMN = "Month";
+const PARTIAL_NOTE = "to date";
 
-const REGION_SECTION: CsvSection = {
-    title: "Regional performance",
-    columns: ["Rank", "Region", "Listings", "Average price", "Volume", "Share"],
-    rows: [],
-};
+const statementSection = (months: ReportMonth[]): CsvSection => ({
+    title: "Monthly statement",
+    columns: [
+        MONTH_COLUMN,
+        ...REPORT_MEASURE_IDS.map((id) => REPORT_MEASURES[id].label),
+    ],
+    rows: months.map((month) => [
+        month.partial ? `${month.label} (${PARTIAL_NOTE})` : month.label,
+        ...REPORT_MEASURE_IDS.map((id) => {
+            const value = measureValue(month, id);
+            return value === null ? null : Math.round(value);
+        }),
+    ]),
+});
 
-const PERIOD_SECTION: CsvSection = {
-    title: "Trend",
-    columns: ["Period", "GMV", "Closed deals", "Members joined"],
-    rows: [],
-};
+const marketSection = (markets: ReportMarket[]): CsvSection => ({
+    title: "Markets",
+    columns: ["Region", "Listings", "Average price", "Settled volume", "Share"],
+    rows: markets.map((market) => [
+        market.region,
+        market.listings,
+        Math.round(market.avgPrice),
+        market.volume,
+        `${market.share}%`,
+    ]),
+});
 
 export const toReportSections = (
     sections: readonly ReportSectionId[],
-    regions: RegionPerformance[],
-    periods: Record<string, string | number>[],
+    months: ReportMonth[],
+    markets: ReportMarket[],
 ): CsvSection[] => [
-    ...(sections.includes("regions")
-        ? [
-              {
-                  ...REGION_SECTION,
-                  rows: regions.map((region) => [
-                      region.rank,
-                      region.region,
-                      region.listings,
-                      region.avgPrice,
-                      region.volume,
-                      `${region.share}%`,
-                  ]),
-              },
-          ]
-        : []),
-    ...(sections.includes("periods")
-        ? [
-              {
-                  ...PERIOD_SECTION,
-                  rows: periods.map((period) => [
-                      period.month,
-                      period.gmv,
-                      period.deals,
-                      period.users,
-                  ]),
-              },
-          ]
-        : []),
+    ...(sections.includes("periods") ? [statementSection(months)] : []),
+    ...(sections.includes("regions") ? [marketSection(markets)] : []),
 ];

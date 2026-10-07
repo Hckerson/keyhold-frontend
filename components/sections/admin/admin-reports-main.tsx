@@ -1,77 +1,61 @@
-import { MapPin } from "lucide-react";
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { EmptyState } from "@/components/ui/empty-state";
-import { PanelSkeleton } from "@/components/patterns/panel-skeleton";
-import { SkeletonRows } from "@/components/patterns/skeleton-rows";
-import { PanelLink } from "@/components/features/shared/panel-link";
-import { RegionLeaderTile } from "@/components/features/admin/region-leader-tile";
-import { RegionPerformanceTable } from "@/components/features/admin/region-performance-table";
-import { AdminReportsChart } from "@/components/sections/admin/admin-reports-chart";
-import type { RegionPerformance, ReportTrendMetric } from "@/lib/types";
+"use client";
 
-const REGION_TITLE = "Regional Performance";
-const REGION_LEDE = "Ranked by transaction volume, leader pulled to the front";
-const REGION_ACTION = "Listings";
-const EMPTY_TITLE = "No regional data";
-const EMPTY_LEDE =
-    "Transaction volume has not been recorded for any region yet.";
+import { useMemo } from "react";
+import { CalendarRange } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
+import { DataTable } from "@/components/patterns/data-table";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
+import { buildStatementConfig } from "@/components/features/admin/report-statement-columns";
+import { reportYears } from "@/lib/data/admin-reports";
+import type { ReportMeasureId, ReportMonth } from "@/lib/types";
+
+const TITLE = "Monthly statement";
+const LEDE = "Newest first, with a subtotal for each year";
+const EMPTY_TITLE = "No months to report";
+const EMPTY_LEDE = "Settled deals, listings and sign-ups land here by month.";
 
 export interface AdminReportsMainProps {
-    regions: RegionPerformance[];
-    metrics: ReportTrendMetric[];
-    months: Record<string, string | number>[];
-    period: string;
+    months: ReportMonth[];
+    measure: ReportMeasureId;
     pending?: boolean;
 }
 
 export function AdminReportsMain({
-    regions,
-    metrics,
     months,
-    period,
+    measure,
     pending,
 }: AdminReportsMainProps) {
+    const years = useMemo(() => reportYears(months), [months]);
+    const config = useMemo(
+        () => buildStatementConfig(measure, years),
+        [measure, years],
+    );
+
     return (
-        <div className="console-span-2 flex flex-col gap-3">
+        <Panel
+            title={TITLE}
+            description={LEDE}
+            count={months.length}
+            className="console-span-2 self-start"
+        >
             {pending ? (
-                <PanelSkeleton />
+                <SkeletonRows tall />
+            ) : months.length > 0 ? (
+                <DataTable
+                    key={years.map((year) => year.id).join()}
+                    {...config}
+                    data={months}
+                    className="-mx-4 -mt-2.5 -mb-4"
+                />
             ) : (
-                <AdminReportsChart
-                    metrics={metrics}
-                    months={months}
-                    period={period}
+                <EmptyState
+                    icon={CalendarRange}
+                    title={EMPTY_TITLE}
+                    description={EMPTY_LEDE}
                 />
             )}
-
-            <Panel
-                title={REGION_TITLE}
-                description={REGION_LEDE}
-                count={regions.length}
-                action={
-                    <PanelLink href="/admin/listings" label={REGION_ACTION} />
-                }
-            >
-                {regions.length > 0 ? (
-                    <>
-                        <RegionLeaderTile region={regions[0]} />
-                        <PanelInset scroll>
-                            <RegionPerformanceTable
-                                regions={regions.slice(1)}
-                            />
-                        </PanelInset>
-                    </>
-                ) : pending ? (
-                    <SkeletonRows />
-                ) : (
-                    <EmptyState
-                        icon={MapPin}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
-            </Panel>
-        </div>
+        </Panel>
     );
 }
 
