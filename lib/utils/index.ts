@@ -10,6 +10,8 @@ export {
     formatCompactUsd,
     formatMillions,
     formatCount,
+    formatCountOf,
+    formatMonthName,
     formatThousands,
     formatAge,
     toDigits,

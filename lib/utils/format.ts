@@ -25,6 +25,11 @@ const dayAndMonth = new Intl.DateTimeFormat(LOCALE, {
     day: "numeric",
 });
 
+const monthName = new Intl.DateTimeFormat(LOCALE, {
+    month: "long",
+    timeZone: "UTC",
+});
+
 const weekdayAndTime = new Intl.DateTimeFormat(LOCALE, {
     weekday: "short",
     hour: "numeric",
@@ -52,6 +57,12 @@ export const formatMillions = (value: number, fractionDigits = 1) =>
     `$${(value / MILLION).toFixed(fractionDigits)}M`;
 
 export const formatCount = (value: number) => wholeNumber.format(value);
+
+export const formatCountOf = (count: number, noun: string) =>
+    `${formatCount(count)} ${noun}${count === 1 ? "" : "s"}`;
+
+export const formatMonthName = (key: string) =>
+    monthName.format(new Date(`${key}-01T00:00:00Z`));
 
 export const formatThousands = (value: number, fractionDigits = 0) =>
     `$${fixedNumber(fractionDigits).format(value / 1_000)}K`;

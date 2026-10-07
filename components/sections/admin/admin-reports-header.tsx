@@ -1,40 +1,51 @@
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FilterPills } from "@/components/patterns/filter-pills";
 import { PortalHeader } from "@/components/patterns/portal-header";
+import { REPORT_EXPORT_COPY, REPORT_WINDOWS } from "@/lib/config/report-export";
+import type { TimeFilter } from "@/lib/enums/enums";
 
-const REPORTS_TITLE = "Analytics & Reports";
-const REPORTS_LEDE =
-    "What the marketplace produced, where it produced it, and which way each measure is moving";
-const DOWNLOAD_ACTION = "Download";
-const CUSTOM_ACTION = "Generate Custom";
+const TITLE = "Platform Reports";
+const LEDE =
+    "What the marketplace produced month by month, where it produced it, and who it serves";
 
 export interface AdminReportsHeaderProps {
-    period: string;
-    onDownload: () => void;
-    onCustomise: () => void;
+    span: string;
+    period: TimeFilter;
+    onPeriodChange: (next: TimeFilter) => void;
+    onExport: () => void;
 }
 
 export function AdminReportsHeader({
+    span,
     period,
-    onDownload,
-    onCustomise,
+    onPeriodChange,
+    onExport,
 }: AdminReportsHeaderProps) {
     return (
         <PortalHeader
-            title={REPORTS_TITLE}
-            lede={REPORTS_LEDE}
-            summary={period}
+            title={TITLE}
+            lede={LEDE}
+            summary={span}
             action={
                 <>
-                    <Button type="button" onClick={onDownload}>
-                        {DOWNLOAD_ACTION}
-                    </Button>
+                    <FilterPills
+                        filters={REPORT_WINDOWS}
+                        active={period}
+                        onChange={onPeriodChange}
+                    />
                     <Button
                         type="button"
                         emphasis="solid"
                         tone="accent"
-                        onClick={onCustomise}
+                        onClick={onExport}
                     >
-                        {CUSTOM_ACTION}
+                        <Download
+                            size={12}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                        {REPORT_EXPORT_COPY.trigger}
                     </Button>
                 </>
             }

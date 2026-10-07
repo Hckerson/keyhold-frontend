@@ -3,6 +3,7 @@
 import {
     BarChart as RBarChart,
     Bar,
+    Cell,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -15,6 +16,8 @@ import { cn } from "@/lib/utils";
 import { formatScaled } from "@/lib/utils/format";
 import type { ColumnSeries } from "@/lib/types";
 
+const FADED_OPACITY = 0.35;
+
 export interface ColumnChartProps {
     data: Record<string, string | number>[];
     xKey: string;
@@ -24,6 +27,7 @@ export interface ColumnChartProps {
     fractionDigits?: number;
     valuePrefix?: string;
     valueSuffix?: string;
+    faded?: (index: number) => boolean;
     className?: string;
 }
 
@@ -36,6 +40,7 @@ export function ColumnChart({
     fractionDigits = 0,
     valuePrefix = "",
     valueSuffix = "",
+    faded,
     className,
 }: ColumnChartProps) {
     const mounted = useMounted();
@@ -125,7 +130,19 @@ export function ColumnChart({
                                             ? [4, 4, 0, 0]
                                             : [0, 0, 0, 0]
                                     }
-                                />
+                                >
+                                    {faded &&
+                                        data.map((datum, index) => (
+                                            <Cell
+                                                key={`${String(datum[xKey])}-${index}`}
+                                                fillOpacity={
+                                                    faded(index)
+                                                        ? FADED_OPACITY
+                                                        : 1
+                                                }
+                                            />
+                                        ))}
+                                </Bar>
                             ))}
                         </RBarChart>
                     </ResponsiveContainer>
