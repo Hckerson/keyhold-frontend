@@ -10,6 +10,8 @@ export interface ReportMeasureMeta {
     suffix: string;
 }
 
+const MONEY_PREFIX = "$";
+
 const MILLIONS = {
     money: true,
     divideBy: 1_000_000,
@@ -63,3 +65,13 @@ export const REPORT_MEASURE_IDS = Object.keys(
 ) as ReportMeasureId[];
 
 export const DEFAULT_REPORT_MEASURE: ReportMeasureId = "gmv";
+
+export const measureAxis = (id: ReportMeasureId) => {
+    const meta = REPORT_MEASURES[id];
+    return {
+        divideBy: meta.divideBy,
+        fractionDigits: meta.fractionDigits,
+        valuePrefix: meta.money ? MONEY_PREFIX : "",
+        valueSuffix: meta.suffix,
+    };
+};

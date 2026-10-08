@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { reportMonths } from "@/lib/data/admin-reports";
-import {
-    measureReading,
-    reportMeasures,
-} from "@/lib/data/admin-reports-measures";
+import { reportMeasures } from "@/lib/data/admin-reports-measures";
 import { aTrend, REPORT_TODAY } from "@/lib/data/__fixtures__/reports";
 
 const months = reportMonths(aTrend(), REPORT_TODAY);
@@ -30,21 +27,5 @@ describe("reportMeasures", () => {
 
     it("estimates commission from settled volume at the platform rate", () => {
         expect(measureOf("commission")?.total).toBe("$288K");
-    });
-});
-
-describe("measureReading", () => {
-    it("names the best month and flags the month still accruing", () => {
-        expect(measureReading(months, "gmv")).toBe(
-            "Best month Sep 2026 at $6.10M · Oct 2026 is month to date",
-        );
-    });
-
-    it("says nothing was recorded when the measure is empty across the window", () => {
-        const quiet = reportMonths(aTrend({ gmv: [] }), REPORT_TODAY);
-
-        expect(measureReading(quiet, "gmv")).toBe(
-            "Nothing recorded in this window · Oct 2026 is month to date",
-        );
     });
 });

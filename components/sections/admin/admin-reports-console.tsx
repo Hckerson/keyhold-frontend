@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { ReportExportModal } from "@/components/features/admin/report-export-modal";
-import { AdminReportsChart } from "@/components/sections/admin/admin-reports-chart";
 import { AdminReportsHeader } from "@/components/sections/admin/admin-reports-header";
 import { AdminReportsMain } from "@/components/sections/admin/admin-reports-main";
 import { AdminReportsRail } from "@/components/sections/admin/admin-reports-rail";
+import { AdminReportsStatBand } from "@/components/sections/admin/admin-reports-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
@@ -13,7 +13,6 @@ import {
     reportExportFilename,
     type ReportSectionId,
 } from "@/lib/config/report-export";
-import { DEFAULT_REPORT_MEASURE } from "@/lib/config/report-measures";
 import { reportMonths, reportWindowLabel } from "@/lib/data/admin-reports";
 import {
     membersReading,
@@ -32,13 +31,9 @@ import { useTierDistribution, useUsers } from "@/lib/hooks/use-users";
 import { downloadCsv } from "@/lib/utils/download";
 import { toRoleSegments, toTierSegments } from "@/lib/utils/to-user-segments";
 import type { TimeFilter } from "@/lib/enums/enums";
-import type { ReportMeasureId } from "@/lib/types";
 
 export function AdminReportsConsole() {
     const [period, setPeriod] = useState<TimeFilter>(DEFAULT_REPORT_PERIOD);
-    const [measure, setMeasure] = useState<ReportMeasureId>(
-        DEFAULT_REPORT_MEASURE,
-    );
     const [exporting, setExporting] = useState(false);
 
     const users = useUserStats();
@@ -91,20 +86,13 @@ export function AdminReportsConsole() {
                 onExport={() => setExporting(true)}
             />
 
-            <AdminReportsChart
-                months={months}
+            <AdminReportsStatBand
                 measures={measures}
-                measure={measure}
                 pending={trend.isPending}
-                onMeasureChange={setMeasure}
             />
 
             <div className="console-split gap-3">
-                <AdminReportsMain
-                    months={months}
-                    measure={measure}
-                    pending={trend.isPending}
-                />
+                <AdminReportsMain months={months} pending={trend.isPending} />
                 <AdminReportsRail
                     markets={markets}
                     tiers={tierShares}
