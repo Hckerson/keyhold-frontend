@@ -20,11 +20,10 @@ import { useEscrowHolds, useEscrowStages } from "@/lib/hooks/use-escrow";
 import { useEscrowSettle } from "@/lib/hooks/use-escrow-settle";
 import { toPayouts } from "@/lib/utils/to-payout";
 
-const HOLD_PAGE_SIZE = 100;
 const EVERY_STATE: PayoutStateFilter = "all";
 
 export function AdminPaymentsConsole() {
-    const holds = useEscrowHolds({ limit: HOLD_PAGE_SIZE });
+    const holds = useEscrowHolds();
     const stages = useEscrowStages();
     const settle = useEscrowSettle();
 
@@ -33,8 +32,8 @@ export function AdminPaymentsConsole() {
     const [query, setQuery] = useState("");
 
     const payouts = useMemo(
-        () => rankPayouts(toPayouts(holds.data?.items ?? [])),
-        [holds.data?.items],
+        () => rankPayouts(toPayouts(holds.data ?? [])),
+        [holds.data],
     );
 
     const visible = useMemo(
@@ -69,6 +68,7 @@ export function AdminPaymentsConsole() {
                 stages={pipeline}
                 active={stateFilter}
                 pending={stages.isPending}
+                failed={stages.isError}
                 onChange={setStateFilter}
             />
 

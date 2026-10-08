@@ -22,7 +22,7 @@ export function PayoutDetailActions({
             <Link href={payout.href} className={buttonVariants()}>
                 {DEAL_ACTION}
             </Link>
-            {PAYOUT_STATES[payout.state].held && (
+            {PAYOUT_STATES[payout.state].settlable && (
                 <Button
                     type="button"
                     emphasis="solid"
