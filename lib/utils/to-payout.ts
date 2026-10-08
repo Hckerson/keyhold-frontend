@@ -10,10 +10,13 @@ export const toPayout = (escrow: Escrow): Payout => ({
     id: escrow.id,
     recipient: escrow.transaction?.seller.fullName ?? UNKNOWN_PARTY,
     deal: escrow.transaction?.property.address ?? UNKNOWN_DEAL,
+    locality: escrow.transaction?.property.locality ?? "",
+    buyer: escrow.transaction?.buyer.fullName ?? UNKNOWN_PARTY,
     state: escrow.status,
     gross: escrow.amount,
     ageMinutes: minutesSince(escrow.createdAt),
     inspectionEndsAt: escrow.inspectionEndDate,
+    settledAt: escrow.releasedAt ?? escrow.refundedAt,
     href: escrow.transaction
         ? ADMIN_ROUTES.transaction(escrow.transaction.id)
         : ADMIN_ROUTES.transactions,

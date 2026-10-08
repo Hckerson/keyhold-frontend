@@ -12,10 +12,10 @@ import {
     matchesPayoutFilters,
     matchesPayoutQuery,
     payoutsReading,
-    rankPayouts,
     toPayoutStages,
     type PayoutStateFilter,
 } from "@/lib/data/admin-payments";
+import { orderPayouts } from "@/lib/data/admin-payout-phase";
 import { useEscrowHolds, useEscrowStages } from "@/lib/hooks/use-escrow";
 import { useEscrowSettle } from "@/lib/hooks/use-escrow-settle";
 import { toPayouts } from "@/lib/utils/to-payout";
@@ -32,7 +32,7 @@ export function AdminPaymentsConsole() {
     const [query, setQuery] = useState("");
 
     const payouts = useMemo(
-        () => rankPayouts(toPayouts(holds.data ?? [])),
+        () => orderPayouts(toPayouts(holds.data ?? [])),
         [holds.data],
     );
 

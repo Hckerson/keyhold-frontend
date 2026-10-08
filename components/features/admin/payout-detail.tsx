@@ -7,6 +7,7 @@ import { formatUsd } from "@/lib/utils";
 import type { Payout } from "@/lib/types";
 
 const NET_LABEL = "Net to agent";
+const BUYER_LABEL = "Bought by";
 const CARD = "bg-background border-border-light rounded-xl border p-4";
 
 export interface PayoutDetailProps {
@@ -25,7 +26,10 @@ export function PayoutDetail({ payout }: PayoutDetailProps) {
                     {formatUsd(payoutNet(payout))}
                 </p>
                 <p className="text-text-secondary mt-2 truncate text-xs">
-                    {payout.deal}
+                    {[payout.deal, payout.locality].filter(Boolean).join(" · ")}
+                </p>
+                <p className="text-text-muted mt-0.5 truncate text-xs">
+                    {BUYER_LABEL} {payout.buyer}
                 </p>
             </section>
             <div className={CARD}>

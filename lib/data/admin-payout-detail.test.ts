@@ -1,20 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { aPayout } from "@/lib/data/__fixtures__/payouts";
 import { payoutSteps } from "@/lib/data/admin-payout-detail";
 import type { Payout } from "@/lib/types";
 
 const NOW = new Date("2026-10-06T12:00:00.000Z");
-
-const aPayout = (overrides: Partial<Payout> = {}): Payout => ({
-    id: "esc_1",
-    recipient: "Noor Hale",
-    deal: "12 Harbour Row",
-    state: "HELD",
-    gross: 100_000,
-    ageMinutes: 60,
-    inspectionEndsAt: null,
-    href: "/admin/transactions",
-    ...overrides,
-});
 
 const states = (payout: Payout) =>
     payoutSteps(payout, NOW).map((step) => step.state);

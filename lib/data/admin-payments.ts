@@ -4,20 +4,17 @@ import {
 } from "@/lib/config/payout-tones";
 import { PLATFORM_PAYOUT_FEE_RATE } from "@/lib/constants";
 import type {
-    DataTableGroupDef,
     EscrowPosition,
     Payout,
     PayoutStage,
     PayoutState,
 } from "@/lib/types";
 import type { EscrowStage } from "@/lib/validations/escrow";
-import { formatCompactUsd, sum } from "@/lib/utils";
+import { formatAge, formatCompactUsd, sum } from "@/lib/utils";
 import { minutesSince } from "@/lib/utils/elapsed";
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const FULL_PERCENT = 100;
-const WINDOW_CLOSED = "Closed";
-const NO_WINDOW = "—";
 
 export type PayoutStateFilter = "all" | PayoutState;
 
@@ -35,13 +32,6 @@ export const heldPayouts = (payouts: Payout[]) =>
 export const outstandingPayout = (payouts: Payout[]) =>
     sumGross(heldPayouts(payouts));
 
-export const rankPayouts = (payouts: Payout[]) =>
-    [...payouts].sort(
-        (a, b) =>
-            PAYOUT_STATES[b.state].rank - PAYOUT_STATES[a.state].rank ||
-            b.gross - a.gross,
-    );
-
 export const inspectionDaysLeft = (payout: Payout, now = new Date()) =>
     payout.inspectionEndsAt
         ? Math.ceil(
@@ -49,12 +39,6 @@ export const inspectionDaysLeft = (payout: Payout, now = new Date()) =>
                   MS_PER_DAY,
           )
         : null;
-
-export const inspectionLabel = (payout: Payout, now = new Date()) => {
-    const days = inspectionDaysLeft(payout, now);
-    if (days === null) return NO_WINDOW;
-    return days <= 0 ? WINDOW_CLOSED : `${days}d left`;
-};
 
 export const toPayoutStages = (stages: EscrowStage[]): PayoutStage[] =>
     PAYOUT_PIPELINE_ORDER.map((id) => {
@@ -114,35 +98,16 @@ export const payoutsReading = (
         return `${PAYOUT_STATES[state].label} · ${plural(rows.length, "payout")}, ${formatCompactUsd(sumGross(rows))} gross`;
     }
     if (held.length === 0) return "Every payout has been settled";
-    return `${held.length} still held · oldest first in each group`;
+    const oldest = Math.max(...held.map((payout) => payout.ageMinutes));
+    return `${plural(held.length, "payout")} still held · the oldest has waited ${formatAge(oldest)}`;
 };
 
 export const matchesPayoutQuery = (payout: Payout, query: string) => {
     const needle = query.trim().toLowerCase();
     return (
         needle === "" ||
-        payout.recipient.toLowerCase().includes(needle) ||
-        payout.deal.toLowerCase().includes(needle)
+        [payout.recipient, payout.deal, payout.locality, payout.buyer].some(
+            (field) => field.toLowerCase().includes(needle),
+        )
     );
 };
-
-export const PAYOUT_GROUPS: DataTableGroupDef[] = [
-    { id: "disputed", label: "Disputed" },
-    { id: "ready", label: "Ready to release" },
-    { id: "inspecting", label: "In inspection" },
-    { id: "paid", label: "Paid out", collapsed: true },
-];
-
-export const payoutGroupOf = (payout: Payout, now = new Date()) => {
-    if (payout.state === "DISPUTED") return "disputed";
-    if (!PAYOUT_STATES[payout.state].held) return "paid";
-    return (inspectionDaysLeft(payout, now) ?? 0) > 0 ? "inspecting" : "ready";
-};
-
-export const oldestHeld = (payouts: Payout[]) =>
-    Math.max(
-        0,
-        ...payouts
-            .filter((payout) => PAYOUT_STATES[payout.state].held)
-            .map((payout) => payout.ageMinutes),
-    );
