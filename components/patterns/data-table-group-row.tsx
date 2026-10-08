@@ -1,7 +1,11 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { alignClass, groupCell } from "@/components/patterns/data-table-types";
+import {
+    alignClass,
+    groupCell,
+    WIDE_CELL,
+} from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
 import type { DataTableColumn, DataTableGroupDef } from "@/lib/types";
 
@@ -62,6 +66,7 @@ export function DataTableGroupRow<T>({
                     className={cn(
                         groupCell,
                         alignClass[column.align ?? "left"],
+                        column.wide && WIDE_CELL,
                     )}
                 >
                     {column.summary?.(rows)}

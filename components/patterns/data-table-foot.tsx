@@ -1,6 +1,10 @@
 "use client";
 
-import { alignClass, footCell } from "@/components/patterns/data-table-types";
+import {
+    alignClass,
+    footCell,
+    WIDE_CELL,
+} from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
 import type { DataTableColumn } from "@/lib/types";
 
@@ -35,6 +39,7 @@ export function DataTableFoot<T>({
                         className={cn(
                             footCell,
                             alignClass[column.align ?? "left"],
+                            column.wide && WIDE_CELL,
                         )}
                     >
                         {column.footer?.(rows)}

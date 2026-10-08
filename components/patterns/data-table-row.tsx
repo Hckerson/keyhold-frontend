@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/forms/checkbox";
 import {
     alignClass,
     emphasisClass,
+    WIDE_CELL,
 } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
 import type { ColumnEmphasis, DataTableColumn, RevealMode } from "@/lib/types";
@@ -77,6 +78,7 @@ export function DataTableRow<T>({
                             "px-3 py-0",
                             emphasisClass[emphasisOf(column)],
                             alignClass[column.align ?? "left"],
+                            column.wide && WIDE_CELL,
                         )}
                     >
                         {column.render(row)}

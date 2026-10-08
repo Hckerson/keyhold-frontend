@@ -3,6 +3,7 @@ import {
     alignClass,
     headCell,
     sortIcon,
+    WIDE_CELL,
 } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
 import type { DataTableColumn, DataTableSort } from "@/lib/types";
@@ -39,7 +40,11 @@ export function DataTableHeadCell<T>({
                         : "none"
                     : undefined
             }
-            className={cn(headCell, alignClass[column.align ?? "left"])}
+            className={cn(
+                headCell,
+                alignClass[column.align ?? "left"],
+                column.wide && WIDE_CELL,
+            )}
         >
             {column.sortValue ? (
                 <button
