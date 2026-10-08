@@ -30,7 +30,7 @@ const measureColumn =
         label: REPORT_MEASURES[id].column,
         align: "right",
         width: REPORT_MEASURES[id].width,
-        emphasis: id === focus ? "focal" : "muted",
+        emphasis: id === focus ? "value" : "muted",
         sortValue: (month) => measureValue(month, id) ?? -1,
         render: (month) => (
             <ReportFigure value={formatMeasure(id, measureValue(month, id))} />
@@ -44,7 +44,7 @@ const measureColumn =
         footer: (rows) => (
             <ReportFigure
                 value={formatMeasure(id, measureTotal(rows, id))}
-                className={id === focus ? "text-text font-semibold" : undefined}
+                className={id === focus ? "text-text" : undefined}
             />
         ),
     });

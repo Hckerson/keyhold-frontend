@@ -16,9 +16,14 @@ import {
     payoutTiming,
 } from "@/lib/data/admin-payout-phase";
 import { formatCompactUsd, formatCountOf } from "@/lib/utils";
-import type { DataTableColumn, DataTableConfig, Payout } from "@/lib/types";
+import type {
+    DataTableColumn,
+    DataTableConfig,
+    Payout,
+    PayoutConfigOptions,
+} from "@/lib/types";
 
-const MIN_WIDTH = "68rem";
+const MIN_WIDTH = "40rem";
 const PAGE_SIZE = 12;
 const PAYOUT_NOUN = "payout";
 const CAPTION =
@@ -36,12 +41,6 @@ const settleColumn = (
         <PayoutSettleButton payout={payout} onSettle={onSettle} />
     ),
 });
-
-export interface PayoutConfigOptions {
-    onSettle: (payout: Payout) => void;
-    settlable: boolean;
-    now?: Date;
-}
 
 export function buildPayoutConfig({
     onSettle,
@@ -89,6 +88,7 @@ export function buildPayoutConfig({
             },
             {
                 id: "buyer",
+                wide: true,
                 label: "Buyer",
                 width: "10.5rem",
                 emphasis: "muted",
@@ -108,6 +108,7 @@ export function buildPayoutConfig({
             },
             {
                 id: "when",
+                wide: true,
                 label: "When",
                 width: "7rem",
                 emphasis: "muted",
@@ -116,6 +117,7 @@ export function buildPayoutConfig({
             },
             {
                 id: "gross",
+                wide: true,
                 label: "Gross",
                 align: "right",
                 width: "5.5rem",
@@ -129,7 +131,7 @@ export function buildPayoutConfig({
                 label: "Net",
                 align: "right",
                 width: "6rem",
-                emphasis: "focal",
+                emphasis: "value",
                 sortValue: payoutNet,
                 render: (payout) => (
                     <PaidMute payout={payout}>
@@ -137,7 +139,7 @@ export function buildPayoutConfig({
                     </PaidMute>
                 ),
                 footer: (rows) => (
-                    <span className="text-text font-semibold">
+                    <span className="text-text">
                         {formatCompactUsd(payoutTotals(rows).net)}
                     </span>
                 ),

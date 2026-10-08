@@ -47,7 +47,7 @@ export function DataTableGrid<T>({
     onKeyDown,
 }: DataTableGridProps<T>) {
     return (
-        <div className="scroll-x">
+        <div className="scroll-x data-table-frame">
             <table
                 ref={tableRef}
                 onKeyDown={onKeyDown}

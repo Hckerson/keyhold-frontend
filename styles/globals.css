@@ -371,6 +371,16 @@ svg.lucide * {
     grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
 }
 
+.data-table-frame {
+    container: data-table / inline-size;
+}
+
+@container data-table (max-width: 64rem) {
+    .data-table-wide {
+        display: none;
+    }
+}
+
 .figure-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

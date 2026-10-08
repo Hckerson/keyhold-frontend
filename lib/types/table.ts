@@ -4,6 +4,7 @@ export type SortDirection = "asc" | "desc";
 export type RevealMode = "inline" | "panel";
 export type ColumnEmphasis =
     | "focal"
+    | "value"
     | "identity"
     | "figure"
     | "field"
@@ -26,6 +27,7 @@ export interface DataTableColumn<T> {
     render: (row: T) => ReactNode;
     footer?: (rows: T[]) => ReactNode;
     summary?: (rows: T[]) => ReactNode;
+    wide?: boolean;
 }
 
 export interface DataTableGroupDef {

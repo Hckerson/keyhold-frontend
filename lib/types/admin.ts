@@ -96,6 +96,12 @@ export interface Payout {
     href: string;
 }
 
+export interface PayoutConfigOptions {
+    onSettle: (payout: Payout) => void;
+    settlable: boolean;
+    now?: Date;
+}
+
 export interface PayoutStage {
     id: PayoutState;
     count: number;
