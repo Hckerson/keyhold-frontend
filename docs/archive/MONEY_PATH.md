@@ -126,6 +126,7 @@ The window is the pivot. Before it closes the money is the buyer's to hold; afte
 | 9.4 | The agreement is generated and stored **before** any of those three writes, so a failure to produce it leaves the hold untouched. |
 | 9.5 | The agreement names the parties, the property and the agreed price — `finalPrice`, not the asking price.                          |
 | 9.6 | Settlement email that fails does not fail the release. The money is settled; the notification is not the record.                  |
+| 9.7 | Each party is notified independently: an email to the buyer that fails does not stop the seller's, and the reverse.               |
 
 ## 10 · Settlement is atomic
 
