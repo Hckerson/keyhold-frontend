@@ -40,7 +40,7 @@ describe("reportMarkets", () => {
 describe("reportShares", () => {
     it("orders segments largest first with whole-number shares", () => {
         const shares = reportShares([
-            { name: "Platinum", value: 1, tone: "highlight" },
+            { name: "Platinum", value: 1, tone: "neutral" },
             { name: "Standard", value: 3, tone: "neutral" },
         ]);
 
@@ -56,7 +56,7 @@ describe("rolesLine", () => {
         expect(
             rolesLine([
                 { name: "Buyers", value: 562, tone: "accent" },
-                { name: "Agents", value: 5, tone: "info" },
+                { name: "Agents", value: 5, tone: "neutral" },
             ]),
         ).toBe("562 buyers · 5 agents");
     });

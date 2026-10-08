@@ -8,8 +8,8 @@ const chipVariants = cva(
     {
         variants: {
             tone: {
-                light: "bg-accent text-highlight",
-                dark: "border-highlight/35 text-highlight border bg-transparent",
+                light: "bg-accent text-accent-light",
+                dark: "border-accent-soft/35 text-accent-soft border bg-transparent",
             },
             size: {
                 sm: "size-7",

@@ -92,7 +92,7 @@ export function ListingRow({
                 className={cn(
                     "py-0 pl-3 text-right text-xs tabular-nums",
                     listing.offers > 0
-                        ? "text-highlight-dark font-semibold"
+                        ? "text-accent font-semibold"
                         : "text-text-muted",
                 )}
             >

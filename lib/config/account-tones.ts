@@ -28,8 +28,8 @@ export const NOTIFICATION_CHANNELS: Record<
     NotificationChannelMeta
 > = {
     push: { label: "Push", icon: Smartphone, tone: "accent" },
-    email: { label: "Email", icon: Mail, tone: "info" },
-    sms: { label: "SMS", icon: MessageSquare, tone: "highlight" },
+    email: { label: "Email", icon: Mail, tone: "neutral" },
+    sms: { label: "SMS", icon: MessageSquare, tone: "neutral" },
 };
 
 export const NOTIFICATION_CADENCE_KEYS = [
@@ -49,8 +49,8 @@ export const NOTIFICATION_CADENCES: Record<
     NotificationCadence,
     NotificationCadenceMeta
 > = {
-    instant: { label: "Instant", tone: "success", chartTone: "success" },
-    daily: { label: "Daily", tone: "info", chartTone: "info" },
+    instant: { label: "Instant", tone: "success", chartTone: "accent" },
+    daily: { label: "Daily", tone: "info", chartTone: "neutral" },
     weekly: { label: "Weekly", tone: "neutral", chartTone: "neutral" },
 };
 
@@ -89,8 +89,8 @@ export interface PrivacyScopeMeta {
 
 export const PRIVACY_SCOPES: Record<PrivacyScope, PrivacyScopeMeta> = {
     profile: { label: "Profile", icon: UserRound, tone: "accent" },
-    activity: { label: "Activity", icon: Activity, tone: "info" },
-    contact: { label: "Contact", icon: Mail, tone: "highlight" },
+    activity: { label: "Activity", icon: Activity, tone: "neutral" },
+    contact: { label: "Contact", icon: Mail, tone: "neutral" },
 };
 
 export const PRIVACY_SHARED_LABEL = "Shared";
@@ -102,28 +102,28 @@ interface ToneFloor {
 }
 
 const STRENGTH_FLOORS: ToneFloor[] = [
-    { floor: 90, tone: "success" },
+    { floor: 90, tone: "accent" },
     { floor: 70, tone: "accent" },
-    { floor: 50, tone: "warning" },
+    { floor: 50, tone: "neutral" },
 ];
 
 export const strengthTone = (percent: number): ChartTone =>
     STRENGTH_FLOORS.find((band) => percent >= band.floor)?.tone ?? "error";
 
 export const signalTone = (complete: boolean): ChartTone =>
-    complete ? "accent" : "warning";
+    complete ? "accent" : "neutral";
 
 export const CREDENTIAL_RENEWAL_SLA_MINUTES = 86_400;
 
 export const expiryTone = (minutes: number): ChartTone => {
     if (minutes < CREDENTIAL_RENEWAL_SLA_MINUTES / 3) return "error";
-    return minutes < CREDENTIAL_RENEWAL_SLA_MINUTES ? "warning" : "success";
+    return minutes < CREDENTIAL_RENEWAL_SLA_MINUTES ? "neutral" : "accent";
 };
 
 export const RESPONSE_TARGET_HOURS = 4;
 
 export const responseTone = (hours: number): ChartTone => {
     if (!Number.isFinite(hours) || hours <= 0) return "neutral";
-    if (hours <= RESPONSE_TARGET_HOURS / 2) return "success";
-    return hours <= RESPONSE_TARGET_HOURS ? "warning" : "error";
+    if (hours <= RESPONSE_TARGET_HOURS / 2) return "accent";
+    return hours <= RESPONSE_TARGET_HOURS ? "neutral" : "error";
 };

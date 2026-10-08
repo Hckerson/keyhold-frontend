@@ -125,14 +125,14 @@ export const requestStats = (book: RequestBook): StatDatum[] => [
         icon: CalendarClock,
         label: "Viewings to confirm",
         value: `${book.viewings.length}`,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "offers",
         icon: FileSignature,
         label: "Offers to answer",
         value: `${book.offers.length}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "urgent",

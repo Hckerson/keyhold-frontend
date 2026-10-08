@@ -39,21 +39,21 @@ export const savedStats = (listings: SavedListing[]): StatDatum[] => [
         icon: Wallet,
         label: "Value watched",
         value: formatCompactUsd(watchedValue(listings)),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "cuts",
         icon: TrendingDown,
         label: "Price cuts",
         value: `${cutSaved(listings).length}`,
-        tone: "success",
+        tone: "accent",
     },
     {
         id: "offers",
         icon: Handshake,
         label: "Offers in",
         value: `${offerSaved(listings).length}`,
-        tone: "info",
+        tone: "neutral",
         href: "/dashboard/offers",
     },
     {
@@ -61,7 +61,7 @@ export const savedStats = (listings: SavedListing[]): StatDatum[] => [
         icon: EyeOff,
         label: "Unseen",
         value: `${coldSaved(listings).length}`,
-        tone: "warning",
+        tone: "neutral",
     },
 ];
 

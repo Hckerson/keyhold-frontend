@@ -110,7 +110,7 @@ export const buildDashboardSettingsStats = (
         icon: Wallet,
         label: "Verified",
         value: `${verified}/${documents}`,
-        tone: verified === documents ? "success" : "highlight",
+        tone: verified === documents ? "accent" : "neutral",
     },
     {
         id: "alerts",
@@ -124,13 +124,13 @@ export const buildDashboardSettingsStats = (
         icon: Radio,
         label: "Deliveries",
         value: formatCount(alertDeliveryCount(preferences)),
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "documents",
         icon: BadgeCheck,
         label: "Documents",
         value: `${verified}/${documents}`,
-        tone: verified === documents ? "success" : "warning",
+        tone: verified === documents ? "accent" : "neutral",
     },
 ];

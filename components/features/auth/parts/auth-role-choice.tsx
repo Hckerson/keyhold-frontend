@@ -77,7 +77,7 @@ export function AuthRoleChoice({
                 <span
                     aria-hidden="true"
                     className={cn(
-                        "bg-highlight ease-smooth absolute top-0 left-0 h-px w-1/2 transition-all duration-300",
+                        "bg-accent ease-smooth absolute top-0 left-0 h-px w-1/2 transition-all duration-300",
                         selectedIndex < 0 && "opacity-0",
                         selectedIndex > 0 && "translate-x-full",
                     )}

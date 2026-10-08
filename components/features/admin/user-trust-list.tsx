@@ -26,8 +26,8 @@ export function UserTrustList({ checks }: UserTrustListProps) {
                             className={cn(
                                 "size-3.5 shrink-0",
                                 check.verified
-                                    ? "text-success"
-                                    : "text-warning",
+                                    ? "text-accent"
+                                    : "text-text-secondary",
                             )}
                         />
                         <span className="flex min-w-0 flex-1 flex-col">
@@ -43,7 +43,7 @@ export function UserTrustList({ checks }: UserTrustListProps) {
                                 "shrink-0",
                                 check.verified
                                     ? "text-text-secondary"
-                                    : "text-warning",
+                                    : "text-text-secondary",
                             )}
                         >
                             {check.verified ? VERIFIED : MISSING}

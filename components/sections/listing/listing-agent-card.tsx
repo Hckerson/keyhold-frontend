@@ -38,14 +38,14 @@ export function ListingAgentCard({ agent }: { agent: ListingAgent }) {
                     <Star
                         size={12}
                         strokeWidth={1.5}
-                        className="fill-highlight text-highlight"
+                        className="fill-accent text-accent"
                     />
                     {agent.rating.toFixed(1)}
                 </span>
                 <span className="text-text-secondary text-xs tabular-nums">
                     {agent.reviews} reviews
                 </span>
-                <span className="text-highlight-dark text-xs font-medium">
+                <span className="text-accent text-xs font-medium">
                     {agent.responseTime}
                 </span>
             </div>

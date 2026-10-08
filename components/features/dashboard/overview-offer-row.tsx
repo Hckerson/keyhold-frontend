@@ -10,9 +10,9 @@ import { cn, formatCompactUsd } from "@/lib/utils";
 import type { OfferPosition } from "@/lib/types";
 
 function askTone(ratio: number): ChartTone {
-    if (ratio >= OFFER_STRONG_RATIO) return "success";
+    if (ratio >= OFFER_STRONG_RATIO) return "accent";
     if (ratio >= OFFER_FAIR_RATIO) return "accent";
-    return "warning";
+    return "neutral";
 }
 
 export interface OverviewOfferRowProps {

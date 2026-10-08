@@ -42,7 +42,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             label: "Awaiting payment",
             icon: Clock,
             tone: "warning",
-            chartTone: "warning",
+            chartTone: "neutral",
             rank: 3,
             open: true,
             flowNote: "due on payment",
@@ -51,7 +51,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             label: "In escrow",
             icon: Landmark,
             tone: "info",
-            chartTone: "info",
+            chartTone: "neutral",
             rank: 4,
             open: true,
             flowNote: "held",
@@ -60,7 +60,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             label: "Settled",
             icon: CircleCheck,
             tone: "success",
-            chartTone: "success",
+            chartTone: "accent",
             rank: 1,
             open: false,
             flowNote: "earned",
@@ -126,13 +126,13 @@ export const DEAL_SLA_MINUTES = 86_400;
 
 const DEAL_AGE_BANDS: ToneBand[] = [
     { ceiling: 43_200, tone: "neutral" },
-    { ceiling: 64_800, tone: "info" },
-    { ceiling: DEAL_SLA_MINUTES, tone: "warning" },
+    { ceiling: 64_800, tone: "neutral" },
+    { ceiling: DEAL_SLA_MINUTES, tone: "neutral" },
 ];
 
 const ESCROW_BANDS: ToneBand[] = [
     { ceiling: 25, tone: "neutral" },
-    { ceiling: 60, tone: "info" },
+    { ceiling: 60, tone: "neutral" },
     { ceiling: 100, tone: "accent" },
 ];
 
@@ -140,4 +140,4 @@ export const dealAgeTone = (minutes: number) =>
     bandTone(DEAL_AGE_BANDS, minutes, "error");
 
 export const escrowTone = (percent: number) =>
-    bandTone(ESCROW_BANDS, percent, "success");
+    bandTone(ESCROW_BANDS, percent, "accent");

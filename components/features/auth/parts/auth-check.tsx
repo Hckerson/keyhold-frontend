@@ -42,12 +42,12 @@ export function AuthCheck({
                             "ease-smooth peer-focus-visible:ring-accent grid size-4 place-items-center rounded-xs border transition-colors duration-200 peer-focus-visible:ring-2 peer-checked:[&_svg]:scale-100",
                             error
                                 ? "border-error bg-background"
-                                : "border-border-dark bg-background peer-checked:border-highlight peer-checked:bg-highlight-light",
+                                : "border-border-dark bg-background peer-checked:border-accent peer-checked:bg-accent-light",
                         )}
                     >
                         <Check
                             strokeWidth={1.5}
-                            className="text-highlight-dark ease-smooth size-3 scale-0 transition-transform duration-200"
+                            className="text-accent ease-smooth size-3 scale-0 transition-transform duration-200"
                         />
                     </span>
                 </span>

@@ -92,7 +92,7 @@ export function ListingEnquiryCard({
                     />
                     {VERIFIED}
                 </p>
-                <p className="text-highlight-dark text-xs font-medium">
+                <p className="text-accent text-xs font-medium">
                     {responseTime}
                 </p>
             </div>

@@ -87,21 +87,21 @@ export const alertStats = (alerts: Alert[]): StatDatum[] => [
         icon: Radio,
         label: "Live",
         value: `${alerts.filter((alert) => recencyBandOf(alert) === "live").length}`,
-        tone: "success",
+        tone: "accent",
     },
     {
         id: "signals",
         icon: TrendingDown,
         label: "Signal types",
         value: `${new Set(alerts.map((alert) => alert.type)).size}`,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "tracked",
         icon: Home,
         label: "Properties",
         value: `${trackedProperties(alerts)}`,
-        tone: "warning",
+        tone: "neutral",
     },
 ];
 

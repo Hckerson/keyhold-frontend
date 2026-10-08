@@ -58,8 +58,8 @@ export const documentMeta: Record<
     DocumentState,
     { icon: LucideIcon; cls: string; label: string }
 > = {
-    verified: { icon: CheckCircle2, cls: "text-success", label: "Verified" },
-    review: { icon: Clock3, cls: "text-warning", label: "In review" },
+    verified: { icon: CheckCircle2, cls: "text-accent", label: "Verified" },
+    review: { icon: Clock3, cls: "text-text-secondary", label: "In review" },
     missing: { icon: XCircle, cls: "text-error", label: "Missing" },
 };
 

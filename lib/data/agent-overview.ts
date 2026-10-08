@@ -32,14 +32,14 @@ export const agentQuickActions: QuickAction[] = [
         label: "Review enquiries",
         href: "/agent/leads",
         icon: UserPlus,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "schedule-showing",
         label: "Open the calendar",
         href: "/agent/calendar",
         icon: CalendarPlus,
-        tone: "highlight",
+        tone: "neutral",
     },
 ];
 
@@ -61,7 +61,7 @@ export const agentStats = (
         value: `${countByStage(leads).pending}`,
         icon: Users,
         href: "/agent/leads",
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "offers",
@@ -69,7 +69,7 @@ export const agentStats = (
         value: `${seller?.pendingOffers ?? 0}`,
         icon: FileSignature,
         href: "/agent/pipeline",
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "closed",
@@ -77,7 +77,7 @@ export const agentStats = (
         value: formatCompactUsd(seller?.closedValue ?? 0),
         icon: TrendingUp,
         href: "/agent/analytics",
-        tone: "success",
+        tone: "accent",
     },
 ];
 
@@ -117,21 +117,21 @@ export const pipelineStagesFrom = (
             name: "Offers",
             count: negotiating.length,
             value: stageValue(negotiating),
-            tone: "info",
+            tone: "neutral",
         },
         {
             id: "pending",
             name: "Pending",
             count: inProgress.length,
             value: salesValue(inProgress),
-            tone: "warning",
+            tone: "neutral",
         },
         {
             id: "closed",
             name: "Closed",
             count: closed.length,
             value: salesValue(closed),
-            tone: "success",
+            tone: "accent",
         },
     ];
 };

@@ -70,7 +70,7 @@ export function DevAuthRow({ redirectTo, disabled = false }: DevAuthRowProps) {
                         onClick={() => void handleClick(account)}
                         className={cn(
                             authLabelVariants({ tier: "label" }),
-                            "border-border bg-background text-text-secondary hover:border-highlight hover:text-text focus-visible:ring-accent ease-smooth flex h-9 items-center justify-center gap-2 rounded-xs border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+                            "border-border bg-background text-text-secondary hover:border-accent hover:text-text focus-visible:ring-accent ease-smooth flex h-9 items-center justify-center gap-2 rounded-xs border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
                         )}
                     >
                         {pending === account.email && (

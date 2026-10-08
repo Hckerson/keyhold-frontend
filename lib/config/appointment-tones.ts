@@ -37,8 +37,8 @@ export interface AppointmentTypeMeta {
 
 export const APPOINTMENT_TYPES: Record<AppointmentType, AppointmentTypeMeta> = {
     "in-person": { icon: DoorOpen, tone: "accent", label: "In person" },
-    virtual: { icon: Video, tone: "info", label: "Virtual" },
-    "open-house": { icon: Users, tone: "highlight", label: "Open house" },
+    virtual: { icon: Video, tone: "neutral", label: "Virtual" },
+    "open-house": { icon: Users, tone: "neutral", label: "Open house" },
 };
 
 export interface AppointmentStatusMeta {

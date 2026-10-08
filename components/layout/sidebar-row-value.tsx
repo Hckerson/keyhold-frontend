@@ -12,7 +12,7 @@ export function SidebarRowValue({ item }: SidebarRowValueProps) {
                 className={cn(
                     "shrink-0 font-mono text-[10px] tabular-nums",
                     item.state === "active"
-                        ? "text-highlight"
+                        ? "text-accent-soft"
                         : "text-sidebar-text-muted",
                 )}
             >
@@ -24,7 +24,7 @@ export function SidebarRowValue({ item }: SidebarRowValueProps) {
     if (item.badge === undefined) return null;
 
     return (
-        <span className="bg-highlight/15 text-highlight shrink-0 rounded-full px-1.5 font-mono text-[10px] font-medium tabular-nums">
+        <span className="bg-accent-soft/15 text-accent-soft shrink-0 rounded-full px-1.5 font-mono text-[10px] font-medium tabular-nums">
             {item.badge}
         </span>
     );

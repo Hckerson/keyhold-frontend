@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import type { StatusTone } from "@/lib/types";
 
 const toneClass: Record<StatusTone, string> = {
-    success: "bg-success",
-    warning: "bg-warning",
+    success: "bg-accent",
+    warning: "bg-quiet",
     error: "bg-error",
-    info: "bg-info",
+    info: "bg-quiet",
     neutral: "bg-text-muted",
 };
 

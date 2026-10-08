@@ -92,28 +92,28 @@ export const interestStats = (interests: Interest[]): StatDatum[] => [
         icon: Clock,
         label: "Awaiting reply",
         value: `${countedBy(interests, "pending")}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "introduced",
         icon: CircleCheck,
         label: "Introduced",
         value: `${countedBy(interests, "connected")}`,
-        tone: "success",
+        tone: "accent",
     },
     {
         id: "tracked",
         icon: Wallet,
         label: "Tracked value",
         value: formatCompactUsd(trackedValue(interests)),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "offices",
         icon: Home,
         label: "Offices",
         value: `${new Set(interests.map((interest) => interest.agent)).size}`,
-        tone: "info",
+        tone: "neutral",
     },
 ];
 

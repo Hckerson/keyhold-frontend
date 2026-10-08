@@ -102,7 +102,7 @@ export const MILESTONE_STATUSES_META: Record<
     MilestoneStatusMeta
 > = {
     PENDING: { label: "Not set", tone: "neutral", chartTone: "neutral" },
-    SCHEDULED: { label: "Scheduled", tone: "info", chartTone: "info" },
-    COMPLETED: { label: "Complete", tone: "success", chartTone: "success" },
-    WAIVED: { label: "Waived", tone: "warning", chartTone: "warning" },
+    SCHEDULED: { label: "Scheduled", tone: "info", chartTone: "neutral" },
+    COMPLETED: { label: "Complete", tone: "success", chartTone: "accent" },
+    WAIVED: { label: "Waived", tone: "warning", chartTone: "neutral" },
 };

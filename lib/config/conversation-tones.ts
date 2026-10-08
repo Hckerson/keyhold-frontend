@@ -37,21 +37,21 @@ export const CONVERSATION_STATUSES: Record<
         label: "Waiting on you",
         icon: Reply,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 4,
     },
     "awaiting-agent": {
         label: "Waiting on agent",
         icon: Timer,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 3,
     },
     scheduled: {
         label: "Viewing booked",
         icon: CalendarCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 2,
     },
     closed: {
@@ -78,7 +78,7 @@ export const RESPONSE_BANDS: Record<ResponseBand, ResponseBandMeta> = {
     fast: {
         label: "Fast — replies under 30 min",
         icon: Zap,
-        tone: "success",
+        tone: "accent",
         ceiling: 30,
     },
     steady: {
@@ -90,7 +90,7 @@ export const RESPONSE_BANDS: Record<ResponseBand, ResponseBandMeta> = {
     slow: {
         label: "Slow — over 3 hours",
         icon: Hourglass,
-        tone: "warning",
+        tone: "neutral",
         ceiling: Infinity,
     },
 };
@@ -104,7 +104,7 @@ export interface DocumentKindMeta {
 const DOCUMENT_KINDS: { prefix: string; meta: DocumentKindMeta }[] = [
     {
         prefix: "image/",
-        meta: { label: "Image", icon: FileImage, tone: "info" },
+        meta: { label: "Image", icon: FileImage, tone: "neutral" },
     },
     {
         prefix: "application/pdf",

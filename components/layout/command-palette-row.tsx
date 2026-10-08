@@ -58,7 +58,7 @@ export function CommandPaletteRow({
             )}
 
             {item.badge !== undefined && item.badge > 0 && (
-                <span className="bg-highlight-light text-highlight-dark shrink-0 rounded-xs px-1 py-px font-mono text-[10px] leading-none font-semibold tabular-nums">
+                <span className="bg-accent-light text-accent shrink-0 rounded-xs px-1 py-px font-mono text-[10px] leading-none font-semibold tabular-nums">
                     {item.badge > TOPBAR_BADGE_CEILING
                         ? `${TOPBAR_BADGE_CEILING}+`
                         : item.badge}

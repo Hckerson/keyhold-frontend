@@ -22,12 +22,12 @@ export const POI_KIND_KEYS: PoiKind[] = [
 ];
 
 export const POI_KINDS: Record<PoiKind, PoiKindMeta> = {
-    school: { label: "Schools", icon: GraduationCap, tone: "info" },
+    school: { label: "Schools", icon: GraduationCap, tone: "neutral" },
     transit: { label: "Transit", icon: TrainFront, tone: "accent" },
-    park: { label: "Parks", icon: Trees, tone: "success" },
+    park: { label: "Parks", icon: Trees, tone: "accent" },
     restaurant: {
         label: "Restaurants",
         icon: UtensilsCrossed,
-        tone: "warning",
+        tone: "neutral",
     },
 };

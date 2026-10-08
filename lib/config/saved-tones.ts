@@ -34,21 +34,21 @@ export const SAVED_STATUSES: Record<SavedStatus, SavedStatusMeta> = {
         label: "Available",
         icon: Store,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         live: true,
     },
     "under-offer": {
         label: "Under Offer",
         icon: Handshake,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         live: true,
     },
     sold: {
         label: "Sold",
         icon: BadgeCheck,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         live: false,
     },
     withdrawn: {
@@ -75,7 +75,7 @@ export const MATCH_BANDS: Record<MatchBand, MatchBandMeta> = {
     strong: {
         label: "Strong — 85% and above",
         icon: Sparkles,
-        tone: "success",
+        tone: "accent",
         floor: 85,
     },
     close: {
@@ -107,13 +107,13 @@ export const WATCH_BANDS: Record<WatchBand, WatchBandMeta> = {
     watching: {
         label: "Watching — seen this week",
         icon: Eye,
-        tone: "success",
+        tone: "accent",
         ceiling: 7,
     },
     warm: {
         label: "Warm — seen this month",
         icon: Clock,
-        tone: "warning",
+        tone: "neutral",
         ceiling: 30,
     },
     cold: {

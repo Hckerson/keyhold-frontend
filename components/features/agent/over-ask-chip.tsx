@@ -8,7 +8,7 @@ export interface OverAskChipProps {
 }
 
 export function OverAskChip({ percent }: OverAskChipProps) {
-    const tone: ChartTone = percent > 0 ? "success" : "neutral";
+    const tone: ChartTone = percent > 0 ? "accent" : "neutral";
 
     return (
         <span

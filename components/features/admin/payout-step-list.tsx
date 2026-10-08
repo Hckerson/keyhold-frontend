@@ -8,8 +8,8 @@ const STEP_MARKS: Record<
     PayoutStepState,
     { icon: typeof Circle; className: string }
 > = {
-    done: { icon: CircleCheck, className: "text-success" },
-    current: { icon: Clock, className: "text-warning" },
+    done: { icon: CircleCheck, className: "text-accent" },
+    current: { icon: Clock, className: "text-accent" },
     waiting: { icon: Circle, className: "text-border-dark" },
     blocked: { icon: ShieldAlert, className: "text-error" },
 };

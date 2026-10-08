@@ -36,7 +36,7 @@ export const VIEWING_STATUSES: Record<ViewingStatus, ViewingStatusMeta> = {
         label: "Confirmed",
         icon: CalendarCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         active: true,
         scheduled: true,
         rank: 3,
@@ -45,7 +45,7 @@ export const VIEWING_STATUSES: Record<ViewingStatus, ViewingStatusMeta> = {
         label: "Pending",
         icon: CalendarClock,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         active: true,
         scheduled: true,
         rank: 2,
@@ -54,7 +54,7 @@ export const VIEWING_STATUSES: Record<ViewingStatus, ViewingStatusMeta> = {
         label: "Completed",
         icon: CheckCircle2,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         active: false,
         scheduled: false,
         rank: 1,
@@ -84,8 +84,8 @@ export interface ViewingModeMeta {
 
 export const VIEWING_MODES: Record<ViewingMode, ViewingModeMeta> = {
     "in-person": { label: "In person", icon: DoorOpen, chartTone: "accent" },
-    virtual: { label: "Virtual", icon: Video, chartTone: "info" },
-    "open-house": { label: "Open house", icon: Users, chartTone: "highlight" },
+    virtual: { label: "Virtual", icon: Video, chartTone: "neutral" },
+    "open-house": { label: "Open house", icon: Users, chartTone: "neutral" },
 };
 
 export const TIMING_BAND_KEYS = ["past", "today", "soon", "later"] as const;
@@ -109,7 +109,7 @@ export const TIMING_BANDS: Record<TimingBand, TimingBandMeta> = {
     today: {
         label: "Today — inside the day",
         icon: Sunrise,
-        tone: "warning",
+        tone: "neutral",
         ceiling: 1,
     },
     soon: {
@@ -121,7 +121,7 @@ export const TIMING_BANDS: Record<TimingBand, TimingBandMeta> = {
     later: {
         label: "Later — beyond this week",
         icon: CalendarRange,
-        tone: "info",
+        tone: "neutral",
         ceiling: Infinity,
     },
 };

@@ -84,7 +84,7 @@ export function AdminUserProfileRail({
                         <ShieldCheck
                             aria-hidden="true"
                             strokeWidth={1.5}
-                            className="text-success size-3.5"
+                            className="text-accent size-3.5"
                         />
                         {COPY.neverSuspended}
                     </p>

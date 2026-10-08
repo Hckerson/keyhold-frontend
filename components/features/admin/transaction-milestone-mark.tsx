@@ -16,7 +16,7 @@ export function TransactionMilestoneMark({
     cleared,
 }: TransactionMilestoneMarkProps) {
     const { icon: Icon, label } = TRANSACTION_MILESTONES[id];
-    const tone = cleared ? "success" : "neutral";
+    const tone = cleared ? "accent" : "neutral";
 
     return (
         <li className="flex min-w-0 items-center gap-2">

@@ -65,7 +65,7 @@ export function ConciergeStepPanel({
                     <span
                         className={cn(
                             "font-display ease-smooth text-h5 leading-none font-light tabular-nums transition-colors duration-500",
-                            active ? "text-highlight-dark" : "text-text-muted",
+                            active ? "text-accent" : "text-text-muted",
                         )}
                     >
                         {step.focal}

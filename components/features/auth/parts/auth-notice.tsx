@@ -4,8 +4,8 @@ import type { AuthNoticeTone } from "@/lib/types";
 
 const NOTICE_TONES = {
     error: { rule: "bg-error", title: "text-error" },
-    success: { rule: "bg-success", title: "text-success" },
-    info: { rule: "bg-info", title: "text-info" },
+    success: { rule: "bg-accent", title: "text-accent" },
+    info: { rule: "bg-quiet", title: "text-text-secondary" },
 } as const satisfies Record<AuthNoticeTone, { rule: string; title: string }>;
 
 export interface AuthNoticeProps {

@@ -7,9 +7,9 @@ const calloutVariants = cva("rounded-lg border p-3", {
     variants: {
         variant: {
             neutral: "bg-background-muted border-border-light",
-            success: "bg-success-light border-success/20",
-            info: "bg-info-light border-info/20",
-            warning: "bg-warning-light border-warning/20",
+            success: "bg-accent-light border-accent/20",
+            info: "bg-background-muted border-border-dark",
+            warning: "bg-background-muted border-border-dark",
             error: "bg-error-light border-error/20",
         } satisfies Record<StatusTone, string>,
     },
@@ -18,9 +18,9 @@ const calloutVariants = cva("rounded-lg border p-3", {
 
 const titleColor: Record<StatusTone, string> = {
     neutral: "text-text",
-    success: "text-success",
-    info: "text-info",
-    warning: "text-warning",
+    success: "text-accent",
+    info: "text-text-secondary",
+    warning: "text-text-secondary",
     error: "text-error",
 };
 

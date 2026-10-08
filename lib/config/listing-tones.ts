@@ -38,7 +38,7 @@ export const LISTING_STATUSES: Record<ManagedListingStatus, ListingStatusMeta> =
             label: "Active",
             icon: Store,
             tone: "success",
-            chartTone: "success",
+            chartTone: "accent",
             rank: 5,
             onMarket: true,
         },
@@ -46,7 +46,7 @@ export const LISTING_STATUSES: Record<ManagedListingStatus, ListingStatusMeta> =
             label: "Under Offer",
             icon: Handshake,
             tone: "warning",
-            chartTone: "warning",
+            chartTone: "neutral",
             rank: 4,
             onMarket: true,
         },
@@ -54,7 +54,7 @@ export const LISTING_STATUSES: Record<ManagedListingStatus, ListingStatusMeta> =
             label: "Sold",
             icon: BadgeCheck,
             tone: "info",
-            chartTone: "info",
+            chartTone: "neutral",
             rank: 3,
             onMarket: false,
         },
@@ -91,7 +91,7 @@ export const DEMAND_BANDS: Record<DemandBand, DemandBandMeta> = {
     hot: {
         label: "Hot — save rate above 6%",
         icon: Flame,
-        tone: "highlight",
+        tone: "neutral",
         floor: 6,
     },
     steady: {
@@ -118,13 +118,13 @@ export const AGE_BANDS: Record<AgeBand, AgeBandMeta> = {
     fresh: {
         label: "Fresh — under 30 days",
         icon: Sparkles,
-        tone: "success",
+        tone: "accent",
         ceiling: 30,
     },
     maturing: {
         label: "Maturing — 30 to 90 days",
         icon: Clock,
-        tone: "warning",
+        tone: "neutral",
         ceiling: 90,
     },
     stale: {
@@ -141,7 +141,7 @@ const EXPOSURE_STRONG = 80;
 
 export const exposureTone = (percent: number): ChartTone => {
     if (percent < EXPOSURE_IDLE) return "neutral";
-    if (percent < EXPOSURE_MODEST) return "warning";
+    if (percent < EXPOSURE_MODEST) return "neutral";
     if (percent < EXPOSURE_STRONG) return "accent";
-    return "success";
+    return "accent";
 };

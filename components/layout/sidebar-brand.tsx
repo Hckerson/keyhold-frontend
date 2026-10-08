@@ -33,7 +33,7 @@ export function SidebarBrand({ brand, collapsed, onClose }: SidebarBrandProps) {
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation"
-                className="desk-hidden text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active focus-visible:ring-highlight ease-smooth ml-auto grid size-8 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                className="desk-hidden text-sidebar-text hover:bg-sidebar-hover hover:text-sidebar-text-active focus-visible:ring-accent-soft ease-smooth ml-auto grid size-8 shrink-0 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
             >
                 <X size={16} strokeWidth={1.5} />
             </button>

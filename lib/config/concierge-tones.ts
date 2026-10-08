@@ -58,16 +58,16 @@ const ALLOCATION_HIGH = 90;
 
 export const allocationTone = (percent: number): ChartTone => {
     if (percent < ALLOCATION_IDLE) return "neutral";
-    if (percent < ALLOCATION_LOW) return "info";
+    if (percent < ALLOCATION_LOW) return "neutral";
     if (percent < ALLOCATION_HIGH) return "accent";
-    return "success";
+    return "accent";
 };
 
 const COVERAGE_PARTIAL = 60;
 const COVERAGE_FULL = 100;
 
 export const coverageTone = (percent: number): ChartTone => {
-    if (percent < COVERAGE_PARTIAL) return "warning";
+    if (percent < COVERAGE_PARTIAL) return "neutral";
     if (percent < COVERAGE_FULL) return "accent";
-    return "success";
+    return "accent";
 };
