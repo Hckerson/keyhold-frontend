@@ -8,6 +8,7 @@ import {
     Scale,
     Flag,
     BarChart3,
+    ChartColumnBig,
     Settings,
     type LucideIcon,
 } from "lucide-react";
@@ -76,10 +77,16 @@ export const ADMIN_NAV: AdminNavSection[] = [
         label: "Insights",
         items: [
             {
+                label: "Analytics",
+                href: ADMIN_ROUTES.analytics,
+                icon: ChartColumnBig,
+                description: "Trends & live counts",
+            },
+            {
                 label: "Reports",
                 href: ADMIN_ROUTES.reports,
                 icon: BarChart3,
-                description: "Analytics & reports",
+                description: "Monthly statement & export",
             },
         ],
     },

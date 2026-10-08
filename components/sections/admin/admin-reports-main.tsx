@@ -8,7 +8,8 @@ import { DataTable } from "@/components/patterns/data-table";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { buildStatementConfig } from "@/components/features/admin/report-statement-columns";
 import { reportYears } from "@/lib/data/admin-reports";
-import type { ReportMeasureId, ReportMonth } from "@/lib/types";
+import { DEFAULT_REPORT_MEASURE } from "@/lib/config/report-measures";
+import type { ReportMonth } from "@/lib/types";
 
 const TITLE = "Monthly statement";
 const LEDE = "Newest first, with a subtotal for each year";
@@ -17,19 +18,14 @@ const EMPTY_LEDE = "Settled deals, listings and sign-ups land here by month.";
 
 export interface AdminReportsMainProps {
     months: ReportMonth[];
-    measure: ReportMeasureId;
     pending?: boolean;
 }
 
-export function AdminReportsMain({
-    months,
-    measure,
-    pending,
-}: AdminReportsMainProps) {
+export function AdminReportsMain({ months, pending }: AdminReportsMainProps) {
     const years = useMemo(() => reportYears(months), [months]);
     const config = useMemo(
-        () => buildStatementConfig(measure, years),
-        [measure, years],
+        () => buildStatementConfig(DEFAULT_REPORT_MEASURE, years),
+        [years],
     );
 
     return (

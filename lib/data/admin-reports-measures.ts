@@ -11,8 +11,6 @@ import {
 } from "@/lib/data/admin-reports";
 import type { ReportMeasure, ReportMeasureId, ReportMonth } from "@/lib/types";
 
-const NOTHING_RECORDED = "Nothing recorded in this window";
-
 export const reportMeasures = (months: ReportMonth[]): ReportMeasure[] => {
     const complete = months.filter((month) => !month.partial);
     const latest = complete[complete.length - 1];
@@ -43,24 +41,3 @@ export const measureSeries = (months: ReportMonth[], id: ReportMeasureId) =>
         month: month.tick,
         value: measureValue(month, id) ?? 0,
     }));
-
-export const measureReading = (months: ReportMonth[], id: ReportMeasureId) => {
-    const peak = months.reduce<ReportMonth | null>(
-        (best, month) =>
-            (measureValue(month, id) ?? 0) >
-            (best ? (measureValue(best, id) ?? 0) : 0)
-                ? month
-                : best,
-        null,
-    );
-    const partial = months.find((month) => month.partial);
-
-    return [
-        peak
-            ? `Best month ${peak.label} at ${formatMeasure(id, measureValue(peak, id))}`
-            : NOTHING_RECORDED,
-        partial && `${partial.label} is month to date`,
-    ]
-        .filter(Boolean)
-        .join(" · ");
-};

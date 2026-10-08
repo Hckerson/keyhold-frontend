@@ -52,6 +52,12 @@ export const CONSOLE_FALLBACKS = {
         description:
             "The escrow service is unreachable right now. Try again in a moment.",
     },
+    adminAnalytics: {
+        panel: "Analytics",
+        title: "We couldn't load platform analytics",
+        description:
+            "The stats service is unreachable right now. Try again in a moment.",
+    },
     adminReports: {
         panel: "Reports",
         title: "We couldn't load platform reports",

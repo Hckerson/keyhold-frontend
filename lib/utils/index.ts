@@ -3,7 +3,7 @@ export { composeRefs } from "./compose-refs";
 export { dateFormatter } from "./date-formatter";
 export { parseLocalDate } from "./date-parser";
 export { storage } from "./local-storage";
-export { sum, percentOf, averageOf } from "./math";
+export { sum, percentOf, averageOf, apportion } from "./math";
 export {
     formatDayAndMonth,
     formatUsd,
