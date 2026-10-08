@@ -39,7 +39,7 @@ export function PayoutReceipt({ payout }: PayoutReceiptProps) {
                 </div>
                 <div className="border-border mt-1 flex h-9 items-center justify-between gap-3 border-t">
                     <dt className="text-text font-medium">{NET_LABEL}</dt>
-                    <dd className="text-text font-semibold">
+                    <dd className="text-text">
                         {formatUsd(payoutNet(payout))}
                     </dd>
                 </div>

@@ -19,7 +19,7 @@ export function UserSuspensionList({ suspensions }: UserSuspensionListProps) {
                     className="flex items-start justify-between gap-3 py-2.5"
                 >
                     <div className="min-w-0">
-                        <p className="text-text truncate text-xs font-semibold">
+                        <p className="text-text truncate text-xs">
                             {suspension.reason}
                         </p>
                         {suspension.notes && (

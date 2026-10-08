@@ -78,7 +78,7 @@ export function ModerationQueueRow({
 
                 <span
                     className={cn(
-                        "text-text text-right text-xs font-semibold tabular-nums",
+                        "text-text text-right text-xs tabular-nums",
                         settled,
                     )}
                 >

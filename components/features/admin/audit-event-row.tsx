@@ -18,7 +18,7 @@ export function AuditEventRow({ event }: AuditEventRowProps) {
             />
             <span className="flex w-36 shrink-0 items-center gap-2">
                 <StatusDot tone={event.tone} />
-                <span className="text-text truncate text-xs font-semibold">
+                <span className="text-text truncate text-xs">
                     {event.action}
                 </span>
             </span>

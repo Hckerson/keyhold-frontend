@@ -23,7 +23,7 @@ export function ConfigValueMark({ from, to, className }: ConfigValueMarkProps) {
                 strokeWidth={1.5}
                 aria-hidden="true"
             />
-            <span className="text-text min-w-0 truncate text-xs font-semibold tabular-nums">
+            <span className="text-text min-w-0 truncate text-xs tabular-nums">
                 {to}
             </span>
         </span>

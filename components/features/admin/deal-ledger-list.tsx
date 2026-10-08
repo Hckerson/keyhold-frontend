@@ -45,7 +45,7 @@ export function DealLedgerList({
                     {totals.count} {DEALS_NOUN}
                 </span>
                 <span>
-                    <span className="text-text font-semibold">
+                    <span className="text-text">
                         {formatCompactUsd(totals.volume)}
                     </span>
                     {" · "}
