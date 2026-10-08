@@ -1,13 +1,15 @@
 import {
     CircleCheck,
+    Hourglass,
     Lock,
+    LockOpen,
     ShieldAlert,
     Undo2,
     type LucideIcon,
 } from "lucide-react";
 import { bandTone, type ToneBand } from "@/lib/config/admin-tones";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { PayoutState, StatusTone } from "@/lib/types";
+import type { PayoutPhase, PayoutState, StatusTone } from "@/lib/types";
 
 export interface PayoutStateMeta {
     label: string;
@@ -56,6 +58,26 @@ export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
         held: false,
         settlable: false,
     },
+};
+
+export interface PayoutPhaseMeta {
+    label: string;
+    icon: LucideIcon;
+    tone: StatusTone;
+    rank: number;
+}
+
+export const PAYOUT_PHASES: Record<PayoutPhase, PayoutPhaseMeta> = {
+    disputed: { label: "Disputed", icon: ShieldAlert, tone: "error", rank: 0 },
+    ready: { label: "Ready", icon: LockOpen, tone: "success", rank: 1 },
+    inspecting: {
+        label: "In inspection",
+        icon: Hourglass,
+        tone: "neutral",
+        rank: 2,
+    },
+    paid: { label: "Paid", icon: CircleCheck, tone: "neutral", rank: 3 },
+    refunded: { label: "Refunded", icon: Undo2, tone: "neutral", rank: 4 },
 };
 
 export const PAYOUT_PIPELINE_ORDER: PayoutState[] = [

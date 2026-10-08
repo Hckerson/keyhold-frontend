@@ -75,14 +75,24 @@ export interface ServiceHealth {
 
 export type PayoutState = "HELD" | "RELEASED" | "REFUNDED" | "DISPUTED";
 
+export type PayoutPhase =
+    | "disputed"
+    | "ready"
+    | "inspecting"
+    | "paid"
+    | "refunded";
+
 export interface Payout {
     id: string;
     recipient: string;
     deal: string;
+    locality: string;
+    buyer: string;
     state: PayoutState;
     gross: number;
     ageMinutes: number;
     inspectionEndsAt: string | null;
+    settledAt: string | null;
     href: string;
 }
 

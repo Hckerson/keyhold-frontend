@@ -9,12 +9,13 @@ import { Panel } from "@/components/ui/panel";
 import { DataTable } from "@/components/patterns/data-table";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { buildPayoutConfig } from "@/components/features/admin/payout-columns";
+import { PAYOUT_STATES } from "@/lib/config/payout-tones";
 import type { Payout } from "@/lib/types";
 
 const TITLE = "Payouts";
 const CLEAR_ACTION = "Show every state";
-const SEARCH_LABEL = "Search payouts by agent or deal";
-const SEARCH_PLACEHOLDER = "Search agent or deal";
+const SEARCH_LABEL = "Search payouts by agent, deal or buyer";
+const SEARCH_PLACEHOLDER = "Search agent, deal or buyer";
 const EMPTY_TITLE = "No payouts in this state";
 const EMPTY_LEDE = "Pick another state above, or show every state.";
 
@@ -41,7 +42,13 @@ export function AdminPaymentsMain({
     onClearFilter,
     onSettle,
 }: AdminPaymentsMainProps) {
-    const config = useMemo(() => buildPayoutConfig(onSettle), [onSettle]);
+    const settlable = payouts.some(
+        (payout) => PAYOUT_STATES[payout.state].settlable,
+    );
+    const config = useMemo(
+        () => buildPayoutConfig({ onSettle, settlable }),
+        [onSettle, settlable],
+    );
 
     return (
         <Panel

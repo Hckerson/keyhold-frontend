@@ -1,46 +1,63 @@
 "use client";
 
-import { AgeMark } from "@/components/features/shared/age-mark";
+import { PayoutDealCell } from "@/components/features/admin/payout-deal-cell";
 import { PayoutDetail } from "@/components/features/admin/payout-detail";
-import { PayoutAgentMark } from "@/components/features/admin/payout-agent-mark";
 import { PayoutDetailActions } from "@/components/features/admin/payout-detail-actions";
+import { PayoutPayeeCell } from "@/components/features/admin/payout-payee-cell";
+import { PayoutPhaseBadge } from "@/components/features/admin/payout-phase-badge";
 import { PaidMute } from "@/components/features/admin/paid-mute";
-import { PayoutHeldMark } from "@/components/features/admin/payout-held-mark";
 import { PayoutSettleButton } from "@/components/features/admin/payout-settle-button";
 import { SETTLE_TRIGGER_LABEL } from "@/lib/config/escrow-settle";
-import { PAYOUT_STATES } from "@/lib/config/payout-tones";
+import { PAYOUT_PHASES } from "@/lib/config/payout-tones";
+import { payoutNet, payoutTotals } from "@/lib/data/admin-payments";
 import {
-    inspectionDaysLeft,
-    inspectionLabel,
-    payoutNet,
-    payoutTotals,
-    oldestHeld,
-    PAYOUT_GROUPS,
-    payoutGroupOf,
-} from "@/lib/data/admin-payments";
-import { formatCompactUsd } from "@/lib/utils";
-import type { DataTableConfig, Payout } from "@/lib/types";
+    payoutMoment,
+    payoutPhaseOf,
+    payoutTiming,
+} from "@/lib/data/admin-payout-phase";
+import { formatCompactUsd, formatCountOf } from "@/lib/utils";
+import type { DataTableColumn, DataTableConfig, Payout } from "@/lib/types";
 
-const MIN_WIDTH = "46rem";
-const PAYOUTS_NOUN = "payouts";
+const MIN_WIDTH = "68rem";
+const PAGE_SIZE = 12;
+const PAYOUT_NOUN = "payout";
 const CAPTION =
-    "Agent payouts grouped by what they need: disputed, ready to release, in inspection and paid out; with agent, deal, inspection window, time held and net. Open a row for gross and platform fee";
+    "Agent payouts, disputes and releases waiting on a decision first: payee, deal, buyer, status, timing, gross and net. Open a row for the platform fee and the release steps";
 
-export function buildPayoutConfig(
+const settleColumn = (
     onSettle: (payout: Payout) => void,
-): DataTableConfig<Payout> {
+): DataTableColumn<Payout> => ({
+    id: "settle",
+    label: SETTLE_TRIGGER_LABEL,
+    srOnlyLabel: true,
+    align: "right",
+    width: "5rem",
+    render: (payout) => (
+        <PayoutSettleButton payout={payout} onSettle={onSettle} />
+    ),
+});
+
+export interface PayoutConfigOptions {
+    onSettle: (payout: Payout) => void;
+    settlable: boolean;
+    now?: Date;
+}
+
+export function buildPayoutConfig({
+    onSettle,
+    settlable,
+    now = new Date(),
+}: PayoutConfigOptions): DataTableConfig<Payout> {
+    const phaseOf = (payout: Payout) => payoutPhaseOf(payout, now);
+
     return {
         variant: "bare",
         caption: CAPTION,
         emptyMessage: "No payout matches this search",
         rowKey: (payout) => payout.id,
         rowLabel: (payout) => `${payout.recipient} · ${payout.deal}`,
-        defaultSort: { id: "held", direction: "desc" },
-        grouping: {
-            groups: PAYOUT_GROUPS,
-            of: (payout) => payoutGroupOf(payout),
-        },
         minWidth: MIN_WIDTH,
+        pageSize: PAGE_SIZE,
         rowClassName: () => "reveal-scope",
         reveal: "panel",
         panelSize: "md",
@@ -51,57 +68,67 @@ export function buildPayoutConfig(
         ),
         columns: [
             {
-                id: "agent",
-                label: "Agent",
+                id: "payee",
+                label: "Payee",
+                width: "12rem",
                 emphasis: "identity",
                 sortValue: (payout) => payout.recipient,
-                render: (payout) => <PayoutAgentMark payout={payout} />,
-                footer: (rows) => `${rows.length} ${PAYOUTS_NOUN}`,
+                render: (payout) => <PayoutPayeeCell name={payout.recipient} />,
+                footer: (rows) => formatCountOf(rows.length, PAYOUT_NOUN),
             },
             {
                 id: "deal",
                 label: "Deal",
-                emphasis: "muted",
                 sortValue: (payout) => payout.deal,
                 render: (payout) => (
-                    <span className="block truncate">{payout.deal}</span>
+                    <PayoutDealCell
+                        deal={payout.deal}
+                        locality={payout.locality}
+                    />
                 ),
             },
             {
-                id: "window",
-                label: "Window",
-                width: "6.5rem",
+                id: "buyer",
+                label: "Buyer",
+                width: "10.5rem",
                 emphasis: "muted",
-                sortValue: (payout) => inspectionDaysLeft(payout) ?? -1,
-                render: (payout) =>
-                    PAYOUT_STATES[payout.state].held && inspectionLabel(payout),
+                sortValue: (payout) => payout.buyer,
+                render: (payout) => (
+                    <span className="block truncate">{payout.buyer}</span>
+                ),
             },
             {
-                id: "held",
-                label: "Held",
+                id: "status",
+                label: "Status",
+                width: "8.5rem",
+                sortValue: (payout) => PAYOUT_PHASES[phaseOf(payout)].rank,
+                render: (payout) => (
+                    <PayoutPhaseBadge phase={phaseOf(payout)} />
+                ),
+            },
+            {
+                id: "when",
+                label: "When",
+                width: "7rem",
+                emphasis: "muted",
+                sortValue: (payout) => payoutMoment(payout, now),
+                render: (payout) => payoutTiming(payout, now),
+            },
+            {
+                id: "gross",
+                label: "Gross",
                 align: "right",
-                width: "3.5rem",
-                sortValue: (payout) =>
-                    PAYOUT_STATES[payout.state].held ? payout.ageMinutes : -1,
-                render: (payout) => <PayoutHeldMark payout={payout} />,
-                summary: (rows) => {
-                    const oldest = oldestHeld(rows);
-                    return (
-                        oldest > 0 && (
-                            <AgeMark
-                                minutes={oldest}
-                                tone="neutral"
-                                className="font-normal"
-                            />
-                        )
-                    );
-                },
+                width: "5.5rem",
+                emphasis: "muted",
+                sortValue: (payout) => payout.gross,
+                render: (payout) => formatCompactUsd(payout.gross),
+                footer: (rows) => formatCompactUsd(payoutTotals(rows).gross),
             },
             {
                 id: "net",
                 label: "Net",
                 align: "right",
-                width: "5rem",
+                width: "6rem",
                 emphasis: "focal",
                 sortValue: payoutNet,
                 render: (payout) => (
@@ -109,27 +136,13 @@ export function buildPayoutConfig(
                         {formatCompactUsd(payoutNet(payout))}
                     </PaidMute>
                 ),
-                summary: (rows) => (
-                    <span className="text-text-secondary">
-                        {formatCompactUsd(payoutTotals(rows).net)}
-                    </span>
-                ),
                 footer: (rows) => (
                     <span className="text-text font-semibold">
                         {formatCompactUsd(payoutTotals(rows).net)}
                     </span>
                 ),
             },
-            {
-                id: "settle",
-                label: SETTLE_TRIGGER_LABEL,
-                srOnlyLabel: true,
-                align: "right",
-                width: "4.5rem",
-                render: (payout) => (
-                    <PayoutSettleButton payout={payout} onSettle={onSettle} />
-                ),
-            },
+            ...(settlable ? [settleColumn(onSettle)] : []),
         ],
     };
 }
