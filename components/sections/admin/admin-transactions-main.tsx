@@ -10,6 +10,7 @@ import { DealLedgerList } from "@/components/features/admin/deal-ledger-list";
 import type { LedgerTotals, LedgerTransaction } from "@/lib/types";
 
 const LEDGER_TITLE = "Deals";
+const LOADING_READING = "Reading the ledger";
 const CLEAR_ACTION = "Show every stage";
 const EMPTY_TITLE = "No deals in this stage";
 const EMPTY_LEDE = "Pick another stage above, or show every stage.";
@@ -38,8 +39,14 @@ export function AdminTransactionsMain({
     return (
         <Panel
             title={LEDGER_TITLE}
-            description={reading}
-            count={filtered ? `${transactions.length} / ${total}` : total}
+            description={pending ? LOADING_READING : reading}
+            count={
+                pending
+                    ? undefined
+                    : filtered
+                      ? `${transactions.length} / ${total}`
+                      : total
+            }
             action={
                 filtered && (
                     <Button

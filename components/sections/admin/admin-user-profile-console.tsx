@@ -69,7 +69,7 @@ export function AdminUserProfileConsole({
             />
         );
 
-    if (!managed || !user.data) return <ConsoleSkeleton />;
+    if (!managed || !user.data) return <ConsoleSkeleton variant="profile" />;
 
     return (
         <div className="flex flex-col gap-4">
@@ -90,7 +90,9 @@ export function AdminUserProfileConsole({
                     deals={deals}
                     events={events}
                     dealsPending={ledger.isPending}
+                    dealsFailed={ledger.isError}
                     eventsPending={audit.isPending}
+                    eventsFailed={audit.isError}
                 />
                 <AdminUserProfileRail
                     checks={profileChecks(user.data)}
@@ -98,6 +100,8 @@ export function AdminUserProfileConsole({
                     details={profileDetails(user.data)}
                     suspensions={history}
                     suspended={managed.status === "suspended"}
+                    pending={suspensions.isPending}
+                    failed={suspensions.isError}
                 />
             </div>
 

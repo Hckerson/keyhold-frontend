@@ -82,13 +82,19 @@ export const userRoleTiles = (users: ManagedUser[]): UserRoleTile[] =>
         };
     });
 
+const counted = (label: string, count: number | undefined) =>
+    count === undefined ? label : `${label} · ${formatCount(count)}`;
+
 export const userRoleOptions = (
-    users: ManagedUser[],
+    users?: ManagedUser[],
 ): SelectOption<UserRoleFilter>[] => [
-    { value: "all", label: `${ALL_ROLES} · ${formatCount(users.length)}` },
-    ...userRoleTiles(users).map((role) => ({
-        value: role.id,
-        label: `${role.label} · ${formatCount(role.count)}`,
+    { value: "all", label: counted(ALL_ROLES, users?.length) },
+    ...USER_ROLE_KEYS.map((id) => ({
+        value: id,
+        label: counted(
+            USER_ROLES[id].plural,
+            users && countUsersByRole(users, id),
+        ),
     })),
 ];
 

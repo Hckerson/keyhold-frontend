@@ -25,6 +25,7 @@ The asymmetry from the buyer flow holds twice over: **not settling is recoverabl
 | 1.2 | A failed load of the holds renders `ConsoleUnavailable` with the `adminPayments` fallback and a working retry.             |
 | 1.3 | While the escrow position is loading, or after it fails to load, no figure in the band is shown — never `$0` or `0 holds`. |
 | 1.4 | The amount in escrow counts held and disputed holds only; released and refunded money is never counted as still held.      |
+| 1.5 | While the holds are loading, the payouts panel shows no count and no reading — never `0` or `No payouts on record yet`.    |
 
 ## 02 · What is settlable
 

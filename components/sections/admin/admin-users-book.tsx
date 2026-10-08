@@ -3,8 +3,10 @@
 import { Wallet } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Panel } from "@/components/ui/panel";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { UserConcentrationStatement } from "@/components/features/admin/user-concentration-statement";
 import { UserLeaderRow } from "@/components/features/admin/user-leader-row";
+import { LEADER_COUNT } from "@/lib/data/admin-users-pulse";
 import type { LeaderConcentration, ManagedUser } from "@/lib/types";
 
 const TITLE = "Top of the Book";
@@ -17,6 +19,7 @@ export interface AdminUsersBookProps {
     leaders: ManagedUser[];
     concentration: LeaderConcentration;
     directoryVolume: number;
+    pending?: boolean;
     onOpen: (id: string) => void;
 }
 
@@ -24,6 +27,7 @@ export function AdminUsersBook({
     leaders,
     concentration,
     directoryVolume,
+    pending,
     onOpen,
 }: AdminUsersBookProps) {
     return (
@@ -46,6 +50,8 @@ export function AdminUsersBook({
                     </ol>
                     <UserConcentrationStatement concentration={concentration} />
                 </>
+            ) : pending ? (
+                <SkeletonRows rows={LEADER_COUNT} tall />
             ) : (
                 <EmptyState
                     icon={Wallet}

@@ -12,6 +12,7 @@ import { AdminUsersStatusBand } from "@/components/sections/admin/admin-users-st
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { userDesk } from "@/lib/data/admin-users-pulse";
+import { userRoleOptions } from "@/lib/data/admin-users-totals";
 import { useUserDirectory } from "@/lib/hooks/use-user-directory";
 import { useUserInvite } from "@/lib/hooks/use-user-invite";
 import { useUsers } from "@/lib/hooks/use-users";
@@ -76,7 +77,7 @@ export function AdminUsersConsole() {
                     total={users.length}
                     reading={desk.rolesReading}
                     filters={directory}
-                    roles={desk.roleOptions}
+                    roles={isPending ? userRoleOptions() : desk.roleOptions}
                     onFilter={directory.filter}
                     onSortChange={directory.changeSort}
                     page={directory.page}
@@ -91,6 +92,7 @@ export function AdminUsersConsole() {
                     recency={desk.recency}
                     signups={desk.signups}
                     directoryVolume={desk.volume}
+                    pending={isPending}
                     onOpen={onOpen}
                 />
             </div>

@@ -1,5 +1,6 @@
 import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { UserSuspensionList } from "@/components/features/admin/user-suspension-list";
 import { UserTrustList } from "@/components/features/admin/user-trust-list";
 import { PROFILE_COPY as COPY } from "@/lib/data/admin-user-profile";
@@ -8,6 +9,7 @@ import type { Suspension } from "@/lib/validations/suspension";
 
 const VERIFIED_SUFFIX = "verified";
 const OF = "of";
+const RESTRICTION_ROWS = 1;
 
 export interface AdminUserProfileRailProps {
     checks: ProfileCheck[];
@@ -15,6 +17,8 @@ export interface AdminUserProfileRailProps {
     details: ProfileDetail[];
     suspensions: Suspension[];
     suspended: boolean;
+    pending?: boolean;
+    failed?: boolean;
 }
 
 export function AdminUserProfileRail({
@@ -23,6 +27,8 @@ export function AdminUserProfileRail({
     details,
     suspensions,
     suspended,
+    pending,
+    failed,
 }: AdminUserProfileRailProps) {
     const verified = checks.filter((check) => check.verified).length;
 
@@ -68,7 +74,13 @@ export function AdminUserProfileRail({
                 title={COPY.restrictions}
                 count={suspensions.length || undefined}
             >
-                {suspensions.length > 0 ? (
+                {pending ? (
+                    <SkeletonRows rows={RESTRICTION_ROWS} />
+                ) : failed ? (
+                    <p className="text-text-muted text-xs">
+                        {COPY.restrictionsUnavailable}
+                    </p>
+                ) : suspensions.length > 0 ? (
                     <UserSuspensionList suspensions={suspensions} />
                 ) : suspended ? (
                     <p className="text-error flex items-center gap-2 text-xs">
