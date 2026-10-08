@@ -10,12 +10,14 @@ const GROUP_LABEL = "Filter by open compliance check";
 export interface CheckBreakdownProps {
     rows: CheckBreakdownData[];
     active: ModerationCheckFilter;
+    pending?: boolean;
     onChange: (filter: ModerationCheckFilter) => void;
 }
 
 export function CheckBreakdown({
     rows,
     active,
+    pending,
     onChange,
 }: CheckBreakdownProps) {
     return (
@@ -29,6 +31,7 @@ export function CheckBreakdown({
                     key={row.id}
                     row={row}
                     active={row.id === active}
+                    pending={pending}
                     onSelect={() =>
                         onChange(row.id === active ? EVERY_CHECK : row.id)
                     }

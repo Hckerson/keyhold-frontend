@@ -19,7 +19,7 @@ import type {
 
 const TREND_MONTHS = 12;
 const MONTH_KEY = "yyyy-MM";
-const LEADER_COUNT = 5;
+export const LEADER_COUNT = 5;
 const RECENCY_LABELS = ["This week", "This month", "This quarter", "Dormant"];
 const DORMANT_TONE = "error";
 

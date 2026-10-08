@@ -86,7 +86,10 @@ export function AdminTransactionsConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AdminTransactionsHeader onExport={onExport} />
+            <AdminTransactionsHeader
+                pending={ledger.isPending}
+                onExport={onExport}
+            />
 
             <AdminTransactionsStatBand
                 stages={flow}

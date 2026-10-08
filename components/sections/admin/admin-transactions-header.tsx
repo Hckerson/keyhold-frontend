@@ -10,10 +10,12 @@ const EXPORT_ACTION = "Export";
 const PAYOUTS_ACTION = "Payouts";
 
 export interface AdminTransactionsHeaderProps {
+    pending?: boolean;
     onExport: () => void;
 }
 
 export function AdminTransactionsHeader({
+    pending,
     onExport,
 }: AdminTransactionsHeaderProps) {
     return (
@@ -22,7 +24,7 @@ export function AdminTransactionsHeader({
             lede={TRANSACTIONS_LEDE}
             action={
                 <>
-                    <Button type="button" onClick={onExport}>
+                    <Button type="button" disabled={pending} onClick={onExport}>
                         {EXPORT_ACTION}
                     </Button>
                     <Link

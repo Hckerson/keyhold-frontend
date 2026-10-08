@@ -158,6 +158,19 @@ describe("AdminPaymentsConsole · 01 reading the holds", () => {
             ).toHaveTextContent("3 holds"),
         );
     });
+
+    it("1.5 shows no payout count and no empty record while the holds are loading", async () => {
+        holds.mockReturnValue(new Promise(() => {}));
+        draw();
+        const payouts = within(
+            (await screen.findByRole("heading", { name: "Payouts" })).closest(
+                "section",
+            ) as HTMLElement,
+        );
+
+        expect(payouts.queryByText("0")).toBeNull();
+        expect(payouts.queryByText("No payouts on record yet")).toBeNull();
+    });
 });
 
 describe("AdminPaymentsConsole · 02 what is settlable", () => {
@@ -448,7 +461,7 @@ describe("AdminPaymentsConsole · 07 finding a hold", () => {
         draw();
         await table();
         const search = screen.getByRole("searchbox", {
-            name: "Search payouts by agent or deal",
+            name: "Search payouts by agent, deal or buyer",
         });
 
         await userEvent.type(search, "Ridge");

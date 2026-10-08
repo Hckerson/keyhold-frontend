@@ -13,6 +13,7 @@ import { PAYOUT_STATES } from "@/lib/config/payout-tones";
 import type { Payout } from "@/lib/types";
 
 const TITLE = "Payouts";
+const LOADING_READING = "Reading escrow holds";
 const CLEAR_ACTION = "Show every state";
 const SEARCH_LABEL = "Search payouts by agent, deal or buyer";
 const SEARCH_PLACEHOLDER = "Search agent, deal or buyer";
@@ -53,8 +54,14 @@ export function AdminPaymentsMain({
     return (
         <Panel
             title={TITLE}
-            description={reading}
-            count={filtered ? `${payouts.length} / ${total}` : total}
+            description={pending ? LOADING_READING : reading}
+            count={
+                pending
+                    ? undefined
+                    : filtered
+                      ? `${payouts.length} / ${total}`
+                      : total
+            }
             action={
                 <div className="flex items-center gap-2">
                     {filtered && (

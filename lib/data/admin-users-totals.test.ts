@@ -49,6 +49,15 @@ describe("userRoleOptions", () => {
             userRoleOptions(DIRECTORY).map((option) => option.label),
         ).toEqual(["All roles · 4", "Buyers · 2", "Agents · 1", "Admins · 1"]);
     });
+
+    it("claims no count on any role filter before the directory has answered", () => {
+        expect(userRoleOptions().map((option) => option.label)).toEqual([
+            "All roles",
+            "Buyers",
+            "Agents",
+            "Admins",
+        ]);
+    });
 });
 
 describe("rolesReading", () => {

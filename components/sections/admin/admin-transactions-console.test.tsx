@@ -138,6 +138,28 @@ describe("AdminTransactionsConsole · reading the ledger", () => {
             await screen.findByText("No deals on the ledger yet"),
         ).toBeInTheDocument();
     });
+
+    it("claims no deal count and no empty ledger while the ledger is loading", async () => {
+        ledgerCall.mockReturnValue(new Promise(() => {}));
+        draw();
+        const deals = within(
+            (await screen.findByRole("heading", { name: "Deals" })).closest(
+                "section",
+            ) as HTMLElement,
+        );
+
+        expect(deals.queryByText("0")).toBeNull();
+        expect(deals.queryByText("No deals on the ledger yet")).toBeNull();
+    });
+
+    it("offers no export while the ledger is loading", async () => {
+        ledgerCall.mockReturnValue(new Promise(() => {}));
+        draw();
+
+        expect(
+            await screen.findByRole("button", { name: "Export" }),
+        ).toBeDisabled();
+    });
 });
 
 describe("AdminTransactionsConsole · the stage band", () => {

@@ -18,6 +18,7 @@ import type {
 } from "@/lib/types";
 
 const DIRECTORY_TITLE = "Accounts";
+const LOADING_READING = "Reading the directory";
 const EMPTY_TITLE = "No account matches this view";
 const EMPTY_LEDE =
     "Clear the search or widen the status and role filters to see the full directory.";
@@ -59,8 +60,14 @@ export function AdminUsersMain({
     return (
         <Panel
             title={DIRECTORY_TITLE}
-            description={reading}
-            count={visible === total ? total : `${visible} / ${total}`}
+            description={pending ? LOADING_READING : reading}
+            count={
+                pending
+                    ? undefined
+                    : visible === total
+                      ? total
+                      : `${visible} / ${total}`
+            }
             className="console-span-2 min-w-0 self-start"
             bodyClassName="space-y-3"
         >

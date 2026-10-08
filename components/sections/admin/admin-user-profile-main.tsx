@@ -24,7 +24,9 @@ export interface AdminUserProfileMainProps {
     deals: LedgerTransaction[];
     events: AuditEvent[];
     dealsPending?: boolean;
+    dealsFailed?: boolean;
     eventsPending?: boolean;
+    eventsFailed?: boolean;
 }
 
 export function AdminUserProfileMain({
@@ -34,7 +36,9 @@ export function AdminUserProfileMain({
     deals,
     events,
     dealsPending,
+    dealsFailed,
     eventsPending,
+    eventsFailed,
 }: AdminUserProfileMainProps) {
     const router = useRouter();
 
@@ -52,10 +56,14 @@ export function AdminUserProfileMain({
             <Panel
                 title={COPY.deals}
                 description={COPY.dealsLede}
-                count={deals.length}
+                count={dealsPending || dealsFailed ? undefined : deals.length}
             >
                 {dealsPending ? (
                     <SkeletonRows />
+                ) : dealsFailed ? (
+                    <p className="text-text-muted text-xs">
+                        {COPY.dealsUnavailable}
+                    </p>
                 ) : deals.length > 0 ? (
                     <DealLedgerList
                         transactions={deals}
@@ -71,6 +79,10 @@ export function AdminUserProfileMain({
             <Panel title={COPY.activity} description={COPY.activityLede}>
                 {eventsPending ? (
                     <SkeletonRows />
+                ) : eventsFailed ? (
+                    <p className="text-text-muted text-xs">
+                        {COPY.activityUnavailable}
+                    </p>
                 ) : events.length > 0 ? (
                     <UserActivityList events={events} />
                 ) : (

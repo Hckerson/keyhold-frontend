@@ -7,6 +7,7 @@ import {
     COMPLIANCE_CHECKS,
 } from "@/lib/config/compliance-checks";
 import { chartToneText } from "@/lib/config/chart-tones";
+import { NO_READING } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { CheckBreakdown } from "@/lib/types";
 
@@ -18,16 +19,18 @@ const worstState = (row: CheckBreakdown) =>
 export interface CheckBreakdownTileProps {
     row: CheckBreakdown;
     active: boolean;
+    pending?: boolean;
     onSelect: () => void;
 }
 
 export function CheckBreakdownTile({
     row,
     active,
+    pending,
     onSelect,
 }: CheckBreakdownTileProps) {
     const check = COMPLIANCE_CHECKS[row.id];
-    const tone = CHECK_STATES[worstState(row)].tone;
+    const tone = pending ? "neutral" : CHECK_STATES[worstState(row)].tone;
     const open = row.warn + row.fail;
     const reading = CHECK_STATE_KEYS.map(
         (state) => `${row[state]} ${CHECK_STATES[state].label.toLowerCase()}`,
@@ -37,7 +40,7 @@ export function CheckBreakdownTile({
         <button
             type="button"
             aria-pressed={active}
-            title={reading}
+            title={pending ? undefined : reading}
             onClick={onSelect}
             className={cn(
                 "focus-visible:ring-accent ease-smooth flex h-11 min-w-0 items-center rounded-lg border px-2.5 text-left transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
@@ -57,10 +60,10 @@ export function CheckBreakdownTile({
                         open > 0 ? chartToneText[tone] : "text-text-muted",
                     )}
                 >
-                    {open} {OPEN_SUFFIX}
+                    {pending ? NO_READING : `${open} ${OPEN_SUFFIX}`}
                 </span>
             </span>
-            <span className="sr-only">{reading}</span>
+            {!pending && <span className="sr-only">{reading}</span>}
         </button>
     );
 }

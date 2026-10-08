@@ -121,6 +121,19 @@ describe("ModerationConsole · reading the queue", () => {
         ).toBeInTheDocument();
     });
 
+    it("claims no queue count, reading or open check while the queue is loading", async () => {
+        list.mockReturnValue(new Promise(() => {}));
+        draw();
+        const review = within(
+            (
+                await screen.findByRole("heading", { name: "Review Queue" })
+            ).closest("section") as HTMLElement,
+        );
+
+        expect(review.queryByText("0")).toBeNull();
+        expect(review.queryAllByText(/0 open/)).toHaveLength(0);
+    });
+
     it("narrows the queue to the status pill that was picked", async () => {
         draw();
         await queue();

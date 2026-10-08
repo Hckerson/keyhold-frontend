@@ -763,6 +763,22 @@ describe("AdminUsersConsole · reading the numbers", () => {
         }
     });
 
+    it("claims no role mix, sign-ups, recency or leaders while the directory is loading", async () => {
+        list.mockReturnValue(new Promise(() => {}));
+        draw();
+        await statusBand();
+
+        expect(screen.queryByText(/0 buyers/)).toBeNull();
+        expect(screen.queryByText(/joined in/)).toBeNull();
+        expect(screen.queryByText("No volume yet")).toBeNull();
+        expect(
+            screen.queryByRole("list", { name: /^Live accounts by how/ }),
+        ).toBeNull();
+        expect(
+            screen.getByRole("combobox", { name: "Filter by role" }),
+        ).not.toHaveTextContent("·");
+    });
+
     it("labels each role filter with how many accounts it holds", async () => {
         draw();
         await directory();

@@ -17,6 +17,7 @@ import type {
 } from "@/lib/types";
 
 const QUEUE_TITLE = "Review Queue";
+const LOADING_READING = "Reading the review queue";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
     "Widen the status filter or drop the check filter to see the full queue.";
@@ -51,17 +52,20 @@ export function ModerationMain({
         <div className="console-span-2 flex min-w-0 flex-col gap-3 self-start">
             <Panel
                 title={QUEUE_TITLE}
-                description={reading}
+                description={pending ? LOADING_READING : reading}
                 count={
-                    listings.length === total
-                        ? total
-                        : `${listings.length} / ${total}`
+                    pending
+                        ? undefined
+                        : listings.length === total
+                          ? total
+                          : `${listings.length} / ${total}`
                 }
                 bodyClassName="space-y-3"
             >
                 <CheckBreakdown
                     rows={checks}
                     active={checkFilter}
+                    pending={pending}
                     onChange={onCheckFilterChange}
                 />
                 <PresenceSwap
