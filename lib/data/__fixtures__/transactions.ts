@@ -1,4 +1,5 @@
-import { aTransaction } from "@/lib/data/__fixtures__/purchases";
+import { anEscrowHold, aTransaction } from "@/lib/data/__fixtures__/purchases";
+import type { Escrow, EscrowStage } from "@/lib/validations/escrow";
 import type {
     SettlementTransaction,
     TransactionPage,
@@ -36,5 +37,23 @@ export const aStage = (
 ): TransactionStage => ({
     count: 0,
     volume: 0,
+    ...overrides,
+});
+
+export const anEscrow = (
+    overrides: Partial<Escrow> = {},
+    deal: Parameters<typeof aLedgerDeal>[0] = {},
+): Escrow => ({
+    ...anEscrowHold(),
+    transaction: aLedgerDeal(deal),
+    ...overrides,
+});
+
+export const anEscrowStage = (
+    overrides: Partial<EscrowStage> & Pick<EscrowStage, "status">,
+): EscrowStage => ({
+    count: 0,
+    amount: 0,
+    oldestAt: null,
     ...overrides,
 });

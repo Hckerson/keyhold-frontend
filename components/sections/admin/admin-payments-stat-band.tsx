@@ -2,6 +2,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { EscrowStateCell } from "@/components/features/admin/escrow-state-cell";
+import { NO_READING } from "@/lib/constants";
 import { formatCompactUsd, formatCount } from "@/lib/utils";
 import type { PayoutStateFilter } from "@/lib/data/admin-payments";
 import type { EscrowPosition, PayoutStage } from "@/lib/types";
@@ -18,6 +19,7 @@ export interface AdminPaymentsStatBandProps {
     stages: PayoutStage[];
     active: PayoutStateFilter;
     pending?: boolean;
+    failed?: boolean;
     onChange: (next: PayoutStateFilter) => void;
 }
 
@@ -26,8 +28,11 @@ export function AdminPaymentsStatBand({
     stages,
     active,
     pending,
+    failed,
     onChange,
 }: AdminPaymentsStatBandProps) {
+    const unread = pending || failed;
+
     return (
         <section
             aria-label={BAND_LABEL}
@@ -40,16 +45,22 @@ export function AdminPaymentsStatBand({
                     <Skeleton className="h-8 w-28" />
                 ) : (
                     <p className="font-display text-h4 text-text leading-none font-light tabular-nums">
-                        {formatCompactUsd(position.held)}
+                        {failed ? NO_READING : formatCompactUsd(position.held)}
                     </p>
                 )}
                 <p className="text-text-secondary text-xs tabular-nums">
-                    {formatCount(position.holds)} {HOLDS_NOUN} ·{" "}
-                    {formatCompactUsd(position.fee)} {FEE_SUFFIX} ·{" "}
-                    <span className="text-text font-medium">
-                        {formatCompactUsd(position.net)}
-                    </span>{" "}
-                    {NET_SUFFIX}
+                    {unread ? (
+                        NO_READING
+                    ) : (
+                        <>
+                            {formatCount(position.holds)} {HOLDS_NOUN} ·{" "}
+                            {formatCompactUsd(position.fee)} {FEE_SUFFIX} ·{" "}
+                            <span className="text-text font-medium">
+                                {formatCompactUsd(position.net)}
+                            </span>{" "}
+                            {NET_SUFFIX}
+                        </>
+                    )}
                 </p>
             </div>
             <div className="console-span-2 bg-border grid grid-cols-2 gap-px">
@@ -58,7 +69,7 @@ export function AdminPaymentsStatBand({
                         key={stage.id}
                         stage={stage}
                         active={stage.id === active}
-                        pending={pending}
+                        pending={unread}
                         onSelect={() =>
                             onChange(
                                 stage.id === active ? EVERY_STATE : stage.id,

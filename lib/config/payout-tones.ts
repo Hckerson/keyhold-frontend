@@ -16,6 +16,7 @@ export interface PayoutStateMeta {
     chartTone: ChartTone;
     rank: number;
     held: boolean;
+    settlable: boolean;
 }
 
 export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
@@ -26,14 +27,16 @@ export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
         chartTone: "error",
         rank: 4,
         held: true,
+        settlable: false,
     },
     HELD: {
         label: "Held",
         icon: Lock,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 3,
         held: true,
+        settlable: true,
     },
     REFUNDED: {
         label: "Refunded",
@@ -42,14 +45,16 @@ export const PAYOUT_STATES: Record<PayoutState, PayoutStateMeta> = {
         chartTone: "neutral",
         rank: 2,
         held: false,
+        settlable: false,
     },
     RELEASED: {
         label: "Released",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 1,
         held: false,
+        settlable: false,
     },
 };
 
@@ -64,8 +69,8 @@ export const PAYOUT_SLA_MINUTES = 4_320;
 
 const PAYOUT_AGE_BANDS: ToneBand[] = [
     { ceiling: 1_440, tone: "neutral" },
-    { ceiling: PAYOUT_SLA_MINUTES, tone: "info" },
-    { ceiling: 10_080, tone: "warning" },
+    { ceiling: PAYOUT_SLA_MINUTES, tone: "neutral" },
+    { ceiling: 10_080, tone: "neutral" },
 ];
 
 export const payoutAgeTone = (minutes: number) =>

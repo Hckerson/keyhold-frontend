@@ -17,7 +17,7 @@ export function PayoutSettleButton({
     payout,
     onSettle,
 }: PayoutSettleButtonProps) {
-    if (!PAYOUT_STATES[payout.state].held) return null;
+    if (!PAYOUT_STATES[payout.state].settlable) return null;
 
     return (
         <Button

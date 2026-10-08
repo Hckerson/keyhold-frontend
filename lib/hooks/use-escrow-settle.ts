@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { SettleMode } from "@/lib/config/escrow-settle";
+import { isRefundReady, type SettleMode } from "@/lib/config/escrow-settle";
 import { useRefundEscrow, useReleaseEscrow } from "@/lib/hooks/use-escrow";
 import type { Payout } from "@/lib/types";
 
@@ -54,9 +54,11 @@ export function useEscrowSettle() {
             return;
         }
 
-        const trimmed = reason.trim();
-        if (!trimmed) return;
-        refund.mutate({ id: payout.id, reason: trimmed }, { onSuccess: clear });
+        if (!isRefundReady(reason)) return;
+        refund.mutate(
+            { id: payout.id, reason: reason.trim() },
+            { onSuccess: clear },
+        );
     };
 
     return {
