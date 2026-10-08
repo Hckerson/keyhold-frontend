@@ -73,7 +73,7 @@ export function DealLedgerRow({
                 />
                 <span
                     className={cn(
-                        "text-right font-semibold tabular-nums",
+                        "text-right tabular-nums",
                         open ? "text-text" : "text-text-secondary",
                     )}
                 >

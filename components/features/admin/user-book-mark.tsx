@@ -25,7 +25,7 @@ export function UserBookMark({ deals, volume, className }: UserBookMarkProps) {
                 className,
             )}
         >
-            <span className="text-text font-semibold">
+            <span className="text-text">
                 {formatCompactUsd(volume)}
                 <span className="sr-only"> {VOLUME_NOUN}</span>
             </span>

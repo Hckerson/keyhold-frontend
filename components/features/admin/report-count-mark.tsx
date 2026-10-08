@@ -22,7 +22,7 @@ export function ReportCountMark({ reports, className }: ReportCountMarkProps) {
     return (
         <span
             className={cn(
-                "text-xs font-semibold tabular-nums",
+                "text-xs tabular-nums",
                 chartToneText[reportTone(reports)],
                 className,
             )}

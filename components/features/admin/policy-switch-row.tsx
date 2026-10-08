@@ -23,7 +23,7 @@ export function PolicySwitchRow({
         <tr className="ease-smooth hover:bg-background-muted h-12 transition-colors">
             <td className="py-0">
                 <span className="block min-w-0">
-                    <span className="text-text block truncate text-xs font-semibold">
+                    <span className="text-text block truncate text-xs">
                         {policy.title}
                     </span>
                     <span

@@ -31,7 +31,7 @@ export function UserVolumeMark({
             value={formatCompactUsd(volume)}
             tone={volumeTone(share)}
             label={`${formatCompactUsd(volume)} ${VOLUME_NOUN}, ${share}% ${LEADER_NOUN}`}
-            className={cn("font-semibold", className)}
+            className={className}
         />
     );
 }

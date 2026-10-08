@@ -32,9 +32,7 @@ export function DisputeQueueRow({
             )}
         >
             <div className="min-w-0 flex-1">
-                <p className="text-text truncate text-xs font-semibold">
-                    {dispute.title}
-                </p>
+                <p className="text-text truncate text-xs">{dispute.title}</p>
                 <p className="text-text-muted mt-1 truncate text-xs">
                     {dispute.initiator} ·{" "}
                     {dispute.amountAtStake > 0

@@ -44,9 +44,7 @@ export function VerificationQueueRow({
             />
 
             <div className="min-w-0 flex-1">
-                <p className="text-text truncate text-xs font-semibold">
-                    {request.name}
-                </p>
+                <p className="text-text truncate text-xs">{request.name}</p>
                 <p className="text-text-muted mt-1 truncate text-xs">
                     {request.documentType} · {request.issuerCountry}
                 </p>
@@ -57,7 +55,9 @@ export function VerificationQueueRow({
                 <p
                     className={cn(
                         "font-mono text-[10px] tracking-wide tabular-nums",
-                        outstanding > 0 ? "text-text-secondary" : "text-text-muted",
+                        outstanding > 0
+                            ? "text-text-secondary"
+                            : "text-text-muted",
                     )}
                 >
                     {outstanding > 0

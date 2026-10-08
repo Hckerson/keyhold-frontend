@@ -34,9 +34,7 @@ export function AbuseReportRow({
             )}
         >
             <div className="min-w-0 flex-1">
-                <p className="text-text truncate text-xs font-semibold">
-                    {report.subject}
-                </p>
+                <p className="text-text truncate text-xs">{report.subject}</p>
                 <p className="text-text-muted mt-1 truncate text-xs">
                     {flagTypeMeta[report.type].label} · {report.reason}
                 </p>
