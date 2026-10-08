@@ -5,15 +5,20 @@ import type {
     QueueReadiness,
 } from "@/lib/types";
 
-type QueryState = { isError: boolean; isPending: boolean };
+export type QueryState = { isError: boolean; isPending: boolean };
 type LaneReadiness = Record<ModerationQueueId, QueueReadiness>;
 
-const readinessOf = (query: QueryState): QueueReadiness =>
-    query.isError ? "error" : query.isPending ? "pending" : "ready";
+export const sourceReadiness = (queries: QueryState[]): QueueReadiness => {
+    if (queries.some((query) => query.isError)) return "error";
+    return queries.some((query) => query.isPending) ? "pending" : "ready";
+};
 
 export const laneReadiness = (sources: Record<ModerationQueueId, QueryState>) =>
     Object.fromEntries(
-        Object.entries(sources).map(([id, query]) => [id, readinessOf(query)]),
+        Object.entries(sources).map(([id, query]) => [
+            id,
+            sourceReadiness([query]),
+        ]),
     ) as LaneReadiness;
 
 export const deckReadiness = (lanes: LaneReadiness): QueueReadiness => {

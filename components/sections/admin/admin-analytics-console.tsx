@@ -10,7 +10,10 @@ import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { DEFAULT_ANALYTICS_WINDOW } from "@/lib/config/admin-analytics";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { joinersLine } from "@/lib/data/admin-analytics";
-import { analyticsSnapshot } from "@/lib/data/admin-analytics-panels";
+import {
+    analyticsSnapshot,
+    panelReadiness,
+} from "@/lib/data/admin-analytics-panels";
 import { moderationLoad } from "@/lib/data/admin-overview";
 import {
     decisionLanes,
@@ -92,25 +95,20 @@ export function AdminAnalyticsConsole() {
         queueState,
     ]);
 
-    const queries = [
-        trend,
-        directory,
-        users,
-        platform,
-        tiers,
-        regions,
-        stages,
-        escrow,
-        flags,
-        kyc,
-        disputes,
-    ];
+    const readiness = panelReadiness({
+        pipeline: [stages, platform],
+        escrow: [escrow],
+        queues: [kyc, flags, disputes],
+        status: [users],
+        tiers: [tiers],
+        markets: [regions],
+    });
 
-    if (queries.some((entry) => entry.isError))
+    if (trend.isError)
         return (
             <ConsoleUnavailable
                 fallback={CONSOLE_FALLBACKS.adminAnalytics}
-                onRetry={() => queries.forEach((entry) => void entry.refetch())}
+                onRetry={() => void trend.refetch()}
             />
         );
 
@@ -141,14 +139,7 @@ export function AdminAnalyticsConsole() {
             <ConsoleGroup label={LIVE_LABEL}>
                 <AdminAnalyticsSnapshot
                     snapshot={snapshot}
-                    pending={{
-                        pipeline: stages.isPending || platform.isPending,
-                        escrow: escrow.isPending,
-                        queues: queueState === "pending",
-                        status: users.isPending,
-                        tiers: tiers.isPending,
-                        markets: regions.isPending,
-                    }}
+                    readiness={readiness}
                 />
             </ConsoleGroup>
         </div>
