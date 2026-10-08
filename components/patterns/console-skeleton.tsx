@@ -1,30 +1,29 @@
 import type { ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ConsoleSkeletonHeader } from "@/components/patterns/console-skeleton-header";
+import { FlowBandSkeleton } from "@/components/patterns/flow-band-skeleton";
+import { LeadBandSkeleton } from "@/components/patterns/lead-band-skeleton";
 import { PanelSkeleton } from "@/components/patterns/panel-skeleton";
+import { SplitSkeleton } from "@/components/patterns/split-skeleton";
 import { StatBand } from "@/components/patterns/stat-band";
+import { TileBandSkeleton } from "@/components/patterns/tile-band-skeleton";
 import type { ConsoleSkeletonVariant } from "@/lib/config/console-skeletons";
 
 const BUSY_LABEL = "Loading";
-const TILE_SLOTS = [0, 1, 2, 3, 4, 5];
 const PILL_SLOTS = [0, 1, 2, 3];
 const STAGE_ROWS = 3;
-const HERO_ROWS = 2;
 const RAIL_ROWS = 4;
+const BAND_CELLS = 4;
+const RECORD_CELLS = 3;
+const STATUS_TILES = { sixths: 6, fifths: 5 };
 
-const SPLIT = (
-    <div className="console-split gap-3">
-        <div className="console-span-2 flex flex-col gap-3">
-            <PanelSkeleton rows={HERO_ROWS} />
-            <PanelSkeleton />
-        </div>
-        <div className="flex flex-col gap-3">
-            <PanelSkeleton rows={RAIL_ROWS} />
-            <PanelSkeleton rows={RAIL_ROWS} />
-        </div>
-    </div>
-);
+const STANDARD = { main: [2, 6], rail: [4, 4] };
+const QUEUE = { main: [6, 3], rail: [6] };
+const DIRECTORY = { main: [6], rail: [2, 4, 5] };
+const RECORD = { main: [6, 6], rail: [3, 3] };
 
 const BAND = <StatBand label={BUSY_LABEL} stats={[]} pending />;
+const SPLIT = <SplitSkeleton {...STANDARD} />;
 
 const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
     split: (
@@ -59,15 +58,49 @@ const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
             </div>
         </>
     ),
-    tiles: (
+    sixths: (
         <>
-            <div className="console-split console-split--sixths gap-2">
-                {TILE_SLOTS.map((slot) => (
-                    <Skeleton key={slot} className="h-20 rounded-lg" />
-                ))}
-            </div>
-            {SPLIT}
+            <TileBandSkeleton
+                tiles={STATUS_TILES.sixths}
+                className="console-split--sixths"
+            />
+            <SplitSkeleton {...QUEUE} />
         </>
+    ),
+    fifths: (
+        <>
+            <TileBandSkeleton
+                tiles={STATUS_TILES.fifths}
+                className="console-split--fifths"
+            />
+            <SplitSkeleton {...DIRECTORY} />
+        </>
+    ),
+    flow: (
+        <>
+            <FlowBandSkeleton
+                cells={BAND_CELLS}
+                className="console-split--flow"
+            />
+            <PanelSkeleton tall />
+        </>
+    ),
+    lead: (
+        <>
+            <LeadBandSkeleton cells={BAND_CELLS} />
+            <PanelSkeleton tall />
+        </>
+    ),
+    profile: (
+        <SplitSkeleton
+            {...RECORD}
+            lead={
+                <FlowBandSkeleton
+                    cells={RECORD_CELLS}
+                    className="console-split--flow console-split--flow-thirds"
+                />
+            }
+        />
     ),
     deck: (
         <div className="console-split gap-3">
@@ -107,10 +140,7 @@ export interface ConsoleSkeletonProps {
 export function ConsoleSkeleton({ variant = "split" }: ConsoleSkeletonProps) {
     return (
         <div className="flex w-full flex-col gap-4" aria-busy="true">
-            <div className="flex flex-col gap-2">
-                <Skeleton className="h-7 w-56" />
-                <Skeleton className="h-3 w-full max-w-md" />
-            </div>
+            <ConsoleSkeletonHeader identity={variant === "profile"} />
             {BODIES[variant]}
         </div>
     );
