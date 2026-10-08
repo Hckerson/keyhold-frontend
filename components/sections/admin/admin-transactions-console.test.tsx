@@ -14,6 +14,35 @@ vi.mock("@/lib/api/transactions", () => ({
 }));
 vi.mock("@/lib/utils/download", () => ({ downloadCsv: vi.fn() }));
 
+const address = vi.hoisted(() => {
+    const listeners = new Set<() => void>();
+    const state = { search: "" };
+    const go = (url: string) => {
+        state.search = url.split("?")[1] ?? "";
+        listeners.forEach((listener) => listener());
+    };
+    const subscribe = (listener: () => void) => {
+        listeners.add(listener);
+        return () => listeners.delete(listener);
+    };
+    return { state, go, subscribe };
+});
+
+vi.mock("next/navigation", async () => {
+    const { useSyncExternalStore } = await import("react");
+    return {
+        usePathname: () => ADMIN_ROUTES.transactions,
+        useRouter: () => ({ push: address.go, replace: address.go }),
+        useSearchParams: () =>
+            new URLSearchParams(
+                useSyncExternalStore(
+                    address.subscribe,
+                    () => address.state.search,
+                ),
+            ),
+    };
+});
+
 const ledgerCall = vi.mocked(transactionsAPI.ledger);
 const stages = vi.mocked(transactionsAPI.stages);
 const download = vi.mocked(downloadCsv);
@@ -73,6 +102,7 @@ const shown = async () =>
         .map((button) => button.getAttribute("aria-label"));
 
 beforeEach(() => {
+    address.state.search = "";
     ledgerCall.mockResolvedValue([IN_ESCROW, SETTLED, AWAITING]);
     stages.mockResolvedValue([
         aStage({ status: "PENDING", count: 1, volume: 500_000 }),
@@ -185,6 +215,32 @@ describe("AdminTransactionsConsole · the stage band", () => {
 });
 
 describe("AdminTransactionsConsole · reviewing a deal", () => {
+    it("opens the review of the deal a link points at", async () => {
+        address.state.search = "transaction=txn_settled";
+        draw();
+
+        expect(
+            await screen.findByRole("dialog", { name: "4 Ridge Lane" }),
+        ).toBeInTheDocument();
+    });
+
+    it("puts the open review in the address and clears it on close", async () => {
+        draw();
+        await userEvent.click(
+            within(await ledger()).getByRole("button", {
+                name: "Review 18 Cypress Point",
+            }),
+        );
+        const review = within(
+            await screen.findByRole("dialog", { name: "18 Cypress Point" }),
+        );
+        expect(address.state.search).toBe("transaction=txn_escrow");
+
+        await userEvent.click(review.getByRole("button", { name: "Close" }));
+
+        await waitFor(() => expect(address.state.search).toBe(""));
+    });
+
     it("opens the deal's review from its row", async () => {
         draw();
 

@@ -13,6 +13,7 @@ import {
     ledgerTotals,
     matchesTransactionFilters,
     rankTransactions,
+    REVIEW_URL_CODEC,
     toTransactionExportRows,
     toTransactionStages,
     TRANSACTION_EXPORT_COLUMNS,
@@ -23,6 +24,7 @@ import {
     useTransactionLedger,
     useTransactionStages,
 } from "@/lib/hooks/use-transactions";
+import { useUrlState } from "@/lib/hooks/use-url-state";
 import { toLedger } from "@/lib/utils/to-ledger-transaction";
 import { downloadCsv } from "@/lib/utils/download";
 
@@ -34,7 +36,9 @@ export function AdminTransactionsConsole() {
 
     const [statusFilter, setStatusFilter] =
         useState<TransactionStatusFilter>(EVERY_STATUS);
-    const [reviewId, setReviewId] = useState<string | null>(null);
+    const [reviewId, setReviewId] = useUrlState(REVIEW_URL_CODEC, {
+        history: "replace",
+    });
 
     const transactions = useMemo(
         () => rankTransactions(toLedger(ledger.data ?? [])),
@@ -54,9 +58,9 @@ export function AdminTransactionsConsole() {
         [stages.data],
     );
 
-    const onOpen = useCallback((id: string) => setReviewId(id), []);
+    const onOpen = useCallback((id: string) => setReviewId(id), [setReviewId]);
 
-    const onCloseReview = useCallback(() => setReviewId(null), []);
+    const onCloseReview = useCallback(() => setReviewId(null), [setReviewId]);
 
     const onExport = useCallback(
         () =>
