@@ -8,12 +8,18 @@ import {
     statusSegments,
     tierReading,
 } from "@/lib/data/admin-analytics-snapshot";
-import { openDecisions } from "@/lib/data/admin-overview-triage";
+import {
+    openDecisions,
+    sourceReadiness,
+    type QueryState,
+} from "@/lib/data/admin-overview-triage";
 import { marketLine, membersReading } from "@/lib/data/admin-reports-audience";
 import { NO_READING } from "@/lib/constants";
 import { formatCompactUsd, formatCount } from "@/lib/utils";
 import type {
     AnalyticsPanelData,
+    AnalyticsPanelId,
+    QueueReadiness,
     AnalyticsSnapshot,
     DealFlowStage,
     DecisionLane,
@@ -92,3 +98,13 @@ export const analyticsSnapshot = (
     },
     markets: marketsPanel(sources.markets),
 });
+
+export const panelReadiness = (
+    sources: Record<AnalyticsPanelId, QueryState[]>,
+) =>
+    Object.fromEntries(
+        Object.entries(sources).map(([id, queries]) => [
+            id,
+            sourceReadiness(queries),
+        ]),
+    ) as Record<AnalyticsPanelId, QueueReadiness>;

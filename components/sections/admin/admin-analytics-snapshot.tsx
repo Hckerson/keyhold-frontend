@@ -1,15 +1,19 @@
 import { AnalyticsPanel } from "@/components/features/admin/analytics-panel";
 import { ANALYTICS_PANELS } from "@/lib/config/admin-analytics";
-import type { AnalyticsPanelId, AnalyticsSnapshot } from "@/lib/types";
+import type {
+    AnalyticsPanelId,
+    AnalyticsSnapshot,
+    QueueReadiness,
+} from "@/lib/types";
 
 export interface AdminAnalyticsSnapshotProps {
     snapshot: AnalyticsSnapshot;
-    pending: Record<AnalyticsPanelId, boolean>;
+    readiness: Record<AnalyticsPanelId, QueueReadiness>;
 }
 
 export function AdminAnalyticsSnapshot({
     snapshot,
-    pending,
+    readiness,
 }: AdminAnalyticsSnapshotProps) {
     return (
         <div className="console-split gap-3">
@@ -18,7 +22,7 @@ export function AdminAnalyticsSnapshot({
                     key={meta.id}
                     meta={meta}
                     data={snapshot[meta.id]}
-                    pending={pending[meta.id]}
+                    readiness={readiness[meta.id]}
                 />
             ))}
         </div>
