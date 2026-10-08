@@ -8,7 +8,7 @@ export function PremierSpecCluster({ specs }: { specs: PremierSpec[] }) {
                     <spec.icon
                         size={12}
                         strokeWidth={1.5}
-                        className="text-highlight-dark shrink-0"
+                        className="text-accent shrink-0"
                     />
                     <span className="text-text text-xs font-semibold tabular-nums">
                         {spec.value}

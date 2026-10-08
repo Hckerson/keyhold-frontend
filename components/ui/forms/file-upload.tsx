@@ -145,7 +145,7 @@ export function FileUpload({
             {progress !== undefined && (
                 <p
                     role="status"
-                    className="text-info text-xs font-medium tabular-nums"
+                    className="text-text-secondary text-xs font-medium tabular-nums"
                 >
                     {PROGRESS_LABEL} {progress}%
                 </p>

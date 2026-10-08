@@ -41,12 +41,12 @@ export function ListingActionBar({
                 disabled={savePending}
                 aria-pressed={saved}
                 aria-label={saved ? "Remove from saved" : "Save listing"}
-                className="border-border text-text-secondary hover:border-highlight hover:text-highlight focus-visible:ring-accent ease-smooth grid size-8 shrink-0 place-items-center rounded-full border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:opacity-45"
+                className="border-border text-text-secondary hover:border-accent hover:text-accent focus-visible:ring-accent ease-smooth grid size-8 shrink-0 place-items-center rounded-full border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:opacity-45"
             >
                 <Heart
                     className={cn(
                         "size-3",
-                        saved && "fill-highlight text-highlight",
+                        saved && "fill-accent text-accent",
                     )}
                     strokeWidth={1.5}
                 />

@@ -6,18 +6,18 @@ export const sectionEyebrowClass =
 
 export interface SectionEyebrowProps {
     children: ReactNode;
-    tone?: "brass" | "muted";
+    tone?: "accent" | "muted";
 }
 
 export function SectionEyebrow({
     children,
-    tone = "brass",
+    tone = "accent",
 }: SectionEyebrowProps) {
     return (
         <p
             className={cn(
                 sectionEyebrowClass,
-                tone === "brass" ? "text-highlight-dark" : "text-text-muted",
+                tone === "accent" ? "text-accent" : "text-text-muted",
             )}
         >
             {children}

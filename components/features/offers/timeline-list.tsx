@@ -7,9 +7,9 @@ import type { TimelineEntry, TimelineTone } from "@/lib/types";
 
 const dotTone: Record<TimelineTone, string> = {
     neutral: "bg-border-dark",
-    success: "bg-success",
-    warning: "bg-warning",
-    info: "bg-info",
+    success: "bg-accent",
+    warning: "bg-quiet",
+    info: "bg-quiet",
     error: "bg-error",
 };
 

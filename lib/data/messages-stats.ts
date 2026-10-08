@@ -20,14 +20,14 @@ export const messageStats = (conversations: Conversation[]): StatDatum[] => [
         icon: Users,
         label: "Threads",
         value: `${conversations.length}`,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "waiting",
         icon: Reply,
         label: "Waiting on you",
         value: `${awaitingYou(conversations).length}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "scheduled",
@@ -38,7 +38,7 @@ export const messageStats = (conversations: Conversation[]): StatDatum[] => [
                 (conversation) => conversation.status === "scheduled",
             ).length
         }`,
-        tone: "success",
+        tone: "accent",
     },
 ];
 

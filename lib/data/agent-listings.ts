@@ -131,28 +131,28 @@ export const listingStats = (listings: ManagedListing[]): StatDatum[] => [
         icon: Wallet,
         label: "Portfolio",
         value: formatCompactUsd(portfolioValue(listings)),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "views",
         icon: Eye,
         label: "Views",
         value: formatCount(sum(listings.map((listing) => listing.views))),
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "showings",
         icon: CalendarCheck,
         label: "Showings",
         value: `${sum(listings.map((listing) => listing.showings))}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "offers",
         icon: Handshake,
         label: "Offers",
         value: `${sum(listings.map((listing) => listing.offers))}`,
-        tone: "success",
+        tone: "accent",
     },
 ];
 

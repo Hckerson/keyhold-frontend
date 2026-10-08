@@ -38,21 +38,21 @@ export const calendarLoadStats = (items: Appointment[]): StatDatum[] => {
             id: "booked",
             label: "Booked",
             value: formatHours(bookedMinutes),
-            tone: "info",
+            tone: "neutral",
             icon: Clock,
         },
         {
             id: "confirmed",
             label: "Confirmed",
             value: `${confirmed}/${items.length}`,
-            tone: "success",
+            tone: "accent",
             icon: CheckCircle2,
         },
         {
             id: "clients",
             label: "Clients",
             value: String(clients),
-            tone: "highlight",
+            tone: "neutral",
             icon: Users,
         },
         {
@@ -61,7 +61,7 @@ export const calendarLoadStats = (items: Appointment[]): StatDatum[] => {
             value: busiest
                 ? format(parseLocalDate(busiest.date), "EEE d")
                 : EMPTY_VALUE,
-            tone: "warning",
+            tone: "neutral",
             icon: Flame,
         },
     ];

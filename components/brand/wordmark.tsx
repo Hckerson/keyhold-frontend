@@ -24,8 +24,8 @@ const wordVariants = cva("font-display leading-none whitespace-nowrap", {
 const suffixVariants = cva("font-light italic", {
     variants: {
         tone: {
-            light: "text-highlight-dark",
-            dark: "text-highlight",
+            light: "text-accent",
+            dark: "text-accent-soft",
         },
     },
     defaultVariants: {

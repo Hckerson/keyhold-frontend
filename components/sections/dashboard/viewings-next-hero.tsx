@@ -42,7 +42,7 @@ export function ViewingsNextHero({
     const status = VIEWING_STATUSES[viewing.status];
 
     return (
-        <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
+        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb

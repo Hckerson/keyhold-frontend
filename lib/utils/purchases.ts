@@ -82,14 +82,14 @@ export const purchaseStats = (purchases: Purchase[]): StatDatum[] => [
         icon: ShieldCheck,
         label: "In escrow",
         value: `${heldPurchases(purchases).length}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "held-value",
         icon: Wallet,
         label: "Funds held",
         value: formatCompactUsd(heldValue(purchases)),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "releasable",
@@ -103,7 +103,7 @@ export const purchaseStats = (purchases: Purchase[]): StatDatum[] => [
         icon: Banknote,
         label: "Settled",
         value: `${purchases.filter(isSettled).length}`,
-        tone: "success",
+        tone: "accent",
     },
 ];
 

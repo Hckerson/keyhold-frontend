@@ -18,7 +18,7 @@ export const MODERATION_ACTIONS: ModerationActionMeta[] = [
         rowLabel: "Approve",
         icon: Check,
         tone: "success",
-        restTone: "text-success",
+        restTone: "text-accent",
         hiddenFor: "approved",
     },
     {
@@ -27,7 +27,7 @@ export const MODERATION_ACTIONS: ModerationActionMeta[] = [
         rowLabel: "Request changes on",
         icon: PenLine,
         tone: "warning",
-        restTone: "text-warning",
+        restTone: "text-text-secondary",
     },
     {
         mode: "reject",

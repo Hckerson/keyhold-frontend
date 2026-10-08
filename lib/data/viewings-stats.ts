@@ -42,28 +42,28 @@ export const viewingStats = (viewings: Viewing[]): StatDatum[] => {
             icon: CalendarCheck,
             label: "Confirmed",
             value: `${byStatus(viewings, "confirmed").length}`,
-            tone: "success",
+            tone: "accent",
         },
         {
             id: "pending",
             icon: CalendarClock,
             label: "Awaiting",
             value: `${byStatus(viewings, "pending").length}`,
-            tone: "warning",
+            tone: "neutral",
         },
         {
             id: "walked",
             icon: Footprints,
             label: "Walked",
             value: `${walkedViewings(viewings).length}`,
-            tone: "info",
+            tone: "neutral",
         },
         {
             id: "value",
             icon: Wallet,
             label: "Value touring",
             value: formatCompactUsd(touringValue(viewings)),
-            tone: "highlight",
+            tone: "neutral",
         },
     ];
 };

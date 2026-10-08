@@ -11,7 +11,7 @@ const stateIcon: Record<TaskState, LucideIcon> = {
 };
 
 const stateTone: Record<TaskState, ChartTone> = {
-    done: "success",
+    done: "accent",
     active: "accent",
     todo: "neutral",
 };

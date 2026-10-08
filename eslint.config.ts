@@ -125,6 +125,7 @@ const starterConfig: ConfigArray = [
             ],
             "no-console": "error",
             "@typescript-eslint/no-explicit-any": "error",
+            "starter/retired-colours": "error",
             "no-restricted-syntax": ["error", ...ID_SYNTAX],
         },
     },

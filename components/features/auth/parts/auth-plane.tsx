@@ -33,7 +33,7 @@ export function AuthPlane({ children }: AuthPlaneProps) {
                     key={mark}
                     aria-hidden="true"
                     className={cn(
-                        "border-highlight pointer-events-none absolute size-2",
+                        "border-accent pointer-events-none absolute size-2",
                         mark,
                     )}
                 />

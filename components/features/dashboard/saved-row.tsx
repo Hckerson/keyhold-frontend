@@ -76,7 +76,7 @@ export function SavedRow({ listing, onRemove }: SavedRowProps) {
                     type="button"
                     aria-label={`${REMOVE_LABEL} ${listing.address}`}
                     onClick={() => onRemove(listing.id)}
-                    className="text-text-muted hover:bg-error-light hover:text-error ease-smooth focus-visible:ring-accent ml-auto grid size-5 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                    className="text-text-muted hover:bg-error-light hover:text-error-dark ease-smooth focus-visible:ring-accent ml-auto grid size-5 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Trash2
                         className="size-3"

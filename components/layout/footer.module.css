@@ -14,7 +14,7 @@
     pointer-events: none;
     background: radial-gradient(
         circle closest-side,
-        color-mix(in srgb, var(--color-highlight) 26%, transparent),
+        color-mix(in srgb, var(--color-accent-soft) 26%, transparent),
         transparent
     );
 }

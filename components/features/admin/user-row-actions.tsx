@@ -33,7 +33,7 @@ export function UserRowActions({
                     icon={RotateCcw}
                     label={`${REACTIVATE_LABEL} ${user.name}`}
                     disabled={reactivatingId !== undefined}
-                    className="text-success"
+                    className="text-accent"
                     onClick={() => onReactivate(user.id)}
                 />
             ) : (

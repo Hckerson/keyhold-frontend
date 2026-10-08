@@ -69,7 +69,7 @@ export function LeadRow({ lead, responding, onRespond }: LeadRowProps) {
                             disabled={responding}
                             onClick={() => onRespond(lead.id, true)}
                             aria-label={`${ACCEPT_LABEL} ${lead.name}`}
-                            className={`${ACTION_CLASS} text-success hover:bg-success-light`}
+                            className={`${ACTION_CLASS} text-accent hover:bg-accent-light`}
                         >
                             <Check className="size-3" strokeWidth={1.5} />
                         </button>

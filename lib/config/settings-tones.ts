@@ -21,10 +21,10 @@ export interface PolicyDomainMeta {
 }
 
 export const POLICY_DOMAINS: Record<PolicyDomain, PolicyDomainMeta> = {
-    moderation: { label: "Moderation", icon: Flag, tone: "warning" },
+    moderation: { label: "Moderation", icon: Flag, tone: "neutral" },
     access: { label: "Access", icon: ShieldCheck, tone: "accent" },
-    payout: { label: "Payouts", icon: Wallet, tone: "info" },
-    availability: { label: "Availability", icon: Power, tone: "highlight" },
+    payout: { label: "Payouts", icon: Wallet, tone: "neutral" },
+    availability: { label: "Availability", icon: Power, tone: "neutral" },
     platform: { label: "Platform", icon: Server, tone: "neutral" },
 };
 
@@ -39,7 +39,7 @@ export const POLICY_ENFORCEMENTS: Record<
     PolicyEnforcementMeta
 > = {
     blocking: { label: "Blocking", tone: "error", chartTone: "error" },
-    advisory: { label: "Advisory", tone: "info", chartTone: "info" },
+    advisory: { label: "Advisory", tone: "info", chartTone: "neutral" },
 };
 
 export const POLICY_OFF_LABEL = "Off";
@@ -61,16 +61,16 @@ export const POLICY_GROUPS: Record<PolicyGroup, PolicyGroupMeta> = {
 };
 
 const REACH_CEILINGS: { ceiling: number; tone: ChartTone }[] = [
-    { ceiling: 25, tone: "info" },
+    { ceiling: 25, tone: "neutral" },
     { ceiling: 75, tone: "accent" },
 ];
 
 export const reachTone = (percent: number): ChartTone =>
-    REACH_CEILINGS.find((band) => percent < band.ceiling)?.tone ?? "highlight";
+    REACH_CEILINGS.find((band) => percent < band.ceiling)?.tone ?? "accent";
 
 export const KEY_ROTATION_SLA_MINUTES = 129_600;
 
 export const keyAgeTone = (minutes: number): ChartTone => {
-    if (minutes < KEY_ROTATION_SLA_MINUTES / 2) return "success";
-    return minutes < KEY_ROTATION_SLA_MINUTES ? "warning" : "error";
+    if (minutes < KEY_ROTATION_SLA_MINUTES / 2) return "accent";
+    return minutes < KEY_ROTATION_SLA_MINUTES ? "neutral" : "error";
 };

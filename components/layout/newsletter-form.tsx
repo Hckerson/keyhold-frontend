@@ -62,7 +62,7 @@ export function NewsletterForm() {
                     disabled={pending}
                     aria-busy={pending}
                     aria-label={COPY.submit}
-                    className="text-highlight hover:text-highlight-light focus-visible:ring-highlight ease-smooth grid size-6 shrink-0 place-items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60"
+                    className="text-accent-soft hover:text-accent-light focus-visible:ring-accent-soft ease-smooth grid size-6 shrink-0 place-items-center rounded-full transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-wait disabled:opacity-60"
                 >
                     {pending ? (
                         <Spinner
@@ -98,7 +98,7 @@ export function NewsletterForm() {
                                 size={12}
                                 strokeWidth={1.5}
                                 aria-hidden="true"
-                                className="text-highlight shrink-0"
+                                className="text-accent-soft shrink-0"
                             />
                             <span className="text-sidebar-text">
                                 {COPY.sent}

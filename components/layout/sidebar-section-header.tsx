@@ -30,7 +30,7 @@ export function SidebarSectionHeader({
         <div className="flex h-6 items-center justify-between gap-2 px-2">
             <span className="rail-label">{section.label}</span>
             {stage > 0 && (
-                <span className="text-highlight font-mono text-[10px] tabular-nums">
+                <span className="text-accent-soft font-mono text-[10px] tabular-nums">
                     {stage}/{section.items.length}
                 </span>
             )}

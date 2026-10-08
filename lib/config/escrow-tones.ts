@@ -29,13 +29,13 @@ export const ESCROW_STATES: Record<EscrowStatus, EscrowStatusMeta> = {
         label: "Held",
         icon: ShieldCheck,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
     },
     RELEASED: {
         label: "Released",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
     },
     REFUNDED: {
         label: "Refunded",
@@ -68,19 +68,19 @@ export const PURCHASE_STATES: Record<TransactionStatus, PurchaseStatusMeta> = {
         label: "Awaiting payment",
         icon: Banknote,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
     },
     IN_PROGRESS: {
         label: "In escrow",
         icon: ShieldCheck,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
     },
     COMPLETED: {
         label: "Settled",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
     },
     CANCELLED: {
         label: "Cancelled",

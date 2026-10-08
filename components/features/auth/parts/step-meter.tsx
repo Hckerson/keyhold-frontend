@@ -17,7 +17,7 @@ export function StepMeter({ current, total }: StepMeterProps) {
                     key={mark}
                     className={cn(
                         "ease-smooth block h-px w-4 transition-colors duration-300",
-                        mark <= current ? "bg-highlight" : "bg-border-dark",
+                        mark <= current ? "bg-accent" : "bg-border-dark",
                     )}
                 />
             ))}

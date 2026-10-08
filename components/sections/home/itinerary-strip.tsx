@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 const SLOT_TONE: Record<ItinerarySlot["tone"], string> = {
     settled: "bg-accent-light text-accent",
-    pending: "bg-highlight-light text-highlight-dark",
+    pending: "bg-accent-light text-accent",
 };
 
 export interface ItineraryStripProps {

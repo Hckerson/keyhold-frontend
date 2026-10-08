@@ -95,7 +95,7 @@ export function Sidebar({
                         collapsed ? "Expand sidebar" : "Collapse sidebar"
                     }
                     aria-pressed={collapsed}
-                    className="border-sidebar-border bg-sidebar text-sidebar-text hover:text-highlight hover:border-highlight/40 focus-visible:ring-highlight ease-smooth absolute top-7 -right-3 z-50 hidden size-5 -translate-y-1/2 place-items-center rounded-full border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none lg:grid"
+                    className="border-sidebar-border bg-sidebar text-sidebar-text hover:text-accent-soft hover:border-accent-soft/40 focus-visible:ring-accent-soft ease-smooth absolute top-7 -right-3 z-50 hidden size-5 -translate-y-1/2 place-items-center rounded-full border transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none lg:grid"
                 >
                     <ChevronLeft
                         size={12}

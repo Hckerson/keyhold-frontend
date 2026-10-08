@@ -109,6 +109,6 @@ export const buildAgentSettingsStats = (
         icon: BadgeCheck,
         label: "Credentials",
         value: `${verified}/${credentials}`,
-        tone: verified === credentials ? "success" : "warning",
+        tone: verified === credentials ? "accent" : "neutral",
     },
 ];

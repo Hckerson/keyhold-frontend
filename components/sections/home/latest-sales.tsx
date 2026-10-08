@@ -25,7 +25,7 @@ const toSalePins = (sales: LatestSaleData[]): MapPin[] =>
                       longitude: sale.longitude,
                       label: sale.address,
                       caption: `${sale.price} · ${sale.soldLabel}`,
-                      tone: "success" as const,
+                      tone: "accent" as const,
                       href: PUBLIC_ROUTES.listing(sale.id),
                   },
               ],

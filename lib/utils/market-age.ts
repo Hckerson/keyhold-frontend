@@ -4,7 +4,7 @@ export const describeMarketAge = (days: number) => {
     if (days <= NEW_LISTING_DAYS) {
         return {
             label: days <= 1 ? "Listed today" : `${days} days new`,
-            tone: "text-highlight-dark",
+            tone: "text-accent",
         };
     }
 

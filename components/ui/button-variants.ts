@@ -43,7 +43,7 @@ export const buttonVariants = cva(
             {
                 emphasis: "solid",
                 tone: "success",
-                class: "bg-success border-success-dark hover:bg-success-dark",
+                class: "bg-accent border-accent-dark hover:bg-accent-dark",
             },
             {
                 emphasis: "outline",
@@ -58,12 +58,12 @@ export const buttonVariants = cva(
             {
                 emphasis: "outline",
                 tone: "error",
-                class: "text-error border-error/35 hover:border-error hover:bg-error-light",
+                class: "text-error border-error/35 hover:border-error hover:bg-error-light hover:text-error-dark",
             },
             {
                 emphasis: "outline",
                 tone: "success",
-                class: "text-success border-success/35 hover:border-success hover:bg-success-light",
+                class: "text-accent border-accent/35 hover:border-accent hover:bg-accent-light",
             },
             {
                 emphasis: "quiet",
@@ -78,12 +78,12 @@ export const buttonVariants = cva(
             {
                 emphasis: "quiet",
                 tone: "error",
-                class: "text-error hover:bg-error-light",
+                class: "text-error hover:bg-error-light hover:text-error-dark",
             },
             {
                 emphasis: "quiet",
                 tone: "success",
-                class: "text-success hover:bg-success-light",
+                class: "text-accent hover:bg-accent-light",
             },
             { size: "sm", iconOnly: true, class: "w-8" },
             { size: "lg", iconOnly: true, class: "w-11" },

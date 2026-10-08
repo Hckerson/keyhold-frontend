@@ -9,11 +9,11 @@ const badgeVariants = cva(
             variant: {
                 default: "bg-background-muted text-text-secondary",
                 primary: "bg-accent text-text-inverse",
-                success: "bg-success-light text-success",
-                warning: "bg-warning-light text-warning",
-                error: "bg-error-light text-error",
+                success: "bg-accent-light text-accent",
+                warning: "bg-background-muted text-text-secondary",
+                error: "bg-error-light text-error-dark",
                 accent: "bg-accent-light text-accent-dark",
-                highlight: "bg-highlight text-text-inverse",
+                highlight: "bg-accent text-text-inverse",
             },
             size: {
                 sm: "px-2 py-0.5",

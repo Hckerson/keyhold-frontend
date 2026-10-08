@@ -5,8 +5,8 @@ import { FAST_SALE_DAYS, SLOW_SALE_DAYS } from "@/lib/data/agent-overview-feed";
 import type { ClosedSale } from "@/lib/types";
 
 function speedTone(days: number): ChartTone {
-    if (days <= FAST_SALE_DAYS) return "success";
-    if (days <= SLOW_SALE_DAYS) return "warning";
+    if (days <= FAST_SALE_DAYS) return "accent";
+    if (days <= SLOW_SALE_DAYS) return "neutral";
     return "error";
 }
 

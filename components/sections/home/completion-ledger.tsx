@@ -18,7 +18,7 @@ export function CompletionLedger({ milestones }: CompletionLedgerProps) {
                             className="text-accent shrink-0"
                         />
                     ) : (
-                        <span className="border-highlight-dark size-3 shrink-0 rounded-full border" />
+                        <span className="border-accent size-3 shrink-0 rounded-full border" />
                     )}
                     <span
                         className={cn(

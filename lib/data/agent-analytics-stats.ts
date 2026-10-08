@@ -48,7 +48,7 @@ export const analyticsStats = (analytics: AgentAnalytics): StatDatum[] => [
             ? formatMillions(analytics.production.averagePrice, 2)
             : NO_VALUE,
         icon: TrendingUp,
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "days-to-close",
@@ -57,7 +57,7 @@ export const analyticsStats = (analytics: AgentAnalytics): StatDatum[] => [
             ? `${analytics.benchmarks.daysToClose}d`
             : NO_VALUE,
         icon: Clock,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "volume",
@@ -75,6 +75,6 @@ export const analyticsStats = (analytics: AgentAnalytics): StatDatum[] => [
             ? `${analytics.benchmarks.rating}/5`
             : NO_VALUE,
         icon: Award,
-        tone: "success",
+        tone: "accent",
     },
 ];

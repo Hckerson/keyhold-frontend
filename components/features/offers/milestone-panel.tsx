@@ -47,7 +47,7 @@ export function MilestonePanel({ controls }: MilestonePanelProps) {
             {progress !== undefined && (
                 <p
                     role="status"
-                    className="text-info text-xs font-medium tabular-nums"
+                    className="text-text-secondary text-xs font-medium tabular-nums"
                 >
                     {COPY.uploading} {progress}%
                 </p>

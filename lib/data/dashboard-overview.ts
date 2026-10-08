@@ -64,7 +64,7 @@ export const buyerStats = (
         value: `${liveOffers(connections).length}`,
         icon: FileText,
         href: BUYER_ROUTES.offers,
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "viewings",
@@ -75,7 +75,7 @@ export const buyerStats = (
         )}`,
         icon: CalendarDays,
         href: BUYER_ROUTES.viewings,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "enquiries",
@@ -83,7 +83,7 @@ export const buyerStats = (
         value: `${connections.length}`,
         icon: Users,
         href: BUYER_ROUTES.messages,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "messages",

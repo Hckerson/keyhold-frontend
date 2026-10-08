@@ -49,7 +49,7 @@ export function DisputeQueueRow({
                     className={cn(
                         "font-mono text-[10px] tracking-wide tabular-nums",
                         meta.open && dispute.waitingDays > 0
-                            ? "text-warning"
+                            ? "text-text-secondary"
                             : "text-text-muted",
                     )}
                 >

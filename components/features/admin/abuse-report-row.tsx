@@ -48,7 +48,7 @@ export function AbuseReportRow({
                     className={cn(
                         "font-mono text-[10px] tracking-wide tabular-nums",
                         meta.open && report.waitingDays > 0
-                            ? "text-warning"
+                            ? "text-text-secondary"
                             : "text-text-muted",
                     )}
                 >

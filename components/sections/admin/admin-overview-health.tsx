@@ -59,7 +59,7 @@ export function AdminOverviewHealth({
                     {(systems || pending) && (
                         <DeckFigure
                             value={systems?.figure ?? NO_READING}
-                            tone={systems?.belowSlo ? "warning" : undefined}
+                            tone={systems?.belowSlo ? "error" : undefined}
                             caption={systems?.reading ?? LOADING_READING}
                             pending={pending}
                         />

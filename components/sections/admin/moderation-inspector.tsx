@@ -44,7 +44,7 @@ export function ModerationInspector({
         <aside
             aria-label={TITLE}
             aria-busy={pending || undefined}
-            className="border-highlight/25 bg-background flex flex-col overflow-hidden rounded-xl border shadow-md"
+            className="border-accent/25 bg-background flex flex-col overflow-hidden rounded-xl border shadow-md"
         >
             <header className="bg-background-alt border-border-light flex h-11 items-center justify-between gap-3 border-b px-3">
                 <h2 className="micro-label shrink-0">{TITLE}</h2>

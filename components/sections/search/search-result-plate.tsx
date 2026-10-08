@@ -84,13 +84,13 @@ export function SearchResultPlate({
                             ? `Remove ${listing.title} from saved`
                             : `Save ${listing.title}`
                     }
-                    className="text-text-secondary hover:text-highlight-dark focus-visible:ring-accent ease-smooth inline-flex shrink-0 items-center gap-1 rounded-xs font-mono text-[10px] tabular-nums transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                    className="text-text-secondary hover:text-accent focus-visible:ring-accent ease-smooth inline-flex shrink-0 items-center gap-1 rounded-xs font-mono text-[10px] tabular-nums transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Heart
                         size={12}
                         strokeWidth={1.5}
                         className={cn(
-                            saved && "fill-highlight text-highlight-dark",
+                            saved && "fill-accent text-accent",
                         )}
                     />
                     {formatCount(listing.saves + (saved ? 1 : 0))}

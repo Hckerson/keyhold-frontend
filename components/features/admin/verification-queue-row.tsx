@@ -57,7 +57,7 @@ export function VerificationQueueRow({
                 <p
                     className={cn(
                         "font-mono text-[10px] tracking-wide tabular-nums",
-                        outstanding > 0 ? "text-warning" : "text-text-muted",
+                        outstanding > 0 ? "text-text-secondary" : "text-text-muted",
                     )}
                 >
                     {outstanding > 0

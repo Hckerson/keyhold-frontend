@@ -22,12 +22,6 @@ export function StatsBand({ stats }: { stats: HomeStat[] }) {
                                     focal && "sm:border-l-0 sm:pl-0",
                                 )}
                             >
-                                {focal && (
-                                    <div
-                                        aria-hidden="true"
-                                        className="bg-highlight/20 pointer-events-none absolute -top-4 -left-6 -z-10 h-20 w-48 rounded-full blur-3xl"
-                                    />
-                                )}
                                 <dt className="text-text-muted order-2 font-mono text-[10px] tracking-[0.16em] uppercase">
                                     {stat.label}
                                 </dt>

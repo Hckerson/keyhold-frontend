@@ -125,28 +125,28 @@ export const leadStats = (leads: Lead[]): StatDatum[] => {
             icon: Inbox,
             label: "Awaiting reply",
             value: `${counts.pending}`,
-            tone: "warning",
+            tone: "neutral",
         },
         {
             id: "value",
             icon: Wallet,
             label: "Open value",
             value: formatCompactUsd(openValue(leads)),
-            tone: "info",
+            tone: "neutral",
         },
         {
             id: "viewings",
             icon: CalendarClock,
             label: "Viewings",
             value: `${sum(leads.map((lead) => lead.viewings))}`,
-            tone: "highlight",
+            tone: "neutral",
         },
         {
             id: "offers",
             icon: Handshake,
             label: "Offers",
             value: `${sum(leads.map((lead) => lead.offers))}`,
-            tone: "success",
+            tone: "accent",
         },
     ];
 };

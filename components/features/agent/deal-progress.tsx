@@ -22,7 +22,7 @@ export function DealProgress({ stage, daysInStage }: DealProgressProps) {
             <span
                 className={cn(
                     "text-xs font-medium tabular-nums",
-                    chartToneText[closed ? "success" : "accent"],
+                    chartToneText.accent,
                 )}
             >
                 Stage {index + 1} of {DEAL_STAGES.length}

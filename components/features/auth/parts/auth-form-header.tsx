@@ -19,7 +19,7 @@ export function AuthFormHeader({
     return (
         <header className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-                <span aria-hidden="true" className="bg-highlight h-px w-4" />
+                <span aria-hidden="true" className="bg-accent h-px w-4" />
                 <p
                     className={cn(
                         authLabelVariants({ tier: "marker" }),

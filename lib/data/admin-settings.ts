@@ -123,14 +123,14 @@ export const buildSettingsStats = (
             icon: Power,
             label: "Marketplace",
             value: offline ? MARKETPLACE_OFFLINE : MARKETPLACE_LIVE,
-            tone: offline ? "error" : "success",
+            tone: offline ? "error" : "accent",
         },
         {
             id: "signups",
             icon: UserPlus,
             label: "Signups",
             value: signupsOpen ? SIGNUPS_OPEN : SIGNUPS_CLOSED,
-            tone: signupsOpen ? "info" : "warning",
+            tone: signupsOpen ? "accent" : "neutral",
             href: "/admin/users",
         },
         {
@@ -138,7 +138,7 @@ export const buildSettingsStats = (
             icon: ShieldCheck,
             label: "Logged changes",
             value: `${changes}`,
-            tone: "info",
+            tone: "neutral",
         },
     ];
 };

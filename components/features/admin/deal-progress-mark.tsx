@@ -42,7 +42,7 @@ export function DealProgressMark({
             <Icon
                 aria-hidden="true"
                 strokeWidth={1.5}
-                className="text-warning size-3 shrink-0"
+                className="text-text-secondary size-3 shrink-0"
             />
             <span className="text-text truncate">{label}</span>
             <span className="text-text-muted shrink-0 tabular-nums">

@@ -3,7 +3,7 @@ import { recencyTone } from "@/lib/config/user-tones";
 import { cn } from "@/lib/utils";
 
 const TODAY_LABEL = "Today";
-const QUIET_TONE = "success";
+const QUIET_TONE = "accent";
 const ACTIVITY_NOUN = "since last sign-in";
 
 export interface UserActivityMarkProps {

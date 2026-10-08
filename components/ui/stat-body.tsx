@@ -26,7 +26,7 @@ export function StatBody({
                         className={cn(
                             "ease-smooth grid size-6 shrink-0 place-items-center rounded-full border transition-colors duration-200",
                             featured
-                                ? "border-highlight/40 text-highlight"
+                                ? "border-accent/40 text-accent"
                                 : "border-border-light text-text-muted group-hover:border-accent/40 group-hover:text-accent",
                         )}
                     >

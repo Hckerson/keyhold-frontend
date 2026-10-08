@@ -57,10 +57,6 @@ export function HeroSection({ cities }: { cities: string[] }) {
                     </div>
 
                     <div className="desk-only relative justify-self-end">
-                        <div
-                            aria-hidden="true"
-                            className="bg-highlight/15 pointer-events-none absolute -right-8 -bottom-8 h-3/5 w-3/4 rounded-full blur-[70px]"
-                        />
                         <Image
                             variant="bare"
                             priority

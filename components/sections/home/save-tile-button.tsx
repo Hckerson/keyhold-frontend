@@ -20,12 +20,12 @@ export function SaveTileButton({ id, address }: SaveTileButtonProps) {
             disabled={pending}
             aria-pressed={saved}
             aria-label={saved ? `Unsave ${address}` : `Save ${address}`}
-            className="bg-sidebar/70 text-text-inverse ring-sidebar-border hover:text-highlight focus-visible:ring-highlight ease-smooth absolute top-3.5 right-3.5 z-20 grid size-8 place-items-center rounded-full ring-1 backdrop-blur-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+            className="bg-sidebar/70 text-text-inverse ring-sidebar-border hover:text-accent focus-visible:ring-accent ease-smooth absolute top-3.5 right-3.5 z-20 grid size-8 place-items-center rounded-full ring-1 backdrop-blur-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
         >
             <Heart
                 size={14}
                 strokeWidth={1.5}
-                className={cn(saved && "fill-highlight text-highlight")}
+                className={cn(saved && "fill-accent text-accent")}
             />
         </button>
     );

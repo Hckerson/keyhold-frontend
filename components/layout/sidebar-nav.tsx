@@ -6,7 +6,7 @@ import type { SidebarNavItem, SidebarSection } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const segmentTone = (item: SidebarNavItem) =>
-    item.state === "complete" ? "bg-highlight/40" : "bg-sidebar-border";
+    item.state === "complete" ? "bg-accent-soft/40" : "bg-sidebar-border";
 
 export function SidebarNav({
     sections,

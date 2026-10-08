@@ -36,28 +36,28 @@ export const offerStats = (offers: Offer[]): StatDatum[] => [
         icon: Wallet,
         label: "At stake",
         value: formatCompactUsd(committedCapital(offers)),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "countered",
         icon: Handshake,
         label: "Countered",
         value: `${countedBy(offers, "countered")}`,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "position",
         icon: Percent,
         label: "Avg of ask",
         value: `${averageGap(offers)}%`,
-        tone: "success",
+        tone: "accent",
     },
     {
         id: "accepted",
         icon: Coins,
         label: "Accepted",
         value: `${countedBy(offers, "accepted")}`,
-        tone: "warning",
+        tone: "neutral",
     },
 ];
 

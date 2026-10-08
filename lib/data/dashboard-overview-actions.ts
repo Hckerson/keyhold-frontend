@@ -77,14 +77,14 @@ export const buyerQuickActions: QuickAction[] = [
         label: "Manage offers",
         href: BUYER_ROUTES.offers,
         icon: FileText,
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "viewings",
         label: "View all viewings",
         href: BUYER_ROUTES.viewings,
         icon: CalendarDays,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "messages",

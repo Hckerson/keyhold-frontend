@@ -82,7 +82,7 @@ export function ListingPriceBar({
                         strokeWidth={1.5}
                         className={cn(
                             "size-3",
-                            saved && "fill-highlight text-highlight",
+                            saved && "fill-accent text-accent",
                         )}
                     />
                     {saved ? "Saved" : "Save"}

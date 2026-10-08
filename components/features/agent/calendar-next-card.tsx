@@ -25,7 +25,7 @@ export function CalendarNextCard({ appointment }: CalendarNextCardProps) {
     const type = APPOINTMENT_TYPES[appointment.type];
 
     return (
-        <article className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
+        <article className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <p className="micro-label">
