@@ -2,7 +2,11 @@ import { ADMIN_ROUTES, AGENT_ROUTES, BUYER_ROUTES } from "@/lib/constants";
 
 export type ConsoleSkeletonVariant =
     | "split"
-    | "tiles"
+    | "sixths"
+    | "fifths"
+    | "flow"
+    | "lead"
+    | "profile"
     | "deck"
     | "review"
     | "board"
@@ -15,7 +19,10 @@ const DEFAULT_VARIANT: ConsoleSkeletonVariant = "split";
 
 const ROUTE_VARIANTS: Record<string, ConsoleSkeletonVariant> = {
     [ADMIN_ROUTES.overview]: "deck",
-    [ADMIN_ROUTES.listings]: "tiles",
+    [ADMIN_ROUTES.listings]: "sixths",
+    [ADMIN_ROUTES.users]: "fifths",
+    [ADMIN_ROUTES.transactions]: "flow",
+    [ADMIN_ROUTES.payments]: "lead",
     [ADMIN_ROUTES.verifications]: "review",
     [ADMIN_ROUTES.disputes]: "review",
     [ADMIN_ROUTES.flags]: "review",
@@ -26,6 +33,7 @@ const ROUTE_VARIANTS: Record<string, ConsoleSkeletonVariant> = {
 };
 
 const DETAIL_VARIANTS: Record<string, ConsoleSkeletonVariant> = {
+    [ADMIN_ROUTES.users]: "profile",
     [AGENT_ROUTES.listings]: "form",
     [BUYER_ROUTES.offers]: "form",
 };
