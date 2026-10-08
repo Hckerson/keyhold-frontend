@@ -44,7 +44,7 @@ Rules that follow from the roles:
 3. **Positive is forest.** There is no second green.
 4. **Two washes only:** `accent-light` for a selected or positive pill, `error-light` for an alert.
 5. **Charts:** one series is `accent`. Ordered categories (tiers, stages, age bands) use the forest ramp `accent` → `accent-mid` → `accent-soft`, three steps at most. Status uses the trio `accent` · `quiet` · `error`. Unordered categories are not separated by colour — label them, or fold the tail into an "Other" slot in `quiet`. `quiet` never sits next to `accent-soft`.
-6. **No gloss.** Gradients, glows and glass are not palette tools; the ceiling in the rulebook stands.
+6. **No gloss.** Gradients, glows and glass are not palette tools. The four decorative brass glows on the home page are removed in this change rather than recoloured.
 
 ## How the values were chosen
 
@@ -66,7 +66,7 @@ All coordinates are OKLCH computed with Björn Ottosson's OKLab matrices; contra
 
 **Keep the seven hues and write usage rules.** The hues fail contrast on their own, and rules over seven hues are what produced 58 lookup maps. Fewer hues is the rule that holds.
 
-**Brass as a second brand colour.** It fails AA as text on every surface (3.09:1, and 4.41:1 at its dark step), it reads as khaki beside forest at screen sizes, and the rulebook already defines premium as photography and type, not gold.
+**Brass as a second brand colour.** It fails AA as text on every surface (3.09:1, and 4.41:1 at its dark step), it reads as khaki beside forest at screen sizes, and the UI rulebook already defined premium as photography and type, not gold.
 
 **A new, brighter brand hue.** A palette swap is a redesign, as [0012](0012-tokens-are-the-design-source-of-truth.md) put it. Forest is already near the sRGB ceiling for its depth, so the richness a brighter hue would buy is available through P3 without giving up the brand.
 
@@ -81,6 +81,8 @@ All coordinates are OKLCH computed with Björn Ottosson's OKLab matrices; contra
 Every text token now passes AA on every surface, and a new page has four colour decisions to make instead of seven hues and their washes.
 
 Retired tokens are removed, not aliased: `highlight*`, `success*`, `warning*`, `info*`, the unused `metric-*` and the unused `primary*`. Existing uses migrate by meaning — positive states to forest, informational and pending states to ink, overdue and at-risk states to brick, and brass emphasis to forest. `ChartTone` narrows to `accent-dark`, `accent`, `accent-mid`, `accent-soft`, `neutral` and `error`. `StatusTone` keeps its semantic names; the status primitives render `success` as forest, `warning` and `info` as ink, and `error` as brick.
+
+On dark surfaces — the rail, the footer, the sign-in brand panel — forest emphasis uses `accent-soft`, which clears 5.20:1 against `sidebar`. The logo glyph and the favicon, formerly brass on forest, are `accent-light` on forest.
 
 Categories lose their tints, so identity has to come from labels and icons, and some charts must fold categories they used to separate by colour. That is the intended cost.
 
