@@ -1,3 +1,4 @@
+import { allPages } from "@/lib/api/all-pages";
 import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
@@ -13,6 +14,9 @@ import type {
 export const escrowAPI = {
     list: (input: EscrowQuery = {}) =>
         query.get<EscrowPage>(config.api.escrow.list, { params: input }),
+
+    holds: (input: EscrowQuery = {}) =>
+        allPages((paging) => escrowAPI.list({ ...input, ...paging })),
 
     stages: () => query.get<EscrowStage[]>(config.api.escrow.stages),
 
