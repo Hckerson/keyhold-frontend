@@ -3,7 +3,9 @@ import {
     TRANSACTION_PIPELINE_ORDER,
     TRANSACTION_STATUSES,
 } from "@/lib/config/transaction-tones";
+import { TRANSACTION_REVIEW_PARAM } from "@/lib/config/routes";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import type { UrlStateCodec } from "@/lib/hooks/use-url-state";
 import type {
     DealFlowStage,
     DealGroup,
@@ -18,6 +20,11 @@ import { formatCompactUsd, sum } from "@/lib/utils";
 const FULL_PERCENT = 100;
 
 export type TransactionStatusFilter = "all" | LedgerStatus;
+
+export const REVIEW_URL_CODEC: UrlStateCodec<string | null> = {
+    fromParams: (params) => params.get(TRANSACTION_REVIEW_PARAM),
+    toParams: (id) => ({ [TRANSACTION_REVIEW_PARAM]: id ?? undefined }),
+};
 
 export const COMMISSION_RATE_LABEL = `${DEFAULT_COMMISSION_RATE * FULL_PERCENT}%`;
 

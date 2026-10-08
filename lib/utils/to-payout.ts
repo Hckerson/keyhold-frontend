@@ -1,3 +1,4 @@
+import { ADMIN_ROUTES } from "@/lib/config/routes";
 import type { Payout } from "@/lib/types/admin";
 import type { Escrow } from "@/lib/validations/escrow";
 import { minutesSince } from "@/lib/utils/elapsed";
@@ -14,8 +15,8 @@ export const toPayout = (escrow: Escrow): Payout => ({
     ageMinutes: minutesSince(escrow.createdAt),
     inspectionEndsAt: escrow.inspectionEndDate,
     href: escrow.transaction
-        ? `/admin/transactions?transaction=${escrow.transaction.id}`
-        : "/admin/transactions",
+        ? ADMIN_ROUTES.transaction(escrow.transaction.id)
+        : ADMIN_ROUTES.transactions,
 });
 
 export const toPayouts = (holds: Escrow[]): Payout[] => holds.map(toPayout);

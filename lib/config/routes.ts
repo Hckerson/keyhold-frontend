@@ -74,13 +74,18 @@ export const AGENT_ROUTES = {
     settings: "/agent/settings",
 } as const;
 
+export const TRANSACTION_REVIEW_PARAM = "transaction";
+
 export const ADMIN_ROUTES = {
     overview: "/admin",
     listings: "/admin/listings",
     users: "/admin/users",
     user: (id: string) => `/admin/users/${id}`,
     transactions: "/admin/transactions",
+    transaction: (id: string) =>
+        `/admin/transactions?${TRANSACTION_REVIEW_PARAM}=${id}`,
     payments: "/admin/payments",
+    analytics: "/admin/analytics",
     reports: "/admin/reports",
     verifications: "/admin/verifications",
     disputes: "/admin/disputes",
