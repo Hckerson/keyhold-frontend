@@ -402,6 +402,17 @@ svg.lucide * {
     }
 }
 
+@container console (min-width: 42rem) {
+    .review-split--slim {
+        grid-template-columns: 16rem minmax(0, 1fr);
+    }
+
+    .review-split--slim > .review-pane {
+        position: sticky;
+        top: 0;
+    }
+}
+
 @container console (min-width: 56rem) {
     .console-split {
         grid-template-columns: repeat(var(--split-columns), minmax(0, 1fr));
@@ -431,7 +442,7 @@ svg.lucide * {
         grid-template-columns: 20rem minmax(0, 1fr);
     }
 
-    .review-split > .review-rail {
+    .review-split > :is(.review-rail, .review-pane) {
         position: sticky;
         top: 0;
     }
