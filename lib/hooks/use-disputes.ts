@@ -15,7 +15,7 @@ import { FEEDBACK } from "@/lib/config/feedback";
 export function useDisputes(input: DisputeQuery = {}, enabled = true) {
     return useQuery({
         queryKey: queryKeys.disputes.list(input),
-        queryFn: () => disputesAPI.list(input),
+        queryFn: () => disputesAPI.all(input),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,

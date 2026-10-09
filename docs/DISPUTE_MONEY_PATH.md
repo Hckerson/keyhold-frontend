@@ -25,6 +25,7 @@ The server will not resolve a dispute without being told which way the money goe
 | 1.2 | A deal without a hold, or whose hold the escrow list did not return, shows its price and no escrow figure — never `$0`.      |
 | 1.3 | A failed escrow load leaves the queue and every decision working; only the escrow figures are missing.                       |
 | 1.4 | Open disputes (`OPEN` and `PENDING_REVIEW`) come first, longest open at the top; decided ones follow, latest decision first. |
+| 1.5 | Each deal names its buyer and seller from the hold's deal, and marks the one who raised the dispute.                         |
 
 ## 02 · What can be decided
 
@@ -36,17 +37,17 @@ The server will not resolve a dispute without being told which way the money goe
 
 ## 03 · Deciding
 
-| #   | Criterion                                                                                                  |
-| --- | ---------------------------------------------------------------------------------------------------------- |
-| 3.1 | A decision never calls the API directly — it opens the confirmation for that decision, with an empty note. |
-| 3.2 | The confirmation names the dispute, states where the money goes, and states that the decision is final.    |
-| 3.3 | A decision cannot be confirmed until its note has at least four characters that are not blank.             |
-| 3.4 | Release calls `PATCH /disputes/:id/resolve` with the trimmed note and the outcome `RELEASE`, exactly once. |
-| 3.5 | Refund calls `PATCH /disputes/:id/resolve` with the trimmed note and the outcome `REFUND`, exactly once.   |
-| 3.6 | Resolving a dispute with no hold sends the outcome `RELEASE`, which the server applies to no hold.         |
-| 3.7 | Dismiss calls `PATCH /disputes/:id/dismiss` with the trimmed note and no outcome.                          |
-| 3.8 | Closing the confirmation without confirming calls nothing.                                                 |
-| 3.9 | On success the dispute, escrow and transaction caches are invalidated, so no hold still reads frozen.      |
+| #   | Criterion                                                                                                                                                                                     |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3.1 | A decision never calls the API directly — it opens the confirmation for that decision, with an empty note.                                                                                    |
+| 3.2 | The confirmation names the dispute and states that the decision is final. A release or refund names the amount and the person it pays when the hold is loaded, and the side it pays when not. |
+| 3.3 | A decision cannot be confirmed until its note has at least four characters that are not blank.                                                                                                |
+| 3.4 | Release calls `PATCH /disputes/:id/resolve` with the trimmed note and the outcome `RELEASE`, exactly once.                                                                                    |
+| 3.5 | Refund calls `PATCH /disputes/:id/resolve` with the trimmed note and the outcome `REFUND`, exactly once.                                                                                      |
+| 3.6 | Resolving a dispute with no hold sends the outcome `RELEASE`, which the server applies to no hold.                                                                                            |
+| 3.7 | Dismiss calls `PATCH /disputes/:id/dismiss` with the trimmed note and no outcome.                                                                                                             |
+| 3.8 | Closing the confirmation without confirming calls nothing.                                                                                                                                    |
+| 3.9 | On success the dispute, escrow and transaction caches are invalidated, so no hold still reads frozen.                                                                                         |
 
 ## 04 · While it is in flight, and when it fails
 

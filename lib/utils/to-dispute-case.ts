@@ -11,9 +11,11 @@ const EVIDENCE_LABELS: Record<DisputeEvidence["type"], string> = {
     DOCUMENT: "Document",
 };
 
-const hostOf = (url: string) => {
+const fileOf = (url: string) => {
     try {
-        return new URL(url).hostname;
+        const { hostname, pathname } = new URL(url);
+        const file = pathname.split("/").filter(Boolean).pop();
+        return file ? decodeURIComponent(file) : hostname;
     } catch {
         return url;
     }
@@ -25,7 +27,7 @@ const toEvidence = (item: DisputeEvidence): DisputeEvidenceItem => {
         id: item.id,
         type: item.type,
         label: item.label ?? EVIDENCE_LABELS[item.type],
-        text: link ? hostOf(item.content) : item.content,
+        text: link ? fileOf(item.content) : item.content,
         href: link ? item.content : null,
         addedAt: item.createdAt,
     };
@@ -56,6 +58,18 @@ export const toDisputeCase = (
             price: transaction.finalPrice,
             holdId: transaction.escrowHoldId,
             escrow: hold ? { amount: hold.amount, status: hold.status } : null,
+            parties: hold?.transaction
+                ? {
+                      buyer: {
+                          id: hold.transaction.buyer.id,
+                          name: hold.transaction.buyer.fullName,
+                      },
+                      seller: {
+                          id: hold.transaction.seller.id,
+                          name: hold.transaction.seller.fullName,
+                      },
+                  }
+                : null,
         };
     }),
     evidence: dispute.evidence.map(toEvidence),

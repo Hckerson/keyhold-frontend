@@ -24,7 +24,16 @@ describe("toDisputeQueue", () => {
         expect(dispute.deals[0].holdId).toBe("esc_1");
     });
 
-    it("turns linked evidence into a link named by its host and keeps a message as text", () => {
+    it("1.5 names the deal's buyer and seller from the hold it froze", () => {
+        const [dispute] = toDisputeQueue([aDispute()], [aFrozenHold()]);
+
+        expect(dispute.deals[0].parties).toEqual({
+            buyer: { id: "usr_buyer", name: "Christ Streich" },
+            seller: { id: "usr_seller", name: "Marta Vance" },
+        });
+    });
+
+    it("names linked evidence by its file and keeps a message as text", () => {
         const [dispute] = toDisputeQueue([
             aDispute({
                 evidence: [
@@ -41,7 +50,7 @@ describe("toDisputeQueue", () => {
 
         expect(dispute.evidence).toEqual([
             expect.objectContaining({
-                text: "files.example.com",
+                text: "closing-statement.pdf",
                 href: "https://files.example.com/evidence/closing-statement.pdf",
             }),
             expect.objectContaining({
@@ -50,5 +59,17 @@ describe("toDisputeQueue", () => {
                 href: null,
             }),
         ]);
+    });
+
+    it("names a link with no file in its path by its host", () => {
+        const [dispute] = toDisputeQueue([
+            aDispute({
+                evidence: [
+                    anEvidence({ content: "https://files.example.com/" }),
+                ],
+            }),
+        ]);
+
+        expect(dispute.evidence[0].text).toBe("files.example.com");
     });
 });

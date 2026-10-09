@@ -38,15 +38,20 @@ export function DisputeReviewPane({
                 }}
             />
 
-            <div className="flex flex-col gap-5 p-4">
-                <section>
-                    <h3 className="micro-label">{DISPUTE_COPY.claimHeading}</h3>
-                    <p className="text-text mt-2 max-w-prose text-sm leading-relaxed">
-                        {dispute.claim}
-                    </p>
-                </section>
+            <div className="grid gap-x-6 gap-y-5 p-4 @2xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+                <div className="flex min-w-0 flex-col gap-5">
+                    <section>
+                        <h3 className="micro-label">
+                            {DISPUTE_COPY.claimHeading}
+                        </h3>
+                        <p className="text-text mt-2 max-w-prose text-xs leading-relaxed">
+                            {dispute.claim}
+                        </p>
+                    </section>
+                    <DisputeEvidenceList evidence={dispute.evidence} />
+                </div>
 
-                <div className="grid gap-x-8 gap-y-5 @xl:grid-cols-2">
+                <div className="flex min-w-0 flex-col gap-5">
                     {stakeGroups(dispute).map((group) => (
                         <FactList
                             key={group.id}
@@ -59,8 +64,6 @@ export function DisputeReviewPane({
                         facts={partyFacts(dispute)}
                     />
                 </div>
-
-                <DisputeEvidenceList evidence={dispute.evidence} />
             </div>
 
             {DISPUTE_STATES[dispute.status].open ? (

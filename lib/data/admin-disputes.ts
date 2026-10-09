@@ -1,7 +1,6 @@
 import { DISPUTE_ACTIONS, DISPUTE_STATES } from "@/lib/config/dispute-tones";
 import {
     byReviewOrder,
-    openFor,
     reviewMoment,
     reviewReading,
 } from "@/lib/data/review-queue";
@@ -23,7 +22,8 @@ export const DISPUTE_COPY = {
     lede: "Claims raised on a deal. Each one freezes the deal's escrow until you decide where it goes",
     claimHeading: "Claim",
     stakeHeading: "At stake",
-    partyHeading: "Raised by",
+    partyHeading: "Parties",
+    raisedIt: "raised it",
     evidenceHeading: "Evidence",
     noEvidence: "Nothing was attached to this dispute.",
     resolutionHeading: "Resolution",
@@ -86,9 +86,6 @@ export const disputeQueueItems = (
                 ? DISPUTE_STATES[dispute.status]
                 : undefined,
     }));
-
-export const openLine = (dispute: DisputeCase, now = new Date()) =>
-    `${DISPUTE_STATES[dispute.status].label} · open ${openFor(disputeClock(dispute), now)}`;
 
 export const disputeActions = (dispute: DisputeCase): DisputeAction[] => {
     if (!disputeClock(dispute).open) return [];
