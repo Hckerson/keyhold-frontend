@@ -6,17 +6,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ModerationConsole } from "@/components/sections/admin/moderation-console";
 import { flagsAPI } from "@/lib/api/flags";
 import { propertiesAPI } from "@/lib/api/properties";
-import { aFlagPage, aPropertyFlag } from "@/lib/data/__fixtures__/moderation";
+import { aPropertyFlag } from "@/lib/data/__fixtures__/moderation";
 import type { Property } from "@/lib/validations/property";
 
 vi.mock("@/lib/api/flags", () => ({
-    flagsAPI: { list: vi.fn(), resolve: vi.fn() },
+    flagsAPI: { all: vi.fn(), resolve: vi.fn() },
 }));
 vi.mock("@/lib/api/properties", () => ({
     propertiesAPI: { moderate: vi.fn() },
 }));
 
-const list = vi.mocked(flagsAPI.list);
+const list = vi.mocked(flagsAPI.all);
 const resolve = vi.mocked(flagsAPI.resolve);
 const moderate = vi.mocked(propertiesAPI.moderate);
 
@@ -86,7 +86,7 @@ const gone = (name: string) =>
     );
 
 beforeEach(() => {
-    list.mockResolvedValue(aFlagPage([FLAGGED, CHANGES_ASKED, APPROVED]));
+    list.mockResolvedValue([FLAGGED, CHANGES_ASKED, APPROVED]);
     moderate.mockResolvedValue({} as Property);
     resolve.mockResolvedValue(FLAGGED);
 });
@@ -96,7 +96,7 @@ describe("ModerationConsole · reading the queue", () => {
         draw();
         await queue();
 
-        expect(list).toHaveBeenCalledWith({ type: "PROPERTY", limit: 100 });
+        expect(list).toHaveBeenCalledWith({ type: "PROPERTY" });
     });
 
     it("shows the moderation fallback when the queue fails and recovers on retry", async () => {
@@ -113,7 +113,7 @@ describe("ModerationConsole · reading the queue", () => {
     });
 
     it("says nothing matches rather than loading when the queue is empty", async () => {
-        list.mockResolvedValue(aFlagPage([]));
+        list.mockResolvedValue([]);
         draw();
 
         expect(

@@ -15,6 +15,7 @@ export * from "./deal";
 export * from "./dispute";
 export * from "./display";
 export * from "./feedback";
+export * from "./flag";
 export * from "./home";
 export * from "./interest";
 export * from "./journey";

@@ -14,7 +14,7 @@ import { FEEDBACK } from "@/lib/config/feedback";
 export function useFlags(input: FlagQuery = {}, enabled = true) {
     return useQuery({
         queryKey: queryKeys.flags.list(input),
-        queryFn: () => flagsAPI.list(input),
+        queryFn: () => flagsAPI.all(input),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,

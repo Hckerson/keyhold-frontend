@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { ConsoleSkeletonHeader } from "@/components/patterns/console-skeleton-header";
 import { FlowBandSkeleton } from "@/components/patterns/flow-band-skeleton";
 import { LeadBandSkeleton } from "@/components/patterns/lead-band-skeleton";
@@ -123,19 +122,6 @@ const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
             <PanelSkeleton rows={RAIL_ROWS} />
             <PanelSkeleton tall />
         </div>
-    ),
-    review: (
-        <>
-            <div className="flex flex-wrap gap-2">
-                {PILL_SLOTS.map((slot) => (
-                    <Skeleton key={slot} className="h-8 w-20 rounded-lg" />
-                ))}
-            </div>
-            <div className="review-split items-start gap-3">
-                <PanelSkeleton tall />
-                <PanelSkeleton />
-            </div>
-        </>
     ),
 };
 

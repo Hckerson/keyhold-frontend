@@ -30,7 +30,7 @@ vi.mock("@/lib/api/users", () => ({
     usersAPI: { list: vi.fn(), detail: vi.fn() },
 }));
 vi.mock("@/lib/api/flags", () => ({
-    flagsAPI: { counts: vi.fn(), list: vi.fn() },
+    flagsAPI: { counts: vi.fn(), all: vi.fn() },
 }));
 vi.mock("@/lib/api/kyc", () => ({ kycAPI: { counts: vi.fn() } }));
 vi.mock("@/lib/api/disputes", () => ({ disputesAPI: { counts: vi.fn() } }));
