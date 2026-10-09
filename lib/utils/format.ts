@@ -30,6 +30,15 @@ const monthName = new Intl.DateTimeFormat(LOCALE, {
     timeZone: "UTC",
 });
 
+const fullDate = new Intl.DateTimeFormat(LOCALE, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+});
+
+const regions = new Intl.DisplayNames(LOCALE, { type: "region" });
+const REGION_CODE = /^[A-Z]{2}$/;
+
 const weekdayAndTime = new Intl.DateTimeFormat(LOCALE, {
     weekday: "short",
     hour: "numeric",
@@ -39,6 +48,11 @@ const weekdayAndTime = new Intl.DateTimeFormat(LOCALE, {
 export const formatClock = (value: Date) => clock.format(value);
 
 export const formatDayAndMonth = (value: Date) => dayAndMonth.format(value);
+
+export const formatFullDate = (value: Date) => fullDate.format(value);
+
+export const formatRegion = (value: string) =>
+    (REGION_CODE.test(value) && regions.of(value)) || value;
 
 export const formatWeekdayAndTime = (value: Date) =>
     weekdayAndTime.format(value);

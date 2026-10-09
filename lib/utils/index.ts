@@ -6,6 +6,8 @@ export { storage } from "./local-storage";
 export { sum, percentOf, averageOf, apportion } from "./math";
 export {
     formatDayAndMonth,
+    formatFullDate,
+    formatRegion,
     formatUsd,
     formatCompactUsd,
     formatMillions,
