@@ -32,8 +32,10 @@ export function DisputeReviewPane({
             <ReviewPaneHeader
                 title={dispute.title}
                 caption={raisedLine(dispute)}
-                href={ADMIN_ROUTES.user(dispute.initiatorId)}
-                linkLabel={DISPUTE_COPY.profile}
+                link={{
+                    href: ADMIN_ROUTES.user(dispute.initiatorId),
+                    label: DISPUTE_COPY.profile,
+                }}
             />
 
             <div className="flex flex-col gap-5 p-4">

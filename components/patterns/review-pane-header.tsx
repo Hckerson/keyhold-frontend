@@ -1,20 +1,19 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import type { ReviewLink } from "@/lib/types";
 
 export interface ReviewPaneHeaderProps {
     title: string;
     caption: string;
-    href: string;
-    linkLabel: string;
+    link?: ReviewLink;
     lead?: ReactNode;
 }
 
 export function ReviewPaneHeader({
     title,
     caption,
-    href,
-    linkLabel,
+    link,
     lead,
 }: ReviewPaneHeaderProps) {
     return (
@@ -24,13 +23,19 @@ export function ReviewPaneHeader({
                 <h2 className="text-text truncate text-sm">{title}</h2>
                 <p className="text-text-muted truncate text-xs">{caption}</p>
             </div>
-            <Link
-                href={href}
-                className="text-text-secondary hover:text-accent ease-smooth focus-visible:ring-accent inline-flex shrink-0 items-center gap-1 rounded-xs text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
-            >
-                {linkLabel}
-                <ArrowUpRight size={12} strokeWidth={1.5} aria-hidden="true" />
-            </Link>
+            {link && (
+                <Link
+                    href={link.href}
+                    className="text-text-secondary hover:text-accent ease-smooth focus-visible:ring-accent inline-flex shrink-0 items-center gap-1 rounded-xs text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                >
+                    {link.label}
+                    <ArrowUpRight
+                        size={12}
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                    />
+                </Link>
+            )}
         </header>
     );
 }
