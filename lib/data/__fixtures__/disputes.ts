@@ -1,4 +1,5 @@
 import { anEscrowHold } from "@/lib/data/__fixtures__/purchases";
+import { aLedgerDeal } from "@/lib/data/__fixtures__/transactions";
 import type { DisputeCase } from "@/lib/types";
 import type {
     Dispute,
@@ -66,7 +67,9 @@ export const aDisputePage = (items: Dispute[] = [aDispute()]): DisputePage => ({
 
 export const aFrozenHold = (overrides: Partial<Escrow> = {}): Escrow => ({
     ...anEscrowHold({ amount: 67_200, status: "DISPUTED" }),
-    transaction: null,
+    transaction: aLedgerDeal({
+        buyer: { id: "usr_buyer", fullName: "Christ Streich" },
+    }),
     ...overrides,
 });
 
@@ -91,6 +94,10 @@ export const aDisputeCase = (
             price: 2_240_000,
             holdId: "esc_1",
             escrow: { amount: 67_200, status: "DISPUTED" },
+            parties: {
+                buyer: { id: "usr_buyer", name: "Christ Streich" },
+                seller: { id: "usr_seller", name: "Marta Vance" },
+            },
         },
     ],
     evidence: [],

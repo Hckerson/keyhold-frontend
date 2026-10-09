@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { ReviewActions } from "@/components/patterns/review-actions";
-import { disputeActions, openLine } from "@/lib/data/admin-disputes";
+import { disputeActions } from "@/lib/data/admin-disputes";
+import { openLine } from "@/lib/data/admin-dispute-detail";
 import type { DisputeCase, DisputeDecisionMode } from "@/lib/types";
 
 export interface DisputeDecisionBarProps {

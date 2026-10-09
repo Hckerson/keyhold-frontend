@@ -60,6 +60,7 @@ export const DISPUTE_DECISION_COPY: Record<
             body: "The dispute closes as resolved and the money leaves escrow. This cannot be undone.",
         },
         outcome: "RELEASE",
+        payout: { verb: "Release", to: "seller" },
     },
     refund: {
         title: "Refund the buyer",
@@ -72,6 +73,7 @@ export const DISPUTE_DECISION_COPY: Record<
             body: "The dispute closes as resolved and the money leaves escrow. This cannot be undone.",
         },
         outcome: "REFUND",
+        payout: { verb: "Refund", to: "buyer" },
     },
     resolve: {
         title: "Resolve this dispute",

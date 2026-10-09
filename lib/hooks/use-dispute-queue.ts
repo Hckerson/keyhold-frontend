@@ -21,10 +21,8 @@ import type {
 } from "@/lib/types";
 import type { SettleDisputeInput } from "@/lib/validations/dispute";
 
-const QUEUE_PAGE_SIZE = 100;
-
 export function useDisputeQueue() {
-    const queue = useDisputes({ limit: QUEUE_PAGE_SIZE });
+    const queue = useDisputes();
     const holds = useEscrowHolds();
     const settle = useConfirmation<SettleDisputeInput, DisputeDecision>(
         useSettleDispute(),
@@ -37,8 +35,8 @@ export function useDisputeQueue() {
     const [note, setNote] = useState("");
 
     const disputes = useMemo(
-        () => toDisputeQueue(queue.data?.items ?? [], holds.data ?? []),
-        [queue.data?.items, holds.data],
+        () => toDisputeQueue(queue.data ?? [], holds.data ?? []),
+        [queue.data, holds.data],
     );
     const counts = useMemo(() => disputeCounts(disputes), [disputes]);
     const visible = useMemo(
@@ -72,9 +70,8 @@ export function useDisputeQueue() {
         settle.dismiss();
     };
 
-    const subjectTitle =
-        disputes.find((dispute) => dispute.id === settle.target?.id)?.title ??
-        "";
+    const subject =
+        disputes.find((dispute) => dispute.id === settle.target?.id) ?? null;
 
     return {
         filter,
@@ -84,7 +81,7 @@ export function useDisputeQueue() {
         active,
         decision: settle.target,
         note,
-        subjectTitle,
+        subject,
         pending: queue.isPending,
         settling: settle.pending,
         settleFailed: settle.failed,

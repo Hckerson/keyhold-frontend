@@ -17,6 +17,16 @@ export interface DisputeEvidenceItem {
     addedAt: string;
 }
 
+export interface DealParty {
+    id: string;
+    name: string;
+}
+
+export interface DealParties {
+    buyer: DealParty;
+    seller: DealParty;
+}
+
 export interface DisputedDeal {
     id: string;
     property: string;
@@ -24,6 +34,7 @@ export interface DisputedDeal {
     price: number;
     holdId: string | null;
     escrow: { amount: number; status: EscrowStatus } | null;
+    parties: DealParties | null;
 }
 
 export interface DisputeCase {
@@ -59,4 +70,5 @@ export interface DisputeDecisionCopy {
     submit: string;
     warning: { title: string; body: string };
     outcome?: DisputeOutcome;
+    payout?: { verb: string; to: keyof DealParties };
 }

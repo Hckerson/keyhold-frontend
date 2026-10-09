@@ -40,10 +40,10 @@ export function DisputeEvidenceList({ evidence }: DisputeEvidenceListProps) {
                                 className="flex items-start gap-3 py-2.5 text-xs"
                             >
                                 <Icon
-                                    size={14}
+                                    size={16}
                                     strokeWidth={1.5}
                                     aria-hidden="true"
-                                    className="text-text-muted mt-0.5 shrink-0"
+                                    className="text-text-muted shrink-0"
                                 />
                                 <div className="min-w-0 flex-1">
                                     <p className="text-text truncate">

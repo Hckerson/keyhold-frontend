@@ -71,7 +71,7 @@ export function AdminDisputesConsole() {
 
             <DisputeDecisionModal
                 decision={queue.decision}
-                subjectTitle={queue.subjectTitle}
+                dispute={queue.subject}
                 note={queue.note}
                 pending={queue.settling}
                 failed={queue.settleFailed}

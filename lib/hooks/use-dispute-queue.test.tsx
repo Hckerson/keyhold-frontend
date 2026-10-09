@@ -14,11 +14,11 @@ import { useDisputeQueue } from "@/lib/hooks/use-dispute-queue";
 import type { DisputeDecisionMode } from "@/lib/types";
 
 vi.mock("@/lib/api/disputes", () => ({
-    disputesAPI: { list: vi.fn(), resolve: vi.fn(), dismiss: vi.fn() },
+    disputesAPI: { all: vi.fn(), resolve: vi.fn(), dismiss: vi.fn() },
 }));
 vi.mock("@/lib/api/escrow", () => ({ escrowAPI: { holds: vi.fn() } }));
 
-const list = vi.mocked(disputesAPI.list);
+const list = vi.mocked(disputesAPI.all);
 const resolve = vi.mocked(disputesAPI.resolve);
 const dismiss = vi.mocked(disputesAPI.dismiss);
 const holds = vi.mocked(escrowAPI.holds);
@@ -53,7 +53,7 @@ beforeEach(() => {
             mutations: { retry: false },
         },
     });
-    list.mockResolvedValue(aDisputePage());
+    list.mockResolvedValue(aDisputePage().items);
     holds.mockResolvedValue([aFrozenHold()]);
     resolve.mockResolvedValue(aDispute({ status: "RESOLVED" }));
     dismiss.mockResolvedValue(aDispute({ status: "DISMISSED" }));
@@ -109,7 +109,7 @@ describe("useDisputeQueue", () => {
     });
 
     it("3.6 resolving a dispute with no hold sends the outcome RELEASE", async () => {
-        list.mockResolvedValue(aDisputePage([aDispute({ transactions: [] })]));
+        list.mockResolvedValue([aDispute({ transactions: [] })]);
 
         await decide("resolve");
 
