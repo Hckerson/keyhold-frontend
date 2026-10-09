@@ -2,19 +2,13 @@
 
 import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
-import {
-    DISPUTE_DECISION_COPY,
-    type DisputeDecision,
-} from "@/lib/data/admin-disputes";
+import { DISPUTE_DECISION_COPY } from "@/lib/config/dispute-tones";
+import { DISPUTE_COPY, noteReady } from "@/lib/data/admin-disputes";
+import type { DisputeDecision } from "@/lib/types";
 
-const NOTE_HINT = "Required. Both parties see this on the dispute record.";
-const WARNING = {
-    title: "This decision is final",
-    body: "The dispute is settled and its record becomes read-only. It cannot be reopened.",
-};
 const FAILURE = {
     title: "The decision was not recorded",
-    body: "The dispute is still open and neither party was notified. Try again in a moment.",
+    body: "The dispute is still open, no money moved and neither party was notified. Try again in a moment.",
 };
 
 export interface DisputeDecisionModalProps {
@@ -38,21 +32,20 @@ export function DisputeDecisionModal({
     onClose,
     onSubmit,
 }: DisputeDecisionModalProps) {
-    const mode = decision?.mode ?? "resolve";
-    const copy = DISPUTE_DECISION_COPY[mode];
+    const copy = DISPUTE_DECISION_COPY[decision?.mode ?? "dismiss"];
 
     return (
         <ConfirmModal
             open={decision !== null}
             title={copy.title}
             subject={subjectTitle}
-            warning={WARNING}
+            warning={copy.warning}
             failure={FAILURE}
             confirmLabel={copy.submit}
-            tone={mode === "dismiss" ? "error" : "accent"}
+            tone="accent"
             pending={pending}
             failed={failed}
-            confirmDisabled={note.trim().length === 0}
+            confirmDisabled={!noteReady(note)}
             onClose={onClose}
             onConfirm={onSubmit}
         >
@@ -67,7 +60,9 @@ export function DisputeDecisionModal({
                     onChange={(event) => onNoteChange(event.target.value)}
                     placeholder={copy.placeholder}
                 />
-                <p className="text-text-muted mt-1.5 text-xs">{NOTE_HINT}</p>
+                <p className="text-text-muted mt-1.5 text-xs">
+                    {DISPUTE_COPY.noteHint}
+                </p>
             </div>
         </ConfirmModal>
     );

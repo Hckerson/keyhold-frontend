@@ -1,22 +1,20 @@
 "use client";
 
-import { Callout } from "@/components/ui/callout";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { SignalGrid } from "@/components/patterns/signal-grid";
 import { DisputeDecisionBar } from "@/components/features/admin/dispute-decision-bar";
 import { DisputeEvidenceList } from "@/components/features/admin/dispute-evidence-list";
+import { FactList } from "@/components/patterns/fact-list";
+import { ReviewOutcome } from "@/components/patterns/review-outcome";
+import { ReviewPaneHeader } from "@/components/patterns/review-pane-header";
+import { DISPUTE_STATES } from "@/lib/config/dispute-tones";
+import { ADMIN_ROUTES } from "@/lib/constants";
+import { DISPUTE_COPY } from "@/lib/data/admin-disputes";
 import {
-    disputeStatusMeta,
-    type DisputeCase,
-    type DisputeDecisionMode,
-} from "@/lib/data/admin-disputes";
-import { formatUsd } from "@/lib/utils";
-import type { Signal } from "@/lib/types";
-
-const OUTCOME_TITLE = "Outcome";
-const EVIDENCE_LABEL = "Evidence";
-const DEALS_LABEL = "Disputed deals";
-const NO_DEALS = "No transaction is attached to this dispute.";
+    disputeOutcome,
+    partyFacts,
+    raisedLine,
+    stakeGroups,
+} from "@/lib/data/admin-dispute-detail";
+import type { DisputeCase, DisputeDecisionMode } from "@/lib/types";
 
 export interface DisputeReviewPaneProps {
     dispute: DisputeCase;
@@ -29,95 +27,49 @@ export function DisputeReviewPane({
     busy,
     onAction,
 }: DisputeReviewPaneProps) {
-    const meta = disputeStatusMeta[dispute.status];
-
-    const signals: Signal[] = [
-        { label: "Raised by", value: dispute.initiator },
-        { label: "At stake", value: formatUsd(dispute.amountAtStake) },
-        { label: "Open", value: `${dispute.waitingDays}d` },
-        { label: "Evidence", value: `${dispute.evidence.length}` },
-    ];
-
     return (
-        <section className="bg-background-muted border-border-light overflow-hidden rounded-xl border shadow-sm">
-            <div className="border-border-light flex items-start justify-between gap-3 border-b px-4 py-3">
-                <div className="min-w-0">
-                    <h2 className="text-text truncate text-xs font-semibold">
-                        {dispute.title}
-                    </h2>
-                    <p className="text-text-muted truncate text-xs">
-                        {dispute.initiatorEmail}
-                    </p>
-                </div>
-                <StatusBadge tone={meta.tone} size="md">
-                    {meta.label}
-                </StatusBadge>
-            </div>
-
-            <div className="flex flex-col gap-4 px-4 py-3">
-                <SignalGrid signals={signals} />
-
-                <p className="text-text-secondary text-xs break-words">
-                    {dispute.description}
-                </p>
-
-                {dispute.resolutionNotes && (
-                    <Callout
-                        variant={
-                            dispute.status === "DISMISSED"
-                                ? "warning"
-                                : "success"
-                        }
-                        title={OUTCOME_TITLE}
-                        description={dispute.resolutionNotes}
-                    />
-                )}
-
-                <div>
-                    <p className="micro-label">
-                        {DEALS_LABEL} · {dispute.deals.length}
-                    </p>
-                    {dispute.deals.length === 0 ? (
-                        <p className="text-text-muted mt-1.5 text-xs">
-                            {NO_DEALS}
-                        </p>
-                    ) : (
-                        <ul className="divide-border-light mt-1.5 divide-y">
-                            {dispute.deals.map((deal) => (
-                                <li
-                                    key={deal.id}
-                                    className="flex items-center justify-between gap-3 py-2"
-                                >
-                                    <div className="min-w-0">
-                                        <p className="text-text truncate text-xs font-medium">
-                                            {deal.property}
-                                        </p>
-                                        <p className="text-text-muted truncate text-xs">
-                                            {deal.address}
-                                        </p>
-                                    </div>
-                                    <span className="text-text shrink-0 text-xs font-semibold tabular-nums">
-                                        {formatUsd(deal.amount)}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-
-                <div>
-                    <p className="micro-label">
-                        {EVIDENCE_LABEL} · {dispute.evidence.length}
-                    </p>
-                    <DisputeEvidenceList evidence={dispute.evidence} />
-                </div>
-            </div>
-
-            <DisputeDecisionBar
-                status={dispute.status}
-                busy={busy}
-                onAction={onAction}
+        <section className="bg-background border-border @container overflow-hidden rounded-xl border shadow-sm">
+            <ReviewPaneHeader
+                title={dispute.title}
+                caption={raisedLine(dispute)}
+                href={ADMIN_ROUTES.user(dispute.initiatorId)}
+                linkLabel={DISPUTE_COPY.profile}
             />
+
+            <div className="flex flex-col gap-5 p-4">
+                <section>
+                    <h3 className="micro-label">{DISPUTE_COPY.claimHeading}</h3>
+                    <p className="text-text mt-2 max-w-prose text-sm leading-relaxed">
+                        {dispute.claim}
+                    </p>
+                </section>
+
+                <div className="grid gap-x-8 gap-y-5 @xl:grid-cols-2">
+                    {stakeGroups(dispute).map((group) => (
+                        <FactList
+                            key={group.id}
+                            title={DISPUTE_COPY.stakeHeading}
+                            facts={group.facts}
+                        />
+                    ))}
+                    <FactList
+                        title={DISPUTE_COPY.partyHeading}
+                        facts={partyFacts(dispute)}
+                    />
+                </div>
+
+                <DisputeEvidenceList evidence={dispute.evidence} />
+            </div>
+
+            {DISPUTE_STATES[dispute.status].open ? (
+                <DisputeDecisionBar
+                    dispute={dispute}
+                    busy={busy}
+                    onAction={onAction}
+                />
+            ) : (
+                <ReviewOutcome outcome={disputeOutcome(dispute)} />
+            )}
         </section>
     );
 }

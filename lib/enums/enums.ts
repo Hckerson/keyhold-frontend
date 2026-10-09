@@ -241,6 +241,8 @@ export const AUDIT_ACTION_TYPES = [
 
 export const MODERATION_DECISIONS = ["approve", "changes", "reject"] as const;
 
+export const DISPUTE_OUTCOMES = ["RELEASE", "REFUND"] as const;
+
 export type FlagType = (typeof FLAG_TYPES)[number];
 export type FlagStatus = (typeof FLAG_STATUSES)[number];
 export type VerificationStatus = (typeof VERIFICATION_STATUSES)[number];
@@ -255,6 +257,7 @@ export type NotificationChannel = (typeof NOTIFICATION_CHANNELS)[number];
 export type SettingCategory = (typeof SETTING_CATEGORIES)[number];
 export type AuditActionType = (typeof AUDIT_ACTION_TYPES)[number];
 export type ModerationDecision = (typeof MODERATION_DECISIONS)[number];
+export type DisputeOutcome = (typeof DISPUTE_OUTCOMES)[number];
 
 export const FLAG_TYPE_LABELS: Record<FlagType, string> = {
     USER: "Member",
