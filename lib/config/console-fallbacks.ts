@@ -23,8 +23,8 @@ export const CONSOLE_FALLBACKS = {
             "The moderation service is unreachable right now. Try again in a moment.",
     },
     adminFlags: {
-        panel: "Reports",
-        title: "We could not load the reports queue",
+        panel: "Flags",
+        title: "We could not load the flags queue",
         description:
             "The moderation service is unreachable right now. Try again in a moment.",
     },

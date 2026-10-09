@@ -3,7 +3,7 @@ import {
     REPORT_MEASURES,
     REPORT_MEASURE_IDS,
 } from "@/lib/config/report-measures";
-import { monthLabel, monthOverMonth } from "@/lib/data/admin-overview";
+import { monthOverMonth } from "@/lib/data/admin-overview";
 import {
     formatMeasure,
     measureTotal,
@@ -24,14 +24,14 @@ export const reportMeasures = (months: ReportMonth[]): ReportMeasure[] => {
             id,
             label: REPORT_MEASURES[id].label,
             total: formatMeasure(id, measureTotal(months, id)) ?? NO_READING,
-            latest: reading && `${monthLabel(latest.key)} ${reading}`,
+            latest: reading && `${latest.short} ${reading}`,
             delta: prior
                 ? monthOverMonth([
                       { name: prior.key, value: measureValue(prior, id) ?? 0 },
                       { name: latest.key, value: value ?? 0 },
                   ])
                 : null,
-            against: prior ? monthLabel(prior.key) : null,
+            against: prior ? prior.short : null,
         };
     });
 };

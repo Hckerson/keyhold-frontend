@@ -3,7 +3,7 @@ import type { ReportMeasureId } from "@/lib/types";
 export interface ReportMeasureMeta {
     label: string;
     column: string;
-    width: string;
+    derived: boolean;
     money: boolean;
     divideBy: number;
     fractionDigits: number;
@@ -27,35 +27,35 @@ const THOUSANDS = {
 const UNITS = { money: false, divideBy: 1, fractionDigits: 0, suffix: "" };
 
 export const REPORT_MEASURES: Record<ReportMeasureId, ReportMeasureMeta> = {
-    gmv: { label: "Settled GMV", column: "GMV", width: "5.5rem", ...MILLIONS },
+    gmv: { label: "Settled GMV", column: "GMV", derived: false, ...MILLIONS },
     deals: {
         label: "Closed deals",
         column: "Deals",
-        width: "4.5rem",
+        derived: false,
         ...UNITS,
     },
     average: {
         label: "Average deal",
         column: "Avg deal",
-        width: "6.5rem",
+        derived: true,
         ...MILLIONS,
     },
     commission: {
         label: "Est. commission",
         column: "Commission",
-        width: "7rem",
+        derived: true,
         ...THOUSANDS,
     },
     listings: {
         label: "New listings",
         column: "Listings",
-        width: "5rem",
+        derived: false,
         ...UNITS,
     },
     members: {
         label: "New members",
         column: "Members",
-        width: "5.5rem",
+        derived: false,
         ...UNITS,
     },
 };

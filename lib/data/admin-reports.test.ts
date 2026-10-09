@@ -5,6 +5,7 @@ import {
     reportMonths,
     reportWindowLabel,
     reportYears,
+    statementNotes,
 } from "@/lib/data/admin-reports";
 import { aTrend, REPORT_TODAY } from "@/lib/data/__fixtures__/reports";
 
@@ -78,7 +79,7 @@ describe("measureTotal", () => {
 });
 
 describe("reportYears", () => {
-    it("lists years newest first and opens only the newest, with a month count for each", () => {
+    it("lists years newest first, each with its month count, folded until opened", () => {
         const years = reportYears(reportMonths(aTrend(), REPORT_TODAY));
 
         expect(years).toEqual([
@@ -86,10 +87,29 @@ describe("reportYears", () => {
                 id: "2026",
                 label: "2026",
                 caption: "10 months",
-                collapsed: false,
+                collapsed: true,
             },
             { id: "2025", label: "2025", caption: "1 month", collapsed: true },
         ]);
+    });
+});
+
+describe("statementNotes", () => {
+    it("states how each figure is counted, including the commission rate", () => {
+        expect(statementNotes(reportMonths(aTrend(), REPORT_TODAY))).toContain(
+            "Commission is estimated at 2.5% of settled GMV.",
+        );
+    });
+
+    it("names the month still accruing, and only when there is one", () => {
+        expect(statementNotes(reportMonths(aTrend(), REPORT_TODAY))).toContain(
+            "Oct 2026 is month to date.",
+        );
+        expect(
+            statementNotes(
+                reportMonths(aTrend(), new Date("2027-03-01T00:00:00Z")),
+            ),
+        ).not.toContain("month to date");
     });
 });
 

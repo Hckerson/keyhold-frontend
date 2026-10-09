@@ -100,7 +100,7 @@ export const ADMIN_NAV: AdminNavSection[] = [
                 description: "Identity & listing checks",
             },
             {
-                label: "Reports",
+                label: "Flags",
                 href: ADMIN_ROUTES.flags,
                 icon: Flag,
                 description: "Reported members & messages",

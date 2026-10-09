@@ -22,7 +22,7 @@ export const headCell =
     "h-9 px-3 py-0 micro-label leading-none whitespace-nowrap";
 
 export const groupCell =
-    "h-9 px-3 py-0 text-xs font-medium tabular-nums bg-background-muted";
+    "h-9 px-3 py-0 text-xs tabular-nums text-text-secondary bg-background-alt";
 
 export const footCell = "h-10 px-3 py-0 text-xs font-medium tabular-nums";
 

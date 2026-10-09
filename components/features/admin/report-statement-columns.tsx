@@ -1,5 +1,6 @@
 import { ReportFigure } from "@/components/features/admin/report-figure";
 import { ReportMonthCell } from "@/components/features/admin/report-month-cell";
+import { REPORT_GRAINS } from "@/lib/config/report-export";
 import {
     REPORT_MEASURES,
     REPORT_MEASURE_IDS,
@@ -14,14 +15,15 @@ import type {
     DataTableColumn,
     DataTableConfig,
     DataTableGroupDef,
+    ReportGrain,
     ReportMeasureId,
     ReportMonth,
 } from "@/lib/types";
 
-const MIN_WIDTH = "44rem";
-const MONTH_NOUN = "month";
-const CAPTION =
-    "Monthly statement grouped by year, newest first: settled GMV, closed deals, average deal, estimated commission, new listings and new members, with a subtotal for each year and a total for the window";
+const MIN_WIDTH = "36rem";
+const MONTH_WIDTH = "11rem";
+const CAPTION_DETAIL =
+    "grouped by year, newest first: settled GMV, closed deals, average deal, estimated commission, new listings and new members, with a subtotal for each year and a total for the window";
 
 const measureColumn =
     (focus: ReportMeasureId) =>
@@ -29,7 +31,7 @@ const measureColumn =
         id,
         label: REPORT_MEASURES[id].column,
         align: "right",
-        width: REPORT_MEASURES[id].width,
+        wide: REPORT_MEASURES[id].derived,
         emphasis: id === focus ? "value" : "muted",
         sortValue: (month) => measureValue(month, id) ?? -1,
         render: (month) => (
@@ -52,10 +54,13 @@ const measureColumn =
 export function buildStatementConfig(
     focus: ReportMeasureId,
     years: DataTableGroupDef[],
+    grain: ReportGrain,
 ): DataTableConfig<ReportMonth> {
+    const copy = REPORT_GRAINS[grain];
+
     return {
         variant: "bare",
-        caption: CAPTION,
+        caption: `${copy.statement} ${CAPTION_DETAIL}`,
         rowKey: (month) => month.key,
         defaultSort: { id: "month", direction: "desc" },
         grouping: { groups: years, of: (month) => month.year },
@@ -63,11 +68,12 @@ export function buildStatementConfig(
         columns: [
             {
                 id: "month",
-                label: "Month",
+                label: copy.column,
+                width: MONTH_WIDTH,
                 emphasis: "identity",
                 sortValue: (month) => month.key,
                 render: (month) => <ReportMonthCell month={month} />,
-                footer: (rows) => formatCountOf(rows.length, MONTH_NOUN),
+                footer: (rows) => formatCountOf(rows.length, copy.noun),
             },
             ...REPORT_MEASURE_IDS.map(measureColumn(focus)),
         ],

@@ -13,14 +13,15 @@ import { ChoiceChips } from "@/components/patterns/choice-chips";
 import { LabelledBlock } from "@/components/patterns/labelled-block";
 import {
     REPORT_EXPORT_COPY as COPY,
-    REPORT_SECTION_CHOICES,
-    REPORT_SECTION_IDS,
+    type ReportSectionChoice,
     type ReportSectionId,
 } from "@/lib/config/report-export";
 
 export interface ReportExportModalProps {
     open: boolean;
     span: string;
+    choices: readonly ReportSectionChoice[];
+    note?: string;
     onClose: () => void;
     onExport: (sections: ReportSectionId[]) => void;
 }
@@ -28,15 +29,18 @@ export interface ReportExportModalProps {
 export function ReportExportModal({
     open,
     span,
+    choices,
+    note,
     onClose,
     onExport,
 }: ReportExportModalProps) {
-    const [sections, setSections] = useState<ReportSectionId[]>([
-        ...REPORT_SECTION_IDS,
-    ]);
+    const [excluded, setExcluded] = useState<ReportSectionId[]>([]);
+    const sections = choices
+        .map((choice) => choice.id)
+        .filter((id) => !excluded.includes(id));
 
     const toggleSection = (id: ReportSectionId) =>
-        setSections((current) =>
+        setExcluded((current) =>
             current.includes(id)
                 ? current.filter((section) => section !== id)
                 : [...current, id],
@@ -61,11 +65,12 @@ export function ReportExportModal({
                 <LabelledBlock label={COPY.sections}>
                     <ChoiceChips
                         label={COPY.sections}
-                        choices={REPORT_SECTION_CHOICES}
+                        choices={choices}
                         selected={sections}
                         onToggle={toggleSection}
                     />
                 </LabelledBlock>
+                {note && <p className="text-text-muted text-xs">{note}</p>}
             </ModalBody>
 
             <ModalFooter className="gap-4">
