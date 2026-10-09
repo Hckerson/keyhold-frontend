@@ -35,8 +35,10 @@ export function VerificationReviewPane({
             <ReviewPaneHeader
                 title={request.name}
                 caption={applicantLine(request)}
-                href={ADMIN_ROUTES.user(request.userId)}
-                linkLabel={VERIFICATION_COPY.profile}
+                link={{
+                    href: ADMIN_ROUTES.user(request.userId),
+                    label: VERIFICATION_COPY.profile,
+                }}
                 lead={
                     <Avatar
                         size="sm"
@@ -47,9 +49,9 @@ export function VerificationReviewPane({
                 }
             />
 
-            <div className="flex flex-col gap-5 p-4">
+            <div className="grid gap-x-6 gap-y-5 p-4 @2xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
                 <VerificationEvidence request={request} />
-                <div className="grid gap-x-8 gap-y-5 @xl:grid-cols-2">
+                <div className="flex min-w-0 flex-col gap-5">
                     <FactList
                         title={VERIFICATION_COPY.documentHeading}
                         facts={documentFacts(request)}

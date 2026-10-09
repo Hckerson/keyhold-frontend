@@ -112,7 +112,7 @@ export const documentFacts = (
     now = new Date(),
 ): Fact[] => [
     { label: "Type", value: request.documentType },
-    { label: "Number", value: request.documentNumber },
+    { label: "Number", value: request.documentNumber, mono: true },
     { label: "Issued by", value: request.issuer },
     ...(request.expiresAt ? [expiryFact(request.expiresAt, now)] : []),
     {
@@ -122,7 +122,9 @@ export const documentFacts = (
 ];
 
 export const applicantFacts = (request: VerificationRequest): Fact[] => [
-    ...(request.licence ? [{ label: "Licence", value: request.licence }] : []),
+    ...(request.licence
+        ? [{ label: "Licence", value: request.licence, mono: true }]
+        : []),
     {
         label: "Member since",
         value: formatFullDate(new Date(request.memberSince)),
