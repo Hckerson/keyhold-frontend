@@ -14,7 +14,7 @@ import { FEEDBACK, type MutationFeedback } from "@/lib/config/feedback";
 export function useKycQueue(input: KycQuery = {}, enabled = true) {
     return useQuery({
         queryKey: queryKeys.kyc.list(input),
-        queryFn: () => kycAPI.list(input),
+        queryFn: () => kycAPI.queue(input),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
