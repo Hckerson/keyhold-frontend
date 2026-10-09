@@ -1,6 +1,8 @@
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
+import { REPORT_GRAINS } from "@/lib/config/report-export";
 import { REPORT_MEASURES } from "@/lib/config/report-measures";
 import { fillMonths, monthLabel } from "@/lib/data/admin-overview";
+import { reportDays, tallyOf, trendKeys } from "@/lib/data/admin-reports-days";
 import {
     formatCompactUsd,
     formatCount,
@@ -9,15 +11,21 @@ import {
 } from "@/lib/utils";
 import type {
     DataTableGroupDef,
+    ReportGrain,
     ReportMeasureId,
     ReportMonth,
 } from "@/lib/types";
-import type { GrowthPoint, TrendStats } from "@/lib/validations/stats";
+import type { TrendStats } from "@/lib/validations/stats";
 
 type Tally = Pick<ReportMonth, "gmv" | "deals" | "listings" | "members">;
 
 const NO_ACTIVITY = "No activity recorded yet";
-const MONTH_NOUN = "month";
+const PERCENT = 100;
+const basisNotes = (grain: ReportGrain) => [
+    "Settled GMV counts completed deals at their final price.",
+    `Commission is estimated at ${(DEFAULT_COMMISSION_RATE * PERCENT).toFixed(1)}% of settled GMV.`,
+    `Listings and members count what was created in each ${REPORT_GRAINS[grain].noun}.`,
+];
 const EMPTY_TALLY: Tally = { gmv: 0, deals: 0, listings: 0, members: 0 };
 
 const VALUE_OF: Record<ReportMeasureId, (tally: Tally) => number | null> = {
@@ -32,18 +40,14 @@ const VALUE_OF: Record<ReportMeasureId, (tally: Tally) => number | null> = {
 const monthKeyOf = (today: Date) =>
     `${today.getUTCFullYear()}-${String(today.getUTCMonth() + 1).padStart(2, "0")}`;
 
-const valueAt = (points: GrowthPoint[], key: string) =>
-    points.find((point) => point.name === key)?.value ?? 0;
-
 export const reportMonths = (
     trend: TrendStats | undefined,
     today = new Date(),
+    grain: ReportGrain = "month",
 ): ReportMonth[] => {
     if (!trend) return [];
-    const keys = [trend.gmv, trend.deals, trend.listings, trend.users]
-        .flat()
-        .map((point) => point.name)
-        .sort();
+    if (grain === "day") return reportDays(trend, today);
+    const keys = trendKeys(trend);
     if (keys.length === 0) return [];
 
     const axis = fillMonths([
@@ -59,14 +63,13 @@ export const reportMonths = (
 
         return {
             key: name,
+            grain: "month",
+            short: month,
             year,
             name: formatMonthName(name),
             label: `${month} ${year}`,
             tick: marksYear ? `${month} ’${year.slice(2)}` : month,
-            gmv: valueAt(trend.gmv, name),
-            deals: valueAt(trend.deals, name),
-            listings: valueAt(trend.listings, name),
-            members: valueAt(trend.users, name),
+            ...tallyOf(trend, name),
             partial: name === current,
         };
     });
@@ -102,15 +105,30 @@ export const reportWindowLabel = (months: ReportMonth[]) => {
     return first === last ? first : `${first} – ${last}`;
 };
 
-export const reportYears = (months: ReportMonth[]): DataTableGroupDef[] =>
-    [...new Set(months.map((month) => month.year))]
-        .reverse()
-        .map((year, index) => ({
-            id: year,
-            label: year,
-            caption: formatCountOf(
-                months.filter((month) => month.year === year).length,
-                MONTH_NOUN,
-            ),
-            collapsed: index > 0,
-        }));
+export const grainOf = (months: ReportMonth[]): ReportGrain =>
+    months[0]?.grain ?? "month";
+
+export const reportYears = (months: ReportMonth[]): DataTableGroupDef[] => {
+    const years = [...new Set(months.map((month) => month.year))].reverse();
+
+    return years.map((year) => ({
+        id: year,
+        label: year,
+        caption: formatCountOf(
+            months.filter((month) => month.year === year).length,
+            REPORT_GRAINS[grainOf(months)].noun,
+        ),
+        collapsed: true,
+    }));
+};
+
+export const statementNotes = (months: ReportMonth[]) => {
+    const partial = months.find((month) => month.partial);
+    const grain = grainOf(months);
+    return [
+        ...basisNotes(grain),
+        ...(partial
+            ? [`${partial.label} ${REPORT_GRAINS[grain].inProgress}.`]
+            : []),
+    ].join(" ");
+};

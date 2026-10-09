@@ -1,20 +1,21 @@
 import { ReportMeasureCell } from "@/components/features/admin/report-measure-cell";
-import type { ReportMeasure } from "@/lib/types";
-
-const BAND_LABEL = "Totals for the window, with the last complete month";
+import { REPORT_GRAINS } from "@/lib/config/report-export";
+import type { ReportGrain, ReportMeasure } from "@/lib/types";
 
 export interface AdminReportsStatBandProps {
     measures: ReportMeasure[];
+    grain: ReportGrain;
     pending?: boolean;
 }
 
 export function AdminReportsStatBand({
     measures,
+    grain,
     pending,
 }: AdminReportsStatBandProps) {
     return (
         <dl
-            aria-label={BAND_LABEL}
+            aria-label={REPORT_GRAINS[grain].band}
             aria-busy={pending || undefined}
             className="figure-grid border-border overflow-hidden rounded-xl border shadow-sm"
         >

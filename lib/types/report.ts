@@ -19,8 +19,12 @@ export interface ReportMarket extends RegionMetric {
     share: number;
 }
 
+export type ReportGrain = "day" | "month";
+
 export interface ReportMonth {
     key: string;
+    grain: ReportGrain;
+    short: string;
     year: string;
     name: string;
     label: string;
@@ -39,11 +43,4 @@ export interface ReportMeasure {
     latest: string | null;
     delta: MonthDelta | null;
     against: string | null;
-}
-
-export interface ReportShare {
-    id: string;
-    label: string;
-    count: number;
-    share: number;
 }

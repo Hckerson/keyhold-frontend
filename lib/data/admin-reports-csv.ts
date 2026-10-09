@@ -2,18 +2,20 @@ import {
     REPORT_MEASURES,
     REPORT_MEASURE_IDS,
 } from "@/lib/config/report-measures";
-import { measureValue } from "@/lib/data/admin-reports";
-import type { ReportSectionId } from "@/lib/config/report-export";
+import { grainOf, measureValue } from "@/lib/data/admin-reports";
+import {
+    REPORT_GRAINS,
+    type ReportSectionId,
+} from "@/lib/config/report-export";
 import type { ReportMarket, ReportMonth } from "@/lib/types";
 import type { CsvSection } from "@/lib/utils/download";
 
-const MONTH_COLUMN = "Month";
 const PARTIAL_NOTE = "to date";
 
 const statementSection = (months: ReportMonth[]): CsvSection => ({
-    title: "Monthly statement",
+    title: REPORT_GRAINS[grainOf(months)].statement,
     columns: [
-        MONTH_COLUMN,
+        REPORT_GRAINS[grainOf(months)].column,
         ...REPORT_MEASURE_IDS.map((id) => REPORT_MEASURES[id].label),
     ],
     rows: months.map((month) => [

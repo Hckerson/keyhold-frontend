@@ -7,12 +7,13 @@ import type { TimeFilter } from "@/lib/enums/enums";
 
 const TITLE = "Platform Reports";
 const LEDE =
-    "What the marketplace produced month by month, where it produced it, and who it serves";
+    "What the marketplace produced each month of the window you pick, ready to export";
 
 export interface AdminReportsHeaderProps {
-    span: string;
+    span?: string;
     period: TimeFilter;
     onPeriodChange: (next: TimeFilter) => void;
+    exportDisabled?: boolean;
     onExport: () => void;
 }
 
@@ -20,6 +21,7 @@ export function AdminReportsHeader({
     span,
     period,
     onPeriodChange,
+    exportDisabled,
     onExport,
 }: AdminReportsHeaderProps) {
     return (
@@ -38,6 +40,7 @@ export function AdminReportsHeader({
                         type="button"
                         emphasis="solid"
                         tone="accent"
+                        disabled={exportDisabled}
                         onClick={onExport}
                     >
                         <Download
