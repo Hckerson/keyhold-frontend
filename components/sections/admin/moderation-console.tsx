@@ -23,10 +23,9 @@ import type { DecisionMode } from "@/lib/types";
 
 const EVERY_STATUS: ModerationStatusFilter = "all";
 const EVERY_CHECK: ModerationCheckFilter = "all";
-const QUEUE_PAGE_SIZE = 100;
 
 export function ModerationConsole() {
-    const flags = useFlags({ type: "PROPERTY", limit: QUEUE_PAGE_SIZE });
+    const flags = useFlags({ type: "PROPERTY" });
 
     const [statusFilter, setStatusFilter] =
         useState<ModerationStatusFilter>(EVERY_STATUS);
@@ -35,8 +34,8 @@ export function ModerationConsole() {
     const [reviewId, setReviewId] = useState<string | null>(null);
 
     const listings = useMemo(
-        () => toModerationQueue(flags.data?.items ?? []),
-        [flags.data?.items],
+        () => toModerationQueue(flags.data ?? []),
+        [flags.data],
     );
 
     const desk = useMemo(() => moderationDesk(listings), [listings]);

@@ -8,7 +8,6 @@ export type ConsoleSkeletonVariant =
     | "lead"
     | "profile"
     | "deck"
-    | "review"
     | "casework"
     | "board"
     | "quarters"
@@ -26,7 +25,7 @@ const ROUTE_VARIANTS: Record<string, ConsoleSkeletonVariant> = {
     [ADMIN_ROUTES.payments]: "lead",
     [ADMIN_ROUTES.verifications]: "casework",
     [ADMIN_ROUTES.disputes]: "casework",
-    [ADMIN_ROUTES.flags]: "review",
+    [ADMIN_ROUTES.flags]: "casework",
     [AGENT_ROUTES.pipeline]: "board",
     [AGENT_ROUTES.calendar]: "quarters",
     [AGENT_ROUTES.requests]: "stack",

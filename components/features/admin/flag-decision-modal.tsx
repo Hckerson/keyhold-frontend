@@ -1,50 +1,43 @@
 "use client";
 
 import { ConfirmModal } from "@/components/patterns/confirm-modal";
-import {
-    FLAG_DECISION_COPY,
-    flagTypeMeta,
-    type AbuseReport,
-    type FlagSettleMode,
-} from "@/lib/data/admin-flags";
+import { FLAG_DECISION_COPY } from "@/lib/config/flag-tones";
+import { subjectOf } from "@/lib/data/admin-flags";
+import type { FlagReport, FlagSettleMode } from "@/lib/types";
 
-const WARNING_TITLE = "This decision is final";
 const FAILURE = {
     title: "The decision was not recorded",
     body: "The report is still open. Try again in a moment.",
 };
 
-export interface AbuseReportDecisionModalProps {
+export interface FlagDecisionModalProps {
     mode?: FlagSettleMode;
-    report?: AbuseReport;
+    report?: FlagReport;
     pending: boolean;
     failed: boolean;
     onClose: () => void;
     onConfirm: () => void;
 }
 
-export function AbuseReportDecisionModal({
+export function FlagDecisionModal({
     mode,
     report,
     pending,
     failed,
     onClose,
     onConfirm,
-}: AbuseReportDecisionModalProps) {
+}: FlagDecisionModalProps) {
     const copy = FLAG_DECISION_COPY[mode ?? "resolve"];
 
     return (
         <ConfirmModal
             open={mode !== undefined && report !== undefined}
             title={copy.title}
-            subject={
-                report &&
-                `${flagTypeMeta[report.type].label} · ${report.subject} · ${report.reason}`
-            }
-            warning={{ title: WARNING_TITLE, body: copy.effect }}
+            subject={report && `${subjectOf(report)} · ${report.reason}`}
+            warning={copy.warning}
             failure={FAILURE}
             confirmLabel={copy.submit}
-            tone={copy.tone}
+            tone="accent"
             pending={pending}
             failed={failed}
             onClose={onClose}
@@ -53,4 +46,4 @@ export function AbuseReportDecisionModal({
     );
 }
 
-AbuseReportDecisionModal.displayName = "AbuseReportDecisionModal";
+FlagDecisionModal.displayName = "FlagDecisionModal";
