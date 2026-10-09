@@ -2,41 +2,47 @@
 
 import { useMemo, useState } from "react";
 import {
-    countDisputes,
-    filterDisputes,
-    rankDisputes,
-    type DisputeDecision,
-    type DisputeDecisionMode,
-    type DisputeFilterKey,
+    DEFAULT_DISPUTE_FILTER,
+    DISPUTE_DECISION_COPY,
+} from "@/lib/config/dispute-tones";
+import {
+    disputeCounts,
+    disputesIn,
+    noteReady,
 } from "@/lib/data/admin-disputes";
 import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useDisputes, useSettleDispute } from "@/lib/hooks/use-disputes";
+import { useEscrowHolds } from "@/lib/hooks/use-escrow";
 import { toDisputeQueue } from "@/lib/utils/to-dispute-case";
-import type { ResolveDisputeInput } from "@/lib/validations/dispute";
+import type {
+    DisputeDecision,
+    DisputeDecisionMode,
+    DisputeFilterKey,
+} from "@/lib/types";
+import type { SettleDisputeInput } from "@/lib/validations/dispute";
 
-const ALL_FILTER: DisputeFilterKey = "all";
 const QUEUE_PAGE_SIZE = 100;
 
 export function useDisputeQueue() {
     const queue = useDisputes({ limit: QUEUE_PAGE_SIZE });
-    const settle = useConfirmation<
-        { id: string; dismiss: boolean } & ResolveDisputeInput,
-        DisputeDecision
-    >(useSettleDispute());
+    const holds = useEscrowHolds();
+    const settle = useConfirmation<SettleDisputeInput, DisputeDecision>(
+        useSettleDispute(),
+    );
 
-    const [filter, setFilter] = useState<DisputeFilterKey>(ALL_FILTER);
+    const [filter, setFilter] = useState<DisputeFilterKey>(
+        DEFAULT_DISPUTE_FILTER,
+    );
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [note, setNote] = useState("");
 
     const disputes = useMemo(
-        () => rankDisputes(toDisputeQueue(queue.data?.items ?? [])),
-        [queue.data?.items],
+        () => toDisputeQueue(queue.data?.items ?? [], holds.data ?? []),
+        [queue.data?.items, holds.data],
     );
-
-    const counts = useMemo(() => countDisputes(disputes), [disputes]);
-
+    const counts = useMemo(() => disputeCounts(disputes), [disputes]);
     const visible = useMemo(
-        () => filterDisputes(disputes, filter),
+        () => disputesIn(disputes, filter),
         [disputes, filter],
     );
 
@@ -52,12 +58,12 @@ export function useDisputeQueue() {
     };
 
     const submitDecision = () => {
-        const trimmed = note.trim();
-        if (!settle.target || !trimmed) return;
+        if (!settle.target || !noteReady(note)) return;
         settle.confirm({
             id: settle.target.id,
             dismiss: settle.target.mode === "dismiss",
-            resolutionNotes: trimmed,
+            resolutionNotes: note.trim(),
+            outcome: DISPUTE_DECISION_COPY[settle.target.mode].outcome,
         });
     };
 
@@ -72,6 +78,7 @@ export function useDisputeQueue() {
 
     return {
         filter,
+        disputes,
         counts,
         visible,
         active,

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
     DISPUTE_EVIDENCE_TYPES,
+    DISPUTE_OUTCOMES,
     DISPUTE_STATUSES,
     TRANSACTION_STATUSES,
 } from "@/lib/enums/enums";
@@ -70,6 +71,7 @@ export const resolveDisputeSchema = z.object({
     resolutionNotes: z
         .string()
         .min(4, "Explain the outcome in at least four characters"),
+    outcome: z.enum(DISPUTE_OUTCOMES).optional(),
 });
 
 export const disputeQuerySchema = pageQuerySchema.extend({
@@ -85,4 +87,8 @@ export type DisputeCounts = z.infer<typeof disputeCountsSchema>;
 export type CreateDisputeInput = z.infer<typeof createDisputeSchema>;
 export type AddEvidenceInput = z.infer<typeof addEvidenceSchema>;
 export type ResolveDisputeInput = z.infer<typeof resolveDisputeSchema>;
+export type SettleDisputeInput = {
+    id: string;
+    dismiss: boolean;
+} & ResolveDisputeInput;
 export type DisputeQuery = z.infer<typeof disputeQuerySchema>;
