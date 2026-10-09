@@ -23,6 +23,7 @@ export function FactList({ title, facts }: FactListProps) {
                             className={cn(
                                 "min-w-0 truncate text-right tabular-nums",
                                 fact.alarm ? "text-error-dark" : "text-text",
+                                fact.mono && "font-mono",
                             )}
                         >
                             {fact.href ? (

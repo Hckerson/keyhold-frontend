@@ -5,6 +5,7 @@ export interface Fact {
     value: string;
     href?: string;
     alarm?: boolean;
+    mono?: boolean;
 }
 
 export interface ReviewStatus {
@@ -25,6 +26,11 @@ export interface ReviewOutcomeView extends ReviewStatus {
     detail?: string;
     noteHeading: string;
     note: string | null;
+}
+
+export interface ReviewLink {
+    href: string;
+    label: string;
 }
 
 export interface ReviewClock {
