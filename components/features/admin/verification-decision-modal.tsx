@@ -4,8 +4,9 @@ import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
 import {
     DECISION_COPY,
-    type VerificationDecision,
-} from "@/lib/data/admin-verifications";
+    isRejectionReady,
+} from "@/lib/config/verification-tones";
+import type { VerificationDecision } from "@/lib/types";
 
 const NOTE_HINT =
     "Required. The agent receives this message with the decision.";
@@ -51,7 +52,7 @@ export function VerificationDecisionModal({
             confirmLabel={copy.submit}
             pending={pending}
             failed={failed}
-            confirmDisabled={note.trim().length === 0}
+            confirmDisabled={!isRejectionReady(note)}
             onClose={onClose}
             onConfirm={onSubmit}
         >
