@@ -3,6 +3,7 @@ import { recencyTone } from "@/lib/config/user-tones";
 import { cn } from "@/lib/utils";
 
 const TODAY_LABEL = "Today";
+const QUIET_TONE = "accent";
 const ACTIVITY_NOUN = "since last sign-in";
 
 export interface UserActivityMarkProps {
@@ -11,11 +12,15 @@ export interface UserActivityMarkProps {
 }
 
 export function UserActivityMark({ days, className }: UserActivityMarkProps) {
+    const tone = recencyTone(days);
+
     return (
         <span
             className={cn(
                 "text-xs font-medium tabular-nums",
-                chartToneText[recencyTone(days)],
+                tone === QUIET_TONE
+                    ? "text-text-secondary"
+                    : chartToneText[tone],
                 className,
             )}
         >

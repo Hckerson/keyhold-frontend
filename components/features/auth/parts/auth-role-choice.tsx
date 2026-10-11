@@ -1,12 +1,10 @@
 "use client";
 
 import { AnimatePresence, m } from "motion/react";
-import type { UserRole } from "@/lib/types/auth";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { AUTH_COLLAPSE_MOTION } from "@/lib/config/auth-motion";
 import { cn } from "@/lib/utils";
-
-export type SignupRole = Extract<UserRole, "BUYER" | "SELLER">;
+import type { SignupRole } from "@/lib/types";
 
 const ROLE_OPTIONS: {
     value: SignupRole;
@@ -79,7 +77,7 @@ export function AuthRoleChoice({
                 <span
                     aria-hidden="true"
                     className={cn(
-                        "bg-highlight ease-smooth absolute top-0 left-0 h-px w-1/2 transition-all duration-300",
+                        "bg-accent ease-smooth absolute top-0 left-0 h-px w-1/2 transition-all duration-300",
                         selectedIndex < 0 && "opacity-0",
                         selectedIndex > 0 && "translate-x-full",
                     )}

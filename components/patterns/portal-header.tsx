@@ -1,11 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-
-export interface PortalHeaderBack {
-    label: string;
-    href: string;
-}
+import type { PortalHeaderBack } from "@/lib/types";
 
 export interface PortalHeaderProps {
     title: string;
@@ -47,7 +43,7 @@ export function PortalHeader({
                 </div>
 
                 {(summary || action) && (
-                    <div className="flex min-w-0 flex-auto items-center justify-end gap-x-6 gap-y-2">
+                    <div className="flex min-w-0 flex-auto flex-wrap items-center justify-end gap-x-6 gap-y-2">
                         {summary && (
                             <p className="micro-label max-w-60 min-w-0 leading-relaxed text-pretty">
                                 {summary}

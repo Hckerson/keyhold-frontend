@@ -1,29 +1,14 @@
 "use client";
 
 import { useId } from "react";
-import { DataTableBody } from "@/components/patterns/data-table-body";
-import { DataTableFoot } from "@/components/patterns/data-table-foot";
-import { DataTableHead } from "@/components/patterns/data-table-head";
+import { DataTableGrid } from "@/components/patterns/data-table-grid";
 import { DataTablePager } from "@/components/patterns/data-table-pager";
 import { DataTablePanel } from "@/components/patterns/data-table-panel";
 import { DataTableSelectionBar } from "@/components/patterns/data-table-selection-bar";
-import type {
-    ColumnEmphasis,
-    DataTableColumn,
-    DataTableProps,
-} from "@/components/patterns/data-table-types";
 import { useDataTable } from "@/lib/hooks/use-data-table";
 import { cn } from "@/lib/utils";
-
-export type {
-    ColumnEmphasis,
-    DataTableColumn,
-    DataTableConfig,
-    DataTableProps,
-    DataTableSort,
-    RevealMode,
-    SortDirection,
-} from "@/components/patterns/data-table-types";
+import { tableLayout } from "@/lib/utils/table-layout";
+import type { DataTableProps } from "@/lib/types";
 
 export function DataTable<T>({
     columns,
@@ -47,34 +32,14 @@ export function DataTable<T>({
     panelSize = "lg",
     openKey,
     onOpenChange,
+    minWidth,
+    grouping,
     className,
 }: DataTableProps<T>) {
     const baseId = useId();
     const revealing = reveal !== undefined && renderDetail !== undefined;
 
-    const {
-        allOnPageSelected,
-        applySelection,
-        currentKeys,
-        currentOpen,
-        currentPage,
-        firstIndex,
-        onRowClick,
-        onTableKeyDown,
-        openRow,
-        pageRows,
-        selectedRows,
-        setOpen,
-        setPage,
-        sort,
-        sortedData,
-        tableRef,
-        toggleOpen,
-        togglePage,
-        toggleRow,
-        toggleSort,
-        totalPages,
-    } = useDataTable({
+    const { tableRef, ...table } = useDataTable({
         columns,
         data,
         rowKey,
@@ -88,20 +53,25 @@ export function DataTable<T>({
     });
 
     const bare = variant === "bare";
-    const fixed = columns.some((column) => column.width);
-    const hasFooter = columns.some((column) => column.footer);
-    const columnCount =
-        columns.length + (selectable ? 1 : 0) + (revealing ? 1 : 0);
-
-    const focalColumnId = columns.find(
-        (column) => column.emphasis === "focal",
-    )?.id;
-
-    const emphasisOf = (column: DataTableColumn<T>): ColumnEmphasis => {
-        const declared = column.emphasis ?? "field";
-        if (declared === "focal" && column.id !== focalColumnId)
-            return "figure";
-        return declared;
+    const layout = tableLayout({ columns, selectable, revealing });
+    const body = {
+        emptyMessage,
+        baseId,
+        rowKey,
+        columns,
+        columnCount: layout.columnCount,
+        emphasisOf: layout.emphasisOf,
+        selectable,
+        selectedKeys: table.currentKeys,
+        onToggleSelect: table.toggleRow,
+        revealing,
+        reveal,
+        openKey: table.currentOpen,
+        onToggleOpen: table.toggleOpen,
+        onRowClick: table.onRowClick,
+        rowLabel,
+        renderDetail,
+        rowClassName,
     };
 
     return (
@@ -114,87 +84,51 @@ export function DataTable<T>({
                     className,
                 )}
             >
-                {selectable && selectedRows.length > 0 && (
+                {selectable && table.selectedRows.length > 0 && (
                     <DataTableSelectionBar
-                        count={selectedRows.length}
-                        actions={bulkActions?.(selectedRows)}
-                        onClear={() => applySelection([])}
+                        count={table.selectedRows.length}
+                        actions={bulkActions?.(table.selectedRows)}
+                        onClear={() => table.applySelection([])}
                     />
                 )}
 
-                <div className="scroll-x">
-                    <table
-                        ref={tableRef}
-                        onKeyDown={onTableKeyDown}
-                        className={cn(
-                            "w-full text-xs leading-tight",
-                            fixed && "table-fixed",
-                        )}
-                    >
-                        <caption className="sr-only">{caption}</caption>
+                <DataTableGrid
+                    body={body}
+                    caption={caption}
+                    bare={bare}
+                    fixed={layout.fixed}
+                    hasFooter={layout.hasFooter}
+                    minWidth={minWidth}
+                    grouping={grouping}
+                    sortedRows={table.sortedData}
+                    pageRows={table.pageRows}
+                    sort={table.sort}
+                    allOnPageSelected={table.allOnPageSelected}
+                    tableRef={tableRef}
+                    onSort={table.toggleSort}
+                    onTogglePage={table.togglePage}
+                    onKeyDown={table.onTableKeyDown}
+                />
 
-                        <DataTableHead
-                            columns={columns}
-                            sort={sort}
-                            onSort={toggleSort}
-                            bare={bare}
-                            selectable={selectable}
-                            revealing={revealing}
-                            allOnPageSelected={allOnPageSelected}
-                            onTogglePage={togglePage}
+                {!grouping &&
+                    pageSize &&
+                    table.sortedData.length > pageSize && (
+                        <DataTablePager
+                            firstIndex={table.firstIndex}
+                            shownCount={table.pageRows.length}
+                            totalCount={table.sortedData.length}
+                            currentPage={table.currentPage}
+                            totalPages={table.totalPages}
+                            onPageChange={table.setPage}
                         />
-
-                        <DataTableBody
-                            rows={pageRows}
-                            isEmpty={sortedData.length === 0}
-                            emptyMessage={emptyMessage}
-                            baseId={baseId}
-                            rowKey={rowKey}
-                            columns={columns}
-                            columnCount={columnCount}
-                            emphasisOf={emphasisOf}
-                            selectable={selectable}
-                            selectedKeys={currentKeys}
-                            onToggleSelect={toggleRow}
-                            revealing={revealing}
-                            reveal={reveal}
-                            openKey={currentOpen}
-                            onToggleOpen={toggleOpen}
-                            onRowClick={onRowClick}
-                            rowLabel={rowLabel}
-                            renderDetail={renderDetail}
-                            rowClassName={rowClassName}
-                        />
-
-                        {hasFooter && sortedData.length > 0 && (
-                            <DataTableFoot
-                                columns={columns}
-                                rows={sortedData}
-                                bare={bare}
-                                selectable={selectable}
-                                revealing={revealing}
-                            />
-                        )}
-                    </table>
-                </div>
-
-                {pageSize && sortedData.length > pageSize && (
-                    <DataTablePager
-                        firstIndex={firstIndex}
-                        shownCount={pageRows.length}
-                        totalCount={sortedData.length}
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setPage}
-                    />
-                )}
+                    )}
             </div>
 
             {revealing && reveal === "panel" && (
                 <DataTablePanel
-                    row={openRow}
+                    row={table.openRow}
                     size={panelSize}
-                    onClose={() => setOpen(null)}
+                    onClose={() => table.setOpen(null)}
                     rowLabel={rowLabel}
                     panelTitle={panelTitle}
                     panelFooter={panelFooter}

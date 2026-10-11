@@ -28,7 +28,7 @@ export function ViewingRatingMeter({
                     className={cn(
                         "size-3",
                         index < rating
-                            ? "fill-highlight text-highlight"
+                            ? "fill-accent text-accent"
                             : "text-border-dark",
                     )}
                     strokeWidth={1.5}

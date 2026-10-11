@@ -1,5 +1,4 @@
-import type { LucideIcon } from "lucide-react";
-import type { ChartTone } from "@/lib/config/chart-tones";
+import type { FilterTileDatum } from "./ui";
 
 export type ModerationStatus =
     | "flagged"
@@ -55,20 +54,13 @@ export interface ModerationTarget {
 export interface ModerationAgentLoad {
     id: string;
     name: string;
-    firm: string;
+    email: string;
     submissions: number;
     open: number;
     reports: number;
 }
 
-export interface ModerationStatusTile {
-    id: ModerationStatusFilter;
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-    count: number;
-    percent: number;
-}
+export type ModerationStatusTile = FilterTileDatum<ModerationStatusFilter>;
 
 export type CheckBreakdown = { id: ComplianceCheckId } & Record<
     CheckState,

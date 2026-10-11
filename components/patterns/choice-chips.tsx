@@ -1,12 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-
-export interface Choice<T extends string> {
-    id: T;
-    label: string;
-    caption?: string;
-}
+import type { Choice } from "@/lib/types";
 
 export interface ChoiceChipsProps<T extends string> {
     choices: readonly Choice<T>[];

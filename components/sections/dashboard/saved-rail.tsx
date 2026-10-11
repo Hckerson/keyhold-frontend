@@ -5,7 +5,7 @@ import {
     matchShares,
     statusShares,
     watchShares,
-} from "@/lib/data/saved-listings";
+} from "@/lib/data/saved-listings-stats";
 import type { SavedListing } from "@/lib/types";
 
 const STATUS_TITLE = "Market State";

@@ -1,67 +1,61 @@
-import { MapPin } from "lucide-react";
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { EmptyState } from "@/components/ui/empty-state";
-import { PanelLink } from "@/components/features/shared/panel-link";
-import { RegionLeaderTile } from "@/components/features/admin/region-leader-tile";
-import { RegionPerformanceTable } from "@/components/features/admin/region-performance-table";
-import { AdminReportsChart } from "@/components/sections/admin/admin-reports-chart";
-import type { RegionPerformance, ReportTrendMetric } from "@/lib/types";
+"use client";
 
-const REGION_TITLE = "Regional Performance";
-const REGION_LEDE = "Ranked by transaction volume, leader pulled to the front";
-const REGION_ACTION = "Listings";
-const EMPTY_TITLE = "No regional data";
-const EMPTY_LEDE =
-    "Transaction volume has not been recorded for any region yet.";
+import { useMemo } from "react";
+import { CalendarRange } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Panel } from "@/components/ui/panel";
+import { DataTable } from "@/components/patterns/data-table";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
+import { buildStatementConfig } from "@/components/features/admin/report-statement-columns";
+import { REPORT_GRAINS } from "@/lib/config/report-export";
+import { grainOf, reportYears, statementNotes } from "@/lib/data/admin-reports";
+import { DEFAULT_REPORT_MEASURE } from "@/lib/config/report-measures";
+import type { ReportMonth } from "@/lib/types";
+
+const LEDE = "A subtotal for each year · open a year to see its";
 
 export interface AdminReportsMainProps {
-    regions: RegionPerformance[];
-    metrics: ReportTrendMetric[];
-    months: Record<string, string | number>[];
-    period: string;
+    months: ReportMonth[];
+    pending?: boolean;
 }
 
-export function AdminReportsMain({
-    regions,
-    metrics,
-    months,
-    period,
-}: AdminReportsMainProps) {
-    return (
-        <div className="console-span-2 flex flex-col gap-3">
-            <AdminReportsChart
-                metrics={metrics}
-                months={months}
-                period={period}
-            />
+export function AdminReportsMain({ months, pending }: AdminReportsMainProps) {
+    const grain = grainOf(months);
+    const copy = REPORT_GRAINS[grain];
+    const years = useMemo(() => reportYears(months), [months]);
+    const config = useMemo(
+        () => buildStatementConfig(DEFAULT_REPORT_MEASURE, years, grain),
+        [years, grain],
+    );
 
-            <Panel
-                title={REGION_TITLE}
-                description={REGION_LEDE}
-                count={regions.length}
-                action={
-                    <PanelLink href="/admin/listings" label={REGION_ACTION} />
-                }
-            >
-                {regions.length > 0 ? (
-                    <>
-                        <RegionLeaderTile region={regions[0]} />
-                        <PanelInset scroll>
-                            <RegionPerformanceTable
-                                regions={regions.slice(1)}
-                            />
-                        </PanelInset>
-                    </>
-                ) : (
-                    <EmptyState
-                        icon={MapPin}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
+    return (
+        <Panel
+            title={copy.statement}
+            description={`${LEDE} ${copy.noun}s`}
+            count={months.length}
+        >
+            {pending ? (
+                <SkeletonRows tall />
+            ) : months.length > 0 ? (
+                <>
+                    <DataTable
+                        key={years.map((year) => year.id).join()}
+                        {...config}
+                        data={months}
+                        className="-mx-4 -mt-2.5"
                     />
-                )}
-            </Panel>
-        </div>
+                    <p className="text-text-muted border-border-light -mx-4 -mb-4 border-t px-4 py-3 text-xs leading-relaxed">
+                        {statementNotes(months)}
+                    </p>
+                </>
+            ) : (
+                <EmptyState
+                    icon={CalendarRange}
+                    title={copy.empty}
+                    description={copy.caption}
+                />
+            )}
+        </Panel>
     );
 }
 

@@ -9,8 +9,7 @@ import {
     ShieldCheck,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { PropertyStage, StageAction } from "@/lib/types";
+import type { PropertyStage, StageAction, StatusTone } from "@/lib/types";
 
 export const PROPERTY_STAGE_KEYS: PropertyStage[] = [
     "browsing",
@@ -28,7 +27,7 @@ export interface PropertyStageMeta {
     label: string;
     note: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     primary: StageAction;
     secondary: StageAction | null;
 }

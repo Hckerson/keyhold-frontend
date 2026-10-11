@@ -1,14 +1,12 @@
-import type { ColumnSeries } from "@/components/ui/charts/column-chart";
-import type { MetricItem, Trend } from "@/lib/types/ui";
+import type { MonthDelta } from "@/lib/types/admin";
 
-export type ReportMetricKey = "gmv" | "deals" | "users";
-
-export type ReportSignalId =
+export type ReportMeasureId =
+    | "gmv"
+    | "deals"
+    | "average"
+    | "commission"
     | "listings"
-    | "transaction"
-    | "audience"
-    | "revenue"
-    | "velocity";
+    | "members";
 
 export interface RegionMetric {
     region: string;
@@ -17,29 +15,32 @@ export interface RegionMetric {
     avgPrice: number;
 }
 
-export interface RegionPerformance extends RegionMetric {
-    rank: number;
+export interface ReportMarket extends RegionMetric {
     share: number;
 }
 
-export interface ReportSignal {
-    id: ReportSignalId;
-    value: string;
-    caption: string;
-    change: string;
-    trend: Trend;
+export type ReportGrain = "day" | "month";
+
+export interface ReportMonth {
+    key: string;
+    grain: ReportGrain;
+    short: string;
+    year: string;
+    name: string;
+    label: string;
+    tick: string;
+    gmv: number;
+    deals: number;
+    listings: number;
+    members: number;
+    partial: boolean;
 }
 
-export interface ReportTrendMetric {
-    id: ReportMetricKey;
+export interface ReportMeasure {
+    id: ReportMeasureId;
     label: string;
-    eyebrow: string;
-    headline: string;
-    change: string;
-    trend: Trend;
-    series: ColumnSeries[];
-    divideBy: number;
-    valuePrefix: string;
-    valueSuffix: string;
-    summary: MetricItem[];
+    total: string;
+    latest: string | null;
+    delta: MonthDelta | null;
+    against: string | null;
 }

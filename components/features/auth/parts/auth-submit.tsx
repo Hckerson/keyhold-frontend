@@ -30,7 +30,7 @@ export function AuthSubmit({
                 {pending ? pendingLabel : label}
             </span>
             <span className="flex items-center gap-3">
-                <span aria-hidden="true" className="bg-highlight h-4 w-px" />
+                <span aria-hidden="true" className="bg-accent-soft h-4 w-px" />
                 <span className="relative block size-3">
                     <AnimatePresence initial={false}>
                         {pending ? (

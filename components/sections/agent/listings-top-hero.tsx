@@ -3,7 +3,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { ListingExposureMeter } from "@/components/features/agent/listing-exposure-meter";
+import { ListingExposureMark } from "@/components/features/agent/listing-exposure-mark";
 import { LISTING_STATUSES } from "@/lib/config/listing-tones";
 import {
     exposureOf,
@@ -44,7 +44,7 @@ export function ListingsTopHero({
     const featured = isFeatured(listing);
 
     return (
-        <section className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
+        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -113,7 +113,7 @@ export function ListingsTopHero({
                     </span>
                 </MetricCell>
                 <MetricCell label={EXPOSURE_LABEL}>
-                    <ListingExposureMeter percent={exposureOf(listing, peak)} />
+                    <ListingExposureMark percent={exposureOf(listing, peak)} />
                 </MetricCell>
                 <MetricCell label={INTEREST_LABEL}>
                     <span className="truncate tabular-nums">

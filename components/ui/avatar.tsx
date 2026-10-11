@@ -1,18 +1,24 @@
 "use client";
 
-import {
-    forwardRef,
-    useState,
-    type ImgHTMLAttributes,
-    type ReactNode,
-} from "react";
+import { forwardRef, useState, type ReactNode } from "react";
+import NextImage, { type ImageProps as NextImageProps } from "next/image";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const UNKNOWN_INITIALS = "?";
 
+type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
+
+const AVATAR_PIXELS: Record<AvatarSize, string> = {
+    xs: "28px",
+    sm: "32px",
+    md: "40px",
+    lg: "48px",
+    xl: "64px",
+};
+
 const avatarVariants = cva(
-    "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full text-center font-medium select-none",
+    "relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full text-center font-medium select-none",
     {
         variants: {
             size: {
@@ -21,7 +27,7 @@ const avatarVariants = cva(
                 md: "size-10 text-xs",
                 lg: "size-12 text-sm",
                 xl: "font-display text-h6 size-16 font-light",
-            },
+            } satisfies Record<AvatarSize, string>,
             tone: {
                 default: "bg-background-muted text-text",
                 accent: "bg-accent-light text-accent font-semibold",
@@ -41,8 +47,10 @@ const avatarVariants = cva(
 
 interface AvatarProps
     extends
-        ImgHTMLAttributes<HTMLImageElement>,
+        Omit<NextImageProps, "src" | "alt" | "fill" | "sizes">,
         VariantProps<typeof avatarVariants> {
+    src?: string | null;
+    alt?: string;
     initials?: string;
     fallback?: ReactNode;
 }
@@ -76,16 +84,18 @@ const Avatar = forwardRef<HTMLImageElement, AvatarProps>(
                     className,
                 )}
             >
-                {showImage ? (
-                    <img
+                {showImage && src ? (
+                    <NextImage
                         ref={ref}
                         src={src}
                         alt={alt}
+                        fill
+                        sizes={AVATAR_PIXELS[size ?? "md"]}
                         onError={(event) => {
                             setFailedSrc(src);
                             onError?.(event);
                         }}
-                        className="size-full object-cover"
+                        className="object-cover"
                         {...props}
                     />
                 ) : (

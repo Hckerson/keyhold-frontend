@@ -10,32 +10,19 @@ import { starter } from "./tools/eslint";
 
 const TRANSPORT_MODULE = "@/lib/api/client";
 const MAX_FILE_LINES = 150;
-const ADOPTING = "warn";
 
 const GENERATED = "lib/contract/**";
 const VIEWS = ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"];
 const SOURCE = [...VIEWS, "lib/**/*.{ts,tsx}"];
 const RESOURCE_LAYER = ["lib/api/**"];
 const ROUTES = ["app/**/page.tsx"];
+const GENERATED_IMAGES = [
+    "app/**/{icon,apple-icon,opengraph-image,twitter-image}.tsx",
+];
 const COMPONENTS = ["components/**/*.tsx"];
+const PRIMITIVES = ["components/ui/**/*.tsx"];
 const TESTS = ["**/*.test.{ts,tsx}"];
 const LENGTH_EXEMPT = ["lib/enums/enums.ts"];
-const EDITORIAL = [
-    "app/(public)/**",
-    "app/(auth)/**",
-    "components/sections/home/**",
-    "components/sections/listing/**",
-    "components/sections/search/**",
-    "components/sections/site/**",
-    "components/features/auth/**",
-    "components/layout/**",
-];
-const BREAKPOINT_OWNERS = [
-    "components/ui/**/*.tsx",
-    "components/patterns/**/*.tsx",
-];
-const BREAKPOINT_MESSAGE =
-    "Primitives and patterns must not decide their own breakpoints. Promote the chain to a named scale class in styles/globals.css.";
 
 type RestrictedPath = { name: string; message: string };
 
@@ -49,17 +36,36 @@ type RestrictedImports = [
 
 const ID_SOURCE = "IDs come from nanoid — never uuid or Date.now().";
 
-const restrictedImports = (...paths: RestrictedPath[]): RestrictedImports => [
+const DATE_NOW =
+    "CallExpression[callee.object.name='Date'][callee.property.name='now']";
+
+const ID_SYNTAX = [
+    `TemplateLiteral > ${DATE_NOW}`,
+    `CallExpression[callee.name='String'] > ${DATE_NOW}`,
+    `MemberExpression[property.name='toString'] > ${DATE_NOW}`,
+    `Property[key.name=/^id$|Id$/] > ${DATE_NOW}`,
+].map((selector) => ({ selector, message: ID_SOURCE }));
+
+const DEEP_RELATIVE = {
+    group: ["../*", "../**"],
+    message:
+        "Import through the '@/' alias. Deep-relative paths break when a file moves.",
+};
+
+const LIB_ABOVE_COMPONENTS = {
+    group: ["@/components/*", "@/components/**"],
+    message:
+        "lib/ sits below components/. Move the shared type to lib/types or the value to lib/constants and import it from there.",
+};
+
+const restrictedImports = (
+    paths: RestrictedPath[] = [],
+    patterns = [DEEP_RELATIVE],
+): RestrictedImports => [
     "error",
     {
         paths: [{ name: "uuid", message: ID_SOURCE }, ...paths],
-        patterns: [
-            {
-                group: ["../*", "../**"],
-                message:
-                    "Import through the '@/' alias. Deep-relative paths break when a file moves.",
-            },
-        ],
+        patterns,
     },
 ];
 
@@ -87,23 +93,6 @@ const projectConfig: ConfigArray = tseslint.config(
         rules: { "@typescript-eslint/no-empty-object-type": "off" },
     },
     {
-        files: BREAKPOINT_OWNERS,
-        rules: {
-            "no-restricted-syntax": [
-                "error",
-                {
-                    selector: "Literal[value=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
-                    message: BREAKPOINT_MESSAGE,
-                },
-                {
-                    selector:
-                        "TemplateElement[value.raw=/(^| )(sm|md|lg|xl|2xl):[a-z]/]",
-                    message: BREAKPOINT_MESSAGE,
-                },
-            ],
-        },
-    },
-    {
         rules: {
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/no-explicit-any": "off",
@@ -127,19 +116,17 @@ const starterConfig: ConfigArray = [
         rules: {
             "no-restricted-imports": restrictedImports(),
             "max-lines": [
-                ADOPTING,
+                "error",
                 {
                     max: MAX_FILE_LINES,
-                    skipBlankLines: false,
+                    skipBlankLines: true,
                     skipComments: false,
                 },
             ],
             "no-console": "error",
             "@typescript-eslint/no-explicit-any": "error",
-            "no-restricted-properties": [
-                ADOPTING,
-                { object: "Date", property: "now", message: ID_SOURCE },
-            ],
+            "starter/retired-colours": "error",
+            "no-restricted-syntax": ["error", ...ID_SYNTAX],
         },
     },
     {
@@ -155,31 +142,46 @@ const starterConfig: ConfigArray = [
     {
         files: VIEWS,
         rules: {
-            "starter/application-register-density": ADOPTING,
-            "starter/domain-types-in-lib": ADOPTING,
-            "starter/token-first-classnames": ADOPTING,
-            "no-restricted-imports": restrictedImports({
-                name: TRANSPORT_MODULE,
-                message:
-                    "Components consume hooks. Import a use-<resource> hook from @/lib/hooks instead.",
-            }),
+            "starter/domain-types-in-lib": "error",
+            "no-restricted-imports": restrictedImports([
+                {
+                    name: TRANSPORT_MODULE,
+                    message:
+                        "Components consume hooks. Import a use-<resource> hook from @/lib/hooks instead.",
+                },
+            ]),
         },
     },
     {
-        files: EDITORIAL,
-        rules: { "starter/application-register-density": "off" },
+        files: ["lib/**/*.{ts,tsx}"],
+        rules: {
+            "no-restricted-imports": restrictedImports(
+                [],
+                [DEEP_RELATIVE, LIB_ABOVE_COMPONENTS],
+            ),
+        },
     },
     {
         files: COMPONENTS,
-        rules: { "starter/one-component-per-file": ADOPTING },
+        rules: { "starter/one-component-per-file": "error" },
+    },
+    {
+        files: PRIMITIVES,
+        rules: {
+            "starter/one-component-per-file": ["error", { compound: true }],
+        },
     },
     {
         files: ROUTES,
-        rules: { "starter/page-composes-only": ADOPTING },
+        rules: { "starter/page-composes-only": "error" },
     },
     {
         files: [...TESTS, ...LENGTH_EXEMPT],
         rules: { "max-lines": "off" },
+    },
+    {
+        files: GENERATED_IMAGES,
+        rules: { "@next/next/no-img-element": "off" },
     },
 ];
 

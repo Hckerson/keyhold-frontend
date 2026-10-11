@@ -33,7 +33,7 @@ export function PipelineHealthPanel({
             label: "Close Rate",
             value: `${closeRate}%`,
             caption: `${closedCount} closed of ${closedCount + openCount}`,
-            tone: "text-success",
+            tone: "text-accent",
         },
     ];
 

@@ -3,9 +3,11 @@
 import { useState } from "react";
 import {
     EMPTY_USER_INVITE_DRAFT,
+    USER_INVITE_COPY,
     type UserInviteDraft,
 } from "@/lib/config/user-invite";
 import { useCreateUser } from "@/lib/hooks/use-users";
+import { errorMessage } from "@/lib/utils/api-error";
 import { toFieldErrors, type FieldErrors } from "@/lib/validations/auth";
 import { createUserSchema } from "@/lib/validations/user";
 
@@ -50,7 +52,9 @@ export function useUserInvite() {
         draft,
         errors,
         pending: createUser.isPending,
-        failed: createUser.isError,
+        failure: createUser.isError
+            ? errorMessage(createUser.error, USER_INVITE_COPY.retry)
+            : undefined,
         setDraft,
         start,
         close,

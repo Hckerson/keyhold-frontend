@@ -1,4 +1,4 @@
-import { ErrorBudgetMeter } from "@/components/features/admin/error-budget-meter";
+import { ErrorBudgetMark } from "@/components/features/admin/error-budget-mark";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { errorRateTone, SERVICE_STATES } from "@/lib/config/admin-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
@@ -28,8 +28,8 @@ export function ServiceHealthRow({ service }: ServiceHealthRowProps) {
                     <span className="sr-only">{state.label}</span>
                 </span>
             </th>
-            <td className="py-0 pl-3">
-                <ErrorBudgetMeter
+            <td className="py-0 pl-3 text-right">
+                <ErrorBudgetMark
                     uptime={service.uptime}
                     label={service.label}
                 />

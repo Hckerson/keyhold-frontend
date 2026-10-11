@@ -9,13 +9,14 @@ import { TimelineList } from "@/components/features/offers/timeline-list";
 import { MilestonePanel } from "@/components/features/offers/milestone-panel";
 import { MetricList } from "@/components/patterns/metric-list";
 import { PanelInset } from "@/components/ui/panel-inset";
-import { OFFER_TERMS_COPY } from "@/lib/data/offer-details";
-import type { DealMilestoneControls, MessageSendHandler } from "@/lib/types";
+import { OFFER_TERMS_COPY } from "@/lib/data/offer-details-terms";
 import type {
+    DealMilestoneControls,
+    MessageSendHandler,
     OfferDetail,
     ThreadMessage,
     TimelineEntry,
-} from "@/lib/data/offer-details";
+} from "@/lib/types";
 
 export interface OfferDetailPanelsProps {
     detail: OfferDetail;

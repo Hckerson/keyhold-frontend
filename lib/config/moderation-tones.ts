@@ -1,24 +1,13 @@
 import {
-    AlertTriangle,
     BadgeCheck,
-    CheckCircle2,
     Clock,
-    FileText,
     Flag,
-    Images,
     PenLine,
     XCircle,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { CalloutVariant } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type {
-    CheckState,
-    ComplianceCheckId,
-    DecisionMode,
-    ModerationStatus,
-} from "@/lib/types";
+import type { ModerationStatus, StatusTone } from "@/lib/types";
 
 export const MODERATION_STATUS_KEYS: ModerationStatus[] = [
     "flagged",
@@ -31,12 +20,12 @@ export const MODERATION_STATUS_KEYS: ModerationStatus[] = [
 export interface ModerationStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;
     noteTitle: string;
-    noteTone: CalloutVariant;
+    noteTone: StatusTone;
 }
 
 export const MODERATION_STATUSES: Record<
@@ -57,7 +46,7 @@ export const MODERATION_STATUSES: Record<
         label: "Pending",
         icon: Clock,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 3,
         open: true,
         noteTitle: "Reviewer note",
@@ -67,7 +56,7 @@ export const MODERATION_STATUSES: Record<
         label: "Changes asked",
         icon: PenLine,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 2,
         open: true,
         noteTitle: "Feedback sent to the agent",
@@ -77,7 +66,7 @@ export const MODERATION_STATUSES: Record<
         label: "Approved",
         icon: BadgeCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 1,
         open: false,
         noteTitle: "Approval note",
@@ -92,92 +81,6 @@ export const MODERATION_STATUSES: Record<
         open: false,
         noteTitle: "Reason for rejection",
         noteTone: "neutral",
-    },
-};
-
-export const COMPLIANCE_CHECK_KEYS: ComplianceCheckId[] = [
-    "photos",
-    "accuracy",
-    "licence",
-];
-
-export interface ComplianceCheckMeta {
-    label: string;
-    icon: LucideIcon;
-}
-
-export const COMPLIANCE_CHECKS: Record<ComplianceCheckId, ComplianceCheckMeta> =
-    {
-        photos: { label: "Photo provenance", icon: Images },
-        accuracy: { label: "Description accuracy", icon: FileText },
-        licence: { label: "Licence on file", icon: BadgeCheck },
-    };
-
-export const CHECK_STATE_KEYS: CheckState[] = ["pass", "warn", "fail"];
-
-export interface CheckStateMeta {
-    label: string;
-    noun: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-    weight: number;
-    score: number;
-}
-
-export const CHECK_STATES: Record<CheckState, CheckStateMeta> = {
-    pass: {
-        label: "Clear",
-        noun: "checks cleared",
-        icon: CheckCircle2,
-        tone: "success",
-        weight: 0,
-        score: 100,
-    },
-    warn: {
-        label: "Needs a look",
-        noun: "checks flagged for a look",
-        icon: AlertTriangle,
-        tone: "warning",
-        weight: 1,
-        score: 55,
-    },
-    fail: {
-        label: "Failing",
-        noun: "checks failing",
-        icon: XCircle,
-        tone: "error",
-        weight: 10,
-        score: 0,
-    },
-};
-
-export interface DecisionMeta {
-    title: string;
-    field: string;
-    placeholder: string;
-    submit: string;
-    status: ModerationStatus;
-    destructive: boolean;
-}
-
-export const MODERATION_DECISIONS: Record<DecisionMode, DecisionMeta> = {
-    changes: {
-        title: "Request changes",
-        field: "Feedback for the agent",
-        placeholder:
-            "Describe exactly what the agent must change before this listing can go live.",
-        submit: "Send feedback",
-        status: "changes",
-        destructive: false,
-    },
-    reject: {
-        title: "Reject listing",
-        field: "Reason for rejection",
-        placeholder:
-            "Explain what fails review. This reason is stored with the listing and sent to the agent.",
-        submit: "Reject listing",
-        status: "rejected",
-        destructive: true,
     },
 };
 

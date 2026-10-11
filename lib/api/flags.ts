@@ -1,3 +1,4 @@
+import { allPages } from "@/lib/api/all-pages";
 import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
@@ -12,6 +13,9 @@ import type {
 export const flagsAPI = {
     list: (input: FlagQuery = {}) =>
         query.get<FlagPage>(config.api.flags.list, { params: input }),
+
+    all: (input: FlagQuery = {}) =>
+        allPages((paging) => flagsAPI.list({ ...input, ...paging })),
 
     counts: () => query.get<FlagCounts>(config.api.flags.counts),
 

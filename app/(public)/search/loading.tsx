@@ -1,5 +1,5 @@
 import { Container } from "@/components/ui/container";
-import { SearchResultsSkeleton } from "@/components/sections/search/search-skeleton";
+import { SearchResultsSkeleton } from "@/components/sections/search/search-results-skeleton";
 
 export default function SearchLoading() {
     return (

@@ -1,11 +1,9 @@
 import { format } from "date-fns";
 import {
     MILESTONE_KINDS_META,
-    MILESTONE_ORDER,
     MILESTONE_STATUSES_META,
 } from "@/lib/config/contingency-tones";
 import type { MilestoneKind } from "@/lib/enums/enums";
-import { percentOf } from "@/lib/utils";
 import type { DealMilestone } from "@/lib/validations/offer";
 
 export const MILESTONE_DATE_FORMAT = "d MMM yyyy";
@@ -48,12 +46,6 @@ export const settledCount = (milestones: DealMilestone[]) =>
         (milestone) =>
             milestone.status === "COMPLETED" || milestone.status === "WAIVED",
     ).length;
-
-export const milestoneProgress = (milestones: DealMilestone[]) =>
-    percentOf(
-        settledCount(milestones),
-        milestones.length || MILESTONE_ORDER.length,
-    );
 
 export const isOverdue = (milestone: DealMilestone, now = new Date()) =>
     milestone.status === "SCHEDULED" &&

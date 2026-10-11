@@ -8,6 +8,7 @@ import { OverviewLeadList } from "@/components/features/agent/overview-lead-list
 import { QuickActionList } from "@/components/features/shared/quick-action-list";
 import { agentQuickActions } from "@/lib/data/agent-overview";
 import type { RecentLead, UpcomingShowing } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const SHOWINGS_TITLE = "Upcoming Showings";
 const SHOWINGS_ACTION = "Calendar";
@@ -19,10 +20,6 @@ const LEADS_ACTION = "All enquiries";
 const LEADS_EMPTY = "No enquiries yet";
 const LEADS_EMPTY_LEDE =
     "Buyers who reach out about one of your listings land here first.";
-const SHOWINGS_LOADING = "Loading your calendar";
-const SHOWINGS_LOADING_LEDE = "Fetching confirmed viewings on your listings.";
-const LEADS_LOADING = "Loading your enquiries";
-const LEADS_LOADING_LEDE = "Fetching buyers who reached out on your listings.";
 const ACTIONS_TITLE = "Quick Actions";
 
 export interface AgentOverviewRailProps {
@@ -49,15 +46,13 @@ export function AgentOverviewRail({
                     <PanelInset>
                         <OverviewShowingList showings={showings} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={CalendarOff}
-                        title={pending ? SHOWINGS_LOADING : SHOWINGS_EMPTY}
-                        description={
-                            pending
-                                ? SHOWINGS_LOADING_LEDE
-                                : SHOWINGS_EMPTY_LEDE
-                        }
+                        title={SHOWINGS_EMPTY}
+                        description={SHOWINGS_EMPTY_LEDE}
                     />
                 )}
             </Panel>
@@ -71,13 +66,13 @@ export function AgentOverviewRail({
                     <PanelInset>
                         <OverviewLeadList leads={leads} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={Inbox}
-                        title={pending ? LEADS_LOADING : LEADS_EMPTY}
-                        description={
-                            pending ? LEADS_LOADING_LEDE : LEADS_EMPTY_LEDE
-                        }
+                        title={LEADS_EMPTY}
+                        description={LEADS_EMPTY_LEDE}
                     />
                 )}
             </Panel>

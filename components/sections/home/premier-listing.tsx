@@ -11,18 +11,12 @@ import { SectionShell } from "@/components/patterns/section-shell";
 import { SectionHeading } from "@/components/patterns/section-heading";
 import { buttonVariants } from "@/components/ui/button";
 import { formatUsd } from "@/lib/utils";
-import type { Listing } from "@/lib/types";
+import type { Listing, PremierMediaView, PremierSpec } from "@/lib/types";
 import { PUBLIC_ROUTES } from "@/lib/constants";
 import { formatCount } from "@/lib/utils/format";
 import { PROPERTY_TYPE_LABELS } from "@/lib/enums/enums";
-import {
-    PremierListingMedia,
-    type PremierMediaView,
-} from "@/components/sections/home/premier-listing-media";
-import {
-    PremierSpecCluster,
-    type PremierSpec,
-} from "@/components/sections/home/premier-spec-cluster";
+import { PremierListingMedia } from "@/components/sections/home/premier-listing-media";
+import { PremierSpecCluster } from "@/components/sections/home/premier-spec-cluster";
 
 interface PremierListingProps {
     listing: Listing;
@@ -85,10 +79,6 @@ export function PremierListing({ listing }: PremierListingProps) {
                         </div>
 
                         <div className="relative isolate flex items-baseline gap-3">
-                            <div
-                                aria-hidden="true"
-                                className="bg-highlight/25 pointer-events-none absolute -top-6 -left-6 -z-10 h-24 w-56 rounded-full blur-3xl"
-                            />
                             <span className="font-display text-text text-h3 leading-none font-light tracking-tight tabular-nums">
                                 {view.price}
                             </span>
@@ -122,7 +112,7 @@ export function PremierListing({ listing }: PremierListingProps) {
                                 <ArrowRight
                                     size={12}
                                     strokeWidth={1.5}
-                                    className="text-highlight-dark"
+                                    className="text-accent"
                                 />
                             </Link>
                         </div>

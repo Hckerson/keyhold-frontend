@@ -1,139 +1,98 @@
-import type { BadgeTone } from "@/lib/types";
+import { DISPUTE_ACTIONS, DISPUTE_STATES } from "@/lib/config/dispute-tones";
+import {
+    byReviewOrder,
+    reviewMoment,
+    reviewReading,
+} from "@/lib/data/review-queue";
+import { resolveDisputeSchema } from "@/lib/validations/dispute";
 import type {
-    DisputeEvidenceType,
-    DisputeStatus as ApiDisputeStatus,
-} from "@/lib/enums/enums";
+    DisputeAction,
+    DisputeCase,
+    DisputeFilterKey,
+    ReviewClock,
+    ReviewQueueItem,
+} from "@/lib/types";
 
-export type DisputeStatus = ApiDisputeStatus;
-export type DisputeFilterKey = "all" | DisputeStatus;
-export type DisputeDecisionMode = "resolve" | "dismiss";
+const ALL: DisputeFilterKey = "all";
+const OPEN: DisputeFilterKey = "open";
+const READING = { open: "open", none: "No dispute is open" };
 
-export interface DisputeEvidenceItem {
-    id: string;
-    type: DisputeEvidenceType;
-    label: string;
-    content: string;
-}
+export const DISPUTE_COPY = {
+    title: "Disputes",
+    lede: "Claims raised on a deal. Each one freezes the deal's escrow until you decide where it goes",
+    claimHeading: "Claim",
+    stakeHeading: "At stake",
+    partyHeading: "Parties",
+    raisedIt: "raised it",
+    evidenceHeading: "Evidence",
+    noEvidence: "Nothing was attached to this dispute.",
+    resolutionHeading: "Resolution",
+    profile: "Open profile",
+    emptyTitle: "Queue clear",
+    emptyLede: "No disputes match this view.",
+    noteHint:
+        "Required, at least four characters. Both parties see it on the dispute record.",
+} as const;
 
-export interface DisputedDeal {
-    id: string;
-    property: string;
-    address: string;
-    amount: number;
-    escrowHoldId: string | null;
-}
+export const disputeClock = (dispute: DisputeCase): ReviewClock => ({
+    open: DISPUTE_STATES[dispute.status].open,
+    openedAt: dispute.openedAt,
+    decidedAt: dispute.decidedAt,
+});
 
-export interface DisputeCase {
-    id: string;
-    title: string;
-    description: string;
-    status: DisputeStatus;
-    initiator: string;
-    initiatorEmail: string;
-    openedAt: string;
-    waitingDays: number;
-    resolvedAt: string | null;
-    resolutionNotes: string | null;
-    amountAtStake: number;
-    evidence: DisputeEvidenceItem[];
-    deals: DisputedDeal[];
-}
-
-export interface DisputeAction {
-    label: string;
-    destructive?: boolean;
-    mode: DisputeDecisionMode;
-}
-
-export interface DisputeDecision {
-    mode: DisputeDecisionMode;
-    id: string;
-}
-
-export const disputeStatusMeta: Record<
-    DisputeStatus,
-    { tone: BadgeTone; label: string; open: boolean }
-> = {
-    OPEN: { tone: "error", label: "Open", open: true },
-    PENDING_REVIEW: { tone: "warning", label: "In review", open: true },
-    RESOLVED: { tone: "success", label: "Resolved", open: false },
-    DISMISSED: { tone: "neutral", label: "Dismissed", open: false },
+const inView = (dispute: DisputeCase, filter: DisputeFilterKey) => {
+    if (filter === ALL) return true;
+    if (filter === OPEN) return disputeClock(dispute).open;
+    return dispute.status === filter;
 };
 
-export const evidenceMeta: Record<DisputeEvidenceType, { label: string }> = {
-    MESSAGE: { label: "Message" },
-    PHOTO: { label: "Photo" },
-    DOCUMENT: { label: "Document" },
-};
-
-export const DISPUTE_FILTERS: { id: DisputeFilterKey; label: string }[] = [
-    { id: "all", label: "All" },
-    { id: "OPEN", label: "Open" },
-    { id: "PENDING_REVIEW", label: "In review" },
-    { id: "RESOLVED", label: "Resolved" },
-    { id: "DISMISSED", label: "Dismissed" },
-];
-
-export const disputeActionsByStatus: Record<DisputeStatus, DisputeAction[]> = {
-    OPEN: [
-        { label: "Resolve in full", mode: "resolve" },
-        { label: "Dismiss", destructive: true, mode: "dismiss" },
-    ],
-    PENDING_REVIEW: [
-        { label: "Resolve in full", mode: "resolve" },
-        { label: "Dismiss", destructive: true, mode: "dismiss" },
-    ],
-    RESOLVED: [],
-    DISMISSED: [],
-};
-
-export const DISPUTE_DECISION_COPY: Record<
-    DisputeDecisionMode,
-    { title: string; label: string; placeholder: string; submit: string }
-> = {
-    resolve: {
-        title: "Resolve this dispute",
-        label: "How it was resolved",
-        placeholder:
-            "State the outcome and what happens to the money. Both parties keep this on the transaction record.",
-        submit: "Resolve dispute",
-    },
-    dismiss: {
-        title: "Dismiss this dispute",
-        label: "Why it is being dismissed",
-        placeholder:
-            "Explain why no action is warranted. The person who raised it sees this.",
-        submit: "Dismiss dispute",
-    },
-};
-
-export const isOpenDispute = (dispute: DisputeCase) =>
-    disputeStatusMeta[dispute.status].open;
-
-export const rankDisputes = (disputes: DisputeCase[]) =>
-    [...disputes].sort(
-        (a, b) =>
-            Number(isOpenDispute(b)) - Number(isOpenDispute(a)) ||
-            b.amountAtStake - a.amountAtStake ||
-            b.waitingDays - a.waitingDays,
-    );
-
-export const countDisputes = (disputes: DisputeCase[]) => {
+export const disputeCounts = (items: DisputeCase[]) => {
     const counts: Record<DisputeFilterKey, number> = {
-        all: disputes.length,
-        OPEN: 0,
-        PENDING_REVIEW: 0,
+        open: 0,
         RESOLVED: 0,
         DISMISSED: 0,
+        all: items.length,
     };
-    for (const dispute of disputes) counts[dispute.status] += 1;
+    for (const item of items) {
+        if (item.status === "RESOLVED" || item.status === "DISMISSED")
+            counts[item.status] += 1;
+        else counts.open += 1;
+    }
     return counts;
 };
 
-export const filterDisputes = (
+export const disputesIn = (items: DisputeCase[], filter: DisputeFilterKey) =>
+    items
+        .filter((item) => inView(item, filter))
+        .sort((a, b) => byReviewOrder(disputeClock(a), disputeClock(b)));
+
+export const disputeReading = (items: DisputeCase[], now = new Date()) =>
+    reviewReading(items.map(disputeClock), READING, now);
+
+export const disputeQueueItems = (
     disputes: DisputeCase[],
-    filter: DisputeFilterKey,
-) =>
-    filter === "all"
-        ? disputes
-        : disputes.filter((dispute) => dispute.status === filter);
+    mixed: boolean,
+    now = new Date(),
+): ReviewQueueItem[] =>
+    disputes.map((dispute) => ({
+        id: dispute.id,
+        title: dispute.title,
+        caption: [dispute.initiator, dispute.deals[0]?.property]
+            .filter(Boolean)
+            .join(" · "),
+        moment: reviewMoment(disputeClock(dispute), now),
+        status:
+            mixed && !disputeClock(dispute).open
+                ? DISPUTE_STATES[dispute.status]
+                : undefined,
+    }));
+
+export const disputeActions = (dispute: DisputeCase): DisputeAction[] => {
+    if (!disputeClock(dispute).open) return [];
+    return dispute.deals.some((deal) => deal.holdId)
+        ? DISPUTE_ACTIONS.escrow
+        : DISPUTE_ACTIONS.plain;
+};
+
+export const noteReady = (note: string) =>
+    resolveDisputeSchema.shape.resolutionNotes.safeParse(note.trim()).success;

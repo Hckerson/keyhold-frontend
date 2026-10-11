@@ -37,7 +37,10 @@ export function SavedTable({ listings, onRemove }: SavedTableProps) {
                     >
                         Move
                     </th>
-                    <th scope="col" className="micro-label w-24 pl-3 text-left">
+                    <th
+                        scope="col"
+                        className="micro-label w-16 pl-3 text-right"
+                    >
                         Match
                     </th>
                     <th

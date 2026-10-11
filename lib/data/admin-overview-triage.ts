@@ -1,16 +1,30 @@
 import { formatAge, formatCount, percentOf } from "@/lib/utils";
 import type {
     DecisionLane,
-    ModerationQueueLoad,
+    ModerationQueueId,
     QueueReadiness,
 } from "@/lib/types";
-import type { UserStats } from "@/lib/validations/stats";
 
-export const queueReadiness = (
-    queries: { isError: boolean; isPending: boolean }[],
-): QueueReadiness => {
+export type QueryState = { isError: boolean; isPending: boolean };
+type LaneReadiness = Record<ModerationQueueId, QueueReadiness>;
+
+export const sourceReadiness = (queries: QueryState[]): QueueReadiness => {
     if (queries.some((query) => query.isError)) return "error";
     return queries.some((query) => query.isPending) ? "pending" : "ready";
+};
+
+export const laneReadiness = (sources: Record<ModerationQueueId, QueryState>) =>
+    Object.fromEntries(
+        Object.entries(sources).map(([id, query]) => [
+            id,
+            sourceReadiness([query]),
+        ]),
+    ) as LaneReadiness;
+
+export const deckReadiness = (lanes: LaneReadiness): QueueReadiness => {
+    const states = Object.values(lanes);
+    if (states.includes("error")) return "error";
+    return states.includes("pending") ? "pending" : "ready";
 };
 
 const byUrgency = (a: DecisionLane, b: DecisionLane) =>
@@ -18,16 +32,11 @@ const byUrgency = (a: DecisionLane, b: DecisionLane) =>
     (b.oldestMinutes ?? -1) - (a.oldestMinutes ?? -1);
 
 export const decisionLanes = (
-    queues: ModerationQueueLoad[],
-    users: UserStats | undefined,
+    queues: Omit<DecisionLane, "share">[],
 ): DecisionLane[] => {
-    const loads: Omit<DecisionLane, "share">[] = [
-        ...queues,
-        { id: "accounts", backlog: users?.pending ?? 0, oldestMinutes: null },
-    ];
-    const open = loads.reduce((total, lane) => total + lane.backlog, 0);
+    const open = queues.reduce((total, lane) => total + lane.backlog, 0);
 
-    return loads
+    return queues
         .map(
             (lane): DecisionLane => ({
                 ...lane,

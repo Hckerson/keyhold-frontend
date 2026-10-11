@@ -1,25 +1,21 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
+import { ADMIN_ROUTES } from "@/lib/constants";
+import { FEE_RATE_LABEL } from "@/lib/data/admin-payments";
 
 const PAYMENTS_TITLE = "Payments & Payouts";
-const PAYMENTS_LEDE =
-    "What the platform earned, what it still owes agents, and what is stuck on the way out";
+const PAYMENTS_LEDE = `What escrow still holds, what agents are owed, and what is stuck on the way out, at a ${FEE_RATE_LABEL} platform fee`;
 const LEDGER_ACTION = "Transaction Ledger";
 
-export interface AdminPaymentsHeaderProps {
-    summary: string;
-}
-
-export function AdminPaymentsHeader({ summary }: AdminPaymentsHeaderProps) {
+export function AdminPaymentsHeader() {
     return (
         <PortalHeader
             title={PAYMENTS_TITLE}
             lede={PAYMENTS_LEDE}
-            summary={summary}
             action={
                 <Link
-                    href="/admin/transactions"
+                    href={ADMIN_ROUTES.transactions}
                     className={buttonVariants({
                         emphasis: "solid",
                         tone: "accent",

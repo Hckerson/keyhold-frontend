@@ -1,5 +1,5 @@
 import { OverviewTaskRow } from "@/components/features/dashboard/overview-task-row";
-import type { JourneyTask } from "@/lib/data/dashboard-overview";
+import type { JourneyTask } from "@/lib/types";
 
 export interface OverviewTaskListProps {
     tasks: JourneyTask[];

@@ -1,13 +1,11 @@
 import { BadgeCheck, BellRing, UserCheck } from "lucide-react";
-import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import { strengthTone } from "@/lib/config/account-tones";
 import {
     enabledNotificationCount,
     NOTIFICATION_RULE_COUNT,
-    type NotificationState,
 } from "@/lib/data/agent-account";
-import type { User } from "@/lib/validations/user";
+import type { UpdateUserInput, User } from "@/lib/validations/user";
+import type { ConfigField, NotificationState, StatDatum } from "@/lib/types";
 
 export const AGENT_SETTINGS_FORM_ID = "agent-settings-form";
 
@@ -30,6 +28,18 @@ export const toAgentForm = (user: User | undefined): AgentSettingsForm => ({
     brokerage: user?.agencyName ?? "",
     license: user?.licenseNumber ?? "",
     bio: user?.bio ?? "",
+});
+
+export const toAgentUserPayload = (
+    form: AgentSettingsForm,
+): UpdateUserInput => ({
+    fullName: form.fullName,
+    email: form.email,
+    phoneNumber: form.phone,
+    jobTitle: form.jobTitle,
+    agencyName: form.brokerage,
+    licenseNumber: form.license,
+    bio: form.bio,
 });
 
 export const changedFieldCount = (
@@ -99,6 +109,6 @@ export const buildAgentSettingsStats = (
         icon: BadgeCheck,
         label: "Credentials",
         value: `${verified}/${credentials}`,
-        tone: verified === credentials ? "success" : "warning",
+        tone: verified === credentials ? "accent" : "neutral",
     },
 ];

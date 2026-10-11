@@ -8,11 +8,8 @@ import { WalkedViewingTable } from "@/components/features/dashboard/walked-viewi
 import { ViewingsNextHero } from "@/components/sections/dashboard/viewings-next-hero";
 import { ViewingsShares } from "@/components/sections/dashboard/viewings-shares";
 import { ViewingsToolbar } from "@/components/sections/dashboard/viewings-toolbar";
-import type {
-    ViewingModeFilter,
-    ViewingStatusFilter,
-} from "@/lib/data/viewings";
-import type { Viewing } from "@/lib/types";
+import type { Viewing, ViewingModeFilter, ViewingStatusFilter } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const SCHEDULE_TITLE = "Schedule";
 const SCHEDULE_LEDE = "Every tour behind the one you walk next";
@@ -22,8 +19,6 @@ const WALKED_LEDE = "What you toured and where each one left you";
 const EMPTY_TITLE = "Nothing matches this view";
 const EMPTY_LEDE =
     "Widen the status or format filter, or clear the date to see the full schedule.";
-const LOADING_TITLE = "Loading your schedule";
-const LOADING_LEDE = "Fetching every viewing across your enquiries.";
 
 export interface ViewingsMainProps {
     next?: Viewing;
@@ -101,11 +96,13 @@ export function ViewingsMain({
                             onCancel={onCancel}
                         />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={CalendarDays}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                     />
                 )}
             </Panel>

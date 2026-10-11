@@ -1,7 +1,6 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { DeltaChip } from "@/components/ui/delta-chip";
-import { formatMillions } from "@/lib/utils";
-import type { MonthlyProduction } from "@/lib/data/agent-analytics";
+import { formatMillions, percentOf } from "@/lib/utils";
+import type { MonthlyProduction } from "@/lib/types";
 
 const NO_DELTA = "—";
 
@@ -16,7 +15,7 @@ export function AnalyticsMonthRow({
     previousVolume,
     peakVolume,
 }: AnalyticsMonthRowProps) {
-    const share = peakVolume > 0 ? (month.volume / peakVolume) * 100 : 0;
+    const share = percentOf(month.volume, peakVolume);
     const deltaPct = previousVolume
         ? ((month.volume - previousVolume) / previousVolume) * 100
         : null;
@@ -29,17 +28,8 @@ export function AnalyticsMonthRow({
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
                 {month.closings}
             </td>
-            <td className="py-0 pl-3">
-                <div className="flex items-center gap-2">
-                    <ProgressBar
-                        value={share}
-                        tone="accent"
-                        className="min-w-0 flex-1"
-                    />
-                    <span className="text-text-secondary w-9 shrink-0 text-right text-xs tabular-nums">
-                        {Math.round(share)}%
-                    </span>
-                </div>
+            <td className="text-accent py-0 pl-3 text-right text-xs font-medium tabular-nums">
+                {share}%
             </td>
             <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
                 {formatMillions(month.volume)}

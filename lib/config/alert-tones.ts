@@ -15,8 +15,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { AlertChannel, AlertType } from "@/lib/types";
+import type { AlertChannel, AlertType, StatusTone } from "@/lib/types";
 
 export const ALERT_TYPE_KEYS: AlertType[] = [
     "PRICE_DROP",
@@ -32,7 +31,7 @@ export const ALERT_TYPE_KEYS: AlertType[] = [
 export interface AlertTypeMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
 }
@@ -42,28 +41,28 @@ export const ALERT_TYPES: Record<AlertType, AlertTypeMeta> = {
         label: "Price Drop",
         icon: TrendingDown,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 8,
     },
     OFFER_RESPONSE: {
         label: "Offer Reply",
         icon: FileText,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 7,
     },
     NEW_LISTING: {
         label: "New Match",
         icon: Sparkles,
         tone: "info",
-        chartTone: "highlight",
+        chartTone: "neutral",
         rank: 6,
     },
     MESSAGE_RECEIVED: {
         label: "Message",
         icon: MessageSquare,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 5,
     },
     CONNECTION_REQUEST: {
@@ -77,7 +76,7 @@ export const ALERT_TYPES: Record<AlertType, AlertTypeMeta> = {
         label: "Under Offer",
         icon: Handshake,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 3,
     },
     VIEWING_CONFIRMATION: {
@@ -106,12 +105,12 @@ export interface AlertChannelMeta {
 }
 
 export const ALERT_CHANNELS: Record<AlertChannel, AlertChannelMeta> = {
-    email: { label: "Email", short: "Eml", icon: Mail, chartTone: "info" },
+    email: { label: "Email", short: "Eml", icon: Mail, chartTone: "neutral" },
     sms: {
         label: "SMS",
         short: "Sms",
         icon: MessageSquare,
-        chartTone: "warning",
+        chartTone: "neutral",
     },
     inApp: { label: "In-app", short: "App", icon: Bell, chartTone: "accent" },
 };
@@ -143,7 +142,7 @@ export const RECENCY_BANDS: Record<RecencyBand, RecencyBandMeta> = {
     live: {
         label: "Live — within the hour",
         icon: Radio,
-        tone: "success",
+        tone: "accent",
         ceiling: 60,
     },
     today: {

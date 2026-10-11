@@ -3,9 +3,10 @@
 import {
     alignClass,
     footCell,
-    type DataTableColumn,
+    WIDE_CELL,
 } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
+import type { DataTableColumn } from "@/lib/types";
 
 export interface DataTableFootProps<T> {
     columns: DataTableColumn<T>[];
@@ -25,8 +26,9 @@ export function DataTableFoot<T>({
     return (
         <tfoot
             className={cn(
-                "border-border-dark border-t",
-                bare ? "bg-transparent" : "bg-background/60 backdrop-blur-md",
+                bare
+                    ? "border-border-light border-t bg-transparent"
+                    : "border-border-dark bg-background/60 border-t backdrop-blur-md",
             )}
         >
             <tr>
@@ -37,6 +39,7 @@ export function DataTableFoot<T>({
                         className={cn(
                             footCell,
                             alignClass[column.align ?? "left"],
+                            column.wide && WIDE_CELL,
                         )}
                     >
                         {column.footer?.(rows)}

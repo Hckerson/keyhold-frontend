@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 type DeltaDirection = "below" | "above";
 
 const DELTA_TONE: Record<DeltaDirection, string> = {
-    below: "bg-success-light text-success",
-    above: "bg-warning-light text-warning",
+    below: "bg-accent-light text-accent",
+    above: "bg-background-muted text-text-secondary",
 };
 
 const DELTA_ICON: Record<DeltaDirection, LucideIcon> = {

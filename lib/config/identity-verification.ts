@@ -8,6 +8,13 @@ export const IDENTITY_DOCUMENT_TYPES = [
 export type IdentityDocumentType =
     (typeof IDENTITY_DOCUMENT_TYPES)[number]["value"];
 
+export const IDENTITY_DOCUMENT_CODES: Record<string, IdentityDocumentType> = {
+    PASSPORT: "Passport",
+    DRIVERS_LICENSE: "Driver's licence",
+    ID_CARD: "National ID card",
+    RESIDENCE_PERMIT: "Residence permit",
+};
+
 export const IDENTITY_ACCEPT =
     "image/jpeg,image/png,image/webp,application/pdf";
 export const IDENTITY_MAX_BYTES = 10 * 1024 * 1024;

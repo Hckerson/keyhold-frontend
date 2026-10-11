@@ -2,7 +2,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { AnalyticsBenchmarkTable } from "@/components/features/agent/analytics-benchmark-table";
 import { AnalyticsQuarterList } from "@/components/features/agent/analytics-quarter-list";
-import type { Benchmark, QuarterSummary } from "@/lib/data/agent-analytics";
+import type { Benchmark, QuarterSummary } from "@/lib/types";
 
 const BENCHMARK_TITLE = "Market Position";
 const BENCHMARK_LEDE = "Your figures against the platform average";

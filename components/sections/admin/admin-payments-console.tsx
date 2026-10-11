@@ -3,49 +3,47 @@
 import { useMemo, useState } from "react";
 import { AdminPaymentsHeader } from "@/components/sections/admin/admin-payments-header";
 import { AdminPaymentsMain } from "@/components/sections/admin/admin-payments-main";
-import { AdminPaymentsRail } from "@/components/sections/admin/admin-payments-rail";
 import { AdminPaymentsStatBand } from "@/components/sections/admin/admin-payments-stat-band";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { EscrowSettleModal } from "@/components/features/admin/escrow-settle-modal";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
-    heldPayouts,
+    escrowPosition,
     matchesPayoutFilters,
-    outstandingPayout,
-    paymentStats,
-    paymentsSummary,
-    payoutCounts,
-    rankPayouts,
-    settlementMetrics,
+    matchesPayoutQuery,
+    payoutsReading,
     toPayoutStages,
     type PayoutStateFilter,
 } from "@/lib/data/admin-payments";
+import { orderPayouts } from "@/lib/data/admin-payout-phase";
 import { useEscrowHolds, useEscrowStages } from "@/lib/hooks/use-escrow";
 import { useEscrowSettle } from "@/lib/hooks/use-escrow-settle";
 import { toPayouts } from "@/lib/utils/to-payout";
 
-const HOLD_PAGE_SIZE = 100;
+const EVERY_STATE: PayoutStateFilter = "all";
 
 export function AdminPaymentsConsole() {
-    const holds = useEscrowHolds({ limit: HOLD_PAGE_SIZE });
+    const holds = useEscrowHolds();
     const stages = useEscrowStages();
     const settle = useEscrowSettle();
 
-    const [stateFilter, setStateFilter] = useState<PayoutStateFilter>("all");
+    const [stateFilter, setStateFilter] =
+        useState<PayoutStateFilter>(EVERY_STATE);
+    const [query, setQuery] = useState("");
 
     const payouts = useMemo(
-        () => rankPayouts(toPayouts(holds.data?.items ?? [])),
-        [holds.data?.items],
+        () => orderPayouts(toPayouts(holds.data ?? [])),
+        [holds.data],
     );
-
-    const counts = useMemo(() => payoutCounts(payouts), [payouts]);
 
     const visible = useMemo(
         () =>
-            payouts.filter((payout) =>
-                matchesPayoutFilters(payout, stateFilter),
+            payouts.filter(
+                (payout) =>
+                    matchesPayoutFilters(payout, stateFilter) &&
+                    matchesPayoutQuery(payout, query),
             ),
-        [payouts, stateFilter],
+        [payouts, stateFilter, query],
     );
 
     const pipeline = useMemo(
@@ -63,31 +61,28 @@ export function AdminPaymentsConsole() {
 
     return (
         <div className="flex flex-col gap-4">
-            <AdminPaymentsHeader summary={paymentsSummary(payouts)} />
+            <AdminPaymentsHeader />
 
             <AdminPaymentsStatBand
-                stats={paymentStats(payouts)}
-                pending={holds.isPending}
+                position={escrowPosition(pipeline)}
+                stages={pipeline}
+                active={stateFilter}
+                pending={stages.isPending}
+                failed={stages.isError}
+                onChange={setStateFilter}
             />
 
-            <div className="console-split gap-3">
-                <AdminPaymentsMain
-                    payouts={visible}
-                    stateFilter={stateFilter}
-                    counts={counts}
-                    held={outstandingPayout(payouts)}
-                    heldLabel={paymentsSummary(payouts)}
-                    metrics={settlementMetrics(payouts)}
-                    pending={holds.isPending}
-                    onStateFilterChange={setStateFilter}
-                    onSettle={settle.open}
-                />
-                <AdminPaymentsRail
-                    stages={pipeline}
-                    heldCount={heldPayouts(payouts).length}
-                    metrics={settlementMetrics(payouts)}
-                />
-            </div>
+            <AdminPaymentsMain
+                payouts={visible}
+                total={payouts.length}
+                reading={payoutsReading(payouts, stateFilter)}
+                query={query}
+                filtered={stateFilter !== EVERY_STATE}
+                pending={holds.isPending}
+                onQueryChange={setQuery}
+                onClearFilter={() => setStateFilter(EVERY_STATE)}
+                onSettle={settle.open}
+            />
 
             <EscrowSettleModal
                 payout={settle.payout}

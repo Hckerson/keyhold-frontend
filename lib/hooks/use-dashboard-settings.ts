@@ -1,8 +1,9 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useUnsavedChangesWarning } from "@/lib/hooks/use-unsaved-changes-warning";
+import { useHydratedState } from "@/lib/hooks/use-hydrated-state";
+import { useSettingsSecurity } from "@/lib/hooks/use-settings-security";
 import {
     arePreferencesDirty,
     emptyPreferences,
@@ -10,38 +11,31 @@ import {
     toggleEnabled,
     toPreferenceList,
     toPreferenceMap,
-} from "@/lib/data/alerts";
+} from "@/lib/data/alerts-preferences";
 import {
     buyerDocuments,
     searchProfileStrength,
     searchSignals,
-    type SettingsDialogKey,
+    verifiedDocumentCount,
 } from "@/lib/data/buyer-account";
 import {
     buildDashboardSettingsStats,
     changedFieldCount,
-    DATA_EXPORT_FILENAME,
-    EMPTY_PROFILE,
     profileStrength,
     toProfileForm,
-    type ProfileForm,
 } from "@/lib/data/dashboard-settings";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useSavedProperties } from "@/lib/hooks/use-saved-properties";
 import {
     useCurrentUser,
+    useExportPersonalData,
     useUpdateUser,
     useUploadAvatar,
 } from "@/lib/hooks/use-users";
-import { useRequestPasswordReset } from "@/lib/hooks/use-session";
 import {
     useNotificationPreferences,
     useUpdateNotificationPreferences,
 } from "@/lib/hooks/use-notifications";
-import { verifiedDocumentCount } from "@/lib/data/buyer-account";
-import { downloadJson } from "@/lib/utils/download";
-import { usersAPI } from "@/lib/api/users";
-import { FEEDBACK } from "@/lib/config/feedback";
 import type { AlertChannel, AlertType } from "@/lib/types";
 
 export function useDashboardSettings() {
@@ -52,32 +46,21 @@ export function useDashboardSettings() {
     const updateUser = useUpdateUser(user?.id ?? "");
     const storedPreferences = useNotificationPreferences();
     const updatePreferences = useUpdateNotificationPreferences();
-    const requestReset = useRequestPasswordReset();
     const uploadAvatar = useUploadAvatar();
+    const exportMine = useExportPersonalData();
+    const security = useSettingsSecurity(user?.email);
 
     const queries = [currentUser, saved_, connections, storedPreferences];
 
     const baseline = toProfileForm(user);
-    const [form, setForm] = useState<ProfileForm>(EMPTY_PROFILE);
-    const [hydrated, setHydrated] = useState(false);
-
-    if (user && !hydrated) {
-        setForm(baseline);
-        setHydrated(true);
-    }
+    const [form, setForm] = useHydratedState(Boolean(user), baseline);
     const preferenceBaseline = storedPreferences.data
         ? toPreferenceMap(storedPreferences.data)
         : emptyPreferences();
-    const [preferences, setPreferences] = useState(preferenceBaseline);
-    const [preferencesHydrated, setPreferencesHydrated] = useState(false);
-
-    if (storedPreferences.data && !preferencesHydrated) {
-        setPreferences(preferenceBaseline);
-        setPreferencesHydrated(true);
-    }
-
-    const [dialog, setDialog] = useState<SettingsDialogKey | null>(null);
-    const [resetSent, setResetSent] = useState(false);
+    const [preferences, setPreferences] = useHydratedState(
+        Boolean(storedPreferences.data),
+        preferenceBaseline,
+    );
     const [saved, setSaved] = useState(false);
 
     const saving = updateUser.isPending || updatePreferences.isPending;
@@ -129,20 +112,8 @@ export function useDashboardSettings() {
         setSaved(false);
     };
 
-    const runSecurityAction = (id: SettingsDialogKey) => {
-        setResetSent(false);
-        setDialog(id);
-    };
-
-    const sendPasswordReset = () => {
-        if (!user?.email) return;
-        requestReset.mutate(
-            { email: user.email },
-            { onSuccess: () => setResetSent(true) },
-        );
-    };
-
     const documents = buyerDocuments(user);
+    const verifiedCount = verifiedDocumentCount(documents);
     const signals = searchSignals(
         user,
         saved_.data?.length ?? 0,
@@ -152,32 +123,24 @@ export function useDashboardSettings() {
         (searchProfileStrength(signals) + profileStrength(form)) / 2,
     );
 
-    const exportMine = useMutation({
-        meta: FEEDBACK.exportPersonalData,
-        mutationFn: () => usersAPI.exportMine(),
-        onSuccess: (data) => downloadJson(data, DATA_EXPORT_FILENAME),
-    });
-
     const exportData = () => {
         if (!exportMine.isPending) exportMine.mutate();
     };
 
     return {
+        ...security,
         form,
         preferences,
-        dialog,
-        resetSent,
         failed: queries.some((query) => query.isError),
         loading: queries.some((query) => query.isPending),
         retry: () => queries.forEach((query) => void query.refetch()),
-        resettingPassword: requestReset.isPending,
         saved,
         saving,
         dirty,
         pending,
         stats: buildDashboardSettingsStats(
             strength,
-            verifiedDocumentCount(documents),
+            verifiedCount,
             documents.length,
             preferences,
         ),
@@ -185,15 +148,12 @@ export function useDashboardSettings() {
         signals,
         strength,
         documents,
-        verifiedCount: verifiedDocumentCount(documents),
-        setDialog,
+        verifiedCount,
         changeField,
         switchEnabled,
         switchChannel,
-        sendPasswordReset,
         submit,
         reset,
-        runSecurityAction,
         exportData,
         exporting: exportMine.isPending,
         exportFailed: exportMine.isError,

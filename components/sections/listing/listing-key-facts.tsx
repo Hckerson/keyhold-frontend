@@ -8,7 +8,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import { FactCell } from "@/components/sections/listing/fact-cell";
-import { SectionEyebrow } from "@/components/patterns/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-eyebrow";
 
 import type { Listing } from "@/lib/types";
 import { formatCount, formatUsd } from "@/lib/utils/format";

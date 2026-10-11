@@ -1,3 +1,4 @@
+import { allPages } from "@/lib/api/all-pages";
 import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
@@ -12,6 +13,9 @@ import type {
 export const kycAPI = {
     list: (input: KycQuery = {}) =>
         query.get<IdentityDocumentPage>(config.api.kyc.list, { params: input }),
+
+    queue: (input: KycQuery = {}) =>
+        allPages((paging) => kycAPI.list({ ...input, ...paging })),
 
     counts: () => query.get<KycCounts>(config.api.kyc.counts),
 

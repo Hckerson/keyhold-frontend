@@ -1,56 +1,25 @@
 import { differenceInCalendarDays, format } from "date-fns";
-import { Building2, CircleSlash, UserCheck, Users, Wallet } from "lucide-react";
-import type { FilterPill } from "@/components/patterns/filter-pills";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
-import type { SelectOption } from "@/components/ui/forms/select";
-import {
-    USER_ROLES,
-    USER_ROLE_KEYS,
-    USER_STATUSES,
-    USER_STATUS_KEYS,
-} from "@/lib/config/user-tones";
-import {
-    formatCompactUsd,
-    formatCount,
-    parseLocalDate,
-    percentOf,
-    sum,
-} from "@/lib/utils";
+import { USER_STATUSES } from "@/lib/config/user-tones";
+import { parseLocalDate } from "@/lib/utils";
 import type {
     ManagedUser,
-    ManagedUserRole,
-    UserBreakdown,
+    SelectOption,
+    UserAction,
     UserDirectoryFilters,
     UserRoleFilter,
     UserSortKey,
-    UserStatus,
     UserStatusFilter,
 } from "@/lib/types";
 
-const COHORT_FORMAT = "yyyy";
 const JOINED_FORMAT = "MMM yyyy";
 const EVERY_STATUS: UserStatusFilter = "all";
 const EVERY_ROLE: UserRoleFilter = "all";
 
-export const USER_STATUS_FILTERS: FilterPill<UserStatusFilter>[] = [
-    { id: EVERY_STATUS, label: "All" },
-    ...USER_STATUS_KEYS.map((id) => ({ id, label: USER_STATUSES[id].label })),
-];
-
-export const USER_ROLE_OPTIONS: SelectOption<UserRoleFilter>[] = [
-    { value: EVERY_ROLE, label: "All roles" },
-    ...USER_ROLE_KEYS.map((id) => ({
-        value: id,
-        label: USER_ROLES[id].plural,
-    })),
-];
-
 export const USER_SORT_OPTIONS: SelectOption<UserSortKey>[] = [
+    { value: "recent", label: "Recently active" },
     { value: "priority", label: "Needs attention" },
     { value: "volume", label: "Lifetime volume" },
     { value: "deals", label: "Closed deals" },
-    { value: "recent", label: "Recently active" },
     { value: "name", label: "Name" },
 ];
 
@@ -60,16 +29,14 @@ export const idleDays = (user: ManagedUser) =>
         differenceInCalendarDays(new Date(), parseLocalDate(user.lastActive)),
     );
 
+export const dealsLabel = (deals: number) =>
+    `${deals} deal${deals === 1 ? "" : "s"}`;
+
 export const joinedLabel = (user: ManagedUser) =>
     format(parseLocalDate(user.joinDate), JOINED_FORMAT);
 
-export const cohortOf = (user: ManagedUser) =>
-    format(parseLocalDate(user.joinDate), COHORT_FORMAT);
-
 export const statusRisk = (user: ManagedUser) =>
     USER_STATUSES[user.status].risk;
-
-export const isAtRisk = (user: ManagedUser) => statusRisk(user) > 0;
 
 export const userNote = (user: ManagedUser) =>
     user.note ?? USER_STATUSES[user.status].note;
@@ -84,11 +51,13 @@ const SORTERS: Record<UserSortKey, (a: ManagedUser, b: ManagedUser) => number> =
         name: (a, b) => a.name.localeCompare(b.name),
     };
 
+export const userActionOf = (user: ManagedUser): UserAction | undefined => {
+    if (user.status === "deleted" || user.role === "admin") return undefined;
+    return user.status === "suspended" ? "reactivate" : "suspend";
+};
+
 export const sortUsers = (users: ManagedUser[], key: UserSortKey) =>
     [...users].sort(SORTERS[key]);
-
-export const focusUser = (users: ManagedUser[]) =>
-    sortUsers(users, "priority")[0];
 
 export const matchesUserFilters = (
     user: ManagedUser,
@@ -104,117 +73,3 @@ export const matchesUserFilters = (
         (filters.role === EVERY_ROLE || user.role === filters.role)
     );
 };
-
-const ZERO_STATUS_COUNTS: Record<UserStatus, number> = {
-    active: 0,
-    pending: 0,
-    suspended: 0,
-    deleted: 0,
-};
-
-export const countUsersByStatus = (
-    users: ManagedUser[],
-): Record<UserStatusFilter, number> =>
-    users.reduce<Record<UserStatusFilter, number>>(
-        (counts, user) => ({
-            ...counts,
-            [user.status]: counts[user.status] + 1,
-        }),
-        { all: users.length, ...ZERO_STATUS_COUNTS },
-    );
-
-export const countUsersByRole = (users: ManagedUser[], role: ManagedUserRole) =>
-    users.filter((user) => user.role === role).length;
-
-export const peakVolume = (users: ManagedUser[]) =>
-    Math.max(0, ...users.map((user) => user.volume));
-
-export const directoryVolume = (users: ManagedUser[]) =>
-    sum(users.map((user) => user.volume));
-
-export const directoryDeals = (users: ManagedUser[]) =>
-    sum(users.map((user) => user.transactions));
-
-export const userStats = (users: ManagedUser[]): StatDatum[] => {
-    const counts = countUsersByStatus(users);
-
-    return [
-        {
-            id: "accounts",
-            icon: Users,
-            label: "Accounts",
-            value: formatCount(users.length),
-            tone: "accent",
-        },
-        {
-            id: "active",
-            icon: UserCheck,
-            label: "Active",
-            value: `${counts.active}`,
-            tone: "success",
-        },
-        {
-            id: "agents",
-            icon: Building2,
-            label: "Agents",
-            value: `${countUsersByRole(users, "agent")}`,
-            tone: "info",
-        },
-        {
-            id: "suspended",
-            icon: CircleSlash,
-            label: "Suspended",
-            value: `${counts.suspended}`,
-            tone: "error",
-        },
-        {
-            id: "volume",
-            icon: Wallet,
-            label: "Lifetime volume",
-            value: formatCompactUsd(directoryVolume(users)),
-            tone: "highlight",
-        },
-    ];
-};
-
-export const userSummary = (users: ManagedUser[]) => {
-    const counts = countUsersByStatus(users);
-    return `${counts.active} active · ${users.filter(isAtRisk).length} needing review · ${formatCompactUsd(directoryVolume(users))} lifetime`;
-};
-
-export const roleShares = (users: ManagedUser[]): ShareDatum[] =>
-    USER_ROLE_KEYS.map((id) => {
-        const count = countUsersByRole(users, id);
-        return {
-            id,
-            icon: USER_ROLES[id].icon,
-            label: USER_ROLES[id].plural,
-            value: `${count}`,
-            percent: percentOf(count, users.length),
-            tone: USER_ROLES[id].tone,
-        };
-    });
-
-const breakdownOf = (
-    id: string,
-    label: string,
-    rows: ManagedUser[],
-): UserBreakdown => ({
-    id,
-    label,
-    accounts: rows.length,
-    deals: directoryDeals(rows),
-    volume: directoryVolume(rows),
-});
-
-export const cohortBreakdowns = (users: ManagedUser[]) =>
-    [...new Set(users.map(cohortOf))].sort().map((year) =>
-        breakdownOf(
-            year,
-            year,
-            users.filter((user) => cohortOf(user) === year),
-        ),
-    );
-
-export const peakBreakdownVolume = (breakdowns: UserBreakdown[]) =>
-    Math.max(0, ...breakdowns.map((breakdown) => breakdown.volume));

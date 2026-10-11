@@ -1,29 +1,9 @@
 import type { ReactNode } from "react";
+import {
+    SectionEyebrow,
+    type SectionEyebrowProps,
+} from "@/components/patterns/section-eyebrow";
 import { cn } from "@/lib/utils";
-
-export const sectionEyebrowClass =
-    "font-mono text-[10px] tracking-[0.18em] uppercase";
-
-export function SectionEyebrow({
-    children,
-    tone = "brass",
-}: {
-    children: ReactNode;
-    tone?: "brass" | "muted";
-}) {
-    return (
-        <p
-            className={cn(
-                sectionEyebrowClass,
-                tone === "brass" ? "text-highlight-dark" : "text-text-muted",
-            )}
-        >
-            {children}
-        </p>
-    );
-}
-
-SectionEyebrow.displayName = "SectionEyebrow";
 
 export function SectionHeading({
     eyebrow,
@@ -33,7 +13,7 @@ export function SectionHeading({
 }: {
     eyebrow: string;
     title: ReactNode;
-    tone?: "brass" | "muted";
+    tone?: SectionEyebrowProps["tone"];
     className?: string;
 }) {
     return (

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
+import { ADMIN_ROUTES } from "@/lib/constants";
 
 const MODERATION_TITLE = "Listing Moderation";
 const MODERATION_LEDE =
@@ -14,7 +15,7 @@ export function ModerationHeader() {
             lede={MODERATION_LEDE}
             action={
                 <Link
-                    href="/admin/verifications"
+                    href={ADMIN_ROUTES.verifications}
                     className={buttonVariants({
                         emphasis: "solid",
                         tone: "accent",

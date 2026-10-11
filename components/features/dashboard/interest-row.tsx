@@ -29,7 +29,7 @@ export function InterestRow({ interest }: InterestRowProps) {
             className={cn(
                 "ease-smooth h-11 transition-colors",
                 interest.status === "pending"
-                    ? "bg-warning-light/30"
+                    ? "bg-background-muted/30"
                     : "hover:bg-background-muted",
             )}
         >

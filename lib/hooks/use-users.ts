@@ -9,6 +9,8 @@ import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
 import type { CreateUserInput, UpdateUserInput } from "@/lib/validations/user";
 import type { UserTier } from "@/lib/enums/enums";
 import { FEEDBACK } from "@/lib/config/feedback";
+import { DATA_EXPORT_FILENAME } from "@/lib/data/dashboard-settings";
+import { downloadJson } from "@/lib/utils/download";
 
 export function useCurrentUser() {
     return useQuery({
@@ -69,6 +71,14 @@ export function useUpdateUser(id: string) {
                 }),
             ]);
         },
+    });
+}
+
+export function useExportPersonalData() {
+    return useMutation({
+        meta: FEEDBACK.exportPersonalData,
+        mutationFn: () => usersAPI.exportMine(),
+        onSuccess: (data) => downloadJson(data, DATA_EXPORT_FILENAME),
     });
 }
 

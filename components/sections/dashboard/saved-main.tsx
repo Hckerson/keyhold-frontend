@@ -9,11 +9,8 @@ import { SavedTable } from "@/components/features/dashboard/saved-table";
 import { SavedToolbar } from "@/components/sections/dashboard/saved-toolbar";
 import { SavedTopHero } from "@/components/sections/dashboard/saved-top-hero";
 import { PUBLIC_ROUTES } from "@/lib/constants";
-import type {
-    SavedSortKey,
-    SavedStatusFilter,
-} from "@/lib/data/saved-listings";
-import type { SavedListing } from "@/lib/types";
+import type { SavedListing, SavedSortKey, SavedStatusFilter } from "@/lib/types";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const BOOK_TITLE = "Saved Book";
 const BOOK_LEDE = "Every property behind the one closest to a decision";
@@ -22,8 +19,6 @@ const EMPTY_TITLE = "Nothing saved in this view";
 const EMPTY_LEDE =
     "Widen the status filter, or keep browsing to build out your book.";
 const EMPTY_ACTION = "Start Browsing";
-const LOADING_TITLE = "Loading your saved homes";
-const LOADING_LEDE = "Fetching the latest pricing for your book.";
 
 export interface SavedMainProps {
     top?: SavedListing;
@@ -72,11 +67,13 @@ export function SavedMain({
                     <PanelInset scroll>
                         <SavedTable listings={listings} onRemove={onRemove} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={Heart}
-                        title={pending ? LOADING_TITLE : EMPTY_TITLE}
-                        description={pending ? LOADING_LEDE : EMPTY_LEDE}
+                        title={EMPTY_TITLE}
+                        description={EMPTY_LEDE}
                         action={
                             <Link
                                 href={PUBLIC_ROUTES.search}

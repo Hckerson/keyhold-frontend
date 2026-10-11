@@ -1,15 +1,11 @@
 "use client";
 
-import { type ReactNode } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Container } from "@/components/ui/container";
 import { ListingGallery } from "@/components/sections/listing/listing-gallery";
 import { ListingPriceBar } from "@/components/sections/listing/listing-price-bar";
 import { ListingDescription } from "@/components/sections/listing/listing-description";
 import { ListingKeyFacts } from "@/components/sections/listing/listing-key-facts";
-import { ListingFeatures } from "@/components/sections/listing/listing-features";
-import { ListingNeighborhood } from "@/components/sections/listing/listing-neighborhood";
-import { ListingComparables } from "@/components/sections/listing/listing-comparables";
+import { ListingDossier } from "@/components/sections/listing/listing-dossier";
 import { ListingEnquiryCard } from "@/components/sections/listing/listing-enquiry-card";
 import { ListingAgentCard } from "@/components/sections/listing/listing-agent-card";
 import { ReportTrigger } from "@/components/features/shared/report-trigger";
@@ -27,44 +23,12 @@ interface ListingDetailProps {
     comparables: Listing[];
 }
 
-interface DossierTab {
-    value: string;
-    label: string;
-    panel: ReactNode;
-}
-
 const HIGHLIGHT_COUNT = 4;
-
-function buildTabs(listing: Listing, comparables: Listing[]): DossierTab[] {
-    return [
-        {
-            value: "features",
-            label: "Features",
-            panel: <ListingFeatures features={listing.features} />,
-        },
-        {
-            value: "neighborhood",
-            label: "Neighborhood",
-            panel: <ListingNeighborhood listing={listing} />,
-        },
-        {
-            value: "comparables",
-            label: "Comparables",
-            panel: (
-                <ListingComparables
-                    listing={listing}
-                    comparables={comparables}
-                />
-            ),
-        },
-    ];
-}
 
 export function ListingDetail({ listing, comparables }: ListingDetailProps) {
     const { journey, actions, toggleSave, savePending } = usePropertyJourney(
         listing.id,
     );
-    const tabs = buildTabs(listing, comparables);
 
     return (
         <>
@@ -103,28 +67,10 @@ export function ListingDetail({ listing, comparables }: ListingDetailProps) {
                             )}
                         />
 
-                        <section className="border-border-light bg-background-alt rounded-xl border p-4 shadow-sm">
-                            <Tabs defaultValue={tabs[0].value}>
-                                <TabsList>
-                                    {tabs.map((tab) => (
-                                        <TabsTrigger
-                                            key={tab.value}
-                                            value={tab.value}
-                                        >
-                                            {tab.label}
-                                        </TabsTrigger>
-                                    ))}
-                                </TabsList>
-                                {tabs.map((tab) => (
-                                    <TabsContent
-                                        key={tab.value}
-                                        value={tab.value}
-                                    >
-                                        {tab.panel}
-                                    </TabsContent>
-                                ))}
-                            </Tabs>
-                        </section>
+                        <ListingDossier
+                            listing={listing}
+                            comparables={comparables}
+                        />
                     </div>
 
                     <aside

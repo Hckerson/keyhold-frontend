@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import {
-    MAINTENANCE_ACTIONS,
-    type MaintenanceActionId,
-} from "@/lib/data/admin-settings";
+import { MAINTENANCE_ACTIONS } from "@/lib/config/admin-settings";
+import type { MaintenanceActionId } from "@/lib/types";
 import {
     usePurgeExpiredVerifications,
     useRestorePlatformDefaults,

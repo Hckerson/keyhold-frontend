@@ -5,7 +5,6 @@ import { AgeMark } from "@/components/features/shared/age-mark";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { CheckPips } from "@/components/features/admin/check-pips";
 import { ModerationRowActions } from "@/components/features/admin/moderation-row-actions";
-import { ModerationStatusMark } from "@/components/features/admin/moderation-status-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
 import { LIST_ROW_MOTION } from "@/lib/config/motion";
 import { isOpen } from "@/lib/data/admin-listings";
@@ -29,21 +28,26 @@ export function ModerationQueueRow({
     onApprove,
     onDecide,
 }: ModerationQueueRowProps) {
+    const open = isOpen(listing);
+    const settled = !open && "opacity-60";
+
     return (
         <m.li {...LIST_ROW_MOTION} className="overflow-hidden">
-            <div
-                className={cn(
-                    "queue-grid group hover:bg-background-muted ease-smooth h-11 rounded-md px-2 transition-colors duration-200",
-                    !isOpen(listing) && "opacity-60",
-                )}
-            >
+            <div className="queue-grid reveal-scope hover:bg-background-muted ease-smooth relative h-11 rounded-md px-2 transition-colors duration-200">
                 <button
                     type="button"
                     aria-label={`${REVIEW_PREFIX} ${listing.address}, ${listing.locality}`}
                     onClick={() => onOpen(listing.id)}
-                    className="focus-visible:ring-accent flex min-w-0 items-center gap-2.5 rounded-sm text-left text-xs focus-visible:ring-2 focus-visible:outline-none"
+                    className={cn(
+                        "group focus-visible:ring-accent flex min-w-0 items-center gap-2.5 rounded-sm text-left text-xs focus-visible:ring-2 focus-visible:outline-none",
+                        settled,
+                    )}
                 >
-                    <ListingThumb src={listing.photos[0] ?? null} alt="" />
+                    <ListingThumb
+                        src={listing.photos[0] ?? null}
+                        alt=""
+                        className="aspect-video h-8 w-auto"
+                    />
                     <span className="min-w-0 truncate">
                         <span className="text-text group-hover:text-accent ease-smooth font-medium transition-colors">
                             {listing.address}
@@ -54,25 +58,30 @@ export function ModerationQueueRow({
                         </span>
                     </span>
                 </button>
-
-                <ModerationStatusMark
-                    status={listing.status}
-                    className="queue-grid__wide"
-                />
                 <CheckPips
                     compliance={listing.compliance}
-                    className="queue-grid__wide"
+                    openOnly
+                    className={cn("queue-grid__wide", settled)}
                 />
                 <ReportCountMark
                     reports={listing.reports}
-                    className="queue-grid__wide justify-end"
+                    className={cn("queue-grid__wide justify-end", settled)}
                 />
-                <AgeMark
-                    minutes={listing.queuedMinutes}
-                    className="queue-grid__wide justify-end"
-                />
+                {open ? (
+                    <AgeMark
+                        minutes={listing.queuedMinutes}
+                        className="queue-grid__wide justify-end"
+                    />
+                ) : (
+                    <span className="queue-grid__wide" />
+                )}
 
-                <span className="text-text text-right text-xs font-semibold tabular-nums">
+                <span
+                    className={cn(
+                        "text-text text-right text-xs tabular-nums",
+                        settled,
+                    )}
+                >
                     {formatMillions(listing.price, 2)}
                 </span>
 

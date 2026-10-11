@@ -2,22 +2,10 @@
 
 import type { ChangeEvent } from "react";
 import { FormField } from "@/components/ui/forms/form-field";
-import { Select, type SelectOption } from "@/components/ui/forms/select";
+import { Select } from "@/components/ui/forms/select";
 import { LabelledBlock } from "@/components/patterns/labelled-block";
-import type { InputProps } from "@/components/ui/forms/input";
 import type { FieldErrors } from "@/lib/validations/auth";
-
-export interface ConfigField<K extends string> {
-    name: K;
-    label: string;
-    placeholder: string;
-    type?: string;
-    prefix?: string;
-    suffix?: string;
-    variant?: InputProps["variant"];
-    hint?: string;
-    options?: readonly SelectOption<string>[];
-}
+import type { ConfigField } from "@/lib/types";
 
 export interface ConfigFieldGridProps<K extends string> {
     fields: readonly ConfigField<K>[];

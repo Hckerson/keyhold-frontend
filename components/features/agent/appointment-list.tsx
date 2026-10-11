@@ -1,5 +1,5 @@
 import { AppointmentRow } from "@/components/features/agent/appointment-row";
-import type { Appointment } from "@/lib/data/agent-calendar";
+import type { Appointment } from "@/lib/types";
 
 export interface AppointmentListProps {
     appointments: Appointment[];

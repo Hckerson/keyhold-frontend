@@ -1,15 +1,10 @@
 import { Pencil } from "lucide-react";
 import { IconButton } from "@/components/ui/icon-button";
 import { StatusDot } from "@/components/patterns/status-dot";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
 import { APPOINTMENT_STATUSES } from "@/lib/config/appointment-tones";
-import {
-    durationShare,
-    formatDuration,
-    formatTime,
-    type Appointment,
-} from "@/lib/data/agent-calendar";
+import { formatDuration, formatTime } from "@/lib/data/agent-calendar";
+import type { Appointment } from "@/lib/types";
 
 export interface AppointmentRowProps {
     appointment: Appointment;
@@ -41,11 +36,6 @@ export function AppointmentRow({
             <span className="desk-only text-text-secondary w-24 shrink-0 truncate text-xs">
                 {appointment.client}
             </span>
-
-            <ProgressBar
-                value={durationShare(appointment.durationMinutes)}
-                className="wide-only w-10 shrink-0"
-            />
 
             <span className="micro-label w-12 shrink-0 text-right">
                 {formatDuration(appointment.durationMinutes)}

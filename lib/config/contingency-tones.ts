@@ -5,13 +5,13 @@ import {
     Home,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type {
     Contingency,
     MilestoneKind,
     MilestoneStatus,
 } from "@/lib/enums/enums";
+import type { StatusTone } from "@/lib/types";
 
 export interface ContingencyMeta {
     label: string;
@@ -86,7 +86,7 @@ export const MILESTONE_KINDS_META: Record<MilestoneKind, MilestoneKindMeta> = {
 
 export interface MilestoneStatusMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 
@@ -102,7 +102,7 @@ export const MILESTONE_STATUSES_META: Record<
     MilestoneStatusMeta
 > = {
     PENDING: { label: "Not set", tone: "neutral", chartTone: "neutral" },
-    SCHEDULED: { label: "Scheduled", tone: "info", chartTone: "info" },
-    COMPLETED: { label: "Complete", tone: "success", chartTone: "success" },
-    WAIVED: { label: "Waived", tone: "warning", chartTone: "warning" },
+    SCHEDULED: { label: "Scheduled", tone: "info", chartTone: "neutral" },
+    COMPLETED: { label: "Complete", tone: "success", chartTone: "accent" },
+    WAIVED: { label: "Waived", tone: "warning", chartTone: "neutral" },
 };

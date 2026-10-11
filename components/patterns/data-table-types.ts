@@ -1,59 +1,5 @@
-import type { ReactNode } from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
-
-export type SortDirection = "asc" | "desc";
-export type RevealMode = "inline" | "panel";
-export type ColumnEmphasis =
-    | "focal"
-    | "identity"
-    | "figure"
-    | "field"
-    | "muted"
-    | "meta";
-
-export interface DataTableSort {
-    id: string;
-    direction: SortDirection;
-}
-
-export interface DataTableColumn<T> {
-    id: string;
-    label: string;
-    align?: "left" | "right";
-    width?: string;
-    srOnlyLabel?: boolean;
-    emphasis?: ColumnEmphasis;
-    sortValue?: (row: T) => string | number;
-    render: (row: T) => ReactNode;
-    footer?: (rows: T[]) => ReactNode;
-}
-
-export interface DataTableProps<T> {
-    columns: DataTableColumn<T>[];
-    data: T[];
-    rowKey: (row: T) => string;
-    caption: string;
-    variant?: "card" | "bare";
-    emptyMessage?: string;
-    rowClassName?: (row: T) => string | undefined;
-    defaultSort?: DataTableSort;
-    selectable?: boolean;
-    selectedKeys?: string[];
-    onSelectedKeysChange?: (keys: string[]) => void;
-    bulkActions?: (rows: T[]) => ReactNode;
-    pageSize?: number;
-    reveal?: RevealMode;
-    renderDetail?: (row: T) => ReactNode;
-    rowLabel?: (row: T) => string;
-    panelTitle?: (row: T) => ReactNode;
-    panelFooter?: (row: T) => ReactNode;
-    panelSize?: "sm" | "md" | "lg";
-    openKey?: string | null;
-    onOpenChange?: (key: string | null) => void;
-    className?: string;
-}
-
-export type DataTableConfig<T> = Omit<DataTableProps<T>, "data">;
+import type { ColumnEmphasis } from "@/lib/types";
 
 export const alignClass = {
     left: "text-left",
@@ -62,6 +8,7 @@ export const alignClass = {
 
 export const emphasisClass: Record<ColumnEmphasis, string> = {
     focal: "text-text text-xs font-semibold tabular-nums",
+    value: "text-text text-xs tabular-nums",
     identity: "text-xs font-medium",
     figure: "text-xs font-medium tabular-nums",
     field: "text-xs",
@@ -69,13 +16,17 @@ export const emphasisClass: Record<ColumnEmphasis, string> = {
     meta: "micro-label tabular-nums",
 };
 
-export const headCell = "px-3 py-2.5 micro-label leading-none";
+export const WIDE_CELL = "data-table-wide";
 
-export const footCell = "px-3 py-2.5 text-xs font-medium tabular-nums";
+export const headCell =
+    "h-9 px-3 py-0 micro-label leading-none whitespace-nowrap";
+
+export const groupCell =
+    "h-9 px-3 py-0 text-xs tabular-nums text-text-secondary bg-background-alt";
+
+export const footCell = "h-10 px-3 py-0 text-xs font-medium tabular-nums";
 
 export const sortIcon = {
     asc: ArrowUp,
     desc: ArrowDown,
 } as const;
-
-export const INTERACTIVE = "a, button, input, label, select, textarea";

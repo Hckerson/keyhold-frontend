@@ -1,8 +1,8 @@
-import type { ShareDatum } from "@/components/patterns/share-row";
 import { USER_STATUSES } from "@/lib/config/user-tones";
+import { NO_READING } from "@/lib/constants";
 import { formatCount, percentOf } from "@/lib/utils";
 import { MANAGED_ROLE_BY_USER } from "@/lib/utils/to-user-segments";
-import type { AuditEvent } from "@/lib/types";
+import type { AuditEvent, ShareDatum } from "@/lib/types";
 import type { UserStats } from "@/lib/validations/stats";
 import type { User } from "@/lib/validations/user";
 
@@ -19,7 +19,7 @@ export const statusShares = (users: UserStats | undefined): ShareDatum[] =>
             id: status,
             icon: meta.icon,
             label: meta.label,
-            value: formatCount(count),
+            value: users ? formatCount(count) : NO_READING,
             percent: percentOf(count, users?.total ?? 0),
             tone: meta.chartTone,
         };

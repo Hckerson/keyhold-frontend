@@ -9,8 +9,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { OfferStatus } from "@/lib/types";
+import type { OfferStatus, StatusTone } from "@/lib/types";
 
 export const OFFER_STATUS_KEYS: OfferStatus[] = [
     "countered",
@@ -23,7 +22,7 @@ export const OFFER_STATUS_KEYS: OfferStatus[] = [
 export interface OfferStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;
@@ -34,7 +33,7 @@ export const OFFER_STATUSES: Record<OfferStatus, OfferStatusMeta> = {
         label: "Countered",
         icon: Handshake,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 5,
         open: true,
     },
@@ -42,7 +41,7 @@ export const OFFER_STATUSES: Record<OfferStatus, OfferStatusMeta> = {
         label: "Submitted",
         icon: ScrollText,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 4,
         open: true,
     },
@@ -50,7 +49,7 @@ export const OFFER_STATUSES: Record<OfferStatus, OfferStatusMeta> = {
         label: "Accepted",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 3,
         open: false,
     },
@@ -87,7 +86,7 @@ export const GAP_BANDS: Record<GapBand, GapBandMeta> = {
     "at-ask": {
         label: "At or above ask",
         icon: CircleCheck,
-        tone: "success",
+        tone: "accent",
         ceiling: 1,
     },
     close: {
@@ -99,7 +98,7 @@ export const GAP_BANDS: Record<GapBand, GapBandMeta> = {
     wide: {
         label: "More than 5% under",
         icon: Clock,
-        tone: "warning",
+        tone: "neutral",
         ceiling: Infinity,
     },
 };

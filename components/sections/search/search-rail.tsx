@@ -141,7 +141,7 @@ export function SearchRail({
 
             <footer className="border-border-dark flex flex-col gap-1.5 border-t px-3 py-2">
                 {dirty && (
-                    <p className="text-highlight-dark font-mono text-[10px] tracking-wide uppercase">
+                    <p className="text-accent font-mono text-[10px] tracking-wide uppercase">
                         Unapplied changes
                     </p>
                 )}

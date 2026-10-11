@@ -15,20 +15,16 @@ import { UserAccountList } from "@/components/features/admin/user-account-list";
 import { UserActivityMark } from "@/components/features/admin/user-activity-mark";
 import { UserDealMark } from "@/components/features/admin/user-deal-mark";
 import { UserStatusMark } from "@/components/features/admin/user-status-mark";
-import { UserVolumeMeter } from "@/components/features/admin/user-volume-meter";
+import { UserVolumeMark } from "@/components/features/admin/user-volume-mark";
 import { USER_ROLES, USER_STATUSES } from "@/lib/config/user-tones";
-import { idleDays, joinedLabel, userNote } from "@/lib/data/admin-users";
+import {
+    idleDays,
+    joinedLabel,
+    userActionOf,
+    userNote,
+} from "@/lib/data/admin-users";
+import { USER_DETAIL_COPY as COPY } from "@/lib/config/user-detail";
 import type { ManagedUser } from "@/lib/types";
-
-const VOLUME_LABEL = "Lifetime volume";
-const DEALS_LABEL = "Closed deals";
-const ACTIVE_LABEL = "Last sign-in";
-const JOINED_LABEL = "Joined";
-const ACCOUNT_LABEL = "Account";
-const CLOSE_ACTION = "Close";
-const PROFILE_ACTION = "View profile";
-const SUSPEND_ACTION = "Suspend";
-const REACTIVATE_ACTION = "Reactivate";
 
 export interface UserDetailModalProps {
     user?: ManagedUser;
@@ -49,6 +45,7 @@ export function UserDetailModal({
 }: UserDetailModalProps) {
     const status = user ? USER_STATUSES[user.status] : null;
     const note = user ? userNote(user) : undefined;
+    const action = user ? userActionOf(user) : undefined;
 
     return (
         <Modal
@@ -72,20 +69,20 @@ export function UserDetailModal({
 
                     <ModalBody className="scroll-y max-h-[60vh] space-y-4">
                         <div className="metric-strip bg-background border-border-light gap-3 rounded-md border p-3">
-                            <MetricCell label={VOLUME_LABEL}>
-                                <UserVolumeMeter
+                            <MetricCell label={COPY.volume}>
+                                <UserVolumeMark
                                     volume={user.volume}
                                     peak={peak}
                                     className="justify-start"
                                 />
                             </MetricCell>
-                            <MetricCell label={DEALS_LABEL}>
+                            <MetricCell label={COPY.deals}>
                                 <UserDealMark deals={user.transactions} />
                             </MetricCell>
-                            <MetricCell label={ACTIVE_LABEL}>
+                            <MetricCell label={COPY.active}>
                                 <UserActivityMark days={idleDays(user)} />
                             </MetricCell>
-                            <MetricCell label={JOINED_LABEL}>
+                            <MetricCell label={COPY.joined}>
                                 <span className="truncate tabular-nums">
                                     {joinedLabel(user)}
                                 </span>
@@ -101,7 +98,7 @@ export function UserDetailModal({
                         )}
 
                         <div>
-                            <p className="micro-label">{ACCOUNT_LABEL}</p>
+                            <p className="micro-label">{COPY.account}</p>
                             <div className="mt-1.5">
                                 <UserAccountList user={user} />
                             </div>
@@ -114,7 +111,7 @@ export function UserDetailModal({
                             emphasis="quiet"
                             onClick={onClose}
                         >
-                            {CLOSE_ACTION}
+                            {COPY.close}
                         </Button>
                         <Link
                             href={`/admin/users/${user.id}`}
@@ -122,29 +119,29 @@ export function UserDetailModal({
                                 size: "sm",
                             })}
                         >
-                            {PROFILE_ACTION}
+                            {COPY.profile}
                         </Link>
-                        {user.status !== "deleted" &&
-                            (user.status === "suspended" ? (
-                                <Button
-                                    type="button"
-                                    emphasis="solid"
-                                    tone="accent"
-                                    isLoading={reactivatingId === user.id}
-                                    disabled={reactivatingId !== undefined}
-                                    onClick={() => onReactivate(user.id)}
-                                >
-                                    {REACTIVATE_ACTION}
-                                </Button>
-                            ) : (
-                                <Button
-                                    type="button"
-                                    tone="error"
-                                    onClick={() => onSuspend(user.id)}
-                                >
-                                    {SUSPEND_ACTION}
-                                </Button>
-                            ))}
+                        {action === "reactivate" && (
+                            <Button
+                                type="button"
+                                emphasis="solid"
+                                tone="accent"
+                                isLoading={reactivatingId === user.id}
+                                disabled={reactivatingId !== undefined}
+                                onClick={() => onReactivate(user.id)}
+                            >
+                                {COPY.reactivate}
+                            </Button>
+                        )}
+                        {action === "suspend" && (
+                            <Button
+                                type="button"
+                                tone="error"
+                                onClick={() => onSuspend(user.id)}
+                            >
+                                {COPY.suspend}
+                            </Button>
+                        )}
                     </ModalFooter>
                 </>
             )}

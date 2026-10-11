@@ -11,17 +11,18 @@ import {
     nextViewing,
     rankViewings,
     scheduledViewings,
-    viewingStats,
     viewingsOnDate,
-    viewingsSummary,
     walkedViewings,
-    type ViewingModeFilter,
-    type ViewingStatusFilter,
 } from "@/lib/data/viewings";
+import { viewingStats, viewingsSummary } from "@/lib/data/viewings-stats";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useRescheduleViewing } from "@/lib/hooks/use-viewings";
 import { draftToIso, toViewingBook } from "@/lib/utils/to-viewing";
-import type { RescheduleDraft } from "@/lib/types";
+import type {
+    RescheduleDraft,
+    ViewingModeFilter,
+    ViewingStatusFilter,
+} from "@/lib/types";
 
 const EMPTY_DRAFT: RescheduleDraft = { date: "", time: "" };
 

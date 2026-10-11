@@ -1,7 +1,7 @@
 "use client";
 
 import { ConfirmModal } from "@/components/patterns/confirm-modal";
-import type { MaintenanceAction } from "@/lib/data/admin-settings";
+import type { MaintenanceAction } from "@/lib/types";
 
 const WARNING_TITLE = "This cannot be undone";
 const FAILURE_BODY = "Nothing was changed. Try again in a moment.";

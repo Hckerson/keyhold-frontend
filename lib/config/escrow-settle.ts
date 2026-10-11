@@ -1,3 +1,5 @@
+import { refundEscrowSchema } from "@/lib/validations/escrow";
+
 export type SettleMode = "release" | "refund";
 
 export interface SettleModeMeta {
@@ -43,6 +45,9 @@ export const SETTLE_MODES: Record<SettleMode, SettleModeMeta> = {
         },
     },
 };
+
+export const isRefundReady = (reason: string) =>
+    refundEscrowSchema.safeParse({ reason: reason.trim() }).success;
 
 export const SETTLE_TRIGGER_LABEL = "Settle";
 export const SETTLE_ACTION_LABEL = "Settle the hold for";

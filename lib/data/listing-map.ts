@@ -9,8 +9,8 @@ import { formatCompactUsd } from "@/lib/utils";
 export const MAP_STATUS_TONE: Record<ListingStatus, ChartTone> = {
     DRAFT: "neutral",
     AVAILABLE: "accent",
-    PENDING: "warning",
-    SOLD: "success",
+    PENDING: "neutral",
+    SOLD: "accent",
     EXPIRED: "neutral",
 };
 

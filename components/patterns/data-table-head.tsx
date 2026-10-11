@@ -1,71 +1,10 @@
 "use client";
 
-import { ChevronsUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/forms/checkbox";
-import {
-    alignClass,
-    headCell,
-    sortIcon,
-    type DataTableColumn,
-    type DataTableSort,
-} from "@/components/patterns/data-table-types";
+import { DataTableHeadCell } from "@/components/patterns/data-table-head-cell";
+import { headCell } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
-
-function HeadCell<T>({
-    column,
-    sort,
-    onSort,
-}: {
-    column: DataTableColumn<T>;
-    sort: DataTableSort | null;
-    onSort: (id: string) => void;
-}) {
-    const active = sort?.id === column.id;
-    const Icon = active && sort ? sortIcon[sort.direction] : ChevronsUpDown;
-    const label = (
-        <span className={cn(column.srOnlyLabel && "sr-only")}>
-            {column.label}
-        </span>
-    );
-
-    return (
-        <th
-            scope="col"
-            style={{ width: column.width }}
-            aria-sort={
-                column.sortValue
-                    ? active && sort
-                        ? sort.direction === "asc"
-                            ? "ascending"
-                            : "descending"
-                        : "none"
-                    : undefined
-            }
-            className={cn(headCell, alignClass[column.align ?? "left"])}
-        >
-            {column.sortValue ? (
-                <button
-                    type="button"
-                    onClick={() => onSort(column.id)}
-                    className={cn(
-                        "hover:text-text focus-visible:ring-accent ease-smooth inline-flex items-center gap-1 rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none",
-                        column.align === "right" && "flex-row-reverse",
-                    )}
-                >
-                    {label}
-                    <Icon
-                        size={12}
-                        strokeWidth={1.5}
-                        aria-hidden="true"
-                        className={active ? "text-accent" : "text-text-muted"}
-                    />
-                </button>
-            ) : (
-                label
-            )}
-        </th>
-    );
-}
+import type { DataTableColumn, DataTableSort } from "@/lib/types";
 
 export interface DataTableHeadProps<T> {
     columns: DataTableColumn<T>[];
@@ -91,7 +30,9 @@ export function DataTableHead<T>({
     return (
         <thead
             className={cn(
-                "border-border-dark border-b",
+                bare
+                    ? "border-border-light border-b"
+                    : "border-border-dark border-b",
                 bare
                     ? "bg-transparent"
                     : "bg-background/80 sticky top-0 z-10 backdrop-blur-md",
@@ -108,7 +49,7 @@ export function DataTableHead<T>({
                     </th>
                 )}
                 {columns.map((column) => (
-                    <HeadCell
+                    <DataTableHeadCell
                         key={column.id}
                         column={column}
                         sort={sort}

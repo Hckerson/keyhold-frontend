@@ -16,9 +16,7 @@ import {
 } from "@/lib/config/command-palette";
 import { TOPBAR_SEARCH } from "@/lib/config/topbar";
 import { matchRoutes } from "@/lib/utils/nav";
-import { rovingIndex } from "@/lib/utils/roving";
-
-const STEP: Record<string, number> = { ArrowDown: 1, ArrowUp: -1 };
+import { ARROW_STEPS, rovingIndex } from "@/lib/utils/roving";
 
 const APPLE_PLATFORM = /Mac|iPhone|iPad/;
 const subscribe = () => () => {};
@@ -105,7 +103,7 @@ export function useCommandPalette(routes: NavRoute[]) {
 
     const onKeyDown = useCallback(
         (event: React.KeyboardEvent<HTMLInputElement>) => {
-            const delta = STEP[event.key];
+            const delta = ARROW_STEPS[event.key];
 
             if (delta !== undefined) {
                 event.preventDefault();

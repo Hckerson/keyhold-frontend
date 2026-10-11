@@ -1,0 +1,56 @@
+export const DEAL_ENDPOINTS = {
+    transactions: {
+        list: "/transactions",
+        stages: "/transactions/stages",
+        create: "/transactions",
+        detail: (id: string) => `/transactions/${id}`,
+        confirmPayment: (id: string) => `/transactions/${id}/confirm-payment`,
+        purchases: "/transactions/my/purchases",
+        sales: "/transactions/my/sales",
+    },
+    reviews: {
+        byTransaction: (transactionId: string) =>
+            `/reviews/transaction/${transactionId}`,
+        byUser: (userId: string) => `/reviews/user/${userId}`,
+        userRating: (userId: string) => `/reviews/user/${userId}/rating`,
+    },
+    flags: {
+        list: "/flags",
+        counts: "/flags/counts",
+        detail: (id: string) => `/flags/${id}`,
+        resolve: (id: string) => `/flags/${id}/resolve`,
+        dismiss: (id: string) => `/flags/${id}/dismiss`,
+    },
+    kyc: {
+        list: "/kyc",
+        submit: "/kyc",
+        mine: "/kyc/me",
+        counts: "/kyc/counts",
+        detail: (id: string) => `/kyc/${id}`,
+        approve: (id: string) => `/kyc/${id}/approve`,
+        reject: (id: string) => `/kyc/${id}/reject`,
+    },
+    suspensions: {
+        list: "/suspensions",
+        create: "/suspensions",
+        byUser: (userId: string) => `/suspensions/user/${userId}`,
+        lift: (id: string) => `/suspensions/${id}/lift`,
+    },
+    escrow: {
+        list: "/escrow",
+        stages: "/escrow/stages",
+        detail: (id: string) => `/escrow/${id}`,
+        release: (id: string) => `/escrow/${id}/release`,
+        refund: (id: string) => `/escrow/${id}/refund`,
+    },
+    disputes: {
+        list: "/disputes",
+        create: "/disputes",
+        mine: "/disputes/mine",
+        counts: "/disputes/counts",
+        detail: (id: string) => `/disputes/${id}`,
+        evidence: (id: string) => `/disputes/${id}/evidence`,
+        resolve: (id: string) => `/disputes/${id}/resolve`,
+        dismiss: (id: string) => `/disputes/${id}/dismiss`,
+    },
+};

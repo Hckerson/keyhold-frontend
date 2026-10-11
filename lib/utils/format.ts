@@ -25,6 +25,20 @@ const dayAndMonth = new Intl.DateTimeFormat(LOCALE, {
     day: "numeric",
 });
 
+const monthName = new Intl.DateTimeFormat(LOCALE, {
+    month: "long",
+    timeZone: "UTC",
+});
+
+const fullDate = new Intl.DateTimeFormat(LOCALE, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+});
+
+const regions = new Intl.DisplayNames(LOCALE, { type: "region" });
+const REGION_CODE = /^[A-Z]{2}$/;
+
 const weekdayAndTime = new Intl.DateTimeFormat(LOCALE, {
     weekday: "short",
     hour: "numeric",
@@ -34,6 +48,11 @@ const weekdayAndTime = new Intl.DateTimeFormat(LOCALE, {
 export const formatClock = (value: Date) => clock.format(value);
 
 export const formatDayAndMonth = (value: Date) => dayAndMonth.format(value);
+
+export const formatFullDate = (value: Date) => fullDate.format(value);
+
+export const formatRegion = (value: string) =>
+    (REGION_CODE.test(value) && regions.of(value)) || value;
 
 export const formatWeekdayAndTime = (value: Date) =>
     weekdayAndTime.format(value);
@@ -52,6 +71,12 @@ export const formatMillions = (value: number, fractionDigits = 1) =>
     `$${(value / MILLION).toFixed(fractionDigits)}M`;
 
 export const formatCount = (value: number) => wholeNumber.format(value);
+
+export const formatCountOf = (count: number, noun: string) =>
+    `${formatCount(count)} ${noun}${count === 1 ? "" : "s"}`;
+
+export const formatMonthName = (key: string) =>
+    monthName.format(new Date(`${key}-01T00:00:00Z`));
 
 export const formatThousands = (value: number, fractionDigits = 0) =>
     `$${fixedNumber(fractionDigits).format(value / 1_000)}K`;

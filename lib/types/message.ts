@@ -6,6 +6,8 @@ export type ConversationStatus =
 
 export type MessageSender = "user" | "agent";
 
+export type ConversationFilter = "all" | "unread" | "awaiting-you";
+
 export type MessageSendHandler = (
     content: string,
     files: File[],

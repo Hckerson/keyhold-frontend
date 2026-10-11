@@ -71,4 +71,5 @@ export type Offer = z.infer<typeof offerSchema>;
 export type DealMilestone = z.infer<typeof dealMilestoneSchema>;
 export type UpdateMilestoneInput = z.infer<typeof updateMilestoneSchema>;
 export type CreateOfferInput = z.infer<typeof createOfferSchema>;
+export type OfferDraft = Omit<CreateOfferInput, "connectionId">;
 export type RespondOfferInput = z.infer<typeof respondOfferSchema>;

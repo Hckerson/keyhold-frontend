@@ -1,103 +1,98 @@
-import type { BadgeTone } from "@/lib/types";
-import type { FlagStatus, FlagType } from "@/lib/enums/enums";
+import { FLAG_STATES } from "@/lib/config/flag-tones";
+import { ADMIN_ROUTES } from "@/lib/constants";
+import {
+    byReviewOrder,
+    openFor,
+    reviewMoment,
+    reviewReading,
+} from "@/lib/data/review-queue";
+import { FLAG_TYPE_LABELS } from "@/lib/enums/enums";
+import type {
+    FlagFilterKey,
+    FlagReport,
+    ReviewClock,
+    ReviewLink,
+    ReviewQueueItem,
+} from "@/lib/types";
 
-export type FlagFilterKey = "all" | FlagType;
-export type FlagSettleMode = "resolve" | "dismiss";
+const ALL: FlagFilterKey = "all";
+const READING = { open: "open", none: "Nothing is flagged" };
+const GONE = "No longer on the platform";
 
-export interface AbuseReport {
-    id: string;
-    type: FlagType;
-    status: FlagStatus;
-    reason: string;
-    details: string | null;
-    reporter: string;
-    subject: string;
-    subjectDetail: string;
-    openedAt: string;
-    waitingDays: number;
-}
+export const FLAG_COPY = {
+    title: "Flags",
+    lede: "Members and messages reported by other people. Upholding records the finding only",
+    reasonHeading: "Reason given",
+    wordsHeading: "In the reporter's words",
+    messageHeading: "Reported message",
+    memberHeading: "Reported member",
+    reporterHeading: "Reported by",
+    profile: "Open profile",
+    sender: "Open sender",
+    emptyTitle: "Nothing flagged",
+    emptyLede: "No member or message reports match this view.",
+} as const;
 
-export interface FlagDecision {
-    mode: FlagSettleMode;
-    id: string;
-}
+export const flagClock = (report: FlagReport): ReviewClock => ({
+    open: FLAG_STATES[report.status].open,
+    openedAt: report.openedAt,
+    decidedAt: report.decidedAt,
+});
 
-export const FLAG_DECISION_COPY: Record<
-    FlagSettleMode,
-    { title: string; effect: string; submit: string; tone: "accent" | "error" }
-> = {
-    resolve: {
-        title: "Uphold this report",
-        effect: "The report is closed as upheld and its record becomes read-only.",
-        submit: "Uphold report",
-        tone: "accent",
-    },
-    dismiss: {
-        title: "Dismiss this report",
-        effect: "The report is closed with no finding and its record becomes read-only.",
-        submit: "Dismiss report",
-        tone: "error",
-    },
-};
-
-export interface FlagSettleAction {
-    label: string;
-    destructive?: boolean;
-    mode: FlagSettleMode;
-}
-
-export const flagStatusMeta: Record<
-    FlagStatus,
-    { tone: BadgeTone; label: string; open: boolean }
-> = {
-    ACTIVE: { tone: "error", label: "Active", open: true },
-    RESOLVED: { tone: "success", label: "Resolved", open: false },
-    DISMISSED: { tone: "neutral", label: "Dismissed", open: false },
-};
-
-export const flagTypeMeta: Record<FlagType, { label: string }> = {
-    USER: { label: "Member" },
-    PROPERTY: { label: "Listing" },
-    MESSAGE: { label: "Message" },
-};
-
-export const ABUSE_FILTERS: { id: FlagFilterKey; label: string }[] = [
-    { id: "all", label: "All" },
-    { id: "USER", label: "Members" },
-    { id: "MESSAGE", label: "Messages" },
-];
-
-export const flagActionsByStatus: Record<FlagStatus, FlagSettleAction[]> = {
-    ACTIVE: [
-        { label: "Uphold the report", mode: "resolve" },
-        { label: "Dismiss", destructive: true, mode: "dismiss" },
-    ],
-    RESOLVED: [],
-    DISMISSED: [],
-};
-
-export const isOpenReport = (report: AbuseReport) =>
-    flagStatusMeta[report.status].open;
-
-export const rankReports = (reports: AbuseReport[]) =>
-    [...reports].sort(
-        (a, b) =>
-            Number(isOpenReport(b)) - Number(isOpenReport(a)) ||
-            b.waitingDays - a.waitingDays,
-    );
-
-export const countReports = (reports: AbuseReport[]) => {
+export const flagCounts = (items: FlagReport[]) => {
     const counts: Record<FlagFilterKey, number> = {
-        all: reports.length,
-        USER: 0,
-        PROPERTY: 0,
-        MESSAGE: 0,
+        ACTIVE: 0,
+        RESOLVED: 0,
+        DISMISSED: 0,
+        all: items.length,
     };
-    for (const report of reports) counts[report.type] += 1;
+    for (const item of items) counts[item.status] += 1;
     return counts;
 };
 
-export const filterReports = (reports: AbuseReport[], filter: FlagFilterKey) =>
-    filter === "all"
-        ? reports
-        : reports.filter((report) => report.type === filter);
+export const flagsIn = (items: FlagReport[], filter: FlagFilterKey) =>
+    items
+        .filter((item) => filter === ALL || item.status === filter)
+        .sort((a, b) => byReviewOrder(flagClock(a), flagClock(b)));
+
+export const flagReading = (items: FlagReport[], now = new Date()) =>
+    reviewReading(items.map(flagClock), READING, now);
+
+export const subjectOf = (report: FlagReport) => {
+    if (report.target?.kind === "USER") return report.target.name;
+    if (report.target?.kind === "MESSAGE") return `“${report.target.content}”`;
+    return GONE;
+};
+
+export const subjectLink = (report: FlagReport): ReviewLink | undefined => {
+    if (report.target?.kind === "USER")
+        return {
+            href: ADMIN_ROUTES.user(report.target.id),
+            label: FLAG_COPY.profile,
+        };
+    if (report.target?.kind === "MESSAGE")
+        return {
+            href: ADMIN_ROUTES.user(report.target.senderId),
+            label: FLAG_COPY.sender,
+        };
+    return undefined;
+};
+
+export const flagQueueItems = (
+    reports: FlagReport[],
+    mixed: boolean,
+    now = new Date(),
+): ReviewQueueItem[] =>
+    reports.map((report) => ({
+        id: report.id,
+        title: subjectOf(report),
+        caption: `${FLAG_TYPE_LABELS[report.type]} · ${report.reason}`,
+        moment: reviewMoment(flagClock(report), now),
+        status:
+            mixed && !flagClock(report).open
+                ? FLAG_STATES[report.status]
+                : undefined,
+    }));
+
+export const flagOpenLine = (report: FlagReport, now = new Date()) =>
+    `Open ${openFor(flagClock(report), now)}`;

@@ -2,23 +2,23 @@
 
 import { Scale } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PortalHeader } from "@/components/patterns/portal-header";
-import { FilterPills } from "@/components/patterns/filter-pills";
 import { DisputeDecisionModal } from "@/components/features/admin/dispute-decision-modal";
-import { DisputeQueueRail } from "@/components/features/admin/dispute-queue-rail";
 import { DisputeReviewPane } from "@/components/features/admin/dispute-review-pane";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { ReviewQueue } from "@/components/patterns/review-queue";
+import { AdminDisputesHeader } from "@/components/sections/admin/admin-disputes-header";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
-import { DISPUTE_FILTERS } from "@/lib/data/admin-disputes";
+import {
+    DISPUTE_COPY,
+    disputeQueueItems,
+    disputeReading,
+} from "@/lib/data/admin-disputes";
 import { useDisputeQueue } from "@/lib/hooks/use-dispute-queue";
-
-const TITLE = "Disputes";
-const EMPTY_TITLE = "Queue clear";
-const EMPTY_LEDE = "No disputes match this filter.";
 
 export function AdminDisputesConsole() {
     const queue = useDisputeQueue();
-    const { counts, active } = queue;
+    const { active } = queue;
 
     if (queue.failed)
         return (
@@ -28,47 +28,50 @@ export function AdminDisputesConsole() {
             />
         );
 
+    if (queue.pending) return <ConsoleSkeleton variant="casework" />;
+
     return (
-        <div className="space-y-3">
-            <PortalHeader
-                title={TITLE}
-                lede={`${counts.OPEN} open · ${counts.PENDING_REVIEW} in review · ${counts.RESOLVED} resolved`}
+        <div className="space-y-4">
+            <AdminDisputesHeader
+                reading={disputeReading(queue.disputes)}
+                filter={queue.filter}
+                counts={queue.counts}
+                onFilterChange={queue.changeFilter}
             />
 
-            <FilterPills
-                filters={DISPUTE_FILTERS}
-                active={queue.filter}
-                onChange={queue.changeFilter}
-                counts={counts}
-            />
-
-            <div className="review-split items-start gap-3">
-                <div className="review-rail">
-                    <DisputeQueueRail
-                        disputes={queue.visible}
-                        selectedId={active?.id ?? null}
-                        onSelect={queue.setSelectedId}
-                    />
+            {active ? (
+                <div className="review-split review-split--slim items-start gap-3">
+                    <div className="review-rail">
+                        <ReviewQueue
+                            items={disputeQueueItems(
+                                queue.visible,
+                                queue.filter === "all",
+                            )}
+                            selectedId={active.id}
+                            onSelect={queue.setSelectedId}
+                        />
+                    </div>
+                    <div className="review-pane">
+                        <DisputeReviewPane
+                            dispute={active}
+                            busy={queue.settling}
+                            onAction={(mode) =>
+                                queue.openDecision(mode, active.id)
+                            }
+                        />
+                    </div>
                 </div>
-
-                {active ? (
-                    <DisputeReviewPane
-                        dispute={active}
-                        busy={queue.settling}
-                        onAction={(mode) => queue.openDecision(mode, active.id)}
-                    />
-                ) : (
-                    <EmptyState
-                        icon={Scale}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
-            </div>
+            ) : (
+                <EmptyState
+                    icon={Scale}
+                    title={DISPUTE_COPY.emptyTitle}
+                    description={DISPUTE_COPY.emptyLede}
+                />
+            )}
 
             <DisputeDecisionModal
                 decision={queue.decision}
-                subjectTitle={queue.subjectTitle}
+                dispute={queue.subject}
                 note={queue.note}
                 pending={queue.settling}
                 failed={queue.settleFailed}

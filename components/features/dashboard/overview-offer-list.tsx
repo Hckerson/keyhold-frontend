@@ -1,5 +1,5 @@
 import { OverviewOfferRow } from "@/components/features/dashboard/overview-offer-row";
-import type { OfferPosition } from "@/lib/data/dashboard-overview";
+import type { OfferPosition } from "@/lib/types";
 
 export interface OverviewOfferListProps {
     offers: OfferPosition[];

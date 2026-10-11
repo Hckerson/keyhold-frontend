@@ -29,7 +29,9 @@ export function FieldShell({
                 >
                     {label}
                 </label>
-                {hint}
+                {hint && (
+                    <span className="text-text-muted text-xs">{hint}</span>
+                )}
             </div>
             {children}
             {error && (

@@ -7,20 +7,13 @@ import {
     AuthField,
     AuthRoleChoice,
     PasswordStrength,
-    type SignupRole,
 } from "@/components/features/auth/parts";
 import { AUTH_ROUTES } from "@/lib/constants";
 import { MIN_PASSWORD_LENGTH, type FieldErrors } from "@/lib/validations/auth";
+import type { SignupFieldValues, SignupRole } from "@/lib/types";
 
 const LEGAL_LINK_CLASS =
     "text-accent hover:text-accent-dark focus-visible:ring-accent ease-smooth rounded-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none";
-
-export interface SignupFieldValues {
-    fullName: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-}
 
 export interface SignupFieldsProps {
     values: SignupFieldValues;

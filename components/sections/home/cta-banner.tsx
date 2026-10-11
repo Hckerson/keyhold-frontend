@@ -1,17 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { SectionShell } from "@/components/patterns/section-shell";
-import { SectionEyebrow } from "@/components/patterns/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-eyebrow";
 import { Button } from "@/components/ui/button";
 
 export function CtaBanner() {
     return (
         <section className="section-pady bg-background-muted border-border relative isolate overflow-hidden border-y">
-            <div
-                aria-hidden="true"
-                className="bg-highlight/15 pointer-events-none absolute -top-24 left-1/4 -z-10 h-72 w-96 rounded-full blur-[90px]"
-            />
-
             <SectionShell>
                 <div className="mx-auto flex max-w-[52ch] flex-col items-center gap-5 text-center">
                     <SectionEyebrow>Free to join</SectionEyebrow>

@@ -1,14 +1,14 @@
 import { BellOff } from "lucide-react";
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { OverviewTaskList } from "@/components/features/dashboard/overview-task-list";
 import { OverviewAlertList } from "@/components/features/dashboard/overview-alert-list";
 import { QuickActionList } from "@/components/features/shared/quick-action-list";
-import { buyerQuickActions } from "@/lib/data/dashboard-overview";
-import type { JourneyTask } from "@/lib/data/dashboard-overview";
-import type { Alert } from "@/lib/types";
+import { buyerQuickActions } from "@/lib/data/dashboard-overview-actions";
+import type { Alert, JourneyTask } from "@/lib/types";
 
 const STEPS_TITLE = "Next Steps";
 const STEPS_LEDE = "Where you stand in the purchase";
@@ -22,11 +22,13 @@ const ACTIONS_TITLE = "Quick Links";
 export interface DashboardOverviewRailProps {
     tasks: JourneyTask[];
     alerts: Alert[];
+    pending?: boolean;
 }
 
 export function DashboardOverviewRail({
     tasks,
     alerts,
+    pending,
 }: DashboardOverviewRailProps) {
     return (
         <div className="flex flex-col gap-3">
@@ -48,6 +50,8 @@ export function DashboardOverviewRail({
                     <PanelInset>
                         <OverviewAlertList alerts={alerts} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={BellOff}

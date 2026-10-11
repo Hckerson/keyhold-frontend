@@ -1,13 +1,16 @@
 import { BadgeCheck, BellRing, Radio, UserCheck, Wallet } from "lucide-react";
-import type { ConfigField } from "@/components/patterns/config-field-grid";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import { strengthTone } from "@/lib/config/account-tones";
 import {
     ALERT_TYPE_COUNT,
     alertDeliveryCount,
     enabledAlertCount,
-} from "@/lib/data/alerts";
-import type { AlertPreference, AlertType } from "@/lib/types";
+} from "@/lib/data/alerts-preferences";
+import type {
+    AlertPreference,
+    AlertType,
+    ConfigField,
+    StatDatum,
+} from "@/lib/types";
 import { formatCount, percentOf } from "@/lib/utils";
 import type { User } from "@/lib/validations/user";
 
@@ -107,7 +110,7 @@ export const buildDashboardSettingsStats = (
         icon: Wallet,
         label: "Verified",
         value: `${verified}/${documents}`,
-        tone: verified === documents ? "success" : "highlight",
+        tone: verified === documents ? "accent" : "neutral",
     },
     {
         id: "alerts",
@@ -121,13 +124,13 @@ export const buildDashboardSettingsStats = (
         icon: Radio,
         label: "Deliveries",
         value: formatCount(alertDeliveryCount(preferences)),
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "documents",
         icon: BadgeCheck,
         label: "Documents",
         value: `${verified}/${documents}`,
-        tone: verified === documents ? "success" : "warning",
+        tone: verified === documents ? "accent" : "neutral",
     },
 ];

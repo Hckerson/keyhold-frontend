@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { OfferConfirmAction } from "@/components/features/offers/offer-confirm-modal";
 import { toOfferDetail } from "@/lib/data/offer-details";
 import { useConnection } from "@/lib/hooks/use-connections";
 import { useConversation } from "@/lib/hooks/use-messages";
@@ -18,6 +17,7 @@ import { usePurchaseEligibility } from "@/lib/hooks/use-purchase-eligibility";
 import { useSession } from "@/lib/hooks/use-session";
 import { toDigits } from "@/lib/utils";
 import type { CreateOfferInput } from "@/lib/validations/offer";
+import type { OfferConfirmAction } from "@/lib/types";
 
 const COUNTER_WINDOW_DAYS = 7;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
@@ -96,7 +96,7 @@ export function useOfferDetail(id: string) {
                 offeredPrice: counterValue,
                 offeredTerms: counterNote || offer.offeredTerms,
                 expiresAt: new Date(
-                    Date.now() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
+                    new Date().getTime() + COUNTER_WINDOW_DAYS * MS_PER_DAY,
                 ).toISOString(),
             },
             () => {

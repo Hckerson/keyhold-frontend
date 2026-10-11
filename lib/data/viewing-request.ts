@@ -11,8 +11,12 @@ export const toDateInput = (date: Date) =>
 export const earliestViewingDate = (from: Date = new Date()) =>
     toDateInput(new Date(from.getTime() + VIEWING_LEAD_DAYS * MS_PER_DAY));
 
-export const toProposedTimes = (date: string, slotIds: string[]): string[] =>
+export const toProposedTimes = (
+    date: string,
+    slotIds: string[],
+    now: Date = new Date(),
+): string[] =>
     VIEWING_SLOTS.filter((slot) => slotIds.includes(slot.id))
         .map((slot) => new Date(`${date}T${pad(slot.hour)}:00:00`))
-        .filter((at) => at.getTime() > Date.now())
+        .filter((at) => at > now)
         .map((at) => at.toISOString());

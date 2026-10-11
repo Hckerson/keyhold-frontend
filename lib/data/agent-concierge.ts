@@ -11,7 +11,6 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     CONCIERGE_TIERS,
     type ConciergeStatus,
@@ -23,6 +22,7 @@ import type {
     ConciergeServiceEntry,
 } from "@/lib/validations/concierge";
 import { formatMillions, percentOf } from "@/lib/utils";
+import type { StatDatum } from "@/lib/types";
 
 export interface VIPClient {
     id: string;
@@ -55,11 +55,11 @@ export interface ConciergePractice {
 }
 
 const SERVICE_STYLES: { icon: LucideIcon; tone: ChartTone }[] = [
-    { icon: Plane, tone: "info" },
+    { icon: Plane, tone: "neutral" },
     { icon: Castle, tone: "accent" },
-    { icon: Sparkles, tone: "highlight" },
-    { icon: Banknote, tone: "success" },
-    { icon: ConciergeBell, tone: "warning" },
+    { icon: Sparkles, tone: "neutral" },
+    { icon: Banknote, tone: "accent" },
+    { icon: ConciergeBell, tone: "neutral" },
 ];
 
 const styleFor = (index: number) =>
@@ -110,28 +110,28 @@ export const conciergeStats = (overview: ConciergeOverview): StatDatum[] => [
         icon: Wallet,
         label: "Under mandate",
         value: formatMillions(overview.bookValue),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "allocated",
         icon: Gauge,
         label: "Allocated",
         value: `${overview.allocatedPercent}%`,
-        tone: "info",
+        tone: "neutral",
     },
     {
         id: "requests",
         icon: ConciergeBell,
         label: "Open requests",
         value: `${overview.openRequests}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "closed",
         icon: CheckCircle2,
         label: "Closed to date",
         value: `${overview.closedDeals}`,
-        tone: "success",
+        tone: "accent",
     },
 ];
 

@@ -1,5 +1,6 @@
 import { StatBand } from "@/components/patterns/stat-band";
-import { calendarLoadStats, type Appointment } from "@/lib/data/agent-calendar";
+import { calendarLoadStats } from "@/lib/data/agent-calendar-stats";
+import type { Appointment } from "@/lib/types";
 
 const BAND_LABEL = "Week at a glance";
 

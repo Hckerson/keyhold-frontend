@@ -18,10 +18,7 @@ import {
     statusShares,
 } from "@/lib/data/admin-overview-people";
 import { systemsDeck } from "@/lib/data/admin-overview-systems";
-import {
-    decisionLanes,
-    queueReadiness,
-} from "@/lib/data/admin-overview-triage";
+import { decisionLanes, laneReadiness } from "@/lib/data/admin-overview-triage";
 import { useAuditLogs } from "@/lib/hooks/use-audit-logs";
 import { useDisputeCounts } from "@/lib/hooks/use-disputes";
 import { useFlagCounts } from "@/lib/hooks/use-flags";
@@ -50,15 +47,17 @@ export function AdminOverviewConsole() {
     const health = useServiceHealth(HEALTH_WINDOW_HOURS);
     const audit = useAuditLogs({ limit: RECORD_WINDOW });
 
-    const readiness = queueReadiness([flags, kyc, disputes]);
+    const readiness = laneReadiness({
+        verifications: kyc,
+        listings: flags,
+        flags,
+        disputes,
+    });
 
     const lanes = useMemo(
         () =>
-            decisionLanes(
-                moderationLoad(flags.data, kyc.data, disputes.data),
-                users.data,
-            ),
-        [flags.data, kyc.data, disputes.data, users.data],
+            decisionLanes(moderationLoad(flags.data, kyc.data, disputes.data)),
+        [flags.data, kyc.data, disputes.data],
     );
 
     const business = useMemo(
@@ -72,7 +71,7 @@ export function AdminOverviewConsole() {
         () => ({
             statuses: statusShares(users.data),
             roles: toRoleSegments(directory.data ?? []),
-            coverage: coverageReading(directory.data ?? []),
+            coverage: directory.data ? coverageReading(directory.data) : null,
         }),
         [users.data, directory.data],
     );
@@ -107,7 +106,11 @@ export function AdminOverviewConsole() {
                         months={business.months}
                         figures={business.figures}
                         lifetime={business.lifetime}
-                        pending={trend.isPending || platform.isPending}
+                        pending={
+                            trend.isPending ||
+                            platform.isPending ||
+                            users.isPending
+                        }
                         failed={trend.isError}
                     />
                 </div>
@@ -124,7 +127,8 @@ export function AdminOverviewConsole() {
                     statuses={people.statuses}
                     roles={people.roles}
                     coverage={people.coverage}
-                    pending={users.isPending}
+                    pending={users.isPending || directory.isPending}
+                    failed={directory.isError}
                 />
                 <div className="console-span-2">
                     <AdminOverviewActivity

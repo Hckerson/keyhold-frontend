@@ -26,11 +26,21 @@ ruleTester.run("domain-types-in-lib", domainTypesInLib, {
             filename: "app/layout.tsx",
             code: `export const metadata = { title: "Starter" };`,
         },
+        {
+            name: "a component exporting the props named after its own file",
+            filename: "components/common/status-badge.tsx",
+            code: `export interface StatusBadgeProps {\n    label: string;\n}`,
+        },
+        {
+            name: "a barrel re-exporting types from their home module",
+            filename: "components/common/index.ts",
+            code: `export type { ButtonProps, Size } from "./button";`,
+        },
     ],
     invalid: [
         {
-            name: "an exported interface",
-            filename: "components/common/button.tsx",
+            name: "props named after a component other than the file's",
+            filename: "components/common/card.tsx",
             code: `export interface ButtonProps {\n    label: string;\n}`,
             errors: [
                 { messageId: "exportedType", data: { name: "ButtonProps" } },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { statsAPI } from "@/lib/api/stats";
 import { queryKeys } from "@/lib/hooks/query-keys";
 import { CACHE_TIME, STALE_TIME } from "@/lib/constants";
@@ -60,6 +60,7 @@ export function useTrendStats(filter: TimeFilter, enabled = true) {
     return useQuery({
         queryKey: queryKeys.stats.trend(filter),
         queryFn: () => statsAPI.trend(filter),
+        placeholderData: keepPreviousData,
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,

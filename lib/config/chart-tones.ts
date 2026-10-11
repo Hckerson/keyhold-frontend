@@ -1,53 +1,64 @@
+import { CircleAlert, CircleCheck, type LucideIcon } from "lucide-react";
+
 export type ChartTone =
+    | "accent-dark"
     | "accent"
-    | "info"
-    | "highlight"
+    | "accent-mid"
+    | "accent-soft"
     | "neutral"
-    | "success"
-    | "warning"
     | "error";
 
 export const chartToneVar: Record<ChartTone, string> = {
+    "accent-dark": "var(--color-accent-dark)",
     accent: "var(--color-accent)",
-    info: "var(--color-info)",
-    highlight: "var(--color-highlight)",
-    neutral: "var(--color-text-muted)",
-    success: "var(--color-success)",
-    warning: "var(--color-warning)",
+    "accent-mid": "var(--color-accent-mid)",
+    "accent-soft": "var(--color-accent-soft)",
+    neutral: "var(--color-quiet)",
     error: "var(--color-error)",
 };
 
+export const chartToneWash: Record<ChartTone, string> = {
+    "accent-dark": "var(--color-accent-light)",
+    accent: "var(--color-accent-light)",
+    "accent-mid": "var(--color-accent-light)",
+    "accent-soft": "var(--color-accent-light)",
+    neutral: "var(--color-background-muted)",
+    error: "var(--color-error-light)",
+};
+
 export const chartToneText: Record<ChartTone, string> = {
+    "accent-dark": "text-accent-dark",
     accent: "text-accent",
-    info: "text-info",
-    highlight: "text-highlight-dark",
+    "accent-mid": "text-accent-mid",
+    "accent-soft": "text-accent",
     neutral: "text-text-muted",
-    success: "text-success",
-    warning: "text-warning",
     error: "text-error",
 };
 
 export const moveTone = (percent: number): ChartTone => {
     if (percent === 0) return "neutral";
-    return percent < 0 ? "success" : "error";
+    return percent < 0 ? "accent" : "error";
 };
 
 export const chartToneSoft: Record<ChartTone, string> = {
+    "accent-dark": "bg-accent-light text-accent-dark",
     accent: "bg-accent-light text-accent",
-    info: "bg-info-light text-info",
-    highlight: "bg-highlight-light text-highlight-dark",
+    "accent-mid": "bg-accent-light text-accent",
+    "accent-soft": "bg-accent-light text-accent",
     neutral: "bg-background-alt text-text-secondary",
-    success: "bg-success-light text-success",
-    warning: "bg-warning-light text-warning",
-    error: "bg-error-light text-error",
+    error: "bg-error-light text-error-dark",
 };
 
 export const chartToneFill: Record<ChartTone, string> = {
+    "accent-dark": "bg-accent-dark",
     accent: "bg-accent",
-    info: "bg-info",
-    highlight: "bg-highlight",
-    neutral: "bg-text-muted",
-    success: "bg-success",
-    warning: "bg-warning",
+    "accent-mid": "bg-accent-mid",
+    "accent-soft": "bg-accent-soft",
+    neutral: "bg-quiet",
     error: "bg-error",
+};
+
+export const chartToneGlyph: Partial<Record<ChartTone, LucideIcon>> = {
+    accent: CircleCheck,
+    error: CircleAlert,
 };

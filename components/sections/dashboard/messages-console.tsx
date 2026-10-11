@@ -7,20 +7,19 @@ import { MessagesHeader } from "@/components/sections/dashboard/messages-header"
 import { MessagesStatBand } from "@/components/sections/dashboard/messages-stat-band";
 import { ThreadContextRail } from "@/components/sections/dashboard/thread-context-rail";
 import { ThreadPanel } from "@/components/sections/dashboard/thread-panel";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     countByFilter,
     matchesConversation,
-    messageStats,
-    messagesSummary,
     rankConversations,
-    type ConversationFilter,
 } from "@/lib/data/messages";
+import { messageStats, messagesSummary } from "@/lib/data/messages-stats";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useConversation, useSendMessage } from "@/lib/hooks/use-messages";
 import { useSession } from "@/lib/hooks/use-session";
-import type { MessageSendHandler } from "@/lib/types";
+import type { MessageSendHandler, ConversationFilter } from "@/lib/types";
 import { toConversationList } from "@/lib/utils/to-conversation";
 import {
     medianReplyMinutes,
@@ -99,6 +98,8 @@ export function MessagesConsole() {
                 onRetry={() => void interests.refetch()}
             />
         );
+
+    if (interests.isPending) return <ConsoleSkeleton variant="thread" />;
 
     return (
         <div className="flex flex-col gap-4">

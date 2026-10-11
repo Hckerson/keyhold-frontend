@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export interface GalleryTileData {
     id: string;
     imageUrl: string;
@@ -36,4 +38,16 @@ export interface BrowseEntry {
 export interface BrowseGroup {
     title: string;
     entries: BrowseEntry[];
+}
+
+export interface PremierMediaView {
+    image: string;
+    name: string;
+    badge?: string;
+}
+
+export interface PremierSpec {
+    icon: LucideIcon;
+    value: string;
+    label: string;
 }

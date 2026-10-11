@@ -1,7 +1,7 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
-import { statusShares, timingShares } from "@/lib/data/viewings";
+import { statusShares, timingShares } from "@/lib/data/viewings-stats";
 import type { Viewing } from "@/lib/types";
 
 const STATUS_TITLE = "Status Mix";

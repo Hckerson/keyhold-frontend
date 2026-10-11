@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Container } from "@/components/ui/container";
 import { MapExperience } from "@/components/sections/search/map-experience";
-import { SearchResultsSkeleton } from "@/components/sections/search/search-skeleton";
+import { SearchResultsSkeleton } from "@/components/sections/search/search-results-skeleton";
 
 export const metadata = {
     title: "Map View | Luxury Real Estate",
