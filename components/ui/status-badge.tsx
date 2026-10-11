@@ -2,6 +2,7 @@ import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { StatusTone } from "@/lib/types";
 
 const statusBadgeVariants = cva(
     "ease-smooth inline-flex shrink-0 select-none items-center rounded-full align-middle text-[10px] leading-none font-medium tracking-wide whitespace-nowrap transition-colors duration-200",
@@ -17,7 +18,7 @@ const statusBadgeVariants = cva(
                 warning: "",
                 error: "",
                 info: "",
-            },
+            } satisfies Record<StatusTone, string>,
             variant: {
                 subtle: "",
                 solid: "",
@@ -33,22 +34,22 @@ const statusBadgeVariants = cva(
             {
                 tone: "success",
                 variant: "subtle",
-                class: "bg-success-light text-success",
+                class: "bg-accent-light text-accent",
             },
             {
                 tone: "warning",
                 variant: "subtle",
-                class: "bg-warning-light text-warning",
+                class: "bg-background-muted text-text-secondary",
             },
             {
                 tone: "error",
                 variant: "subtle",
-                class: "bg-error-light text-error",
+                class: "bg-error-light text-error-dark",
             },
             {
                 tone: "info",
                 variant: "subtle",
-                class: "bg-info-light text-info",
+                class: "bg-background-muted text-text-secondary",
             },
             {
                 tone: "neutral",
@@ -58,12 +59,12 @@ const statusBadgeVariants = cva(
             {
                 tone: "success",
                 variant: "solid",
-                class: "bg-success text-text-inverse",
+                class: "bg-accent text-text-inverse",
             },
             {
                 tone: "warning",
                 variant: "solid",
-                class: "bg-warning text-text-inverse",
+                class: "bg-text-secondary text-text-inverse",
             },
             {
                 tone: "error",
@@ -73,7 +74,7 @@ const statusBadgeVariants = cva(
             {
                 tone: "info",
                 variant: "solid",
-                class: "bg-info text-text-inverse",
+                class: "bg-text-secondary text-text-inverse",
             },
             {
                 tone: "neutral",
@@ -83,12 +84,12 @@ const statusBadgeVariants = cva(
             {
                 tone: "success",
                 variant: "outline",
-                class: "border border-success/30 text-success",
+                class: "border border-accent/30 text-accent",
             },
             {
                 tone: "warning",
                 variant: "outline",
-                class: "border border-warning/30 text-warning",
+                class: "border border-border-dark text-text-secondary",
             },
             {
                 tone: "error",
@@ -98,7 +99,7 @@ const statusBadgeVariants = cva(
             {
                 tone: "info",
                 variant: "outline",
-                class: "border border-info/30 text-info",
+                class: "border border-border-dark text-text-secondary",
             },
         ],
         defaultVariants: {

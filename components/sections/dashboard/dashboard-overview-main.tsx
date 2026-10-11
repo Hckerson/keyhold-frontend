@@ -4,15 +4,11 @@ import { PanelLink } from "@/components/features/shared/panel-link";
 import { ActivityList } from "@/components/features/shared/activity-list";
 import { DashboardOfferHero } from "@/components/sections/dashboard/dashboard-offer-hero";
 import { OverviewViewingList } from "@/components/features/dashboard/overview-viewing-list";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { EmptyState } from "@/components/ui/empty-state";
 import { CalendarDays, History } from "lucide-react";
-import type {
-    OfferBook,
-    OfferPosition,
-    OverviewViewing,
-} from "@/lib/data/dashboard-overview";
 import { ACTIVITY_COPY } from "@/lib/config/activity";
-import type { ActivityEntry } from "@/lib/types";
+import type { ActivityEntry, OfferBook, OfferPosition, OverviewViewing } from "@/lib/types";
 
 const VIEWINGS_TITLE = "Upcoming Viewings";
 const VIEWINGS_LEDE = "Confirmed tours and the agent hosting each one";
@@ -27,6 +23,7 @@ export interface DashboardOverviewMainProps {
     positions: OfferPosition[];
     viewings: OverviewViewing[];
     activity: ActivityEntry[];
+    pending?: boolean;
 }
 
 export function DashboardOverviewMain({
@@ -34,6 +31,7 @@ export function DashboardOverviewMain({
     positions,
     viewings,
     activity,
+    pending,
 }: DashboardOverviewMainProps) {
     return (
         <div className="console-span-2 flex flex-col gap-3">
@@ -54,6 +52,8 @@ export function DashboardOverviewMain({
                     <PanelInset>
                         <OverviewViewingList viewings={viewings} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={CalendarDays}
@@ -68,6 +68,8 @@ export function DashboardOverviewMain({
                     <PanelInset>
                         <ActivityList entries={activity} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={History}

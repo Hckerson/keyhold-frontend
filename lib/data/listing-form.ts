@@ -1,9 +1,7 @@
 import { DEFAULT_COUNTRY, type ListingDraft } from "@/lib/config/listing-form";
 import { LISTING_FORM_COPY } from "@/lib/config/listing-form-copy";
-import {
-    BULK_TRANSITIONS,
-    FEATURED_DATE_FORMAT,
-} from "@/lib/data/agent-listings";
+import { BULK_TRANSITIONS } from "@/lib/config/listing-bulk";
+import { FEATURED_DATE_FORMAT } from "@/lib/data/agent-listings";
 import {
     PROPERTY_STATUSES,
     PROPERTY_STATUS_LABELS,

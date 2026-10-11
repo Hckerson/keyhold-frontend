@@ -104,7 +104,7 @@ export function CalendarSyncPanel({
                     role="status"
                     className={cn(
                         "text-xs",
-                        message === "connected" ? "text-success" : "text-error",
+                        message === "connected" ? "text-accent" : "text-error",
                     )}
                 >
                     {COPY.outcomes[message]}

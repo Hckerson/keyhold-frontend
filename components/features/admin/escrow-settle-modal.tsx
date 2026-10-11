@@ -4,6 +4,7 @@ import { ConfirmModal } from "@/components/patterns/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { TextareaField } from "@/components/ui/forms/textarea-field";
 import {
+    isRefundReady,
     SETTLE_MODES,
     SETTLE_WARNING_TITLE,
     type SettleMode,
@@ -39,7 +40,7 @@ export function EscrowSettleModal({
     onSubmit,
 }: EscrowSettleModalProps) {
     const copy = SETTLE_MODES[mode];
-    const blocked = Boolean(copy.reason) && reason.trim().length === 0;
+    const blocked = mode === "refund" && !isRefundReady(reason);
 
     return (
         <ConfirmModal

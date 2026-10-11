@@ -1,9 +1,6 @@
 import { AppointmentList } from "@/components/features/agent/appointment-list";
-import {
-    formatGroupDay,
-    formatHours,
-    type AppointmentGroup,
-} from "@/lib/data/agent-calendar";
+import { formatGroupDay, formatHours } from "@/lib/data/agent-calendar";
+import type { AppointmentGroup } from "@/lib/types";
 
 export interface AppointmentDayGroupProps {
     group: AppointmentGroup;

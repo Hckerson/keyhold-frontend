@@ -16,7 +16,7 @@ export function useTransactionLedger(
 ) {
     return useQuery({
         queryKey: queryKeys.transactions.list(input),
-        queryFn: () => transactionsAPI.list(input),
+        queryFn: () => transactionsAPI.ledger(input),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,

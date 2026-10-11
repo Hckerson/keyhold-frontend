@@ -10,7 +10,7 @@ import { FEEDBACK } from "@/lib/config/feedback";
 export function useEscrowHolds(input: EscrowQuery = {}, enabled = true) {
     return useQuery({
         queryKey: queryKeys.escrow.list(input),
-        queryFn: () => escrowAPI.list(input),
+        queryFn: () => escrowAPI.holds(input),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,

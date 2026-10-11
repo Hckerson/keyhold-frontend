@@ -41,7 +41,7 @@ export function JournalListingRow({ listing }: { listing: Listing }) {
                 className={cn(
                     "wide-only-flex shrink-0 items-center gap-1 font-mono text-[10px] tabular-nums",
                     listing.saves > 0
-                        ? "text-highlight-dark"
+                        ? "text-accent"
                         : "text-text-muted",
                 )}
             >

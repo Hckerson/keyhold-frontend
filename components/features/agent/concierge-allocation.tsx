@@ -1,6 +1,7 @@
-import { ProgressBar } from "@/components/ui/progress-bar";
+import { ToneReading } from "@/components/patterns/tone-reading";
 import { allocationTone } from "@/lib/config/concierge-tones";
-import { cn } from "@/lib/utils";
+
+const ALLOCATED_NOUN = "allocated";
 
 export interface ConciergeAllocationProps {
     percent: number;
@@ -12,16 +13,12 @@ export function ConciergeAllocation({
     className,
 }: ConciergeAllocationProps) {
     return (
-        <span className={cn("flex items-center gap-1.5", className)}>
-            <ProgressBar
-                value={percent}
-                tone={allocationTone(percent)}
-                className="w-10 shrink-0"
-            />
-            <span className="text-text-secondary w-8 shrink-0 text-right text-xs tabular-nums">
-                {percent}%
-            </span>
-        </span>
+        <ToneReading
+            value={`${percent}%`}
+            tone={allocationTone(percent)}
+            label={`${percent}% ${ALLOCATED_NOUN}`}
+            className={className}
+        />
     );
 }
 

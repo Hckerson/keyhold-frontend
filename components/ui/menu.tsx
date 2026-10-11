@@ -16,7 +16,7 @@ const menuItemVariants = cva(FLOATING_ITEM, {
     variants: {
         tone: {
             neutral: "text-text",
-            error: "text-error data-highlighted:text-error data-highlighted:bg-error-light",
+            error: "text-error-dark data-highlighted:text-error-dark data-highlighted:bg-error-light",
         },
     },
     defaultVariants: { tone: "neutral" },

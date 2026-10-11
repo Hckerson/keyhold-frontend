@@ -3,6 +3,7 @@
 import {
     BarChart as RBarChart,
     Bar,
+    Cell,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -10,18 +11,18 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import { useMounted } from "@/lib/hooks/use-mounted";
+import { chartToneVar as toneVar } from "@/lib/config/chart-tones";
 import {
-    chartToneVar as toneVar,
-    type ChartTone,
-} from "@/lib/config/chart-tones";
+    AXIS_TICK,
+    STACK_GAP,
+    TOOLTIP_CONTENT,
+    TOOLTIP_LABEL,
+} from "@/components/ui/charts/chart-chrome";
 import { cn } from "@/lib/utils";
 import { formatScaled } from "@/lib/utils/format";
+import type { ColumnSeries } from "@/lib/types";
 
-export interface ColumnSeries {
-    key: string;
-    name: string;
-    tone: ChartTone;
-}
+const FADED_OPACITY = 0.35;
 
 export interface ColumnChartProps {
     data: Record<string, string | number>[];
@@ -32,6 +33,8 @@ export interface ColumnChartProps {
     fractionDigits?: number;
     valuePrefix?: string;
     valueSuffix?: string;
+    faded?: (index: number) => boolean;
+    xAxis?: boolean;
     className?: string;
 }
 
@@ -44,16 +47,19 @@ export function ColumnChart({
     fractionDigits = 0,
     valuePrefix = "",
     valueSuffix = "",
+    faded,
+    xAxis = true,
     className,
 }: ColumnChartProps) {
     const mounted = useMounted();
+    const stacked = series.length > 1;
 
     const format = (value: number) =>
         `${valuePrefix}${formatScaled(value, { divideBy, fractionDigits })}${valueSuffix}`;
 
     return (
         <div className={cn("flex flex-col gap-3", className)}>
-            {series.length > 1 && (
+            {stacked && (
                 <ul className="flex flex-wrap items-center gap-x-4 gap-y-1">
                     {series.map((s) => (
                         <li
@@ -61,7 +67,7 @@ export function ColumnChart({
                             className="text-text-secondary flex items-center gap-1.5 text-xs"
                         >
                             <span
-                                className="size-2 rounded-full"
+                                className="size-2 rounded-xs"
                                 style={{ background: toneVar[s.tone] }}
                             />
                             {s.name}
@@ -84,21 +90,19 @@ export function ColumnChart({
                             />
                             <XAxis
                                 dataKey={xKey}
+                                hide={!xAxis}
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{
-                                    fontSize: 11,
-                                    fill: "var(--color-text-muted)",
-                                }}
+                                tick={AXIS_TICK}
                             />
                             <YAxis
                                 tickLine={false}
                                 axisLine={false}
                                 width={56}
-                                tick={{
-                                    fontSize: 11,
-                                    fill: "var(--color-text-muted)",
-                                }}
+                                allowDecimals={
+                                    divideBy > 1 || fractionDigits > 0
+                                }
+                                tick={AXIS_TICK}
                                 tickFormatter={format}
                             />
                             <Tooltip
@@ -107,18 +111,8 @@ export function ColumnChart({
                                     format(Number(value)),
                                     name,
                                 ]}
-                                contentStyle={{
-                                    background: "var(--color-background)",
-                                    border: "1px solid var(--color-border)",
-                                    borderRadius: "var(--radius-lg)",
-                                    fontSize: 12,
-                                    boxShadow: "var(--shadow-md)",
-                                }}
-                                labelStyle={{
-                                    color: "var(--color-text-muted)",
-                                    fontSize: 11,
-                                    marginBottom: 2,
-                                }}
+                                contentStyle={TOOLTIP_CONTENT}
+                                labelStyle={TOOLTIP_LABEL}
                             />
                             {series.map((s, i) => (
                                 <Bar
@@ -128,12 +122,25 @@ export function ColumnChart({
                                     stackId="stack"
                                     fill={toneVar[s.tone]}
                                     maxBarSize={38}
+                                    {...(stacked && STACK_GAP)}
                                     radius={
                                         i === series.length - 1
                                             ? [4, 4, 0, 0]
                                             : [0, 0, 0, 0]
                                     }
-                                />
+                                >
+                                    {faded &&
+                                        data.map((datum, index) => (
+                                            <Cell
+                                                key={`${String(datum[xKey])}-${index}`}
+                                                fillOpacity={
+                                                    faded(index)
+                                                        ? FADED_OPACITY
+                                                        : 1
+                                                }
+                                            />
+                                        ))}
+                                </Bar>
                             ))}
                         </RBarChart>
                     </ResponsiveContainer>

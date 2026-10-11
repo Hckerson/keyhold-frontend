@@ -16,7 +16,7 @@ import {
     useGoogleCalendarStatus,
 } from "@/lib/hooks/use-google-calendar";
 import type { CalendarOutcome } from "@/lib/config/calendar-sync";
-import { RESCHEDULE_HINT } from "@/lib/data/agent-calendar";
+import { RESCHEDULE_HINT } from "@/lib/config/agent-calendar";
 
 export interface CalendarConsoleProps {
     calendarOutcome?: CalendarOutcome;
@@ -69,6 +69,7 @@ export function CalendarConsole({ calendarOutcome }: CalendarConsoleProps) {
                     className="console-span-3"
                     view={calendar.view}
                     appointments={calendar.visible}
+                    pending={calendar.pending}
                     selectedIso={calendar.selectedIso}
                     rangeLabel={calendar.rangeLabel}
                     dayCount={calendar.dayCount}

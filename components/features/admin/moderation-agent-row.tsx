@@ -1,5 +1,12 @@
+import { Avatar } from "@/components/ui/avatar";
+import { MetricCell } from "@/components/patterns/metric-cell";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
+import { initialsOf } from "@/lib/utils";
 import type { ModerationAgentLoad } from "@/lib/types";
+
+const SENT_LABEL = "Sent";
+const OPEN_LABEL = "Open";
+const REPORTS_LABEL = "Reports";
 
 export interface ModerationAgentRowProps {
     load: ModerationAgentLoad;
@@ -7,25 +14,42 @@ export interface ModerationAgentRowProps {
 
 export function ModerationAgentRow({ load }: ModerationAgentRowProps) {
     return (
-        <tr className="ease-smooth hover:bg-background-muted h-11 transition-colors">
-            <td className="min-w-0 py-0">
-                <span className="text-text block truncate text-xs font-medium">
-                    {load.name}
-                </span>
-                <span className="text-text-muted block truncate text-[10px]">
-                    {load.firm}
-                </span>
-            </td>
-            <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
-                {load.submissions}
-            </td>
-            <td className="text-text py-0 pl-3 text-right text-xs font-semibold tabular-nums">
-                {load.open}
-            </td>
-            <td className="py-0 pl-3 text-right">
-                <ReportCountMark reports={load.reports} />
-            </td>
-        </tr>
+        <li
+            title={load.email}
+            className="bg-background-muted flex h-14 items-center gap-3 rounded-lg px-3"
+        >
+            <Avatar
+                size="sm"
+                elevated={false}
+                initials={initialsOf(load.name)}
+                alt={load.name}
+            />
+            <span className="text-text min-w-0 flex-1 truncate text-xs font-medium">
+                {load.name}
+            </span>
+            <div className="flex shrink-0 gap-4 text-right">
+                <MetricCell
+                    label={SENT_LABEL}
+                    className="flex flex-col items-end"
+                >
+                    <span className="text-text-secondary tabular-nums">
+                        {load.submissions}
+                    </span>
+                </MetricCell>
+                <MetricCell
+                    label={OPEN_LABEL}
+                    className="flex flex-col items-end"
+                >
+                    <span className="tabular-nums">{load.open}</span>
+                </MetricCell>
+                <MetricCell
+                    label={REPORTS_LABEL}
+                    className="flex flex-col items-end"
+                >
+                    <ReportCountMark reports={load.reports} />
+                </MetricCell>
+            </div>
+        </li>
     );
 }
 

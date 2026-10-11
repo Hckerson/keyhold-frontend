@@ -13,33 +13,34 @@ import { ChoiceChips } from "@/components/patterns/choice-chips";
 import { LabelledBlock } from "@/components/patterns/labelled-block";
 import {
     REPORT_EXPORT_COPY as COPY,
-    REPORT_PERIOD_CHOICES,
-    REPORT_SECTION_CHOICES,
-    REPORT_SECTION_IDS,
+    type ReportSectionChoice,
     type ReportSectionId,
 } from "@/lib/config/report-export";
-import type { TimeFilter } from "@/lib/enums/enums";
 
 export interface ReportExportModalProps {
     open: boolean;
-    period: TimeFilter;
+    span: string;
+    choices: readonly ReportSectionChoice[];
+    note?: string;
     onClose: () => void;
-    onGenerate: (period: TimeFilter, sections: ReportSectionId[]) => void;
+    onExport: (sections: ReportSectionId[]) => void;
 }
 
 export function ReportExportModal({
     open,
-    period,
+    span,
+    choices,
+    note,
     onClose,
-    onGenerate,
+    onExport,
 }: ReportExportModalProps) {
-    const [chosenPeriod, setChosenPeriod] = useState<TimeFilter>(period);
-    const [sections, setSections] = useState<ReportSectionId[]>([
-        ...REPORT_SECTION_IDS,
-    ]);
+    const [excluded, setExcluded] = useState<ReportSectionId[]>([]);
+    const sections = choices
+        .map((choice) => choice.id)
+        .filter((id) => !excluded.includes(id));
 
     const toggleSection = (id: ReportSectionId) =>
-        setSections((current) =>
+        setExcluded((current) =>
             current.includes(id)
                 ? current.filter((section) => section !== id)
                 : [...current, id],
@@ -57,25 +58,19 @@ export function ReportExportModal({
             </ModalHeader>
 
             <ModalBody className="space-y-3">
-                <p className="text-text-secondary text-xs">{COPY.hint}</p>
-
-                <LabelledBlock label={COPY.period}>
-                    <ChoiceChips
-                        label={COPY.period}
-                        choices={REPORT_PERIOD_CHOICES}
-                        selected={[chosenPeriod]}
-                        onToggle={setChosenPeriod}
-                    />
-                </LabelledBlock>
+                <p className="text-text-secondary text-xs">
+                    {COPY.hint}, {span}
+                </p>
 
                 <LabelledBlock label={COPY.sections}>
                     <ChoiceChips
                         label={COPY.sections}
-                        choices={REPORT_SECTION_CHOICES}
+                        choices={choices}
                         selected={sections}
                         onToggle={toggleSection}
                     />
                 </LabelledBlock>
+                {note && <p className="text-text-muted text-xs">{note}</p>}
             </ModalBody>
 
             <ModalFooter className="gap-4">
@@ -87,7 +82,7 @@ export function ReportExportModal({
                     emphasis="solid"
                     tone="accent"
                     disabled={sections.length === 0}
-                    onClick={() => onGenerate(chosenPeriod, sections)}
+                    onClick={() => onExport(sections)}
                 >
                     {COPY.confirm}
                 </Button>

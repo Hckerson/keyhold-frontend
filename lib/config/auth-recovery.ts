@@ -1,8 +1,8 @@
-import type { AuthStep } from "@/components/features/auth/parts/auth-form-header";
-import type { AuthTitleBlockEntry } from "@/components/features/auth/parts/auth-title-block";
-import { AUTH_ROUTES } from "@/lib/constants";
+import { AUTH_ROUTES, withRedirect } from "@/lib/constants";
+import type { AuthStep, AuthTitleBlockEntry } from "@/lib/types";
 
 export const AUTH_FAILURES = {
+    signIn: "We couldn't sign you in. Check your email and password, then try again.",
     register:
         "We couldn't create your account. Review your details and try again.",
     request:
@@ -42,6 +42,31 @@ const BACK_TO_SIGN_IN: AuthTitleBlockEntry = {
 };
 
 export const RECOVERY_BACK_ENTRIES: AuthTitleBlockEntry[] = [BACK_TO_SIGN_IN];
+
+export const loginFooterEntries = (
+    redirectTo?: string,
+): AuthTitleBlockEntry[] => [
+    {
+        label: "New here",
+        href: withRedirect(AUTH_ROUTES.signup, redirectTo),
+        action: "Apply for access",
+    },
+];
+
+export const signupFooterEntries = (
+    redirectTo?: string,
+): AuthTitleBlockEntry[] => [
+    {
+        label: "Already a member",
+        href: withRedirect(AUTH_ROUTES.login, redirectTo),
+        action: "Sign in",
+    },
+    {
+        label: "Your data",
+        href: AUTH_ROUTES.privacy,
+        action: "Privacy policy",
+    },
+];
 
 export const RECOVERY_DONE_ENTRIES: AuthTitleBlockEntry[] = [
     {

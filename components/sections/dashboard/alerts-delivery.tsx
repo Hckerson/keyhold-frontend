@@ -1,8 +1,12 @@
 import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { AlertPreferenceList } from "@/components/features/dashboard/alert-preference-list";
-import type { AlertVolume } from "@/lib/data/alerts";
-import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
+import type {
+    AlertChannel,
+    AlertPreference,
+    AlertType,
+    AlertVolume,
+} from "@/lib/types";
 
 const DELIVERY_TITLE = "Delivery";
 const DELIVERY_LEDE = "Choose what fires and where it lands";

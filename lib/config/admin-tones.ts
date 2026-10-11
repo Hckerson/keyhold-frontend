@@ -3,17 +3,11 @@ import {
     Flag,
     Gavel,
     ShieldCheck,
-    UserCheck,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import { ADMIN_ROUTES } from "@/lib/constants";
-import type {
-    DecisionLaneId,
-    ModerationQueueId,
-    ServiceState,
-} from "@/lib/types";
+import type { ModerationQueueId, ServiceState, StatusTone } from "@/lib/types";
 
 export interface ToneBand {
     ceiling: number;
@@ -39,41 +33,31 @@ export const MODERATION_QUEUES: Record<ModerationQueueId, ModerationQueueMeta> =
             label: "Verifications",
             icon: ShieldCheck,
             href: ADMIN_ROUTES.verifications,
-            tone: "accent",
+            tone: "neutral",
         },
         listings: {
             label: "Listing review",
             icon: ClipboardCheck,
             href: ADMIN_ROUTES.listings,
-            tone: "info",
+            tone: "neutral",
         },
         flags: {
-            label: "Flagged accounts & messages",
+            label: "Flagged content",
             icon: Flag,
             href: ADMIN_ROUTES.flags,
-            tone: "warning",
+            tone: "neutral",
         },
         disputes: {
             label: "Disputes",
             icon: Gavel,
             href: ADMIN_ROUTES.disputes,
-            tone: "error",
+            tone: "neutral",
         },
     };
 
-export const DECISION_LANES: Record<DecisionLaneId, ModerationQueueMeta> = {
-    ...MODERATION_QUEUES,
-    accounts: {
-        label: "Account approvals",
-        icon: UserCheck,
-        href: ADMIN_ROUTES.users,
-        tone: "highlight",
-    },
-};
-
 export interface ServiceStateMeta {
     label: string;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 
@@ -81,26 +65,26 @@ export const SERVICE_STATES: Record<ServiceState, ServiceStateMeta> = {
     operational: {
         label: "Operational",
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
     },
-    degraded: { label: "Degraded", tone: "warning", chartTone: "warning" },
+    degraded: { label: "Degraded", tone: "error", chartTone: "error" },
     down: { label: "Down", tone: "error", chartTone: "error" },
 };
 
 const AGE_BANDS: ToneBand[] = [
     { ceiling: 60, tone: "neutral" },
-    { ceiling: 240, tone: "info" },
-    { ceiling: 1_440, tone: "warning" },
+    { ceiling: 240, tone: "neutral" },
+    { ceiling: 1_440, tone: "neutral" },
 ];
 
 const LOAD_BANDS: ToneBand[] = [
-    { ceiling: 60, tone: "success" },
-    { ceiling: 85, tone: "warning" },
+    { ceiling: 60, tone: "accent" },
+    { ceiling: 85, tone: "neutral" },
 ];
 
 const ERROR_RATE_BANDS: ToneBand[] = [
-    { ceiling: 0.05, tone: "success" },
-    { ceiling: 0.2, tone: "warning" },
+    { ceiling: 0.05, tone: "accent" },
+    { ceiling: 0.2, tone: "neutral" },
 ];
 
 export const UPTIME_SLO = 99.9;

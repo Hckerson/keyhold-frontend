@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { Container } from "@/components/ui/container";
+import { ConsoleCanvas } from "@/components/layout/console-canvas";
 import { Sidebar, type SidebarProps } from "@/components/layout/sidebar";
 import { SignOutModal } from "@/components/layout/sign-out-modal";
 import { Topbar, type TopbarProps } from "@/components/layout/topbar";
@@ -57,13 +57,7 @@ export function PortalShell({
                     signingOut={signingOut}
                 />
 
-                <div className="py-4 md:py-6">
-                    <Container className="gutter-x gutter-x--tight">
-                        <div className="console-canvas w-full min-w-0">
-                            {children}
-                        </div>
-                    </Container>
-                </div>
+                <ConsoleCanvas>{children}</ConsoleCanvas>
             </main>
 
             <SignOutModal confirmation={confirmation} />

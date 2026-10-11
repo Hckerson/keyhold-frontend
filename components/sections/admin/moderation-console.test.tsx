@@ -6,17 +6,17 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ModerationConsole } from "@/components/sections/admin/moderation-console";
 import { flagsAPI } from "@/lib/api/flags";
 import { propertiesAPI } from "@/lib/api/properties";
-import { aFlagPage, aPropertyFlag } from "@/lib/data/__fixtures__/moderation";
+import { aPropertyFlag } from "@/lib/data/__fixtures__/moderation";
 import type { Property } from "@/lib/validations/property";
 
 vi.mock("@/lib/api/flags", () => ({
-    flagsAPI: { list: vi.fn(), resolve: vi.fn() },
+    flagsAPI: { all: vi.fn(), resolve: vi.fn() },
 }));
 vi.mock("@/lib/api/properties", () => ({
     propertiesAPI: { moderate: vi.fn() },
 }));
 
-const list = vi.mocked(flagsAPI.list);
+const list = vi.mocked(flagsAPI.all);
 const resolve = vi.mocked(flagsAPI.resolve);
 const moderate = vi.mocked(propertiesAPI.moderate);
 
@@ -86,7 +86,7 @@ const gone = (name: string) =>
     );
 
 beforeEach(() => {
-    list.mockResolvedValue(aFlagPage([FLAGGED, CHANGES_ASKED, APPROVED]));
+    list.mockResolvedValue([FLAGGED, CHANGES_ASKED, APPROVED]);
     moderate.mockResolvedValue({} as Property);
     resolve.mockResolvedValue(FLAGGED);
 });
@@ -96,7 +96,7 @@ describe("ModerationConsole · reading the queue", () => {
         draw();
         await queue();
 
-        expect(list).toHaveBeenCalledWith({ type: "PROPERTY", limit: 100 });
+        expect(list).toHaveBeenCalledWith({ type: "PROPERTY" });
     });
 
     it("shows the moderation fallback when the queue fails and recovers on retry", async () => {
@@ -113,12 +113,25 @@ describe("ModerationConsole · reading the queue", () => {
     });
 
     it("says nothing matches rather than loading when the queue is empty", async () => {
-        list.mockResolvedValue(aFlagPage([]));
+        list.mockResolvedValue([]);
         draw();
 
         expect(
             await screen.findByText("Nothing matches this view"),
         ).toBeInTheDocument();
+    });
+
+    it("claims no queue count, reading or open check while the queue is loading", async () => {
+        list.mockReturnValue(new Promise(() => {}));
+        draw();
+        const review = within(
+            (
+                await screen.findByRole("heading", { name: "Review Queue" })
+            ).closest("section") as HTMLElement,
+        );
+
+        expect(review.queryByText("0")).toBeNull();
+        expect(review.queryAllByText(/0 open/)).toHaveLength(0);
     });
 
     it("narrows the queue to the status pill that was picked", async () => {
@@ -165,6 +178,13 @@ describe("ModerationConsole · reading the queue", () => {
         draw();
 
         await queue();
+        await userEvent.click(
+            screen.getByRole("button", { name: /^decided/i }),
+        );
+
+        expect(
+            await screen.findByRole("button", { name: `Review ${MILL}` }),
+        ).toBeInTheDocument();
         expect(
             screen.queryByRole("button", { name: `Approve ${MILL}` }),
         ).not.toBeInTheDocument();
@@ -403,7 +423,13 @@ describe("ModerationConsole · reviewing", () => {
 
     it("offers no approval when reviewing a listing that is already approved", async () => {
         draw();
-        await userEvent.click(await rowButton(`Review ${MILL}`));
+        await queue();
+        await userEvent.click(
+            screen.getByRole("button", { name: /^decided/i }),
+        );
+        await userEvent.click(
+            await screen.findByRole("button", { name: `Review ${MILL}` }),
+        );
 
         expect(
             within(await dialog(MILL)).queryByRole("button", {

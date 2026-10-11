@@ -2,39 +2,14 @@
 
 import { LogOut } from "lucide-react";
 import {
-    rowBase,
-    rowCollapsed,
-    rowIconSlot,
-    rowIdle,
-} from "@/components/layout/sidebar-nav";
+    SIDEBAR_ICON_SLOT,
+    SIDEBAR_ROW,
+    SIDEBAR_ROW_COLLAPSED,
+    SIDEBAR_ROW_IDLE,
+} from "@/lib/config/sidebar";
+import { SidebarUserCard } from "@/components/layout/sidebar-user-card";
 import type { AuthUser } from "@/lib/types/auth";
-import { cn, initialsOf } from "@/lib/utils";
-
-function UserCard({ user, collapsed }: { user: AuthUser; collapsed: boolean }) {
-    return (
-        <div
-            className={cn(
-                "flex h-11 items-center gap-2 rounded-lg px-2",
-                collapsed && rowCollapsed,
-            )}
-        >
-            <span className={cn(rowIconSlot, "h-11")}>
-                <span className="bg-sidebar-active text-sidebar-text-active ring-highlight/25 grid size-6 place-items-center rounded-full font-mono text-[10px] font-semibold ring-1">
-                    {initialsOf(user.name)}
-                </span>
-                <span className="bg-success ring-sidebar absolute right-0 bottom-2 size-1.5 rounded-full ring-2" />
-            </span>
-            {!collapsed && (
-                <div className="min-w-0 flex-1">
-                    <p className="text-sidebar-text-active truncate text-xs font-medium">
-                        {user.name}
-                    </p>
-                    <p className="rail-label mt-0.5 truncate">{user.role}</p>
-                </div>
-            )}
-        </div>
-    );
-}
+import { cn } from "@/lib/utils";
 
 export function SidebarFooter({
     user,
@@ -54,7 +29,7 @@ export function SidebarFooter({
                 collapsed ? "px-1.5" : "px-2",
             )}
         >
-            {user && <UserCard user={user} collapsed={collapsed} />}
+            {user && <SidebarUserCard user={user} collapsed={collapsed} />}
 
             {onLogout && (
                 <button
@@ -65,13 +40,13 @@ export function SidebarFooter({
                     title={collapsed ? "Log out" : undefined}
                     aria-label="Log out"
                     className={cn(
-                        rowBase,
-                        rowIdle,
-                        collapsed && rowCollapsed,
+                        SIDEBAR_ROW,
+                        SIDEBAR_ROW_IDLE,
+                        collapsed && SIDEBAR_ROW_COLLAPSED,
                         "disabled:pointer-events-none disabled:opacity-45",
                     )}
                 >
-                    <span className={rowIconSlot}>
+                    <span className={SIDEBAR_ICON_SLOT}>
                         <LogOut size={12} strokeWidth={1.5} />
                     </span>
                     {!collapsed && <span>Log out</span>}

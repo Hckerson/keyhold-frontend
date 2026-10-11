@@ -9,12 +9,12 @@ const CREDENTIAL_STATES = {
         label: "Connected",
         icon: Check,
         className:
-            "border-border-light text-text-secondary [&>svg]:text-success",
+            "border-border-light text-text-secondary [&>svg]:text-accent",
     },
     missing: {
         label: "Missing keys",
         icon: TriangleAlert,
-        className: "border-error/30 bg-error-light text-error",
+        className: "border-error/30 bg-error-light text-error-dark",
     },
     optional: {
         label: "Not set up",

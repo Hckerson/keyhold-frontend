@@ -2,11 +2,7 @@
 
 import type { MouseEvent, ReactNode } from "react";
 import { DataTableRow } from "@/components/patterns/data-table-row";
-import type {
-    ColumnEmphasis,
-    DataTableColumn,
-    RevealMode,
-} from "@/components/patterns/data-table-types";
+import type { ColumnEmphasis, DataTableColumn, RevealMode } from "@/lib/types";
 
 export interface DataTableBodyProps<T> {
     rows: T[];
@@ -28,6 +24,7 @@ export interface DataTableBodyProps<T> {
     rowLabel?: (row: T) => string;
     renderDetail?: (row: T) => ReactNode;
     rowClassName?: (row: T) => string | undefined;
+    header?: ReactNode;
 }
 
 export function DataTableBody<T>({
@@ -50,9 +47,11 @@ export function DataTableBody<T>({
     rowLabel,
     renderDetail,
     rowClassName,
+    header,
 }: DataTableBodyProps<T>) {
     return (
-        <tbody className="divide-border divide-y">
+        <tbody className="divide-border-light divide-y">
+            {header}
             {rows.map((row) => {
                 const key = rowKey(row);
 

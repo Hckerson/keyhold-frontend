@@ -3,51 +3,45 @@
 import { useMemo, useState } from "react";
 import { FEEDBACK } from "@/lib/config/feedback";
 import {
-    type VerificationActionMode,
-    type VerificationDecision,
-    type VerificationFilterKey,
+    DEFAULT_VERIFICATION_FILTER,
+    isRejectionReady,
+} from "@/lib/config/verification-tones";
+import {
+    verificationCounts,
+    verificationsIn,
 } from "@/lib/data/admin-verifications";
 import { useConfirmation } from "@/lib/hooks/use-confirmation";
 import { useKycQueue, useReviewKyc } from "@/lib/hooks/use-kyc";
 import { toVerificationQueue } from "@/lib/utils/to-verification-request";
+import type {
+    VerificationActionMode,
+    VerificationDecision,
+    VerificationFilterKey,
+} from "@/lib/types";
 import type { RejectKycInput } from "@/lib/validations/kyc";
 
-const ALL_FILTER: VerificationFilterKey = "all";
-const QUEUE_PAGE_SIZE = 100;
-
 export function useVerificationQueue() {
-    const queue = useKycQueue({ limit: QUEUE_PAGE_SIZE });
+    const queue = useKycQueue();
     const approval = useConfirmation<{ id: string }, string>(useReviewKyc());
     const rejection = useConfirmation<
         { id: string } & RejectKycInput,
         VerificationDecision
     >(useReviewKyc(FEEDBACK.rejectKyc));
 
-    const [filter, setFilter] = useState<VerificationFilterKey>(ALL_FILTER);
+    const [filter, setFilter] = useState<VerificationFilterKey>(
+        DEFAULT_VERIFICATION_FILTER,
+    );
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [note, setNote] = useState("");
 
     const items = useMemo(
-        () => toVerificationQueue(queue.data?.items ?? []),
-        [queue.data?.items],
+        () => toVerificationQueue(queue.data ?? []),
+        [queue.data],
     );
 
-    const counts = useMemo(() => {
-        const base: Record<VerificationFilterKey, number> = {
-            all: items.length,
-            PENDING: 0,
-            VERIFIED: 0,
-            REJECTED: 0,
-        };
-        for (const item of items) base[item.status] += 1;
-        return base;
-    }, [items]);
-
+    const counts = useMemo(() => verificationCounts(items), [items]);
     const visible = useMemo(
-        () =>
-            filter === ALL_FILTER
-                ? items
-                : items.filter((item) => item.status === filter),
+        () => verificationsIn(items, filter),
         [items, filter],
     );
 
@@ -67,11 +61,10 @@ export function useVerificationQueue() {
     };
 
     const submitDecision = () => {
-        const trimmed = note.trim();
-        if (!rejection.target || !trimmed) return;
+        if (!rejection.target || !isRejectionReady(note)) return;
         rejection.confirm({
             id: rejection.target.id,
-            rejectionReason: trimmed,
+            rejectionReason: note.trim(),
         });
     };
 
@@ -89,6 +82,7 @@ export function useVerificationQueue() {
 
     return {
         filter,
+        items,
         counts,
         visible,
         active,

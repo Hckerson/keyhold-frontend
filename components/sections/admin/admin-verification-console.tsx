@@ -2,22 +2,24 @@
 
 import { ShieldCheck } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PortalHeader } from "@/components/patterns/portal-header";
-import { FilterPills } from "@/components/patterns/filter-pills";
 import { VerificationApproveModal } from "@/components/features/admin/verification-approve-modal";
 import { VerificationDecisionModal } from "@/components/features/admin/verification-decision-modal";
-import { VerificationQueueRail } from "@/components/features/admin/verification-queue-rail";
 import { VerificationReviewPane } from "@/components/features/admin/verification-review-pane";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { ReviewQueue } from "@/components/patterns/review-queue";
+import { AdminVerificationHeader } from "@/components/sections/admin/admin-verification-header";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import {
+    VERIFICATION_COPY,
+    verificationQueueItems,
+    verificationReading,
+} from "@/lib/data/admin-verifications";
 import { useVerificationQueue } from "@/lib/hooks/use-verification-queue";
-import { VERIFICATION_FILTERS } from "@/lib/data/admin-verifications";
-
-const TITLE = "Identity Verifications";
 
 export function AdminVerificationConsole() {
     const queue = useVerificationQueue();
-    const { counts, active } = queue;
+    const { active } = queue;
 
     if (queue.failed)
         return (
@@ -27,44 +29,47 @@ export function AdminVerificationConsole() {
             />
         );
 
+    if (queue.pending) return <ConsoleSkeleton variant="casework" />;
+
     return (
-        <div className="space-y-3">
-            <PortalHeader
-                title={TITLE}
-                lede={`${counts.PENDING} pending · ${counts.VERIFIED} verified · ${counts.REJECTED} rejected`}
+        <div className="space-y-4">
+            <AdminVerificationHeader
+                reading={verificationReading(queue.items)}
+                filter={queue.filter}
+                counts={queue.counts}
+                onFilterChange={queue.changeFilter}
             />
 
-            <FilterPills
-                filters={VERIFICATION_FILTERS}
-                active={queue.filter}
-                onChange={queue.changeFilter}
-                counts={counts}
-            />
-
-            <div className="review-split items-start gap-3">
-                <div className="review-rail">
-                    <VerificationQueueRail
-                        requests={queue.visible}
-                        selectedId={active?.id ?? null}
-                        onSelect={queue.setSelectedId}
-                    />
+            {active ? (
+                <div className="review-split review-split--slim items-start gap-3">
+                    <div className="review-rail">
+                        <ReviewQueue
+                            items={verificationQueueItems(
+                                queue.visible,
+                                queue.filter === "all",
+                            )}
+                            selectedId={active.id}
+                            onSelect={queue.setSelectedId}
+                        />
+                    </div>
+                    <div className="review-pane">
+                        <VerificationReviewPane
+                            request={active}
+                            approving={queue.approvingId === active.id}
+                            busy={queue.busy}
+                            onAction={(mode) =>
+                                queue.runAction(mode, active.id)
+                            }
+                        />
+                    </div>
                 </div>
-
-                {active ? (
-                    <VerificationReviewPane
-                        request={active}
-                        approving={queue.approvingId === active.id}
-                        busy={queue.busy}
-                        onAction={(mode) => queue.runAction(mode, active.id)}
-                    />
-                ) : (
-                    <EmptyState
-                        icon={ShieldCheck}
-                        title="Queue clear"
-                        description="No identity documents match this filter."
-                    />
-                )}
-            </div>
+            ) : (
+                <EmptyState
+                    icon={ShieldCheck}
+                    title={VERIFICATION_COPY.emptyTitle}
+                    description={VERIFICATION_COPY.emptyLede}
+                />
+            )}
 
             <VerificationApproveModal
                 open={queue.approval.open}

@@ -1,20 +1,9 @@
 "use client";
 
-import { useContext, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { AnimatePresence } from "motion/react";
-
-function FrozenRoute({ children }: { children: ReactNode }) {
-    const context = useContext(LayoutRouterContext);
-    const [frozen] = useState(context);
-
-    return (
-        <LayoutRouterContext.Provider value={frozen}>
-            {children}
-        </LayoutRouterContext.Provider>
-    );
-}
+import { FrozenRoute } from "@/components/features/auth/parts/frozen-route";
 
 export interface AuthMotionFrameProps {
     children: ReactNode;

@@ -13,6 +13,7 @@ import type {
     PipelineSummary,
 } from "@/lib/types";
 import { ACTIVITY_COPY } from "@/lib/config/activity";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 
 const SALES_TITLE = "Closed Sales";
 const SALES_LEDE = "Recent comps, days on market and result against ask";
@@ -20,11 +21,6 @@ const SALES_ACTION = "View comps";
 const SALES_EMPTY = "No completed sales yet";
 const SALES_EMPTY_LEDE =
     "Sales appear here once a transaction settles on one of your listings.";
-const SALES_LOADING = "Loading your closed sales";
-const SALES_LOADING_LEDE = "Fetching settled transactions on your listings.";
-const ACTIVITY_LOADING = "Loading recent activity";
-const ACTIVITY_LOADING_LEDE =
-    "Fetching enquiries, showings and offers on your listings.";
 const ACTIVITY = ACTIVITY_COPY.agent;
 
 export interface AgentOverviewMainProps {
@@ -57,13 +53,13 @@ export function AgentOverviewMain({
                     <PanelInset>
                         <OverviewSaleList sales={sales} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={Handshake}
-                        title={pending ? SALES_LOADING : SALES_EMPTY}
-                        description={
-                            pending ? SALES_LOADING_LEDE : SALES_EMPTY_LEDE
-                        }
+                        title={SALES_EMPTY}
+                        description={SALES_EMPTY_LEDE}
                     />
                 )}
             </Panel>
@@ -76,15 +72,13 @@ export function AgentOverviewMain({
                     <PanelInset>
                         <ActivityList entries={activity} />
                     </PanelInset>
+                ) : pending ? (
+                    <SkeletonRows />
                 ) : (
                     <EmptyState
                         icon={History}
-                        title={pending ? ACTIVITY_LOADING : ACTIVITY.emptyTitle}
-                        description={
-                            pending
-                                ? ACTIVITY_LOADING_LEDE
-                                : ACTIVITY.emptyDescription
-                        }
+                        title={ACTIVITY.emptyTitle}
+                        description={ACTIVITY.emptyDescription}
                     />
                 )}
             </Panel>

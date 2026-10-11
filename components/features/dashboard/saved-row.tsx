@@ -4,7 +4,7 @@ import Link from "next/link";
 import { m } from "motion/react";
 import { Trash2 } from "lucide-react";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
-import { SavedMatchMeter } from "@/components/features/dashboard/saved-match-meter";
+import { SavedMatchMark } from "@/components/features/dashboard/saved-match-mark";
 import { SavedMoveMark } from "@/components/features/dashboard/saved-move-mark";
 import { SavedStatusMark } from "@/components/features/dashboard/saved-status-mark";
 import { chartToneText } from "@/lib/config/chart-tones";
@@ -55,8 +55,8 @@ export function SavedRow({ listing, onRemove }: SavedRowProps) {
             <td className="py-0 pl-3 text-right">
                 <SavedMoveMark percent={movePercent(listing)} />
             </td>
-            <td className="py-0 pl-3">
-                <SavedMatchMeter score={listing.matchScore} />
+            <td className="py-0 pl-3 text-right">
+                <SavedMatchMark score={listing.matchScore} />
             </td>
             <td className="text-text-secondary py-0 pl-3 text-right text-xs tabular-nums">
                 {listing.savedDaysAgo}
@@ -76,7 +76,7 @@ export function SavedRow({ listing, onRemove }: SavedRowProps) {
                     type="button"
                     aria-label={`${REMOVE_LABEL} ${listing.address}`}
                     onClick={() => onRemove(listing.id)}
-                    className="text-text-muted hover:bg-error-light hover:text-error ease-smooth focus-visible:ring-accent ml-auto grid size-5 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                    className="text-text-muted hover:bg-error-light hover:text-error-dark ease-smooth focus-visible:ring-accent ml-auto grid size-5 place-items-center rounded-md transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
                 >
                     <Trash2
                         className="size-3"

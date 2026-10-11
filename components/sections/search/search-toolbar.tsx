@@ -1,21 +1,17 @@
 "use client";
 
-import {
-    SearchViewToggle,
-    type ViewMode,
-} from "@/components/sections/search/search-view-toggle";
+import { SearchViewToggle } from "@/components/sections/search/search-view-toggle";
 import { SearchSortSelect } from "@/components/sections/search/search-sort-select";
 import type { SortValue } from "@/lib/utils/search";
-
-export type { ViewMode };
+import type { SearchViewMode } from "@/lib/utils/search-url";
 
 export const SEARCH_TOOLBAR_HEADING_ID = "search-results-heading";
 
 interface SearchToolbarProps {
     resultCount: number;
     totalCount: number;
-    view: ViewMode;
-    onViewChange: (next: ViewMode) => void;
+    view: SearchViewMode;
+    onViewChange: (next: SearchViewMode) => void;
     sort: SortValue;
     onSortChange: (next: SortValue) => void;
 }

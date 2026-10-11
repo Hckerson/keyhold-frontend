@@ -5,7 +5,7 @@ import {
     ageShares,
     demandShares,
     statusShares,
-} from "@/lib/data/agent-listings";
+} from "@/lib/data/agent-listings-shares";
 import type { ManagedListing } from "@/lib/types";
 
 const STATUS_TITLE = "Status Mix";

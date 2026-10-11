@@ -3,8 +3,7 @@
 import { Panel } from "@/components/ui/panel";
 import { MessageBubble } from "@/components/features/messaging/message-bubble";
 import { MessageComposer } from "@/components/features/messaging/message-composer";
-import type { ThreadMessage } from "@/lib/data/offer-details";
-import type { MessageSendHandler } from "@/lib/types";
+import type { MessageSendHandler, ThreadMessage } from "@/lib/types";
 
 export interface OfferMessagesPanelProps {
     messages: ThreadMessage[];

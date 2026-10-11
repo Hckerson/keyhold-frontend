@@ -1,9 +1,9 @@
-import type { ConfigField } from "@/components/patterns/config-field-grid";
 import { LISTING_FORM_COPY as COPY } from "@/lib/config/listing-form-copy";
 import {
     LISTING_AMENITY_SUGGESTIONS as AMENITY_SUGGESTIONS,
     LISTING_FEATURE_SUGGESTIONS as FEATURE_SUGGESTIONS,
 } from "@/lib/config/listing-form";
+import type { ConfigField } from "@/lib/types";
 
 type PlaceField =
     | "address"

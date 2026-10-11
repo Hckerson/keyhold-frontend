@@ -1,7 +1,6 @@
 "use client";
 
 import { Switch } from "@/components/ui/forms/switch";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { AlertChannelToggle } from "@/components/features/dashboard/alert-channel-toggle";
 import { AlertTypeGlyph } from "@/components/features/dashboard/alert-type-glyph";
 import {
@@ -10,9 +9,14 @@ import {
     ALERT_TYPES,
     alertDeliveryGrid,
 } from "@/lib/config/alert-tones";
+import { chartToneText } from "@/lib/config/chart-tones";
 import { cn } from "@/lib/utils";
-import type { AlertVolume } from "@/lib/data/alerts";
-import type { AlertChannel, AlertPreference, AlertType } from "@/lib/types";
+import type {
+    AlertChannel,
+    AlertPreference,
+    AlertType,
+    AlertVolume,
+} from "@/lib/types";
 
 export interface AlertPreferenceRowProps {
     type: AlertType;
@@ -60,10 +64,16 @@ export function AlertPreferenceRow({
                     >
                         {volume.count}
                     </span>
-                    <ProgressBar
-                        value={volume.percent}
-                        tone={enabled ? chartTone : "neutral"}
-                    />
+                    <span
+                        className={cn(
+                            "text-right text-xs font-medium tabular-nums",
+                            enabled
+                                ? chartToneText[chartTone]
+                                : "text-text-muted",
+                        )}
+                    >
+                        {volume.percent}%
+                    </span>
                 </>
             )}
 

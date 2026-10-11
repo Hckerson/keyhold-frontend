@@ -8,12 +8,15 @@ import {
     UserRound,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { CalloutVariant } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { ManagedUserRole, UserStatus, UserTier } from "@/lib/types";
+import type {
+    ManagedUserRole,
+    StatusTone,
+    UserStatus,
+    UserTier,
+} from "@/lib/types";
 
-interface ToneBand {
+export interface ToneBand {
     ceiling: number;
     tone: ChartTone;
 }
@@ -43,14 +46,14 @@ export const USER_ROLES: Record<ManagedUserRole, UserRoleMeta> = {
         label: "Agent",
         plural: "Agents",
         icon: Building2,
-        tone: "info",
+        tone: "neutral",
         rank: 2,
     },
     admin: {
         label: "Admin",
         plural: "Admins",
         icon: ShieldCheck,
-        tone: "accent",
+        tone: "neutral",
         rank: 3,
     },
 };
@@ -64,9 +67,9 @@ export interface UserTierMeta {
 }
 
 export const USER_TIERS: Record<UserTier, UserTierMeta> = {
-    platinum: { label: "Platinum", tone: "highlight", rank: 3 },
-    premium: { label: "Premium", tone: "info", rank: 2 },
-    standard: { label: "Standard", tone: "neutral", rank: 1 },
+    platinum: { label: "Platinum", tone: "accent", rank: 3 },
+    premium: { label: "Premium", tone: "accent-mid", rank: 2 },
+    standard: { label: "Standard", tone: "accent-soft", rank: 1 },
 };
 
 export const USER_STATUS_KEYS: UserStatus[] = [
@@ -79,13 +82,13 @@ export const USER_STATUS_KEYS: UserStatus[] = [
 export interface UserStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     risk: number;
     rowTone?: string;
     note?: string;
     noteTitle: string;
-    noteTone: CalloutVariant;
+    noteTone: StatusTone;
 }
 
 export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
@@ -93,7 +96,7 @@ export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
         label: "Active",
         icon: CheckCircle2,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         risk: 0,
         noteTitle: "Account note",
         noteTone: "success",
@@ -102,7 +105,7 @@ export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
         label: "Pending",
         icon: PauseCircle,
         tone: "neutral",
-        chartTone: "warning",
+        chartTone: "neutral",
         risk: 1,
         note: "This account has not completed verification. It keeps every permission until it is suspended.",
         noteTitle: "Pending account",
@@ -124,17 +127,17 @@ export const USER_STATUSES: Record<UserStatus, UserStatusMeta> = {
         icon: UserRoundX,
         tone: "neutral",
         chartTone: "neutral",
-        risk: 3,
+        risk: -1,
         note: "This account has been deleted. It is retained for audit only and cannot be reactivated.",
         noteTitle: "Why this account is deleted",
         noteTone: "neutral",
     },
 };
 
-const RECENCY_BANDS: ToneBand[] = [
-    { ceiling: 8, tone: "success" },
-    { ceiling: 31, tone: "info" },
-    { ceiling: 91, tone: "warning" },
+export const RECENCY_BANDS: ToneBand[] = [
+    { ceiling: 8, tone: "accent" },
+    { ceiling: 31, tone: "neutral" },
+    { ceiling: 91, tone: "neutral" },
 ];
 
 const VOLUME_BANDS: ToneBand[] = [
@@ -146,4 +149,4 @@ export const recencyTone = (days: number) =>
     bandTone(RECENCY_BANDS, days, "error");
 
 export const volumeTone = (share: number) =>
-    bandTone(VOLUME_BANDS, share, "highlight");
+    bandTone(VOLUME_BANDS, share, "accent");

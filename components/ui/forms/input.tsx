@@ -1,6 +1,7 @@
 import React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import type { InputVariant } from "@/lib/types";
 
 const inputVariants = cva(
     "border-border bg-background-alt text-text placeholder:text-text-muted focus-visible:border-accent focus-visible:ring-accent/40 aria-invalid:border-error aria-invalid:focus-visible:ring-error/40 ease-smooth flex h-8 w-full rounded-md border px-2.5 text-xs transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
@@ -10,7 +11,7 @@ const inputVariants = cva(
                 text: "font-body",
                 numeric: "font-body tabular-nums",
                 code: "font-mono tracking-wide tabular-nums",
-            },
+            } satisfies Record<InputVariant, string>,
         },
         defaultVariants: {
             variant: "text",

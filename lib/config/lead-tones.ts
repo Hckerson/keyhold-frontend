@@ -7,16 +7,16 @@ import {
     Thermometer,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { LeadStage, LeadTemperature } from "@/lib/types/lead";
+import type { StatusTone } from "@/lib/types";
 
 export const LEAD_STAGE_KEYS: LeadStage[] = ["pending", "accepted", "declined"];
 
 export interface LeadStageMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     nextAction: string;
@@ -27,7 +27,7 @@ export const LEAD_STAGES: Record<LeadStage, LeadStageMeta> = {
         label: "Awaiting reply",
         icon: Sparkles,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 3,
         nextAction: "Accept or decline the enquiry",
     },
@@ -35,7 +35,7 @@ export const LEAD_STAGES: Record<LeadStage, LeadStageMeta> = {
         label: "Accepted",
         icon: BadgeCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 2,
         nextAction: "Arrange a viewing",
     },
@@ -52,7 +52,7 @@ export const LEAD_STAGES: Record<LeadStage, LeadStageMeta> = {
 export interface LeadTemperatureMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     floor: number;
 }
@@ -71,7 +71,7 @@ export const LEAD_TEMPERATURES: Record<LeadTemperature, LeadTemperatureMeta> = {
         label: "Warm",
         icon: Thermometer,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         floor: 30,
     },
     cold: {

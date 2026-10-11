@@ -21,7 +21,7 @@ export async function FooterLocalityIndex() {
             <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
                 <h2
                     id="footer-localities"
-                    className="text-highlight font-mono text-[10px] tracking-[0.18em] uppercase"
+                    className="text-accent-soft font-mono text-[10px] tracking-[0.18em] uppercase"
                 >
                     {HEADING}
                 </h2>
@@ -35,12 +35,12 @@ export async function FooterLocalityIndex() {
                     <li key={`${locality.locality}-${locality.region}`}>
                         <Link
                             href={`${PUBLIC_ROUTES.search}?q=${encodeURIComponent(locality.locality)}`}
-                            className="group border-sidebar-border focus-visible:ring-highlight flex items-baseline justify-between gap-3 border-b py-2.5 focus-visible:ring-2 focus-visible:outline-none"
+                            className="group border-sidebar-border focus-visible:ring-accent-soft flex items-baseline justify-between gap-3 border-b py-2.5 focus-visible:ring-2 focus-visible:outline-none"
                         >
                             <span className="text-sidebar-text group-hover:text-sidebar-text-active ease-smooth truncate text-xs transition-colors duration-200">
                                 {locality.locality}
                             </span>
-                            <span className="text-sidebar-text-muted group-hover:text-highlight ease-smooth shrink-0 font-mono text-[10px] tabular-nums transition-colors duration-200">
+                            <span className="text-sidebar-text-muted group-hover:text-accent-soft ease-smooth shrink-0 font-mono text-[10px] tabular-nums transition-colors duration-200">
                                 {locality.count}
                             </span>
                         </Link>

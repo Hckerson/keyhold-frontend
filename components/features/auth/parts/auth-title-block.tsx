@@ -1,12 +1,7 @@
 import Link from "next/link";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { cn } from "@/lib/utils";
-
-export interface AuthTitleBlockEntry {
-    label: string;
-    href: string;
-    action: string;
-}
+import type { AuthTitleBlockEntry } from "@/lib/types";
 
 export interface AuthTitleBlockProps {
     entries: AuthTitleBlockEntry[];

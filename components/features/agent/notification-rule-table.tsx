@@ -5,7 +5,7 @@ import type {
     NotificationRule,
     NotificationRuleId,
     NotificationState,
-} from "@/lib/data/agent-account";
+} from "@/lib/types";
 
 const TABLE_CAPTION =
     "Alert routing by notification, delivery channel, cadence, weekly send volume and current state";

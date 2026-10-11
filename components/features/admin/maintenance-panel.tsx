@@ -3,10 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Panel } from "@/components/ui/panel";
 import { ActionRow } from "@/components/ui/action-row";
-import {
-    MAINTENANCE_ACTIONS,
-    type MaintenanceActionId,
-} from "@/lib/data/admin-settings";
+import { MAINTENANCE_ACTIONS } from "@/lib/config/admin-settings";
+import type { MaintenanceActionId } from "@/lib/types";
 
 const PANEL_TITLE = "Maintenance";
 const PANEL_LEDE = "Operational and destructive actions, run one at a time";

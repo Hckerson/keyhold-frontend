@@ -7,9 +7,9 @@ const TABLE_CAPTION =
 
 const COLUMNS = [
     { id: "service", label: "Service", className: "text-left" },
-    { id: "budget", label: "Budget", className: "w-24 pl-3 text-right" },
-    { id: "p95", label: "p95", className: "w-14 pl-3 text-right" },
-    { id: "errors", label: "Errors", className: "w-14 pl-3 text-right" },
+    { id: "budget", label: "Budget", className: "w-16 pl-3 text-right" },
+    { id: "p95", label: "p95", className: "w-18 pl-3 text-right" },
+    { id: "errors", label: "Errors", className: "w-18 pl-3 text-right" },
 ];
 
 export interface ServiceHealthTableProps {

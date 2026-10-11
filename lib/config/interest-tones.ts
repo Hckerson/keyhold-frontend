@@ -9,8 +9,8 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { InterestStatus } from "@/lib/types/interest";
+import type { StatusTone } from "@/lib/types";
 
 export const INTEREST_STATUS_KEYS: InterestStatus[] = [
     "pending",
@@ -21,7 +21,7 @@ export const INTEREST_STATUS_KEYS: InterestStatus[] = [
 export interface InterestStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;
@@ -32,7 +32,7 @@ export const INTEREST_STATUSES: Record<InterestStatus, InterestStatusMeta> = {
         label: "Awaiting reply",
         icon: Clock,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 3,
         open: true,
     },
@@ -40,7 +40,7 @@ export const INTEREST_STATUSES: Record<InterestStatus, InterestStatusMeta> = {
         label: "Introduced",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 2,
         open: true,
     },
@@ -83,14 +83,14 @@ export const TRACTIONS: Record<Traction, TractionMeta> = {
         label: "Viewing arranged",
         short: "Touring",
         icon: CalendarDays,
-        tone: "info",
+        tone: "neutral",
         rank: 3,
     },
     talking: {
         label: "In conversation",
         short: "Talking",
         icon: MessageSquare,
-        tone: "highlight",
+        tone: "neutral",
         rank: 2,
     },
     quiet: {

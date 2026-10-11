@@ -1,6 +1,5 @@
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { StatusBadgeProps } from "@/components/ui/status-badge";
+import type { StatusTone } from "@/lib/types";
 
 export const CONCIERGE_TIER_KEYS = ["platinum", "vip", "premium"] as const;
 
@@ -8,7 +7,7 @@ export type ConciergeTier = (typeof CONCIERGE_TIER_KEYS)[number];
 
 export interface ConciergeTierMeta {
     label: string;
-    tone: NonNullable<StatusBadgeProps["tone"]>;
+    tone: StatusTone;
     rank: number;
 }
 
@@ -29,8 +28,8 @@ export type ConciergeStatus = (typeof CONCIERGE_STATUS_KEYS)[number];
 
 export interface ConciergeStatusMeta {
     label: string;
-    tone: DotTone;
-    badgeTone: NonNullable<StatusBadgeProps["tone"]>;
+    tone: StatusTone;
+    badgeTone: StatusTone;
 }
 
 export const CONCIERGE_STATUSES: Record<ConciergeStatus, ConciergeStatusMeta> =
@@ -59,16 +58,16 @@ const ALLOCATION_HIGH = 90;
 
 export const allocationTone = (percent: number): ChartTone => {
     if (percent < ALLOCATION_IDLE) return "neutral";
-    if (percent < ALLOCATION_LOW) return "info";
+    if (percent < ALLOCATION_LOW) return "neutral";
     if (percent < ALLOCATION_HIGH) return "accent";
-    return "success";
+    return "accent";
 };
 
 const COVERAGE_PARTIAL = 60;
 const COVERAGE_FULL = 100;
 
 export const coverageTone = (percent: number): ChartTone => {
-    if (percent < COVERAGE_PARTIAL) return "warning";
+    if (percent < COVERAGE_PARTIAL) return "neutral";
     if (percent < COVERAGE_FULL) return "accent";
-    return "success";
+    return "accent";
 };

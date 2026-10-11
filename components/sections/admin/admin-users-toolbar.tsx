@@ -1,51 +1,38 @@
 "use client";
 
-import { ArrowUpDown, Search, Users } from "lucide-react";
-import { FilterPills } from "@/components/patterns/filter-pills";
+import { ArrowUpDown, Search, UsersRound } from "lucide-react";
 import { Input } from "@/components/ui/forms/input";
 import { Select } from "@/components/ui/forms/select";
-import {
-    USER_ROLE_OPTIONS,
-    USER_SORT_OPTIONS,
-    USER_STATUS_FILTERS,
-} from "@/lib/data/admin-users";
-import type {
-    UserRoleFilter,
-    UserSortKey,
-    UserStatusFilter,
-} from "@/lib/types";
+import { USER_SORT_OPTIONS } from "@/lib/data/admin-users";
+import type { SelectOption, UserRoleFilter, UserSortKey } from "@/lib/types";
 
 const SEARCH_LABEL = "Search accounts by name or email";
 const SEARCH_PLACEHOLDER = "Search name or email";
-const ROLE_LABEL = "Filter by role";
 const SORT_LABEL = "Sort the directory";
+const ROLE_LABEL = "Filter by role";
 
 export interface AdminUsersToolbarProps {
     query: string;
-    status: UserStatusFilter;
-    role: UserRoleFilter;
     sort: UserSortKey;
-    counts: Record<UserStatusFilter, number>;
+    role: UserRoleFilter;
+    roles: SelectOption<UserRoleFilter>[];
     onQueryChange: (next: string) => void;
-    onStatusChange: (next: UserStatusFilter) => void;
-    onRoleChange: (next: UserRoleFilter) => void;
     onSortChange: (next: UserSortKey) => void;
+    onRoleChange: (next: UserRoleFilter) => void;
 }
 
 export function AdminUsersToolbar({
     query,
-    status,
-    role,
     sort,
-    counts,
+    role,
+    roles,
     onQueryChange,
-    onStatusChange,
-    onRoleChange,
     onSortChange,
+    onRoleChange,
 }: AdminUsersToolbarProps) {
     return (
-        <div className="flex min-h-11 flex-wrap items-center gap-2 py-1.5">
-            <div className="toolbar-field toolbar-field--wide">
+        <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
                 <Input
                     type="search"
                     value={query}
@@ -55,25 +42,16 @@ export function AdminUsersToolbar({
                     onChange={(event) => onQueryChange(event.target.value)}
                 />
             </div>
-
-            <FilterPills<UserStatusFilter>
-                filters={USER_STATUS_FILTERS}
-                active={status}
-                onChange={onStatusChange}
-                counts={counts}
-            />
-
             <Select<UserRoleFilter>
-                options={USER_ROLE_OPTIONS}
+                options={roles}
                 value={role}
                 onChange={onRoleChange}
                 label={ROLE_LABEL}
-                icon={Users}
+                icon={UsersRound}
                 align="end"
                 size="sm"
-                className="ml-auto w-28"
+                className="w-44 shrink-0"
             />
-
             <Select<UserSortKey>
                 options={USER_SORT_OPTIONS}
                 value={sort}
@@ -82,7 +60,7 @@ export function AdminUsersToolbar({
                 icon={ArrowUpDown}
                 align="end"
                 size="sm"
-                className="w-36"
+                className="w-44 shrink-0"
             />
         </div>
     );

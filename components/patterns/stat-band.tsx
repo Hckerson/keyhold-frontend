@@ -1,5 +1,6 @@
-import { StatCell, type StatDatum } from "@/components/patterns/stat-cell";
+import { StatCell } from "@/components/patterns/stat-cell";
 import { StatCellSkeleton } from "@/components/patterns/stat-cell-skeleton";
+import type { StatDatum } from "@/lib/types";
 
 const PENDING_SLOTS = 4;
 

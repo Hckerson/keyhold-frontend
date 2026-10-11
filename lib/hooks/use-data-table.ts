@@ -1,18 +1,8 @@
 "use client";
 
-import {
-    useCallback,
-    useMemo,
-    useRef,
-    useState,
-    type KeyboardEvent,
-    type MouseEvent,
-} from "react";
-import {
-    INTERACTIVE,
-    type DataTableColumn,
-    type DataTableSort,
-} from "@/components/patterns/data-table-types";
+import { useCallback, useMemo, useState } from "react";
+import { useRevealNavigation } from "@/lib/hooks/use-reveal-navigation";
+import type { DataTableColumn, DataTableSort } from "@/lib/types";
 
 function compare(a: string | number, b: string | number) {
     if (typeof a === "number" && typeof b === "number") return a - b;
@@ -44,7 +34,6 @@ export function useDataTable<T>({
     onOpenChange,
     revealing,
 }: DataTableStateInput<T>) {
-    const tableRef = useRef<HTMLTableElement | null>(null);
     const [sort, setSort] = useState<DataTableSort | null>(defaultSort ?? null);
     const [internalKeys, setInternalKeys] = useState<string[]>([]);
     const [internalOpen, setInternalOpen] = useState<string | null>(null);
@@ -130,47 +119,15 @@ export function useDataTable<T>({
     const toggleOpen = (key: string) =>
         setOpen(currentOpen === key ? null : key);
 
-    const onRowClick = (
-        event: MouseEvent<HTMLTableRowElement>,
-        key: string,
-    ) => {
-        if (!revealing) return;
-        const target = event.target;
-        if (target instanceof Element && target.closest(INTERACTIVE)) return;
-        toggleOpen(key);
-    };
-
-    const onTableKeyDown = (event: KeyboardEvent<HTMLTableElement>) => {
-        if (!revealing) return;
-
-        if (event.key === "Escape" && currentOpen !== null) {
-            setOpen(null);
-            return;
-        }
-        if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
-
-        const element = tableRef.current;
-        const active = document.activeElement;
-        if (!element || !(active instanceof HTMLButtonElement)) return;
-
-        const triggers = Array.from(
-            element.querySelectorAll<HTMLButtonElement>("[data-reveal-row]"),
-        );
-        const index = triggers.indexOf(active);
-        if (index === -1) return;
-
-        event.preventDefault();
-        const next =
-            event.key === "ArrowDown"
-                ? Math.min(index + 1, triggers.length - 1)
-                : Math.max(index - 1, 0);
-        triggers[next]?.focus();
-    };
+    const navigation = useRevealNavigation({
+        revealing,
+        currentOpen,
+        setOpen,
+        toggleOpen,
+    });
 
     return {
-        tableRef,
-        onRowClick,
-        onTableKeyDown,
+        ...navigation,
         sort,
         sortedData,
         pageRows,

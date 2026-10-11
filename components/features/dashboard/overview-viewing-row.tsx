@@ -1,14 +1,11 @@
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { StatusDot, type DotTone } from "@/components/patterns/status-dot";
+import { StatusDot } from "@/components/patterns/status-dot";
 import { VIEWING_STATUSES } from "@/lib/config/viewing-tones";
 import { initialsOf } from "@/lib/utils";
-import type {
-    OverviewViewing,
-    ViewingTiming,
-} from "@/lib/data/dashboard-overview";
+import type { StatusTone, OverviewViewing, ViewingTiming } from "@/lib/types";
 
-const timingTone: Record<ViewingTiming, DotTone> = {
+const timingTone: Record<ViewingTiming, StatusTone> = {
     today: "warning",
     tomorrow: "info",
     later: "neutral",

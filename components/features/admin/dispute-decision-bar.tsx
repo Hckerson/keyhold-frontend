@@ -1,45 +1,36 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-    disputeActionsByStatus,
-    type DisputeDecisionMode,
-    type DisputeStatus,
-} from "@/lib/data/admin-disputes";
-
-const SETTLED_LEDE = "This dispute is settled. Its record is read-only.";
+import { ReviewActions } from "@/components/patterns/review-actions";
+import { disputeActions } from "@/lib/data/admin-disputes";
+import { openLine } from "@/lib/data/admin-dispute-detail";
+import type { DisputeCase, DisputeDecisionMode } from "@/lib/types";
 
 export interface DisputeDecisionBarProps {
-    status: DisputeStatus;
+    dispute: DisputeCase;
     busy: boolean;
     onAction: (mode: DisputeDecisionMode) => void;
 }
 
 export function DisputeDecisionBar({
-    status,
+    dispute,
     busy,
     onAction,
 }: DisputeDecisionBarProps) {
-    const actions = disputeActionsByStatus[status];
-
     return (
-        <div className="border-border-light bg-background-alt flex flex-wrap items-center gap-2 border-t px-4 py-3">
-            {actions.length === 0 ? (
-                <p className="text-text-muted text-xs">{SETTLED_LEDE}</p>
-            ) : (
-                actions.map((action) => (
-                    <Button
-                        key={action.mode}
-                        emphasis={action.destructive ? "outline" : "solid"}
-                        tone={action.destructive ? "error" : "accent"}
-                        disabled={busy}
-                        onClick={() => onAction(action.mode)}
-                    >
-                        {action.label}
-                    </Button>
-                ))
-            )}
-        </div>
+        <ReviewActions lede={openLine(dispute)}>
+            {disputeActions(dispute).map((action) => (
+                <Button
+                    key={action.mode}
+                    emphasis={action.emphasis}
+                    tone="neutral"
+                    disabled={busy}
+                    onClick={() => onAction(action.mode)}
+                >
+                    {action.label}
+                </Button>
+            ))}
+        </ReviewActions>
     );
 }
 

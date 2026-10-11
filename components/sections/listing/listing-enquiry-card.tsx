@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ShieldCheck } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusDot } from "@/components/patterns/status-dot";
-import { SectionEyebrow } from "@/components/patterns/section-heading";
+import { SectionEyebrow } from "@/components/patterns/section-eyebrow";
 import { MakeOfferModal } from "@/components/features/listings/make-offer-modal";
 import { RequestViewingModal } from "@/components/features/listings/request-viewing-modal";
 import { ListingJourneyAction } from "@/components/sections/listing/listing-journey-action";
@@ -92,7 +92,7 @@ export function ListingEnquiryCard({
                     />
                     {VERIFIED}
                 </p>
-                <p className="text-highlight-dark text-xs font-medium">
+                <p className="text-accent text-xs font-medium">
                     {responseTime}
                 </p>
             </div>

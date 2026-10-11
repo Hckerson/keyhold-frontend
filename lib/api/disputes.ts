@@ -1,3 +1,4 @@
+import { allPages } from "@/lib/api/all-pages";
 import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
@@ -14,6 +15,9 @@ import type {
 export const disputesAPI = {
     list: (input: DisputeQuery = {}) =>
         query.get<DisputePage>(config.api.disputes.list, { params: input }),
+
+    all: (input: DisputeQuery = {}) =>
+        allPages((paging) => disputesAPI.list({ ...input, ...paging })),
 
     mine: () => query.get<Dispute[]>(config.api.disputes.mine),
 

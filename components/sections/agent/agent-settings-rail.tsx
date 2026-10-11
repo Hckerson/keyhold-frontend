@@ -4,13 +4,12 @@ import { ShareList } from "@/components/patterns/share-list";
 import { CredentialTable } from "@/components/features/shared/credential-table";
 import { SecurityControlList } from "@/components/features/shared/security-control-list";
 import {
-    profileSignalShares,
     SECURITY_CONTROLS,
     type AgentSecurityDialog,
-    verifiedCredentialCount,
-    type ProfileSignal,
-} from "@/lib/data/agent-account";
-import type { AccountCredential } from "@/lib/types";
+} from "@/lib/config/agent-account";
+import { verifiedCredentialCount } from "@/lib/data/agent-account";
+import { profileSignalShares } from "@/lib/data/agent-account-signals";
+import type { AccountCredential, ProfileSignal } from "@/lib/types";
 
 const STRENGTH_TITLE = "Profile Strength";
 const STRENGTH_LEDE = "Weight each signal carries on your public profile";

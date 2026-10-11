@@ -17,13 +17,13 @@ import {
 import {
     MARKETPLACE_FIELDS,
     PLATFORM_FIELDS,
-    SETTINGS_FORM_ID,
     type AdminConfig,
     type AdminConfigKey,
-    type MaintenanceActionId,
-} from "@/lib/data/admin-settings";
+} from "@/lib/config/admin-settings";
+import { SETTINGS_FORM_ID } from "@/lib/data/admin-settings";
 import type {
     ConfigChange,
+    MaintenanceActionId,
     PolicyGroup,
     PolicyState,
     PolicySwitchId,

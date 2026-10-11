@@ -2,14 +2,14 @@
 
 import { AnimatePresence, m } from "motion/react";
 import { ENTRY_MOTION } from "@/lib/config/motion";
-import type { TimelineEntry, TimelineTone } from "@/lib/data/offer-details";
 import { cn, formatUsd } from "@/lib/utils";
+import type { TimelineEntry, TimelineTone } from "@/lib/types";
 
 const dotTone: Record<TimelineTone, string> = {
     neutral: "bg-border-dark",
-    success: "bg-success",
-    warning: "bg-warning",
-    info: "bg-info",
+    success: "bg-accent",
+    warning: "bg-quiet",
+    info: "bg-quiet",
     error: "bg-error",
 };
 

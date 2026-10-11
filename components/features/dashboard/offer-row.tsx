@@ -69,7 +69,7 @@ export function OfferRow({ offer }: OfferRowProps) {
                         {NO_COUNTER}
                     </span>
                 ) : (
-                    <span className="text-info text-xs font-medium tabular-nums">
+                    <span className="text-text-secondary text-xs font-medium tabular-nums">
                         {formatMillions(offer.counterPrice, 2)}
                     </span>
                 )}

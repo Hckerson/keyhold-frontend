@@ -4,11 +4,7 @@ import { useId } from "react";
 import { m } from "motion/react";
 import { FAST } from "@/lib/config/motion";
 import { cn } from "@/lib/utils";
-
-export interface FilterPill<T extends string> {
-    id: T;
-    label: string;
-}
+import type { FilterPill } from "@/lib/types";
 
 export interface FilterPillsProps<T extends string> {
     filters: readonly FilterPill<T>[];

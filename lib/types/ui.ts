@@ -41,7 +41,7 @@ export interface TrailCrumb {
     current: boolean;
 }
 
-export type BadgeTone = "neutral" | "success" | "warning" | "error" | "info";
+export type StatusTone = "neutral" | "success" | "warning" | "error" | "info";
 
 export interface StatItem {
     label: string;
@@ -95,4 +95,13 @@ export interface TrustBadge {
     icon: LucideIcon;
     label: string;
     detail: string;
+}
+
+export interface FilterTileDatum<T extends string> {
+    id: T;
+    label: string;
+    icon: LucideIcon;
+    tone: ChartTone;
+    count: number;
+    percent: number;
 }

@@ -65,6 +65,65 @@ describe("businessFigures", () => {
         expect(deals?.delta).toBeNull();
     });
 
+    it("draws a month with no activity as zero instead of skipping it", () => {
+        const listings = figureOf(
+            businessFigures(
+                aTrend({
+                    listings: [
+                        { name: "2025-11", value: 2 },
+                        { name: "2026-02", value: 5 },
+                    ],
+                }),
+                undefined,
+                undefined,
+            ),
+            "listings",
+        );
+
+        expect(listings?.points).toEqual([2, 0, 0, 5]);
+        expect(listings?.delta).toBeNull();
+    });
+
+    it("shows no change when the latest month matches the one before", () => {
+        const deals = figureOf(
+            businessFigures(
+                aTrend({
+                    deals: [
+                        { name: "2026-08", value: 11 },
+                        { name: "2026-09", value: 11 },
+                    ],
+                }),
+                undefined,
+                undefined,
+            ),
+            "deals",
+        );
+
+        expect(deals?.delta).toBeNull();
+    });
+
+    it("leaves the unfinished month out of the reading, the change and the line", () => {
+        const listings = figureOf(
+            businessFigures(
+                aTrend({
+                    listings: [
+                        { name: "2026-08", value: 6 },
+                        { name: "2026-09", value: 9 },
+                        { name: "2026-10", value: 1 },
+                    ],
+                }),
+                undefined,
+                undefined,
+                new Date("2026-10-04T12:00:00Z"),
+            ),
+            "listings",
+        );
+
+        expect(listings?.latest).toBe("9 in Sep");
+        expect(listings?.delta).toEqual({ label: "+50%", direction: "up" });
+        expect(listings?.points).toEqual([6, 9]);
+    });
+
     it("measures the member ratio as active over all accounts", () => {
         const members = figureOf(
             businessFigures(
@@ -84,11 +143,11 @@ describe("lifetimeVolume", () => {
         expect(
             lifetimeVolume(
                 aPlatform({ volume: 12_000_000, completedTransactions: 4 }),
-            ).averageDeal,
+            )?.averageDeal,
         ).toBe("$3.0M");
     });
 
     it("leaves the per-deal average out until a deal has settled", () => {
-        expect(lifetimeVolume(aPlatform()).averageDeal).toBeNull();
+        expect(lifetimeVolume(aPlatform())?.averageDeal).toBeNull();
     });
 });

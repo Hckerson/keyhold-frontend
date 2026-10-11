@@ -1,56 +1,21 @@
-import { CalendarDays, CheckCircle2, Clock, Flame, Users } from "lucide-react";
 import { addDays, format, startOfWeek } from "date-fns";
 import { parseLocalDate } from "@/lib/utils";
-import type { RescheduleDraft } from "@/lib/types";
-import type { SelectOption } from "@/components/ui/forms/select";
+import type {
+    Appointment,
+    AppointmentGroup,
+    AppointmentTypeShare,
+    CalendarViewMode,
+    RescheduleDraft,
+    SelectOption,
+} from "@/lib/types";
 import type { ConnectionListItem } from "@/lib/validations/connection-list";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     APPOINTMENT_TYPES,
     APPOINTMENT_TYPE_KEYS,
-    type AppointmentStatus,
-    type AppointmentType,
 } from "@/lib/config/appointment-tones";
-
-export type CalendarViewMode = "month" | "week";
-
-export interface Appointment {
-    id: string;
-    type: AppointmentType;
-    status: AppointmentStatus;
-    title: string;
-    property: string;
-    client: string;
-    date: string;
-    start: string;
-    durationMinutes: number;
-    notes: string;
-}
-
-export interface AppointmentGroup {
-    date: string;
-    items: Appointment[];
-}
-
-export interface AppointmentTypeShare {
-    type: AppointmentType;
-    label: string;
-    count: number;
-    share: number;
-}
 
 const MINUTES_PER_HOUR = 60;
 const HOURS_PER_HALF_DAY = 12;
-const FULL_PERCENT = 100;
-const CONFIRMED: AppointmentStatus = "confirmed";
-const EMPTY_VALUE = "—";
-
-export const DURATION_SCALE_MINUTES = 180;
-
-export const SCHEDULE_ACTION = "Propose a viewing";
-
-export const RESCHEDULE_HINT =
-    "The buyer reconfirms once you propose a new slot.";
 
 const anchorDate = () => new Date();
 
@@ -65,11 +30,6 @@ export const ANCHOR = {
         return anchorDate().getDate();
     },
 };
-
-export const VIEW_MODES: { id: CalendarViewMode; label: string }[] = [
-    { id: "month", label: "Day" },
-    { id: "week", label: "Week" },
-];
 
 export const isoOf = (year: number, month: number, day: number) =>
     `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -118,9 +78,6 @@ export const formatHours = (minutes: number) => {
     const hours = minutes / MINUTES_PER_HOUR;
     return `${Number.isInteger(hours) ? hours : hours.toFixed(1)}h`;
 };
-
-export const durationShare = (minutes: number) =>
-    Math.min(FULL_PERCENT, (minutes / DURATION_SCALE_MINUTES) * FULL_PERCENT);
 
 const byStart = (a: Appointment, b: Appointment) =>
     startMinutes(a.start) - startMinutes(b.start);
@@ -172,75 +129,12 @@ export const appointmentDays = (
 
 export const appointmentTypeMix = (
     items: Appointment[],
-): AppointmentTypeShare[] => {
-    const counts = APPOINTMENT_TYPE_KEYS.map((type) => ({
+): AppointmentTypeShare[] =>
+    APPOINTMENT_TYPE_KEYS.map((type) => ({
         type,
         label: APPOINTMENT_TYPES[type].label,
         count: items.filter((item) => item.type === type).length,
     }));
-    const peak = counts.reduce((max, entry) => Math.max(max, entry.count), 0);
-
-    return counts.map((entry) => ({
-        ...entry,
-        share: peak ? (entry.count / peak) * FULL_PERCENT : 0,
-    }));
-};
-
-export const calendarLoadStats = (items: Appointment[]): StatDatum[] => {
-    const bookedMinutes = items.reduce(
-        (total, item) => total + item.durationMinutes,
-        0,
-    );
-    const confirmed = items.filter((item) => item.status === CONFIRMED).length;
-    const clients = new Set(items.map((item) => item.client)).size;
-    const busiest = groupAppointmentsByDate(
-        items,
-    ).reduce<AppointmentGroup | null>(
-        (peak, group) =>
-            !peak || group.items.length > peak.items.length ? group : peak,
-        null,
-    );
-
-    return [
-        {
-            id: "appointments",
-            label: "Appointments",
-            value: String(items.length),
-            tone: "accent",
-            icon: CalendarDays,
-        },
-        {
-            id: "booked",
-            label: "Booked",
-            value: formatHours(bookedMinutes),
-            tone: "info",
-            icon: Clock,
-        },
-        {
-            id: "confirmed",
-            label: "Confirmed",
-            value: `${confirmed}/${items.length}`,
-            tone: "success",
-            icon: CheckCircle2,
-        },
-        {
-            id: "clients",
-            label: "Clients",
-            value: String(clients),
-            tone: "highlight",
-            icon: Users,
-        },
-        {
-            id: "busiest",
-            label: "Busiest day",
-            value: busiest
-                ? format(parseLocalDate(busiest.date), "EEE d")
-                : EMPTY_VALUE,
-            tone: "warning",
-            icon: Flame,
-        },
-    ];
-};
 
 export const toClientOptions = (
     connections: ConnectionListItem[],
@@ -249,17 +143,3 @@ export const toClientOptions = (
         value: connection.id,
         label: `${connection.buyer.fullName} · ${connection.property.address}`,
     }));
-
-export const CREATE_EVENT_COPY = {
-    title: "Schedule a viewing",
-    hint: "The client is notified and confirms one of the times you propose.",
-    client: "Client and property",
-    date: "Date",
-    slots: "Times to propose",
-    mode: "Format",
-    cancel: "Not now",
-    confirm: "Propose times",
-    empty: "You have no active enquiries to schedule against.",
-    failed: "That viewing did not reach the client.",
-    retry: "Check the details and try once more.",
-} as const;

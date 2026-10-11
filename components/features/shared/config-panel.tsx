@@ -2,11 +2,9 @@
 
 import type { ChangeEvent, ReactNode } from "react";
 import { Panel } from "@/components/ui/panel";
-import {
-    ConfigFieldGrid,
-    type ConfigField,
-} from "@/components/patterns/config-field-grid";
+import { ConfigFieldGrid } from "@/components/patterns/config-field-grid";
 import type { FieldErrors } from "@/lib/validations/auth";
+import type { ConfigField } from "@/lib/types";
 
 export interface ConfigPanelProps<K extends string> {
     id?: string;

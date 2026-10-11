@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { FormField } from "@/components/ui/forms/form-field";
-import { Select } from "@/components/ui/forms/select";
 import {
     Modal,
     ModalHeader,
@@ -11,13 +10,13 @@ import {
     ModalBody,
     ModalFooter,
 } from "@/components/ui/modal";
-import { LabelledBlock } from "@/components/patterns/labelled-block";
+import { ChoiceChips } from "@/components/patterns/choice-chips";
+import { UserPasswordField } from "@/components/features/admin/user-password-field";
 import {
     USER_INVITE_COPY as COPY,
-    USER_ROLE_OPTIONS,
+    USER_ROLE_CHOICES,
     type UserInviteDraft,
 } from "@/lib/config/user-invite";
-import type { UserRole } from "@/lib/enums/enums";
 import type { FieldErrors } from "@/lib/validations/auth";
 
 export interface UserCreateModalProps {
@@ -25,7 +24,7 @@ export interface UserCreateModalProps {
     draft: UserInviteDraft;
     errors: FieldErrors;
     pending: boolean;
-    failed: boolean;
+    failure?: string;
     onDraftChange: (draft: UserInviteDraft) => void;
     onClose: () => void;
     onSubmit: () => void;
@@ -36,7 +35,7 @@ export function UserCreateModal({
     draft,
     errors,
     pending,
-    failed,
+    failure,
     onDraftChange,
     onClose,
     onSubmit,
@@ -54,40 +53,33 @@ export function UserCreateModal({
         >
             <ModalHeader>
                 <ModalTitle>{COPY.title}</ModalTitle>
+                <p className="text-text-secondary mt-1 text-xs">{COPY.lede}</p>
             </ModalHeader>
 
-            <ModalBody className="scroll-y max-h-[60vh] space-y-3">
-                <p className="text-text-secondary text-xs">{COPY.hint}</p>
-
-                <FormField
-                    name="fullName"
-                    label={COPY.name}
-                    value={draft.fullName}
-                    error={errors.fullName}
-                    onChange={(event) =>
-                        patch({ fullName: event.target.value })
-                    }
-                />
-
-                <FormField
-                    name="email"
-                    type="email"
-                    label={COPY.email}
-                    value={draft.email}
-                    error={errors.email}
-                    onChange={(event) => patch({ email: event.target.value })}
-                />
-
-                <FormField
-                    name="password"
-                    type="password"
-                    label={COPY.password}
-                    value={draft.password}
-                    error={errors.password}
-                    onChange={(event) =>
-                        patch({ password: event.target.value })
-                    }
-                />
+            <ModalBody className="scroll-y flex max-h-[70vh] flex-col gap-4">
+                <div className="grid gap-3 sm:grid-cols-2">
+                    <FormField
+                        name="fullName"
+                        label={COPY.name}
+                        autoComplete="off"
+                        value={draft.fullName}
+                        error={errors.fullName}
+                        onChange={(event) =>
+                            patch({ fullName: event.target.value })
+                        }
+                    />
+                    <FormField
+                        name="email"
+                        type="email"
+                        label={COPY.email}
+                        autoComplete="off"
+                        value={draft.email}
+                        error={errors.email}
+                        onChange={(event) =>
+                            patch({ email: event.target.value })
+                        }
+                    />
+                </div>
 
                 <FormField
                     name="phoneNumber"
@@ -101,20 +93,29 @@ export function UserCreateModal({
                     }
                 />
 
-                <LabelledBlock label={COPY.role}>
-                    <Select
-                        label={COPY.role}
-                        options={USER_ROLE_OPTIONS}
-                        value={draft.role}
-                        onChange={(role: UserRole) => patch({ role })}
+                <div className="flex flex-col gap-1.5">
+                    <p className="text-text-secondary text-xs font-medium">
+                        {COPY.role}
+                    </p>
+                    <ChoiceChips
+                        label={COPY.roleLabel}
+                        choices={USER_ROLE_CHOICES}
+                        selected={[draft.role]}
+                        onToggle={(role) => patch({ role })}
                     />
-                </LabelledBlock>
+                </div>
 
-                {failed && (
+                <UserPasswordField
+                    value={draft.password}
+                    error={errors.password}
+                    onChange={(password) => patch({ password })}
+                />
+
+                {failure && (
                     <Callout
                         variant="error"
                         title={COPY.failed}
-                        description={COPY.retry}
+                        description={failure}
                     />
                 )}
             </ModalBody>

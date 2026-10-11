@@ -9,12 +9,10 @@ import {
 } from "@/components/ui/modal";
 import { ModerationReviewBody } from "@/components/features/admin/moderation-review-body";
 import { ModerationStatusMark } from "@/components/features/admin/moderation-status-mark";
+import { MODERATION_ACTION } from "@/lib/config/moderation-actions";
 import { CHECK_COUNT_LABEL } from "@/lib/data/admin-listings";
 import type { DecisionMode, ModerationListing } from "@/lib/types";
 
-const APPROVE_ACTION = "Approve";
-const CHANGES_ACTION = "Request Changes";
-const REJECT_ACTION = "Reject";
 const CLOSE_ACTION = "Close";
 
 export interface ModerationReviewModalProps {
@@ -68,27 +66,30 @@ export function ModerationReviewModal({
                             <Button
                                 type="button"
                                 tone="error"
+                                icon={MODERATION_ACTION.reject.icon}
                                 onClick={() => onDecide("reject", listing.id)}
                             >
-                                {REJECT_ACTION}
+                                {MODERATION_ACTION.reject.label}
                             </Button>
                         )}
                         <Button
                             type="button"
+                            icon={MODERATION_ACTION.changes.icon}
                             onClick={() => onDecide("changes", listing.id)}
                         >
-                            {CHANGES_ACTION}
+                            {MODERATION_ACTION.changes.label}
                         </Button>
                         {listing.status !== "approved" && (
                             <Button
                                 type="button"
                                 emphasis="solid"
                                 tone="accent"
+                                icon={MODERATION_ACTION.approve.icon}
                                 isLoading={approvingId === listing.id}
                                 disabled={approvingId !== undefined}
                                 onClick={() => onApprove(listing.id)}
                             >
-                                {APPROVE_ACTION}
+                                {MODERATION_ACTION.approve.label}
                             </Button>
                         )}
                     </ModalFooter>

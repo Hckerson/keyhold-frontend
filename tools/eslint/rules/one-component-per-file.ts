@@ -1,7 +1,7 @@
 import { ESLintUtils } from "@typescript-eslint/utils";
 import { baseName, componentTracker, kebabCase } from "../ast";
 
-type Options = [];
+type Options = [{ compound?: boolean }];
 type MessageIds = "multipleComponents" | "filenameMismatch";
 
 export const oneComponentPerFile = ESLintUtils.RuleCreator.withoutDocs<
@@ -20,11 +20,19 @@ export const oneComponentPerFile = ESLintUtils.RuleCreator.withoutDocs<
             filenameMismatch:
                 "Component '{{name}}' belongs in '{{expected}}', not '{{actual}}'.",
         },
-        schema: [],
+        schema: [
+            {
+                type: "object",
+                properties: { compound: { type: "boolean" } },
+                additionalProperties: false,
+            },
+        ],
     },
-    defaultOptions: [],
-    create(context) {
-        const { primary, secondary, listeners } = componentTracker();
+    defaultOptions: [{ compound: false }],
+    create(context, [{ compound }]) {
+        const { primary, secondary, listeners } = componentTracker(
+            context.filename,
+        );
 
         return {
             ...listeners,
@@ -33,7 +41,12 @@ export const oneComponentPerFile = ESLintUtils.RuleCreator.withoutDocs<
 
                 if (!component) return;
 
-                for (const [name, node] of secondary()) {
+                const actual = baseName(context.filename);
+                const isPart = (name: string) =>
+                    compound && kebabCase(name).startsWith(`${actual}-`);
+                const strays = secondary().filter(([name]) => !isPart(name));
+
+                for (const [name, node] of strays) {
                     context.report({
                         node,
                         messageId: "multipleComponents",
@@ -42,10 +55,9 @@ export const oneComponentPerFile = ESLintUtils.RuleCreator.withoutDocs<
                 }
 
                 const [name, node] = component;
-                const actual = baseName(context.filename);
                 const expected = kebabCase(name);
 
-                if (actual === expected) return;
+                if (actual === expected || isPart(name)) return;
 
                 context.report({
                     node,

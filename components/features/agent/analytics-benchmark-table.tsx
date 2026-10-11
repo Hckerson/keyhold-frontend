@@ -1,5 +1,5 @@
 import { AnalyticsBenchmarkRow } from "@/components/features/agent/analytics-benchmark-row";
-import type { Benchmark } from "@/lib/data/agent-analytics";
+import type { Benchmark } from "@/lib/types";
 
 const TABLE_CAPTION = "Your figures against the market average";
 

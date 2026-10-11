@@ -1,53 +1,65 @@
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { PanelLink } from "@/components/features/shared/panel-link";
-import { ShareList } from "@/components/patterns/share-list";
-import { UserBreakdownTable } from "@/components/features/admin/user-breakdown-table";
-import { cohortBreakdowns, roleShares } from "@/lib/data/admin-users";
-import type { ManagedUser } from "@/lib/types";
+"use client";
 
-const ROLE_TITLE = "Role Mix";
-const ROLE_LEDE = "How the directory splits across the three account types";
-const COHORT_TITLE = "Joining Cohorts";
-const COHORT_CAPTION =
-    "Sign-up years by accounts held, closed deals and lifetime volume";
-const COHORT_GROUP = "Joined";
-const COHORT_ACTION = "Reports";
+import { Panel } from "@/components/ui/panel";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
+import { UserRecencyList } from "@/components/features/admin/user-recency-list";
+import { UserSignupTrend } from "@/components/features/admin/user-signup-trend";
+import { AdminUsersBook } from "@/components/sections/admin/admin-users-book";
+import type {
+    LeaderConcentration,
+    ManagedUser,
+    UserRecencyBand,
+    UserSignupTrend as UserSignupTrendData,
+} from "@/lib/types";
+
+const SIGNUPS_TITLE = "New Accounts";
+const SIGNUPS_LEDE = "Sign-ups in the last complete month";
+const RECENCY_TITLE = "Sign-in Recency";
+const RECENCY_LEDE = "How recently live accounts last signed in";
+const SIGNUP_ROWS = 2;
 
 export interface AdminUsersRailProps {
-    users: ManagedUser[];
+    leaders: ManagedUser[];
+    concentration: LeaderConcentration;
+    recency: UserRecencyBand[];
+    signups: UserSignupTrendData;
+    directoryVolume: number;
+    pending?: boolean;
+    onOpen: (id: string) => void;
 }
 
-export function AdminUsersRail({ users }: AdminUsersRailProps) {
-    const cohorts = cohortBreakdowns(users);
-
+export function AdminUsersRail({
+    leaders,
+    concentration,
+    recency,
+    signups,
+    directoryVolume,
+    pending,
+    onOpen,
+}: AdminUsersRailProps) {
     return (
-        <div className="flex flex-col gap-3">
-            <Panel
-                title={ROLE_TITLE}
-                description={ROLE_LEDE}
-                count={users.length}
-            >
-                <PanelInset>
-                    <ShareList shares={roleShares(users)} />
-                </PanelInset>
+        <div className="console-rail flex min-w-0 flex-col gap-3 self-start">
+            <Panel title={SIGNUPS_TITLE} description={SIGNUPS_LEDE}>
+                {pending ? (
+                    <SkeletonRows rows={SIGNUP_ROWS} />
+                ) : (
+                    <UserSignupTrend signups={signups} />
+                )}
             </Panel>
-
-            <Panel
-                title={COHORT_TITLE}
-                count={cohorts.length}
-                action={
-                    <PanelLink href="/admin/reports" label={COHORT_ACTION} />
-                }
-            >
-                <PanelInset scroll>
-                    <UserBreakdownTable
-                        groupLabel={COHORT_GROUP}
-                        breakdowns={cohorts}
-                        caption={COHORT_CAPTION}
-                    />
-                </PanelInset>
+            <Panel title={RECENCY_TITLE} description={RECENCY_LEDE}>
+                {pending ? (
+                    <SkeletonRows rows={recency.length} />
+                ) : (
+                    <UserRecencyList bands={recency} />
+                )}
             </Panel>
+            <AdminUsersBook
+                leaders={leaders}
+                concentration={concentration}
+                directoryVolume={directoryVolume}
+                pending={pending}
+                onOpen={onOpen}
+            />
         </div>
     );
 }

@@ -1,31 +1,28 @@
 import type { ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
+import type { StatusTone } from "@/lib/types";
 
 const calloutVariants = cva("rounded-lg border p-3", {
     variants: {
         variant: {
             neutral: "bg-background-muted border-border-light",
-            success: "bg-success-light border-success/20",
-            info: "bg-info-light border-info/20",
-            warning: "bg-warning-light border-warning/20",
+            success: "bg-accent-light border-accent/20",
+            info: "bg-background-muted border-border-dark",
+            warning: "bg-background-muted border-border-dark",
             error: "bg-error-light border-error/20",
-        },
+        } satisfies Record<StatusTone, string>,
     },
     defaultVariants: { variant: "neutral" },
 });
 
-const titleColor: Record<CalloutVariant, string> = {
+const titleColor: Record<StatusTone, string> = {
     neutral: "text-text",
-    success: "text-success",
-    info: "text-info",
-    warning: "text-warning",
+    success: "text-accent",
+    info: "text-text-secondary",
+    warning: "text-text-secondary",
     error: "text-error",
 };
-
-export type CalloutVariant = NonNullable<
-    VariantProps<typeof calloutVariants>["variant"]
->;
 
 export interface CalloutProps extends VariantProps<typeof calloutVariants> {
     title: string;

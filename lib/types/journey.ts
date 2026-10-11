@@ -22,6 +22,23 @@ export interface BuyerJourney {
     status: JourneyStatus;
 }
 
+export interface JourneyCounts {
+    saved: number;
+    interests: number;
+    viewings: number;
+    offers: number;
+    closings: number;
+}
+
+export type TaskState = "done" | "active" | "todo";
+
+export interface JourneyTask {
+    id: string;
+    label: string;
+    href: string;
+    state: TaskState;
+}
+
 export type PropertyStage =
     | "browsing"
     | "requested"

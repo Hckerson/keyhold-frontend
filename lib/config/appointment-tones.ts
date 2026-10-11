@@ -9,8 +9,8 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ViewingMode, ViewingStatus } from "@/lib/types/viewing";
+import type { StatusTone } from "@/lib/types";
 
 export const APPOINTMENT_TYPE_KEYS: ViewingMode[] = [
     "in-person",
@@ -37,13 +37,13 @@ export interface AppointmentTypeMeta {
 
 export const APPOINTMENT_TYPES: Record<AppointmentType, AppointmentTypeMeta> = {
     "in-person": { icon: DoorOpen, tone: "accent", label: "In person" },
-    virtual: { icon: Video, tone: "info", label: "Virtual" },
-    "open-house": { icon: Users, tone: "highlight", label: "Open house" },
+    virtual: { icon: Video, tone: "neutral", label: "Virtual" },
+    "open-house": { icon: Users, tone: "neutral", label: "Open house" },
 };
 
 export interface AppointmentStatusMeta {
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     label: string;
 }
 

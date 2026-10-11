@@ -7,25 +7,15 @@
 
 @theme {
     /* Map plural tokens to singular Tailwind v4 theme names */
-    --color-success: var(--colors-success);
-    --color-success-dark: var(--colors-success-dark);
-    --color-success-light: var(--colors-success-light);
     --color-error: var(--colors-error);
     --color-error-dark: var(--colors-error-dark);
     --color-error-light: var(--colors-error-light);
-    --color-warning: var(--colors-warning);
-    --color-warning-light: var(--colors-warning-light);
-    --color-info: var(--colors-info);
-    --color-info-light: var(--colors-info-light);
-    --color-primary: var(--colors-primary);
-    --color-primary-dark: var(--colors-primary-dark);
-    --color-primary-light: var(--colors-primary-light);
     --color-accent: var(--colors-accent);
     --color-accent-dark: var(--colors-accent-dark);
     --color-accent-light: var(--colors-accent-light);
-    --color-highlight: var(--colors-highlight);
-    --color-highlight-dark: var(--colors-highlight-dark);
-    --color-highlight-light: var(--colors-highlight-light);
+    --color-accent-mid: var(--colors-accent-mid);
+    --color-accent-soft: var(--colors-accent-soft);
+    --color-quiet: var(--colors-quiet);
     --color-background: var(--colors-background);
     --color-background-alt: var(--colors-background-alt);
     --color-background-muted: var(--colors-background-muted);
@@ -43,10 +33,6 @@
     --color-sidebar-text: var(--colors-sidebar-text);
     --color-sidebar-text-muted: var(--colors-sidebar-text-muted);
     --color-sidebar-text-active: var(--colors-sidebar-text-active);
-    --color-metric-pipeline: var(--colors-metric-pipeline);
-    --color-metric-success: var(--colors-metric-success);
-    --color-metric-activity: var(--colors-metric-activity);
-    --color-metric-warning: var(--colors-metric-warning);
     --color-overlay: var(--colors-overlay);
 
     --font-display: var(--fonts-display);
@@ -214,6 +200,49 @@
     text-transform: uppercase;
 }
 
+svg.lucide * {
+    vector-effect: non-scaling-stroke;
+}
+
+.reveal {
+    opacity: 0;
+    transition: opacity var(--durations-fast) var(--timing-functions-smooth);
+}
+
+.reveal-fold {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--durations-fast)
+        var(--timing-functions-smooth);
+}
+
+.reveal-fold > * {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.reveal-scope:is(:hover, :focus-within) .reveal {
+    opacity: 1;
+}
+
+.reveal-scope:is(:hover, :focus-within) .reveal-fold {
+    grid-template-rows: 1fr;
+}
+
+@media (hover: none) {
+    .reveal {
+        opacity: 1;
+    }
+
+    .reveal-fold {
+        grid-template-rows: 1fr;
+    }
+
+    .reveal-overlay {
+        display: none;
+    }
+}
+
 .rail-label {
     color: var(--color-sidebar-text-muted);
     font-family: var(--font-mono);
@@ -285,15 +314,51 @@
     --split-columns: 4;
 }
 
+.console-split--flow {
+    --split-columns: 4;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+.console-split--flow-thirds {
+    --split-columns: 3;
+}
+
+.queue-frame {
+    container: queue / inline-size;
+    max-height: var(--queue-max-height);
+}
+
 .queue-grid {
+    --queue-columns: minmax(0, 1fr) 6rem;
+    --queue-columns-wide: minmax(0, 1fr) 4.5rem 3.5rem 2.5rem 6rem;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 4.5rem 4.5rem;
+    grid-template-columns: var(--queue-columns);
     align-items: center;
     column-gap: var(--spacing-3);
 }
 
+.queue-grid--accounts {
+    --queue-columns: minmax(0, 1fr) 4.5rem;
+    --queue-columns-wide: minmax(0, 1fr) 6rem 3rem 4.5rem;
+}
+
+.queue-grid--deals {
+    --queue-columns: minmax(0, 1fr) 5rem;
+    --queue-columns-wide: minmax(0, 1.2fr) minmax(0, 1fr) 10rem 5rem 4rem;
+}
+
 .queue-grid__wide {
     display: none;
+}
+
+@container queue (min-width: 36rem) {
+    .queue-grid {
+        grid-template-columns: var(--queue-columns-wide);
+    }
+
+    .queue-grid__wide {
+        display: flex;
+    }
 }
 
 .console-split--sixths {
@@ -303,22 +368,54 @@
 
 .console-split--fifths {
     --split-columns: 5;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+}
+
+.data-table-frame {
+    container: data-table / inline-size;
+}
+
+@container data-table (max-width: 64rem) {
+    .data-table-wide {
+        display: none;
+    }
+}
+
+.figure-grid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--color-border-light);
+}
+
+@container console (min-width: 36rem) {
+    .figure-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@container console (min-width: 64rem) {
+    .figure-grid {
+        grid-template-columns: none;
+        grid-auto-columns: minmax(0, 1fr);
+        grid-auto-flow: column;
+    }
+}
+
+@container console (min-width: 42rem) {
+    .review-split--slim {
+        grid-template-columns: 16rem minmax(0, 1fr);
+    }
+
+    .review-split--slim > .review-pane {
+        position: sticky;
+        top: 0;
+    }
 }
 
 @container console (min-width: 56rem) {
     .console-split {
         grid-template-columns: repeat(var(--split-columns), minmax(0, 1fr));
-    }
-
-    .queue-grid {
-        grid-template-columns:
-            minmax(0, 1fr)
-            6rem 5.5rem 2rem 2.5rem 4.5rem 4.5rem;
-    }
-
-    .queue-grid__wide {
-        display: flex;
     }
 
     .panel-pair {
@@ -345,7 +442,7 @@
         grid-template-columns: 20rem minmax(0, 1fr);
     }
 
-    .review-split > .review-rail {
+    .review-split > :is(.review-rail, .review-pane) {
         position: sticky;
         top: 0;
     }
@@ -690,7 +787,7 @@
 .field-on-glass:-webkit-autofill:focus,
 .field-on-glass:-webkit-autofill:active {
     -webkit-text-fill-color: var(--colors-text-inverse);
-    caret-color: var(--colors-highlight);
+    caret-color: var(--colors-text-inverse);
     -webkit-background-clip: text;
     background-clip: text;
     transition: background-color 9999s ease-in-out 0s;
@@ -698,7 +795,7 @@
 
 .field-on-glass:autofill {
     -webkit-text-fill-color: var(--colors-text-inverse);
-    caret-color: var(--colors-highlight);
+    caret-color: var(--colors-text-inverse);
     transition: background-color 9999s ease-in-out 0s;
 }
 
@@ -829,22 +926,6 @@ html {
     border-color: var(--stat-card-border-hover);
     box-shadow: var(--stat-card-shadow-hover);
     transform: translateY(-1px);
-}
-
-.stat-card--pipeline {
-    --metric-color: var(--colors-metric-pipeline);
-}
-
-.stat-card--success {
-    --metric-color: var(--colors-metric-success);
-}
-
-.stat-card--activity {
-    --metric-color: var(--colors-metric-activity);
-}
-
-.stat-card--warning {
-    --metric-color: var(--colors-metric-warning);
 }
 
 /* ============================================

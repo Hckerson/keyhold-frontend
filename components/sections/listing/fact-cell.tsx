@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { sectionEyebrowClass } from "@/components/patterns/section-heading";
+import { sectionEyebrowClass } from "@/components/patterns/section-eyebrow";
 
 export interface FactCellProps {
     label: string;

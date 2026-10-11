@@ -6,14 +6,14 @@ import {
     Undo2,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
 import type { ChartTone } from "@/lib/config/chart-tones";
 import type { EscrowStatus, TransactionStatus } from "@/lib/enums/enums";
+import type { StatusTone } from "@/lib/types";
 
 export interface EscrowStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 
@@ -29,13 +29,13 @@ export const ESCROW_STATES: Record<EscrowStatus, EscrowStatusMeta> = {
         label: "Held",
         icon: ShieldCheck,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
     },
     RELEASED: {
         label: "Released",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
     },
     REFUNDED: {
         label: "Refunded",
@@ -59,7 +59,7 @@ export const ESCROW_STATUS_LABELS: Record<EscrowStatus, string> =
 export interface PurchaseStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
 }
 
@@ -68,19 +68,19 @@ export const PURCHASE_STATES: Record<TransactionStatus, PurchaseStatusMeta> = {
         label: "Awaiting payment",
         icon: Banknote,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
     },
     IN_PROGRESS: {
         label: "In escrow",
         icon: ShieldCheck,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
     },
     COMPLETED: {
         label: "Settled",
         icon: CircleCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
     },
     CANCELLED: {
         label: "Cancelled",

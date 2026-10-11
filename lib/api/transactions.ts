@@ -1,3 +1,4 @@
+import { allPages } from "@/lib/api/all-pages";
 import { query } from "@/lib/api/client";
 import { config } from "@/lib/constants";
 import type {
@@ -15,6 +16,9 @@ export const transactionsAPI = {
         query.get<TransactionPage>(config.api.transactions.list, {
             params: input,
         }),
+
+    ledger: (input: TransactionQuery = {}) =>
+        allPages((paging) => transactionsAPI.list({ ...input, ...paging })),
 
     stages: () => query.get<TransactionStage[]>(config.api.transactions.stages),
 

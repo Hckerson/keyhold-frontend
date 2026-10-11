@@ -6,6 +6,7 @@ import { OfferDetailHeader } from "@/components/features/offers/offer-detail-hea
 import { OfferDetailPanels } from "@/components/features/offers/offer-detail-panels";
 import { OfferConfirmModal } from "@/components/features/offers/offer-confirm-modal";
 import { CheckoutModal } from "@/components/features/offers/checkout-modal";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useOfferDetail } from "@/lib/hooks/use-offer-detail";
@@ -26,7 +27,8 @@ export default function OfferDetailPage({
             />
         );
 
-    if (!offer.detail || !offer.status) return null;
+    if (!offer.detail || !offer.status)
+        return <ConsoleSkeleton variant="form" />;
 
     return (
         <div className="space-y-3">

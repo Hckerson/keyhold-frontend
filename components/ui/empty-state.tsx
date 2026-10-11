@@ -25,7 +25,7 @@ export function EmptyState({
             )}
         >
             {Icon && (
-                <span className="bg-background-muted text-text-muted border-border-light grid size-8 place-items-center rounded-full border">
+                <span className="bg-background-muted text-text-muted border-border-light grid size-8 place-items-center rounded-md border">
                     <Icon className="size-4" strokeWidth={1.5} />
                 </span>
             )}

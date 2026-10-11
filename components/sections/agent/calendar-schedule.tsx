@@ -6,19 +6,15 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { EmptyState } from "@/components/ui/empty-state";
 import { FilterPills } from "@/components/patterns/filter-pills";
+import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { PresenceSwap } from "@/components/patterns/presence-swap";
 import { CalendarNextCard } from "@/components/features/agent/calendar-next-card";
 import { AppointmentList } from "@/components/features/agent/appointment-list";
 import { AppointmentDayGroup } from "@/components/features/agent/appointment-day-group";
 import { cn } from "@/lib/utils";
-import {
-    SCHEDULE_ACTION,
-    VIEW_MODES,
-    formatDay,
-    groupAppointmentsByDate,
-    type Appointment,
-    type CalendarViewMode,
-} from "@/lib/data/agent-calendar";
+import { SCHEDULE_ACTION, VIEW_MODES } from "@/lib/config/agent-calendar";
+import { formatDay, groupAppointmentsByDate } from "@/lib/data/agent-calendar";
+import type { Appointment, CalendarViewMode } from "@/lib/types";
 
 const DAY_TITLE = "Schedule";
 const WEEK_TITLE = "Week Schedule";
@@ -34,6 +30,7 @@ export interface CalendarScheduleProps {
     weekCount: number;
     onViewChange: (view: CalendarViewMode) => void;
     onReschedule: (id: string) => void;
+    pending?: boolean;
     className?: string;
 }
 
@@ -46,6 +43,7 @@ export function CalendarSchedule({
     weekCount,
     onViewChange,
     onReschedule,
+    pending,
     className,
 }: CalendarScheduleProps) {
     const isDayView = view === "month";
@@ -74,7 +72,7 @@ export function CalendarSchedule({
                 }
             >
                 <PresenceSwap
-                    swapKey={`${view}-${selectedIso}-${rest.length > 0 ? "list" : "empty"}`}
+                    swapKey={`${view}-${selectedIso}-${rest.length > 0 ? "list" : pending ? "pending" : "empty"}`}
                 >
                     {rest.length > 0 ? (
                         <PanelInset>
@@ -97,6 +95,8 @@ export function CalendarSchedule({
                                 </div>
                             )}
                         </PanelInset>
+                    ) : pending ? (
+                        <SkeletonRows />
                     ) : (
                         <EmptyState
                             icon={CalendarX2}

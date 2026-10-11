@@ -13,9 +13,9 @@ const TONE_GLYPH: Record<ToastTone, LucideIcon> = {
 };
 
 const TONE_ACCENT: Record<ToastTone, string> = {
-    success: "text-success",
+    success: "text-accent",
     error: "text-error",
-    info: "text-info",
+    info: "text-text-secondary",
 };
 
 export interface ToastProps {

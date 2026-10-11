@@ -1,7 +1,6 @@
 "use client";
 
 import { CircleCheckBig } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LabelledBlock } from "@/components/patterns/labelled-block";
@@ -9,6 +8,7 @@ import { MetricCell } from "@/components/patterns/metric-cell";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ComplianceCheckList } from "@/components/features/admin/compliance-check-list";
+import { ModerationInspectorActions } from "@/components/features/admin/moderation-inspector-actions";
 import { ModerationStatusMark } from "@/components/features/admin/moderation-status-mark";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
 import { MODERATION_STATUSES } from "@/lib/config/moderation-tones";
@@ -20,10 +20,6 @@ const ASKING_LABEL = "Asking";
 const REPORTS_LABEL = "Reports";
 const QUEUE_LABEL = "In queue";
 const AGENT_LABEL = "Agent";
-const REVIEW_ACTION = "Review";
-const APPROVE_ACTION = "Approve";
-const CHANGES_ACTION = "Request Changes";
-const REJECT_ACTION = "Reject";
 const CLEAR_TITLE = "Queue is clear";
 const CLEAR_LEDE = "Every submitted listing has a decision.";
 
@@ -48,7 +44,7 @@ export function ModerationInspector({
         <aside
             aria-label={TITLE}
             aria-busy={pending || undefined}
-            className="border-highlight/25 bg-background flex flex-col overflow-hidden rounded-xl border shadow-md"
+            className="border-accent/25 bg-background flex flex-col overflow-hidden rounded-xl border shadow-md"
         >
             <header className="bg-background-alt border-border-light flex h-11 items-center justify-between gap-3 border-b px-3">
                 <h2 className="micro-label shrink-0">{TITLE}</h2>
@@ -105,9 +101,12 @@ export function ModerationInspector({
                             </LabelledBlock>
                         )}
 
-                        <ComplianceCheckList compliance={listing.compliance} />
+                        <ComplianceCheckList
+                            compliance={listing.compliance}
+                            openOnly
+                        />
 
-                        <div className="metric-strip bg-background-muted gap-3 rounded-lg p-3">
+                        <div className="bg-background-muted grid grid-cols-3 gap-3 rounded-lg p-3">
                             <MetricCell label={REPORTS_LABEL}>
                                 <ReportCountMark reports={listing.reports} />
                             </MetricCell>
@@ -122,37 +121,13 @@ export function ModerationInspector({
                         </div>
                     </div>
 
-                    <footer className="border-border-light grid grid-cols-2 gap-2 border-t p-3">
-                        <Button
-                            type="button"
-                            onClick={() => onOpen(listing.id)}
-                        >
-                            {REVIEW_ACTION}
-                        </Button>
-                        <Button
-                            type="button"
-                            emphasis="solid"
-                            tone="accent"
-                            isLoading={approvingId === listing.id}
-                            disabled={approvingId !== undefined}
-                            onClick={() => onApprove(listing.id)}
-                        >
-                            {APPROVE_ACTION}
-                        </Button>
-                        <Button
-                            type="button"
-                            onClick={() => onDecide("changes", listing.id)}
-                        >
-                            {CHANGES_ACTION}
-                        </Button>
-                        <Button
-                            type="button"
-                            tone="error"
-                            onClick={() => onDecide("reject", listing.id)}
-                        >
-                            {REJECT_ACTION}
-                        </Button>
-                    </footer>
+                    <ModerationInspectorActions
+                        listing={listing}
+                        approvingId={approvingId}
+                        onOpen={onOpen}
+                        onApprove={onApprove}
+                        onDecide={onDecide}
+                    />
                 </>
             )}
         </aside>

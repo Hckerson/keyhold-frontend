@@ -1,11 +1,6 @@
 import { Image } from "@/components/ui/image";
 import { FeaturedBadge } from "@/components/features/shared/featured-badge";
-
-export interface PremierMediaView {
-    image: string;
-    name: string;
-    badge?: string;
-}
+import type { PremierMediaView } from "@/lib/types";
 
 export function PremierListingMedia({
     listing,

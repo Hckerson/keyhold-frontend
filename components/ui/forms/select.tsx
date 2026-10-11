@@ -10,6 +10,7 @@ import {
     FLOATING_SURFACE,
 } from "@/lib/config/floating";
 import { cn } from "@/lib/utils";
+import type { SelectOption } from "@/lib/types";
 
 const triggerVariants = cva(
     "text-text focus-visible:ring-accent/40 ease-smooth flex w-full items-center gap-2 text-left transition-colors duration-200 select-none focus-visible:ring-2 focus-visible:outline-none data-disabled:cursor-not-allowed data-disabled:opacity-50",
@@ -40,11 +41,6 @@ const optionVariants = cva(
         defaultVariants: { size: "sm" },
     },
 );
-
-export interface SelectOption<T extends string> {
-    value: T;
-    label: string;
-}
 
 export interface SelectProps<T extends string> extends VariantProps<
     typeof triggerVariants

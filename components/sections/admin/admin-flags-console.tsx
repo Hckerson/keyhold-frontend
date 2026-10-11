@@ -2,23 +2,19 @@
 
 import { Flag } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PortalHeader } from "@/components/patterns/portal-header";
-import { FilterPills } from "@/components/patterns/filter-pills";
-import { AbuseReportDecisionModal } from "@/components/features/admin/abuse-report-decision-modal";
-import { AbuseReportPane } from "@/components/features/admin/abuse-report-pane";
-import { AbuseReportRail } from "@/components/features/admin/abuse-report-rail";
+import { FlagDecisionModal } from "@/components/features/admin/flag-decision-modal";
+import { FlagReviewPane } from "@/components/features/admin/flag-review-pane";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
+import { ReviewQueue } from "@/components/patterns/review-queue";
+import { AdminFlagsHeader } from "@/components/sections/admin/admin-flags-header";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
-import { ABUSE_FILTERS } from "@/lib/data/admin-flags";
+import { FLAG_COPY, flagQueueItems, flagReading } from "@/lib/data/admin-flags";
 import { useFlagQueue } from "@/lib/hooks/use-flag-queue";
-
-const TITLE = "Reported Members & Messages";
-const EMPTY_TITLE = "Nothing reported";
-const EMPTY_LEDE = "No member or message reports match this filter.";
 
 export function AdminFlagsConsole() {
     const queue = useFlagQueue();
-    const { counts, active } = queue;
+    const { active } = queue;
 
     if (queue.failed)
         return (
@@ -28,47 +24,48 @@ export function AdminFlagsConsole() {
             />
         );
 
+    if (queue.pending) return <ConsoleSkeleton variant="casework" />;
+
     return (
-        <div className="space-y-3">
-            <PortalHeader
-                title={TITLE}
-                lede={`${counts.USER} member · ${counts.MESSAGE} message reports awaiting a decision`}
+        <div className="space-y-4">
+            <AdminFlagsHeader
+                reading={flagReading(queue.reports)}
+                filter={queue.filter}
+                counts={queue.counts}
+                onFilterChange={queue.changeFilter}
             />
 
-            <FilterPills
-                filters={ABUSE_FILTERS}
-                active={queue.filter}
-                onChange={queue.changeFilter}
-                counts={counts}
-            />
-
-            <div className="review-split items-start gap-3">
-                <div className="review-rail">
-                    <AbuseReportRail
-                        reports={queue.visible}
-                        selectedId={active?.id ?? null}
-                        onSelect={queue.setSelectedId}
-                    />
+            {active ? (
+                <div className="review-split review-split--slim items-start gap-3">
+                    <div className="review-rail">
+                        <ReviewQueue
+                            items={flagQueueItems(
+                                queue.visible,
+                                queue.filter === "all",
+                            )}
+                            selectedId={active.id}
+                            onSelect={queue.setSelectedId}
+                        />
+                    </div>
+                    <div className="review-pane">
+                        <FlagReviewPane
+                            report={active}
+                            busy={queue.settling}
+                            onAction={(mode) =>
+                                queue.requestSettle(mode, active.id)
+                            }
+                        />
+                    </div>
                 </div>
+            ) : (
+                <EmptyState
+                    icon={Flag}
+                    title={FLAG_COPY.emptyTitle}
+                    description={FLAG_COPY.emptyLede}
+                />
+            )}
 
-                {active ? (
-                    <AbuseReportPane
-                        report={active}
-                        pending={queue.settling}
-                        onAction={(mode) =>
-                            queue.requestSettle(mode, active.id)
-                        }
-                    />
-                ) : (
-                    <EmptyState
-                        icon={Flag}
-                        title={EMPTY_TITLE}
-                        description={EMPTY_LEDE}
-                    />
-                )}
-            </div>
-
-            <AbuseReportDecisionModal
+            <FlagDecisionModal
                 mode={queue.decision?.mode}
                 report={queue.deciding}
                 pending={queue.settling}

@@ -12,8 +12,7 @@ import {
     type LucideIcon,
 } from "lucide-react";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { ConversationStatus } from "@/lib/types";
+import type { ConversationStatus, StatusTone } from "@/lib/types";
 
 export const CONVERSATION_STATUS_KEYS: ConversationStatus[] = [
     "awaiting-you",
@@ -25,7 +24,7 @@ export const CONVERSATION_STATUS_KEYS: ConversationStatus[] = [
 export interface ConversationStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
 }
@@ -38,21 +37,21 @@ export const CONVERSATION_STATUSES: Record<
         label: "Waiting on you",
         icon: Reply,
         tone: "warning",
-        chartTone: "warning",
+        chartTone: "neutral",
         rank: 4,
     },
     "awaiting-agent": {
         label: "Waiting on agent",
         icon: Timer,
         tone: "info",
-        chartTone: "info",
+        chartTone: "neutral",
         rank: 3,
     },
     scheduled: {
         label: "Viewing booked",
         icon: CalendarCheck,
         tone: "success",
-        chartTone: "success",
+        chartTone: "accent",
         rank: 2,
     },
     closed: {
@@ -79,7 +78,7 @@ export const RESPONSE_BANDS: Record<ResponseBand, ResponseBandMeta> = {
     fast: {
         label: "Fast — replies under 30 min",
         icon: Zap,
-        tone: "success",
+        tone: "accent",
         ceiling: 30,
     },
     steady: {
@@ -91,20 +90,10 @@ export const RESPONSE_BANDS: Record<ResponseBand, ResponseBandMeta> = {
     slow: {
         label: "Slow — over 3 hours",
         icon: Hourglass,
-        tone: "warning",
+        tone: "neutral",
         ceiling: Infinity,
     },
 };
-
-const RESPONSE_CAP = 240;
-
-export const responsePercent = (minutes: number) =>
-    Math.max(
-        0,
-        Math.round(
-            100 - (Math.min(minutes, RESPONSE_CAP) / RESPONSE_CAP) * 100,
-        ),
-    );
 
 export interface DocumentKindMeta {
     label: string;
@@ -115,7 +104,7 @@ export interface DocumentKindMeta {
 const DOCUMENT_KINDS: { prefix: string; meta: DocumentKindMeta }[] = [
     {
         prefix: "image/",
-        meta: { label: "Image", icon: FileImage, tone: "info" },
+        meta: { label: "Image", icon: FileImage, tone: "neutral" },
     },
     {
         prefix: "application/pdf",

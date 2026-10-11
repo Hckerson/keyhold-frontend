@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
     AuthCheck,
     AuthField,
@@ -17,35 +15,14 @@ import {
 } from "@/components/features/auth/parts";
 import { authLabelVariants } from "@/components/features/auth/parts/auth-label";
 import { cn } from "@/lib/utils";
-import {
-    AUTH_ROUTES,
-    isSafeRedirect,
-    portalForRole,
-    withRedirect,
-} from "@/lib/constants";
+import { AUTH_ROUTES } from "@/lib/constants";
 import { SESSION_EXPIRED } from "@/lib/config/feedback";
-import { OAUTH_NOTICES, type OAuthFailure } from "@/lib/config/auth-recovery";
-import { useSignIn } from "@/lib/hooks/use-sign-in";
-import { errorMessage } from "@/lib/utils/api-error";
 import {
-    fieldErrorFor,
-    loginSchema,
-    toFieldErrors,
-    type FieldErrors,
-} from "@/lib/validations/auth";
-
-const INITIAL_VALUES = { email: "", password: "" };
-
-const SIGN_IN_FAILED =
-    "We couldn't sign you in. Check your email and password, then try again.";
-
-const footerEntries = (redirectTo?: string) => [
-    {
-        label: "New here",
-        href: withRedirect(AUTH_ROUTES.signup, redirectTo),
-        action: "Apply for access",
-    },
-];
+    OAUTH_NOTICES,
+    loginFooterEntries,
+    type OAuthFailure,
+} from "@/lib/config/auth-recovery";
+import { useLoginForm } from "@/lib/hooks/use-login-form";
 
 export interface LoginFormProps {
     redirectTo?: string;
@@ -58,56 +35,17 @@ export function LoginForm({
     expired,
     oauthFailure,
 }: LoginFormProps) {
-    const router = useRouter();
-    const signIn = useSignIn();
-
-    const [values, setValues] = useState(INITIAL_VALUES);
-    const [remember, setRemember] = useState(false);
-    const [errors, setErrors] = useState<FieldErrors>({});
-    const [formError, setFormError] = useState<string | null>(null);
-    const [pending, setPending] = useState(false);
-
-    const parsed = loginSchema.safeParse(values);
-
-    const handleChange =
-        (field: keyof typeof INITIAL_VALUES) =>
-        (event: ChangeEvent<HTMLInputElement>) => {
-            const { value } = event.target;
-            setValues((current) => ({ ...current, [field]: value }));
-            setErrors((current) => ({ ...current, [field]: undefined }));
-            setFormError(null);
-        };
-
-    const handleBlur = (field: keyof typeof INITIAL_VALUES) => () =>
-        setErrors((current) => ({
-            ...current,
-            [field]: fieldErrorFor(loginSchema, values, field),
-        }));
-
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (pending) return;
-        if (!parsed.success) {
-            setErrors(toFieldErrors(parsed.error));
-            return;
-        }
-
-        setPending(true);
-        setFormError(null);
-
-        try {
-            const user = await signIn(parsed.data, remember);
-
-            router.replace(
-                isSafeRedirect(redirectTo)
-                    ? redirectTo
-                    : portalForRole(user.role),
-            );
-        } catch (error) {
-            setFormError(errorMessage(error, SIGN_IN_FAILED));
-            setPending(false);
-        }
-    };
+    const {
+        values,
+        remember,
+        setRemember,
+        errors,
+        formError,
+        pending,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+    } = useLoginForm(redirectTo);
 
     return (
         <AuthPlane>
@@ -205,7 +143,7 @@ export function LoginForm({
 
             <DevAuthRow redirectTo={redirectTo} disabled={pending} />
 
-            <AuthTitleBlock entries={footerEntries(redirectTo)} />
+            <AuthTitleBlock entries={loginFooterEntries(redirectTo)} />
         </AuthPlane>
     );
 }

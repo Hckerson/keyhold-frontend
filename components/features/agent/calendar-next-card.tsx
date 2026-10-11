@@ -1,19 +1,18 @@
 import { Avatar } from "@/components/ui/avatar";
-import { ProgressBar } from "@/components/ui/progress-bar";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
-import { initialsOf } from "@/lib/utils";
+import { cn, initialsOf } from "@/lib/utils";
+import { chartToneText } from "@/lib/config/chart-tones";
 import {
     APPOINTMENT_STATUSES,
     APPOINTMENT_TYPES,
 } from "@/lib/config/appointment-tones";
 import {
-    durationShare,
     formatDuration,
     formatGroupDay,
     formatTime,
-    type Appointment,
 } from "@/lib/data/agent-calendar";
+import type { Appointment } from "@/lib/types";
 
 const NEXT_LABEL = "Next up";
 
@@ -26,7 +25,7 @@ export function CalendarNextCard({ appointment }: CalendarNextCardProps) {
     const type = APPOINTMENT_TYPES[appointment.type];
 
     return (
-        <article className="border-highlight/25 bg-background rounded-xl border p-4 shadow-md">
+        <article className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <p className="micro-label">
@@ -64,12 +63,12 @@ export function CalendarNextCard({ appointment }: CalendarNextCardProps) {
                 </div>
                 <div className="flex w-20 shrink-0 flex-col items-end gap-1">
                     <span className="micro-label">{type.label}</span>
-                    <ProgressBar
-                        value={durationShare(appointment.durationMinutes)}
-                        tone={type.tone}
-                        className="w-16"
-                    />
-                    <span className="text-text text-xs font-medium tabular-nums">
+                    <span
+                        className={cn(
+                            "text-xs font-medium tabular-nums",
+                            chartToneText[type.tone],
+                        )}
+                    >
                         {formatDuration(appointment.durationMinutes)}
                     </span>
                 </div>

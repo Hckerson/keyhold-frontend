@@ -8,10 +8,13 @@ import {
     Wallet,
     type LucideIcon,
 } from "lucide-react";
-import type { DotTone } from "@/components/patterns/status-dot";
-import type { CalloutProps } from "@/components/ui/callout";
 import type { ChartTone } from "@/lib/config/chart-tones";
-import type { LedgerStatus, TransactionMilestoneId } from "@/lib/types";
+import type {
+    CalloutNote,
+    LedgerStatus,
+    StatusTone,
+    TransactionMilestoneId,
+} from "@/lib/types";
 
 interface ToneBand {
     ceiling: number;
@@ -24,11 +27,12 @@ const bandTone = (bands: ToneBand[], value: number, fallback: ChartTone) =>
 export interface TransactionStatusMeta {
     label: string;
     icon: LucideIcon;
-    tone: DotTone;
+    tone: StatusTone;
     chartTone: ChartTone;
     rank: number;
     open: boolean;
-    note?: CalloutProps;
+    note?: CalloutNote;
+    flowNote: string;
     rowTone?: string;
 }
 
@@ -38,25 +42,28 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             label: "Awaiting payment",
             icon: Clock,
             tone: "warning",
-            chartTone: "warning",
+            chartTone: "neutral",
             rank: 3,
             open: true,
+            flowNote: "due on payment",
         },
         IN_PROGRESS: {
             label: "In escrow",
             icon: Landmark,
             tone: "info",
-            chartTone: "info",
+            chartTone: "neutral",
             rank: 4,
             open: true,
+            flowNote: "held",
         },
         COMPLETED: {
             label: "Settled",
             icon: CircleCheck,
             tone: "success",
-            chartTone: "success",
+            chartTone: "accent",
             rank: 1,
             open: false,
+            flowNote: "earned",
         },
         CANCELLED: {
             label: "Cancelled",
@@ -65,6 +72,7 @@ export const TRANSACTION_STATUSES: Record<LedgerStatus, TransactionStatusMeta> =
             chartTone: "neutral",
             rank: 2,
             open: false,
+            flowNote: "fell through",
         },
     };
 
@@ -77,6 +85,7 @@ export const TRANSACTION_PIPELINE_ORDER: LedgerStatus[] = [
 
 export interface TransactionMilestoneMeta {
     label: string;
+    next: string;
     icon: LucideIcon;
 }
 
@@ -84,10 +93,26 @@ export const TRANSACTION_MILESTONES: Record<
     TransactionMilestoneId,
     TransactionMilestoneMeta
 > = {
-    agreement: { label: "Purchase agreement", icon: FileSignature },
-    deposit: { label: "Escrow deposit", icon: Landmark },
-    inspection: { label: "Inspection window closed", icon: ClipboardCheck },
-    settlement: { label: "Funds released", icon: Wallet },
+    agreement: {
+        label: "Purchase agreement",
+        next: "Agreement to sign",
+        icon: FileSignature,
+    },
+    deposit: {
+        label: "Escrow deposit",
+        next: "Deposit due",
+        icon: Landmark,
+    },
+    inspection: {
+        label: "Inspection window closed",
+        next: "Inspection open",
+        icon: ClipboardCheck,
+    },
+    settlement: {
+        label: "Funds released",
+        next: "Funds to release",
+        icon: Wallet,
+    },
 };
 
 export const MILESTONE_ORDER: TransactionMilestoneId[] = [
@@ -101,13 +126,13 @@ export const DEAL_SLA_MINUTES = 86_400;
 
 const DEAL_AGE_BANDS: ToneBand[] = [
     { ceiling: 43_200, tone: "neutral" },
-    { ceiling: 64_800, tone: "info" },
-    { ceiling: DEAL_SLA_MINUTES, tone: "warning" },
+    { ceiling: 64_800, tone: "neutral" },
+    { ceiling: DEAL_SLA_MINUTES, tone: "neutral" },
 ];
 
 const ESCROW_BANDS: ToneBand[] = [
     { ceiling: 25, tone: "neutral" },
-    { ceiling: 60, tone: "info" },
+    { ceiling: 60, tone: "neutral" },
     { ceiling: 100, tone: "accent" },
 ];
 
@@ -115,4 +140,4 @@ export const dealAgeTone = (minutes: number) =>
     bandTone(DEAL_AGE_BANDS, minutes, "error");
 
 export const escrowTone = (percent: number) =>
-    bandTone(ESCROW_BANDS, percent, "success");
+    bandTone(ESCROW_BANDS, percent, "accent");

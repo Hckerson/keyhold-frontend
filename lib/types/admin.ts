@@ -1,4 +1,4 @@
-import type { DotTone } from "@/components/patterns/status-dot";
+import type { StatusTone } from "./ui";
 import type { Trend } from "@/lib/types/ui";
 
 export type ModerationQueueId =
@@ -17,10 +17,8 @@ export interface ModerationQueueLoad {
 
 export type QueueReadiness = "pending" | "error" | "ready";
 
-export type DecisionLaneId = ModerationQueueId | "accounts";
-
 export interface DecisionLane {
-    id: DecisionLaneId;
+    id: ModerationQueueId;
     backlog: number;
     oldestMinutes: number | null;
     share: number;
@@ -56,7 +54,7 @@ export interface LifetimeVolume {
 export interface AuditEvent {
     id: string;
     action: string;
-    tone: DotTone;
+    tone: StatusTone;
     security: boolean;
     actor: string;
     initials: string;
@@ -77,15 +75,31 @@ export interface ServiceHealth {
 
 export type PayoutState = "HELD" | "RELEASED" | "REFUNDED" | "DISPUTED";
 
+export type PayoutPhase =
+    | "disputed"
+    | "ready"
+    | "inspecting"
+    | "paid"
+    | "refunded";
+
 export interface Payout {
     id: string;
     recipient: string;
     deal: string;
+    locality: string;
+    buyer: string;
     state: PayoutState;
     gross: number;
     ageMinutes: number;
     inspectionEndsAt: string | null;
+    settledAt: string | null;
     href: string;
+}
+
+export interface PayoutConfigOptions {
+    onSettle: (payout: Payout) => void;
+    settlable: boolean;
+    now?: Date;
 }
 
 export interface PayoutStage {
@@ -136,4 +150,20 @@ export interface ConfigChange {
     from: string;
     to: string;
     ageMinutes: number;
+}
+
+export interface EscrowPosition {
+    held: number;
+    holds: number;
+    fee: number;
+    net: number;
+}
+
+export type PayoutStepState = "done" | "current" | "waiting" | "blocked";
+
+export interface PayoutStep {
+    id: "escrow" | "inspection" | "release";
+    label: string;
+    detail: string;
+    state: PayoutStepState;
 }

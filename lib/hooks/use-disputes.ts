@@ -8,14 +8,14 @@ import type {
     AddEvidenceInput,
     CreateDisputeInput,
     DisputeQuery,
-    ResolveDisputeInput,
+    SettleDisputeInput,
 } from "@/lib/validations/dispute";
 import { FEEDBACK } from "@/lib/config/feedback";
 
 export function useDisputes(input: DisputeQuery = {}, enabled = true) {
     return useQuery({
         queryKey: queryKeys.disputes.list(input),
-        queryFn: () => disputesAPI.list(input),
+        queryFn: () => disputesAPI.all(input),
         enabled,
         staleTime: STALE_TIME,
         gcTime: CACHE_TIME,
@@ -89,11 +89,18 @@ export function useSettleDispute() {
             id,
             dismiss,
             resolutionNotes,
-        }: { id: string; dismiss?: boolean } & ResolveDisputeInput) =>
+            outcome,
+        }: SettleDisputeInput) =>
             dismiss
                 ? disputesAPI.dismiss(id, { resolutionNotes })
-                : disputesAPI.resolve(id, { resolutionNotes }),
+                : disputesAPI.resolve(id, { resolutionNotes, outcome }),
         onSuccess: () =>
-            client.invalidateQueries({ queryKey: queryKeys.disputes.all }),
+            Promise.all(
+                [
+                    queryKeys.disputes.all,
+                    queryKeys.escrow.all,
+                    queryKeys.transactions.all,
+                ].map((queryKey) => client.invalidateQueries({ queryKey })),
+            ),
     });
 }

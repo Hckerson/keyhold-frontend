@@ -1,6 +1,4 @@
 import { Banknote, Clock, ShieldCheck, Wallet } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     ESCROW_STATES,
     ESCROW_STATUS_KEYS,
@@ -8,7 +6,7 @@ import {
     PURCHASE_STATES,
 } from "@/lib/config/escrow-tones";
 import { TRANSACTION_STATUSES } from "@/lib/enums/enums";
-import type { Purchase } from "@/lib/types";
+import type { Purchase, ShareDatum, StatDatum } from "@/lib/types";
 import { formatCompactUsd } from "@/lib/utils/format";
 import { percentOf, sum } from "@/lib/utils/math";
 
@@ -34,10 +32,10 @@ export const heldPurchases = (purchases: Purchase[]) =>
 export const heldValue = (purchases: Purchase[]) =>
     sum(heldPurchases(purchases).map((purchase) => purchase.escrowAmount ?? 0));
 
-export const inspectionDaysLeft = (purchase: Purchase) => {
+export const inspectionDaysLeft = (purchase: Purchase, now = new Date()) => {
     if (!purchase.inspectionEndsAt) return null;
     const remaining =
-        new Date(purchase.inspectionEndsAt).getTime() - Date.now();
+        new Date(purchase.inspectionEndsAt).getTime() - now.getTime();
     return Math.ceil(remaining / MS_PER_DAY);
 };
 
@@ -84,14 +82,14 @@ export const purchaseStats = (purchases: Purchase[]): StatDatum[] => [
         icon: ShieldCheck,
         label: "In escrow",
         value: `${heldPurchases(purchases).length}`,
-        tone: "warning",
+        tone: "neutral",
     },
     {
         id: "held-value",
         icon: Wallet,
         label: "Funds held",
         value: formatCompactUsd(heldValue(purchases)),
-        tone: "highlight",
+        tone: "neutral",
     },
     {
         id: "releasable",
@@ -105,7 +103,7 @@ export const purchaseStats = (purchases: Purchase[]): StatDatum[] => [
         icon: Banknote,
         label: "Settled",
         value: `${purchases.filter(isSettled).length}`,
-        tone: "success",
+        tone: "accent",
     },
 ];
 

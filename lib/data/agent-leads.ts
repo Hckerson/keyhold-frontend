@@ -1,16 +1,14 @@
 import { CalendarClock, Handshake, Inbox, Users, Wallet } from "lucide-react";
-import type { ShareDatum } from "@/components/patterns/share-row";
-import type { StatDatum } from "@/components/patterns/stat-cell";
 import {
     LEAD_STAGES,
     LEAD_STAGE_KEYS,
     LEAD_TEMPERATURES,
     LEAD_TEMPERATURE_KEYS,
 } from "@/lib/config/lead-tones";
-import type { SelectOption } from "@/components/ui/forms/select";
 import type { Property } from "@/lib/validations/property";
 import type { Lead, LeadStageFilter, LeadTemperature } from "@/lib/types/lead";
 import { formatCompactUsd, percentOf, sum } from "@/lib/utils";
+import type { SelectOption, ShareDatum, StatDatum } from "@/lib/types";
 
 export const LEAD_STAGE_FILTERS: { id: LeadStageFilter; label: string }[] = [
     { id: "all", label: "All" },
@@ -127,28 +125,28 @@ export const leadStats = (leads: Lead[]): StatDatum[] => {
             icon: Inbox,
             label: "Awaiting reply",
             value: `${counts.pending}`,
-            tone: "warning",
+            tone: "neutral",
         },
         {
             id: "value",
             icon: Wallet,
             label: "Open value",
             value: formatCompactUsd(openValue(leads)),
-            tone: "info",
+            tone: "neutral",
         },
         {
             id: "viewings",
             icon: CalendarClock,
             label: "Viewings",
             value: `${sum(leads.map((lead) => lead.viewings))}`,
-            tone: "highlight",
+            tone: "neutral",
         },
         {
             id: "offers",
             icon: Handshake,
             label: "Offers",
             value: `${sum(leads.map((lead) => lead.offers))}`,
-            tone: "success",
+            tone: "accent",
         },
     ];
 };

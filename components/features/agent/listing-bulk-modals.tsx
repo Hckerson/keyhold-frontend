@@ -2,14 +2,14 @@
 
 import { ListingBulkDeleteModal } from "@/components/features/agent/listing-bulk-delete-modal";
 import { ListingBulkStatusModal } from "@/components/features/agent/listing-bulk-status-modal";
-import {
-    BULK_TRANSITIONS,
-    allowsBulk,
-    type BulkStatusChange,
-    type BulkStatusTarget,
-} from "@/lib/data/agent-listings";
+import { BULK_TRANSITIONS } from "@/lib/config/listing-bulk";
+import { allowsBulk } from "@/lib/data/agent-listings";
 import type { useConfirmation } from "@/lib/hooks/use-confirmation";
-import type { ManagedListing } from "@/lib/types";
+import type {
+    BulkStatusChange,
+    BulkStatusTarget,
+    ManagedListing,
+} from "@/lib/types";
 
 export interface ListingBulkModalsProps {
     listings: ManagedListing[];

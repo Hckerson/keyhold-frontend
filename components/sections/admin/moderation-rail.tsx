@@ -14,7 +14,7 @@ export interface ModerationRailProps {
 
 export function ModerationRail({ focus, ...inspector }: ModerationRailProps) {
     return (
-        <div className="min-w-0 self-start">
+        <div className="console-rail min-w-0 self-start">
             <ModerationInspector listing={focus} {...inspector} />
         </div>
     );

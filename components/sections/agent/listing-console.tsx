@@ -16,10 +16,9 @@ import {
     listingsSummary,
     peakViews,
     rankListings,
-    type BulkAction,
-    type BulkStatusChange,
-    type BulkStatusTarget,
 } from "@/lib/data/agent-listings";
+import type { BulkAction } from "@/lib/config/listing-bulk";
+import type { BulkStatusChange, BulkStatusTarget } from "@/lib/types";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { useSession } from "@/lib/hooks/use-session";
 import { useConfirmation } from "@/lib/hooks/use-confirmation";
@@ -27,6 +26,8 @@ import { useListingSelection } from "@/lib/hooks/use-listing-selection";
 import {
     useBulkDeleteProperties,
     useBulkUpdatePropertyStatus,
+} from "@/lib/hooks/use-bulk-properties";
+import {
     usePromoteProperty,
     useSellerProperties,
 } from "@/lib/hooks/use-properties";

@@ -1,104 +1,142 @@
-import { CheckCircle2, Clock3, XCircle, type LucideIcon } from "lucide-react";
-import type { BadgeTone } from "@/lib/types";
-import type { VerificationStatus as ApiVerificationStatus } from "@/lib/enums/enums";
+import { VERIFICATION_STATES } from "@/lib/config/verification-tones";
+import {
+    byReviewOrder,
+    decidedOn,
+    openFor,
+    reviewMoment,
+    reviewReading,
+} from "@/lib/data/review-queue";
+import { formatFullDate, mailHref, telHref } from "@/lib/utils";
+import type {
+    Fact,
+    ReviewClock,
+    ReviewOutcomeView,
+    ReviewQueueItem,
+    VerificationFilterKey,
+    VerificationRequest,
+} from "@/lib/types";
 
-export type VerificationStatus = ApiVerificationStatus;
-export type VerificationFilterKey = "all" | VerificationStatus;
-export type DocumentState = "verified" | "review" | "missing";
-export type VerificationDecisionMode = "reject";
-export type VerificationActionMode = VerificationDecisionMode | "approve";
+const ALL: VerificationFilterKey = "all";
+const READING = { open: "waiting", none: "Nothing is waiting for review" };
 
-export interface VerificationDocument {
-    label: string;
-    detail: string;
-    state: DocumentState;
-    url: string | null;
-}
+export const VERIFICATION_COPY = {
+    title: "Identity Verifications",
+    lede: "Match each applicant's document to their selfie before they can list or buy",
+    documentHeading: "Document",
+    applicantHeading: "Applicant",
+    documentFrame: "Document image",
+    faceFrame: "Selfie",
+    noFace: "No selfie submitted",
+    noFaceHint: "Nothing to hold the document photo against",
+    openFull: "Open full size",
+    profile: "Open profile",
+    reasonHeading: "Reason given",
+    emptyTitle: "Queue clear",
+    emptyLede: "No identity documents match this view.",
+} as const;
 
-export interface VerificationRequest {
-    id: string;
-    userId: string;
-    name: string;
-    email: string;
-    phone: string;
-    agency: string;
-    documentType: string;
-    documentNumber: string;
-    issuerCountry: string;
-    status: VerificationStatus;
-    submittedDate: string;
-    waitingDays: number;
-    memberSince: string;
-    documents: VerificationDocument[];
-    note?: string;
-    noteKind?: VerificationDecisionMode;
-}
+const clockOf = (request: VerificationRequest): ReviewClock => ({
+    open: request.status === "PENDING",
+    openedAt: request.submittedAt,
+    decidedAt: request.decidedAt,
+});
 
-export interface VerificationAction {
-    label: string;
-    destructive?: boolean;
-    mode: VerificationActionMode;
-}
-
-export interface VerificationDecision {
-    mode: VerificationDecisionMode;
-    id: string;
-}
-
-export const statusMeta: Record<
-    VerificationStatus,
-    { tone: BadgeTone; label: string }
-> = {
-    PENDING: { tone: "warning", label: "Pending" },
-    VERIFIED: { tone: "success", label: "Verified" },
-    REJECTED: { tone: "error", label: "Rejected" },
+export const verificationCounts = (items: VerificationRequest[]) => {
+    const counts: Record<VerificationFilterKey, number> = {
+        all: items.length,
+        PENDING: 0,
+        VERIFIED: 0,
+        REJECTED: 0,
+    };
+    for (const item of items) counts[item.status] += 1;
+    return counts;
 };
 
-export const documentMeta: Record<
-    DocumentState,
-    { icon: LucideIcon; cls: string; label: string }
-> = {
-    verified: { icon: CheckCircle2, cls: "text-success", label: "Verified" },
-    review: { icon: Clock3, cls: "text-warning", label: "In review" },
-    missing: { icon: XCircle, cls: "text-error", label: "Missing" },
+export const verificationsIn = (
+    items: VerificationRequest[],
+    filter: VerificationFilterKey,
+) =>
+    items
+        .filter((item) => filter === ALL || item.status === filter)
+        .sort((a, b) => byReviewOrder(clockOf(a), clockOf(b)));
+
+export const verificationReading = (
+    items: VerificationRequest[],
+    now = new Date(),
+) => reviewReading(items.map(clockOf), READING, now);
+
+export const verificationQueueItems = (
+    requests: VerificationRequest[],
+    mixed: boolean,
+    now = new Date(),
+): ReviewQueueItem[] =>
+    requests.map((request) => ({
+        id: request.id,
+        title: request.name,
+        caption: [request.documentType, request.role]
+            .filter(Boolean)
+            .join(" · "),
+        moment: reviewMoment(clockOf(request), now),
+        status:
+            mixed && request.status !== "PENDING"
+                ? VERIFICATION_STATES[request.status]
+                : undefined,
+    }));
+
+export const waitingLine = (request: VerificationRequest, now = new Date()) =>
+    `Waiting ${openFor(clockOf(request), now)}`;
+
+export const verificationOutcome = (
+    request: VerificationRequest,
+): ReviewOutcomeView => ({
+    ...VERIFICATION_STATES[request.status],
+    date: decidedOn(clockOf(request)),
+    noteHeading: VERIFICATION_COPY.reasonHeading,
+    note: request.reason,
+});
+
+export const applicantLine = (request: VerificationRequest) =>
+    [request.role, request.agency].filter(Boolean).join(" · ");
+
+const expiryFact = (expiresAt: string, now: Date): Fact => {
+    const expired = new Date(expiresAt).getTime() < now.getTime();
+    return {
+        label: expired ? "Expired" : "Valid until",
+        value: formatFullDate(new Date(expiresAt)),
+        alarm: expired,
+    };
 };
 
-export const noteMeta: Record<
-    VerificationDecisionMode,
-    { title: string; variant: "warning" | "error" }
-> = {
-    reject: { title: "Rejection reason", variant: "error" },
-};
-
-export const VERIFICATION_FILTERS: {
-    id: VerificationFilterKey;
-    label: string;
-}[] = [
-    { id: "all", label: "All" },
-    { id: "PENDING", label: "Pending" },
-    { id: "VERIFIED", label: "Verified" },
-    { id: "REJECTED", label: "Rejected" },
+export const documentFacts = (
+    request: VerificationRequest,
+    now = new Date(),
+): Fact[] => [
+    { label: "Type", value: request.documentType },
+    { label: "Number", value: request.documentNumber, mono: true },
+    { label: "Issued by", value: request.issuer },
+    ...(request.expiresAt ? [expiryFact(request.expiresAt, now)] : []),
+    {
+        label: "Submitted",
+        value: formatFullDate(new Date(request.submittedAt)),
+    },
 ];
 
-export const actionsByStatus: Record<VerificationStatus, VerificationAction[]> =
+export const applicantFacts = (request: VerificationRequest): Fact[] => [
+    ...(request.licence
+        ? [{ label: "Licence", value: request.licence, mono: true }]
+        : []),
     {
-        PENDING: [
-            { label: "Approve identity", mode: "approve" },
-            { label: "Reject", destructive: true, mode: "reject" },
-        ],
-        VERIFIED: [],
-        REJECTED: [],
-    };
-
-export const DECISION_COPY: Record<
-    VerificationDecisionMode,
-    { title: string; label: string; placeholder: string; submit: string }
-> = {
-    reject: {
-        title: "Reject verification",
-        label: "Reason for rejection",
-        placeholder:
-            "Explain which requirement the document fails. This reason is stored with the submission and shown to the applicant.",
-        submit: "Reject document",
+        label: "Member since",
+        value: formatFullDate(new Date(request.memberSince)),
     },
-};
+    { label: "Email", value: request.email, href: mailHref(request.email) },
+    ...(request.phone
+        ? [
+              {
+                  label: "Phone",
+                  value: request.phone,
+                  href: telHref(request.phone),
+              },
+          ]
+        : []),
+];

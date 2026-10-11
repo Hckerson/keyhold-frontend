@@ -2,7 +2,7 @@ import { Panel } from "@/components/ui/panel";
 import { PanelInset } from "@/components/ui/panel-inset";
 import { ShareList } from "@/components/patterns/share-list";
 import { AlertsRecency } from "@/components/sections/dashboard/alerts-recency";
-import { typeShares } from "@/lib/data/alerts";
+import { typeShares } from "@/lib/data/alerts-shares";
 import type { Alert } from "@/lib/types";
 
 const SIGNAL_TITLE = "Signal Mix";

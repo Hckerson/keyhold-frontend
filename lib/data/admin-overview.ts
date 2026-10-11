@@ -1,6 +1,5 @@
-import type { ColumnSeries } from "@/components/ui/charts/column-chart";
 import { DEFAULT_COMMISSION_RATE } from "@/lib/constants";
-import type { ModerationQueueLoad, MonthDelta } from "@/lib/types";
+import type { ColumnSeries, DecisionLane, MonthDelta } from "@/lib/types";
 import type { DisputeCounts } from "@/lib/validations/dispute";
 import type { FlagCounts } from "@/lib/validations/flag";
 import type { KycCounts } from "@/lib/validations/kyc";
@@ -26,32 +25,60 @@ const MONTH_LABELS = [
 export const monthLabel = (key: string) =>
     MONTH_LABELS[Number(key.slice(5, 7)) - 1];
 
-const ageOf = (iso: string | null) => (iso ? minutesSince(iso) : 0);
+const monthIndex = (key: string) =>
+    Number(key.slice(0, 4)) * MONTH_LABELS.length + Number(key.slice(5, 7)) - 1;
+
+const monthKey = (index: number) =>
+    `${Math.floor(index / MONTH_LABELS.length)}-${String((index % MONTH_LABELS.length) + 1).padStart(2, "0")}`;
+
+export const completeMonths = (
+    points: GrowthPoint[],
+    today = new Date(),
+): GrowthPoint[] => {
+    const current =
+        today.getUTCFullYear() * MONTH_LABELS.length + today.getUTCMonth();
+    return points.filter((point) => monthIndex(point.name) < current);
+};
+
+export const fillMonths = (points: GrowthPoint[]): GrowthPoint[] => {
+    if (points.length === 0) return points;
+    const values = new Map(points.map((point) => [point.name, point.value]));
+    const first = monthIndex(points[0].name);
+    const span = monthIndex(points[points.length - 1].name) - first + 1;
+
+    return Array.from({ length: span }, (_, offset) => {
+        const name = monthKey(first + offset);
+        return { name, value: values.get(name) ?? 0 };
+    });
+};
+
+const ageOf = (iso: string | null | undefined) =>
+    iso ? minutesSince(iso) : null;
 
 export const moderationLoad = (
     flags: FlagCounts | undefined,
     kyc: KycCounts | undefined,
     disputes: DisputeCounts | undefined,
-): ModerationQueueLoad[] => [
+): Omit<DecisionLane, "share">[] => [
     {
         id: "verifications",
         backlog: kyc?.pending ?? 0,
-        oldestMinutes: ageOf(kyc?.oldestPendingAt ?? null),
+        oldestMinutes: ageOf(kyc?.oldestPendingAt),
     },
     {
         id: "listings",
         backlog: flags?.byType.properties ?? 0,
-        oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
+        oldestMinutes: null,
     },
     {
         id: "flags",
         backlog: (flags?.byType.users ?? 0) + (flags?.byType.messages ?? 0),
-        oldestMinutes: ageOf(flags?.oldestActiveAt ?? null),
+        oldestMinutes: ageOf(flags?.oldestActiveAt),
     },
     {
         id: "disputes",
         backlog: disputes?.byStatus.OPEN ?? 0,
-        oldestMinutes: ageOf(disputes?.oldestOpenAt ?? null),
+        oldestMinutes: ageOf(disputes?.oldestOpenAt),
     },
 ];
 
@@ -78,7 +105,7 @@ export interface GmvReading {
 export const monthOverMonth = (points: GrowthPoint[]): MonthDelta | null => {
     const latest = points[points.length - 1]?.value ?? 0;
     const previous = points[points.length - 2]?.value ?? 0;
-    if (previous <= 0) return null;
+    if (previous <= 0 || latest === previous) return null;
 
     const change = Math.round(((latest - previous) / previous) * 100);
 

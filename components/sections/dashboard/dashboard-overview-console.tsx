@@ -9,13 +9,17 @@ import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
     buyerActivityFrom,
+    upcomingViewingsFrom,
+} from "@/lib/data/dashboard-overview-activity";
+import {
     buyerStats,
-    journeyTasksFrom,
     offerBookFrom,
     offerPositionsFrom,
-    triggeredAlertsFrom,
-    upcomingViewingsFrom,
 } from "@/lib/data/dashboard-overview";
+import {
+    journeyTasksFrom,
+    triggeredAlertsFrom,
+} from "@/lib/data/dashboard-overview-actions";
 import { useMyInterests } from "@/lib/hooks/use-connections";
 import { useNotifications } from "@/lib/hooks/use-notifications";
 import { useUnreadMessageCount } from "@/lib/hooks/use-messages";
@@ -74,6 +78,7 @@ export function DashboardOverviewConsole() {
                     positions={positions}
                     viewings={upcomingViewingsFrom(items)}
                     activity={buyerActivityFrom(items)}
+                    pending={connections.isPending}
                 />
                 <DashboardOverviewRail
                     tasks={journeyTasksFrom(
@@ -82,6 +87,7 @@ export function DashboardOverviewConsole() {
                         purchases.data ?? [],
                     )}
                     alerts={alerts}
+                    pending={notifications.isPending}
                 />
             </div>
         </div>

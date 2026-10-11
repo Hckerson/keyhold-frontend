@@ -6,11 +6,10 @@ import { Checkbox } from "@/components/ui/forms/checkbox";
 import {
     alignClass,
     emphasisClass,
-    type ColumnEmphasis,
-    type DataTableColumn,
-    type RevealMode,
+    WIDE_CELL,
 } from "@/components/patterns/data-table-types";
 import { cn } from "@/lib/utils";
+import type { ColumnEmphasis, DataTableColumn, RevealMode } from "@/lib/types";
 
 export interface DataTableRowProps<T> {
     row: T;
@@ -56,14 +55,14 @@ export function DataTableRow<T>({
             <tr
                 onClick={(event) => onRowClick(event, rowId)}
                 className={cn(
-                    "ease-smooth transition-colors duration-200",
+                    "group ease-smooth h-10 transition-colors duration-200",
                     revealing && "cursor-pointer",
-                    open ? "bg-background-alt" : "hover:bg-background-alt/60",
+                    open ? "bg-background-alt" : "hover:bg-background-muted",
                     rowClassName?.(row),
                 )}
             >
                 {selectable && (
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-0">
                         <Checkbox
                             aria-label={`Select row ${rowId}`}
                             checked={selected}
@@ -76,9 +75,10 @@ export function DataTableRow<T>({
                     <td
                         key={column.id}
                         className={cn(
-                            "px-3 py-2",
+                            "px-3 py-0",
                             emphasisClass[emphasisOf(column)],
                             alignClass[column.align ?? "left"],
+                            column.wide && WIDE_CELL,
                         )}
                     >
                         {column.render(row)}
@@ -86,7 +86,7 @@ export function DataTableRow<T>({
                 ))}
 
                 {revealing && (
-                    <td className="px-3 py-2 text-right">
+                    <td className="px-3 py-0 text-right">
                         <button
                             type="button"
                             data-reveal-row=""
@@ -105,7 +105,12 @@ export function DataTableRow<T>({
                                     ? `Details for ${rowLabel(row)}`
                                     : "Show details"
                             }
-                            className="text-text-muted hover:text-text focus-visible:ring-accent ease-smooth grid size-5 place-items-center rounded-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:outline-none"
+                            className={cn(
+                                "text-text-muted hover:text-text focus-visible:ring-accent ease-smooth grid size-5 place-items-center rounded-sm transition duration-200 focus-visible:ring-2 focus-visible:outline-none",
+                                reveal === "panel" &&
+                                    !open &&
+                                    "opacity-0 group-hover:opacity-100 focus-visible:opacity-100",
+                            )}
                         >
                             {reveal === "inline" ? (
                                 <ChevronDown

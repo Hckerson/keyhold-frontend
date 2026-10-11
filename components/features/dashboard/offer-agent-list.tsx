@@ -1,7 +1,5 @@
-import {
-    OfferAgentRow,
-    type OfferAgentShare,
-} from "@/components/features/dashboard/offer-agent-row";
+import { OfferAgentRow } from "@/components/features/dashboard/offer-agent-row";
+import type { OfferAgentShare } from "@/lib/types";
 
 export interface OfferAgentListProps {
     shares: OfferAgentShare[];

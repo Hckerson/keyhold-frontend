@@ -8,7 +8,7 @@ const deltaChipVariants = cva(
     {
         variants: {
             tone: {
-                success: "bg-success/10 text-success",
+                success: "bg-accent/10 text-accent",
                 error: "bg-error/10 text-error",
             },
             size: {

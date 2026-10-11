@@ -19,10 +19,10 @@ const typeIcon: Record<ActivityType, LucideIcon> = {
 };
 
 const typeTone: Record<ActivityType, ChartTone> = {
-    viewing: "info",
-    offer: "highlight",
+    viewing: "neutral",
+    offer: "neutral",
     message: "neutral",
-    showing: "info",
+    showing: "neutral",
     listing: "accent",
 };
 
