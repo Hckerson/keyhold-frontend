@@ -1,12 +1,11 @@
 "use client";
 
 import { Flag } from "lucide-react";
-import { EmptyState } from "@/components/ui/empty-state";
 import { FlagDecisionModal } from "@/components/features/admin/flag-decision-modal";
 import { FlagReviewPane } from "@/components/features/admin/flag-review-pane";
 import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
-import { ReviewQueue } from "@/components/patterns/review-queue";
+import { ReviewSplit } from "@/components/patterns/review-split";
 import { AdminFlagsHeader } from "@/components/sections/admin/admin-flags-header";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import { FLAG_COPY, flagQueueItems, flagReading } from "@/lib/data/admin-flags";
@@ -35,35 +34,26 @@ export function AdminFlagsConsole() {
                 onFilterChange={queue.changeFilter}
             />
 
-            {active ? (
-                <div className="review-split review-split--slim items-start gap-3">
-                    <div className="review-rail">
-                        <ReviewQueue
-                            items={flagQueueItems(
-                                queue.visible,
-                                queue.filter === "all",
-                            )}
-                            selectedId={active.id}
-                            onSelect={queue.setSelectedId}
-                        />
-                    </div>
-                    <div className="review-pane">
-                        <FlagReviewPane
-                            report={active}
-                            busy={queue.settling}
-                            onAction={(mode) =>
-                                queue.requestSettle(mode, active.id)
-                            }
-                        />
-                    </div>
-                </div>
-            ) : (
-                <EmptyState
-                    icon={Flag}
-                    title={FLAG_COPY.emptyTitle}
-                    description={FLAG_COPY.emptyLede}
-                />
-            )}
+            <ReviewSplit
+                items={flagQueueItems(queue.visible, queue.filter === "all")}
+                selectedId={active?.id}
+                onSelect={queue.setSelectedId}
+                empty={{
+                    icon: Flag,
+                    title: FLAG_COPY.emptyTitle,
+                    description: FLAG_COPY.emptyLede,
+                }}
+            >
+                {active && (
+                    <FlagReviewPane
+                        report={active}
+                        busy={queue.settling}
+                        onAction={(mode) =>
+                            queue.requestSettle(mode, active.id)
+                        }
+                    />
+                )}
+            </ReviewSplit>
 
             <FlagDecisionModal
                 mode={queue.decision?.mode}

@@ -4,7 +4,6 @@ import { m } from "motion/react";
 import { Avatar } from "@/components/ui/avatar";
 import { UserActivityMark } from "@/components/features/admin/user-activity-mark";
 import { UserBookMark } from "@/components/features/admin/user-book-mark";
-import { UserRowActions } from "@/components/features/admin/user-row-actions";
 import { UserStatusMark } from "@/components/features/admin/user-status-mark";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { LIST_ROW_MOTION } from "@/lib/config/motion";
@@ -16,22 +15,15 @@ import type { ManagedUser } from "@/lib/types";
 export interface UserDirectoryRowProps {
     user: ManagedUser;
     onOpen: (id: string) => void;
-    onSuspend: (id: string) => void;
-    reactivatingId?: string;
-    onReactivate: (id: string) => void;
 }
 
-export function UserDirectoryRow({
-    user,
-    onOpen,
-    ...actions
-}: UserDirectoryRowProps) {
+export function UserDirectoryRow({ user, onOpen }: UserDirectoryRowProps) {
     const muted = user.status === "deleted" && "opacity-60";
     const role = USER_ROLES[user.role];
 
     return (
         <m.li {...LIST_ROW_MOTION} className="overflow-hidden">
-            <div className="queue-grid queue-grid--accounts reveal-scope hover:bg-background-muted ease-smooth relative h-11 rounded-md px-2 transition-colors duration-200">
+            <div className="queue-grid queue-grid--accounts hover:bg-background-muted ease-smooth h-11 rounded-md px-2 transition-colors duration-200">
                 <button
                     type="button"
                     onClick={() => onOpen(user.id)}
@@ -83,7 +75,6 @@ export function UserDirectoryRow({
                 >
                     {joinedLabel(user)}
                 </span>
-                <UserRowActions user={user} {...actions} />
             </div>
         </m.li>
     );

@@ -1,5 +1,5 @@
 ---
-name: horizon-grove-real-estate
+name: keyhold-real-estate
 description: Use this skill when designing luxury real estate websites. It provides a clean, high-contrast aesthetic with a modern, exclusive feel, perfect for showcasing high-end properties. The design utilizes the 'acumin-pro' font family for clear typography and a palette featuring primary blue and deep ink colors.
 packages:
     - name: clsx
@@ -30,7 +30,7 @@ packages:
 ---
 
 ```yaml
-brand: Horizon Grove
+brand: Keyhold
 mood:
     An atmosphere of serene, architectural luxury and modern exclusivity, communicated
     through a clean, high-contrast aesthetic.
@@ -178,7 +178,7 @@ components:
 
 ## Visual Theme & Atmosphere
 
-The Horizon Grove design system projects an aura of clean, architectural luxury. It is modern, refined, and exclusive, built on a foundation of high-contrast visuals, generous whitespace, and exceptionally sharp typography. The mood is serene and confident, using a minimalist color palette to let the content—stunning architectural photography and compelling descriptions—take center stage. The aesthetic feels less like a traditional website and more like a high-end architectural journal or a gallery exhibition. Every element is placed with intention, contributing to a sense of calm and order that befits a luxury real estate brand.
+The Keyhold design system projects an aura of clean, architectural luxury. It is modern, refined, and exclusive, built on a foundation of high-contrast visuals, generous whitespace, and exceptionally sharp typography. The mood is serene and confident, using a minimalist color palette to let the content—stunning architectural photography and compelling descriptions—take center stage. The aesthetic feels less like a traditional website and more like a high-end architectural journal or a gallery exhibition. Every element is placed with intention, contributing to a sense of calm and order that befits a luxury real estate brand.
 
 The interaction design is subtle but responsive, with smooth transitions and satisfying feedback that reinforces the feeling of quality. Elevation is used sparingly via soft shadows like `{shadows.card}`, giving key interface elements a gentle lift off the `{colors.canvas}` background. The primary action color, `{colors.primary}`, is a vibrant, modern blue that provides a confident splash of color for calls-to-action, drawing the user's eye without overwhelming the sophisticated, neutral environment.
 
@@ -194,7 +194,7 @@ Key Characteristics:
 
 ## Color Usage Rules
 
-The Horizon Grove color system is intentionally minimal to maintain a sophisticated and focused user experience. An agent must build interfaces primarily using the core grayscale palette and the single primary accent. The core working set is `{colors.ink}` for text, `{colors.paper}` for elevated surfaces, `{colors.canvas}` for the base background, and `{colors.primary}` for key actions.
+The Keyhold color system is intentionally minimal to maintain a sophisticated and focused user experience. An agent must build interfaces primarily using the core grayscale palette and the single primary accent. The core working set is `{colors.ink}` for text, `{colors.paper}` for elevated surfaces, `{colors.canvas}` for the base background, and `{colors.primary}` for key actions.
 
 - **Primary Action Color:** `{colors.primary}` is reserved for the most important calls-to-action (CTAs) on any given screen. Use it for primary buttons, active navigation states, and input focus rings. A single viewport should contain at most one or two elements using `{colors.primary}` as a solid background fill to preserve its impact. Hover and pressed states should use `{colors.primary-bright}` and `{colors.primary-deep}` respectively.
 - **Surface & Backgrounds:** The default page background is always `{colors.canvas}`. For content modules, cards, and modal dialogs that need to appear elevated above the canvas, use `{colors.paper}`. The slightly darker `{colors.cloud}` can be used for large, subtle background fields or to differentiate alternating bands in long data tables, but `{colors.canvas}` and `{colors.paper}` should suffice for 95% of layouts.
@@ -210,16 +210,16 @@ The typographic system is built on a strict two-font hierarchy to ensure clarity
 
 The scale is designed to provide clear levels of importance, with generous line height ensuring excellent readability, especially for content-heavy pages.
 
-| Role            | Token                     | Use                                                                                                          |
-| --------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| Display XL      | `{typography.display-xl}` | Reserved for the primary brand name or the single most important headline on a page (e.g., "HORIZON GROVE"). |
-| Display LG      | `{typography.display-lg}` | For major section titles and hero headings. Sets a strong, confident tone.                                   |
-| Body Large      | `{typography.body-lg}`    | For introductory paragraphs or emphasized blocks of text to provide a richer reading experience.             |
-| Body Medium     | `{typography.body-md}`    | The default style for all standard paragraph text. Optimized for long-form reading.                          |
-| Caption         | `{typography.caption-md}` | For metadata, image captions, legal disclaimers, and other small informational text.                         |
-| Navigation Item | `{typography.nav-item}`   | Specifically for items in the main site navigation, ensuring they are clear and legible.                     |
-| Button          | `{typography.button-md}`  | For all button labels. The heavier weight and specific size ensure it stands out.                            |
-| Link            | `{typography.link-md}`    | For standalone or inline text links, with a slightly heavier weight than body text for emphasis.             |
+| Role            | Token                     | Use                                                                                                    |
+| --------------- | ------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Display XL      | `{typography.display-xl}` | Reserved for the primary brand name or the single most important headline on a page (e.g., "KEYHOLD"). |
+| Display LG      | `{typography.display-lg}` | For major section titles and hero headings. Sets a strong, confident tone.                             |
+| Body Large      | `{typography.body-lg}`    | For introductory paragraphs or emphasized blocks of text to provide a richer reading experience.       |
+| Body Medium     | `{typography.body-md}`    | The default style for all standard paragraph text. Optimized for long-form reading.                    |
+| Caption         | `{typography.caption-md}` | For metadata, image captions, legal disclaimers, and other small informational text.                   |
+| Navigation Item | `{typography.nav-item}`   | Specifically for items in the main site navigation, ensuring they are clear and legible.               |
+| Button          | `{typography.button-md}`  | For all button labels. The heavier weight and specific size ensure it stands out.                      |
+| Link            | `{typography.link-md}`    | For standalone or inline text links, with a slightly heavier weight than body text for emphasis.       |
 
 **Typography Principles:**
 
@@ -231,7 +231,7 @@ The scale is designed to provide clear levels of importance, with generous line 
 
 ## Component Patterns
 
-Components are the reusable building blocks of the Horizon Grove interface. They are composed from the base tokens and should be used consistently to maintain visual and interactive harmony.
+Components are the reusable building blocks of the Keyhold interface. They are composed from the base tokens and should be used consistently to maintain visual and interactive harmony.
 
 **Primary Button**
 The primary button is the key call-to-action element. It is composed using a `{colors.primary}` background, `{colors.on-primary}` text, and a `{rounded.pill}` shape. Its typography is `{typography.button-md}`, and it has a distinctive `{shadows.glow-primary}`. Padding is `{spacing.sm}` top/bottom and `{spacing.lg}` left/right. On interaction, it must use `cursor: pointer`. When a user hovers, the button smoothly scales up and its background color shifts to `{colors.primary-bright}` over `{motion.transition-default}`. This button should be used sparingly for the most important actions, like "Contact Agent" or "Schedule a Viewing".
@@ -250,7 +250,7 @@ Standard hypertext links within a body of text are styled with `{colors.link}` a
 
 ## Layout & Spacing
 
-The layout of Horizon Grove is defined by a commitment to structure, rhythm, and generous negative space. Every dimension, from the smallest padding to the largest section margin, must be derived from the `{spacing.*}` token scale, which is based on a 4px grid. This creates an underlying visual harmony across the entire application.
+The layout of Keyhold is defined by a commitment to structure, rhythm, and generous negative space. Every dimension, from the smallest padding to the largest section margin, must be derived from the `{spacing.*}` token scale, which is based on a 4px grid. This creates an underlying visual harmony across the entire application.
 
 The primary layout structure is a 12-column flexible grid system. On desktop viewports, content typically resides within a maximum width container of 1280px, centered on the page. Gutters between grid columns should be `{spacing.xl}` (32px) to ensure content blocks are clearly separated.
 
@@ -286,7 +286,7 @@ Image galleries and property listings should be arranged in a clean grid, using 
 
 ## Responsive Behavior
 
-The Horizon Grove design system is fluid and adaptive, designed to provide an optimal experience across all device sizes. Layouts, typography, and interactive targets must adjust according to the viewport.
+The Keyhold design system is fluid and adaptive, designed to provide an optimal experience across all device sizes. Layouts, typography, and interactive targets must adjust according to the viewport.
 
 | Breakpoint    | Dimensions      | Behavior                                                                                                                                                                     |
 | ------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -304,7 +304,7 @@ The Horizon Grove design system is fluid and adaptive, designed to provide an op
 
 ## Iteration Guide
 
-When building or iterating on a UI for Horizon Grove, follow these steps to ensure brand consistency and quality.
+When building or iterating on a UI for Keyhold, follow these steps to ensure brand consistency and quality.
 
 1.  **Establish the Foundation:** Begin every new layout with a `{colors.canvas}` background. Define your vertical rhythm using `{spacing.section}` to separate the main logical blocks of the page.
 2.  **Define Typographic Hierarchy:** Place your main headline using `{typography.display-xl}` or `{typography.display-lg}` with `{colors.ink}`. Populate text content using `{typography.body-md}` or `{typography.body-lg}` for readability. Ensure all typography adheres to the defined hierarchy.

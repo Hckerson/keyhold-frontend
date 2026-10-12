@@ -17,7 +17,7 @@ const triggerVariants = cva(
     {
         variants: {
             size: {
-                sm: "h-8 px-2.5 text-sm",
+                sm: "h-8 px-2.5 text-xs",
                 lg: "h-11 px-3 text-sm",
             },
             variant: {
@@ -34,7 +34,7 @@ const optionVariants = cva(
     {
         variants: {
             size: {
-                sm: "text-sm",
+                sm: "text-xs",
                 lg: "h-9 px-2.5 text-sm",
             },
         },
@@ -49,6 +49,7 @@ export interface SelectProps<T extends string> extends VariantProps<
     value: T;
     onChange: (next: T) => void;
     label: string;
+    id?: string;
     icon?: LucideIcon;
     align?: "start" | "end";
     disabled?: boolean;
@@ -60,6 +61,7 @@ export function Select<T extends string>({
     value,
     onChange,
     label,
+    id,
     icon: Icon,
     align = "start",
     disabled,
@@ -78,6 +80,7 @@ export function Select<T extends string>({
                 }}
             >
                 <BaseSelect.Trigger
+                    id={id}
                     aria-label={label}
                     className={cn(triggerVariants({ size, variant }))}
                 >

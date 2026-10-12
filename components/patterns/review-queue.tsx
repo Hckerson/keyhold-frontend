@@ -11,9 +11,20 @@ export interface ReviewQueueProps {
     items: ReviewQueueItem[];
     selectedId: string;
     onSelect: (id: string) => void;
+    onPick?: (id: string) => void;
 }
 
-export function ReviewQueue({ items, selectedId, onSelect }: ReviewQueueProps) {
+export function ReviewQueue({
+    items,
+    selectedId,
+    onSelect,
+    onPick,
+}: ReviewQueueProps) {
+    const pick = (id: string) => {
+        onSelect(id);
+        onPick?.(id);
+    };
+
     const step = (event: KeyboardEvent<HTMLUListElement>) => {
         const delta = ARROW_STEPS[event.key];
         if (delta === undefined) return;
@@ -41,7 +52,7 @@ export function ReviewQueue({ items, selectedId, onSelect }: ReviewQueueProps) {
                         <ReviewQueueRow
                             item={item}
                             selected={item.id === selectedId}
-                            onSelect={onSelect}
+                            onSelect={pick}
                         />
                     </m.li>
                 ))}

@@ -1,20 +1,13 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ReviewQueue } from "@/components/patterns/review-queue";
-import type { ReviewQueueItem } from "@/lib/types";
-
-const ITEMS: ReviewQueueItem[] = ["Ada", "Ben", "Cy"].map((name) => ({
-    id: name,
-    title: name,
-    caption: "Passport · Buyer",
-    moment: "2d",
-}));
+import { REVIEW_ITEMS } from "@/lib/data/__fixtures__/review";
 
 const press = (key: string, selectedId = "Ada") => {
     const onSelect = vi.fn();
     render(
         <ReviewQueue
-            items={ITEMS}
+            items={REVIEW_ITEMS}
             selectedId={selectedId}
             onSelect={onSelect}
         />,

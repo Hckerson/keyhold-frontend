@@ -98,7 +98,6 @@ export interface Payout {
 
 export interface PayoutConfigOptions {
     onSettle: (payout: Payout) => void;
-    settlable: boolean;
     now?: Date;
 }
 
@@ -108,13 +107,6 @@ export interface PayoutStage {
     amount: number;
     oldestMinutes: number;
 }
-
-export type PolicyDomain =
-    | "moderation"
-    | "access"
-    | "payout"
-    | "availability"
-    | "platform";
 
 export type PolicyEnforcement = "blocking" | "advisory";
 
@@ -135,21 +127,11 @@ export type PolicyState = Record<PolicySwitchId, boolean>;
 export interface PolicySwitch {
     id: PolicySwitchId;
     group: PolicyGroup;
-    domain: PolicyDomain;
     title: string;
     caption: string;
     enforcement: PolicyEnforcement;
-    reach: number;
-}
-
-export interface ConfigChange {
-    id: string;
-    actor: string;
-    role: string;
-    field: string;
-    from: string;
-    to: string;
-    ageMinutes: number;
+    warnOn?: string;
+    warnOff?: string;
 }
 
 export interface EscrowPosition {
