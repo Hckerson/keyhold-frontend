@@ -10,3 +10,11 @@ export interface MaintenanceAction {
     failure: string;
     danger: boolean;
 }
+
+export interface SettingChange {
+    key: string;
+    label: string;
+    value: string;
+    editor: string;
+    ageMinutes: number;
+}

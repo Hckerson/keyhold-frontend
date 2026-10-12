@@ -237,10 +237,6 @@ svg.lucide * {
     .reveal-fold {
         grid-template-rows: 1fr;
     }
-
-    .reveal-overlay {
-        display: none;
-    }
 }
 
 .rail-label {
@@ -297,6 +293,10 @@ svg.lucide * {
 
 .console-split {
     --split-columns: 3;
+}
+
+.review-pane {
+    scroll-margin-top: var(--spacing-10);
 }
 
 .console-split > *,
@@ -403,13 +403,13 @@ svg.lucide * {
 }
 
 @container console (min-width: 42rem) {
-    .review-split--slim {
+    .review-split {
         grid-template-columns: 16rem minmax(0, 1fr);
     }
 
-    .review-split--slim > .review-pane {
+    .review-split > .review-pane {
         position: sticky;
-        top: 0;
+        top: var(--spacing-10);
     }
 }
 
@@ -442,9 +442,9 @@ svg.lucide * {
         grid-template-columns: 20rem minmax(0, 1fr);
     }
 
-    .review-split > :is(.review-rail, .review-pane) {
+    .review-split > .review-rail {
         position: sticky;
-        top: 0;
+        top: var(--spacing-10);
     }
 
     .console-split > .console-rail {

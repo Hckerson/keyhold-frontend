@@ -80,6 +80,13 @@ const rowButton = async (name: string) =>
 
 const dialog = (name: string) => screen.findByRole("dialog", { name });
 
+const fromReview = async (action: string, listing: string) => {
+    await userEvent.click(await rowButton(`Review ${listing}`));
+    await userEvent.click(
+        within(await dialog(listing)).getByRole("button", { name: action }),
+    );
+};
+
 const gone = (name: string) =>
     waitFor(() =>
         expect(screen.queryByRole("dialog", { name })).not.toBeInTheDocument(),
@@ -173,29 +180,13 @@ describe("ModerationConsole · reading the queue", () => {
             within(table).getByRole("button", { name: `Review ${HARBOUR}` }),
         ).toBeInTheDocument();
     });
-
-    it("offers no approval on a listing that is already approved", async () => {
-        draw();
-
-        await queue();
-        await userEvent.click(
-            screen.getByRole("button", { name: /^decided/i }),
-        );
-
-        expect(
-            await screen.findByRole("button", { name: `Review ${MILL}` }),
-        ).toBeInTheDocument();
-        expect(
-            screen.queryByRole("button", { name: `Approve ${MILL}` }),
-        ).not.toBeInTheDocument();
-    });
 });
 
 describe("ModerationConsole · approving", () => {
     it("asks for confirmation instead of approving on the first click", async () => {
         draw();
 
-        await userEvent.click(await rowButton(`Approve ${HARBOUR}`));
+        await fromReview("Approve", HARBOUR);
 
         expect(await dialog("Approve listing")).toHaveTextContent(HARBOUR);
         expect(moderate).not.toHaveBeenCalled();
@@ -203,7 +194,7 @@ describe("ModerationConsole · approving", () => {
 
     it("closes without approving when cancelled", async () => {
         draw();
-        await userEvent.click(await rowButton(`Approve ${HARBOUR}`));
+        await fromReview("Approve", HARBOUR);
 
         await userEvent.click(
             within(await dialog("Approve listing")).getByRole("button", {
@@ -217,7 +208,7 @@ describe("ModerationConsole · approving", () => {
 
     it("approves the listing, then resolves the report against it", async () => {
         draw();
-        await userEvent.click(await rowButton(`Approve ${HARBOUR}`));
+        await fromReview("Approve", HARBOUR);
 
         await userEvent.click(
             within(await dialog("Approve listing")).getByRole("button", {
@@ -241,7 +232,7 @@ describe("ModerationConsole · approving", () => {
         const call = deferred();
         moderate.mockReturnValue(call.promise);
         draw();
-        await userEvent.click(await rowButton(`Approve ${HARBOUR}`));
+        await fromReview("Approve", HARBOUR);
         const confirm = within(await dialog("Approve listing"));
 
         await userEvent.click(
@@ -252,12 +243,11 @@ describe("ModerationConsole · approving", () => {
         );
 
         expect(confirm.getByRole("button", { name: "Cancel" })).toBeDisabled();
-        expect(
-            screen.getByRole("button", {
-                name: `Approve ${RIDGE}`,
-                hidden: true,
-            }),
-        ).toBeDisabled();
+        for (const approve of screen.getAllByRole("button", {
+            name: "Approve",
+            hidden: true,
+        }))
+            expect(approve).toBeDisabled();
         expect(moderate).toHaveBeenCalledTimes(1);
 
         call.settle();
@@ -267,7 +257,7 @@ describe("ModerationConsole · approving", () => {
     it("keeps the confirmation open with the failure when approving fails, and lets it be retried", async () => {
         moderate.mockRejectedValueOnce(new Error("listing service down"));
         draw();
-        await userEvent.click(await rowButton(`Approve ${HARBOUR}`));
+        await fromReview("Approve", HARBOUR);
         const confirm = within(await dialog("Approve listing"));
 
         await userEvent.click(
@@ -289,7 +279,7 @@ describe("ModerationConsole · approving", () => {
 
     it("approves a listing whose report was already settled without settling it again", async () => {
         draw();
-        await userEvent.click(await rowButton(`Approve ${RIDGE}`));
+        await fromReview("Approve", RIDGE);
 
         await userEvent.click(
             within(await dialog("Approve listing")).getByRole("button", {
@@ -310,7 +300,7 @@ describe("ModerationConsole · approving", () => {
 describe("ModerationConsole · requesting changes and rejecting", () => {
     it("holds the decision until the agent is given a reason", async () => {
         draw();
-        await userEvent.click(await rowButton(`Reject ${HARBOUR}`));
+        await fromReview("Reject", HARBOUR);
         const decision = within(await dialog("Reject listing"));
         const submit = decision.getByRole("button", { name: "Reject listing" });
 
@@ -332,7 +322,7 @@ describe("ModerationConsole · requesting changes and rejecting", () => {
             "reject",
         ],
         [
-            "Request changes on",
+            "Request Changes",
             "Request changes",
             "Feedback for the agent",
             "Send feedback",
@@ -342,7 +332,7 @@ describe("ModerationConsole · requesting changes and rejecting", () => {
         "%s sends the trimmed reason with the decision and resolves the report",
         async (action, title, field, submit, mode) => {
             draw();
-            await userEvent.click(await rowButton(`${action} ${HARBOUR}`));
+            await fromReview(action, HARBOUR);
             const decision = within(await dialog(title));
 
             await userEvent.type(
@@ -366,7 +356,7 @@ describe("ModerationConsole · requesting changes and rejecting", () => {
     it("keeps the reason and shows the failure when the decision fails", async () => {
         moderate.mockRejectedValueOnce(new Error("listing service down"));
         draw();
-        await userEvent.click(await rowButton(`Reject ${HARBOUR}`));
+        await fromReview("Reject", HARBOUR);
         const decision = within(await dialog("Reject listing"));
 
         await userEvent.type(
@@ -387,7 +377,7 @@ describe("ModerationConsole · requesting changes and rejecting", () => {
 
     it("starts every decision with an empty reason", async () => {
         draw();
-        await userEvent.click(await rowButton(`Reject ${HARBOUR}`));
+        await fromReview("Reject", HARBOUR);
         const first = within(await dialog("Reject listing"));
         await userEvent.type(
             first.getByLabelText("Reason for rejection"),
@@ -396,7 +386,7 @@ describe("ModerationConsole · requesting changes and rejecting", () => {
         await userEvent.click(first.getByRole("button", { name: "Cancel" }));
         await gone("Reject listing");
 
-        await userEvent.click(await rowButton(`Reject ${HARBOUR}`));
+        await fromReview("Reject", HARBOUR);
 
         expect(
             within(await dialog("Reject listing")).getByLabelText(

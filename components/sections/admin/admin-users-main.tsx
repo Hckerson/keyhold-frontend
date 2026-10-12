@@ -37,9 +37,6 @@ export interface AdminUsersMainProps {
     pending?: boolean;
     onPageChange: (next: number) => void;
     onOpen: (id: string) => void;
-    onSuspend: (id: string) => void;
-    reactivatingId?: string;
-    onReactivate: (id: string) => void;
 }
 
 export function AdminUsersMain({
@@ -55,7 +52,7 @@ export function AdminUsersMain({
     pageCount,
     pending,
     onPageChange,
-    ...row
+    onOpen,
 }: AdminUsersMainProps) {
     return (
         <Panel
@@ -86,7 +83,7 @@ export function AdminUsersMain({
                 }
             >
                 {users.length > 0 ? (
-                    <UserDirectoryList users={users} {...row} />
+                    <UserDirectoryList users={users} onOpen={onOpen} />
                 ) : pending ? (
                     <SkeletonRows tall />
                 ) : (

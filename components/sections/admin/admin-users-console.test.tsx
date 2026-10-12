@@ -71,8 +71,12 @@ const draw = () => render(<AdminUsersConsole />, { wrapper });
 const directory = () =>
     screen.findByRole("list", { name: /^platform accounts/i });
 
-const rowButton = async (name: string) =>
-    within(await directory()).getByRole("button", { name });
+const fromDetail = async (action: string, name: string) => {
+    await userEvent.click(within(await directory()).getByText(name));
+    await userEvent.click(
+        within(await dialog(name)).getByRole("button", { name: action }),
+    );
+};
 
 const dialog = (name: string) => screen.findByRole("dialog", { name });
 
@@ -194,11 +198,25 @@ describe("AdminUsersConsole · reading the directory", () => {
 });
 
 describe("AdminUsersConsole · which accounts can be acted on", () => {
-    it("offers suspension on an active member and reactivation on a suspended one", async () => {
+    it.each([
+        ["suspension on an active member", "Ada Vance", "Suspend"],
+        ["reactivation on a suspended one", "Ben Ortiz", "Reactivate"],
+    ])("offers %s", async (_, name, action) => {
+        draw();
+        await userEvent.click(within(await directory()).getByText(name));
+
+        expect(
+            within(await dialog(name)).getByRole("button", { name: action }),
+        ).toBeInTheDocument();
+    });
+
+    it("offers suspension on a pending account through the suspension modal", async () => {
+        list.mockResolvedValue([{ ...ADA, status: "PENDING" }, CARA]);
         draw();
 
-        expect(await rowButton("Suspend Ada Vance")).toBeInTheDocument();
-        expect(await rowButton("Reactivate Ben Ortiz")).toBeInTheDocument();
+        await fromDetail("Suspend", "Ada Vance");
+
+        expect(await dialog("Suspend account")).toHaveTextContent("Ada Vance");
     });
 
     it.each([
@@ -206,13 +224,7 @@ describe("AdminUsersConsole · which accounts can be acted on", () => {
         ["a deleted account", "Dev Patel"],
     ])("offers no suspension on %s", async (_, name) => {
         draw();
-        const table = await directory();
-
-        expect(
-            within(table).queryByRole("button", { name: `Suspend ${name}` }),
-        ).not.toBeInTheDocument();
-
-        await userEvent.click(within(table).getByText(name));
+        await userEvent.click(within(await directory()).getByText(name));
         expect(
             within(await dialog(name)).queryByRole("button", {
                 name: "Suspend",
@@ -224,7 +236,7 @@ describe("AdminUsersConsole · which accounts can be acted on", () => {
 describe("AdminUsersConsole · suspending", () => {
     it("holds the suspension until the reason has at least four real characters", async () => {
         draw();
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        await fromDetail("Suspend", "Ada Vance");
         const modal = within(await dialog("Suspend account"));
         const submit = modal.getByRole("button", { name: "Suspend account" });
 
@@ -239,7 +251,7 @@ describe("AdminUsersConsole · suspending", () => {
 
     it("sends the trimmed reason and leaves an indefinite suspension without a duration", async () => {
         draw();
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        await fromDetail("Suspend", "Ada Vance");
         const modal = within(await dialog("Suspend account"));
 
         await userEvent.type(
@@ -261,7 +273,7 @@ describe("AdminUsersConsole · suspending", () => {
 
     it("sends a picked duration as a number of days", async () => {
         draw();
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        await fromDetail("Suspend", "Ada Vance");
         const modal = within(await dialog("Suspend account"));
 
         await userEvent.type(
@@ -287,7 +299,7 @@ describe("AdminUsersConsole · suspending", () => {
     it("keeps the modal and the reason when the suspension fails", async () => {
         suspend.mockRejectedValueOnce(new Error("suspensions down"));
         draw();
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        await fromDetail("Suspend", "Ada Vance");
         const modal = within(await dialog("Suspend account"));
 
         await userEvent.type(
@@ -308,7 +320,7 @@ describe("AdminUsersConsole · suspending", () => {
 
     it("closes without suspending when cancelled", async () => {
         draw();
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        await fromDetail("Suspend", "Ada Vance");
 
         await userEvent.click(
             within(await dialog("Suspend account")).getByRole("button", {
@@ -325,7 +337,7 @@ describe("AdminUsersConsole · reactivating", () => {
     it("asks for confirmation instead of reactivating on the first click", async () => {
         draw();
 
-        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
+        await fromDetail("Reactivate", "Ben Ortiz");
 
         expect(await dialog("Reactivate account")).toHaveTextContent(
             "Ben Ortiz",
@@ -335,7 +347,7 @@ describe("AdminUsersConsole · reactivating", () => {
 
     it("lifts the suspension still in force, not one already lifted", async () => {
         draw();
-        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
+        await fromDetail("Reactivate", "Ben Ortiz");
 
         await userEvent.click(
             within(await dialog("Reactivate account")).getByRole("button", {
@@ -353,7 +365,7 @@ describe("AdminUsersConsole · reactivating", () => {
             aSuspension({ liftedAt: "2026-07-01T09:00:00.000Z" }),
         ]);
         draw();
-        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
+        await fromDetail("Reactivate", "Ben Ortiz");
         const modal = within(await dialog("Reactivate account"));
 
         await userEvent.click(
@@ -475,14 +487,6 @@ describe("AdminUsersConsole · reviewing", () => {
     });
 });
 
-const EVE = aMemberRecord({
-    id: "usr_5",
-    fullName: "Eve Stone",
-    email: "eve@keyhol.me",
-    role: "BUYER",
-    status: "SUSPENDED",
-});
-
 const hold = <T,>() => {
     let release: (value: T) => void = () => {};
     const promise = new Promise<T>((resolve) => {
@@ -501,7 +505,7 @@ describe("AdminUsersConsole · while a decision is in flight", () => {
         const call = hold<ReturnType<typeof aSuspension>>();
         suspend.mockReturnValue(call.promise);
         draw();
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
+        await fromDetail("Suspend", "Ada Vance");
         const modal = within(await dialog("Suspend account"));
 
         await userEvent.type(
@@ -522,27 +526,23 @@ describe("AdminUsersConsole · while a decision is in flight", () => {
         await gone("Suspend account");
     });
 
-    it("disables every other reactivation while one is being confirmed", async () => {
-        list.mockResolvedValue([ADA, BEN, EVE]);
+    it("keeps the reactivation confirmation open and its cancel locked until the request settles", async () => {
         const call = hold<ReturnType<typeof aSuspension>>();
         lift.mockReturnValue(call.promise);
         draw();
-        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
+        await fromDetail("Reactivate", "Ben Ortiz");
+        const confirm = within(await dialog("Reactivate account"));
 
         await userEvent.click(
-            within(await dialog("Reactivate account")).getByRole("button", {
-                name: "Reactivate account",
-            }),
+            confirm.getByRole("button", { name: "Reactivate account" }),
         );
 
         await waitFor(() =>
             expect(
-                screen.getByRole("button", {
-                    name: "Reactivate Eve Stone",
-                    hidden: true,
-                }),
+                confirm.getByRole("button", { name: "Cancel" }),
             ).toBeDisabled(),
         );
+        expect(lift).toHaveBeenCalledOnce();
 
         call.release(aSuspension({ id: "sus_live" }));
         await gone("Reactivate account");
@@ -572,27 +572,6 @@ describe("AdminUsersConsole · while a decision is in flight", () => {
 
         call.release(ADA);
         await gone("Add a user");
-    });
-});
-
-describe("AdminUsersConsole · acting from a row", () => {
-    it("reactivates a suspended account through the confirmation", async () => {
-        draw();
-
-        await userEvent.click(await rowButton("Reactivate Ben Ortiz"));
-
-        expect(await dialog("Reactivate account")).toHaveTextContent(
-            "Ben Ortiz",
-        );
-    });
-
-    it("offers suspension on a pending account through the suspension modal", async () => {
-        list.mockResolvedValue([{ ...ADA, status: "PENDING" }, CARA]);
-        draw();
-
-        await userEvent.click(await rowButton("Suspend Ada Vance"));
-
-        expect(await dialog("Suspend account")).toHaveTextContent("Ada Vance");
     });
 });
 

@@ -92,11 +92,8 @@ export function ModerationConsole() {
                     checkFilter={checkFilter}
                     loads={desk.loads}
                     pending={flags.isPending}
-                    approvingId={actions.approvingId}
                     onCheckFilterChange={setCheckFilter}
                     onOpen={onOpen}
-                    onApprove={onApprove}
-                    onDecide={onDecide}
                 />
                 <ModerationRail
                     focus={desk.focus}

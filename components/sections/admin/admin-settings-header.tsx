@@ -1,50 +1,39 @@
 "use client";
 
+import { History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PortalHeader } from "@/components/patterns/portal-header";
-import { ENVIRONMENT_LABEL, SETTINGS_FORM_ID } from "@/lib/data/admin-settings";
-
-const SETTINGS_TITLE = "System Settings";
-const SETTINGS_LEDE =
-    "What the platform charges, what it enforces, and who changed it last";
-const RESET_ACTION = "Reset";
-const SAVE_ACTION = "Save Changes";
-const SAVED_ACTION = "Saved";
+import { SETTINGS_COPY } from "@/lib/data/admin-settings";
 
 export interface AdminSettingsHeaderProps {
-    dirty: boolean;
-    saved: boolean;
-    saving: boolean;
-    onReset: () => void;
+    summary?: string;
+    onHistory?: () => void;
 }
 
 export function AdminSettingsHeader({
-    dirty,
-    saved,
-    saving,
-    onReset,
+    summary,
+    onHistory,
 }: AdminSettingsHeaderProps) {
     return (
         <PortalHeader
-            title={SETTINGS_TITLE}
-            lede={SETTINGS_LEDE}
-            summary={ENVIRONMENT_LABEL}
+            title={SETTINGS_COPY.title}
+            lede={SETTINGS_COPY.lede}
+            summary={summary}
             action={
-                <>
-                    <Button type="button" disabled={!dirty} onClick={onReset}>
-                        {RESET_ACTION}
-                    </Button>
+                onHistory && (
                     <Button
-                        type="submit"
-                        emphasis="solid"
-                        tone="accent"
-                        form={SETTINGS_FORM_ID}
-                        disabled={!dirty}
-                        isLoading={saving}
+                        type="button"
+                        emphasis="outline"
+                        onClick={onHistory}
                     >
-                        {saved ? SAVED_ACTION : SAVE_ACTION}
+                        <History
+                            size={12}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                        />
+                        {SETTINGS_COPY.history}
                     </Button>
-                </>
+                )
             }
         />
     );
