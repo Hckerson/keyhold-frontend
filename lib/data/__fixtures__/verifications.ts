@@ -15,7 +15,7 @@ export const aVerification = (
     agency: "Harbor & Vine",
     licence: "CA-01234567",
     documentType: "Passport",
-    documentNumber: "HG-100703",
+    documentNumber: "KH-100703",
     issuer: "United States",
     status: "PENDING",
     submittedAt: "2026-09-29T12:00:00Z",
@@ -33,7 +33,7 @@ export const anIdentityDocument = (
 ): IdentityDocument => ({
     id: "kyc-1",
     documentType: "DRIVERS_LICENSE",
-    documentNumber: "HG-100703",
+    documentNumber: "KH-100703",
     issuerCountry: "US",
     documentImageUrl: "https://res.cloudinary.com/demo/document.jpg",
     faceImageUrl: null,

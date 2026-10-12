@@ -5,13 +5,13 @@
 
 ## Context
 
-Two files claimed authority over the same design system, and finding 02.2 of the stage 02 audit recorded that they shared no vocabulary: `horizon-grove-real-estate.md` named its type scale `display-xl` / `body-md` / `caption-md` in pixels, `styles/tokens.css` names its `h1`–`h6` / `base` / `caption` in rems. No mapping existed between them, so neither could be checked against the other.
+Two files claimed authority over the same design system, and finding 02.2 of the stage 02 audit recorded that they shared no vocabulary: `keyhold-real-estate.md` named its type scale `display-xl` / `body-md` / `caption-md` in pixels, `styles/tokens.css` names its `h1`–`h6` / `base` / `caption` in rems. No mapping existed between them, so neither could be checked against the other.
 
 The audit left the decision open because it read as a genuine tie. It is not one. Reading both files settles it.
 
 The two documents do not describe one system in two vocabularies. They describe two different brands:
 
-|           | `horizon-grove-real-estate.md`  | `styles/tokens.css`                     |
+|           | `keyhold-real-estate.md`        | `styles/tokens.css`                     |
 | --------- | ------------------------------- | --------------------------------------- |
 | Primary   | `#0057ff` — saturated blue      | `#faf8f4` — warm off-white              |
 | Accent    | `#001e36` — deep navy           | `#1f4e3d` — forest green                |
@@ -27,7 +27,7 @@ The document is also not a handoff artifact in the first place. It carries agent
 
 `styles/tokens.css` is the single source of truth for colour, type, spacing, radii and motion. Every design decision is named there and referenced through the scale classes in `styles/globals.css`.
 
-`horizon-grove-real-estate.md` moves to `docs/archive/` rather than being deleted. It is the record of what the project was originally asked to be, which is worth keeping and worthless to follow. Nothing reads it, nothing validates against it, and no design question is settled by consulting it.
+`keyhold-real-estate.md` moves to `docs/archive/` rather than being deleted. It is the record of what the project was originally asked to be, which is worth keeping and worthless to follow. Nothing reads it, nothing validates against it, and no design question is settled by consulting it.
 
 ## Rejected
 
