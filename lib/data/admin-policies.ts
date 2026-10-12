@@ -9,75 +9,64 @@ export const POLICY_SWITCHES: readonly PolicySwitch[] = [
     {
         id: "photo-scanning",
         group: "moderation",
-        domain: "moderation",
         title: "Automatic Photo Scanning",
         caption: "Screen every uploaded listing image before it goes live",
         enforcement: "blocking",
-        reach: 100,
+        warnOff: "Saving lets listing photos go live unscreened.",
     },
     {
         id: "agent-license-verification",
         group: "moderation",
-        domain: "access",
         title: "Require Agent License Verification",
         caption: "Hold agent accounts until a licence document clears review",
         enforcement: "blocking",
-        reach: 22,
+        warnOff: "Saving lets agents list before their licence clears review.",
     },
     {
         id: "manual-review-threshold",
         group: "moderation",
-        domain: "moderation",
         title: "Manual Review Above Threshold",
         caption:
             "Route listings priced over the auto-approve limit to a reviewer",
         enforcement: "blocking",
-        reach: 64,
     },
     {
         id: "auto-suspend-repeat-rejections",
         group: "moderation",
-        domain: "moderation",
         title: "Auto-Suspend On Repeat Rejections",
         caption: "Suspend an account after three rejected listings in a row",
         enforcement: "advisory",
-        reach: 8,
     },
     {
         id: "maintenance-mode",
         group: "operations",
-        domain: "availability",
         title: "Maintenance Mode",
         caption: "Take the marketplace offline for everyone but admins",
         enforcement: "blocking",
-        reach: 100,
+        warnOn: "Saving takes the marketplace offline for everyone but admins.",
     },
     {
         id: "open-signups",
         group: "operations",
-        domain: "availability",
         title: "Open Signups",
         caption: "Allow anyone to register a buyer or agent account",
         enforcement: "advisory",
-        reach: 100,
+        warnOff: "Saving stops new buyers and agents from registering.",
     },
     {
         id: "daily-health-digest",
         group: "operations",
-        domain: "platform",
         title: "Daily Health Digest",
         caption: "Email admins a uptime and error-rate summary each morning",
         enforcement: "advisory",
-        reach: 4,
     },
     {
         id: "payout-automation",
         group: "operations",
-        domain: "payout",
         title: "Payout Automation",
         caption: "Release cleared agent commissions without a manual approval",
         enforcement: "blocking",
-        reach: 46,
+        warnOn: "Saving releases cleared commissions without a manual approval.",
     },
 ];
 
@@ -92,23 +81,26 @@ export const POLICY_SETTING_KEY: Record<PolicySwitchId, string> = {
     "payout-automation": "payoutAutomation",
 };
 
-export const POLICY_COUNT = POLICY_SWITCHES.length;
-
 export const policiesInGroup = (group: PolicyGroup) =>
     POLICY_SWITCHES.filter((policy) => policy.group === group);
-
-export const enabledPolicyCount = (state: PolicyState) =>
-    POLICY_SWITCHES.filter((policy) => state[policy.id]).length;
 
 export const enabledInGroup = (state: PolicyState, group: PolicyGroup) =>
     policiesInGroup(group).filter((policy) => state[policy.id]).length;
 
-export const blockingPolicyCount = (state: PolicyState) =>
-    POLICY_SWITCHES.filter(
-        (policy) => policy.enforcement === "blocking" && state[policy.id],
-    ).length;
-
-export const arePoliciesDirty = (state: PolicyState, baseline: PolicyState) =>
-    POLICY_SWITCHES.some((policy) => state[policy.id] !== baseline[policy.id]);
-
 export const isPolicyOn = (state: PolicyState, id: PolicySwitchId) => state[id];
+
+export const groupReading = (state: PolicyState, group: PolicyGroup) =>
+    `${enabledInGroup(state, group)} of ${policiesInGroup(group).length} on`;
+
+export const pendingWarnings = (state: PolicyState, baseline: PolicyState) =>
+    POLICY_SWITCHES.flatMap((policy) => {
+        if (state[policy.id] === baseline[policy.id]) return [];
+        const warning = state[policy.id] ? policy.warnOn : policy.warnOff;
+        return warning ? [warning] : [];
+    });
+
+export const changedFrom = (
+    state: PolicyState,
+    baseline: PolicyState,
+    id: PolicySwitchId,
+) => (state[id] === baseline[id] ? undefined : baseline[id]);

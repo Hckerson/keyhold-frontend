@@ -1,22 +1,20 @@
 "use client";
 
-import { Callout } from "@/components/ui/callout";
+import { useState } from "react";
+import { MaintenanceConfirmModal } from "@/components/features/admin/maintenance-confirm-modal";
+import { SettingsHistoryDrawer } from "@/components/features/admin/settings-history-drawer";
+import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
+import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
 import { AdminSettingsHeader } from "@/components/sections/admin/admin-settings-header";
 import { AdminSettingsMain } from "@/components/sections/admin/admin-settings-main";
-import { AdminSettingsRail } from "@/components/sections/admin/admin-settings-rail";
-import { AdminSettingsStatBand } from "@/components/sections/admin/admin-settings-stat-band";
-import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
-import { MaintenanceConfirmModal } from "@/components/features/admin/maintenance-confirm-modal";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
+import { lastEditLine } from "@/lib/data/admin-settings-changes";
 import { useAdminSettings } from "@/lib/hooks/use-admin-settings";
-
-const SAVED_TITLE = "Configuration saved";
-const SAVED_LEDE =
-    "New values apply to listings and payouts created from now on.";
 
 export function AdminSettingsConsole() {
     const settings = useAdminSettings();
     const { maintenance } = settings;
+    const [historyOpen, setHistoryOpen] = useState(false);
 
     if (settings.failed)
         return (
@@ -26,49 +24,45 @@ export function AdminSettingsConsole() {
             />
         );
 
+    if (settings.loading) return <ConsoleSkeleton variant="form" />;
+
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
             <AdminSettingsHeader
-                dirty={settings.dirty}
-                saved={settings.saved}
+                summary={lastEditLine(settings.changes)}
+                onHistory={
+                    settings.changes.length > 0
+                        ? () => setHistoryOpen(true)
+                        : undefined
+                }
+            />
+
+            <AdminSettingsMain
+                config={settings.config}
+                errors={settings.errors}
+                policies={settings.policies}
+                baselinePolicies={settings.baselinePolicies}
+                platformFields={settings.platformFields}
+                marketplaceFields={settings.marketplaceFields}
+                unsaved={settings.unsaved}
+                warnings={settings.warnings}
+                invalid={settings.invalid}
+                offline={settings.offline}
                 saving={settings.saving}
+                maintenancePending={maintenance.running}
+                onFieldChange={settings.changeField}
+                onFieldSelect={settings.selectField}
+                onPolicyToggle={settings.togglePolicy}
+                onSubmit={settings.submit}
                 onReset={settings.reset}
+                onMaintenanceRun={maintenance.request}
             />
 
-            <AdminSettingsStatBand
-                stats={settings.stats}
-                pending={settings.loading}
+            <SettingsHistoryDrawer
+                open={historyOpen}
+                changes={settings.changes}
+                onOpenChange={setHistoryOpen}
             />
-
-            {settings.saved && (
-                <Callout
-                    variant="success"
-                    title={SAVED_TITLE}
-                    description={SAVED_LEDE}
-                />
-            )}
-
-            <div className="console-split gap-3">
-                <AdminSettingsMain
-                    config={settings.config}
-                    policies={settings.policies}
-                    pending={settings.pending}
-                    maintenancePending={maintenance.running}
-                    onFieldChange={settings.changeField}
-                    onFieldSelect={settings.selectField}
-                    onPolicyToggle={settings.togglePolicy}
-                    onSubmit={settings.submit}
-                    onMaintenanceRun={maintenance.request}
-                    lastChange={settings.lastChange}
-                />
-                <AdminSettingsRail
-                    changes={settings.changes}
-                    total={settings.loggedChanges}
-                    page={settings.logPage}
-                    pageCount={settings.logPageCount}
-                    onPageChange={settings.setLogPage}
-                />
-            </div>
 
             <MaintenanceConfirmModal
                 action={maintenance.action}

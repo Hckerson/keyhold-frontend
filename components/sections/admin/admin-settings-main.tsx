@@ -1,122 +1,136 @@
 "use client";
 
 import type { ChangeEvent, FormEvent } from "react";
-import { Panel } from "@/components/ui/panel";
-import { PanelInset } from "@/components/ui/panel-inset";
-import { ConfigPanel } from "@/components/features/shared/config-panel";
-import { PolicySwitchTable } from "@/components/features/admin/policy-switch-table";
-import { MaintenancePanel } from "@/components/features/admin/maintenance-panel";
-import { AdminSettingsPostureHero } from "@/components/sections/admin/admin-settings-posture-hero";
-import { POLICY_GROUPS } from "@/lib/config/settings-tones";
-import {
-    blockingPolicyCount,
-    enabledInGroup,
-    enabledPolicyCount,
-    policiesInGroup,
-} from "@/lib/data/admin-policies";
-import {
-    MARKETPLACE_FIELDS,
-    PLATFORM_FIELDS,
-    type AdminConfig,
-    type AdminConfigKey,
-} from "@/lib/config/admin-settings";
-import { SETTINGS_FORM_ID } from "@/lib/data/admin-settings";
+import { Callout } from "@/components/ui/callout";
+import { ConfigFieldGrid } from "@/components/patterns/config-field-grid";
+import { MaintenanceActions } from "@/components/features/admin/maintenance-actions";
+import { PolicyGroupSection } from "@/components/features/admin/policy-group-section";
+import { SettingsSaveBar } from "@/components/features/admin/settings-save-bar";
+import { SettingsSection } from "@/components/features/admin/settings-section";
+import { POLICY_GROUP_ORDER } from "@/lib/config/settings-tones";
+import type { AdminConfig, AdminConfigKey } from "@/lib/config/admin-settings";
+import { SETTINGS_COPY, SETTINGS_FORM_ID } from "@/lib/data/admin-settings";
+import type { FieldErrors } from "@/lib/validations/auth";
 import type {
-    ConfigChange,
+    ConfigField,
     MaintenanceActionId,
-    PolicyGroup,
     PolicyState,
     PolicySwitchId,
 } from "@/lib/types";
 
-const PLATFORM_TITLE = "Platform";
-const PLATFORM_LEDE = "Identity and defaults used across every surface";
-const MARKETPLACE_TITLE = "Marketplace Rules";
-const MARKETPLACE_LEDE = "Fees, limits, and thresholds applied to new listings";
-const POLICY_GROUP_ORDER: PolicyGroup[] = ["moderation", "operations"];
-
 export interface AdminSettingsMainProps {
     config: AdminConfig;
+    errors: FieldErrors;
     policies: PolicyState;
-    pending: number;
+    baselinePolicies: PolicyState;
+    platformFields: readonly ConfigField<AdminConfigKey>[];
+    marketplaceFields: readonly ConfigField<AdminConfigKey>[];
+    unsaved: string[];
+    warnings: string[];
+    invalid: number;
+    offline: boolean;
+    saving: boolean;
     maintenancePending?: MaintenanceActionId;
     onFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
     onFieldSelect: (name: AdminConfigKey, value: string) => void;
     onPolicyToggle: (id: PolicySwitchId) => void;
     onSubmit: (event: FormEvent) => void;
+    onReset: () => void;
     onMaintenanceRun: (id: MaintenanceActionId) => void;
-    lastChange?: ConfigChange;
 }
 
 export function AdminSettingsMain({
     config,
+    errors,
     policies,
-    pending,
+    baselinePolicies,
+    platformFields,
+    marketplaceFields,
+    unsaved,
+    warnings,
+    invalid,
+    offline,
+    saving,
     maintenancePending,
     onFieldChange,
     onFieldSelect,
     onPolicyToggle,
     onSubmit,
+    onReset,
     onMaintenanceRun,
-    lastChange,
 }: AdminSettingsMainProps) {
+    const fieldSections = [
+        { ...SETTINGS_COPY.platform, fields: platformFields },
+        { ...SETTINGS_COPY.marketplace, fields: marketplaceFields },
+    ];
+
     return (
-        <div className="console-span-2 flex flex-col gap-3">
-            <AdminSettingsPostureHero
-                pending={pending}
-                enabled={enabledPolicyCount(policies)}
-                blocking={blockingPolicyCount(policies)}
-                lastChange={lastChange}
-            />
+        <div className="@container flex flex-col gap-10">
+            {offline && (
+                <Callout
+                    variant="error"
+                    title={SETTINGS_COPY.offlineTitle}
+                    description={SETTINGS_COPY.offlineLede}
+                />
+            )}
 
             <form
                 id={SETTINGS_FORM_ID}
                 onSubmit={onSubmit}
-                className="flex flex-col gap-3"
+                noValidate
+                className="flex flex-col gap-10"
             >
-                <ConfigPanel
-                    title={PLATFORM_TITLE}
-                    description={PLATFORM_LEDE}
-                    fields={PLATFORM_FIELDS}
-                    values={config}
-                    onChange={onFieldChange}
-                    onSelect={onFieldSelect}
-                />
-
-                <ConfigPanel
-                    title={MARKETPLACE_TITLE}
-                    description={MARKETPLACE_LEDE}
-                    fields={MARKETPLACE_FIELDS}
-                    values={config}
-                    onChange={onFieldChange}
-                />
+                {fieldSections.map((section) => (
+                    <SettingsSection
+                        key={section.id}
+                        id={section.id}
+                        title={section.title}
+                        lede={section.lede}
+                    >
+                        <div className="card-grid gap-3">
+                            <ConfigFieldGrid
+                                fields={section.fields}
+                                values={config}
+                                errors={errors}
+                                onChange={onFieldChange}
+                                onSelect={onFieldSelect}
+                            />
+                        </div>
+                    </SettingsSection>
+                ))}
             </form>
 
-            {POLICY_GROUP_ORDER.map((group) => {
-                const members = policiesInGroup(group);
+            {POLICY_GROUP_ORDER.map((group) => (
+                <PolicyGroupSection
+                    key={group}
+                    group={group}
+                    policies={policies}
+                    baseline={baselinePolicies}
+                    onToggle={onPolicyToggle}
+                />
+            ))}
 
-                return (
-                    <Panel
-                        key={group}
-                        title={POLICY_GROUPS[group].title}
-                        description={POLICY_GROUPS[group].lede}
-                        count={`${enabledInGroup(policies, group)}/${members.length}`}
-                    >
-                        <PanelInset scroll>
-                            <PolicySwitchTable
-                                policies={members}
-                                state={policies}
-                                onToggle={onPolicyToggle}
-                            />
-                        </PanelInset>
-                    </Panel>
-                );
-            })}
+            <SettingsSection
+                id={SETTINGS_COPY.maintenance.id}
+                title={SETTINGS_COPY.maintenance.title}
+                lede={SETTINGS_COPY.maintenance.lede}
+                flush
+            >
+                <MaintenanceActions
+                    pending={maintenancePending}
+                    onRun={onMaintenanceRun}
+                />
+            </SettingsSection>
 
-            <MaintenancePanel
-                pending={maintenancePending}
-                onRun={onMaintenanceRun}
-            />
+            {unsaved.length > 0 && (
+                <SettingsSaveBar
+                    unsaved={unsaved}
+                    warnings={warnings}
+                    invalid={invalid}
+                    saving={saving}
+                    onReset={onReset}
+                />
+            )}
         </div>
     );
 }
