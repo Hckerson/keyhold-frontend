@@ -118,7 +118,7 @@ const BODIES: Record<ConsoleSkeletonVariant, ReactNode> = {
         </div>
     ),
     casework: (
-        <div className="review-split review-split--slim items-start gap-3">
+        <div className="review-split items-start gap-3">
             <PanelSkeleton rows={RAIL_ROWS} />
             <PanelSkeleton tall />
         </div>

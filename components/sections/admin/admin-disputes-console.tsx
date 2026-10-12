@@ -1,12 +1,11 @@
 "use client";
 
 import { Scale } from "lucide-react";
-import { EmptyState } from "@/components/ui/empty-state";
 import { DisputeDecisionModal } from "@/components/features/admin/dispute-decision-modal";
 import { DisputeReviewPane } from "@/components/features/admin/dispute-review-pane";
 import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
-import { ReviewQueue } from "@/components/patterns/review-queue";
+import { ReviewSplit } from "@/components/patterns/review-split";
 import { AdminDisputesHeader } from "@/components/sections/admin/admin-disputes-header";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
@@ -39,35 +38,24 @@ export function AdminDisputesConsole() {
                 onFilterChange={queue.changeFilter}
             />
 
-            {active ? (
-                <div className="review-split review-split--slim items-start gap-3">
-                    <div className="review-rail">
-                        <ReviewQueue
-                            items={disputeQueueItems(
-                                queue.visible,
-                                queue.filter === "all",
-                            )}
-                            selectedId={active.id}
-                            onSelect={queue.setSelectedId}
-                        />
-                    </div>
-                    <div className="review-pane">
-                        <DisputeReviewPane
-                            dispute={active}
-                            busy={queue.settling}
-                            onAction={(mode) =>
-                                queue.openDecision(mode, active.id)
-                            }
-                        />
-                    </div>
-                </div>
-            ) : (
-                <EmptyState
-                    icon={Scale}
-                    title={DISPUTE_COPY.emptyTitle}
-                    description={DISPUTE_COPY.emptyLede}
-                />
-            )}
+            <ReviewSplit
+                items={disputeQueueItems(queue.visible, queue.filter === "all")}
+                selectedId={active?.id}
+                onSelect={queue.setSelectedId}
+                empty={{
+                    icon: Scale,
+                    title: DISPUTE_COPY.emptyTitle,
+                    description: DISPUTE_COPY.emptyLede,
+                }}
+            >
+                {active && (
+                    <DisputeReviewPane
+                        dispute={active}
+                        busy={queue.settling}
+                        onAction={(mode) => queue.openDecision(mode, active.id)}
+                    />
+                )}
+            </ReviewSplit>
 
             <DisputeDecisionModal
                 decision={queue.decision}
