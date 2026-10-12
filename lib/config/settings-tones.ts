@@ -1,48 +1,9 @@
-import {
-    Flag,
-    Power,
-    Server,
-    ShieldCheck,
-    Wallet,
-    type LucideIcon,
-} from "lucide-react";
-import type { ChartTone } from "@/lib/config/chart-tones";
-import type {
-    PolicyDomain,
-    PolicyEnforcement,
-    PolicyGroup,
-    StatusTone,
-} from "@/lib/types";
+import type { PolicyEnforcement, PolicyGroup } from "@/lib/types";
 
-export interface PolicyDomainMeta {
-    label: string;
-    icon: LucideIcon;
-    tone: ChartTone;
-}
-
-export const POLICY_DOMAINS: Record<PolicyDomain, PolicyDomainMeta> = {
-    moderation: { label: "Moderation", icon: Flag, tone: "neutral" },
-    access: { label: "Access", icon: ShieldCheck, tone: "accent" },
-    payout: { label: "Payouts", icon: Wallet, tone: "neutral" },
-    availability: { label: "Availability", icon: Power, tone: "neutral" },
-    platform: { label: "Platform", icon: Server, tone: "neutral" },
+export const POLICY_EFFECTS: Record<PolicyEnforcement, string> = {
+    blocking: "Blocking",
+    advisory: "Advisory",
 };
-
-export interface PolicyEnforcementMeta {
-    label: string;
-    tone: StatusTone;
-    chartTone: ChartTone;
-}
-
-export const POLICY_ENFORCEMENTS: Record<
-    PolicyEnforcement,
-    PolicyEnforcementMeta
-> = {
-    blocking: { label: "Blocking", tone: "error", chartTone: "error" },
-    advisory: { label: "Advisory", tone: "info", chartTone: "neutral" },
-};
-
-export const POLICY_OFF_LABEL = "Off";
 
 export interface PolicyGroupMeta {
     title: string;
@@ -51,7 +12,7 @@ export interface PolicyGroupMeta {
 
 export const POLICY_GROUPS: Record<PolicyGroup, PolicyGroupMeta> = {
     moderation: {
-        title: "Moderation Policy",
+        title: "Moderation",
         lede: "What is screened before a listing or an agent reaches the market",
     },
     operations: {
@@ -60,17 +21,7 @@ export const POLICY_GROUPS: Record<PolicyGroup, PolicyGroupMeta> = {
     },
 };
 
-const REACH_CEILINGS: { ceiling: number; tone: ChartTone }[] = [
-    { ceiling: 25, tone: "neutral" },
-    { ceiling: 75, tone: "accent" },
+export const POLICY_GROUP_ORDER: readonly PolicyGroup[] = [
+    "moderation",
+    "operations",
 ];
-
-export const reachTone = (percent: number): ChartTone =>
-    REACH_CEILINGS.find((band) => percent < band.ceiling)?.tone ?? "accent";
-
-export const KEY_ROTATION_SLA_MINUTES = 129_600;
-
-export const keyAgeTone = (minutes: number): ChartTone => {
-    if (minutes < KEY_ROTATION_SLA_MINUTES / 2) return "accent";
-    return minutes < KEY_ROTATION_SLA_MINUTES ? "neutral" : "error";
-};

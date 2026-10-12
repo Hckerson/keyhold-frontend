@@ -1,16 +1,9 @@
-import { Power, Server, ShieldCheck, UserPlus } from "lucide-react";
-import {
-    POLICY_COUNT,
-    POLICY_SETTING_KEY,
-    POLICY_SWITCHES,
-    enabledPolicyCount,
-    isPolicyOn,
-} from "@/lib/data/admin-policies";
+import { POLICY_SETTING_KEY, POLICY_SWITCHES } from "@/lib/data/admin-policies";
 import {
     ADMIN_CONFIG_KEYS,
     type AdminConfig,
 } from "@/lib/config/admin-settings";
-import type { PolicyState, StatDatum } from "@/lib/types";
+import type { PolicyState } from "@/lib/types";
 import type {
     PlatformSetting,
     UpdateSettingsInput,
@@ -18,7 +11,36 @@ import type {
 import type { SettingCategory } from "@/lib/enums/enums";
 
 export const SETTINGS_FORM_ID = "admin-settings-form";
-export const ENVIRONMENT_LABEL = "Live";
+
+export const SETTINGS_COPY = {
+    title: "Settings",
+    lede: "What the platform charges, what it enforces, and how it runs",
+    history: "History",
+    historyTitle: "Recent changes",
+    historyLede: "Each setting's current value and who set it last",
+    platform: {
+        id: "platform",
+        title: "Platform",
+        lede: "Identity and defaults used across every surface",
+    },
+    marketplace: {
+        id: "marketplace",
+        title: "Marketplace",
+        lede: "Fees, limits and thresholds applied to new listings and payouts",
+    },
+    maintenance: {
+        id: "maintenance",
+        title: "Maintenance",
+        lede: "One-off operations, each confirmed before it runs",
+    },
+    offlineTitle: "The marketplace is offline",
+    offlineLede:
+        "Maintenance mode is on, so only admins can reach the marketplace. Turn it off under Operations.",
+    reset: "Reset",
+    save: "Save changes",
+    wasOn: "Was on",
+    wasOff: "Was off",
+} as const;
 
 const TRUE = "true";
 
@@ -57,16 +79,6 @@ export const toPolicyState = (settings: PlatformSetting[]): PolicyState => {
     );
 };
 
-export const changedFieldCount = (
-    current: AdminConfig,
-    baseline: AdminConfig,
-) => ADMIN_CONFIG_KEYS.filter((key) => current[key] !== baseline[key]).length;
-
-export const isAdminConfigDirty = (
-    current: AdminConfig,
-    baseline: AdminConfig,
-) => changedFieldCount(current, baseline) > 0;
-
 export const toSettingsPayload = (
     settings: PlatformSetting[],
     config: AdminConfig,
@@ -89,56 +101,4 @@ export const toSettingsPayload = (
             })),
         ],
     };
-};
-
-const MARKETPLACE_LIVE = "Live";
-const MARKETPLACE_OFFLINE = "Offline";
-const SIGNUPS_OPEN = "Open";
-const SIGNUPS_CLOSED = "Closed";
-
-export const buildSettingsStats = (
-    state: PolicyState,
-    changes: number,
-): StatDatum[] => {
-    const offline = isPolicyOn(state, "maintenance-mode");
-    const signupsOpen = isPolicyOn(state, "open-signups");
-
-    return [
-        {
-            id: "environment",
-            icon: Server,
-            label: "Environment",
-            value: ENVIRONMENT_LABEL,
-            tone: "neutral",
-        },
-        {
-            id: "policies",
-            icon: ShieldCheck,
-            label: "Policies on",
-            value: `${enabledPolicyCount(state)}/${POLICY_COUNT}`,
-            tone: "accent",
-        },
-        {
-            id: "marketplace",
-            icon: Power,
-            label: "Marketplace",
-            value: offline ? MARKETPLACE_OFFLINE : MARKETPLACE_LIVE,
-            tone: offline ? "error" : "accent",
-        },
-        {
-            id: "signups",
-            icon: UserPlus,
-            label: "Signups",
-            value: signupsOpen ? SIGNUPS_OPEN : SIGNUPS_CLOSED,
-            tone: signupsOpen ? "accent" : "neutral",
-            href: "/admin/users",
-        },
-        {
-            id: "changes",
-            icon: ShieldCheck,
-            label: "Logged changes",
-            value: `${changes}`,
-            tone: "neutral",
-        },
-    ];
 };

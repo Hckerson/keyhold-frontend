@@ -3,7 +3,7 @@
 import type { ChangeEvent } from "react";
 import { FormField } from "@/components/ui/forms/form-field";
 import { Select } from "@/components/ui/forms/select";
-import { LabelledBlock } from "@/components/patterns/labelled-block";
+import { FieldShell } from "@/components/ui/forms/field-shell";
 import type { FieldErrors } from "@/lib/validations/auth";
 import type { ConfigField } from "@/lib/types";
 
@@ -26,14 +26,20 @@ export function ConfigFieldGrid<K extends string>({
         <>
             {fields.map((field) =>
                 field.options ? (
-                    <LabelledBlock key={field.name} label={field.label}>
+                    <FieldShell
+                        key={field.name}
+                        label={field.label}
+                        htmlFor={field.name}
+                        hint={field.hint}
+                    >
                         <Select
+                            id={field.name}
                             options={field.options}
                             value={values[field.name]}
                             onChange={(next) => onSelect?.(field.name, next)}
                             label={field.label}
                         />
-                    </LabelledBlock>
+                    </FieldShell>
                 ) : (
                     <FormField
                         key={field.name}
