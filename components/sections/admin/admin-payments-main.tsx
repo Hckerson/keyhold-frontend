@@ -9,7 +9,6 @@ import { Panel } from "@/components/ui/panel";
 import { DataTable } from "@/components/patterns/data-table";
 import { SkeletonRows } from "@/components/patterns/skeleton-rows";
 import { buildPayoutConfig } from "@/components/features/admin/payout-columns";
-import { PAYOUT_STATES } from "@/lib/config/payout-tones";
 import type { Payout } from "@/lib/types";
 
 const TITLE = "Payouts";
@@ -43,13 +42,7 @@ export function AdminPaymentsMain({
     onClearFilter,
     onSettle,
 }: AdminPaymentsMainProps) {
-    const settlable = payouts.some(
-        (payout) => PAYOUT_STATES[payout.state].settlable,
-    );
-    const config = useMemo(
-        () => buildPayoutConfig({ onSettle, settlable }),
-        [onSettle, settlable],
-    );
+    const config = useMemo(() => buildPayoutConfig({ onSettle }), [onSettle]);
 
     return (
         <Panel

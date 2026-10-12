@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { ModerationQueueRow } from "@/components/features/admin/moderation-queue-row";
 import { isOpen } from "@/lib/data/admin-listings";
 import { cn } from "@/lib/utils";
-import type { DecisionMode, ModerationListing } from "@/lib/types";
+import type { ModerationListing } from "@/lib/types";
 
 const LIST_LABEL =
     "Submitted listings by review status, compliance checks, user reports, time in queue and asking price";
@@ -23,15 +23,12 @@ const COLUMNS = [
 
 export interface ModerationQueueListProps {
     listings: ModerationListing[];
-    approvingId?: string;
     onOpen: (id: string) => void;
-    onApprove: (id: string) => void;
-    onDecide: (mode: DecisionMode, id: string) => void;
 }
 
 export function ModerationQueueList({
     listings,
-    ...actions
+    onOpen,
 }: ModerationQueueListProps) {
     const [showDecided, setShowDecided] = useState(false);
     const waiting = listings.filter(isOpen);
@@ -43,7 +40,7 @@ export function ModerationQueueList({
                 <ModerationQueueRow
                     key={listing.id}
                     listing={listing}
-                    {...actions}
+                    onOpen={onOpen}
                 />
             ))}
         </AnimatePresence>

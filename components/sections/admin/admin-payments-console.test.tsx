@@ -82,10 +82,19 @@ const draw = () => render(<AdminPaymentsConsole />, { wrapper });
 
 const table = () => screen.findByRole("table");
 
+const detail = async (agent: string) => {
+    await userEvent.click(
+        within(await table()).getByRole("button", {
+            name: new RegExp(`^Details for ${agent} · `),
+        }),
+    );
+    return within(
+        await screen.findByRole("dialog", { name: new RegExp(`^${agent} · `) }),
+    );
+};
+
 const settleButton = async (agent: string) =>
-    within(await table()).getByRole("button", {
-        name: `Settle the hold for ${agent}`,
-    });
+    (await detail(agent)).getByRole("button", { name: "Settle" });
 
 const confirmation = () => screen.findByRole("dialog", { name: /this hold$/ });
 
@@ -93,7 +102,11 @@ const band = async () =>
     within(await screen.findByRole("region", { name: /^Escrow position/ }));
 
 const gone = () =>
-    waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    waitFor(() =>
+        expect(
+            screen.queryByRole("dialog", { name: /this hold$/ }),
+        ).not.toBeInTheDocument(),
+    );
 
 const openRefund = async (agent = "Marta Vance") => {
     draw();
@@ -174,23 +187,28 @@ describe("AdminPaymentsConsole · 01 reading the holds", () => {
 });
 
 describe("AdminPaymentsConsole · 02 what is settlable", () => {
-    it("2.1 offers settlement on a held hold", async () => {
+    it("2.1 offers settlement on a held hold, in its detail", async () => {
         draw();
 
         expect(await settleButton("Marta Vance")).toBeInTheDocument();
     });
 
+    it("2.1 never puts a settle action on a row", async () => {
+        draw();
+
+        expect(
+            within(await table()).queryByRole("button", { name: /settle/i }),
+        ).not.toBeInTheDocument();
+    });
+
     it.each([
         ["2.2 a released", "Sarah Johnson"],
         ["2.3 a disputed", "Elena Whitfield"],
-    ])("%s hold offers no settlement", async (_, agent) => {
+    ])("%s hold offers no settlement in its detail", async (_, agent) => {
         draw();
-        const rows = within(await table());
 
         expect(
-            rows.queryByRole("button", {
-                name: `Settle the hold for ${agent}`,
-            }),
+            (await detail(agent)).queryByRole("button", { name: "Settle" }),
         ).not.toBeInTheDocument();
     });
 });
@@ -427,8 +445,12 @@ describe("AdminPaymentsConsole · 06 when it fails", () => {
 describe("AdminPaymentsConsole · 07 finding a hold", () => {
     const agents = async () =>
         within(await table())
-            .queryAllByRole("button", { name: /^Settle the hold for / })
-            .map((button) => button.getAttribute("aria-label"));
+            .queryAllByRole("button", { name: /^Details for / })
+            .map((button) =>
+                button
+                    .getAttribute("aria-label")
+                    ?.replace(/^Details for (.+?) · .*$/, "$1"),
+            );
 
     it("7.1 narrows to the picked state, and shows every hold again", async () => {
         draw();
@@ -466,13 +488,13 @@ describe("AdminPaymentsConsole · 07 finding a hold", () => {
 
         await userEvent.type(search, "Ridge");
         await waitFor(async () =>
-            expect(await agents()).toEqual(["Settle the hold for Noor Hale"]),
+            expect(await agents()).toEqual(["Noor Hale"]),
         );
 
         await userEvent.clear(search);
         await userEvent.type(search, "marta");
         await waitFor(async () =>
-            expect(await agents()).toEqual(["Settle the hold for Marta Vance"]),
+            expect(await agents()).toEqual(["Marta Vance"]),
         );
     });
 

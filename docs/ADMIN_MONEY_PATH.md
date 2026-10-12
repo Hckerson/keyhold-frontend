@@ -31,7 +31,7 @@ The asymmetry from the buyer flow holds twice over: **not settling is recoverabl
 
 | #   | Criterion                                                                                                  |
 | --- | ---------------------------------------------------------------------------------------------------------- |
-| 2.1 | Only a hold whose status is `HELD` offers a settle action — in its row and in its detail.                  |
+| 2.1 | Only a hold whose status is `HELD` offers a settle action, in its detail; a row never carries one.         |
 | 2.2 | A `RELEASED` or `REFUNDED` hold offers no settle action.                                                   |
 | 2.3 | A `DISPUTED` hold offers no settle action: the server refuses it, and the dispute's resolution settles it. |
 

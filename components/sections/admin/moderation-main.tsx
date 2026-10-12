@@ -11,7 +11,6 @@ import { ModerationAgents } from "@/components/sections/admin/moderation-agents"
 import type { ModerationCheckFilter } from "@/lib/data/admin-listings";
 import type {
     CheckBreakdown as CheckBreakdownData,
-    DecisionMode,
     ModerationAgentLoad,
     ModerationListing,
 } from "@/lib/types";
@@ -30,11 +29,8 @@ export interface ModerationMainProps {
     checkFilter: ModerationCheckFilter;
     loads: ModerationAgentLoad[];
     pending?: boolean;
-    approvingId?: string;
     onCheckFilterChange: (filter: ModerationCheckFilter) => void;
     onOpen: (id: string) => void;
-    onApprove: (id: string) => void;
-    onDecide: (mode: DecisionMode, id: string) => void;
 }
 
 export function ModerationMain({
@@ -46,7 +42,7 @@ export function ModerationMain({
     loads,
     pending,
     onCheckFilterChange,
-    ...actions
+    onOpen,
 }: ModerationMainProps) {
     return (
         <div className="console-span-2 flex min-w-0 flex-col gap-3 self-start">
@@ -78,7 +74,10 @@ export function ModerationMain({
                     }
                 >
                     {listings.length > 0 ? (
-                        <ModerationQueueList listings={listings} {...actions} />
+                        <ModerationQueueList
+                            listings={listings}
+                            onOpen={onOpen}
+                        />
                     ) : pending ? (
                         <SkeletonRows tall />
                     ) : (

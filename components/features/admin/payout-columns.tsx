@@ -6,8 +6,6 @@ import { PayoutDetailActions } from "@/components/features/admin/payout-detail-a
 import { PayoutPayeeCell } from "@/components/features/admin/payout-payee-cell";
 import { PayoutPhaseBadge } from "@/components/features/admin/payout-phase-badge";
 import { PaidMute } from "@/components/features/admin/paid-mute";
-import { PayoutSettleButton } from "@/components/features/admin/payout-settle-button";
-import { SETTLE_TRIGGER_LABEL } from "@/lib/config/escrow-settle";
 import { PAYOUT_PHASES } from "@/lib/config/payout-tones";
 import { payoutNet, payoutTotals } from "@/lib/data/admin-payments";
 import {
@@ -16,12 +14,7 @@ import {
     payoutTiming,
 } from "@/lib/data/admin-payout-phase";
 import { formatCompactUsd, formatCountOf } from "@/lib/utils";
-import type {
-    DataTableColumn,
-    DataTableConfig,
-    Payout,
-    PayoutConfigOptions,
-} from "@/lib/types";
+import type { DataTableConfig, Payout, PayoutConfigOptions } from "@/lib/types";
 
 const MIN_WIDTH = "40rem";
 const PAGE_SIZE = 12;
@@ -29,22 +22,8 @@ const PAYOUT_NOUN = "payout";
 const CAPTION =
     "Agent payouts, disputes and releases waiting on a decision first: payee, deal, buyer, status, timing, gross and net. Open a row for the platform fee and the release steps";
 
-const settleColumn = (
-    onSettle: (payout: Payout) => void,
-): DataTableColumn<Payout> => ({
-    id: "settle",
-    label: SETTLE_TRIGGER_LABEL,
-    srOnlyLabel: true,
-    align: "right",
-    width: "5rem",
-    render: (payout) => (
-        <PayoutSettleButton payout={payout} onSettle={onSettle} />
-    ),
-});
-
 export function buildPayoutConfig({
     onSettle,
-    settlable,
     now = new Date(),
 }: PayoutConfigOptions): DataTableConfig<Payout> {
     const phaseOf = (payout: Payout) => payoutPhaseOf(payout, now);
@@ -57,7 +36,6 @@ export function buildPayoutConfig({
         rowLabel: (payout) => `${payout.recipient} · ${payout.deal}`,
         minWidth: MIN_WIDTH,
         pageSize: PAGE_SIZE,
-        rowClassName: () => "reveal-scope",
         reveal: "panel",
         panelSize: "md",
         panelTitle: (payout) => payout.recipient,
@@ -144,7 +122,6 @@ export function buildPayoutConfig({
                     </span>
                 ),
             },
-            ...(settlable ? [settleColumn(onSettle)] : []),
         ],
     };
 }
