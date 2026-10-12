@@ -4,36 +4,29 @@ import { m } from "motion/react";
 import { AgeMark } from "@/components/features/shared/age-mark";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { CheckPips } from "@/components/features/admin/check-pips";
-import { ModerationRowActions } from "@/components/features/admin/moderation-row-actions";
 import { ReportCountMark } from "@/components/features/admin/report-count-mark";
 import { LIST_ROW_MOTION } from "@/lib/config/motion";
 import { isOpen } from "@/lib/data/admin-listings";
 import { cn, formatMillions } from "@/lib/utils";
-import type { DecisionMode, ModerationListing } from "@/lib/types";
+import type { ModerationListing } from "@/lib/types";
 
 const REVIEW_PREFIX = "Review";
 
 export interface ModerationQueueRowProps {
     listing: ModerationListing;
-    approvingId?: string;
     onOpen: (id: string) => void;
-    onApprove: (id: string) => void;
-    onDecide: (mode: DecisionMode, id: string) => void;
 }
 
 export function ModerationQueueRow({
     listing,
-    approvingId,
     onOpen,
-    onApprove,
-    onDecide,
 }: ModerationQueueRowProps) {
     const open = isOpen(listing);
     const settled = !open && "opacity-60";
 
     return (
         <m.li {...LIST_ROW_MOTION} className="overflow-hidden">
-            <div className="queue-grid reveal-scope hover:bg-background-muted ease-smooth relative h-11 rounded-md px-2 transition-colors duration-200">
+            <div className="queue-grid hover:bg-background-muted ease-smooth h-11 rounded-md px-2 transition-colors duration-200">
                 <button
                     type="button"
                     aria-label={`${REVIEW_PREFIX} ${listing.address}, ${listing.locality}`}
@@ -84,13 +77,6 @@ export function ModerationQueueRow({
                 >
                     {formatMillions(listing.price, 2)}
                 </span>
-
-                <ModerationRowActions
-                    listing={listing}
-                    approvingId={approvingId}
-                    onApprove={onApprove}
-                    onDecide={onDecide}
-                />
             </div>
         </m.li>
     );

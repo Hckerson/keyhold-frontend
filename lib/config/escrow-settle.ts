@@ -50,5 +50,4 @@ export const isRefundReady = (reason: string) =>
     refundEscrowSchema.safeParse({ reason: reason.trim() }).success;
 
 export const SETTLE_TRIGGER_LABEL = "Settle";
-export const SETTLE_ACTION_LABEL = "Settle the hold for";
 export const SETTLE_WARNING_TITLE = "This cannot be undone";

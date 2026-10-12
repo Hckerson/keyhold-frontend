@@ -44,13 +44,6 @@ export function AdminUsersConsole() {
         suspension.reactivation.request(id);
     };
 
-    const decisions = {
-        reactivatingId: suspension.reactivatingId,
-        onOpen,
-        onSuspend,
-        onReactivate,
-    };
-
     if (isError)
         return (
             <ConsoleUnavailable
@@ -84,7 +77,7 @@ export function AdminUsersConsole() {
                     pageCount={directory.pageCount}
                     pending={isPending}
                     onPageChange={directory.setPage}
-                    {...decisions}
+                    onOpen={onOpen}
                 />
                 <AdminUsersRail
                     leaders={desk.leaders}

@@ -237,10 +237,6 @@ svg.lucide * {
     .reveal-fold {
         grid-template-rows: 1fr;
     }
-
-    .reveal-overlay {
-        display: none;
-    }
 }
 
 .rail-label {

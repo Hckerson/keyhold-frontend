@@ -18,12 +18,9 @@ const COLUMNS = [
 export interface UserDirectoryListProps {
     users: ManagedUser[];
     onOpen: (id: string) => void;
-    onSuspend: (id: string) => void;
-    reactivatingId?: string;
-    onReactivate: (id: string) => void;
 }
 
-export function UserDirectoryList({ users, ...row }: UserDirectoryListProps) {
+export function UserDirectoryList({ users, onOpen }: UserDirectoryListProps) {
     return (
         <div className="queue-frame -mx-2">
             <div
@@ -46,7 +43,11 @@ export function UserDirectoryList({ users, ...row }: UserDirectoryListProps) {
             <ul aria-label={LIST_LABEL} className="flex flex-col pt-1">
                 <AnimatePresence initial={false}>
                     {users.map((user) => (
-                        <UserDirectoryRow key={user.id} user={user} {...row} />
+                        <UserDirectoryRow
+                            key={user.id}
+                            user={user}
+                            onOpen={onOpen}
+                        />
                     ))}
                 </AnimatePresence>
             </ul>

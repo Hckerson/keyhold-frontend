@@ -98,7 +98,6 @@ export interface Payout {
 
 export interface PayoutConfigOptions {
     onSettle: (payout: Payout) => void;
-    settlable: boolean;
     now?: Date;
 }
 
