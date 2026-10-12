@@ -136,7 +136,10 @@ describe("AdminFlagsConsole · reviewing a report", () => {
             await screen.findByRole("button", { name: /Take it or leave it/ }),
         );
 
-        expect(await reviewing()).toHaveTextContent("Take it or leave it");
+        expect(await reviewing()).toHaveTextContent("Reported message");
+        expect(
+            screen.getByText(/Take it or leave it/, { selector: "blockquote" }),
+        ).toBeInTheDocument();
         expect(
             screen.getByRole("link", { name: "Open sender" }),
         ).toHaveAttribute("href", ADMIN_ROUTES.user("usr_12"));

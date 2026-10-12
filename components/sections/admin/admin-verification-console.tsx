@@ -1,13 +1,12 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
-import { EmptyState } from "@/components/ui/empty-state";
 import { VerificationApproveModal } from "@/components/features/admin/verification-approve-modal";
 import { VerificationDecisionModal } from "@/components/features/admin/verification-decision-modal";
 import { VerificationReviewPane } from "@/components/features/admin/verification-review-pane";
 import { ConsoleSkeleton } from "@/components/patterns/console-skeleton";
 import { ConsoleUnavailable } from "@/components/patterns/console-unavailable";
-import { ReviewQueue } from "@/components/patterns/review-queue";
+import { ReviewSplit } from "@/components/patterns/review-split";
 import { AdminVerificationHeader } from "@/components/sections/admin/admin-verification-header";
 import { CONSOLE_FALLBACKS } from "@/lib/config/console-fallbacks";
 import {
@@ -40,36 +39,28 @@ export function AdminVerificationConsole() {
                 onFilterChange={queue.changeFilter}
             />
 
-            {active ? (
-                <div className="review-split review-split--slim items-start gap-3">
-                    <div className="review-rail">
-                        <ReviewQueue
-                            items={verificationQueueItems(
-                                queue.visible,
-                                queue.filter === "all",
-                            )}
-                            selectedId={active.id}
-                            onSelect={queue.setSelectedId}
-                        />
-                    </div>
-                    <div className="review-pane">
-                        <VerificationReviewPane
-                            request={active}
-                            approving={queue.approvingId === active.id}
-                            busy={queue.busy}
-                            onAction={(mode) =>
-                                queue.runAction(mode, active.id)
-                            }
-                        />
-                    </div>
-                </div>
-            ) : (
-                <EmptyState
-                    icon={ShieldCheck}
-                    title={VERIFICATION_COPY.emptyTitle}
-                    description={VERIFICATION_COPY.emptyLede}
-                />
-            )}
+            <ReviewSplit
+                items={verificationQueueItems(
+                    queue.visible,
+                    queue.filter === "all",
+                )}
+                selectedId={active?.id}
+                onSelect={queue.setSelectedId}
+                empty={{
+                    icon: ShieldCheck,
+                    title: VERIFICATION_COPY.emptyTitle,
+                    description: VERIFICATION_COPY.emptyLede,
+                }}
+            >
+                {active && (
+                    <VerificationReviewPane
+                        request={active}
+                        approving={queue.approvingId === active.id}
+                        busy={queue.busy}
+                        onAction={(mode) => queue.runAction(mode, active.id)}
+                    />
+                )}
+            </ReviewSplit>
 
             <VerificationApproveModal
                 open={queue.approval.open}
