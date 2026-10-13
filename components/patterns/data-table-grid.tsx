@@ -4,7 +4,7 @@ import type { KeyboardEvent, RefObject } from "react";
 import {
     DataTableBody,
     type DataTableBodyProps,
-} from "@/components/patterns/data-table-body";
+} from "@/components/patterns/data-table-body"; 
 import { DataTableFoot } from "@/components/patterns/data-table-foot";
 import { DataTableGroups } from "@/components/patterns/data-table-groups";
 import { DataTableHead } from "@/components/patterns/data-table-head";
