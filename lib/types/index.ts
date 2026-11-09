@@ -38,3 +38,4 @@ export * from "./ui";
 export * from "./user";
 export * from "./verification";
 export * from "./viewing";
+export * from "./stage";

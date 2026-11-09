@@ -156,6 +156,7 @@
     --paddings-lg: 3rem;
     --paddings-xl: 4rem;
     --paddings-2xl: 5rem;
+    --paddings-descender: 0.1em;
 
     /* Section Margins (Vertical) */
     --margins-section-sm: 5rem;
