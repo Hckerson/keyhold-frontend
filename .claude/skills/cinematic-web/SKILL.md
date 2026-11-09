@@ -18,7 +18,7 @@ Read `.claude/CLAUDE.md` alongside this. It owns vocabulary and structure; this 
 
 ## The standard
 
-Measured against the references in `references/`. What they share, and what every build must have:
+What every build must have:
 
 1. **One hero object or world that is a metaphor for the product.** Someone who reads no copy still gets the idea. Never a generic gradient blob, a globe, floating UI cards, or particles with no structure.
 2. **Scroll is the timeline.** The page is a sequence of scenes; the hero changes state between them (disperses, converges, turns, splits, opens).
@@ -77,6 +77,13 @@ Append the build to `references/fingerprints.md`.
 - Animating `width` / `height` / `top` / `left`; animate `transform`, `opacity`, `clip-path` only.
 - Em dashes in visible copy.
 - Audio tracks left on scrub media.
+
+## Browser
+
+Capture and verify run in the user's Chrome through the `chrome-browser` skill and the Claude in Chrome extension. Before either starts, check both and install whatever is missing first:
+
+- **`chrome-browser` is not in the skill list:** it is Anthropic's skill and only arrives through claude.ai sync. Ask the user to turn it on in their claude.ai skills settings and restart Claude Code; it lands in `~/.claude/skills/synced/`.
+- **No `mcp__claude-in-chrome__*` tools:** ask the user to run `/chrome`, or restart with `claude --chrome`, and take the **Install extension** prompt. The extension must be signed in to the same claude.ai account as Claude Code.
 
 ## Adding references
 

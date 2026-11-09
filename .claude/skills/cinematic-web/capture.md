@@ -4,7 +4,7 @@ Turn a site the user likes into a file in `references/` so its taste is availabl
 
 ## From a URL
 
-1. Open it with the `anthropic-skills:chrome-browser` skill at 1440×900.
+1. Open it with the `chrome-browser` skill (SKILL.md › Browser) at 1440×900.
 2. Screenshot at scroll progress 0, 10, 20 … 100%, pausing ~600ms at each so animation settles. Repeat the hero and peak at 390×844.
 3. Inspect the page to identify the route, not guess it:
     - `<canvas>` with a WebGL context, or `three` / `@react-three` / `ogl` in the scripts → route C.
@@ -15,7 +15,7 @@ Turn a site the user likes into a file in `references/` so its taste is availabl
 
 ## From frames the user sends
 
-Ask for 6–10 screenshots spread evenly from the top of the page to the bottom, plus one at the moment they found most impressive. Two frames of the same scene at different moments (as with the Pegasus reference) are the most useful thing they can send: they show what moves.
+Ask for 6–10 screenshots spread evenly from the top of the page to the bottom, plus one at the moment they found most impressive. Two frames of the same scene at different moments are the most useful thing they can send: they show what moves.
 
 ## From a screen recording
 

@@ -8,7 +8,7 @@ Verification needs a dev server and a browser. Start them only when the user's c
 
 ## Steps
 
-1. `pnpm dev`, then open the route with the `anthropic-skills:chrome-browser` skill.
+1. `pnpm dev`, then open the route with the `chrome-browser` skill (SKILL.md › Browser).
 2. For every scene in the scene table, screenshot at its start, midpoint and end, at 1440×900 and at 390×844.
 3. Emulate `prefers-reduced-motion: reduce` and screenshot the top of the page.
 4. Put each capture beside its scene-table row and check:

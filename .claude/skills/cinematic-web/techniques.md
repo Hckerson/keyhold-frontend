@@ -6,17 +6,31 @@ How the cinematic register is built in this starter. Mechanics only; the concept
 
 Pick one per build on what the metaphor needs, and justify it against the other two. The Needs column is what to name in the concept, never a reason to choose a route.
 
-| Route                    | What it is                                                                                                                     | Wins when                                                                                                               | Needs                                                                                                                         |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **A. Procedural canvas** | Drawn every frame from math: raw WebGL2 for dense fields (strands, particles), 2D canvas or SVG only for a few hundred strokes | The metaphor is abstract structure (flows, networks, convergence). Pegasus is buildable here                            | Often nothing. Name any library the field needs (deck.gl for real geography, ogl or regl for shader work) |
-| **B. Scrubbed media**    | A pre-rendered clip or image sequence whose frame is chosen by scroll progress                                                 | The metaphor is photographic or physical (glass, liquid, a product, a place). Most likely how both references were made | Source footage or stills, `ffmpeg` to encode; an image or video generation service if nothing exists. Name them in the concept |
-| **C. Real-time WebGL**   | three.js via `@react-three/fiber` + `@react-three/drei`, or deck.gl when the world is real geography | Real refraction, true 3D the pointer can orbit, or geometry that must react live                                        | The library and any data it draws. Name them in the concept |
+| Route                    | What it is                                                                                                                     | Wins when                                                                        | Needs                                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **A. Procedural canvas** | Drawn every frame from math: raw WebGL2 for dense fields (strands, particles), 2D canvas or SVG only for a few hundred strokes | The metaphor is abstract structure (flows, networks, convergence)                | Often nothing. Name any library the field needs (deck.gl for real geography, ogl or regl for shader work)                      |
+| **B. Scrubbed media**    | A pre-rendered clip or image sequence whose frame is chosen by scroll progress                                                 | The metaphor is photographic or physical (glass, liquid, a product, a place)     | Source footage or stills, `ffmpeg` to encode; an image or video generation service if nothing exists. Name them in the concept |
+| **C. Real-time WebGL**   | three.js via `@react-three/fiber` + `@react-three/drei`, or deck.gl when the world is real geography                           | Real refraction, true 3D the pointer can orbit, or geometry that must react live | The library and any data it draws. Name them in the concept                                                                    |
 
 Route B looks the most expensive and is often the cheapest: a four-second render does what a week of shader work does. Route C is only right when the object must respond live in ways a clip cannot.
 
 The libraries named in this table are examples, not requirements. Use whichever library, dataset or service fits the concept, including ones not listed here.
 
 "Nothing new" is not a reason to pick a route. The first Haulr build chose Route A to avoid new packages and came out as a flat diagram; the rebuild on deck.gl, with real state outlines and interstate data, was what the concept needed from the start.
+
+## The engine
+
+The starter ships the mechanics every cinematic page shares and **no look**. Every value that decides how a build looks or moves (light strength, exposure, grain, streak, colours, reveal timing, intro easing, springs) is passed in from the build's own tokens in `lib/<feature>/constants.ts`. Extend these pieces in place; never write a parallel helper.
+
+| Layer   | Pieces                                                                                                                                                                  |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Drawing | `CanvasStage` in `components/wrappers/`; `lib/utils/webgl.ts`: `linkProgram`, `uniformLocator`, `createRenderTarget` / `disposeRenderTarget`, `renderFormat`, `glFloat` |
+| Motion  | `useSceneProgress(track, spring)`, `useDampedPointer(spring)`, `useIntroProgress({ duration, ease })` in `lib/hooks/`                                                   |
+| Text    | `RevealLine` in `components/wrappers/`, over `lineTimeline` and `sceneAnchorTop` in `lib/stage/choreography.ts`, timed by a `RevealTiming`                              |
+| Light   | `createPostChain(gl, settings)` in `lib/stage/post-chain.ts`: bright pass, bloom, streak, tone map, grain, tuned by a `PostSettings`                                    |
+| Colour  | `tokenRgb(getComputedStyle(element), token)` in `lib/utils/color.ts`                                                                                                    |
+
+The shared types live in `lib/types/stage.ts`.
 
 ## Scene container
 
@@ -30,32 +44,29 @@ Every scrollytelling section is a tall track with a sticky stage:
 
 ```tsx
 const trackRef = useRef<HTMLElement>(null);
-const { scrollYProgress } = useScroll({
-    target: trackRef,
-    offset: ["start start", "end end"],
-});
-const progress = useSpring(scrollYProgress, SCENE_SPRING);
+const progress = useSceneProgress(trackRef, SCROLL_SPRING);
 ```
 
+- `useSceneProgress` springs the track's `useScroll` progress (`start start` → `end end`) with the build's spring token.
 - `progress` feeds both the hero and the copy. Copy maps it with `useTransform(progress, range, [0, 1])`.
 - The hero reads `progress.get()` inside its own `requestAnimationFrame` loop. Never put per-frame values in React state.
-- Wrap this in `lib/hooks/use-scene-progress.ts`; components consume the hook.
 
 ## Pointer with inertia
 
-Two motion values for normalised pointer position (−1…1) through `useSpring` with a soft spring from `lib/constants.ts`. The hero reads `.get()` per frame. Touch devices get a slow idle drift instead.
+`useDampedPointer(spring)` gives the normalised pointer position (−1…1) and its presence through the build's soft spring token. The hero reads `.get()` per frame. Touch devices get a slow idle drift instead.
 
 ## Route A: procedural canvas
 
 - `CanvasStage` in `components/wrappers/`: owns the canvas, `ResizeObserver`, DPR capped at 1.5, and an `IntersectionObserver` that stops the loop off-screen. It hands the canvas to the consumer; it does not pick a context.
+- Every procedural hero builds its scene on the engine's drawing and light layers (see The engine).
 - **Dense fields go to raw WebGL2, not 2D canvas.** No package needed. Measured on the first build (Intel HD 620): 900 strands in 2D canvas with `lighter` blending ran at 3–13 fps, ~15 ms of JS per frame. The same field as a WebGL2 vertex shader runs at 60 fps with ~0.1 ms of JS. 2D canvas is for a few hundred strokes at most.
-- The shape maths lives in the vertex shader. Each strand is one instance of a `LINE_STRIP` (`drawArraysInstanced`): per-vertex `u` along the strand, per-instance strand params, and a handful of uniforms (size, focal point, state, time, pointer) are all JS sends per frame. Shader constants are interpolated from the TS constants so there is one source of truth. Reference: `cinematic-lab/lib/tributary/flow-shaders.ts` and `flow-renderer.ts`.
+- The shape maths lives in the vertex shader. Each strand is one instance of a `LINE_STRIP` (`drawArraysInstanced`): per-vertex `u` along the strand, per-instance strand params, and a handful of uniforms (size, focal point, state, time, pointer) are all JS sends per frame. Shader constants are interpolated from the TS constants so there is one source of truth.
 - **`antialias: false` for dense additive fields.** MSAA alone halved the frame rate (31 → 60 fps when removed) and a thousand faint overlapping lines show no aliasing.
 - Glow: additive blending (`blendFunc(SRC_ALPHA, ONE)`) on an opaque canvas cleared to the ground token, so density builds the light. A focal bloom is a CSS radial-gradient layer with `mix-blend-mode: plus-lighter`, opacity driven by the same state; it costs nothing measurable.
-- **Light as a pipeline, not a CSS glow.** Draw the field and sparks additively into a half-float offscreen target (`EXT_color_buffer_float`, RGBA8 fallback), bright-pass and blur at quarter resolution for bloom, a long horizontal-only blur of the same bright pass for a lens streak, then one composite: filmic tone map `1 - exp(-x * exposure)` (dense areas go white-hot on their own), ground colour, per-pixel grain. Measured at 60 fps on an Intel HD 620. Reference: `cinematic-lab/lib/tributary/flow-post.ts`.
+- **Light as a pipeline, not a CSS glow.** Draw the field and sparks additively into a half-float offscreen target (`EXT_color_buffer_float`, RGBA8 fallback), bright-pass and blur at quarter resolution for bloom, a long horizontal-only blur of the same bright pass for a lens streak, then one composite: filmic tone map `1 - exp(-x * exposure)` (dense areas go white-hot on their own), ground colour, per-pixel grain. Measured at 60 fps on an Intel HD 620. This is `createPostChain`; the build supplies every number as its `PostSettings`.
 - **Bright-pass on luminance, never per channel.** Subtracting a threshold per channel shifts saturated warm light toward green-yellow. Scale the colour by `max(lum - threshold, 0) / lum` to keep its hue.
 - **Colour temperature is narrow.** A heat ramp (crimson ends, ember body, gold core) reads as heat only when the hot zone is tight around the focal point and the hot token is a saturated gold, not near-white; otherwise the whole field turns silver.
-- Colours come from CSS tokens read once with `getComputedStyle`, never hardcoded.
+- Colours come from CSS tokens read once with `getComputedStyle` through `tokenRgb`, never hardcoded.
 
 ## Route B: scrubbed media
 
@@ -69,19 +80,19 @@ Two motion values for normalised pointer position (−1…1) through `useSpring`
 
 - `Canvas` from r3f, `dpr={[1, 2]}`, `frameloop="demand"` or paused off-screen, lazy-loaded with `next/dynamic` and `ssr: false`.
 - Animate in `useFrame` through refs; never set state per frame.
-- Glass: `MeshTransmissionMaterial` over bright emissive shapes to refract (the NebulaX slats), with `thickness`, `chromaticAberration`, `anisotropy`.
+- Glass: `MeshTransmissionMaterial` over bright emissive shapes to refract, with `thickness`, `chromaticAberration`, `anisotropy`.
 - Strands at scale: instanced lines or tubes displaced in a vertex shader by a `uProgress` uniform.
 - Post: bloom and grain sparingly; each pass costs every frame.
 
 ## Copy choreography
 
-- **A hero that is the page's LCP plays on load, by time, not by scroll.** The first scene's hero state (e.g. convergence) runs from a mount-time motion value (`animate(intro, 1)`), and its headline reveals immediately. Scroll takes over from the second scene. Never make the largest above-the-fold element wait for the visitor to scroll.
+- **A hero that is the page's LCP plays on load, by time, not by scroll.** The first scene's hero state (e.g. convergence) runs from a mount-time motion value (`useIntroProgress`), and its headline reveals immediately. Scroll takes over from the second scene. Never make the largest above-the-fold element wait for the visitor to scroll.
 
-- **Line reveal:** split the headline into lines, each in an `overflow-hidden` mask, translating from `100%` to `0` with a stagger. Cue the start to a scene threshold, not to mount.
+- **Line reveal:** split the headline into lines, one `RevealLine` each: an `overflow-hidden` mask, translating from `100%` to `0` with a stagger. Cue the start to a scene threshold, not to mount.
 - **Type-on:** for a single short line that should feel like a system speaking.
 - **Stat count-up:** numbers tween to value when their scene enters; tabular numerals.
 - **Nothing moves linearly and nothing starts hard.** `useTransform` maps linearly unless given `{ ease }`: pass an ease per segment (ease-out in, linear hold, ease-in out). State ramps use smootherstep (zero velocity and acceleration at both ends), not smoothstep. Scene copy crossfades with an overlap instead of leaving an empty beat. The hero fades in from zero on load, and a field that starts inside the viewport fades in along its length instead of showing a cut edge. Scroll spring around stiffness 70 / damping 24; stiffer reads as the wheel stepping.
-- Durations and easings are tokens (`MOTION_DURATION`, `--ease-*`); see `docs/MOTION.md`.
+- Durations, easings and springs are tokens: `MOTION_DURATION` in `lib/constants.ts` for the starter's own UI, and the build's `lib/<feature>/constants.ts` for everything the engine takes (`RevealTiming`, `IntroMotion`, springs, `PostSettings`).
 
 ## Devices
 
