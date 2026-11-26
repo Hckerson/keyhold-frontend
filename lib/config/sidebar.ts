@@ -1,5 +1,11 @@
 import type { JourneyStationState } from "@/lib/types";
 
+export const SIDEBAR_DIALOG_LABEL = "Navigation";
+export const SIDEBAR_DRAWER_ID = "sidebar-drawer";
+
+export const SIDEBAR_PANEL =
+    "bg-sidebar border-sidebar-border ease-smooth fixed inset-y-0 left-0 flex h-screen w-60 flex-col border-r transition-[transform,visibility] duration-300";
+
 export const SIDEBAR_ROW =
     "group relative flex h-9 items-center gap-2 rounded-md px-2 text-xs transition-colors duration-200 ease-smooth";
 export const SIDEBAR_ROW_IDLE =

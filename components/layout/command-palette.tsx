@@ -48,7 +48,7 @@ export function CommandPalette({
             aria-label={COMMAND_PALETTE.label}
             className="max-w-lg"
         >
-            <div className="border-border-light bg-background-alt flex h-11 shrink-0 items-center gap-2.5 border-b px-3">
+            <div className="border-border-light bg-background-alt focus-within:border-accent flex h-11 shrink-0 items-center gap-2.5 border-b px-3">
                 <Search
                     size={12}
                     strokeWidth={1.5}
@@ -63,7 +63,7 @@ export function CommandPalette({
                     onKeyDown={onKeyDown}
                     placeholder={COMMAND_PALETTE.placeholder}
                     aria-label={COMMAND_PALETTE.label}
-                    aria-expanded
+                    aria-expanded={open && items.length > 0}
                     aria-controls={COMMAND_PALETTE.listId}
                     aria-activedescendant={items[active]?.id}
                     autoComplete="off"
