@@ -41,7 +41,20 @@ export function DataTablePanel<T>({
                 <>
                     <DrawerHeader>
                         <DrawerTitle>
-                            {panelTitle ? panelTitle(row) : rowLabel?.(row)}
+                            {panelTitle && rowLabel ? (
+                                <>
+                                    <span aria-hidden="true">
+                                        {panelTitle(row)}
+                                    </span>
+                                    <span className="sr-only">
+                                        {rowLabel(row)}
+                                    </span>
+                                </>
+                            ) : panelTitle ? (
+                                panelTitle(row)
+                            ) : (
+                                rowLabel?.(row)
+                            )}
                         </DrawerTitle>
                     </DrawerHeader>
 
