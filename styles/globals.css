@@ -2,10 +2,11 @@
 @import "tw-animate-css";
 @import "./tokens.css";
 @import "maplibre-gl/dist/maplibre-gl.css";
+@source not "../.claude";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+@theme inline {
     /* Map plural tokens to singular Tailwind v4 theme names */
     --color-error: var(--colors-error);
     --color-error-dark: var(--colors-error-dark);
@@ -1022,5 +1023,43 @@ html {
     [data-reveal] {
         opacity: 1 !important;
         transform: none !important;
+    }
+}
+
+.stage-line,
+.stage-line-mask {
+    --glyph-bleed: max(
+        0px,
+        calc((var(--fonts-display-extent) * 1em - 1lh) / 2)
+    );
+}
+
+.stage-line {
+    padding-block: var(--glyph-bleed);
+}
+
+.stage-line-mask {
+    margin-bottom: calc(var(--glyph-bleed) * -2);
+}
+
+.stage-line-mask:first-child {
+    margin-top: calc(var(--glyph-bleed) * -1);
+}
+
+.stage-line-mask:last-child {
+    margin-bottom: calc(var(--glyph-bleed) * -1);
+}
+
+@keyframes stage-reveal-fallback {
+    to {
+        visibility: visible;
+    }
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    .stage-reveal:not(:has(.stage-line-mask)) {
+        visibility: hidden;
+        animation: stage-reveal-fallback 0s var(--durations-reveal-fallback)
+            forwards;
     }
 }

@@ -13,6 +13,17 @@ export const config = {
 
 export const BRAND_NAME = "Luxury RE";
 
+export const MAIN_CONTENT_ID = "main-content";
+export const SKIP_LINK_LABEL = "Skip to main content";
+
+export const APP_ERROR = {
+    title: "This page stopped responding",
+    description:
+        "Something went wrong while loading this page. Try loading it again.",
+    retry: "Try again",
+    home: "Back to home",
+} as const;
+
 export const ACCESS_TOKEN_COOKIE = "access_token";
 export const SESSION_DAYS = 7;
 
@@ -65,3 +76,5 @@ export const NO_READING = "—";
 export const OFFER_WINDOW_DAYS = 14;
 export const VIEWING_SLOT_COUNT = 3;
 export const VIEWING_LEAD_DAYS = 2;
+
+export const STAGE_WEBGL_PARAM = "webgl";

@@ -57,6 +57,7 @@
     --fonts-body:
         var(--nf-body), system-ui, -apple-system, "Segoe UI", sans-serif;
     --fonts-mono: var(--nf-mono), ui-monospace, "JetBrains Mono", monospace;
+    --fonts-display-extent: 1.4;
 
     /* Font Weights */
     --font-weights-thin: 100;
@@ -156,7 +157,6 @@
     --paddings-lg: 3rem;
     --paddings-xl: 4rem;
     --paddings-2xl: 5rem;
-    --paddings-descender: 0.1em;
 
     /* Section Margins (Vertical) */
     --margins-section-sm: 5rem;
@@ -172,6 +172,7 @@
     --durations-normal: 350ms;
     --durations-slow: 600ms;
     --durations-slower: 800ms;
+    --durations-reveal-fallback: 2.5s;
 
     --timing-functions-in: cubic-bezier(0.4, 0, 1, 1);
     --timing-functions-out: cubic-bezier(0, 0, 0.2, 1);
