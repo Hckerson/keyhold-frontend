@@ -1,6 +1,7 @@
 import { Avatar } from "@/components/ui/avatar";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { AppointmentTypeGlyph } from "@/components/features/agent/appointment-type-glyph";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { cn, initialsOf } from "@/lib/utils";
 import { chartToneText } from "@/lib/config/chart-tones";
 import {
@@ -25,7 +26,7 @@ export function CalendarNextCard({ appointment }: CalendarNextCardProps) {
     const type = APPOINTMENT_TYPES[appointment.type];
 
     return (
-        <article className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel as="article">
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <p className="micro-label">
@@ -73,7 +74,7 @@ export function CalendarNextCard({ appointment }: CalendarNextCardProps) {
                     </span>
                 </div>
             </div>
-        </article>
+        </SpotlightPanel>
     );
 }
 

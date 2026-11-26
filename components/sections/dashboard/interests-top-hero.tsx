@@ -5,6 +5,7 @@ import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { InterestTractionChip } from "@/components/features/dashboard/interest-traction-chip";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { INTEREST_STATUSES, TRACTIONS } from "@/lib/config/interest-tones";
 import { tractionOf } from "@/lib/data/interests";
 import { BUYER_ROUTES } from "@/lib/constants";
@@ -29,7 +30,7 @@ export function InterestsTopHero({ interest }: InterestsTopHeroProps) {
     const traction = tractionOf(interest);
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -87,7 +88,7 @@ export function InterestsTopHero({ interest }: InterestsTopHeroProps) {
                     <span className="tabular-nums">{interest.viewings}</span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

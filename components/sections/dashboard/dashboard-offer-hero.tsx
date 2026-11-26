@@ -1,5 +1,6 @@
 import { OverviewOfferList } from "@/components/features/dashboard/overview-offer-list";
 import { PanelLink } from "@/components/features/shared/panel-link";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { formatCompactUsd } from "@/lib/utils";
 import type { OfferBook, OfferPosition } from "@/lib/types";
 
@@ -17,7 +18,7 @@ export function DashboardOfferHero({
     positions,
 }: DashboardOfferHeroProps) {
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <p className="micro-label">
@@ -34,7 +35,7 @@ export function DashboardOfferHero({
             <div className="bg-background-muted border-border-light mt-3 rounded-md border px-3">
                 <OverviewOfferList offers={positions} />
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

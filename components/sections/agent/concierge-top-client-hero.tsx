@@ -2,6 +2,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ConciergeAllocation } from "@/components/features/agent/concierge-allocation";
 import { MetricCell } from "@/components/patterns/metric-cell";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import {
     CONCIERGE_STATUSES,
     CONCIERGE_TIERS,
@@ -28,7 +29,7 @@ export function ConciergeTopClientHero({
     const status = CONCIERGE_STATUSES[client.status];
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <Avatar
@@ -77,7 +78,7 @@ export function ConciergeTopClientHero({
                     <span className="truncate">{client.nextAction}</span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

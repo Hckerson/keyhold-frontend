@@ -7,6 +7,7 @@ import { MoveChip } from "@/components/patterns/move-chip";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { SavedMatchMark } from "@/components/features/dashboard/saved-match-mark";
 import { SavedStatusMark } from "@/components/features/dashboard/saved-status-mark";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { WATCH_BANDS, watchBandOf } from "@/lib/config/saved-tones";
 import { movePercent, pricePerSqft } from "@/lib/data/saved-listings";
@@ -36,7 +37,7 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
     const watch = WATCH_BANDS[watchBandOf(listing.viewedDaysAgo)];
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -123,7 +124,7 @@ export function SavedTopHero({ listing, onRemove }: SavedTopHeroProps) {
                     </span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

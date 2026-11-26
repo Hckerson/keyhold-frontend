@@ -1,6 +1,7 @@
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { strengthTone } from "@/lib/config/account-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { NOTIFICATION_RULE_COUNT } from "@/lib/data/agent-account";
@@ -43,7 +44,7 @@ export function AgentSettingsProfileHero({
     const dirty = pending > 0;
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <p className="micro-label">
                 {HERO_EYEBROW} · {brokerage}
             </p>
@@ -96,7 +97,7 @@ export function AgentSettingsProfileHero({
                     )}
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

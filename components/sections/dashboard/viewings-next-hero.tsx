@@ -8,6 +8,7 @@ import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ViewingAgentMark } from "@/components/features/dashboard/viewing-agent-mark";
 import { ViewingCountdown } from "@/components/features/dashboard/viewing-countdown";
 import { ViewingModeMark } from "@/components/features/dashboard/viewing-mode-mark";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { VIEWING_MODES, VIEWING_STATUSES } from "@/lib/config/viewing-tones";
 import { daysUntil, formatViewingDate } from "@/lib/data/viewings";
 import type { Viewing } from "@/lib/types";
@@ -42,7 +43,7 @@ export function ViewingsNextHero({
     const status = VIEWING_STATUSES[viewing.status];
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -123,7 +124,7 @@ export function ViewingsNextHero({
                     <ViewingCountdown days={daysUntil(viewing)} />
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 
