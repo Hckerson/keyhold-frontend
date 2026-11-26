@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import { config } from "@/lib/constants";
 import type { Metadata, Viewport } from "next";
 import Provider from "@/components/providers/provider";
-import { display, sans, mono } from "@/public/fonts/font";
+import { RootDocument } from "@/components/layout/root-document";
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -42,13 +42,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html
-            lang="en"
-            className={`${display.variable} ${sans.variable} ${mono.variable}`}
-        >
-            <body className="bg-background text-text font-body antialiased">
-                <Provider>{children}</Provider>
-            </body>
-        </html>
+        <RootDocument>
+            <Provider>{children}</Provider>
+        </RootDocument>
     );
 }
