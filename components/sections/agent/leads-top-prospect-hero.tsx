@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { LeadTemperatureChip } from "@/components/features/agent/lead-temperature-chip";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { LEAD_STAGES } from "@/lib/config/lead-tones";
 import type { Lead } from "@/lib/types/lead";
 import { formatCompactUsd, initialsOf } from "@/lib/utils";
@@ -39,7 +40,7 @@ export function LeadsTopProspectHero({
     const stage = LEAD_STAGES[lead.stage];
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <Avatar
@@ -138,7 +139,7 @@ export function LeadsTopProspectHero({
                     </span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

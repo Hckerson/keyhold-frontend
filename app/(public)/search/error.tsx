@@ -5,6 +5,7 @@ import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
+import { APP_ERROR } from "@/lib/constants";
 
 export default function SearchError({ reset }: { reset: () => void }) {
     return (
@@ -21,10 +22,10 @@ export default function SearchError({ reset }: { reset: () => void }) {
                                 tone="accent"
                                 onClick={reset}
                             >
-                                Try again
+                                {APP_ERROR.retry}
                             </Button>
                             <Button asChild>
-                                <Link href="/">Back to home</Link>
+                                <Link href="/">{APP_ERROR.home}</Link>
                             </Button>
                         </div>
                     }

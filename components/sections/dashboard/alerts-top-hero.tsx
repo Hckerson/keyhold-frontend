@@ -6,6 +6,7 @@ import { StatusDot } from "@/components/patterns/status-dot";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { AlertChannelMark } from "@/components/features/dashboard/alert-channel-mark";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { ALERT_TYPES, RECENCY_BANDS } from "@/lib/config/alert-tones";
 import { chartToneText } from "@/lib/config/chart-tones";
 import { recencyBandOf } from "@/lib/data/alerts";
@@ -33,7 +34,7 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
     const band = RECENCY_BANDS[recencyBandOf(alert)];
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -106,7 +107,7 @@ export function AlertsTopHero({ alert, onMarkRead }: AlertsTopHeroProps) {
                     </span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

@@ -4,6 +4,7 @@ import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { ListingExposureMark } from "@/components/features/agent/listing-exposure-mark";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { LISTING_STATUSES } from "@/lib/config/listing-tones";
 import {
     exposureOf,
@@ -44,7 +45,7 @@ export function ListingsTopHero({
     const featured = isFeatured(listing);
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -122,7 +123,7 @@ export function ListingsTopHero({
                     </span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

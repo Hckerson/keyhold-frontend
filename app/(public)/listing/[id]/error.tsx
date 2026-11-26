@@ -5,7 +5,7 @@ import { TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
-import { PUBLIC_ROUTES } from "@/lib/constants";
+import { APP_ERROR, PUBLIC_ROUTES } from "@/lib/constants";
 
 export default function ListingError({ reset }: { reset: () => void }) {
     return (
@@ -22,7 +22,7 @@ export default function ListingError({ reset }: { reset: () => void }) {
                                 tone="accent"
                                 onClick={reset}
                             >
-                                Try again
+                                {APP_ERROR.retry}
                             </Button>
                             <Button asChild>
                                 <Link href={PUBLIC_ROUTES.search}>

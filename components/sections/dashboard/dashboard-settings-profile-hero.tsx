@@ -1,6 +1,7 @@
 import { MetricCell } from "@/components/patterns/metric-cell";
 import { StatusDot } from "@/components/patterns/status-dot";
 import { AgeMark } from "@/components/features/shared/age-mark";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { ALERT_TYPE_COUNT } from "@/lib/data/alerts-preferences";
 import { minutesSince } from "@/lib/utils/elapsed";
 
@@ -37,7 +38,7 @@ export function DashboardSettingsProfileHero({
     const dirty = pending > 0;
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <p className="micro-label">{HERO_EYEBROW}</p>
             <div className="mt-1 flex flex-wrap items-baseline gap-2">
                 <p className="text-h4 font-display text-text font-light tabular-nums">
@@ -78,7 +79,7 @@ export function DashboardSettingsProfileHero({
                     )}
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

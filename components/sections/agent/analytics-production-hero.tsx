@@ -1,5 +1,6 @@
 import { DeltaChip } from "@/components/ui/delta-chip";
 import { ColumnChart } from "@/components/ui/charts/column-chart";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { formatMillions } from "@/lib/utils";
 import type {
     ColumnSeries,
@@ -29,7 +30,7 @@ export function AnalyticsProductionHero({
     const plot = months.map(({ month, volume }) => ({ month, volume }));
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="min-w-0">
                 <p className="micro-label">
                     {production.label} · {production.closings} {CLOSINGS_LABEL}{" "}
@@ -58,7 +59,7 @@ export function AnalyticsProductionHero({
                     valueSuffix="M"
                 />
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

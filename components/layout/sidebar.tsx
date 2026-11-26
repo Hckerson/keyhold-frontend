@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import {
     SidebarBrand,
     type SidebarBrandProps,
 } from "@/components/layout/sidebar-brand";
+import {
+    SidebarDrawer,
+    type SidebarDrawerProps,
+} from "@/components/layout/sidebar-drawer";
 import { SidebarNav } from "@/components/layout/sidebar-nav";
 import { SidebarStatus } from "@/components/layout/sidebar-status";
 import { SidebarFooter } from "@/components/layout/sidebar-footer";
@@ -14,6 +18,7 @@ import { useMediaQuery } from "@/lib/hooks/use-media-query";
 import type { AuthUser, JourneyStatus, SidebarSection } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { RAIL_QUERY } from "@/lib/constants";
+import { SIDEBAR_PANEL } from "@/lib/config/sidebar";
 
 export interface SidebarProps {
     brand: SidebarBrandProps["brand"];
@@ -24,6 +29,7 @@ export interface SidebarProps {
     signingOut?: boolean;
     open?: boolean;
     onClose?: () => void;
+    finalFocus?: SidebarDrawerProps["finalFocus"];
     className?: string;
 }
 
@@ -36,22 +42,13 @@ export function Sidebar({
     signingOut,
     open = false,
     onClose,
+    finalFocus,
     className,
 }: SidebarProps) {
     const pathname = usePathname();
     const isRail = useMediaQuery(RAIL_QUERY);
     const [railCollapsed, setRailCollapsed] = useState(false);
     const collapsed = isRail && railCollapsed;
-
-    useEffect(() => {
-        if (!open) return;
-
-        const onKeyDown = (event: KeyboardEvent) =>
-            event.key === "Escape" && onClose?.();
-
-        window.addEventListener("keydown", onKeyDown);
-        return () => window.removeEventListener("keydown", onKeyDown);
-    }, [open, onClose]);
 
     const activeHref = useMemo(() => {
         return sections
@@ -66,24 +63,38 @@ export function Sidebar({
             ?.href;
     }, [sections, pathname]);
 
-    return (
+    const contents = (
         <>
-            <div
-                aria-hidden="true"
-                onClick={onClose}
-                className={cn(
-                    "desk-hidden bg-text/50 ease-smooth fixed inset-0 z-40 backdrop-blur-[2px] transition-opacity duration-300",
-                    open ? "opacity-100" : "pointer-events-none opacity-0",
-                )}
+            <SidebarBrand
+                brand={brand}
+                collapsed={collapsed}
+                onClose={onClose}
             />
 
+            <SidebarNav
+                sections={sections}
+                activeHref={activeHref}
+                collapsed={collapsed}
+            />
+
+            {status && !collapsed && <SidebarStatus status={status} />}
+
+            <SidebarFooter
+                user={user}
+                onLogout={onLogout}
+                signingOut={signingOut}
+                collapsed={collapsed}
+            />
+        </>
+    );
+
+    return (
+        <>
             <aside
                 className={cn(
-                    "bg-sidebar border-sidebar-border ease-smooth fixed inset-y-0 left-0 z-50 flex h-screen w-60 flex-col border-r transition-[transform,visibility] duration-300",
-                    "lg:visible lg:relative lg:z-auto lg:w-52 lg:shrink-0 lg:translate-x-0 lg:transition-[width]",
-                    open
-                        ? "visible translate-x-0"
-                        : "invisible -translate-x-full",
+                    SIDEBAR_PANEL,
+                    "z-50 lg:visible lg:relative lg:z-auto lg:w-52 lg:shrink-0 lg:translate-x-0 lg:transition-[width]",
+                    "invisible -translate-x-full",
                     collapsed && "lg:w-12",
                     className,
                 )}
@@ -107,27 +118,16 @@ export function Sidebar({
                     />
                 </button>
 
-                <SidebarBrand
-                    brand={brand}
-                    collapsed={collapsed}
-                    onClose={onClose}
-                />
-
-                <SidebarNav
-                    sections={sections}
-                    activeHref={activeHref}
-                    collapsed={collapsed}
-                />
-
-                {status && !collapsed && <SidebarStatus status={status} />}
-
-                <SidebarFooter
-                    user={user}
-                    onLogout={onLogout}
-                    signingOut={signingOut}
-                    collapsed={collapsed}
-                />
+                {contents}
             </aside>
+
+            <SidebarDrawer
+                open={open && !isRail}
+                onClose={onClose}
+                finalFocus={finalFocus}
+            >
+                {contents}
+            </SidebarDrawer>
         </>
     );
 }

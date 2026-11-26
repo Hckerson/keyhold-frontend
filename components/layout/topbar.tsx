@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, type Ref } from "react";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import type { AuthUser, NavRoute } from "@/lib/types";
@@ -11,6 +11,7 @@ import {
     TOPBAR_ICON_BUTTON,
     TOPBAR_SETTINGS_SEGMENT,
 } from "@/lib/config/topbar";
+import { SIDEBAR_DRAWER_ID } from "@/lib/config/sidebar";
 import { cn } from "@/lib/utils";
 import { trailFor } from "@/lib/utils/nav";
 
@@ -19,6 +20,8 @@ export interface TopbarProps {
     rootLabel: string;
     rootHref: string;
     user?: AuthUser | null;
+    navOpen?: boolean;
+    navToggleRef?: Ref<HTMLButtonElement>;
     onNavOpen?: () => void;
     onLogout?: () => void;
     signingOut?: boolean;
@@ -29,6 +32,8 @@ export function Topbar({
     rootLabel,
     rootHref,
     user,
+    navOpen = false,
+    navToggleRef,
     onNavOpen,
     onLogout,
     signingOut,
@@ -50,9 +55,13 @@ export function Topbar({
                 <div className="flex min-w-0 items-center gap-2">
                     {onNavOpen && (
                         <button
+                            ref={navToggleRef}
                             type="button"
                             onClick={onNavOpen}
                             aria-label="Open navigation"
+                            aria-expanded={navOpen}
+                            aria-haspopup="dialog"
+                            aria-controls={SIDEBAR_DRAWER_ID}
                             className={cn(
                                 TOPBAR_ICON_BUTTON,
                                 "desk-hidden -ml-1",

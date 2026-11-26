@@ -1,5 +1,6 @@
 import { OverviewStageList } from "@/components/features/agent/overview-stage-list";
 import { PanelLink } from "@/components/features/shared/panel-link";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { formatCompactUsd } from "@/lib/utils";
 import type { PipelineStage, PipelineSummary } from "@/lib/types";
 
@@ -13,7 +14,7 @@ export interface AgentPipelineHeroProps {
 
 export function AgentPipelineHero({ summary, stages }: AgentPipelineHeroProps) {
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                     <p className="micro-label">
@@ -29,7 +30,7 @@ export function AgentPipelineHero({ summary, stages }: AgentPipelineHeroProps) {
             <div className="bg-background-muted border-border-light mt-3 rounded-md border px-3">
                 <OverviewStageList stages={stages} />
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 

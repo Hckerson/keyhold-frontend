@@ -108,6 +108,15 @@ const gone = () =>
         ).not.toBeInTheDocument(),
     );
 
+const closeDetail = async (agent: string) => {
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() =>
+        expect(
+            screen.queryByRole("dialog", { name: new RegExp(`^${agent} · `) }),
+        ).not.toBeInTheDocument(),
+    );
+};
+
 const openRefund = async (agent = "Marta Vance") => {
     draw();
     await userEvent.click(await settleButton(agent));
@@ -330,6 +339,7 @@ describe("AdminPaymentsConsole · 04 refunding", () => {
         );
         await userEvent.click(modal.getByRole("button", { name: "Cancel" }));
         await gone();
+        await closeDetail("Marta Vance");
 
         await userEvent.click(await settleButton("Noor Hale"));
         const next = within(await confirmation());

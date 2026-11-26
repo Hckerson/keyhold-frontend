@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { LogoChip } from "@/components/brand/logo-chip";
+import { DIALOG_CLOSE_MARK } from "@/lib/hooks/use-dialog-focus";
 import { cn } from "@/lib/utils";
 
 export interface SidebarBrandProps {
@@ -30,6 +31,7 @@ export function SidebarBrand({ brand, collapsed, onClose }: SidebarBrandProps) {
                 </div>
             )}
             <button
+                {...DIALOG_CLOSE_MARK}
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation"

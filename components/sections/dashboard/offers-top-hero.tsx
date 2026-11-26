@@ -5,6 +5,7 @@ import { StatusDot } from "@/components/patterns/status-dot";
 import { PanelLink } from "@/components/features/shared/panel-link";
 import { ListingThumb } from "@/components/features/shared/listing-thumb";
 import { OfferGapChip } from "@/components/features/dashboard/offer-gap-chip";
+import { SpotlightPanel } from "@/components/patterns/spotlight-panel";
 import { GAP_BANDS, OFFER_STATUSES, gapBandOf } from "@/lib/config/offer-tones";
 import { activePrice, discountPercent, gapPercent } from "@/lib/data/offers";
 import type { Offer } from "@/lib/types";
@@ -29,7 +30,7 @@ export function OffersTopHero({ offer }: OffersTopHeroProps) {
     const band = GAP_BANDS[gapBandOf(discountPercent(offer))];
 
     return (
-        <section className="border-accent/25 bg-background rounded-xl border p-4 shadow-md">
+        <SpotlightPanel>
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex min-w-0 items-start gap-3">
                     <ListingThumb
@@ -100,7 +101,7 @@ export function OffersTopHero({ offer }: OffersTopHeroProps) {
                     <span className="min-w-0 truncate">{offer.agent}</span>
                 </MetricCell>
             </div>
-        </section>
+        </SpotlightPanel>
     );
 }
 
